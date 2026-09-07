@@ -15,7 +15,6 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
         android:layout_gravity="bottom"
         android:elevation="0dp"
         android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"

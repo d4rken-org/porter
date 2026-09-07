@@ -260,23 +260,17 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             }
         }
 
-        listOf("appearance", "startup", "tools", "support", "version").forEach { key ->
+        listOf(KEY_START_ON_BOOT, KEY_WATCHDOG, "pairing_method", KEY_TCP_PORT,
+            KEY_NIGHT_MODE, KEY_THEME_STYLE, KEY_THEME_COLOR, "terminal", "automation",
+            "developer_guide", "support", "version").forEach { key ->
             findPreference<Preference>(key)!!.apply { icon = tint(icon) }
         }
 
-        arguments?.getString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT)?.let { key ->
-            preferenceScreen = findPreference<PreferenceScreen>(key)!!
-        }
-    }
-
-    override fun onNavigateToScreen(preferenceScreen: PreferenceScreen) {
-        startActivity(Intent(requireContext(), SettingsActivity::class.java)
-            .putExtra(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.key))
     }
 
     override fun onResume() {
         super.onResume()
-        activity?.title = preferenceScreen.title ?: getString(R.string.settings_title)
+        activity?.title = getString(R.string.settings_title)
         preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
         ShizukuStateMachine.addListener(stateListener)
     }
@@ -333,9 +327,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private fun maybeGetRestartIcon(setting: String): Drawable? {
         val context = requireContext()
-        if (!needsRestart(setting)) return null
-        
-        val icon = context.getDrawable(R.drawable.ic_server_restart)
+        val icon = context.getDrawable(if (needsRestart(setting)) {
+            R.drawable.ic_server_restart
+        } else {
+            R.drawable.ic_wadb_24
+        })
         return tint(icon)
     }
 

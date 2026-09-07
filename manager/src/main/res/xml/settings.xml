@@ -8,40 +8,42 @@
         android:key="empty"
         style="@style/Preference.Rikka.Material3.Empty" />
 
-    <PreferenceScreen android:key="appearance" android:title="@string/settings_user_interface"
-        android:icon="@drawable/ic_outline_dark_mode_24">
+    <PreferenceCategory android:key="startup" android:title="@string/porter_startup"
+        app:iconSpaceReserved="false">
+        <SwitchPreferenceCompat android:key="start_on_boot" android:icon="@drawable/ic_outline_play_arrow_24" android:title="@string/settings_start_on_boot" />
+        <SwitchPreferenceCompat android:key="watchdog" android:icon="@drawable/ic_autorenew" android:title="@string/settings_watchdog"
+            android:summary="@string/settings_watchdog_summary" />
+        <Preference android:key="pairing_method" android:icon="@drawable/ic_baseline_link_24" android:title="@string/porter_pairing_method" />
+        <EditTextPreference android:key="tcp_port" android:icon="@drawable/ic_wadb_24" android:title="@string/settings_tcp_port"
+            android:inputType="number" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:key="appearance" android:title="@string/settings_user_interface"
+        app:iconSpaceReserved="false">
         <moe.shizuku.manager.settings.IntegerSimpleMenuPreference
-            android:key="night_mode" android:entries="@array/night_mode"
+            android:key="night_mode" android:icon="@drawable/ic_outline_dark_mode_24" android:entries="@array/night_mode"
             android:entryValues="@array/night_mode_value" android:summary="%s"
             android:title="@string/porter_theme_mode" />
-        <ListPreference android:key="theme_style" android:entries="@array/porter_theme_styles"
+        <ListPreference android:key="theme_style" android:icon="@drawable/ic_contrast_24" android:entries="@array/porter_theme_styles"
             android:entryValues="@array/porter_theme_style_values"
             android:title="@string/porter_theme_style" app:useSimpleSummaryProvider="true" />
-        <ListPreference android:key="theme_color" android:entries="@array/porter_theme_colors"
+        <ListPreference android:key="theme_color" android:icon="@drawable/ic_palette_24" android:entries="@array/porter_theme_colors"
             android:entryValues="@array/porter_theme_color_values"
             android:title="@string/porter_theme_color" app:useSimpleSummaryProvider="true" />
-    </PreferenceScreen>
+    </PreferenceCategory>
 
-    <PreferenceScreen android:key="startup" android:title="@string/porter_startup"
-        android:icon="@drawable/ic_outline_play_arrow_24">
-        <SwitchPreferenceCompat android:key="start_on_boot" android:title="@string/settings_start_on_boot" />
-        <SwitchPreferenceCompat android:key="watchdog" android:title="@string/settings_watchdog"
-            android:summary="@string/settings_watchdog_summary" />
-        <Preference android:key="pairing_method" android:title="@string/porter_pairing_method" />
-        <EditTextPreference android:key="tcp_port" android:title="@string/settings_tcp_port"
-            android:inputType="number" />
-    </PreferenceScreen>
-
-    <PreferenceScreen android:key="tools" android:title="@string/porter_tools"
-        android:icon="@drawable/ic_terminal_24">
-        <Preference android:key="terminal" android:title="@string/home_terminal_title"
+    <PreferenceCategory android:key="tools" android:title="@string/porter_tools"
+        app:iconSpaceReserved="false">
+        <Preference android:key="terminal" android:icon="@drawable/ic_terminal_24" android:title="@string/home_terminal_title"
             android:summary="@string/home_terminal_description" />
-        <Preference android:key="automation" android:title="@string/home_automation_title" />
-        <Preference android:key="developer_guide" android:title="@string/porter_developer_guide" />
-    </PreferenceScreen>
+        <Preference android:key="automation" android:icon="@drawable/ic_integration_instructions_24" android:title="@string/home_automation_title" />
+        <Preference android:key="developer_guide" android:icon="@drawable/ic_code_24dp" android:title="@string/porter_developer_guide" />
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_support" app:iconSpaceReserved="false">
     <Preference android:key="support" android:title="@string/porter_support_title"
         android:summary="@string/porter_support_summary" android:icon="@drawable/ic_help_outline_24dp" />
     <Preference android:key="version" android:title="@string/porter_version"
         android:icon="@drawable/ic_outline_info_24" />
+    </PreferenceCategory>
 </PreferenceScreen>
