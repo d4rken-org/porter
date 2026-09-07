@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item
-        android:id="@+id/action_settings"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_settings"
         android:icon="@drawable/ic_action_settings_24dp"
         android:title="@string/settings_title"
-        android:showAsAction="never"/>
-
-    <item
-        android:id="@+id/action_stop"
-        android:title="@string/action_stop"
-        android:showAsAction="never"/>
-
+        app:showAsAction="always" />
 </menu>

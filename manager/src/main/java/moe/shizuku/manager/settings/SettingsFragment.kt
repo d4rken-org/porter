@@ -64,8 +64,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     private lateinit var watchdogPreference: TwoStatePreference
     private lateinit var tcpPortPreference: EditTextPreference
     private lateinit var nightModePreference: IntegerSimpleMenuPreference
-    private lateinit var legacyPairingPreference: TwoStatePreference
-    private lateinit var advancedCategory: PreferenceCategory
 
     private lateinit var batteryOptimizationListener: ActivityResultLauncher<Intent>
     private var batteryOptimizationContinuation: CancellableContinuation<Boolean>? = null
@@ -88,8 +86,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         watchdogPreference = findPreference(KEY_WATCHDOG)!!
         tcpPortPreference = findPreference(KEY_TCP_PORT)!!
         nightModePreference = findPreference(KEY_NIGHT_MODE)!!
-        legacyPairingPreference = findPreference(KEY_LEGACY_PAIRING)!!
-        advancedCategory = findPreference(KEY_CATEGORY_ADVANCED)!!
 
         batteryOptimizationListener = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val accepted = SettingsHelper.isIgnoringBatteryOptimizations(requireContext())
@@ -238,23 +234,49 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             startActivity(Intent(context, moe.shizuku.manager.support.SupportActivity::class.java))
             true
         }
-        findPreference<Preference>("about")!!.apply {
+        findPreference<Preference>("version")!!.apply {
             summary = context.packageManager.getPackageInfo(context.packageName, 0).versionName
             setOnPreferenceClickListener {
-                AboutDialog().show(parentFragmentManager, "about")
+                CustomTabsHelper.launchUrlOrCopy(context, Helps.DOWNLOAD.get())
                 true
             }
         }
 
-        legacyPairingPreference.apply {
-            isVisible = !EnvironmentUtils.isTelevision()
+        findPreference<Preference>("pairing_method")!!.apply {
+            isVisible = !EnvironmentUtils.isTelevision() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+            val choices = resources.getStringArray(R.array.porter_pairing_methods)
+            summary = choices[if (ShizukuSettings.getLegacyPairing()) 1 else 0]
+            setOnPreferenceClickListener {
+                MaterialAlertDialogBuilder(context)
+                    .setTitle(R.string.porter_pairing_method)
+                    .setSingleChoiceItems(choices, if (ShizukuSettings.getLegacyPairing()) 1 else 0) { dialog, which ->
+                        ShizukuSettings.getPreferences().edit().putBoolean(KEY_LEGACY_PAIRING, which == 1).apply()
+                        summary = choices[which]
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+                true
+            }
         }
 
-        advancedCategory.isVisible = legacyPairingPreference.isVisible
+        listOf("appearance", "startup", "tools", "support", "version").forEach { key ->
+            findPreference<Preference>(key)!!.apply { icon = tint(icon) }
+        }
+
+        arguments?.getString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT)?.let { key ->
+            preferenceScreen = findPreference<PreferenceScreen>(key)!!
+        }
+    }
+
+    override fun onNavigateToScreen(preferenceScreen: PreferenceScreen) {
+        startActivity(Intent(requireContext(), SettingsActivity::class.java)
+            .putExtra(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.key))
     }
 
     override fun onResume() {
         super.onResume()
+        activity?.title = preferenceScreen.title ?: getString(R.string.settings_title)
         preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
         ShizukuStateMachine.addListener(stateListener)
     }

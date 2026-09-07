@@ -26,7 +26,7 @@ Der automatische Start hängt weiterhin davon ab, ob Android Debugging-Zugriff b
 - Lass das Gerät mit dem WLAN verbunden und prüfe, ob drahtloses Debugging aktiviert ist.
 - Erlaube Porter Benachrichtigungen, damit du den Kopplungscode eingeben kannst. Erlaube auch den Zugriff auf Geräte in der Nähe oder das lokale Netzwerk, wenn Android danach fragt.
 - Lass Androids Kopplungscode-Dialog geöffnet, während du den Code in Porters Benachrichtigung eingibst. Falls der Code abläuft, öffne einen neuen Kopplungsdialog.
-- Wenn du Legacy-Paarung verwendest, übernimm den Kopplungsport aus dem Kopplungscode-Dialog. Verwende nicht den Verbindungsport auf der Hauptseite für drahtloses Debugging.
+- Wenn du den Kopplungscode in Porters Dialog eingibst, übernimm den Kopplungsport aus dem Kopplungscode-Dialog. Verwende nicht den Verbindungsport auf der Hauptseite für drahtloses Debugging.
 - Falls ein VPN oder eine Einschränkung im lokalen Netzwerk die Erkennung verhindert, versuche es in einem Netzwerk, das die Kommunikation zwischen Geräten erlaubt.
 
 Wenn drahtloses Debugging auf deinem Gerät nicht verfügbar oder unzuverlässig ist, [starte Porter über einen Computer](setup.html#with-a-computer).
@@ -77,12 +77,12 @@ Manche OPPO-/OnePlus-Systeme haben in den Entwickleroptionen einen Schalter zur 
 ## Die angezeigte Version des laufenden Dienstes weicht ab
 {: #the-version-shown-while-running-is-different }
 
-Porters Info-Dialog zeigt die Version der Porter-App. Die Karte zum laufenden Dienst zeigt die kompatible Shizuku-Dienstversion. Diese Versionsnummern haben unterschiedliche Zwecke.
+Der Eintrag **Version** in den **Einstellungen** zeigt die Version der Porter-App. Die Karte zum laufenden Dienst zeigt die kompatible Shizuku-Dienstversion. Diese Versionsnummern haben unterschiedliche Zwecke.
 
 ## Ein Problem melden
 {: #report-a-problem }
 
-Öffne über Porters Dreipunktmenü die **Einstellungen** und dann **Hilfe & Support**. Dort kannst du den Support per E-Mail kontaktieren, die [Discord-Community](https://discord.gg/5hXXgwKNgm) besuchen oder [ein Problem auf GitHub melden](https://github.com/d4rken-org/porter/issues).
+Tippe in Porter auf das Einstellungssymbol und öffne **Hilfe & Support**. Dort kannst du den Support per E-Mail kontaktieren, die [Discord-Community](https://discord.gg/5hXXgwKNgm) besuchen oder [ein Problem auf GitHub melden](https://github.com/d4rken-org/porter/issues).
 
 Für ein Diagnoseprotokoll wählst du **Diagnoseprotokoll aufnehmen**, reproduzierst das Problem und tippst auf **Aufnahme beenden**. Wähle die gespeicherte Aufnahme im Kontaktformular aus oder teile sie unter **Gespeicherte Protokolle**. Protokolle bleiben auf deinem Gerät, bis du sie teilst. Sie können App-Namen, Gerätedaten und Aktionen enthalten, die über Porter ausgeführt werden.
 

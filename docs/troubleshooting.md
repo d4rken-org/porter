@@ -21,7 +21,7 @@ Automatic start still depends on Android making debugging access available and a
 - Keep the device connected to Wi-Fi and check that Wireless debugging is enabled.
 - Allow Porter notifications so you can enter the pairing code. Also allow nearby-device or local-network access when Android requests it.
 - Keep Android's pairing-code dialog open while entering the code in Porter's notification. If the code expires, open a new pairing dialog.
-- If using Legacy pairing, copy the pairing port from the pairing-code dialog, not the connection port on the main Wireless debugging screen.
+- If entering the pairing code in Porter's in-app dialog, copy the pairing port from the pairing-code dialog, not the connection port on the main Wireless debugging screen.
 - If a VPN or local-network restriction blocks discovery, try a network where device communication is allowed.
 
 When wireless debugging is unavailable or unreliable on your device, [start from a computer](setup.md#with-a-computer).
@@ -66,11 +66,11 @@ Some OPPO/OnePlus systems have a **Permission monitoring** switch in Developer o
 
 ## The version shown while running is different
 
-Porter's About dialog shows the Porter app version. The running-service card shows the compatible Shizuku service version. These version numbers serve different purposes.
+The **Version** entry in **Settings** shows the Porter app version. The running-service card shows the compatible Shizuku service version. These version numbers serve different purposes.
 
 ## Report a problem
 
-Open **Settings**, then **Help & support** from Porter's overflow menu. You can contact support by email, visit the [Discord community](https://discord.gg/5hXXgwKNgm), or [open an issue](https://github.com/d4rken-org/porter/issues).
+Tap the settings icon in Porter, then open **Help & support**. You can contact support by email, visit the [Discord community](https://discord.gg/5hXXgwKNgm), or [open an issue](https://github.com/d4rken-org/porter/issues).
 
 To include a debug log, choose **Record debug log**, reproduce the problem, then **Stop recording**. Select the saved recording in the contact form or share it from **Saved debug logs**. Logs stay on your device until you share them. They may contain app names, device details and actions performed through Porter.
 

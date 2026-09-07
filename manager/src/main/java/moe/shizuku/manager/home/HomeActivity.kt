@@ -2,7 +2,6 @@ package moe.shizuku.manager.home
 
 import android.app.NotificationManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
@@ -54,6 +53,7 @@ abstract class HomeActivity : AppBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.subtitle = getString(R.string.porter_home_subtitle)
 
         val binding = HomeActivityBinding.inflate(layoutInflater, rootView, true)
 
@@ -171,19 +171,6 @@ abstract class HomeActivity : AppBarActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_stop -> {
-                if (ShizukuStateMachine.isRunning()) {
-                    MaterialAlertDialogBuilder(this)
-                        .setMessage(R.string.dialog_stop_message)
-                        .setPositiveButton(android.R.string.ok) { _: DialogInterface?, _: Int ->
-                            ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
-                            runCatching { Shizuku.exit() }
-                        }
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .show()
-                }
-                true
-            }
             R.id.action_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true

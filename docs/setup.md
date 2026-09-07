@@ -40,7 +40,7 @@ Porter leaves Android's debugging settings enabled when it stops. You can turn t
 
 Pairing normally only needs to be done once. Starting the service is a separate step and is needed again after a device restart. If Android forgets the pairing, repeat these steps.
 
-If you enabled **Legacy pairing** in Porter settings, wait for Porter's dialog to discover the pairing service, then enter the code there. If it asks for a port, use the pairing port from Android's pairing-code dialog, not the connection port on the main Wireless debugging screen.
+If you selected **In-app dialog** under **Settings**, **Startup**, **Pairing method**, wait for Porter's dialog to discover the pairing service, then enter the code there. If it asks for a port, use the pairing port from Android's pairing-code dialog, not the connection port on the main Wireless debugging screen.
 
 ## With a computer
 
@@ -72,6 +72,10 @@ Open the app you want to use, enable its Porter or Shizuku integration, then app
 To remove access, tap **Authorized applications** in Porter and turn off the app's authorization. Porter and Shizuku keep separate approvals.
 
 If the app has a service selector, choose Porter there. Follow the app's own setup instructions. If changing the selection requires restarting the app, use **Force stop** in Android's app settings and reopen it.
+
+## Stop Porter
+
+Tap **Porter is running** on the dashboard, then choose **Stop Porter**. Connected apps lose access until you start Porter again.
 
 ## Update Porter
 

@@ -45,7 +45,7 @@ Wenn Porter stoppt, bleiben die Debugging-Einstellungen von Android aktiviert. D
 
 Die Kopplung ist normalerweise nur einmal nötig. Den Dienst zu starten ist ein eigener Schritt, den du nach einem Neustart des Geräts wiederholen musst. Falls Android die Kopplung vergisst, führe die Schritte erneut aus.
 
-Wenn du in Porter **Legacy-Paarung** aktiviert hast, warte im Dialog auf die Erkennung des Kopplungsdienstes und gib den Code dort ein. Falls nach einem Port gefragt wird, verwende den Kopplungsport aus Androids Kopplungscode-Dialog. Er unterscheidet sich vom Verbindungsport auf der Hauptseite für drahtloses Debugging.
+Wenn du unter **Einstellungen**, **Startverhalten**, **Kopplungsmethode** die Option **Dialog in der App** ausgewählt hast, warte im Dialog auf die Erkennung des Kopplungsdienstes und gib den Code dort ein. Falls nach einem Port gefragt wird, verwende den Kopplungsport aus Androids Kopplungscode-Dialog. Er unterscheidet sich vom Verbindungsport auf der Hauptseite für drahtloses Debugging.
 
 ## Mit einem Computer
 {: #with-a-computer }
@@ -80,6 +80,11 @@ Stoppe den laufenden Porter-Dienst, bevor du zwischen Root und Debugging-Zugriff
 Um den Zugriff zu entziehen, öffne in Porter die Liste der autorisierten Apps und schalte die Berechtigung für die betreffende App aus. Porter und Shizuku verwalten ihre Freigaben getrennt.
 
 Falls die App eine Dienstauswahl hat, wähle dort Porter. Folge den Anweisungen der jeweiligen App. Wenn ein Wechsel einen Neustart der App erfordert, nutze **Beenden erzwingen** in den Android-App-Einstellungen und öffne die App erneut.
+
+## Porter stoppen
+{: #stop-porter }
+
+Tippe auf der Startseite auf **Porter läuft** und dann auf **Porter stoppen**. Verbundene Apps verlieren den Zugriff, bis du Porter erneut startest.
 
 ## Porter aktualisieren
 {: #update-porter }

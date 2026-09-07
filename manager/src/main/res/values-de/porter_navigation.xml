@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_home_subtitle">ADB-Zugriff für deine Apps</string>
+    <string name="porter_startup">Startverhalten</string>
+    <string name="porter_version">Version</string>
+    <string name="porter_pairing_method">Kopplungsmethode</string>
+    <string name="porter_status_restricted">Android schränkt einige ADB-Berechtigungen ein.</string>
+    <string name="porter_status_stop_message">Wenn du Porter stoppst, werden verbundene Apps getrennt. Sie verlieren den Zugriff, bis du Porter erneut startest.</string>
+    <string name="porter_status_details_hint">Tippen für Dienstdetails und zum Stoppen</string>
+    <string name="porter_pairing_notification">Benachrichtigung</string>
+    <string name="porter_pairing_dialog">Dialog in der App</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+</resources>
