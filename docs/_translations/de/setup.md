@@ -84,7 +84,7 @@ Falls die App eine Dienstauswahl hat, wähle dort Porter. Folge den Anweisungen 
 ## Porter stoppen
 {: #stop-porter }
 
-Tippe auf der Startseite auf **Porter läuft** und dann auf **Porter stoppen**. Verbundene Apps verlieren den Zugriff, bis du Porter erneut startest.
+Tippe auf der Startseite auf **Porter läuft** und dann auf **Porter anhalten**. Verbundene Apps verlieren den Zugriff, bis du Porter erneut startest.
 
 ## Porter aktualisieren
 {: #update-porter }
