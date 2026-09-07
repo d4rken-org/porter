@@ -95,7 +95,6 @@
         system.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Starta (för rootade enheter)]]></string>
-    <string name="home_root_description"><![CDATA[Om du använder Magisk kan du prova %1$s. För root-användare kommer det så småningom att ersätta Porter. Observera att befintliga applikationer behöver ändras lite för att kunna använda %2$s.]]></string>
     <string name="home_root_button_start">Start</string>
     <string name="home_root_button_restart">Starta om</string>
     <!-- Home - Application management -->

@@ -98,7 +98,6 @@
         untuk Porter pada sistem sedemikian.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Mula (untuk peranti berakar)]]></string>
-    <string name="home_root_description"><![CDATA[Jika anda menggunakan Magisk, anda boleh mencuba %1$s. Bagi pengguna root, ia akhirnya akan menggantikan Porter. Perhatikan, aplikasi sedia ada perlu berubah sedikit untuk menggunakan %2$s.]]></string>
     <string name="home_root_button_start">Mulakan</string>
     <string name="home_root_button_restart">Mulakan semula</string>
     <!-- Home - Application management -->

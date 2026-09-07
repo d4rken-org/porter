@@ -90,7 +90,6 @@
         الأمامية. يُرجى تعطيل ميزات تحسين أداء البطارية لتطبيق Porter على هذه الأنظمة.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[ابدأ (للأجهزة المجذرة)]]></string>
-    <string name="home_root_description"><![CDATA[إذا كنت تستخدم Magisk، يمكنك تجربة %1$s. بالنسبة لمستخدمي الجذر، سيحل هذا الخيار محل Porter في نهاية المطاف. ملاحظة: تحتاج التطبيقات الحالية إلى تغيير بسيط لاستخدام %2$s.]]></string>
     <string name="home_root_button_start">البدء بالتشغيل</string>
     <string name="home_root_button_restart">إعادة البدء بالتشغيل</string>
     <!-- Home - Application management -->

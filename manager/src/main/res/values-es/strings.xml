@@ -101,7 +101,6 @@
         optimización de batería para Porter en estos sistemas.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Iniciar (dispositivo rooteado)]]></string>
-    <string name="home_root_description"><![CDATA[Si usas Magisk, puedes probar %1$s. Para usuarios root, eventualmente reemplazará a Porter. Ten en cuenta que las aplicaciones existentes deben modificarse ligeramente para usar %2$s.]]></string>
     <string name="home_root_button_start">Iniciar</string>
     <string name="home_root_button_restart">Reiniciar</string>
     <!-- Home - Application management -->

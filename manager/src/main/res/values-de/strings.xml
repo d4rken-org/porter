@@ -102,7 +102,6 @@
         Akkuoptimierungsfunktionen für Porter auf solchen Systemen.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Start (für gerootete Geräte)]]></string>
-    <string name="home_root_description"><![CDATA[Wenn Sie Magisk verwenden, können Sie %1$sausprobieren. Für Root-Benutzer wird es Porter zukünftig ersetzen. Beachten Sie, dass bestehende Anwendungen geringfügig angepasst werden müssen, um %2$szu verwenden.]]></string>
     <string name="home_root_button_start">Anfangen</string>
     <string name="home_root_button_restart">Neustart</string>
     <!-- Home - Application management -->

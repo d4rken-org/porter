@@ -96,7 +96,6 @@
         üçün batareyanın optimallaşdırılması funksiyalarını söndürün.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Başlat (root edilmiş cihazlar üçün)]]></string>
-    <string name="home_root_description"><![CDATA[Magisk istifadə edirsinizsə, cəhd edə bilərsiniz %1$s. Kök istifadəçiləri üçün o, nəticədə Porter-nu əvəz edəcək. Qeyd edək ki, %2$sistifadə etmək üçün mövcud proqramlar bir az dəyişməlidir.]]></string>
     <string name="home_root_button_start">Başlat</string>
     <string name="home_root_button_restart">Yenidən Başlat</string>
     <!-- Home - Application management -->

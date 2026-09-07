@@ -98,7 +98,6 @@
         untuk Porter pada sistem tersebut.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Mulai (untuk perangkat dengan root)]]></string>
-    <string name="home_root_description"><![CDATA[Jika Anda menggunakan Magisk, Anda bisa mencoba %1$s. Bagi pengguna root, Magisk nantinya akan menggantikan Porter. Perlu diketahui, aplikasi yang sudah ada perlu sedikit diubah agar dapat menggunakan %2$s.]]></string>
     <string name="home_root_button_start">Mulai</string>
     <string name="home_root_button_restart">Mulai ulang</string>
     <!-- Home - Application management -->

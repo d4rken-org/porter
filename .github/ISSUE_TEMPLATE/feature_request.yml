@@ -1,38 +1,16 @@
-name: Feature Request
-description: Suggest an idea for this project
-labels: enhancement
-
+name: Suggest an improvement
+description: Tell us what you would like to do with Porter
+labels: [enhancement]
 body:
-  - type: checkboxes
-    id: before_you_begin
-    attributes:
-      label: Before You Begin
-      options:
-        - label: I searched through all open and closed issues and confirmed that this is a new feature request
-          required: true
-        - label: I am using the latest version of Porter
-          required: true
-
   - type: textarea
     id: problem
     attributes:
-      label: Problem
-      description: Describe the problem your proposed feature would address. E.g., I'm always frustrated when [...]
-
+      label: What would you like to do?
+      description: Describe the task or difficulty you have. You do not need to propose a technical solution.
+    validations:
+      required: true
   - type: textarea
-    id: solution
+    id: context
     attributes:
-      label: Ideal Solution
-      description: Describe your ideal solution/feature
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternatives
-      description: Describe any alternative solutions or features you've considered
-
-  - type: textarea
-    id: additional
-    attributes:
-      label: Additional Context
-      description: Add any other context or screenshots about the feature request here
+      label: Additional context
+      description: Include the affected app or device if relevant.

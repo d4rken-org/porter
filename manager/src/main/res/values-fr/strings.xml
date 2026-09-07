@@ -98,7 +98,6 @@
         fonctions d\'optimisation de la batterie pour Porter sur ces systèmes.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Démarrer (pour les appareils rootés)]]></string>
-    <string name="home_root_description"><![CDATA[Si vous utilisez Magisk, vous pouvez essayer %1$s. Pour les utilisateurs root, cette commande remplacera à terme Porter. Notez que les applications existantes devront être légèrement modifiées pour utiliser %2$s.]]></string>
     <string name="home_root_button_start">Démarrer</string>
     <string name="home_root_button_restart">Redémarrer</string>
     <!-- Home - Application management -->

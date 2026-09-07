@@ -63,7 +63,7 @@
 
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Start (for rooted devices)]]></string>
-    <string name="home_root_description"><![CDATA[If you are using Magisk, you can try %1$s. For root users, it will eventually replace Porter. Note, existing applications need to change a little to use %2$s.]]></string>
+    <string name="home_root_description"><![CDATA[If you use Magisk, %1$s is another option. Apps need explicit support for %2$s.]]></string>
     <string name="home_root_button_start">Start</string>
     <string name="home_root_button_restart">Restart</string>
 

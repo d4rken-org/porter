@@ -14,3 +14,11 @@ build/
 /.kotlin
 /.claude/
 /.local/
+
+# User-guide build output
+/docs/_site/
+/docs/.jekyll-cache/
+/docs/.jekyll-metadata
+/docs/.bundle/
+/docs/vendor/
+/_site/

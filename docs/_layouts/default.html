@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title != site.title %}{{ page.title | escape }} · {% endif %}{{ site.title | escape }}</title>
+  <meta name="description" content="{{ page.description | default: site.description | escape }}">
+  <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <header>
+    <a class="brand" href="{{ '/' | relative_url }}">Porter</a>
+    <a href="{{ site.repository_url }}">GitHub</a>
+  </header>
+  <div class="page">
+    <nav aria-label="Guide">
+      {% assign guides = 'index.md,setup.md,compatibility.md,troubleshooting.md,terminal.md' | split: ',' %}
+      {% for path in guides %}
+        {% assign guide = site.pages | where: 'path', path | first %}
+        <a href="{{ guide.url | relative_url }}"{% if page.path == path %} aria-current="page"{% endif %}>{{ guide.title | escape }}</a>
+      {% endfor %}
+    </nav>
+    <main id="content">{{ content }}</main>
+  </div>
+  <footer>
+    <span>Porter · An independent continuation of Shizuku</span>
+    <a href="{{ site.repository_url }}/issues">Get help</a>
+    <a href="{{ site.repository_url }}/blob/HEAD/NOTICE">Credits &amp; licenses</a>
+  </footer>
+</body>
+</html>

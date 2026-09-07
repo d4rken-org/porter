@@ -59,7 +59,6 @@
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Některé systémy (například MIUI) neumožňují aplikacím přístup k síti, když nejsou viditelné, a to i v případě, že aplikace používá službu v popředí. V takových systémech prosím vypněte funkce optimalizace baterie pro aplikaci Porter.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Start (pro rootovaná zařízení)]]></string>
-    <string name="home_root_description"><![CDATA[Pokud používáte Magisk, můžete zkusit %1$s. Pro uživatele root nakonec nahradí Porter. Upozorňujeme, že stávající aplikace se musí trochu změnit, aby mohly používat %2$s.]]></string>
     <string name="home_root_button_start">Spustit</string>
     <string name="home_root_button_restart">Restartovat</string>
     <!-- Home - Application management -->

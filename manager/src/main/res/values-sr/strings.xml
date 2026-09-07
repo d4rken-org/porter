@@ -95,7 +95,6 @@
         baterije za Porter na takvim sistemima.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Покрени (за рутоване уређаје)]]></string>
-    <string name="home_root_description"><![CDATA[Ако користите Magisk, можете испробати %1$s. За root кориснике, на крају ће заменити Porter. Имајте на уму да постојеће апликације треба мало да се промене да би користиле %2$s.]]></string>
     <string name="home_root_button_start">Почетак</string>
     <string name="home_root_button_restart">Поново покрени</string>
     <!-- Home - Application management -->

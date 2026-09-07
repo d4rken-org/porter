@@ -100,7 +100,6 @@
         feature ng pag-optimize ng baterya para sa Porter sa mga naturang system.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Simulan (para sa mga device na may root)]]></string>
-    <string name="home_root_description"><![CDATA[Kung gumagamit ka ng Magisk, maaari mong subukan %1$s. Para sa mga gumagamit ng ugat, sa kalaunan ay papalitan nito ang Porter. Tandaan, kailangang magbago ng kaunti ang mga umiiral na application upang magamit ang %2$s.]]></string>
     <string name="home_root_button_start">Simulan</string>
     <string name="home_root_button_restart">Simulan muli</string>
     <!-- Home - Application management -->

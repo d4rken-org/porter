@@ -104,7 +104,6 @@
         λειτουργίες βελτιστοποίησης μπαταρίας για το Porter σε τέτοια συστήματα.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Έναρξη (για συσκευές με root)]]></string>
-    <string name="home_root_description"><![CDATA[Αν χρησιμοποιείτε Magisk, μπορείτε να δοκιμάσετε το %1$s. Για τους χρήστες root, τελικά θα αντικαταστήσει το Porter. Σημειώστε ότι οι υπάρχουσες εφαρμογές πρέπει να αλλάξουν λίγο για να χρησιμοποιήσουν το %2$s.]]></string>
     <string name="home_root_button_start">Αρχή</string>
     <string name="home_root_button_restart">Επανεκκίνηση</string>
     <!-- Home - Application management -->

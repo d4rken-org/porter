@@ -76,7 +76,6 @@
         一部のシステム(MIUIなど)は、アプリがフォアグラウンドサービスを使っていても、見えないアプリがネットワークにアクセスすることを許可しません。そのようなシステムでは、しずくのバッテリー最適化機能を無効にしてください。</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[開始(Root化された端末の場合のみ)]]></string>
-    <string name="home_root_description"><![CDATA[Magiskをお使いの場合は、 %1$sをお試しください。rootユーザーの場合、最終的にはShizukuに取って代わる予定です。ただし、既存のアプリケーションで %2$sを使用するには、少し変更が必要です。]]></string>
     <string name="home_root_button_start">開始</string>
     <string name="home_root_button_restart">再起動</string>
     <!-- Home - Application management -->

@@ -97,7 +97,6 @@
         della batteria per Porter su tali sistemi.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Avvia (per dispositivi rootati)]]></string>
-    <string name="home_root_description"><![CDATA[Se stai usando Magisk, puoi provare %1$s. Per gli utenti root, sostituirà Porter. Nota: le applicazioni esistenti devono essere leggermente modificate per poter utilizzare %2$s.]]></string>
     <string name="home_root_button_start">Avvia</string>
     <string name="home_root_button_restart">Riavvia</string>
     <!-- Home - Application management -->

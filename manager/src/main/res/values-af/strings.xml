@@ -97,7 +97,6 @@
         battery-optimaliseringskenmerke vir Porter op sulke stelsels.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Begin (vir gewortelde toestelle)]]></string>
-    <string name="home_root_description"><![CDATA[As jy Magisk gebruik, kan jy %1$sprobeer. Vir root-gebruikers sal dit uiteindelik Porter vervang. Let wel, bestaande toepassings moet \'n bietjie verander om %2$ste gebruik.]]></string>
     <string name="home_root_button_start">Begin</string>
     <string name="home_root_button_restart">Herbegin</string>
     <!-- Home - Application management -->

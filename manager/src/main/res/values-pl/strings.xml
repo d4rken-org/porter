@@ -92,7 +92,6 @@
         baterii dla Porter na takich systemach.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Uruchom (dla urządzeń z rootem)]]></string>
-    <string name="home_root_description"><![CDATA[Jeśli używasz Magiska, możesz wypróbować %1$s. Dla użytkowników roota z czasem zastąpi on Porter. Uwaga: istniejące aplikacje wymagają niewielkich zmian, aby korzystać z %2$s.]]></string>
     <string name="home_root_button_start">Uruchom</string>
     <string name="home_root_button_restart">Uruchom ponownie</string>
     <!-- Home - Application management -->

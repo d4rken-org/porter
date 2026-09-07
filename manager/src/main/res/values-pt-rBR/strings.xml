@@ -100,7 +100,6 @@
         bateria para Porter nesses sistemas.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Começar (para aparelhos rooteados)]]></string>
-    <string name="home_root_description"><![CDATA[Se você estiver usando o Magisk, pode tentar %1$s. Para usuários root, ele eventualmente substituirá o Porter. Observe que os aplicativos existentes precisarão ser ligeiramente alterados para usar %2$s.]]></string>
     <string name="home_root_button_start">Começar</string>
     <string name="home_root_button_restart">Reiniciar</string>
     <!-- Home - Application management -->

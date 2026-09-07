@@ -95,7 +95,6 @@
         optimizare a bateriei pentru Porter pe astfel de sisteme.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Pornire (pentru dispozitive root-ate)]]></string>
-    <string name="home_root_description"><![CDATA[Dacă folosești Magisk, poți încerca %1$s. Pentru utilizatorii root, acesta va înlocui în cele din urmă Porter. Reține că aplicațiile existente trebuie să se modifice puțin pentru a utiliza %2$s.]]></string>
     <string name="home_root_button_start">Pornire</string>
     <string name="home_root_button_restart">Repornire</string>
     <!-- Home - Application management -->

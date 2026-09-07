@@ -97,7 +97,6 @@
         ფუნქციები Porter-სთვის ასეთ სისტემებზე.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[დაწყება (rooted მოწყობილობებისთვის)]]></string>
-    <string name="home_root_description"><![CDATA[თუ Magisk-ს იყენებთ, შეგიძლიათ სცადოთ %1$s. root მომხმარებლებისთვის ის საბოლოოდ ჩაანაცვლებს Porter-ს. გაითვალისწინეთ, რომ არსებული აპლიკაციები %2$s-ის გამოსაყენებლად ცოტა უნდა შეიცვალოს.]]></string>
     <string name="home_root_button_start">დაწყება</string>
     <string name="home_root_button_restart">გადატვირთვა</string>
     <!-- Home - Application management -->

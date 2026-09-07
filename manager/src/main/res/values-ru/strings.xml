@@ -96,7 +96,6 @@
         батареи для Porter на таких системах.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Запуск (для устройств с root правами)]]></string>
-    <string name="home_root_description"><![CDATA[Если вы используете Magisk, попробуйте %1$s. Для пользователей root он в конечном итоге заменит Porter. Обратите внимание, что существующие приложения необходимо немного изменить для использования %2$s.]]></string>
     <string name="home_root_button_start">Запустить</string>
     <string name="home_root_button_restart">Перезапустить</string>
     <!-- Home - Application management -->

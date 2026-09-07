@@ -1,0 +1,22 @@
+title: Porter
+description: Give your Android apps the access they need.
+url: https://d4rken-org.github.io
+baseurl: /porter
+repository_url: https://github.com/d4rken-org/porter
+markdown: kramdown
+kramdown:
+  input: GFM
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: false
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor

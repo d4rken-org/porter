@@ -93,7 +93,6 @@
         Porter trên các hệ thống đó.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Bắt đầu (cho các thiết bị đã root)]]></string>
-    <string name="home_root_description"><![CDATA[Nếu bạn đang sử dụng Magisk, bạn có thể thử %1$s. Đối với người dùng root, nó sẽ thay thế Porter. Lưu ý, các ứng dụng hiện có cần phải thay đổi một chút để sử dụng %2$s.]]></string>
     <string name="home_root_button_start">Bắt đầu</string>
     <string name="home_root_button_restart">Khởi động lại</string>
     <!-- Home - Application management -->

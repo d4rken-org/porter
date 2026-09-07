@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.CancellableContinuation
+import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.ShizukuSettings.Keys.*
@@ -266,7 +267,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
 
         helpPreference.setOnPreferenceClickListener {
-            CustomTabsHelper.launchUrlOrCopy(context, context.getString(R.string.help_url))
+            CustomTabsHelper.launchUrlOrCopy(context, Helps.WEBSITE)
             true
         }
 

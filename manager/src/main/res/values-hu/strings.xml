@@ -102,7 +102,6 @@
         Kérjük, tiltsa le a Porter akkumulátoroptimalizálási funkcióit az ilyen rendszereken.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Indítás (rootolt eszközökhöz)]]></string>
-    <string name="home_root_description"><![CDATA[Ha Magisk-et használsz, próbáld ki a %1$s-t. Root felhasználók számára ez végül felváltja a Porter-t. Fontos megjegyezni, hogy a meglévő alkalmazásoknak kissé módosítaniuk kell a %2$shasználatához.]]></string>
     <string name="home_root_button_start">Indítás</string>
     <string name="home_root_button_restart">Újraindítás</string>
     <!-- Home - Application management -->

@@ -95,7 +95,6 @@
         käytöstä tällaisissa järjestelmissä.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Start (rootatuille laitteille)]]></string>
-    <string name="home_root_description"><![CDATA[Jos käytät Magiskia, voit kokeilla %1$s. Pääkäyttäjille se korvaa lopulta Shizukun. Huomaa, että olemassa olevia sovelluksia on muutettava hieman, jotta ne voivat käyttää %2$s.]]></string>
     <string name="home_root_button_start">Aloittaa</string>
     <string name="home_root_button_restart">Käynnistää uudelleen</string>
     <!-- Home - Application management -->

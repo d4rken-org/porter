@@ -1,5 +1,9 @@
-# Security reports
+# Report a security issue
 
-Porter is currently a development baseline without a public release or reporting destination. Before public distribution, configure private vulnerability reporting on the Porter repository and document the contact route here.
+Please do not post exploitable security details in a public issue or send Porter-specific reports to the Shizuku maintainers.
 
-Include the Porter version, Android version, startup mode (ADB or root), companion installation state, and a minimal reproducer. Do not send Porter-specific reports to the upstream Shizuku maintainers.
+Use [GitHub's private vulnerability reporting](https://github.com/d4rken-org/porter/security/advisories/new) when available. If that form is unavailable, open an issue asking for a private contact route without including the vulnerability details.
+
+Include the Porter version, Android version, whether you use debugging or root access, whether Porter Compatibility is installed, and steps to reproduce the issue.
+
+Porter is currently in development. There are no supported public releases yet.

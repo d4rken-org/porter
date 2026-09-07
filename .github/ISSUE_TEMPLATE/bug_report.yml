@@ -19,10 +19,20 @@ body:
     attributes:
       label: Startup mode
       options: [Wireless debugging, Computer ADB, Root]
+  - type: input
+    id: app
+    attributes:
+      label: Affected app and version
+      description: For example, SD Maid SE 1.7.5. Leave blank if the problem is in Porter itself.
+  - type: dropdown
+    id: companion
+    attributes:
+      label: Is Porter Compatibility installed?
+      options: ["Yes", "No", "Not sure"]
   - type: textarea
     id: reproducer
     attributes:
       label: What happened and how to reproduce it
-      description: Include the client app version, whether Porter Compatibility or Shizuku is installed, and relevant logs.
+      description: Tell us what you expected, what happened, and whether Shizuku is also installed. Remove personal information from any logs or screenshots.
     validations:
       required: true

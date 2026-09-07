@@ -93,7 +93,6 @@
         โปรดปิดใช้งานคุณสมบัติการเพิ่มประสิทธิภาพแบตเตอรี่สําหรับ Porter ในระบบดังกล่าว</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[เริ่ม (สำหรับอุปกรณ์ที่รูทแล้ว)]]></string>
-    <string name="home_root_description"><![CDATA[หากคุณใช้ Magisk คุณสามารถลองใช้ %1$sได้ สำหรับผู้ใช้รูท ในที่สุดมันจะมาแทนที่ Porter โปรดทราบว่าแอปพลิเคชันที่มีอยู่จำเป็นต้องเปลี่ยนแปลงเล็กน้อยเพื่อใช้ %2$s]]></string>
     <string name="home_root_button_start">เริ่ม</string>
     <string name="home_root_button_restart">เริ่มใหม่</string>
     <!-- Home - Application management -->

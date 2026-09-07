@@ -1,33 +1,43 @@
 # Porter
 
-Porter lets Android apps use system APIs with ADB or root privileges. It is an independent maintenance fork of [thedjchi/Shizuku](https://github.com/thedjchi/Shizuku), based on stable `v13.7.0-thedjchi` (`608fcf0e49d9`), which derives from [RikkaApps/Shizuku](https://github.com/RikkaApps/Shizuku).
+**Give your Android apps the access they need.**
 
-This is a development baseline. The artwork is temporary. A public release destination and production signing key have not been configured.
+Porter lets supported apps perform tasks that Android normally restricts, such as managing other apps or accessing additional files. You choose which apps get access. Root is optional.
 
-## Apps
+Porter is an independent continuation of [Shizuku](https://github.com/thedjchi/Shizuku), with its own name and app identity.
 
-* **Porter**, `eu.darken.porter`, serves apps supporting its permission and provider endpoint. It can be installed alongside Shizuku.
-* **Porter Compatibility**, `moe.shizuku.privileged.api`, is an optional companion for existing Shizuku clients. It requires Porter signed with the same key. Remove the original Shizuku before installing the companion: they use the same package and legacy permission.
+> Porter is in development. There is no public Porter release yet.
 
-Porter has its own server process and authorization database. Client apps choose which backend to use. Both backends can run at once, but one client process connects to one backend. Changing the choice requires restarting that client app.
+## Get started
 
-The companion does not run a privileged server or make authorization decisions. Porter grants access. Keep it installed while using apps that depend on the original permission.
+1. Install Porter from [GitHub Releases](https://github.com/d4rken-org/porter/releases) when a release is available.
+2. [Start Porter](docs/setup.md) using wireless debugging, a computer, or root.
+3. Open an app that supports Porter and approve its access request.
 
-## Development
+Porter requires Android 7.0 or newer. Starting without a computer requires Android 11 or newer with wireless debugging, or an already rooted device. After restarting your device, start Porter again before using apps that rely on it.
 
-```sh
-git submodule update --init --recursive
-./gradlew :manager:assembleDebug :compat:assembleDebug
-```
+## Using apps that support Shizuku
 
-Use Java 21 and the Android SDK/NDK/CMake versions pinned by the build. Set `ANDROID_HOME` or `sdk.dir` in an ignored `local.properties`. The API submodule is pinned to `37ebcd3e45edf1d68975c70dd199350b434161f7`; do not update it implicitly.
+Apps with built-in Porter support only need Porter. For apps that only support Shizuku, install the optional **Porter Compatibility** APK from the same release.
 
-APKs are written to `manager/build/outputs/apk/debug/` and `compat/build/outputs/apk/debug/`. Debug builds use development signing. A release requires an ignored `signing.properties`; see [distribution](docs/distribution.md).
+**Porter Compatibility replaces the installed Shizuku app.** Remove Shizuku before installing it. Porter itself can be installed alongside Shizuku, but the compatibility companion cannot.
 
-See [setup](docs/setup.md), [client integration](docs/client-integration.md), [design](docs/design.md) and [development validation](docs/validation.md). The `probe` module builds Porter-aware and unchanged legacy SDK clients for device checks. It is not distributed as a user app.
+[Choose the right setup](docs/compatibility.md), including SD Maid SE and Butler.
 
-## License and attribution
+## Help
 
-The code is licensed under [Apache 2.0](LICENSE). Original copyrights remain with their authors. Porter modifies application identity, routing, authorization and service lifecycle, and supplies new artwork. See [NOTICE](NOTICE).
+Read the [Porter user guide](https://d4rken-org.github.io/porter/) once the site is published, or use the guides in this repository:
 
-The optional compatibility companion deliberately declares the original application ID and API permission for interoperability. Upstream's README reserves those identifiers under its stated trademark policy; renaming the main app does not remove that issue from the companion. Porter is not affiliated with the original Shizuku maintainers.
+- [Installation and startup](docs/setup.md)
+- [App compatibility and switching from Shizuku](docs/compatibility.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [Terminal apps](docs/terminal.md)
+- [Report a problem](https://github.com/d4rken-org/porter/issues)
+
+Include your Porter version, device, Android version and the name of the app you are trying to use. For security issues, see [security reports](SECURITY.md).
+
+## About
+
+Porter builds on [RikkaApps/Shizuku](https://github.com/RikkaApps/Shizuku) and the maintenance work by [thedjchi and contributors](https://github.com/thedjchi/Shizuku). It is not affiliated with the original Shizuku maintainers.
+
+Porter's code is available under [Apache 2.0](LICENSE); the bundled Shizuku API uses the MIT license. See [NOTICE](NOTICE) for attribution. Build and integration notes are in the [maintainer documentation](.github/maintainer/README.md).

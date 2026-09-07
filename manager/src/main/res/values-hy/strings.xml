@@ -97,7 +97,6 @@
         Porter-ի մարտկոցի օպտիմալացման գործառույթները նման համակարգերում:</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Միացնել (root արած սարքերի համար)]]></string>
-    <string name="home_root_description"><![CDATA[Եթե օգտագործում եք Magisk, կարող եք փորձել %1$s-ը։ Root օգտատերերի համար այն ի վերջո կփոխարինի Porter-ին։ Նշենք, որ առկա ծրագրերը պետք է մի փոքր փոփոխվեն՝ %2$s-ն օգտագործելու համար։]]></string>
     <string name="home_root_button_start">Միացնել</string>
     <string name="home_root_button_restart">Վերաբեռնել</string>
     <!-- Home - Application management -->

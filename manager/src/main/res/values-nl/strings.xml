@@ -96,7 +96,6 @@
         Porter op zulke systemen uit.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Starten (voor geroote apparaten)]]></string>
-    <string name="home_root_description"><![CDATA[Als je Magisk gebruikt, kun je %1$s proberen. Voor rootgebruikers zal dit uiteindelijk Porter vervangen. Let op: bestaande applicaties moeten enigszins worden aangepast om %2$s te kunnen gebruiken.]]></string>
     <string name="home_root_button_start">Starten</string>
     <string name="home_root_button_restart">Herstarten</string>
     <!-- Home - Application management -->

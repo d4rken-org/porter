@@ -98,7 +98,6 @@
         அனுமதிக்காது. அத்தகைய அமைப்புகளில் Porter க்கான பேட்டரி தேர்வுமுறை அம்சங்களை முடக்கவும்.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[தொடங்கு (ரூட் செய்யப்பட்ட சாதனங்களுக்கு)]]></string>
-    <string name="home_root_description"><![CDATA[நீங்கள் Magisk ஐப் பயன்படுத்துகிறீர்கள் என்றால், %1$sஐ முயற்சி செய்யலாம். ரூட் பயனர்களுக்கு, இது இறுதியில் Porter ஐ மாற்றும். குறிப்பு, %2$sஐப் பயன்படுத்த ஏற்கனவே உள்ள பயன்பாடுகள் சிறிது மாற வேண்டும்.]]></string>
     <string name="home_root_button_start">தொடங்கு</string>
     <string name="home_root_button_restart">மறுதொடக்கம்</string>
     <!-- Home - Application management -->

@@ -99,7 +99,6 @@
         Porter на таких системах.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Запустіть службу з root доступом]]></string>
-    <string name="home_root_description"><![CDATA[Якщо ви користуєтеся Magisk, можете спробувати %1$s. Для користувачів root він зрештою замінить Porter. Зверніть увагу, що існуючі програми потребують дещо змін, щоб використовувати %2$s.]]></string>
     <string name="home_root_button_start">Запуск</string>
     <string name="home_root_button_restart">Перезапуск</string>
     <!-- Home - Application management -->

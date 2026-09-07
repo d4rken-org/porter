@@ -69,7 +69,6 @@
         MIUI）會禁止應用在不可見時存取網絡，即使該應用程式使用了前台服務。請在這些系統上為 Porter 關閉電池優化功能。</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[啟動 (針對已 Root 裝置)]]></string>
-    <string name="home_root_description"><![CDATA[如果您正在使用 Magisk，可以嘗試使用 %1$s。對於 root 用戶，它最終會取代 Porter。請注意，現有應用程式需要稍作修改才能使用 %2$s。]]></string>
     <string name="home_root_button_start">啟動</string>
     <string name="home_root_button_restart">重新啟動</string>
     <!-- Home - Application management -->

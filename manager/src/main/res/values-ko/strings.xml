@@ -77,7 +77,6 @@
         포그라운드 서비스를 사용하더라도 보이지 않으면 네트워크에 접속하지 못하게 합니다. 해당 시스템에서는 시즈쿠의 배터리 최적화 기능을 비활성화해 주세요.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[시작 (루팅된 기기용)]]></string>
-    <string name="home_root_description"><![CDATA[Magisk를 사용 중이라면 %1$s를 사용해 보세요. 루트 사용자의 경우, 이 명령은 Shizuku를 대체하게 됩니다. 참고: %2$s를 사용하려면 기존 애플리케이션을 약간 변경해야 합니다.]]></string>
     <string name="home_root_button_start">시작</string>
     <string name="home_root_button_restart">재시작</string>
     <!-- Home - Application management -->

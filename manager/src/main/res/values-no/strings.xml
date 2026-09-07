@@ -92,7 +92,6 @@
         Porter på slike systemer.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Start (for rootede enheter)]]></string>
-    <string name="home_root_description"><![CDATA[Hvis du bruker Magisk, kan du prøve %1$s. For root-brukere vil det etter hvert erstatte Porter. Merk at eksisterende applikasjoner må endres litt for å bruke %2$s.]]></string>
     <string name="home_root_button_start">Start</string>
     <string name="home_root_button_restart">Omstart</string>
     <!-- Home - Application management -->

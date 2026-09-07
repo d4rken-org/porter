@@ -92,7 +92,6 @@
         چنین سیستم هایی غیرفعال کنید.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[راه‌اندازی (برای دستگاه‌هایی با دسترسی ریشه)]]></string>
-    <string name="home_root_description"><![CDATA[اگر از Magisk استفاده می‌کنید، می‌توانید %1$sرا امتحان کنید. برای کاربران روت، در نهایت جایگزین Porter خواهد شد. توجه داشته باشید، برنامه‌های موجود برای استفاده از %2$sباید کمی تغییر کنند.]]></string>
     <string name="home_root_button_start">راه‌اندازی</string>
     <string name="home_root_button_restart">راه‌اندازی مجدد</string>
     <!-- Home - Application management -->

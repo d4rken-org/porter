@@ -65,7 +65,7 @@ class AppViewHolder(private val binding: AppListItemBinding) : BaseViewHolder<Pa
             if (uid != 0) {
                 val dialog = MaterialAlertDialogBuilder(context)
                         .setTitle(R.string.app_management_dialog_adb_is_limited_title)
-                        .setMessage(context.getString(R.string.app_management_dialog_adb_is_limited_message, Helps.ADB.get()).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE))
+                        .setMessage(context.getString(R.string.app_management_dialog_adb_is_limited_message, Helps.ADB_PERMISSION.get()).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE))
                         .setPositiveButton(android.R.string.ok, null)
                         .create()
                 dialog.setOnShowListener {
