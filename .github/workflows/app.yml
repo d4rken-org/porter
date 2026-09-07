@@ -10,24 +10,23 @@ permissions:
 
 jobs:
   build:
+    name: Development build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
         with:
           submodules: recursive
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '21'
-      - uses: android-actions/setup-android@v3
-      - uses: gradle/actions/setup-gradle@v5
-      - name: Install Android tools
-        run: sdkmanager "platforms;android-37" "build-tools;37.0.0" "ndk;29.0.13113456" "cmake;3.31.6"
+      - uses: ./.github/actions/android-setup
+      - name: Check release version and scripts
+        run: |
+          bash tools/release/bump.sh --mode=check
+          sudo apt-get update && sudo apt-get install -y bats
+          bats tools/release/bump.bats
       - name: Build development APKs and adapter
         run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assembleDebug :client:assembleRelease :server:testDebugUnitTest
       - name: Verify APK identities
         run: python3 tools/verify-apks.py manager/build/outputs/apk/debug/*.apk compat/build/outputs/apk/debug/*.apk
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
           name: porter-development
           path: |

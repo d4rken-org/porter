@@ -1,0 +1,14 @@
+name: Android build setup
+description: Set up Porter's Android toolchain
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 #v5.7.0
+      with:
+        distribution: temurin
+        java-version: '21'
+    - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 #v3.2.2
+    - uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c #v5.0.2
+    - name: Install Android tools
+      shell: bash
+      run: sdkmanager "platforms;android-37" "build-tools;37.0.0" "ndk;29.0.13113456" "cmake;3.31.6"

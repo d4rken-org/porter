@@ -1,7 +1,21 @@
 def signingFile = rootProject.file("signing.properties")
 def signingProperties = new Properties()
 def developmentSigning = providers.gradleProperty("porter.developmentSigning").orNull == "true"
-if (signingFile.canRead()) {
+def signingEnv = ["STORE_PATH", "STORE_PASSWORD", "KEY_ALIAS", "KEY_PASSWORD"].collectEntries {
+    [(it): System.getenv(it)]
+}
+def hasEnvSigning = signingEnv.values().every { it }
+if (signingEnv.values().any { it } && !hasEnvSigning) {
+    throw new GradleException("CI signing requires STORE_PATH, STORE_PASSWORD, KEY_ALIAS and KEY_PASSWORD")
+}
+if (hasEnvSigning) {
+    android.signingConfigs.sign.with {
+        storeFile = file(signingEnv["STORE_PATH"])
+        storePassword = signingEnv["STORE_PASSWORD"]
+        keyAlias = signingEnv["KEY_ALIAS"]
+        keyPassword = signingEnv["KEY_PASSWORD"]
+    }
+} else if (signingFile.canRead()) {
     signingFile.withInputStream { signingProperties.load(it) }
     ["KEYSTORE_FILE", "KEYSTORE_PASSWORD", "KEYSTORE_ALIAS", "KEYSTORE_ALIAS_PASSWORD"].each { key ->
         if (!signingProperties[key]) throw new GradleException("Missing ${key} in signing.properties")
@@ -23,8 +37,8 @@ if (signingFile.canRead()) {
 
 def verifyReleaseSigning = tasks.register("verifyReleaseSigning") {
     doLast {
-        if (!signingFile.canRead() && !developmentSigning) {
-            throw new GradleException("Release signing requires signing.properties. Local testing only: -Pporter.developmentSigning=true")
+        if (!hasEnvSigning && !signingFile.canRead() && !developmentSigning) {
+            throw new GradleException("Release signing requires CI signing variables or signing.properties. Local testing only: -Pporter.developmentSigning=true")
         }
     }
 }

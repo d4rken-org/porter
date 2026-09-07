@@ -26,10 +26,13 @@ subprojects { subproject ->
     }
 }
 
-def porterVersionCode = 1
-def baseVersionName = "0.1.0"
-def isBeta = project.hasProperty("beta")
+def versioning = new Properties()
+file("version.properties").withInputStream { versioning.load(it) }
+def major = versioning["project.versioning.major"] as int
+def minor = versioning["project.versioning.minor"] as int
+def patch = versioning["project.versioning.patch"] as int
+def build = versioning["project.versioning.build"] as int
 ext {
-    versionCode = porterVersionCode
-    versionName = "${baseVersionName}${if (isBeta) "-beta" else ""}"
+    versionCode = major * 10000000 + minor * 100000 + patch * 1000 + build * 10
+    versionName = "${major}.${minor}.${patch}-${versioning["project.versioning.type"]}${build}"
 }

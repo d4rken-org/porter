@@ -1,0 +1,142 @@
+name: Tagged releases
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Build signed review APKs without publishing a release
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release-github:
+    name: Build signed release
+    runs-on: ubuntu-latest
+    environment: foss-production
+    permissions:
+      contents: write
+      actions: write
+    env:
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+      RELEASE_TAG: ${{ github.ref_name }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Guard release ref
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$DRY_RUN" != true && "$GITHUB_REF" != refs/tags/v* ]]; then
+            echo '::error::Publishing requires a version tag. Use dry_run for branch builds.'
+            exit 1
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - name: Validate version
+        shell: bash
+        run: |
+          args=(--mode=check)
+          if [[ "$DRY_RUN" != true ]]; then args+=("--expected-tag=$RELEASE_TAG"); fi
+          bash tools/release/bump.sh "${args[@]}"
+      - name: Reconcile existing release
+        id: existing
+        if: env.DRY_RUN != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          releases=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" --slurp)
+          release=$(jq -c --arg tag "$RELEASE_TAG" '[.[][] | select(.tag_name == $tag)][0] // empty' <<< "$releases")
+          published=false
+          if [[ -n "$release" ]]; then
+            if jq -e '.draft' <<< "$release" >/dev/null; then
+              gh release delete "$RELEASE_TAG" --yes
+            elif jq -e --arg tag "$RELEASE_TAG" '
+              [.assets[].name] as $names |
+              ["porter-"+$tag+"-release.apk", "porter-compat-"+$tag+"-release.apk", "SHA256SUMS", "verification.txt", "build-info.json"] |
+              all(. as $name | $names | index($name) != null)' <<< "$release" >/dev/null; then
+              published=true
+            else
+              echo '::error::Published release is incomplete. Refusing to overwrite it.'
+              exit 1
+            fi
+          fi
+          echo "published=$published" >> "$GITHUB_OUTPUT"
+      - name: Set up Android build
+        if: steps.existing.outputs.published != 'true'
+        uses: ./.github/actions/android-setup
+      - name: Decode keystore
+        if: steps.existing.outputs.published != 'true'
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p "$RUNNER_TEMP/porter-signing"
+          printf '%s' "$ENCODED_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/porter-signing/keystore.jks"
+          test -s "$RUNNER_TEMP/porter-signing/keystore.jks"
+          echo "STORE_PATH=$RUNNER_TEMP/porter-signing/keystore.jks" >> "$GITHUB_ENV"
+      - name: Assemble signed APKs
+        if: steps.existing.outputs.published != 'true'
+        run: ./gradlew :manager:assembleRelease :compat:assembleRelease :server:testDebugUnitTest
+        env:
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Verify and package downloads
+        if: steps.existing.outputs.published != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp manager/build/outputs/apk/release/*.apk compat/build/outputs/apk/release/*.apk dist/
+          python3 tools/verify-apks.py manager/build/outputs/apk/release/*.apk compat/build/outputs/apk/release/*.apk | tee dist/verification.txt
+          (cd dist && sha256sum -- *.apk > SHA256SUMS)
+          jq -n --arg commit "$(git rev-parse HEAD)" --arg api "$(git -C api rev-parse HEAD)" \
+            --arg run "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            '{commit: $commit, api_commit: $api, workflow_run: $run}' > dist/build-info.json
+          cat .github/release-notes.md > release-notes.md
+          {
+            printf '\n```text\n'
+            cat dist/verification.txt
+            printf '```\n'
+          } >> release-notes.md
+      - name: Upload signed review artifacts
+        if: steps.existing.outputs.published != 'true'
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+        with:
+          name: porter-signed-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Create draft with all downloads
+        if: env.DRY_RUN != 'true' && steps.existing.outputs.published != 'true'
+        shell: bash
+        run: |
+          args=(--draft --verify-tag --title "Porter $RELEASE_TAG" --notes-file release-notes.md --generate-notes)
+          if [[ "$RELEASE_TAG" == *-beta* ]]; then args+=(--prerelease); fi
+          gh release create "$RELEASE_TAG" "${args[@]}" dist/*
+      - name: Publish complete release
+        if: env.DRY_RUN != 'true' && steps.existing.outputs.published != 'true'
+        shell: bash
+        run: |
+          args=(--draft=false)
+          if [[ "$RELEASE_TAG" == *-beta* ]]; then args+=(--prerelease); else args+=(--latest); fi
+          gh release edit "$RELEASE_TAG" "${args[@]}"
+      - name: Deploy user guide
+        if: env.DRY_RUN != 'true'
+        run: gh workflow run pages.yml --ref main
+      - name: Remove signing material
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/porter-signing"

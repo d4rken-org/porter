@@ -36,3 +36,4 @@ for apk, (package, permission) in zip(sys.argv[1:], expected):
     print(hashlib.sha256(Path(apk).read_bytes()).hexdigest(), Path(apk).name)
 assert certificates[0] and certificates[0] == certificates[1], "Manager and companion signatures differ"
 print("APK identities and matching certificates verified")
+print("Signing certificate SHA-256:", ", ".join(certificates[0]))
