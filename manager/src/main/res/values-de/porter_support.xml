@@ -53,4 +53,5 @@
     <string name="porter_contact_send">E-Mail-Entwurf öffnen</string>
     <string name="porter_contact_description_error">Bitte ergänze einige Details (mindestens 20 Zeichen).</string>
     <string name="porter_contact_expected_error">Bitte beschreibe, was du erwartet hast.</string>
+    <string name="porter_contact_no_email">Installiere oder aktiviere eine E-Mail-App, um diesen Entwurf zu öffnen. Du kannst gespeicherte Protokolle auch teilen oder uns über GitHub oder Discord kontaktieren.</string>
 </resources>

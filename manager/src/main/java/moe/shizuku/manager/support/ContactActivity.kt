@@ -1,5 +1,6 @@
 package moe.shizuku.manager.support
 
+import android.content.ComponentName
 import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
@@ -101,7 +102,6 @@ class ContactFragment : Fragment(R.layout.support_contact) {
                 val intent = Intent(if (uri == null) Intent.ACTION_SENDTO else Intent.ACTION_SEND).apply {
                     if (uri == null) data = Uri.parse("mailto:support@darken.eu") else {
                         type = "application/zip"
-                        selector = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"))
                         putExtra(Intent.EXTRA_STREAM, uri)
                         clipData = ClipData.newRawUri("Porter debug log", uri)
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -114,7 +114,19 @@ class ContactFragment : Fragment(R.layout.support_contact) {
                         appendLine("\n${DebugRecorder.deviceDetails()}")
                     })
                 }
-                startActivity(Intent.createChooser(intent, getString(R.string.porter_contact_send)))
+                val mailtoApps = context.packageManager.queryIntentActivities(
+                    Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:support@darken.eu")), 0,
+                )
+                val emailPackages = mailtoApps.map { it.activityInfo.packageName }.toSet()
+                val handlers = if (uri == null) mailtoApps else context.packageManager.queryIntentActivities(intent, 0)
+                    .filter { it.activityInfo.packageName in emailPackages }
+                val emailApps = handlers.map { result ->
+                    Intent(intent).setComponent(ComponentName(result.activityInfo.packageName, result.activityInfo.name))
+                }.distinctBy { it.component }
+                if (emailApps.isEmpty()) throw android.content.ActivityNotFoundException(getString(R.string.porter_contact_no_email))
+                startActivity(Intent.createChooser(emailApps.first(), getString(R.string.porter_contact_send)).apply {
+                    putExtra(Intent.EXTRA_INITIAL_INTENTS, emailApps.drop(1).toTypedArray())
+                })
             } catch (e: Exception) { RecordingDialogs.error(this@ContactFragment, e) }
             finally { binding?.contactSend?.isEnabled = !DebugRecorder.state.value.active }
         }

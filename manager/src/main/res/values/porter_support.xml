@@ -53,4 +53,5 @@
     <string name="porter_contact_send">Open email draft</string>
     <string name="porter_contact_description_error">Please add some details (at least 20 characters).</string>
     <string name="porter_contact_expected_error">Please describe what you expected.</string>
+    <string name="porter_contact_no_email">Install or enable an email app to open this draft. You can also share saved logs or contact us through GitHub or Discord.</string>
 </resources>
