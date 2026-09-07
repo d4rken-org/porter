@@ -56,13 +56,11 @@
         모드를 사용하는 것만이 이 앱과 시스템 대화 대화를 동시에 볼 수 있는 방법입니다.</string>
     <string name="adb_error_key_store">무선 디버깅용 키를 생성할 수 없습니다.\n이는 이 장치의 KeyStore 메커니즘이 고장 났기 때문일 수
         있습니다.</string>
-    <string name="adb_stopping_tcp">TCP 포트를 닫습니다</string>
-    <string name="adb_error_stop_tcp">TCP를 통한 ADB를 중지하지 못했습니다.</string>
     <string name="adb_pair_required">페어링 단계를 먼저 진행하세요.</string>
     <string name="enable">할 수 있게 하다</string>
     <string name="development_settings">개발자 옵션</string>
     <string name="notification_settings">알림 옵션</string>
-    <string name="adb_pairing_tutorial_title">기기와 Shizuku 페어링</string>
+    <string name="adb_pairing_tutorial_title">기기와 Porter 페어링</string>
     <string name="adb_pairing_tutorial_content_notification">Shizuku의 알림이 페어링을 완료하는 데 도움이 될 수도 있습니다.</string>
     <string name="adb_pairing_tutorial_content_steps">\"개발자 옵션\"으로 이동한 다음 \"USB 디버깅\"과 \"무선 디버깅\"을
         활성화합니다.</string>
@@ -88,9 +86,9 @@
         <item quantity="other"><![CDATA[%d개 앱 인증됨]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[탭하여 인증된 앱 관리]]></string>
-    <string name="home_app_management_empty">Shizuku 권한을 요청하거나 선언한 앱이 여기에 표시됩니다.</string>
+    <string name="home_app_management_empty">Porter 권한을 요청하거나 선언한 앱이 여기에 표시됩니다.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">자동화 앱으로 Shizuku 제어</string>
+    <string name="home_automation_title">자동화 앱으로 Porter 제어</string>
     <string name="home_automation_description">Tasker 및 MacroDroid와 같은 앱은 Shizuku를 자동으로 시작/중지하는 인텐트를
         보낼 수 있습니다.</string>
     <string name="home_automation_button_view_intents">의도 보기</string>
@@ -112,14 +110,14 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB의 권한이 제한됨</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[기기 제조사에서 ADB의 권한을 제한하고 있을 가능성이 높습니다.<p><b><a href="%1$s">이 문서</a></b>에 시스템에 대한 해결 방안이 있을 수 있습니다.]]></string>
-    <string name="app_management_item_summary_requires_root">* 루트 권한으로 실행된 Shizuku 필요</string>
+    <string name="app_management_item_summary_requires_root">* 루트 권한으로 실행된 Porter 필요</string>
     <string name="app_management_toggle_all">모두 전환</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">터미널에서 Shizuku 사용</string>
+    <string name="home_terminal_title">터미널에서 Porter 사용</string>
     <string name="home_terminal_description">Shizuku를 통해 터미널 앱에서 셸 명령 실행</string>
     <string name="terminal_tutorial_miui">사용자들은 MIUI가 내보내기 기능에서 사용되는 Storage Access Framework를
         손상시킨다고 보고했습니다.</string>
-    <string name="terminal_tutorial_miui_2">MIUI를 사용하는 경우 Shizuku APK의 assets 폴더에서 파일을 추출해야 할 수도
+    <string name="terminal_tutorial_miui_2">MIUI를 사용하는 경우 Porter APK의 assets 폴더에서 파일을 추출해야 할 수도
         있습니다.</string>
     <string name="terminal_tutorial_1">파일을 새 폴더로 내보냅니다.</string>
     <string name="terminal_tutorial_1_description">%1$s 및 %2$s두 개의 파일이 내보내집니다. 선택한 폴더에 해당 파일이 이미 있는
@@ -141,15 +139,8 @@
     <string name="settings_use_system_color">시스템 테마 색상 사용</string>
     <string name="settings_watchdog">지키는 개</string>
     <string name="settings_watchdog_summary">Shizuku가 충돌하면 자동으로 다시 시작합니다.</string>
-    <string name="settings_tcp_mode">TCP 모드</string>
-    <string name="settings_tcp_mode_summary">"Shizuku가 Wi-Fi 없이 재시작할 수 있도록 합니다. (Shizuku는 재부팅 후 한 번
-        시작되어야 합니다.)"</string>
-    <string name="settings_tcp_mode_dialog_close_port">"TCP 포트가 즉시 닫힙니다. TCP 모드를 다시 켜려면 Wi-Fi에 연결해야
-        합니다. 계속하시겠습니까?"</string>
-    <string name="settings_tcp_mode_closing_port">TCP 포트를 닫는 중...</string>
     <string name="settings_restart_dialog_title">재시작 필요</string>
     <string name="settings_restart_dialog_message">시즈쿠는 이 설정을 적용하려면 다시 시작해야 합니다.</string>
-    <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>와이파이가 필수입니다. 시즈쿠는 계속 달리면서 와이파이 연결이 될 때까지 기다렸다가 백그라운드에서 다시 시작할 것이다.</b>]]></string>
     <string name="settings_tcp_port">TCP 포트</string>
     <string name="settings_tcp_port_default">기본값(5555)</string>
     <string name="settings_tcp_port_hint">기본값(5555)을 사용하려면 비워두세요.</string>
@@ -199,12 +190,12 @@
     <!-- Start -->
     <string name="action_start">시즈쿠 시작</string>
     <!-- Stop -->
-    <string name="action_stop">Shizuku 중지</string>
-    <string name="dialog_stop_message">Shizuku 서비스가 중지됩니다.</string>
+    <string name="action_stop">Porter 중지</string>
+    <string name="dialog_stop_message">Porter 서비스가 중지됩니다.</string>
     <!-- Notification -->
     <string name="notification_channel_service_status">서비스 시작 상태</string>
-    <string name="notification_service_starting">Shizuku 서비스가 시작 중입니다…</string>
-    <string name="notification_service_start_failed">Shizuku 서비스를 시작할 수 없습니다.</string>
+    <string name="notification_service_starting">Porter 서비스가 시작 중입니다…</string>
+    <string name="notification_service_start_failed">Porter 서비스를 시작할 수 없습니다.</string>
     <string name="notification_service_start_no_root">루트 권한을 요청하지 못했습니다.</string>
     <string name="notification_working">진행 중…</string>
     <string name="notification_channel_adb_pairing">무선 디버깅 페어링</string>
@@ -214,7 +205,7 @@
     <string name="notification_adb_pairing_stop_searching">검색 중지</string>
     <string name="notification_adb_pairing_working_title">페어링 진행 중</string>
     <string name="notification_adb_pairing_succeed_title">페어링 성공</string>
-    <string name="notification_adb_pairing_succeed_text">지금 Shizuku 서비스를 시작할 수 있습니다.</string>
+    <string name="notification_adb_pairing_succeed_text">지금 Porter 서비스를 시작할 수 있습니다.</string>
     <string name="notification_adb_pairing_failed_title">페어링 실패</string>
     <string name="notification_adb_pairing_retry">재시도</string>
     <!-- Permission related, appears in system permission UI -->
@@ -253,7 +244,7 @@
     <string name="dialog_legacy_not_support_title">%1$s는 최신 Shizuku를 지원하지 않음</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[구형 Shizuku는 2019년 3월에 지원이 중단되었습니다. 또한, 구형 Shizuku는 새로운 안드로이드 시스템에서 동작하지 않습니다.<p><b>%1$s</b> 개발자에게 업데이트를 문의하세요.]]></string>
     <string name="dialog_requesting_legacy_title">%1$s가 구형 Shizuku를 요청하고 있음</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b>가 최신 Shizuku를 지원하지만, 구형 Shizuku를 요청하고 있습니다. Shizuku가 실행 중이지 않아서 발생할 수 있으니 Shizuku 앱에서 확인하세요.<p>구형 Shizuku는 2019년 3월 부터 지원이 중단되었습니다.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Shizuku 열기</string>
+    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b>가 최신 Shizuku를 지원하지만, 구형 Shizuku를 요청하고 있습니다. Shizuku가 실행 중이지 않아서 발생할 수 있으니 Porter 앱에서 확인하세요.<p>구형 Shizuku는 2019년 3월 부터 지원이 중단되었습니다.]]></string>
+    <string name="dialog_requesting_legacy_button_open_shizuku">Porter 열기</string>
     <string name="wadb_notification_attempt_now">지금 시도하세요</string>
 </resources>

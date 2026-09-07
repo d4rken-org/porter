@@ -31,7 +31,7 @@
 #define EXIT_FATAL_KILL 9
 #define EXIT_FATAL_BINDER_BLOCKED_BY_SELINUX 10
 
-#define SERVER_NAME "shizuku_server"
+#define SERVER_NAME "porter_server"
 #define SERVER_CLASS_PATH "rikka.shizuku.server.ShizukuService"
 
 #if defined(__arm__)
@@ -150,8 +150,8 @@ static void start_server(const char *path, const char *main_class, const char *p
             read(fds[0], &ready, 1);
             close(fds[0]);
 
-            printf("info: shizuku_server pid is %d\n", pid);
-            printf("info: shizuku_starter exit with 0\n");
+            printf("info: porter_server pid is %d\n", pid);
+            printf("info: porter_starter exit with 0\n");
             exit(EXIT_SUCCESS);
         }
     }

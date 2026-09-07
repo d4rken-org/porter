@@ -1,17 +1,35 @@
-def ksFile = rootProject.file("signing.properties")
-def props = new Properties()
-if (ksFile.canRead()) {
-    props.load(new FileInputStream(ksFile))
-
-    if (props != null) {
-        android.signingConfigs.sign.storeFile file(props["KEYSTORE_FILE"])
-        android.signingConfigs.sign.storePassword props["KEYSTORE_PASSWORD"]
-        android.signingConfigs.sign.keyAlias props["KEYSTORE_ALIAS"]
-        android.signingConfigs.sign.keyPassword props["KEYSTORE_ALIAS_PASSWORD"]
+def signingFile = rootProject.file("signing.properties")
+def signingProperties = new Properties()
+def developmentSigning = providers.gradleProperty("porter.developmentSigning").orNull == "true"
+if (signingFile.canRead()) {
+    signingFile.withInputStream { signingProperties.load(it) }
+    ["KEYSTORE_FILE", "KEYSTORE_PASSWORD", "KEYSTORE_ALIAS", "KEYSTORE_ALIAS_PASSWORD"].each { key ->
+        if (!signingProperties[key]) throw new GradleException("Missing ${key} in signing.properties")
+    }
+    android.signingConfigs.sign.with {
+        storeFile = rootProject.file(signingProperties["KEYSTORE_FILE"])
+        storePassword = signingProperties["KEYSTORE_PASSWORD"]
+        keyAlias = signingProperties["KEYSTORE_ALIAS"]
+        keyPassword = signingProperties["KEYSTORE_ALIAS_PASSWORD"]
     }
 } else {
-    android.signingConfigs.sign.storeFile = android.signingConfigs.debug.storeFile
-    android.signingConfigs.sign.storePassword = android.signingConfigs.debug.storePassword
-    android.signingConfigs.sign.keyAlias = android.signingConfigs.debug.keyAlias
-    android.signingConfigs.sign.keyPassword = android.signingConfigs.debug.keyPassword
+    android.signingConfigs.sign.with {
+        storeFile = android.signingConfigs.debug.storeFile
+        storePassword = android.signingConfigs.debug.storePassword
+        keyAlias = android.signingConfigs.debug.keyAlias
+        keyPassword = android.signingConfigs.debug.keyPassword
+    }
+}
+
+def verifyReleaseSigning = tasks.register("verifyReleaseSigning") {
+    doLast {
+        if (!signingFile.canRead() && !developmentSigning) {
+            throw new GradleException("Release signing requires signing.properties. Local testing only: -Pporter.developmentSigning=true")
+        }
+    }
+}
+tasks.configureEach {
+    if (name == "preReleaseBuild" || name == "validateSigningRelease") {
+        dependsOn(verifyReleaseSigning)
+    }
 }

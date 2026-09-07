@@ -58,7 +58,7 @@ public class ShizukuShellLoader {
             managerApplicationId = BuildConfig.MANAGER_APPLICATION_ID;
         }
 
-        Intent intent = new Intent("rikka.shizuku.intent.action.REQUEST_BINDER")
+        Intent intent = new Intent("eu.darken.porter.intent.action.REQUEST_BINDER")
                 .setPackage(managerApplicationId)
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data);
@@ -89,7 +89,7 @@ public class ShizukuShellLoader {
             System.err.flush();
 
             Intent activityIntent = Intent.createChooser(
-                    new Intent("rikka.shizuku.intent.action.REQUEST_BINDER")
+                    new Intent("eu.darken.porter.intent.action.REQUEST_BINDER")
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
@@ -161,9 +161,9 @@ public class ShizukuShellLoader {
         handler.postDelayed(() -> abort(
                 String.format(
                         "Request timeout. " +
-                        "If you are using stealth mode, MANAGER_APPLICATION_ID may not be correct. Please set this environment variable in rish to the package name of Shizuku.\n" +
-                        "Otherwise, the connection between the current app (%1$s) and Shizuku app may be blocked by your system. " +
-                        "Please disable all battery optimization features for both current app (%1$s) and Shizuku app.",
+                        "Check that MANAGER_APPLICATION_ID is eu.darken.porter and Porter is running.\n" +
+                        "The connection between the current app (%1$s) and Porter may be blocked by your system. " +
+                        "Please disable all battery optimization features for both current app (%1$s) and Porter.",
                         packageName)
         ), 5000);
 

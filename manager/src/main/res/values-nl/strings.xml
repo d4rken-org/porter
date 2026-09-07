@@ -8,7 +8,7 @@
     <string name="home_status_service_version_update"><![CDATA[Versie %2$s, %1$s<br>Start opnieuw om te updaten naar versie %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Begin door te verbinden met een computer]]></string>
-    <string name="home_adb_description"><![CDATA[Voor apparaten zonder root moet je adb gebruiken om Shizuku te starten (vereist computerverbinding). Dit proces moet elke keer worden herhaald wanneer het apparaat wordt herstart. Lees alsjeblieft <b><a href=\"%1$s\">de hulp</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Voor apparaten zonder root moet je adb gebruiken om Porter te starten (vereist computerverbinding). Dit proces moet elke keer worden herhaald wanneer het apparaat wordt herstart. Lees alsjeblieft <b><a href=\"%1$s\">de hulp</a></b>.]]></string>
     <string name="home_adb_button_view_help">Hulp lezen</string>
     <string name="home_adb_button_view_command">Commando bekijken</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Er zijn nog enkele andere overwegingen, bevestig alstublieft dat u de hulp eerst heeft gelezen.]]></string>
@@ -16,7 +16,7 @@
     <string name="home_adb_dialog_view_command_button_send">Verzenden</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Starten via draadloze foutopsporing]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Op Android 11 of hoger kun je draadloze foutopsporing inschakelen en Shizuku direct vanaf je apparaat starten, zonder verbinding te maken met een computer.<p>Bekijk eerst de stapsgewijze handleiding.]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Op Android 11 of hoger kun je draadloze foutopsporing inschakelen en Porter direct vanaf je apparaat starten, zonder verbinding te maken met een computer.<p>Bekijk eerst de stapsgewijze handleiding.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Voor Android 11 of lager is verbinding maken met een computer vereist om draadloze foutopsporing in te schakelen.]]></string>
     <string name="home_wireless_adb_view_guide_button">Stapsgewijze handleiding</string>
     <!-- Adb -->
@@ -24,7 +24,7 @@
     <string name="dialog_adb_discovery_message">Schakel alstublieft \"Draadloze foutopsporing\" in,
         in \"Ontwikkelaarsopties\". \"Draadloze foutopsporing\" wordt automatisch uitgeschakeld
         wanneer het netwerk verandert.\n\nLet op, schakel \"Ontwikkelaarsopties\" of
-        \"USB-foutopsporing\" niet uit, anders wordt Shizuku gestopt.</string>
+        \"USB-foutopsporing\" niet uit, anders wordt Porter gestopt.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Probeer alsjeblieft
         \"Draadloze foutopsporing\" uit te schakelen en in te schakelen als het blijft zoeken.</string>
     <string name="dialog_adb_port">Poort</string>
@@ -35,7 +35,7 @@
     <string name="dialog_adb_pairing_paring_code">Koppelingscode</string>
     <string name="paring_code_is_wrong">Koppelingscode is incorrect.</string>
     <string name="cannot_connect_port">Kan geen verbinding maken met de draadloze
-        foutopsporingsservice.\n\nZorg ervoor dat Shizuku op de witte lijst staat in alle firewalls,
+        foutopsporingsservice.\n\nZorg ervoor dat Porter op de witte lijst staat in alle firewalls,
         adblockers, VPN\'s of vergelijkbare apps die de netwerktoegang kunnen beperken.</string>
     <string name="dialog_wireless_adb_not_enabled">Draadloze foutopsporing is niet
         ingeschakeld.\nLet op: Voor Android 11 is een computerverbinding nodig om draadloze
@@ -47,19 +47,19 @@
         \"Draadloze foutopsporing\" in\n- Klik op de linkerkant van \"Draadloze foutopsporing\"\n-
         Tik op \"Apparaat koppelen met koppelingscode\"\n- Voer de koppelingscode in de melding in</string>
     <string name="dialog_adb_pairing_accessibility_permission">Op Android 14 wordt de ^1-machtiging
-        ingetrokken wanneer Shizuku wordt geïnstalleerd/bijgewerkt met de pakketinstallateur. Deze
+        ingetrokken wanneer Porter wordt geïnstalleerd/bijgewerkt met de pakketinstallateur. Deze
         toestemming is nodig om de toegankelijkheidsservice voor het koppelen in te schakelen.\n\nOm
         deze machtiging te verlenen, voer je de volgende ADB-opdracht uit:\n\n^2\n\nNa het uitvoeren
         van de opdracht kun je doorgaan met het koppelingsproces.\n\nOpmerking: Je kan dit omzeilen
-        door Shizuku te installeren/bijwerken met ADB.</string>
+        door Porter te installeren/bijwerken met ADB.</string>
     <string name="dialog_adb_pairing_accessibility_enable">Schakel alsjeblieft de
-        toegankelijkheidsservice in om het koppelingsproces te starten. Hierdoor kan Shizuku de
+        toegankelijkheidsservice in om het koppelingsproces te starten. Hierdoor kan Porter de
         koppelingscode detecteren.\n\nDe toegankelijkheidsservice wordt uitgeschakeld zodra de code
         is gevonden of na 1 minuut inactiviteit om energie te besparen.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Begin met koppelen door de volgende
         stappen uit te voeren:\n- Ga naar \'Ontwikkelaarsopties\'\n- Schakel \'USB-foutopsporing\'
         en \'Draadloze foutopsporing\' in\n- Klik op de linkerkant van \'Draadloze
-        foutopsporing\'\n- Klik op \'Apparaat koppelen met koppelingscode\'. Shizuku detecteert de
+        foutopsporing\'\n- Klik op \'Apparaat koppelen met koppelingscode\'. Porter detecteert de
         koppelingscode automatisch.</string>
     <string name="adb_pairing_requires_multi_window">Ga eerst in de gesplitste schermweergave
         (meerdere vensters).</string>
@@ -68,14 +68,12 @@
         deze app en het systeemvenster tegelijkertijd zichtbaar te maken.</string>
     <string name="adb_error_key_store">Kan geen sleutel genereren voor draadloos debuggen.\nDit kan
         komen doordat het KeyStore-mechanisme van dit apparaat kapot is.</string>
-    <string name="adb_stopping_tcp">TCP-poort sluiten</string>
-    <string name="adb_error_stop_tcp">Niet geslaagd om ADB via TCP te stoppen</string>
     <string name="adb_pair_required">Ga eerst door de koppelingsstap.</string>
     <string name="enable">Inschakelen</string>
     <string name="development_settings">Ontwikkelaarsopties</string>
     <string name="notification_settings">Meldingsopties</string>
-    <string name="adb_pairing_tutorial_title">Koppel Shizuku met je apparaat</string>
-    <string name="adb_pairing_tutorial_content_notification">Een melding van Shizuku zal je helpen
+    <string name="adb_pairing_tutorial_title">Koppel Porter met je apparaat</string>
+    <string name="adb_pairing_tutorial_content_notification">Een melding van Porter zal je helpen
         om de koppeling te voltooien.</string>
     <string name="adb_pairing_tutorial_content_steps">Ga naar \'Ontwikkelaarsopties\' en schakel
         \'USB-foutopsporing\' en \'Draadloze foutopsporing\' in.</string>
@@ -83,22 +81,22 @@
         \'Draadloos debuggen\' en klik vervolgens op \'Apparaat koppelen met koppelingscode\'. Voer
         de code in de melding in om het koppelen te voltooien.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Het koppelproces vereist dat je
-        reageert op een melding van Shizuku. Laat Shizuku alsjeblieft meldingen plaatsen.</string>
+        reageert op een melding van Porter. Laat Porter alsjeblieft meldingen plaatsen.</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI-gebruikers moeten mogelijk de
         notificatiestijl wijzigen naar \"Android\" van \"Melding\" - \"Meldingenscherm\" in de
         systeeminstellingen.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Anders is het mogelijk dat je de
         koppelingscode uit de melding niet kunt invoeren.</string>
-    <string name="adb_pairing_tutorial_content_finish">Ga terug naar Shizuku en start Shizuku.</string>
-    <string name="adb_pairing_tutorial_content_network">Shizuku heeft toegang tot het lokale netwerk
+    <string name="adb_pairing_tutorial_content_finish">Ga terug naar Porter en start Porter.</string>
+    <string name="adb_pairing_tutorial_content_network">Porter heeft toegang tot het lokale netwerk
         nodig. Dit wordt beheerd door de netwerkmachtiging.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Sommige systemen
         (zoals MIUI) staan apps geen toegang tot het netwerk toe wanneer ze niet zichtbaar zijn,
         zelfs niet als de app een voorgrondservice gebruikt. Schakel de batterijoptimalisatie voor
-        Shizuku op zulke systemen uit.</string>
+        Porter op zulke systemen uit.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Starten (voor geroote apparaten)]]></string>
-    <string name="home_root_description"><![CDATA[Als je Magisk gebruikt, kun je %1$s proberen. Voor rootgebruikers zal dit uiteindelijk Shizuku vervangen. Let op: bestaande applicaties moeten enigszins worden aangepast om %2$s te kunnen gebruiken.]]></string>
+    <string name="home_root_description"><![CDATA[Als je Magisk gebruikt, kun je %1$s proberen. Voor rootgebruikers zal dit uiteindelijk Porter vervangen. Let op: bestaande applicaties moeten enigszins worden aangepast om %2$s te kunnen gebruiken.]]></string>
     <string name="home_root_button_start">Starten</string>
     <string name="home_root_button_restart">Herstarten</string>
     <!-- Home - Application management -->
@@ -108,12 +106,12 @@
         <item quantity="other"><![CDATA[%d applicaties geautoriseerd]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Klik om geautoriseerde apps te beheren]]></string>
-    <string name="home_app_management_empty">Apps die de Shizuku-toestemming hebben aangevraagd of
+    <string name="home_app_management_empty">Apps die de Porter-toestemming hebben aangevraagd of
         verklaard, zullen hier weergegeven worden.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">Bestuur Shizuku met automatiseringsapps</string>
+    <string name="home_automation_title">Bestuur Porter met automatiseringsapps</string>
     <string name="home_automation_description">Apps zoals Tasker en MacroDroid kunnen intenties
-        verzenden om Shizuku automatisch te starten/stoppen.</string>
+        verzenden om Porter automatisch te starten/stoppen.</string>
     <string name="home_automation_button_view_intents">Bekijk intenties</string>
     <string name="home_automation_dialog_label_action">Actie</string>
     <string name="home_automation_dialog_label_package">Pakket</string>
@@ -121,27 +119,27 @@
     <string name="home_automation_dialog_label_target">Doel</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Ontwikkelaarsgids</string>
-    <string name="home_learn_more_description">Leer hoe je ontwikkelt met Shizuku</string>
+    <string name="home_learn_more_description">Leer hoe je ontwikkelt met Porter</string>
     <!-- Home - Adb permissions limited -->
     <string name="home_adb_is_limited_title">Je moet een extra stap nemen</string>
     <string name="home_adb_is_limited_description">De fabrikant van je apparaat heeft ADB-rechten
-        beperkt en apps die Shizuku gebruiken zullen niet goed werken.\n\nMeestal kan deze beperking
+        beperkt en apps die Porter gebruiken zullen niet goed werken.\n\nMeestal kan deze beperking
         worden opgeheven door enkele opties in \"Ontwikkelaarsopties\" aan te passen. Lees de hulp
-        voor details over hoe je dit kunt doen.\n\nJe moet Shizuku mogelijk opnieuw starten voordat
+        voor details over hoe je dit kunt doen.\n\nJe moet Porter mogelijk opnieuw starten voordat
         de wijziging effect neemt.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">De toestemming voor adb is beperkt</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Het is zeer goed mogelijk dat de fabrikant van je apparaat de toestemming van adb beperkt.<p>Er kan een oplossing voor jouw systeem zijn in <b><a href=\"%1$s\">dit document</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* vereist dat Shizuku met root wordt
+    <string name="app_management_item_summary_requires_root">* vereist dat Porter met root wordt
         uitgevoerd</string>
     <string name="app_management_toggle_all">Alles (de)selecteren</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">Gebruik Shizuku in terminalapps</string>
-    <string name="home_terminal_description">Voer shell-opdrachten uit in terminal-apps via Shizuku</string>
+    <string name="home_terminal_title">Gebruik Porter in terminalapps</string>
+    <string name="home_terminal_description">Voer shell-opdrachten uit in terminal-apps via Porter</string>
     <string name="terminal_tutorial_miui">Gebruikers hebben gemeld dat MIUI het Storage Access
         Framework verstoort, dat door de exportfunctie wordt gebruikt.</string>
     <string name="terminal_tutorial_miui_2">Als u MIUI gebruikt, moet u het bestand mogelijk uit de
-        map \'assets\' in de APK van Shizuku extraheren.</string>
+        map \'assets\' in de APK van Porter extraheren.</string>
     <string name="terminal_tutorial_1">Exporteer de bestanden naar een nieuwe map.</string>
     <string name="terminal_tutorial_1_description">Er worden twee bestanden geëxporteerd: %1$s en
         %2$s. Als de bestanden al in de geselecteerde map staan, worden ze verwijderd.</string>
@@ -165,22 +163,15 @@
         verschijnt.</string>
     <string name="settings_use_system_color">Gebruik systeemthemakleur</string>
     <string name="settings_watchdog">Bewaker</string>
-    <string name="settings_watchdog_summary">Shizuku automatisch opnieuw opstarten als het vastloopt</string>
-    <string name="settings_tcp_mode">TCP-modus</string>
-    <string name="settings_tcp_mode_summary">"Staat Shizuku toe om te herstarten zonder Wi-Fi.
-        (Shizuku moet sinds het herstarten al begonnen zijn)"</string>
-    <string name="settings_tcp_mode_dialog_close_port">"De TCP-poort zal onmiddellijk gesloten
-        worden. Je hebt Wi-Fi nodig om de TCP-modus opnieuw in te schakelen. Doorgaan?"</string>
-    <string name="settings_tcp_mode_closing_port">TCP-poort sluiten...</string>
+    <string name="settings_watchdog_summary">Porter automatisch opnieuw opstarten als het vastloopt</string>
     <string name="settings_restart_dialog_title">Opnieuw opstarten vereist</string>
-    <string name="settings_restart_dialog_message">Shizuku moet opnieuw worden opgestart om deze
+    <string name="settings_restart_dialog_message">Porter moet opnieuw worden opgestart om deze
         instelling toe te passen.</string>
-    <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wifi is vereist. Shizuku blijft draaien en wacht op een wifi-verbinding voordat het op de achtergrond opnieuw opstart.</b>]]></string>
     <string name="settings_tcp_port">TCP-poort</string>
     <string name="settings_tcp_port_default">Standaard (5555)</string>
     <string name="settings_tcp_port_hint">Laat leeg om de standaard (5555) te gebruiken</string>
     <string name="settings_tcp_learn_more">Lees meer over het gebruik van automatiseringsapps om
-        Shizuku te bedienen</string>
+        Porter te bedienen</string>
     <string name="settings_language">Taal</string>
     <string name="settings_translation_contributors">Vertaalbijdragers</string>
     <string name="settings_translation">Deelnemen aan vertaling</string>
@@ -219,11 +210,11 @@
     <string name="snackbar_action_fix">Repareren</string>
     <!-- Toast -->
     <string name="toast_no_email_app">Geen e-mailapp gevonden</string>
-    <string name="toast_shizuku_already_starting">Shizuku begint al op de achtergrond</string>
+    <string name="toast_shizuku_already_starting">Porter begint al op de achtergrond</string>
     <string name="toast_accessibility_tv_only">Deze service wordt alleen ondersteund op
         tv-apparaten.</string>
     <string name="toast_pairing_timeout">Er is een time-out opgetreden bij de
-        Shizuku-koppelingsservice.</string>
+        Porter-koppelingsservice.</string>
     <!-- Dark Mode Setting Override -->
     <string name="dark_theme">Thema</string>
     <string name="dark_theme_off">Altijd licht</string>
@@ -233,14 +224,14 @@
     <string name="about_dialog_button_close">Sluiten</string>
     <string name="about_view_source_code"><![CDATA[Bekijk de broncode op %s]]></string>
     <!-- Start -->
-    <string name="action_start">Begin met Shizuku</string>
+    <string name="action_start">Begin met Porter</string>
     <!-- Stop -->
-    <string name="action_stop">Stop Shizuku</string>
-    <string name="dialog_stop_message">De Shizuku-service zal stopgezet worden.</string>
+    <string name="action_stop">Stop Porter</string>
+    <string name="dialog_stop_message">De Porter-service zal stopgezet worden.</string>
     <!-- Notification -->
     <string name="notification_channel_service_status">Startstatus van de service</string>
-    <string name="notification_service_starting">De Shizuku-service is aan het starten…</string>
-    <string name="notification_service_start_failed">Start Shizuku-service faalde.</string>
+    <string name="notification_service_starting">De Porter-service is aan het starten…</string>
+    <string name="notification_service_start_failed">Start Porter-service faalde.</string>
     <string name="notification_service_start_no_root">Niet geslaagd om root-toestemming aan te
         vragen.</string>
     <string name="notification_working">Werkend…</string>
@@ -251,12 +242,12 @@
     <string name="notification_adb_pairing_stop_searching">Stop met zoeken</string>
     <string name="notification_adb_pairing_working_title">Pairing in uitvoering</string>
     <string name="notification_adb_pairing_succeed_title">Succesvolle combinatie</string>
-    <string name="notification_adb_pairing_succeed_text">Je kunt nu de Shizuku-service starten.</string>
+    <string name="notification_adb_pairing_succeed_text">Je kunt nu de Porter-service starten.</string>
     <string name="notification_adb_pairing_failed_title">Koppeling mislukte</string>
     <string name="notification_adb_pairing_retry">Opnieuw</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">toegang tot Shizuku</string>
-    <string name="permission_description">Laat de app Shizuku gebruiken.</string>
+    <string name="permission_label">toegang tot Porter</string>
+    <string name="permission_description">Laat de app Porter gebruiken.</string>
     <string name="permission_warning_template"><![CDATA[<b>%1$s</b> toestaan tot %2$s?]]></string>
     <string name="grant_dialog_button_allow_always">Altijd toestaan</string>
     <string name="grant_dialog_button_deny">"Weigeren"</string>
@@ -265,19 +256,19 @@
     <string name="start_with_root_failed">Kan de service niet starten omdat root-rechten niet worden
         verleend of dit apparaat niet geroot is.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Shizuku starten…</string>
+    <string name="wadb_notification_title">Porter starten…</string>
     <string name="wadb_notification_wifi_required">Wacht op Wi-Fi-verbinding voordat ik verder ga</string>
     <string name="wadb_notification_retry">Wachten op een nieuwe poging</string>
     <string name="wadb_error_title">Fout bij het opstarten bij het opstarten</string>
     <string name="wadb_error_notify_dev">Klik om de ontwikkelaar te informeren.</string>
     <string name="wadb_permission_error_notification_title">Toestemmingsfout</string>
-    <string name="wadb_permission_error_notification_content">Shizuku heeft WRITE_SECURE_SETTINGS
+    <string name="wadb_permission_error_notification_content">Porter heeft WRITE_SECURE_SETTINGS
         nodig om bij het opstarten te starten. Klik om te leren hoe je het kunt toestaan.</string>
     <string name="wadb_notification_channel">ADB automatische start service</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog loopt</string>
     <string name="watchdog_turn_off">Uitschakelen</string>
-    <string name="watchdog_shizuku_crashed_title">Shizuku is onlangs neergestort</string>
+    <string name="watchdog_shizuku_crashed_title">Porter is onlangs neergestort</string>
     <string name="watchdog_shizuku_crashed_text">De waakhond startte de service opnieuw. Klik om te
         leren over mogelijke oplossingen om toekomstige crashes te voorkomen.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Zet meldingen uit</string>
@@ -286,14 +277,14 @@
     <string name="toast_copied_to_clipboard">Gekopieerd naar het klembord</string>
     <string name="accessibility_service_description">Biedt koppelingsondersteuning voor apparaten
         (bijv. tv\'s met Android 14+) waar meldingen of de gesplitste schermweergave niet kunnen
-        worden gebruikt.\n\nStelt Shizuku in staat om de koppelingscode uit het draadloze
+        worden gebruikt.\n\nStelt Porter in staat om de koppelingscode uit het draadloze
         foutopsporingskoppelingsscherm te halen. Het schakelt zichzelf uit zodra de koppelingscode
         is gevonden.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s ondersteunt de moderne Shizuku niet</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[De oude versie van Shizuku is sinds maart 2019 buiten gebruik gesteld. Ook werkt de oude versie niet op nieuwere Android-systemen.<p>Vraag alsjeblieft aan de ontwikkelaar van <b>%1$s</b> om het te updaten.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s vraagt om de oude versie van Shizuku</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> heeft moderne Shizuku-ondersteuning, maar vraagt om de oude versie van Shizuku. Dit kan komen doordat Shizuku niet draait, check alsjeblieft in de Shizuku-app.<p>De oude versie van Shizuku is sinds maart 2019 buiten gebruik gesteld.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Open Shizuku</string>
+    <string name="dialog_legacy_not_support_title">%1$s ondersteunt de moderne Porter niet</string>
+    <string name="dialog_legacy_not_support_message"><![CDATA[De oude versie van Porter is sinds maart 2019 buiten gebruik gesteld. Ook werkt de oude versie niet op nieuwere Android-systemen.<p>Vraag alsjeblieft aan de ontwikkelaar van <b>%1$s</b> om het te updaten.]]></string>
+    <string name="dialog_requesting_legacy_title">%1$s vraagt om de oude versie van Porter</string>
+    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> heeft moderne Porter-ondersteuning, maar vraagt om de oude versie van Porter. Dit kan komen doordat Porter niet draait, check alsjeblieft in de Porter-app.<p>De oude versie van Porter is sinds maart 2019 buiten gebruik gesteld.]]></string>
+    <string name="dialog_requesting_legacy_button_open_shizuku">Open Porter</string>
     <string name="wadb_notification_attempt_now">Probeer nu</string>
 </resources>

@@ -8,9 +8,9 @@ body:
     attributes:
       label: Before You Begin
       options:
-        - label: I searched through all [open/closed issues](https://github.com/thedjchi/Shizuku/issues) and confirmed that this is a new feature request
+        - label: I searched through all open and closed issues and confirmed that this is a new feature request
           required: true
-        - label: I am using the latest version of Shizuku
+        - label: I am using the latest version of Porter
           required: true
 
   - type: textarea

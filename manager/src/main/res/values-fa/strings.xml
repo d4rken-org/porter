@@ -8,7 +8,7 @@
     <string name="home_status_service_version_update"><![CDATA[نسخه %2$s، %1$s<br>برای به‌روزرسانی به نسخه %3$s برنامه را راه‌اندازی مجدد نمایید]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[با اتصال به رایانه شروع کنید]]></string>
-    <string name="home_adb_description"><![CDATA[برای دستگاه‌های بدون دسترسی ریشه (روت)، باید از adb برای راه‌اندازی Shizuku استفاده کنید (نیاز به اتصال به رایانه دارد). این فرآیند باید هر بار که دستگاه راه اندازی مجدد می شود تکرار شود. لطفاً <b><a href=\"%1$s\">راهنما را بخوانید</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[برای دستگاه‌های بدون دسترسی ریشه (روت)، باید از adb برای راه‌اندازی Porter استفاده کنید (نیاز به اتصال به رایانه دارد). این فرآیند باید هر بار که دستگاه راه اندازی مجدد می شود تکرار شود. لطفاً <b><a href=\"%1$s\">راهنما را بخوانید</a></b>.]]></string>
     <string name="home_adb_button_view_help">خواندن راهنما</string>
     <string name="home_adb_button_view_command">مشاهده دستور</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* ملاحظات دیگری نیز وجود دارد، لطفاً تأیید کنید که ابتدا راهنما را خوانده اید.]]></string>
@@ -16,7 +16,7 @@
     <string name="home_adb_dialog_view_command_button_send">ارسال</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[از طریق اشکال زدایی بی‌سیم شروع کنید]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[در اندروید ۱۱ یا بالاتر، می‌توانید اشکال‌زدایی بی‌سیم را فعال کنید و Shizuku را مستقیماً از دستگاه خود بدون اتصال به رایانه شروع کنید.<p>لطفاً ابتدا راهنمای گام به گام را مطالعه کنید.]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[در اندروید ۱۱ یا بالاتر، می‌توانید اشکال‌زدایی بی‌سیم را فعال کنید و Porter را مستقیماً از دستگاه خود بدون اتصال به رایانه شروع کنید.<p>لطفاً ابتدا راهنمای گام به گام را مطالعه کنید.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[قبل از اندروید ۱۱، برای فعال کردن اشکال‌زدایی بی‌سیم، اتصال به رایانه لازم است.]]></string>
     <string name="home_wireless_adb_view_guide_button">راهنمای گام به گام</string>
     <!-- Adb -->
@@ -24,7 +24,7 @@
     <string name="dialog_adb_discovery_message">لطفاً \"اشکال‌زدایی بی‌سیم\" را در \"گزینه‌های توسعه
         دهنده\" فعال کنید. وقتی شبکه تغییر می‌کند، \"اشکال‌زدایی بی‌سیم\" به‌طور خودکار غیرفعال
         می‌شود.\n\nتوجه داشته باشید، \"گزینه‌های توسعه دهنده\" یا \"اشکال‌زدایی USB\" را غیرفعال
-        نکنید، در غیر این صورت Shizuku متوقف خواهد شد.</string>
+        نکنید، در غیر این صورت Porter متوقف خواهد شد.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">لطفاً در صورتی که به جستجو
         ادامه داد \"اشکال‌زدایی بی‌سیم\" را غیرفعال و فعال کنید.</string>
     <string name="dialog_adb_port">درگاه</string>
@@ -46,10 +46,10 @@
         روی سمت چپ «اشکال‌زدایی بی‌سیم» ضربه بزنید\n- روی «جفت کردن دستگاه با کد جفت‌سازی» ضربه
         بزنید\n- کد جفت‌سازی را در اعلان وارد کنید</string>
     <string name="dialog_adb_pairing_accessibility_permission">در اندروید ۱۴، نصب/به‌روزرسانی
-        Shizuku با استفاده از Package Installer، مجوز ^1 را که برای فعال کردن سرویس دسترسی برای
+        Porter با استفاده از Package Installer، مجوز ^1 را که برای فعال کردن سرویس دسترسی برای
         جفت‌سازی لازم است، لغو می‌کند.\n\nبرای اعطای آن، دستور ADB زیر را اجرا کنید:\n\n^2\n\nپس از
         اجرای دستور، می‌توانید فرآیند جفت‌سازی را ادامه دهید.\n\nتوجه: می‌توانید با نصب/به‌روزرسانی
-        Shizuku با ADB، از این مرحله عبور کنید.</string>
+        Porter با ADB، از این مرحله عبور کنید.</string>
     <string name="dialog_adb_pairing_accessibility_enable">لطفاً برای شروع فرآیند جفت‌سازی، سرویس
         دسترسی را فعال کنید. این به شیزوکو اجازه می‌دهد تا کد جفت‌سازی را تشخیص دهد.\n\nسرویس دسترسی
         هنگام یافتن کد یا پس از ۱ دقیقه برای صرفه‌جویی در مصرف انرژی خاموش می‌شود.</string>
@@ -64,14 +64,12 @@
         همزمان قابل مشاهده باشند.</string>
     <string name="adb_error_key_store">امکان تولید کلید برای اشکال زدایی بی سیم وجود ندارد.\nاین
         ممکن است به این دلیل باشد که مکانیزم KeyStore این دستگاه خراب شده است.</string>
-    <string name="adb_stopping_tcp">بستن پورت TCP</string>
-    <string name="adb_error_stop_tcp">متوقف کردن ADB روی TCP ناموفق بود</string>
     <string name="adb_pair_required">لطفاً ابتدا مرحله مرتبط کردن را طی کنید.</string>
     <string name="enable">فعال کردن</string>
     <string name="development_settings">گزینه های توسعه دهنده</string>
     <string name="notification_settings">گزینه های اعلان</string>
-    <string name="adb_pairing_tutorial_title">برنامه Shizuku را با دستگاه خود مرتبط کنید</string>
-    <string name="adb_pairing_tutorial_content_notification">یک اعلان از Shizuku به شما امکان می دهد
+    <string name="adb_pairing_tutorial_title">برنامه Porter را با دستگاه خود مرتبط کنید</string>
+    <string name="adb_pairing_tutorial_content_notification">یک اعلان از Porter به شما امکان می دهد
         مرتبط کردن را تکمیل کنید.</string>
     <string name="adb_pairing_tutorial_content_steps">به «گزینه‌های توسعه‌دهنده» بروید، سپس
         «اشکال‌زدایی USB» و «اشکال‌زدایی بی‌سیم» را فعال کنید.</string>
@@ -79,7 +77,7 @@
         ضربه بزنید، سپس روی «جفت کردن دستگاه با کد جفت‌سازی» ضربه بزنید. کد را در اعلان وارد کنید تا
         جفت‌سازی تکمیل شود.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">فرآیند مرتبط شدن به شما نیاز
-        دارد که با اعلان Shizuku تعامل داشته باشید. لطفاً به Shizuku اجازه دهید تا اعلان‌ها را ارسال
+        دارد که با اعلان Porter تعامل داشته باشید. لطفاً به Porter اجازه دهید تا اعلان‌ها را ارسال
         کند.</string>
     <string name="adb_pairing_tutorial_content_miui">کاربران MIUI ممکن است نیاز داشته باشند که در
         تنظیمات دستگاه، سبک اعلان را به \"اندروید\" از \"اعلان ها\" - \"سایه اعلان\" تغییر دهند.</string>
@@ -94,7 +92,7 @@
         چنین سیستم هایی غیرفعال کنید.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[راه‌اندازی (برای دستگاه‌هایی با دسترسی ریشه)]]></string>
-    <string name="home_root_description"><![CDATA[اگر از Magisk استفاده می‌کنید، می‌توانید %1$sرا امتحان کنید. برای کاربران روت، در نهایت جایگزین Shizuku خواهد شد. توجه داشته باشید، برنامه‌های موجود برای استفاده از %2$sباید کمی تغییر کنند.]]></string>
+    <string name="home_root_description"><![CDATA[اگر از Magisk استفاده می‌کنید، می‌توانید %1$sرا امتحان کنید. برای کاربران روت، در نهایت جایگزین Porter خواهد شد. توجه داشته باشید، برنامه‌های موجود برای استفاده از %2$sباید کمی تغییر کنند.]]></string>
     <string name="home_root_button_start">راه‌اندازی</string>
     <string name="home_root_button_restart">راه‌اندازی مجدد</string>
     <!-- Home - Application management -->
@@ -104,12 +102,12 @@
         <item quantity="other"><![CDATA[%d برنامه مجاز]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[برای مدیریت برنامه های مجاز ضربه بزنید]]></string>
-    <string name="home_app_management_empty">برنامه‌هایی که درخواست مجوز Shizuku را داده‌اند یا آن
+    <string name="home_app_management_empty">برنامه‌هایی که درخواست مجوز Porter را داده‌اند یا آن
         را اعلام کرده‌اند، اینجا نمایش داده می‌شوند.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">کنترل شیزوکو با برنامه‌های اتوماسیون</string>
     <string name="home_automation_description">برنامه‌هایی مانند Tasker و MacroDroid می‌توانند برای
-        شروع/توقف خودکار Shizuku، اینتنت ارسال کنند.</string>
+        شروع/توقف خودکار Porter، اینتنت ارسال کنند.</string>
     <string name="home_automation_button_view_intents">مشاهده اهداف</string>
     <string name="home_automation_dialog_label_action">اکشن</string>
     <string name="home_automation_dialog_label_package">بسته</string>
@@ -117,24 +115,24 @@
     <string name="home_automation_dialog_label_target">هدف</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">راهنمای توسعه‌دهنده</string>
-    <string name="home_learn_more_description">یاد بگیرید که چگونه با Shizuku توسعه دهید</string>
+    <string name="home_learn_more_description">یاد بگیرید که چگونه با Porter توسعه دهید</string>
     <!-- Home - Adb permissions limited -->
     <string name="home_adb_is_limited_title">شما باید یک قدم اضافی بردارید</string>
     <string name="home_adb_is_limited_description">سازنده دستگاه شما مجوزهای adb را محدود کرده است و
-        برنامه هایی که از Shizuku استفاده می کنند به درستی کار نمی کنند.\n\nمعمولاً با تنظیم برخی از
+        برنامه هایی که از Porter استفاده می کنند به درستی کار نمی کنند.\n\nمعمولاً با تنظیم برخی از
         گزینه‌ها در \"گزینه‌های توسعه دهنده\" می‌توان این محدودیت را برطرف کرد. لطفاً راهنما را برای
-        جزئیات نحوه انجام این کار بخوانید.\n\nشاید لازم باشد Shizuku را مجدداً راه اندازی کنید تا
+        جزئیات نحوه انجام این کار بخوانید.\n\nشاید لازم باشد Porter را مجدداً راه اندازی کنید تا
         عملیات اجرایی شود.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">مجوز adb محدود است</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[این احتمال وجود دارد که سازنده دستگاه شما مجوز adb را محدود کند.<p>ممکن است راه حلی برای دستگاه شما در <b><a href=\"%1$s\">این سند</a></b> وجود داشته باشد.]]></string>
-    <string name="app_management_item_summary_requires_root">* نیاز دارد که Shizuku با امتیازات ریشه
+    <string name="app_management_item_summary_requires_root">* نیاز دارد که Porter با امتیازات ریشه
         اجرا شود</string>
     <string name="app_management_toggle_all">همه را تغییر دهید</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">از Shizuku در برنامه های پایانه استفاده کنید</string>
+    <string name="home_terminal_title">از Porter در برنامه های پایانه استفاده کنید</string>
     <string name="home_terminal_description">اجرای دستورات shell در برنامه‌های ترمینال از طریق
-        Shizuku</string>
+        Porter</string>
     <string name="terminal_tutorial_miui">کاربران گزارش داده‌اند که MIUI چارچوب دسترسی به حافظه
         (Storage Access Framework) را که توسط تابع export استفاده می‌شود، نقض می‌کند.</string>
     <string name="terminal_tutorial_miui_2">اگر از MIUI استفاده می‌کنید، ممکن است مجبور شوید فایل را
@@ -163,16 +161,9 @@
     <string name="settings_watchdog">دیده‌بان</string>
     <string name="settings_watchdog_summary">در صورت خرابی، شیزوکو را به طور خودکار مجدداً راه
         اندازی کنید</string>
-    <string name="settings_tcp_mode">حالت TCP</string>
-    <string name="settings_tcp_mode_summary">"به Shizuku اجازه می‌دهد بدون Wi-Fi دوباره راه‌اندازی
-        شود. (Shizuku باید یک بار از زمان راه‌اندازی مجدد شروع شده باشد)"</string>
-    <string name="settings_tcp_mode_dialog_close_port">"پورت TCP فوراً بسته خواهد شد. برای فعال کردن
-        مجدد حالت TCP به وای‌فای نیاز خواهید داشت. ادامه می‌دهید؟"</string>
-    <string name="settings_tcp_mode_closing_port">بستن پورت TCP...</string>
     <string name="settings_restart_dialog_title">راه اندازی مجدد مورد نیاز است</string>
     <string name="settings_restart_dialog_message">شیزوکو باید بازی را دوباره شروع کند تا بتواند این
         تنظیم را اعمال کند.</string>
-    <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>وای فای لازم است. شیزوکو به کار خود ادامه می دهد و منتظر اتصال وای فای می ماند تا در پس زمینه ریستارت شود.</b>]]></string>
     <string name="settings_tcp_port">پورت TCP</string>
     <string name="settings_tcp_port_default">پیش‌فرض (۵۵۵۵)</string>
     <string name="settings_tcp_port_hint">برای استفاده از مقدار پیش‌فرض (۵۵۵۵) خالی بگذارید.</string>
@@ -228,14 +219,14 @@
     <string name="about_dialog_button_close">بستن</string>
     <string name="about_view_source_code"><![CDATA[کد منبع را در %s مشاهده کنید]]></string>
     <!-- Start -->
-    <string name="action_start">Shizuku را شروع کنید</string>
+    <string name="action_start">Porter را شروع کنید</string>
     <!-- Stop -->
-    <string name="action_stop">توقف Shizuku</string>
-    <string name="dialog_stop_message">خدمات Shizuku متوقف خواهد شد.</string>
+    <string name="action_stop">توقف Porter</string>
+    <string name="dialog_stop_message">خدمات Porter متوقف خواهد شد.</string>
     <!-- Notification -->
     <string name="notification_channel_service_status">وضعیت شروع خدمات</string>
-    <string name="notification_service_starting">خدمات Shizuku شروع می شود…</string>
-    <string name="notification_service_start_failed">راه‌اندازی خدمات Shizuku ناموفق بود.</string>
+    <string name="notification_service_starting">خدمات Porter شروع می شود…</string>
+    <string name="notification_service_start_failed">راه‌اندازی خدمات Porter ناموفق بود.</string>
     <string name="notification_service_start_no_root">درخواست مجوز دسترسی ریشه (روت) انجام نشد.</string>
     <string name="notification_working">در حال کار کردن…</string>
     <string name="notification_channel_adb_pairing">مرتبط سازی اشکال‌زدایی بی‌سیم</string>
@@ -245,13 +236,13 @@
     <string name="notification_adb_pairing_stop_searching">توقف جستجو</string>
     <string name="notification_adb_pairing_working_title">مرتبط سازی در حال انجام است</string>
     <string name="notification_adb_pairing_succeed_title">مرتبط سازی با موفقیت انجام شد</string>
-    <string name="notification_adb_pairing_succeed_text">اکنون می توانید خدمات Shizuku را راه اندازی
+    <string name="notification_adb_pairing_succeed_text">اکنون می توانید خدمات Porter را راه اندازی
         کنید.</string>
     <string name="notification_adb_pairing_failed_title">مرتبط سازی انجام نشد</string>
     <string name="notification_adb_pairing_retry">سعی مجدد</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">دسترسی Shizuku</string>
-    <string name="permission_description">به برنامه اجازه دهید از Shizuku استفاده کند.</string>
+    <string name="permission_label">دسترسی Porter</string>
+    <string name="permission_description">به برنامه اجازه دهید از Porter استفاده کند.</string>
     <string name="permission_warning_template"><![CDATA[اجازه <b>%1$s</b> برای %2$s؟]]></string>
     <string name="grant_dialog_button_allow_always">همیشه اجازه داده شود</string>
     <string name="grant_dialog_button_deny">"رد"</string>
@@ -281,13 +272,13 @@
     <string name="toast_copied_to_clipboard">در کلیپ بورد کپی شد</string>
     <string name="accessibility_service_description">پشتیبانی از جفت‌سازی را برای دستگاه‌هایی (مثلاً
         تلویزیون‌های دارای اندروید ۱۴+) که در آن‌ها نمی‌توان از اعلان‌ها یا تقسیم صفحه استفاده کرد،
-        فراهم می‌کند.\n\nبه Shizuku این امکان را می‌دهد که کد جفت‌سازی را از صفحه جفت‌سازی
+        فراهم می‌کند.\n\nبه Porter این امکان را می‌دهد که کد جفت‌سازی را از صفحه جفت‌سازی
         اشکال‌زدایی بی‌سیم استخراج کند. پس از یافتن کد جفت‌سازی، خود را غیرفعال می‌کند.</string>
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s از شیزوکوی جدید پشتیبانی نمی کند</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[شیزوکوی قدیمی از مارس ۲۰۱۹ منسوخ شده است. همچنین، Shizuku قدیمی در دستگاه‌های اندروید جدید کار نمی‌کند.<p>لطفاً از توسعه‌دهنده <b>%1$s</b> بخواهید که به‌روزرسانی کند.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s در حال درخواست Shizuku قدیمی است</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> پشتیبانی نسخه جدید شیزوکو دارد، اما شیزوکو قدیمی را درخواست می‌کند. این ممکن است به این دلیل باشد که Shizuku در حال اجرا نیست، لطفاً در برنامه Shizuku بررسی کنید.<p>Shizuku قدیمی از مارس ۲۰۱۹ منسوخ شده است.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">باز کردن Shizuku</string>
+    <string name="dialog_legacy_not_support_message"><![CDATA[شیزوکوی قدیمی از مارس ۲۰۱۹ منسوخ شده است. همچنین، Porter قدیمی در دستگاه‌های اندروید جدید کار نمی‌کند.<p>لطفاً از توسعه‌دهنده <b>%1$s</b> بخواهید که به‌روزرسانی کند.]]></string>
+    <string name="dialog_requesting_legacy_title">%1$s در حال درخواست Porter قدیمی است</string>
+    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> پشتیبانی نسخه جدید شیزوکو دارد، اما شیزوکو قدیمی را درخواست می‌کند. این ممکن است به این دلیل باشد که Porter در حال اجرا نیست، لطفاً در برنامه Porter بررسی کنید.<p>Porter قدیمی از مارس ۲۰۱۹ منسوخ شده است.]]></string>
+    <string name="dialog_requesting_legacy_button_open_shizuku">باز کردن Porter</string>
     <string name="wadb_notification_attempt_now">همین حالا تلاش کنید</string>
 </resources>

@@ -21,20 +21,10 @@
             android:summary="@string/settings_watchdog_summary"
             android:title="@string/settings_watchdog" />
 
-        <SwitchPreferenceCompat
-            android:key="tcp_mode"
-            android:title="@string/settings_tcp_mode" 
-            android:defaultValue="true" />
-
         <EditTextPreference
             android:key="tcp_port"
             android:title="@string/settings_tcp_port"
             android:inputType="number" />
-
-        <SwitchPreferenceCompat
-            android:key="auto_disable_usb_debugging"
-            android:title="@string/settings_auto_disable_usb_debugging"
-            android:summary="@string/settings_auto_disable_usb_debugging_summary" />
 
     </PreferenceCategory>
 
@@ -84,13 +74,6 @@
     <PreferenceCategory
         android:key="category_support"
         android:title="@string/settings_support">
-
-        <moe.shizuku.manager.settings.IntegerSimpleMenuPreference
-            android:entries="@array/update_mode"
-            android:entryValues="@array/update_mode_value"
-            android:key="update_mode"
-            android:summary="%s"
-            android:title="@string/check_for_updates" />
 
         <Preference
             android:key="help"

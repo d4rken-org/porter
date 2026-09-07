@@ -34,7 +34,7 @@ object EnvironmentUtils {
     }
 
     fun isWifiRequired(): Boolean {
-        return (getAdbTcpPort() <= 0 || !ShizukuSettings.getTcpMode())
+        return getAdbTcpPort() <= 0
     }
 
     fun isRooted(): Boolean {

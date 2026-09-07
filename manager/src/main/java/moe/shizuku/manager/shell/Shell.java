@@ -39,6 +39,8 @@ public class Shell extends Rish {
     }
 
     public static void main(String[] args, String packageName, IBinder binder, Handler handler) {
+        // The loader timeout only covers binder delivery, not the user's permission decision.
+        handler.removeCallbacksAndMessages(null);
         RishConfig.init(binder, ShizukuApiConstants.BINDER_DESCRIPTOR, 30000);
         Shizuku.onBinderReceived(binder, packageName);
         Shizuku.addBinderReceivedListenerSticky(() -> {

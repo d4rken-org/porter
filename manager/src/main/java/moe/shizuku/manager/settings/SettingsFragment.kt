@@ -40,7 +40,6 @@ import kotlinx.coroutines.CancellableContinuation
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.ShizukuSettings.Keys.*
-import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.app.SnackbarHelper
 import moe.shizuku.manager.app.ThemeHelper
 import moe.shizuku.manager.ktx.isComponentEnabled
@@ -66,7 +65,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private lateinit var startOnBootPreference: TwoStatePreference
     private lateinit var watchdogPreference: TwoStatePreference
-    private lateinit var tcpModePreference: TwoStatePreference
     private lateinit var tcpPortPreference: EditTextPreference
     private lateinit var languagePreference: ListPreference
     private lateinit var translationPreference: Preference
@@ -74,7 +72,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     private lateinit var nightModePreference: IntegerSimpleMenuPreference
     private lateinit var blackNightThemePreference: TwoStatePreference
     private lateinit var useSystemColorPreference: TwoStatePreference
-    private lateinit var updateModePreference: IntegerSimpleMenuPreference
     private lateinit var helpPreference: Preference
     private lateinit var reportBugPreference: Preference
     private lateinit var legacyPairingPreference: TwoStatePreference
@@ -85,7 +82,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private val stateListener: (ShizukuStateMachine.State) -> Unit = {
         if (ShizukuStateMachine.isRunning()) {
-            tcpModePreference.icon = maybeGetRestartIcon(KEY_TCP_MODE)
             tcpPortPreference.icon = maybeGetRestartIcon(KEY_TCP_PORT)
         }
     }
@@ -100,7 +96,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         startOnBootPreference = findPreference(KEY_START_ON_BOOT)!!
         watchdogPreference = findPreference(KEY_WATCHDOG)!!
-        tcpModePreference = findPreference(KEY_TCP_MODE)!!
         tcpPortPreference = findPreference(KEY_TCP_PORT)!!
         languagePreference = findPreference(KEY_LANGUAGE)!!
         translationPreference = findPreference(KEY_TRANSLATION)!!
@@ -108,7 +103,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         nightModePreference = findPreference(KEY_NIGHT_MODE)!!
         blackNightThemePreference = findPreference(KEY_BLACK_NIGHT_THEME)!!
         useSystemColorPreference = findPreference(KEY_USE_SYSTEM_COLOR)!!
-        updateModePreference = findPreference(KEY_UPDATE_MODE)!!
         helpPreference = findPreference(KEY_HELP)!!
         reportBugPreference = findPreference(KEY_REPORT_BUG)!!
         legacyPairingPreference = findPreference(KEY_LEGACY_PAIRING)!!
@@ -177,37 +171,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             }
         }
 
-        tcpModePreference.apply {
-            if (EnvironmentUtils.isTlsSupported()) {
-                summary = context.getString(R.string.settings_tcp_mode_summary)
-                icon = maybeGetRestartIcon(KEY_TCP_MODE)
-                setOnPreferenceChangeListener { _, newValue ->
-                    if (newValue is Boolean) {
-                        val applyChange: () -> Unit = {
-                            ShizukuSettings.setTcpMode(newValue)
-                            isChecked = newValue
-                            isEnabled = true
-                            summary = context.getString(R.string.settings_tcp_mode_summary)
-                            icon = maybeGetRestartIcon(KEY_TCP_MODE)
-                            tcpPortPreference.isVisible = newValue
-                        }
-                        
-                        if (!newValue && !ShizukuStateMachine.isRunning() && needsRestart(KEY_TCP_MODE, newValue)) {
-                            promptStopTcp { applyChange() }
-                        } else maybePromptRestart (KEY_TCP_MODE, newValue) { applyChange() }
-                    }
-                    false
-                }
-            } else if (EnvironmentUtils.isTelevision()) {
-                isEnabled = false
-                isChecked = true
-            } else {
-                isVisible = false
-            }
-        }
-
         tcpPortPreference.apply {
-            isVisible = tcpModePreference.isVisible && tcpModePreference.isChecked
+            // Only read on TVs without TLS pairing; everywhere else the port comes from adbd itself.
+            isVisible = EnvironmentUtils.isTelevision() && !EnvironmentUtils.isTlsSupported()
             icon = maybeGetRestartIcon(KEY_TCP_PORT)
 
             setOnBindEditTextListener { editText ->
@@ -289,13 +255,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             } else isVisible = false
         }
 
-        translationPreference.apply {
-            summary = context.getString(R.string.settings_translation_summary, context.getString(R.string.app_name))
-            setOnPreferenceClickListener {
-                CustomTabsHelper.launchUrlOrCopy(context, context.getString(R.string.translation_url))
-                true
-            }
-        }
+        // No translation project exists for Porter yet.
+        translationPreference.isVisible = false
 
         translationContributorsPreference.apply {
             val contributors = context.getString(R.string.translation_contributors).toHtml().toString()
@@ -303,8 +264,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 summary = contributors
             } else isVisible = false
         }
-
-        updateModePreference.value = ShizukuSettings.getUpdateMode()
 
         helpPreference.setOnPreferenceClickListener {
             CustomTabsHelper.launchUrlOrCopy(context, context.getString(R.string.help_url))
@@ -371,10 +330,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     private fun needsRestart(setting: String, newValue: Any? = null): Boolean {
         val currentPort = EnvironmentUtils.getAdbTcpPort()
         return when (setting) {
-            KEY_TCP_MODE -> {
-                val newMode = newValue as? Boolean ?: ShizukuSettings.getTcpMode()
-                (currentPort > 0) != newMode
-            }
             KEY_TCP_PORT -> {
                 val newPort = newValue as? Int ?: ShizukuSettings.getTcpPort()
                 (currentPort > 0) && (currentPort != newPort)
@@ -399,36 +354,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         return icon
     }
 
-    private fun promptStopTcp (applyChange: () -> Unit) {
-        val context = requireContext()
-        MaterialAlertDialogBuilder(context)
-            .setTitle(android.R.string.dialog_alert_title)
-            .setMessage(context.getString(R.string.settings_tcp_mode_dialog_close_port))
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                lifecycleScope.launch {
-                    tcpModePreference.apply {
-                        isEnabled = false
-                        summary = context.getString(R.string.settings_tcp_mode_closing_port)
-                    }
-                    AdbStarter.stopTcp(context, EnvironmentUtils.getAdbTcpPort())
-                    if (EnvironmentUtils.getAdbTcpPort() <= 0) applyChange()
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
-
     private fun maybePromptRestart (setting: String, newValue: Any? = null, applyChange: () -> Unit) {
         val context = requireContext()
         if (!ShizukuStateMachine.isRunning() || !needsRestart(setting, newValue)) {
             applyChange()
             context.sendBroadcast(Intent(context, NotifCancelReceiver::class.java))
         } else {
-            val message = buildString {
-                append(context.getString(R.string.settings_restart_dialog_message))
-                if (setting == KEY_TCP_MODE)
-                    append(context.getString(R.string.settings_restart_dialog_message_wifi_required))
-            }
+            val message = context.getString(R.string.settings_restart_dialog_message)
 
             MaterialAlertDialogBuilder(context)
             .setTitle(R.string.settings_restart_dialog_title)

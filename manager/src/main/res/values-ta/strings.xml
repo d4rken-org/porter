@@ -8,7 +8,7 @@
     <string name="home_status_service_version_update"><![CDATA[பதிப்பு %2$s, %1$s<br>%3$s பதிப்புக்கு மேம்படுத்த செயலியை மறுதொடக்கம் செய்யவும்]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[முதலில், திறன்பேசியை கணினியுடன் இணைக்கவும்]]></string>
-    <string name="home_adb_description"><![CDATA[Root அணுகல் இல்லாத பட்சத்தில், adb பயன்படுத்தி Shizuku வை தொடங்க வேண்டும் (கணினி இணைப்பு தேவை). ஒவ்வொரு முறை திறன்பேசி மறுதொடக்கம் ஆகும்போதும் இச்செயலை செய்ய வேண்டும். <b><a href="%1$s">உதவி பக்கத்தை படிக்கவும்</a></b>]]></string>
+    <string name="home_adb_description"><![CDATA[Root அணுகல் இல்லாத பட்சத்தில், adb பயன்படுத்தி Porter வை தொடங்க வேண்டும் (கணினி இணைப்பு தேவை). ஒவ்வொரு முறை திறன்பேசி மறுதொடக்கம் ஆகும்போதும் இச்செயலை செய்ய வேண்டும். <b><a href="%1$s">உதவி பக்கத்தை படிக்கவும்</a></b>]]></string>
     <string name="home_adb_button_view_help">உதவி பக்கத்தை திற</string>
     <string name="home_adb_button_view_command">கட்டளையைக் காட்டு</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* வேறு சில பரிசீலனைகள் உள்ளன, முதலில் நீங்கள் உதவியைப் படித்திருப்பதை உறுதிப்படுத்தவும்.]]></string>
@@ -16,7 +16,7 @@
     <string name="home_adb_dialog_view_command_button_send">அனுப்பவும்</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[வயர்லெஸ் பிழைத்திருத்தம் மூலம் தொடங்கவும்]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Android 11 அல்லது அதற்கு மேற்பட்ட பதிப்புகளில், கணினியுடன் இணைக்காமலேயே, வயர்லெஸ் பிழைத்திருத்தத்தை இயக்கி, உங்கள் சாதனத்திலிருந்து நேரடியாக Shizuku ஐத் தொடங்கலாம்.<p>முதலில் படிப்படியான வழிகாட்டியைப் பார்க்கவும்.]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Android 11 அல்லது அதற்கு மேற்பட்ட பதிப்புகளில், கணினியுடன் இணைக்காமலேயே, வயர்லெஸ் பிழைத்திருத்தத்தை இயக்கி, உங்கள் சாதனத்திலிருந்து நேரடியாக Porter ஐத் தொடங்கலாம்.<p>முதலில் படிப்படியான வழிகாட்டியைப் பார்க்கவும்.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[ஆண்ட்ராய்டு 11க்கு முன், வயர்லெஸ் பிழைத்திருத்தத்தை இயக்க கணினியுடன் இணைப்பது அவசியம்.]]></string>
     <string name="home_wireless_adb_view_guide_button">படிப்படியான வழிகாட்டி</string>
     <!-- Adb -->
@@ -36,7 +36,7 @@
     <string name="paring_code_is_wrong">இணைத்தல் குறியீடு தவறானது.</string>
     <string name="cannot_connect_port">வயர்லெஸ் பிழைத்திருத்தச் சேவையுடன் இணைக்க
         இயலவில்லை.\n\nநெட்வொர்க் அணுகலைக் கட்டுப்படுத்தக்கூடிய அனைத்து ஃபயர்வால், விளம்பரத் தொகுதி,
-        VPN அல்லது ஒத்த பயன்பாடுகளிலும் Shizuku வெள்ளையாகப் பட்டியலிடப்பட்டுள்ளதா என்பதை
+        VPN அல்லது ஒத்த பயன்பாடுகளிலும் Porter வெள்ளையாகப் பட்டியலிடப்பட்டுள்ளதா என்பதை
         உறுதிப்படுத்தவும்.</string>
     <string name="dialog_wireless_adb_not_enabled">வயர்லெஸ் பிழைத்திருத்தம்
         இயக்கப்படவில்லை.\nகுறிப்பு, Android 11 க்கு முன், வயர்லெஸ் பிழைத்திருத்தத்தை இயக்க, கணினி
@@ -49,9 +49,9 @@
         இடது பக்கத்தைத் தட்டவும்\n- \"இணைப்பு குறியீட்டுடன் சாதனத்தை இணை\" என்பதைத் தட்டவும்\n-
         அறிவிப்பில் இணைத்தல் குறியீட்டை உள்ளிடவும்</string>
     <string name="dialog_adb_pairing_accessibility_permission">Android 14 இல், தொகுப்பு நிறுவி மூலம்
-        Shizuku ஐ நிறுவுதல்/புதுப்பித்தல், இணைப்பதற்கான அணுகல் சேவையை இயக்க தேவையான ^1 அனுமதியை
+        Porter ஐ நிறுவுதல்/புதுப்பித்தல், இணைப்பதற்கான அணுகல் சேவையை இயக்க தேவையான ^1 அனுமதியை
         ரத்து செய்கிறது.\n\nஇதை வழங்க, பின்வரும் ADB கட்டளையை இயக்கவும்:\n\n^2\n\nகட்டளையை இயக்கிய
-        பிறகு, நீங்கள் இணைத்தல் செயல்முறையைத் தொடரலாம்.\n\nகுறிப்பு: ADB மூலம் Shizuku ஐ
+        பிறகு, நீங்கள் இணைத்தல் செயல்முறையைத் தொடரலாம்.\n\nகுறிப்பு: ADB மூலம் Porter ஐ
         நிறுவுதல்/புதுப்பித்தல் மூலம் இதை நீங்கள் புறக்கணிக்கலாம்.</string>
     <string name="dialog_adb_pairing_accessibility_enable">இணைத்தல் செயல்முறையைத் தொடங்க அணுகல்
         சேவையை இயக்கவும். இது ஷிசுகுவை இணைத்தல் குறியீட்டைக் கண்டறிய அனுமதிக்கிறது.\n\nகுறியீடு
@@ -69,8 +69,6 @@
         நேரத்தில் காண அனுமதிக்கும் ஒரே வழியாகும்.</string>
     <string name="adb_error_key_store">கம்பியில்லா பிழைத்திருத்தத்திற்கான விசையை உருவாக்க
         இயலவில்லை.\nஇந்த சாதனத்தின் கீஸ்டோர் பொறிமுறை உடைந்துவிட்டதால் இது இருக்கலாம்.</string>
-    <string name="adb_stopping_tcp">TCP போர்ட்டை மூடுகிறது</string>
-    <string name="adb_error_stop_tcp">TCP வழியாக ADB ஐ நிறுத்த முடியவில்லை.</string>
     <string name="adb_pair_required">முதலில் இணைத்தல் படிக்குச் செல்லவும்.</string>
     <string name="enable">இயக்கு</string>
     <string name="development_settings">டெவலப்பர் விருப்பங்கள்</string>
@@ -97,10 +95,10 @@
         இது நெட்வொர்க் அனுமதியால் கட்டுப்படுத்தப்படுகிறது.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">சில அமைப்புகள் (MIUI
         போன்றவை) பயன்பாடு முன்புற சேவையைப் பயன்படுத்தினாலும், நெட்வொர்க்கைத் தெரியாதபோது அவற்றை அணுக
-        அனுமதிக்காது. அத்தகைய அமைப்புகளில் Shizuku க்கான பேட்டரி தேர்வுமுறை அம்சங்களை முடக்கவும்.</string>
+        அனுமதிக்காது. அத்தகைய அமைப்புகளில் Porter க்கான பேட்டரி தேர்வுமுறை அம்சங்களை முடக்கவும்.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[தொடங்கு (ரூட் செய்யப்பட்ட சாதனங்களுக்கு)]]></string>
-    <string name="home_root_description"><![CDATA[நீங்கள் Magisk ஐப் பயன்படுத்துகிறீர்கள் என்றால், %1$sஐ முயற்சி செய்யலாம். ரூட் பயனர்களுக்கு, இது இறுதியில் Shizuku ஐ மாற்றும். குறிப்பு, %2$sஐப் பயன்படுத்த ஏற்கனவே உள்ள பயன்பாடுகள் சிறிது மாற வேண்டும்.]]></string>
+    <string name="home_root_description"><![CDATA[நீங்கள் Magisk ஐப் பயன்படுத்துகிறீர்கள் என்றால், %1$sஐ முயற்சி செய்யலாம். ரூட் பயனர்களுக்கு, இது இறுதியில் Porter ஐ மாற்றும். குறிப்பு, %2$sஐப் பயன்படுத்த ஏற்கனவே உள்ள பயன்பாடுகள் சிறிது மாற வேண்டும்.]]></string>
     <string name="home_root_button_start">தொடங்கு</string>
     <string name="home_root_button_restart">மறுதொடக்கம்</string>
     <!-- Home - Application management -->
@@ -114,7 +112,7 @@
         இங்கே காண்பிக்கப்படும்.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">ஆட்டோமேஷன் பயன்பாடுகள் மூலம் ஷிசுகுவைக் கட்டுப்படுத்தவும்</string>
-    <string name="home_automation_description">Tasker மற்றும் MacroDroid போன்ற பயன்பாடுகள் Shizuku ஐ
+    <string name="home_automation_description">Tasker மற்றும் MacroDroid போன்ற பயன்பாடுகள் Porter ஐ
         தானாகத் தொடங்க/நிறுத்த இன்டென்ட்களை அனுப்ப முடியும்.</string>
     <string name="home_automation_button_view_intents">நோக்கங்களைக் காண்க</string>
     <string name="home_automation_dialog_label_action">செயல்</string>
@@ -127,10 +125,10 @@
     <!-- Home - Adb permissions limited -->
     <string name="home_adb_is_limited_title">நீங்கள் ஒரு கூடுதல் படி எடுக்க வேண்டும்.</string>
     <string name="home_adb_is_limited_description">உங்கள் சாதன உற்பத்தியாளர் adb அனுமதிகளை
-        கட்டுப்படுத்தியுள்ளார், மேலும் Shizuku ஐப் பயன்படுத்தும் பயன்பாடுகள் சரியாக வேலை
+        கட்டுப்படுத்தியுள்ளார், மேலும் Porter ஐப் பயன்படுத்தும் பயன்பாடுகள் சரியாக வேலை
         செய்யாது.\n\nவழக்கமாக, \"டெவலப்பர் விருப்பங்கள்\" இல் உள்ள சில விருப்பங்களை சரிசெய்வதன்
         மூலம் இந்த வரம்பை நீக்க முடியும். இதை எப்படி செய்வது என்பது குறித்த விவரங்களுக்கு உதவியைப்
-        படிக்கவும்.\n\nசெயல்பாடு நடைமுறைக்கு வர நீங்கள் Shizuku ஐ மறுதொடக்கம் செய்ய
+        படிக்கவும்.\n\nசெயல்பாடு நடைமுறைக்கு வர நீங்கள் Porter ஐ மறுதொடக்கம் செய்ய
         வேண்டியிருக்கலாம்.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">adb இன் அனுமதி குறைவாக உள்ளது.</string>
@@ -171,16 +169,9 @@
     <string name="settings_use_system_color">சிஸ்டம் தீம் நிறத்தைப் பயன்படுத்து</string>
     <string name="settings_watchdog">கண்காணிப்பு நாய்</string>
     <string name="settings_watchdog_summary">ஷிசுகு செயலிழந்தால் தானாகவே மறுதொடக்கம் செய்யுங்கள்.</string>
-    <string name="settings_tcp_mode">TCP பயன்முறை</string>
-    <string name="settings_tcp_mode_summary">"Wi-Fi இல்லாமல் Shizukuவை மறுதொடக்கம் செய்ய
-        அனுமதிக்கிறது. (மறுதொடக்கம் செய்யப்பட்டதிலிருந்து Shizuku ஒரு முறை தொடங்கியிருக்க வேண்டும்)"</string>
-    <string name="settings_tcp_mode_dialog_close_port">"TCP போர்ட் உடனடியாக மூடப்படும். TCP
-        பயன்முறையை மீண்டும் இயக்க உங்களுக்கு Wi-Fi தேவைப்படும். தொடரவா?"</string>
-    <string name="settings_tcp_mode_closing_port">TCP போர்ட்டை மூடுகிறது...</string>
     <string name="settings_restart_dialog_title">மறுதொடக்கம் அவசியம்</string>
-    <string name="settings_restart_dialog_message">இந்த அமைப்பைப் பயன்படுத்த Shizuku மறுதொடக்கம்
+    <string name="settings_restart_dialog_message">இந்த அமைப்பைப் பயன்படுத்த Porter மறுதொடக்கம்
         செய்ய வேண்டும்.</string>
-    <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wi-Fi தேவை. Shizuku தொடர்ந்து இயங்கும் மற்றும் பின்னணியில் மறுதொடக்கம் செய்வதற்கு முன் Wi-Fi இணைப்புக்காக காத்திருக்கும்.</b>]]></string>
     <string name="settings_tcp_port">TCP போர்ட்</string>
     <string name="settings_tcp_port_default">இயல்புநிலை (5555)</string>
     <string name="settings_tcp_port_hint">இயல்புநிலையைப் பயன்படுத்த காலியாக விடவும் (5555)</string>
@@ -228,7 +219,7 @@
     <string name="toast_no_email_app">மின்னஞ்சல் பயன்பாடு எதுவும் கிடைக்கவில்லை.</string>
     <string name="toast_shizuku_already_starting">ஷிசுகு ஏற்கனவே பின்னணியில் தொடங்குகிறது.</string>
     <string name="toast_accessibility_tv_only">இந்த சேவை டிவி சாதனங்களில் மட்டுமே ஆதரிக்கப்படுகிறது.</string>
-    <string name="toast_pairing_timeout">Shizuku இணைத்தல் சேவை நேரம் முடிந்துவிட்டது.</string>
+    <string name="toast_pairing_timeout">Porter இணைத்தல் சேவை நேரம் முடிந்துவிட்டது.</string>
     <!-- Dark Mode Setting Override -->
     <string name="dark_theme">தீம்</string>
     <string name="dark_theme_off">எப்போதும் வெளிச்சம்</string>
@@ -238,7 +229,7 @@
     <string name="about_dialog_button_close">மூடு</string>
     <string name="about_view_source_code"><![CDATA[%sஇல் மூலக் குறியீட்டைக் காண்க]]></string>
     <!-- Start -->
-    <string name="action_start">Shizuku ஐத் தொடங்கவும்</string>
+    <string name="action_start">Porter ஐத் தொடங்கவும்</string>
     <!-- Stop -->
     <string name="action_stop">ஷிசுகுவை நிறுத்து</string>
     <string name="dialog_stop_message">ஷிசுகு சேவை நிறுத்தப்படும்.</string>
@@ -292,11 +283,11 @@
     <string name="accessibility_service_description">அறிவிப்புகள் அல்லது ஸ்பிளிட் ஸ்கிரீனைப்
         பயன்படுத்த முடியாத சாதனங்களுக்கு (எ.கா., Android 14+ இயங்கும் டிவிகள்) இணைத்தல் ஆதரவை
         வழங்குகிறது.\n\nவயர்லெஸ் பிழைத்திருத்த இணைத்தல் திரையில் இருந்து இணைத்தல் குறியீட்டைப்
-        பிரித்தெடுக்க Shizuku ஐ இயக்குகிறது. இணைத்தல் குறியீடு கண்டுபிடிக்கப்பட்டதும் அது தானாகவே
+        பிரித்தெடுக்க Porter ஐ இயக்குகிறது. இணைத்தல் குறியீடு கண்டுபிடிக்கப்பட்டதும் அது தானாகவே
         முடக்கப்படும்.</string>
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s நவீன ஷிசுகுவை ஆதரிக்கவில்லை</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[மார்ச் 2019 முதல் Legacy Shizuku நிறுத்தப்பட்டுள்ளது. மேலும், Legacy Shizuku புதிய Android அமைப்புகளில் வேலை செய்யாது.<p>புதுப்பிக்க <b>%1$s</b> டெவலப்பரிடம் கேளுங்கள்.]]></string>
+    <string name="dialog_legacy_not_support_message"><![CDATA[மார்ச் 2019 முதல் Legacy Porter நிறுத்தப்பட்டுள்ளது. மேலும், Legacy Porter புதிய Android அமைப்புகளில் வேலை செய்யாது.<p>புதுப்பிக்க <b>%1$s</b> டெவலப்பரிடம் கேளுங்கள்.]]></string>
     <string name="dialog_requesting_legacy_title">%1$s மரபுவழி ஷிசுகுவைக் கோருகிறது</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> நவீன ஷிசுகு ஆதரவைக் கொண்டுள்ளது, ஆனால் இது மரபுவழி ஷிசுகுவைக் கோருகிறது. ஷிசுகு இயங்காததால் இது நிகழலாம், தயவுசெய்து ஷிசுகு பயன்பாட்டைப் பார்க்கவும்.<p>மரபுவழி ஷிசுகு மார்ச் 2019 முதல் நிறுத்தப்பட்டுள்ளது.]]></string>
     <string name="dialog_requesting_legacy_button_open_shizuku">ஷிசுகுவைத் திறக்கவும்</string>

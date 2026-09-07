@@ -8,7 +8,7 @@
     <string name="home_status_service_version_update"><![CDATA[версія %2$s, %1$s<br>почніть оновлюватися до версії %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Почніть з підключення до ПК]]></string>
-    <string name="home_adb_description"><![CDATA[Для пристроїв без root потрібно використовувати ADB для запуску Shizuku (потрібне підключення до комп’ютера). Цей процес потрібно повторювати кожного разу, коли пристрій перезавантажується. Будь ласка, <b><a href="%1$s">прочитайте довідку</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Для пристроїв без root потрібно використовувати ADB для запуску Porter (потрібне підключення до комп’ютера). Цей процес потрібно повторювати кожного разу, коли пристрій перезавантажується. Будь ласка, <b><a href="%1$s">прочитайте довідку</a></b>.]]></string>
     <string name="home_adb_button_view_help">Прочитати онлайн довідку</string>
     <string name="home_adb_button_view_command">Переглянути adb команду</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Є деякі інші міркування, будь ласка, підтвердьте, що ви прочитали довідку спочатку.]]></string>
@@ -16,7 +16,7 @@
     <string name="home_adb_dialog_view_command_button_send">Відправити</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Запуск за допомогою налагоджування через Wi-Fi]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Починаючи з Android 11 та вище, ви можете ввімкнути налагодження через WiFi та запустити Shizuku прямо з вашого пристрою, не під\'єднуючись до комп\'ютеру.<p>Будь ласка, спочатку перегляньте інструкцію.]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Починаючи з Android 11 та вище, ви можете ввімкнути налагодження через WiFi та запустити Porter прямо з вашого пристрою, не під\'єднуючись до комп\'ютеру.<p>Будь ласка, спочатку перегляньте інструкцію.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[До Android 11, потрібно під\'єднатися до комп\'ютеру щоб ввімкнути налагодження через Wi-FI.]]></string>
     <string name="home_wireless_adb_view_guide_button">Покрокова інструкція</string>
     <!-- Adb -->
@@ -26,7 +26,7 @@
         мереж.
         \n
         \nЗверніть увагу, не вимикайте \"Параметри розробника\" чи \"Налагодження USB\", інакше
-        Shizuku буде зупинено.</string>
+        Porter буде зупинено.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Будь ласка, спробуйте
         вимкнути та увімкнути \"Налагодження через Wi-Fi\", якщо пошук продовжується.</string>
     <string name="dialog_adb_port">Порт</string>
@@ -37,7 +37,7 @@
     <string name="dialog_adb_pairing_paring_code">Код парування</string>
     <string name="paring_code_is_wrong">Код парування неправильний.</string>
     <string name="cannot_connect_port">Не можу підключитися до бездротової служби
-        налагодження.\n\nБудь ласка, переконайтеся, що Shizuku внесений до білого списку у всіх
+        налагодження.\n\nБудь ласка, переконайтеся, що Porter внесений до білого списку у всіх
         фаєрволах, блокуванні реклами, VPN чи подібних додатках, які можуть обмежувати доступ до
         мережі.</string>
     <string name="dialog_wireless_adb_not_enabled">Налагодження через Wi-Fi не ввімкнено.
@@ -51,18 +51,18 @@
         бездротового зв\'язку\"\n- Натисніть \"Спів\'язати пристрій за допомогою коду
         сполучення\"\n- Введіть код сполучення зі сповіщення</string>
     <string name="dialog_adb_pairing_accessibility_permission">На Android 14 встановлення/оновлення
-        Shizuku за допомогою інсталятора пакетів скасовує дозвіл ^1, який потрібен для ввімкнення
+        Porter за допомогою інсталятора пакетів скасовує дозвіл ^1, який потрібен для ввімкнення
         служби доступності для сполучення.\n\nЩоб надати його, виконайте таку команду
         ADB:\n\n^2\n\nПісля виконання команди ви можете продовжити процес сполучення.\n\nПримітка:
-        ви можете обійти це, встановивши/оновивши Shizuku за допомогою ADB.</string>
+        ви можете обійти це, встановивши/оновивши Porter за допомогою ADB.</string>
     <string name="dialog_adb_pairing_accessibility_enable">Будь ласка, увімкніть службу доступності,
-        щоб розпочати процес сполучення. Це дозволить Shizuku виявити код сполучення.\n\nСлужба
+        щоб розпочати процес сполучення. Це дозволить Porter виявити код сполучення.\n\nСлужба
         доступності буде вимкнена після знаходження коду або через 1 хвилину для економії енергії.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Будь ласка, розпочніть сполучення,
         виконавши такі кроки:\n- Перейдіть до розділу \"Параметри розробника\"\n- Увімкніть
         \"Налагодження USB\" та \"Налагодження бездротового зв\'язку\"\n- Натисніть ліву частину
         \"Налагодження бездротового зв\'язку\"\n- Натисніть \"Спів\'язати пристрій за допомогою коду
-        сполучення\". Shizuku автоматично визначить код сполучення.</string>
+        сполучення\". Porter автоматично визначить код сполучення.</string>
     <string name="adb_pairing_requires_multi_window">Спершу увійдіть в режим розділеного екрана
         (багатьох вікон).</string>
     <string name="adb_pairing_requires_multi_window_reason">Система вимагає, щоб діалог поєднання
@@ -70,14 +70,12 @@
         додаток і системний діалог видимими одночасно.</string>
     <string name="adb_error_key_store">Не вдається згенерувати ключ для бездротового
         налагодження.\nМожливо, це пов\'язано з тим, що механізм KeyStore цього пристрою зламаний.</string>
-    <string name="adb_stopping_tcp">Закриття TCP-порту</string>
-    <string name="adb_error_stop_tcp">Не вдалося зупинити ADB через TCP</string>
     <string name="adb_pair_required">Будь ласка, спочатку пройдіть етап парування.</string>
     <string name="enable">Увімкнути</string>
     <string name="development_settings">Параметри розробника</string>
     <string name="notification_settings">Налаштування повідомлень</string>
-    <string name="adb_pairing_tutorial_title">Парувати Shizuku з вашим пристроєм</string>
-    <string name="adb_pairing_tutorial_content_notification">Повідомлення від Shizuku допоможе вам
+    <string name="adb_pairing_tutorial_title">Парувати Porter з вашим пристроєм</string>
+    <string name="adb_pairing_tutorial_content_notification">Повідомлення від Porter допоможе вам
         закінчити парування.</string>
     <string name="adb_pairing_tutorial_content_steps">Перейдіть до розділу «Параметри розробника»,
         потім увімкніть «Налагодження по USB» та «Налагодження по бездротовому зв’язку».</string>
@@ -85,7 +83,7 @@
         «Бездротове налагодження», потім натисніть «Підключити пристрій за допомогою коду
         сполучення». Введіть код зі сповіщення, щоб завершити сполучення.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Процес парування потребує, щоб
-        ви взаємодіяли із сповіщенням від Shizuku. Будь ласка, дозвольте Shizuku публікувати
+        ви взаємодіяли із сповіщенням від Porter. Будь ласка, дозвольте Porter публікувати
         сповіщення.</string>
     <string name="adb_pairing_tutorial_content_miui">Користувачам MIUI, иожливо, доведеться змінити
         стіль сповіщень на \"Android\" із \"Сповіщення\" - \"Панель сповіщень\" в системних
@@ -98,10 +96,10 @@
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Деякі системи
         (наприклад, MIUI) забороняють додаткам доступ до мережі, якщо вони не видимі, навіть якщо
         додаток використовує передній план. Будь ласка, вимкніть функції оптимізації батареї для
-        Shizuku на таких системах.</string>
+        Porter на таких системах.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Запустіть службу з root доступом]]></string>
-    <string name="home_root_description"><![CDATA[Якщо ви користуєтеся Magisk, можете спробувати %1$s. Для користувачів root він зрештою замінить Shizuku. Зверніть увагу, що існуючі програми потребують дещо змін, щоб використовувати %2$s.]]></string>
+    <string name="home_root_description"><![CDATA[Якщо ви користуєтеся Magisk, можете спробувати %1$s. Для користувачів root він зрештою замінить Porter. Зверніть увагу, що існуючі програми потребують дещо змін, щоб використовувати %2$s.]]></string>
     <string name="home_root_button_start">Запуск</string>
     <string name="home_root_button_restart">Перезапуск</string>
     <!-- Home - Application management -->
@@ -114,11 +112,11 @@
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Натисніть для перегляду авторизованих додатків]]></string>
     <string name="home_app_management_empty">Тут відображатимуться програми, які запросили або
-        оголосили дозвіл Shizuku.</string>
+        оголосили дозвіл Porter.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Керуйте Сідзуку за допомогою програм автоматизації</string>
     <string name="home_automation_description">Такі програми, як Tasker та MacroDroid, можуть
-        надсилати наміри для автоматичного запуску/зупинки Shizuku.</string>
+        надсилати наміри для автоматичного запуску/зупинки Porter.</string>
     <string name="home_automation_button_view_intents">Переглянути наміри</string>
     <string name="home_automation_dialog_label_action">Дія</string>
     <string name="home_automation_dialog_label_package">Пакет</string>
@@ -126,29 +124,29 @@
     <string name="home_automation_dialog_label_target">Ціль</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Посібник розробника</string>
-    <string name="home_learn_more_description">Дізнайтеся, як розробляти з Shizuku</string>
+    <string name="home_learn_more_description">Дізнайтеся, як розробляти з Porter</string>
     <!-- Home - Adb permissions limited -->
     <string name="home_adb_is_limited_title">Потрібен ще один крок</string>
     <string name="home_adb_is_limited_description">Виробник вашого пристрою обмежив права ADB,
-        додатки що використовую Shizuku будуть працювати некорректно.
+        додатки що використовую Porter будуть працювати некорректно.
         \n
         \nЗазвичай ці обмеження можна зняти змінивши налаштування в параметрах розробника. Будь
         ласка, прочитайте як це зробити в розділі \"Допомога\".
         \n
-        \nМожливо потрібно буде перезапустити Shizuku.</string>
+        \nМожливо потрібно буде перезапустити Porter.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Дозвіл на adb обмежений</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Можливо, ваш виробник пристрою лімітує дозвіл adb.<p>Можливо, є рішення для вашої системи у <b><a href="%1$s">цьому документі</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* потрібен root, щоб запускався Shizuku</string>
+    <string name="app_management_item_summary_requires_root">* потрібен root, щоб запускався Porter</string>
     <string name="app_management_toggle_all">Перемкнути все</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">Використовувати Shizuku в програмах терміналу</string>
+    <string name="home_terminal_title">Використовувати Porter в програмах терміналу</string>
     <string name="home_terminal_description">Запуск команд оболонки в термінальних програмах через
-        Shizuku</string>
+        Porter</string>
     <string name="terminal_tutorial_miui">Користувачі повідомляли, що MIUI порушує технологію
         доступу до сховища, яка використовується функцією експорту.</string>
     <string name="terminal_tutorial_miui_2">Якщо ви використовуєте MIUI, можливо, вам доведеться
-        витягти файл з папки assets в APK-файлі Shizuku.</string>
+        витягти файл з папки assets в APK-файлі Porter.</string>
     <string name="terminal_tutorial_1">Експортуйте файли в нову папку.</string>
     <string name="terminal_tutorial_1_description">Буде експортовано два файли: %1$s та %2$s. Якщо
         файли вже існують у вибраній папці, їх буде видалено.</string>
@@ -172,23 +170,16 @@
         авторизації.</string>
     <string name="settings_use_system_color">Використовувати системний колір</string>
     <string name="settings_watchdog">Сторожовий пес</string>
-    <string name="settings_watchdog_summary">Автоматично перезапускати Shizuku у разі збою</string>
-    <string name="settings_tcp_mode">Режим TCP</string>
-    <string name="settings_tcp_mode_summary">"Дозволяє перезавантажити Shizuku без Wi-Fi. (Shizuku
-        мала запуститися один раз після перезавантаження)"</string>
-    <string name="settings_tcp_mode_dialog_close_port">"TCP-порт буде негайно закрито. Щоб знову
-        ввімкнути режим TCP, вам знадобиться Wi-Fi. Продовжити?"</string>
-    <string name="settings_tcp_mode_closing_port">Закриття TCP-порту...</string>
+    <string name="settings_watchdog_summary">Автоматично перезапускати Porter у разі збою</string>
     <string name="settings_restart_dialog_title">Потрібно перезавантажити</string>
     <string name="settings_restart_dialog_message">Шізуку потрібно почати заново, щоб застосувати
         цей настрій.</string>
-    <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Потрібен Wi-Fi. Шідзуку продовжить працювати і чекати на Wi-Fi, перш ніж перезапустити у фоновому режимі.</b>]]></string>
     <string name="settings_tcp_port">TCP-порт</string>
     <string name="settings_tcp_port_default">За замовчуванням (5555)</string>
     <string name="settings_tcp_port_hint">Залиште порожнім, щоб використовувати значення за
         замовчуванням (5555)</string>
     <string name="settings_tcp_learn_more">Дізнайтеся більше про використання програм автоматизації
-        для керування Shizuku</string>
+        для керування Porter</string>
     <string name="settings_language">Мова</string>
     <string name="settings_translation_contributors">Співробітники перекладу</string>
     <string name="settings_translation">Беріть участь у перекладі</string>
@@ -241,14 +232,14 @@
     <string name="about_dialog_button_close">Закрити</string>
     <string name="about_view_source_code"><![CDATA[Переглянути вихідний код на %s]]></string>
     <!-- Start -->
-    <string name="action_start">Почніть Shizuku</string>
+    <string name="action_start">Почніть Porter</string>
     <!-- Stop -->
-    <string name="action_stop">Зупинити Shizuku</string>
-    <string name="dialog_stop_message">Сервіс Shizuku буде зупинено.</string>
+    <string name="action_stop">Зупинити Porter</string>
+    <string name="dialog_stop_message">Сервіс Porter буде зупинено.</string>
     <!-- Notification -->
     <string name="notification_channel_service_status">Статус запуску серав</string>
-    <string name="notification_service_starting">Сервіс Shizuku запущено…</string>
-    <string name="notification_service_start_failed">Помилка запуску служби Shizuku.</string>
+    <string name="notification_service_starting">Сервіс Porter запущено…</string>
+    <string name="notification_service_start_failed">Помилка запуску служби Porter.</string>
     <string name="notification_service_start_no_root">Помилка запиту на root доступ.</string>
     <string name="notification_working">Працює…</string>
     <string name="notification_channel_adb_pairing">Парування для налагодження по Wi-Fi</string>
@@ -258,12 +249,12 @@
     <string name="notification_adb_pairing_stop_searching">Зупинити пошук</string>
     <string name="notification_adb_pairing_working_title">Виконується створення пари</string>
     <string name="notification_adb_pairing_succeed_title">Парування успішне</string>
-    <string name="notification_adb_pairing_succeed_text">Тепер ви можете запустити сервіс Shizuku.</string>
+    <string name="notification_adb_pairing_succeed_text">Тепер ви можете запустити сервіс Porter.</string>
     <string name="notification_adb_pairing_failed_title">Парування невдале</string>
     <string name="notification_adb_pairing_retry">Спробувати ще раз</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">доступ до Shizuku</string>
-    <string name="permission_description">Дозволити програмі використовувати Shizuku.</string>
+    <string name="permission_label">доступ до Porter</string>
+    <string name="permission_description">Дозволити програмі використовувати Porter.</string>
     <string name="permission_warning_template"><![CDATA[Дозволити додатку <b>%1$s</b> таке: %2$s\?]]></string>
     <string name="grant_dialog_button_allow_always">Завжди дозволяти</string>
     <string name="grant_dialog_button_deny">"Заборонити"</string>
@@ -279,7 +270,7 @@
     <string name="wadb_error_title">Помилка під час запуску при завантаженні</string>
     <string name="wadb_error_notify_dev">Натисніть, щоб повідомити розробника.</string>
     <string name="wadb_permission_error_notification_title">Помилка дозволу</string>
-    <string name="wadb_permission_error_notification_content">Для запуску Shizuku під час
+    <string name="wadb_permission_error_notification_content">Для запуску Porter під час
         завантаження системи потрібні налаштування WRITE_SECURE_SETTINGS. Натисніть, щоб дізнатися,
         як їх надати.</string>
     <string name="wadb_notification_channel">Служба автоматичного запуску ADB</string>
@@ -295,13 +286,13 @@
     <string name="toast_copied_to_clipboard">Скопійовано в буфер обміну</string>
     <string name="accessibility_service_description">Забезпечує підтримку сполучення для пристроїв
         (наприклад, телевізорів з Android 14+), де не можна використовувати сповіщення або
-        розділений екран.\n\nДозволяє Shizuku витягувати код сполучення з екрана сполучення для
+        розділений екран.\n\nДозволяє Porter витягувати код сполучення з екрана сполучення для
         бездротового налагодження. Він вимкнеться, як тільки код сполучення буде знайдено.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s не підтримує сучасну версію Shizuku</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Підтримка старої версії Shizuku завершилася у березні 2019 року. Також, стара версія Shizuku не працює на нових версіях Android.<p>Будь ласка, попросіть оновитися у розробника <b>%1$s</b>.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s просить стару версію Shizuku</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> має підтримку нової версії Shizuku, але просить стару версію Shizuku. Це може трапитися тому, що Shizuku не запущено, будь ласка, перевірте у програмі Shizuku.<p>Підтримка старої версії Shizuku завершилася у березні 2019 року.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Відкрити Shizuku</string>
+    <string name="dialog_legacy_not_support_title">%1$s не підтримує сучасну версію Porter</string>
+    <string name="dialog_legacy_not_support_message"><![CDATA[Підтримка старої версії Porter завершилася у березні 2019 року. Також, стара версія Porter не працює на нових версіях Android.<p>Будь ласка, попросіть оновитися у розробника <b>%1$s</b>.]]></string>
+    <string name="dialog_requesting_legacy_title">%1$s просить стару версію Porter</string>
+    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> має підтримку нової версії Porter, але просить стару версію Porter. Це може трапитися тому, що Porter не запущено, будь ласка, перевірте у програмі Porter.<p>Підтримка старої версії Porter завершилася у березні 2019 року.]]></string>
+    <string name="dialog_requesting_legacy_button_open_shizuku">Відкрити Porter</string>
     <string name="wadb_notification_attempt_now">Спробуйте зараз</string>
 </resources>

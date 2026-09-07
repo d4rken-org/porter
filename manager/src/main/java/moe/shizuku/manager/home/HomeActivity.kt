@@ -33,7 +33,6 @@ import moe.shizuku.manager.utils.CustomTabsHelper
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import moe.shizuku.manager.utils.UpdateHelper
 import rikka.core.content.asActivity
 import rikka.core.ktx.unsafeLazy
 import rikka.lifecycle.Status
@@ -99,24 +98,6 @@ abstract class HomeActivity : AppBarActivity() {
         appsModel.grantedCount.observe(this) {
             if (it.status == Status.SUCCESS) {
                 adapter.updateData()
-            }
-        }
-
-        lifecycleScope.launch {
-            if (UpdateHelper.isCheckForUpdatesEnabled() && UpdateHelper.isNewUpdateAvailable()) {
-                SnackbarHelper.show(
-                    this@HomeActivity,
-                    binding.root,
-                    msg = getString(R.string.snackbar_update_available),
-                    duration = Snackbar.LENGTH_INDEFINITE,
-                    actionText = getString(R.string.snackbar_action_update),
-                    action = {
-                        lifecycleScope.launch {
-                            UpdateHelper.update()
-                        }
-                    }
-                )
-                UpdateHelper.updateLastPromptedVersion()
             }
         }
 
@@ -199,7 +180,7 @@ abstract class HomeActivity : AppBarActivity() {
                 binding.sourceCode.movementMethod = LinkMovementMethod.getInstance()
                 binding.sourceCode.text = getString(
                     R.string.about_view_source_code,
-                    "<b><a href=\"https://github.com/thedjchi/Shizuku\">GitHub</a></b>"
+                    "<b><a href=\"https://github.com/thedjchi/Shizuku\">Upstream GitHub</a></b>"
                 ).toHtml()
                 binding.icon.setImageBitmap(
                     AppIconCache.getOrLoadBitmap(
@@ -210,16 +191,6 @@ abstract class HomeActivity : AppBarActivity() {
                     )
                 )
                 binding.versionName.text = packageManager.getPackageInfo(packageName, 0).versionName
-
-                binding.btnUpdate.setOnClickListener {
-                    lifecycleScope.launch {
-                        UpdateHelper.checkAndInstallUpdates()
-                    }
-                }
-
-                binding.btnDonate.setOnClickListener {
-                    CustomTabsHelper.launchUrlOrCopy(this, "https://www.buymeacoffee.com/thedjchi")
-                }
 
                 val dialog = MaterialAlertDialogBuilder(this)
                     .setView(binding.root)

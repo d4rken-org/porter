@@ -10,7 +10,7 @@ import rikka.shizuku.Shizuku
 object ShellBinderRequestHandler {
 
     fun handleRequest(context: Context, intent: Intent): Boolean {
-        if (intent.action != "rikka.shizuku.intent.action.REQUEST_BINDER") {
+        if (intent.action != "eu.darken.porter.intent.action.REQUEST_BINDER") {
             return false
         }
 

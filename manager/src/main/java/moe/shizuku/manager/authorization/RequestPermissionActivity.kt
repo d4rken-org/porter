@@ -7,11 +7,12 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
 import moe.shizuku.manager.app.AppActivity
@@ -49,7 +50,7 @@ class RequestPermissionActivity : AppActivity() {
 
         val dialog = MaterialAlertDialogBuilder(this)
                 .setIcon(icon)
-                .setTitle("Shizuku: ${getString(R.string.app_management_dialog_adb_is_limited_title)}")
+                .setTitle("${getString(R.string.app_name)}: ${getString(R.string.app_management_dialog_adb_is_limited_title)}")
                 .setMessage(getString(R.string.app_management_dialog_adb_is_limited_message, Helps.ADB.get()).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE))
                 .setPositiveButton(android.R.string.ok, null)
                 .setOnDismissListener { finish() }
@@ -64,27 +65,21 @@ class RequestPermissionActivity : AppActivity() {
         return false
     }
 
-    private fun waitForBinder(): Boolean {
-        return runBlocking {
-            try { 
-                withTimeout(5000) {
-                    ShizukuStateMachine.asFlow().first { it == ShizukuStateMachine.State.RUNNING }
-                }
-                true
-            } catch (e: TimeoutCancellationException) {
-                LOGGER.e(e, "Binder not received in 5s")
-                false
+    // The RUNNING transition is posted to the main thread, so the wait must not block it.
+    private suspend fun waitForBinder(): Boolean {
+        return try {
+            withTimeout(5000) {
+                ShizukuStateMachine.asFlow().first { it == ShizukuStateMachine.State.RUNNING }
             }
+            true
+        } catch (e: TimeoutCancellationException) {
+            LOGGER.e(e, "Binder not received in 5s")
+            false
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (!waitForBinder()) {
-            finish()
-            return
-        }
 
         val uid = intent.getIntExtra("uid", -1)
         val pid = intent.getIntExtra("pid", -1)
@@ -94,11 +89,21 @@ class RequestPermissionActivity : AppActivity() {
             finish()
             return
         }
-        if (!checkSelfPermission()) {
-            setResult(uid, pid, requestCode, allowed = false, onetime = true)
-            return
-        }
 
+        lifecycleScope.launch {
+            if (!waitForBinder()) {
+                finish()
+                return@launch
+            }
+            if (!checkSelfPermission()) {
+                setResult(uid, pid, requestCode, allowed = false, onetime = true)
+                return@launch
+            }
+            showConfirmation(uid, pid, requestCode, ai)
+        }
+    }
+
+    private fun showConfirmation(uid: Int, pid: Int, requestCode: Int, ai: ApplicationInfo) {
         val label = try {
             ai.loadLabel(packageManager)
         } catch (e: Exception) {

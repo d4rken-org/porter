@@ -29,7 +29,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import moe.shizuku.manager.R
-import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.AdbMdns
 import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.receiver.ShizukuReceiverStarter
@@ -51,14 +50,9 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
             val cr = applicationContext.contentResolver
 
             Settings.Global.putInt(cr, Settings.Global.ADB_ENABLED, 1)
-            Settings.Global.putLong(cr, "adb_allowed_connection_time", 0L)
 
-            val tcpPort = EnvironmentUtils.getAdbTcpPort()
-            if (tcpPort > 0 && !ShizukuSettings.getTcpMode()) {
-                AdbStarter.stopTcp(applicationContext, tcpPort)
-            }
-
-            val port = tcpPort.takeIf { !EnvironmentUtils.isWifiRequired() } ?: callbackFlow {
+            // An adbd already listening on TCP (e.g. set up by a computer or another manager) is used as-is.
+            val port = EnvironmentUtils.getAdbTcpPort().takeIf { it > 0 } ?: callbackFlow {
                 val adbMdns = AdbMdns(applicationContext, AdbMdns.TLS_CONNECT) { p ->
                     if (p.second > 0) trySend(p.second)
                 }

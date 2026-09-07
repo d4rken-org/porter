@@ -14,7 +14,7 @@ plugins {
 android {
     namespace = "moe.shizuku.manager"
     defaultConfig {
-        applicationId = "moe.shizuku.privileged.api"
+        applicationId = "eu.darken.porter"
         versionCode = rootProject.ext.versionCode
         versionName = rootProject.ext.versionName
         externalNativeBuild {
@@ -124,7 +124,7 @@ afterEvaluate {
 
 android.applicationVariants.configureEach { variant ->
     variant.outputs.configureEach {
-        outputFileName = "shizuku-v${variant.versionName}-${variant.name}.apk"
+        outputFileName = "porter-v${variant.versionName}-${variant.name}.apk"
 
         variant.assembleProvider.get().doLast {
             def outDir = new File(rootDir, "out")
@@ -176,9 +176,9 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "androidx.work:work-runtime-ktx:2.10.4"
 
-    implementation "com.android.tools.build:apksig:8.13.2"
     implementation "com.google.android.material:material:1.14.0-alpha08"
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
+    implementation "org.bouncycastle:bcpkix-jdk18on:1.80"
     implementation "com.github.topjohnwu.libsu:core:6.0.0"
 
     implementation "dev.rikka.rikkax.appcompat:appcompat:1.6.1"
@@ -194,10 +194,8 @@ dependencies {
     implementation "dev.rikka.rikkax.preference:simplemenu-preference:1.0.3"
     implementation "dev.rikka.rikkax.lifecycle:lifecycle-resource-livedata:1.0.1"
 
-    implementation "io.github.reandroid:ARSCLib:1.3.8"
     implementation "io.github.vvb2060.ndk:boringssl:20250114"
 
-    implementation "org.bouncycastle:bcpkix-jdk18on:1.80"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0"
     implementation "org.lsposed.libcxx:libcxx:27.0.12077973"
     implementation "org.lsposed.hiddenapibypass:hiddenapibypass:6.1"

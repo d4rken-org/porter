@@ -1,11 +1,9 @@
 package rikka.shizuku.server;
 
-import static rikka.shizuku.server.ServerConstants.PERMISSION;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.util.AtomicFile;
+import android.os.Process;
+import android.system.Os;
 
 import androidx.annotation.Nullable;
 
@@ -23,12 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import kotlin.collections.ArraysKt;
 import rikka.hidden.compat.PackageManagerApis;
-import rikka.shizuku.server.util.Android17Compat;
-import rikka.shizuku.server.util.InstalledPackagesCompat;
-import rikka.hidden.compat.UserManagerApis;
-import rikka.shizuku.server.ktx.HandlerKt;
 
 public class ShizukuConfigManager extends ConfigManager {
 
@@ -38,9 +31,8 @@ public class ShizukuConfigManager extends ConfigManager {
             .setVersion(ShizukuConfig.LATEST_VERSION)
             .create();
 
-    private static final long WRITE_DELAY = 10 * 1000;
 
-    private static final File FILE = new File("/data/user_de/0/com.android.shell/shizuku.json");
+    private static final File FILE = new File("/data/user_de/0/com.android.shell/porter.json");
     private static final AtomicFile ATOMIC_FILE = new AtomicFile(FILE);
 
     public static ShizukuConfig load() {
@@ -82,6 +74,9 @@ public class ShizukuConfigManager extends ConfigManager {
                 String json = GSON_OUT.toJson(config);
                 stream.write(json.getBytes());
 
+                // Root and ADB starts share the same database; shell must own every replacement inode.
+                if (Process.myUid() == 0) Os.fchown(stream.getFD(), 2000, 2000);
+                Os.fchmod(stream.getFD(), 0600);
                 ATOMIC_FILE.finishWrite(stream);
                 LOGGER.v("config saved");
             } catch (Throwable tr) {
@@ -90,14 +85,6 @@ public class ShizukuConfigManager extends ConfigManager {
             }
         }
     }
-
-    private final Runnable mWriteRunner = new Runnable() {
-
-        @Override
-        public void run() {
-            write(config);
-        }
-    };
 
     private final ShizukuConfig config;
 
@@ -149,46 +136,13 @@ public class ShizukuConfigManager extends ConfigManager {
             }
         }
 
-        for (int userId : UserManagerApis.getUserIdsNoThrow()) {
-            for (PackageInfo pi : InstalledPackagesCompat.getInstalledPackagesNoThrow(PackageManager.GET_PERMISSIONS, userId)) {
-                if (pi == null
-                        || pi.applicationInfo == null
-                        || pi.requestedPermissions == null
-                        || !ArraysKt.contains(pi.requestedPermissions, PERMISSION)) {
-                    continue;
-                }
-
-                int uid = pi.applicationInfo.uid;
-                boolean allowed;
-                try {
-                    allowed = Android17Compat.checkPermission(PERMISSION, uid) == PackageManager.PERMISSION_GRANTED;
-                } catch (Throwable e) {
-                    LOGGER.w("checkPermission");
-                    continue;
-                }
-
-                List<String> packages = new ArrayList<>();
-                packages.add(pi.packageName);
-
-                updateLocked(uid, packages, ConfigManager.MASK_PERMISSION, allowed ? ConfigManager.FLAG_ALLOWED : 0);
-                changed = true;
-            }
-        }
-
         if (changed) {
-            scheduleWriteLocked();
+            persistLocked();
         }
     }
 
-    private void scheduleWriteLocked() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (HandlerKt.getWorkerHandler().hasCallbacks(mWriteRunner)) {
-                return;
-            }
-        } else {
-            HandlerKt.getWorkerHandler().removeCallbacks(mWriteRunner);
-        }
-        HandlerKt.getWorkerHandler().postDelayed(mWriteRunner, WRITE_DELAY);
+    private void persistLocked() {
+        write(config);
     }
 
     private ShizukuConfig.PackageEntry findLocked(int uid) {
@@ -198,6 +152,16 @@ public class ShizukuConfigManager extends ConfigManager {
             }
         }
         return null;
+    }
+
+    public List<Integer> allowedUids() {
+        synchronized (this) {
+            List<Integer> uids = new ArrayList<>();
+            for (ShizukuConfig.PackageEntry entry : config.packages) {
+                if (entry.isAllowed()) uids.add(entry.uid);
+            }
+            return uids;
+        }
     }
 
     @Nullable
@@ -227,7 +191,7 @@ public class ShizukuConfigManager extends ConfigManager {
                 entry.packages.add(packageName);
             }
         }
-        scheduleWriteLocked();
+        persistLocked();
     }
 
     public void update(int uid, List<String> packages, int mask, int values) {
@@ -242,7 +206,7 @@ public class ShizukuConfigManager extends ConfigManager {
             return;
         }
         config.packages.remove(entry);
-        scheduleWriteLocked();
+        persistLocked();
     }
 
     public void remove(int uid) {

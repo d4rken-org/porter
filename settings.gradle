@@ -45,7 +45,7 @@ dependencyResolutionManagement {
     }
 }
 
-include ":server", ":starter", ":shell", ":manager", ":common"
+include ":server", ":starter", ":shell", ":manager", ":common", ":compat", ":client", ":probe"
 
 def root = "api"
 
@@ -56,7 +56,7 @@ if (propFile.canRead()) {
     props.load(new FileInputStream(propFile))
 
     if (props != null) {
-        if (props["api.useLocal"].equals("true")) {
+        if ("true".equals(props["api.useLocal"])) {
             root = props["api.dir"]
         }
     }

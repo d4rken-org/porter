@@ -1,0 +1,26 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace = "eu.darken.porter.compat"
+    defaultConfig {
+        applicationId = "moe.shizuku.privileged.api"
+        versionCode = rootProject.ext.versionCode
+        versionName = rootProject.ext.versionName
+    }
+    signingConfigs {
+        sign {}
+    }
+    buildTypes {
+        debug { signingConfig = signingConfigs.sign }
+        release { signingConfig = signingConfigs.sign }
+    }
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            outputFileName = "porter-compat-v${variant.versionName}-${variant.name}.apk"
+        }
+    }
+}
+
+apply from: rootProject.file("signing.gradle")

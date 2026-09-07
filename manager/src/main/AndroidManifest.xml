@@ -22,8 +22,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
@@ -37,22 +35,22 @@
         android:required="false" />
 
     <permission-group
-        android:name="moe.shizuku.manager.permission-group.API"
+        android:name="eu.darken.porter.permission-group.API"
         android:description="@string/permission_group_description"
         android:icon="@drawable/ic_system_icon"
         android:label="@string/permission_group_label" />
 
     <permission
-        android:name="moe.shizuku.manager.permission.MANAGER"
+        android:name="eu.darken.porter.permission.MANAGER"
         android:protectionLevel="signature" />
-    <uses-permission android:name="moe.shizuku.manager.permission.MANAGER" />
+    <uses-permission android:name="eu.darken.porter.permission.MANAGER" />
 
     <permission
-        android:name="moe.shizuku.manager.permission.API_V23"
+        android:name="eu.darken.porter.permission.API_V23"
         android:description="@string/permission_description"
         android:icon="@drawable/ic_system_icon"
         android:label="@string/permission_label"
-        android:permissionGroup="moe.shizuku.manager.permission-group.API"
+        android:permissionGroup="eu.darken.porter.permission-group.API"
         android:protectionLevel="dangerous" />
     <uses-permission
         android:name="moe.shizuku.manager.permission.API_V23"
@@ -90,7 +88,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:banner="@mipmap/banner"
+            android:banner="@drawable/porter_banner"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -112,10 +110,6 @@
         <activity
             android:name=".shell.ShellTutorialActivity"
             android:label="@string/home_terminal_title" />
-        <activity
-            android:name=".stealth.StealthTutorialActivity"
-            android:label="@string/home_stealth_title"
-            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".settings.SettingsActivity"
             android:exported="false"
@@ -154,7 +148,7 @@
             android:exported="true"
             android:theme="@style/GrantPermissions">
             <intent-filter>
-                <action android:name="rikka.shizuku.intent.action.REQUEST_BINDER" />
+                <action android:name="eu.darken.porter.intent.action.REQUEST_BINDER" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -163,7 +157,7 @@
             android:name=".legacy.LegacyIsNotSupportedActivity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:permission="moe.shizuku.manager.permission.API"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL"
             android:theme="@style/GrantPermissions">
             <intent-filter>
                 <action android:name="${applicationId}.intent.action.REQUEST_AUTHORIZATION" />
@@ -211,7 +205,7 @@
             android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>
-                <action android:name="rikka.shizuku.intent.action.REQUEST_BINDER" />
+                <action android:name="eu.darken.porter.intent.action.REQUEST_BINDER" />
             </intent-filter>
         </receiver>
 
@@ -258,7 +252,7 @@
 
         <provider
             android:name=".ShizukuManagerProvider"
-            android:authorities="${applicationId}.shizuku"
+            android:authorities="${applicationId}.porter"
             android:directBootAware="true"
             android:enabled="true"
             android:exported="true"

@@ -15,14 +15,11 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.work.WorkManager
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.R
 import moe.shizuku.manager.adb.AdbPairingTutorialActivity
-import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.databinding.HomeItemContainerBinding
 import moe.shizuku.manager.databinding.HomeStartWirelessAdbBinding
 import moe.shizuku.manager.home.showAccessibilityDialog
@@ -60,9 +57,8 @@ class StartWirelessAdbViewHolder(binding: HomeStartWirelessAdbBinding, root: Vie
             val cr = context.contentResolver
             if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
                 Settings.Global.putInt(cr, Settings.Global.ADB_ENABLED, 1)
-                Settings.Global.putLong(cr, "adb_allowed_connection_time", 0L)
             }
-        
+
             val adbEnabled = Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED, 0)
             if (adbEnabled == 0) {
                 WadbEnableUsbDebuggingDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
@@ -70,7 +66,6 @@ class StartWirelessAdbViewHolder(binding: HomeStartWirelessAdbBinding, root: Vie
             }
 
             val tcpPort = EnvironmentUtils.getAdbTcpPort()
-            val tcpMode = ShizukuSettings.getTcpMode()
 
             // If ADB is NOT listening to a TCP port and the device doesn't support TLS, inform the user
             if (tcpPort <= 0 && !EnvironmentUtils.isTlsSupported()) {
@@ -78,13 +73,7 @@ class StartWirelessAdbViewHolder(binding: HomeStartWirelessAdbBinding, root: Vie
             // If ADB IS NOT listening to a TCP port but the device supports TLS, start mDns discovery
             } else if (tcpPort <= 0) {
                 AdbDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
-            // If ADB IS listening to a TCP port but the user wants to close it and use TLS instead, close the TCP port and start mDns discovery
-            } else if (!tcpMode) {
-                scope.launch {
-                    AdbStarter.stopTcp(context, tcpPort)
-                }
-                AdbDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
-            // Otherwise ADB IS listening to a TCP port and the user wants to keep it open. Start Shizuku via TCP
+            // Otherwise ADB IS already listening to a TCP port. Use it as-is.
             } else {
                 val intent = Intent(context, StarterActivity::class.java).apply {
                     putExtra(StarterActivity.EXTRA_PORT, tcpPort)

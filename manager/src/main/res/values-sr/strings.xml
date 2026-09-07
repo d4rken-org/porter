@@ -8,7 +8,7 @@
     <string name="home_status_service_version_update"><![CDATA[Verzija %2$s, %1$s<br>Počni ispočetka zbog ažuriranja na verziju%3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Pokreni uz pomoć konekcije preko računara]]></string>
-    <string name="home_adb_description"><![CDATA[Za uređaje koji nisu root-ovani, potrebno je izvršiti adb komandu radi pokretanja Shizuku aplikacije (zahteva konekciju sa računarom). Ovaj proces je neophodno svaki put ponoviti nakon restarta uređaja. Molim Vas <b><a href="%1$s">pročitajte pomoć </a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Za uređaje koji nisu root-ovani, potrebno je izvršiti adb komandu radi pokretanja Porter aplikacije (zahteva konekciju sa računarom). Ovaj proces je neophodno svaki put ponoviti nakon restarta uređaja. Molim Vas <b><a href="%1$s">pročitajte pomoć </a></b>.]]></string>
     <string name="home_adb_button_view_help">Pročitajte pomoć</string>
     <string name="home_adb_button_view_command">Pregled komande</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Постоје још нека разматрања, молимо вас да прво потврдите да сте прочитали помоћ.]]></string>
@@ -16,7 +16,7 @@
     <string name="home_adb_dialog_view_command_button_send">Pošalji</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Pokreni preko Bežičnog otklanjanja grešaka]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Za Android verziju softvera 11 i više, možete omogućavanjem rada režima Bežičnog otklanjanja grešaka pokrenuti Shizuku aplikaciju direktno sa Vašeg  telefona, zaobilazeći konekciju sa računarom.<p> Molimo Vas, najpre pogledajte vodič Korak-po-korak.]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Za Android verziju softvera 11 i više, možete omogućavanjem rada režima Bežičnog otklanjanja grešaka pokrenuti Porter aplikaciju direktno sa Vašeg  telefona, zaobilazeći konekciju sa računarom.<p> Molimo Vas, najpre pogledajte vodič Korak-po-korak.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Pre Android verzije softvera 11, konekcija sa računarom bila je neophodna  u cilju omogućavanja rada režima Bežično otklanjanja grešaka.]]></string>
     <string name="home_wireless_adb_view_guide_button">Vodič Korak-po-korak</string>
     <!-- Adb -->
@@ -26,7 +26,7 @@
         se automatski onemogućava pri svakoj promeni mrežne konekcije..
         \n
         \nPrimetićete, onemogućavanjem sekcije \"Opcije programera\" ili režima \"USB otklanjanje
-        grešaka\", proces rada aplikacije Shizuku se prekida.</string>
+        grešaka\", proces rada aplikacije Porter se prekida.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Молимо вас да покушате да
         онемогућите и омогућите „Бежично отклањање грешака“ ако се претрага настави.</string>
     <string name="dialog_adb_port">Лука</string>
@@ -37,7 +37,7 @@
     <string name="dialog_adb_pairing_paring_code">Kód za uparivanje</string>
     <string name="paring_code_is_wrong">Kód za uparivanje je pogrešan.</string>
     <string name="cannot_connect_port">Ne mogu da se povežem sa bežičnom uslugom otklanjanje
-        grešaka.\n\nUverite se da je Shizuku na beloj listi u svim zaštitnim zidovima, ad-block, VPN
+        grešaka.\n\nUverite se da je Porter na beloj listi u svim zaštitnim zidovima, ad-block, VPN
         ili sličnim aplikacijama koje mogu ograničiti pristup mreži.</string>
     <string name="dialog_wireless_adb_not_enabled">Bežično otklanjanje grešaka nije omogućeno.
         \nPrimedba: Pre Android-a 11, omogućavanje bežičnog otklanjanja grešaka bilo je uslovljeno
@@ -68,14 +68,12 @@
         sistemski dijalog budu vidljivi u isto vreme.</string>
     <string name="adb_error_key_store">Nije moguće generisati ključ za bežično otklanjanje
         grešaka.\nTo može biti zato što je KeiStore mehanizam ovog uređaja je slomljena.</string>
-    <string name="adb_stopping_tcp">Затварање TCP порта</string>
-    <string name="adb_error_stop_tcp">Заустављање ADB-а преко TCP-а није успело</string>
     <string name="adb_pair_required">Molim Vas, najpre prođite kroz korake za uparivanje uređaja.</string>
     <string name="enable">Омогући</string>
     <string name="development_settings">Razvojne opcije programera</string>
     <string name="notification_settings">Opcije obaveštenja</string>
-    <string name="adb_pairing_tutorial_title">Uparite Shizuku sa Vašim uređajem</string>
-    <string name="adb_pairing_tutorial_content_notification">Notifikacija iz Shizuku aplikacije će
+    <string name="adb_pairing_tutorial_title">Uparite Porter sa Vašim uređajem</string>
+    <string name="adb_pairing_tutorial_content_notification">Notifikacija iz Porter aplikacije će
         Vam pomoći da dovršite uparivanje.</string>
     <string name="adb_pairing_tutorial_content_steps">Идите на „Опције за програмере“, затим
         омогућите „USB дебаговање“ и „Бежично дебаговање“.</string>
@@ -88,16 +86,16 @@
         стил обавештења на „Android“ из „Обавештења“ - „Тањир обавештења“ у системским подешавањима.</string>
     <string name="adb_pairing_tutorial_content_miui_2">U suprotnom, možda nećete moći da unesete kod
         za uparivanje iz obaveštenja.</string>
-    <string name="adb_pairing_tutorial_content_finish">Vratite se u Shizuku i počnite Shizuku.</string>
-    <string name="adb_pairing_tutorial_content_network">Shizuku treba da pristupi lokalnoj mreži.
+    <string name="adb_pairing_tutorial_content_finish">Vratite se u Porter i počnite Porter.</string>
+    <string name="adb_pairing_tutorial_content_network">Porter treba da pristupi lokalnoj mreži.
         Kontroliše se mrežnom dozvolom.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Neki sistemi (kao
         što je MIUI) ne dozvoljavaju aplikacijama pristup mreži kada nisu vidljive, čak i ako
         aplikacija koristi uslugu u prvom planu. Molimo Vas da onemogućite funkcije optimizacije
-        baterije za Shizuku na takvim sistemima.</string>
+        baterije za Porter na takvim sistemima.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Покрени (за рутоване уређаје)]]></string>
-    <string name="home_root_description"><![CDATA[Ако користите Magisk, можете испробати %1$s. За root кориснике, на крају ће заменити Shizuku. Имајте на уму да постојеће апликације треба мало да се промене да би користиле %2$s.]]></string>
+    <string name="home_root_description"><![CDATA[Ако користите Magisk, можете испробати %1$s. За root кориснике, на крају ће заменити Porter. Имајте на уму да постојеће апликације треба мало да се промене да би користиле %2$s.]]></string>
     <string name="home_root_button_start">Почетак</string>
     <string name="home_root_button_restart">Поново покрени</string>
     <!-- Home - Application management -->
@@ -125,9 +123,9 @@
     <!-- Home - Adb permissions limited -->
     <string name="home_adb_is_limited_title">Морате направити додатни корак</string>
     <string name="home_adb_is_limited_description">Произвођач вашег уређаја је ограничио adb дозволе
-        и апликације које користе Shizuku неће исправно радити.\n\nОбично се ово ограничење може
+        и апликације које користе Porter неће исправно радити.\n\nОбично се ово ограничење може
         уклонити подешавањем неких опција у „Опцијама за програмере“. Молимо вас да прочитате помоћ
-        за детаље о томе како да то урадите.\n\nМожда ћете морати поново да покренете Shizuku да би
+        за детаље о томе како да то урадите.\n\nМожда ћете морати поново да покренете Porter да би
         операција ступила на снагу.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Дозвола adb-а је ограничена</string>
@@ -141,7 +139,7 @@
     <string name="terminal_tutorial_miui">Корисници су пријавили да MIUI крши Storage Access
         Framework, који користи функција извоза.</string>
     <string name="terminal_tutorial_miui_2">Ако користите MIUI, можда ћете морати да извучете
-        датотеку из фасцикле assets у Shizuku-овом APK-у.</string>
+        датотеку из фасцикле assets у Porter-овом APK-у.</string>
     <string name="terminal_tutorial_1">Извезите датотеке у нову фасциклу.</string>
     <string name="terminal_tutorial_1_description">Биће извезене две датотеке: %1$s и %2$s. Ако
         датотеке већ постоје у изабраној фасцикли, биће обрисане.</string>
@@ -166,16 +164,9 @@
     <string name="settings_use_system_color">Користи боју системске теме</string>
     <string name="settings_watchdog">Чувар</string>
     <string name="settings_watchdog_summary">Аутоматски поново покрените Шизуку ако се сруши</string>
-    <string name="settings_tcp_mode">TCP режим</string>
-    <string name="settings_tcp_mode_summary">"Омогућава Шизукуу да се поново покрене без Wi-Fi-ја.
-        (Шизуку се морао једном покренути од поновног покретања)"</string>
-    <string name="settings_tcp_mode_dialog_close_port">"TCP порт ће бити одмах затворен. Биће вам
-        потребан Wi-Fi да бисте поново укључили TCP режим. Желите ли да наставите?"</string>
-    <string name="settings_tcp_mode_closing_port">Затварање TCP порта...</string>
     <string name="settings_restart_dialog_title">Потребно је поновно покретање</string>
-    <string name="settings_restart_dialog_message">Shizuku treba da se ponovo pokrene da bi se
+    <string name="settings_restart_dialog_message">Porter treba da se ponovo pokrene da bi se
         primenila ova postavka.</string>
-    <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Vi-Fi je potreban. Shizuku će nastaviti da radi i čekati Vi-Fi vezu pre ponovnog pokretanja u pozadini.</b>]]></string>
     <string name="settings_tcp_port">ТЦП порт</string>
     <string name="settings_tcp_port_default">Подразумевано (5555)</string>
     <string name="settings_tcp_port_hint">Оставите празно да бисте користили подразумевано (5555)</string>
@@ -220,7 +211,7 @@
     <string name="toast_no_email_app">Није пронађена апликација за е-пошту</string>
     <string name="toast_shizuku_already_starting">Шизуку већ почиње у позадини</string>
     <string name="toast_accessibility_tv_only">Ova usluga je podržana samo na TV uređajima.</string>
-    <string name="toast_pairing_timeout">Shizuku uparivanje servis je isteklo.</string>
+    <string name="toast_pairing_timeout">Porter uparivanje servis je isteklo.</string>
     <!-- Dark Mode Setting Override -->
     <string name="dark_theme">Тема</string>
     <string name="dark_theme_off">Увек светло</string>

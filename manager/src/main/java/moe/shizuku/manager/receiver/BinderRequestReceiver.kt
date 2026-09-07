@@ -7,7 +7,6 @@ import moe.shizuku.manager.shell.ShellBinderRequestHandler
 
 class BinderRequestReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != "rikka.shizuku.intent.action.REQUEST_BINDER") return
         ShellBinderRequestHandler.handleRequest(context, intent)
     }
 }
