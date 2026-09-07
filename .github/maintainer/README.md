@@ -24,4 +24,4 @@ For an existing checkout, run `git submodule update --init --recursive`. Debug A
 - [Website and repository setup](website.md)
 - [Artwork and replacement procedure](artwork.md)
 
-The `probe` module supplies test clients; it is not a user app. The `client` module contains the adapter for direct Porter support. Until an artifact is published, consumers that copy its source need to keep their copies synchronized.
+The `probe` module supplies test clients; it is not a user app. The `client` module is loaded from the API submodule and published with the SDK from `d4rken-org/porter-api`. See the developer guide for its JitPack dependency.

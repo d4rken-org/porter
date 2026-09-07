@@ -33,6 +33,6 @@ jobs:
           path: |
             manager/build/outputs/apk/debug/*.apk
             compat/build/outputs/apk/debug/*.apk
-            client/build/outputs/aar/*.aar
+            api/client/build/outputs/aar/*.aar
             probe/build/outputs/apk/**/*.apk
           if-no-files-found: error

@@ -15,7 +15,7 @@ Release version name and monotonically increasing version code are defined in th
 
 Release builds without a signing configuration fail. For local release-mode testing only, `-Pporter.developmentSigning=true` explicitly permits a development certificate. Never publish those APKs.
 
-CI should build the manager, companion and adapter from the same source tag, verify their manifests and certificates, and attach APK checksums and build provenance. Attestation establishes build provenance; it is not a claim of byte-for-byte reproducibility.
+CI should build the manager and companion from the app tag, including the adapter from its pinned API submodule, verify their manifests and certificates, and attach APK checksums and build provenance. Attestation establishes build provenance; it is not a claim of byte-for-byte reproducibility.
 
 Write release notes for users: describe the changes they will notice, identify the Porter and optional Porter Compatibility downloads, link the startup guide, and state any tested-version limits or known problems. Include SHA-256 checksums for the APKs and their signing-certificate fingerprint from `tools/verify-apks.py`. Do not attach probe apps or development-signed APKs to public releases.
 

@@ -1,8 +1,0 @@
-plugins { id "com.android.library" }
-
-android { namespace = "eu.darken.porter.client" }
-
-dependencies {
-    api "dev.rikka.shizuku:api:13.1.5"
-    api "dev.rikka.shizuku:provider:13.1.5"
-}

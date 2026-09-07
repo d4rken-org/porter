@@ -7,26 +7,43 @@ If your Android app already uses Shizuku, you can add direct Porter support whil
 
 The integration has three parts: declare Porter's permission, accept its service connection through a provider, and select one service for each app process. Adding the permission alone is not enough.
 
-## 1. Include the adapter
+## 1. Add the Porter SDK
 
-Keep these dependencies; they are the versions used with the current adapter:
+Add JitPack to your repositories in `settings.gradle.kts`, restricted to the Porter SDK group:
 
 ```kotlin
-implementation("dev.rikka.shizuku:api:13.1.5")
-implementation("dev.rikka.shizuku:provider:13.1.5")
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven("https://jitpack.io") {
+            content { includeGroup("com.github.d4rken-org.porter-api") }
+        }
+    }
+}
 ```
 
-Copy the three Java files from [Porter's client adapter](https://github.com/d4rken-org/porter/tree/HEAD/client/src/main/java/eu/darken/porter/client) into your app's Java source tree, keeping their `eu.darken.porter.client` package:
+Then add the client library:
 
-- `PorterClient.java`
-- `PorterProvider.java`
-- `SelectedShizukuProvider.java`
+```kotlin
+implementation("com.github.d4rken-org.porter-api:client:0.1.0")
+```
 
-Record the Porter commit you copied so you can track adapter updates. Preserve its Apache 2.0 license and attribution. The adapter is distributed as source; use the files linked above rather than a Maven dependency for the adapter itself.
+This includes Porter's adapter and maintained copies of the Shizuku-compatible API, provider, shared code and Binder interfaces. You do not need to copy any Java files. Source and releases are in [Porter API](https://github.com/d4rken-org/porter-api).
 
-Include the adapter in one module only. Copying the same classes into multiple libraries can cause duplicate-class build errors.
+Remove your existing `dev.rikka.shizuku:api` and `dev.rikka.shizuku:provider` dependencies, and any source copies of `eu.darken.porter.client`. The SDK preserves `rikka.shizuku.*` classes, so your existing imports and calls still work. Including both SDKs produces conflicting classes.
 
-Alternatively, include the repository's `client` Android library module in your build. That module already declares the two SDK dependencies and the Porter permission, but you still need to declare the providers below.
+If another library brings in upstream SDK artifacts, exclude those dependencies from that library and use the Porter SDK instead:
+
+```kotlin
+implementation("some.library:using-shizuku:VERSION") {
+    exclude(group = "dev.rikka.shizuku")
+}
+```
+
+The published Gradle metadata declares conflicts with the equivalent upstream modules. Excluding upstream artifacts is still needed when they enter through another dependency. Verify that library works with the Porter SDK; the metadata does not establish compatibility by itself.
+
+Use a fixed release tag such as `0.1.0`, not a moving branch or `-SNAPSHOT` version.
 
 ## 2. Update your manifest
 
@@ -97,7 +114,7 @@ Use `Backend.AUTO` or `Backend.SHIZUKU` for the other choices. Check `saved` bef
 
 The active choice stays fixed for the life of the process. Ask the user to **Force stop** your app in Android Settings and reopen it after changing the setting. An activity recreation is not sufficient. Do not disconnect ongoing work or change the Shizuku singleton to apply the preference immediately.
 
-Providers initialize before `Application.onCreate()`. Calling the setter there does not select a different service for an already initialized process. A custom default must be chosen before provider initialization, for example in your included adapter's preference default, rather than by a late call to the setter.
+Providers initialize before `Application.onCreate()`. Calling the setter there does not select a different service for an already initialized process. For an app that supports only Porter, use the manifest configuration below so the choice applies before provider initialization.
 
 ## 4. Keep your existing Shizuku calls
 
@@ -129,15 +146,17 @@ If you intentionally drop Shizuku support, remove its permission contributed by 
     tools:node="remove" />
 ```
 
-Keep both gated providers: the SDK still uses `.shizuku` for internal cross-process Binder lookup. In your copied adapter, make `getPreferredBackend()` return Porter unconditionally and do not expose the other choices:
+Keep both gated providers: the SDK still uses `.shizuku` for internal cross-process Binder lookup. Add this metadata inside your app's `<application>` element:
 
-```java
-public static Backend getPreferredBackend(Context context) {
-    return Backend.PORTER;
-}
+```xml
+<meta-data
+    android:name="eu.darken.porter.client.PORTER_ONLY"
+    android:value="true" />
 ```
 
-This selects Porter before provider initialization and ignores any older saved backend choice. Leaving the adapter on Automatic would select Shizuku when Porter is missing, which is inappropriate for a Porter-only app. Show installation guidance for Porter instead.
+Use a literal boolean `true`. This selects Porter before provider initialization, ignores any older saved backend choice and never falls back to Shizuku when Porter is missing. Both the metadata and removal of the legacy permission are required for this setup.
+
+Do not offer a service selector in a Porter-only app. `PorterClient.isPorterOnly(context)` exposes this configuration; attempting to save Automatic or Shizuku in this mode throws `IllegalArgumentException`. Show installation guidance for Porter when it is missing.
 
 ## Verify your integration
 

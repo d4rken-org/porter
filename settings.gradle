@@ -79,3 +79,9 @@ project(":provider").projectDir = file("$root${File.separator}provider")
 
 include ":server-shared"
 project(":server-shared").projectDir = file("$root${File.separator}server-shared")
+
+def clientDir = file("$root${File.separator}client")
+if (!new File(clientDir, "build.gradle").isFile()) {
+    throw new GradleException("Porter SDK client module is missing. Initialize the pinned API submodule or update api.dir in local.properties.")
+}
+project(":client").projectDir = clientDir
