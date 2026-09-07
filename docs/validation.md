@@ -33,6 +33,18 @@ Java 21, pinned upstream API submodule, Android build tools 37.0.0.
 - Original Shizuku and Porter run concurrently. The unchanged legacy probe works with the original.
 - Explicitly selecting Shizuku in the dual-provider probe connects to Shizuku. Stopping Shizuku disconnects the probe while Porter remains running.
 
+## Older published SD Maid SE with compatibility companion
+
+Tested the unmodified [SD Maid SE v1.7.5-rc0 GitHub release](https://github.com/d4rken-org/sdmaid-se/releases/tag/v1.7.5-rc0), published 17 June 2026, on a fresh Android 16 API 36 emulator. APK SHA-256 matches GitHub: `22d3272d3409eccf48b9b88cad66e064c58072529007e503728b39bbaad3fa35`. The APK requests only the original Shizuku API permission. Porter and its companion used the development-signed 0.1.0 release artifacts; original Shizuku was absent.
+
+- Selecting "Use Shizuku if available" displayed Porter's approval dialog. Approval granted the legacy permission and started SD Maid's `AdbHost` user service as shell (UID 2000).
+- AppCleaner scan completed and reported 348 kB of cache. Deletion reached the release's sponsor activation screen and was not exercised.
+- With root and accessibility disabled, AppControl successfully force-stopped Porter Compatibility. Android recorded the force-stop caller as SD Maid's shell helper PID 5592, and the target's stopped flag changed from false to true.
+- Revoking the legacy permission removed Porter's grant and the helper process. Reopening SD Maid prompted again; denial left no privileged helper running.
+- Android's crash buffer was empty. DebugBadger's crash heuristic reported unrelated runtime startup/shutdown lines and a missing marker, so that heuristic did not provide reliable crash evidence.
+
+Evidence is retained locally under `out/porter-0.1.0-development/legacy-sdmaid-1.7.5/`, including the approval screenshot, interaction history, package states, process lists and full logcat. The isolated test emulator was removed; the user's Porter preview emulator was left running.
+
 ## Remaining physical-device coverage
 
 Wireless pairing, vendor-specific background restrictions, work profiles/secondary users and production root implementations still require device beta testing. Emulator ADB startup exercises the server and client paths, not the wireless pairing UX. The artwork and signing certificates used here are for development.
