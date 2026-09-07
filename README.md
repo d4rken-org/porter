@@ -22,7 +22,7 @@ Apps with built-in Porter support only need Porter. For apps that only support S
 
 **Porter Compatibility replaces the installed Shizuku app.** Remove Shizuku before installing it. Porter itself can be installed alongside Shizuku, but the compatibility companion cannot.
 
-[Choose the right setup](docs/compatibility.md), including SD Maid SE and Butler.
+[Choose the right setup for your apps](docs/compatibility.md).
 
 ## Help
 

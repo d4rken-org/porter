@@ -23,4 +23,4 @@ For an existing checkout, run `git submodule update --init --recursive`. Debug A
 - [API source dependency](api.md)
 - [Website and repository setup](website.md)
 
-The `probe` module supplies test clients; it is not a user app. The `client` module contains the adapter currently copied into SD Maid SE and Butler. Keep all three copies synchronized until an artifact is published.
+The `probe` module supplies test clients; it is not a user app. The `client` module contains the adapter for direct Porter support. Until an artifact is published, consumers that copy its source need to keep their copies synchronized.

@@ -68,7 +68,7 @@ Open the app you want to use, enable its Porter or Shizuku integration, then app
 
 To remove access, tap **Authorized applications** in Porter and turn off the app's authorization. Porter and Shizuku keep separate approvals.
 
-If the app has a service selector, choose Porter there. In Porter-aware SD Maid SE and Butler builds, the selector is in General settings. After changing it, use **Force stop** in Android's app settings and reopen the app.
+If the app has a service selector, choose Porter there. Follow the app's own setup instructions. If changing the selection requires restarting the app, use **Force stop** in Android's app settings and reopen it.
 
 ## Update Porter
 

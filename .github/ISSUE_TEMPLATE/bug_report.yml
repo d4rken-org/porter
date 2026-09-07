@@ -23,7 +23,7 @@ body:
     id: app
     attributes:
       label: Affected app and version
-      description: For example, SD Maid SE 1.7.5. Leave blank if the problem is in Porter itself.
+      description: Include the app name and its version. Leave blank if the problem is in Porter itself.
   - type: dropdown
     id: companion
     attributes:

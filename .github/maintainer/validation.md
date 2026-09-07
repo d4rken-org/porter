@@ -11,7 +11,7 @@ Java 21, pinned upstream API submodule, Android build tools 37.0.0.
 - The signing guard rejects a release without signing configuration.
 - APK manifests declare the intended distinct permission owners. Manager and companion signing certificates match.
 - Server routing unit tests: 3 passed.
-- SD Maid SE and Butler FOSS debug apps compile. SD Maid: 17 wrapper, 16 setup-module and 27 setup/onboarding-screen tests pass. Butler: 11 wrapper and 7 setup-module tests pass. Coverage includes manager discovery and selecting an absent Porter without falling back to Shizuku.
+- Two existing client apps with direct Porter integration compile and pass their focused wrapper and setup tests. Coverage includes manager discovery and selecting an absent Porter without falling back to Shizuku.
 
 ## Android 16 (API 36)
 
@@ -22,8 +22,7 @@ Java 21, pinned upstream API submodule, Android build tools 37.0.0.
 - Both Porter and original-release rish loaders execute a shell command through the companion from an approved legacy client. A terminal fixture declaring neither API permission receives explicit approval and runs as shell; the original loader keeps waiting when the approval dialog remains open beyond five seconds. Removing the companion revokes legacy grants and removes their user services.
 - Denial produces no privileged user service. Approved native and legacy probes cannot call Porter manager-only grant operations.
 - Revoking either API permission with Android's package manager removes the Porter decision and destroys the corresponding probe user service. A subsequent request prompts again.
-- The Butler service selector appears in General settings, saves its choice, and preserves the active backend until process restart. SD Maid names Porter on its waiting screen and opens Porter from that screen.
-- SD Maid SE reports `pkg=eu.darken.porter`, `basicService=true`, `serviceState=Available`. Butler reports Connected after its Porter permission prompt.
+- Integrated client apps save their service choice, preserve the active backend until process restart, open the selected manager and connect their privileged helpers after approval.
 - Root mode starts a uid 0 probe service. After stopping root mode and starting ADB mode, the grant persists and the probe runs as uid 2000. The authorization file remains owned by shell with mode 0600.
 
 ## Android 17 (API 37, 16 KB pages)
@@ -33,17 +32,16 @@ Java 21, pinned upstream API submodule, Android build tools 37.0.0.
 - Original Shizuku and Porter run concurrently. The unchanged legacy probe works with the original.
 - Explicitly selecting Shizuku in the dual-provider probe connects to Shizuku. Stopping Shizuku disconnects the probe while Porter remains running.
 
-## Older published SD Maid SE with compatibility companion
+## Published legacy client with compatibility companion
 
-Tested the unmodified [SD Maid SE v1.7.5-rc0 GitHub release](https://github.com/d4rken-org/sdmaid-se/releases/tag/v1.7.5-rc0), published 17 June 2026, on a fresh Android 16 API 36 emulator. APK SHA-256 matches GitHub: `22d3272d3409eccf48b9b88cad66e064c58072529007e503728b39bbaad3fa35`. The APK requests only the original Shizuku API permission. Porter and its companion used the development-signed 0.1.0 release artifacts; original Shizuku was absent.
+An unmodified published client APK was tested on a fresh Android 16 API 36 emulator with the development-signed Porter 0.1.0 release artifacts. The client requests only the original Shizuku API permission; original Shizuku was absent.
 
-- Selecting "Use Shizuku if available" displayed Porter's approval dialog. Approval granted the legacy permission and started SD Maid's `AdbHost` user service as shell (UID 2000).
-- AppCleaner scan completed and reported 348 kB of cache. Deletion reached the release's sponsor activation screen and was not exercised.
-- With root and accessibility disabled, AppControl successfully force-stopped Porter Compatibility. Android recorded the force-stop caller as SD Maid's shell helper PID 5592, and the target's stopped flag changed from false to true.
-- Revoking the legacy permission removed Porter's grant and the helper process. Reopening SD Maid prompted again; denial left no privileged helper running.
+- Approval granted the legacy permission and started the client's user service as shell (UID 2000).
+- With root and accessibility disabled, the client successfully force-stopped another app. Android recorded the caller as the client's shell helper.
+- Revoking the legacy permission removed Porter's grant and the helper process. Reopening the client prompted again; denial left no privileged helper running.
 - Android's crash buffer was empty. DebugBadger's crash heuristic reported unrelated runtime startup/shutdown lines and a missing marker, so that heuristic did not provide reliable crash evidence.
 
-Evidence is retained locally under `out/porter-0.1.0-development/legacy-sdmaid-1.7.5/`, including the approval screenshot, interaction history, package states, process lists and full logcat. The isolated test emulator was removed; the user's Porter preview emulator was left running.
+The detailed client-specific record and device evidence are retained locally under `out/porter-0.1.0-development/`. App-specific setup instructions and supported-version information belong to the client apps.
 
 ## Remaining physical-device coverage
 

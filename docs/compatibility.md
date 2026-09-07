@@ -15,7 +15,7 @@ The companion helps existing Shizuku apps find Porter. Porter still starts the s
 
 ## Switch from Shizuku
 
-For an app with direct Porter support, you can keep Shizuku installed. Start Porter, choose it in the app and approve the new request. If the app says a restart is needed, force-stop it in Android Settings and reopen it. In Porter-aware SD Maid SE and Butler builds, **Automatic** prefers an installed Porter even when it is stopped; select Shizuku explicitly if that is the service you want to use.
+For an app with direct Porter support, you can keep Shizuku installed. Start Porter, choose it in the app and approve the new request. If the app says a restart is needed, force-stop it in Android Settings and reopen it.
 
 For an app that only supports Shizuku:
 
@@ -34,14 +34,6 @@ Yes. Porter and Shizuku can both be installed and running. An app that supports 
 **Porter Compatibility cannot be installed alongside Shizuku.** It uses Shizuku's Android app identity to support older apps. Android treats them as competing installations, not as two separate apps. This also applies to forks using that same identity.
 
 To switch back, remove Porter Compatibility and reinstall Shizuku. Restart the client app and approve its access in Shizuku. You can keep standalone Porter installed.
-
-## SD Maid SE and Butler
-
-Direct Porter support is being prepared for SD Maid SE and Butler. Until your installed version explicitly supports Porter, do not assume it can connect without the companion.
-
-The unmodified SD Maid SE **1.7.5-rc0** GitHub release has been tested on Android 16 with Porter Compatibility: approval, its privileged helper, AppControl force-stop, permission revocation and denial worked. This is one tested version and device environment, not a guarantee for every older app.
-
-Updated development builds of SD Maid SE and Butler have also connected directly to Porter without the companion.
 
 ## An app still asks for Shizuku
 
