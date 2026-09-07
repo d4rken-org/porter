@@ -89,7 +89,7 @@ jobs:
           echo "STORE_PATH=$RUNNER_TEMP/porter-signing/keystore.jks" >> "$GITHUB_ENV"
       - name: Assemble signed APKs
         if: steps.existing.outputs.published != 'true'
-        run: ./gradlew :manager:assembleRelease :compat:assembleRelease :server:testDebugUnitTest
+        run: ./gradlew :manager:assembleRelease :compat:assembleRelease :server:testDebugUnitTest :manager:testDebugUnitTest
         env:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
