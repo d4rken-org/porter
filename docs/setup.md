@@ -6,7 +6,7 @@ language_name: English
 ---
 # Install and start Porter
 
-Porter is in development. These instructions are for Porter builds; public downloads will be listed on [GitHub Releases](https://github.com/d4rken-org/porter/releases).
+Download Porter from [GitHub Releases](https://github.com/d4rken-org/porter/releases), then follow the steps below.
 
 ## Install
 

@@ -3,6 +3,19 @@
   let preferred;
   try { preferred = localStorage.getItem(key); } catch (_) { /* Storage is optional. */ }
 
+  const switcher = document.querySelector(".language-switcher");
+  if (switcher) {
+    document.addEventListener("click", event => {
+      if (!switcher.contains(event.target)) switcher.open = false;
+    });
+    switcher.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        switcher.open = false;
+        switcher.querySelector("summary").focus();
+      }
+    });
+  }
+
   const languageLinks = document.querySelectorAll("[data-setup-language]");
   const syncSection = () => languageLinks.forEach(link => { link.hash = window.location.hash; });
   // Both translations share section IDs so switching preserves a deep link.
@@ -26,7 +39,7 @@
   if (!document.querySelector(".language-switcher") && preferred === "de") {
     document.querySelectorAll("[data-setup-link]").forEach(link => {
       link.href = link.dataset.deUrl;
-      link.textContent = "Installieren und starten (Deutsch)";
+      link.textContent = "Installieren und starten";
       link.hreflang = "de";
     });
   }

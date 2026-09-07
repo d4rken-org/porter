@@ -2,7 +2,9 @@
 
 Repository: `d4rken-org/porter`. Suggested GitHub About description:
 
-> Give your Android apps the access they need. An independent continuation of Shizuku, with optional compatibility for existing apps.
+> A minimal, maintained Shizuku fork that gives Android apps ADB access through the Shizuku APIs, with optional root support.
+
+Headline: **Porter: ADB access for your apps**.
 
 Suggested topics: `android`, `shizuku`, `adb`, `root`, `porter`.
 
@@ -27,7 +29,7 @@ Links to the planned repository and Pages site become usable after publication. 
 3. In **Settings > Pages**, select **GitHub Actions** as the source. The `github-pages` environment should allow deployments only from the default branch.
 4. Run **User guide** manually from the default branch. Pull requests build the guide but cannot deploy it. The workflow does not publish on push.
 5. Confirm `https://d4rken-org.github.io/porter/` and the linked setup, compatibility, troubleshooting, terminal and developer pages work, including `/de/setup.html` and its language switcher. Set the GitHub About website field to the site address.
-6. Replace the development/no-public-release notices in the README and guide when production-signed APKs are actually available.
+6. Publish the first production-signed release alongside the repository and guide. Public documentation is written for that launch and links directly to the downloads.
 
 The Android workflow builds development artifacts only. User downloads belong in GitHub Releases after signing and release preparation.
 
@@ -42,12 +44,12 @@ Do not configure the custom domain before the maintainer's DNS is ready. Stable 
 
 ## Setup translations
 
-Only the setup guide is translated. English stays at `/setup.html`; German lives at `/de/setup.html`. Other guide pages remain in English and are marked accordingly in German navigation.
+Only the setup guide is translated. English stays at `/setup.html`; German lives at `/de/setup.html`. Other guide pages remain in English.
 
 Setup translations declare `lang`, `language_name` and the shared `translation_key: setup` in front matter. Keep the same section IDs in every translation so app links and the language switcher preserve the current topic. Add translated navigation text in `docs/_data/ui.yml`. Porter's `Helps.java` maps German setup links directly to the German page.
 
 For another language, also extend the setup navigation mapping in the layout and the supported languages in `assets/language.js`. The current preference handling supports English and German.
 
-The switcher works without JavaScript. With JavaScript, an explicit choice is remembered locally and used for the setup navigation link from other pages. On the English setup page, German browser preferences produce a suggestion, never a redirect. An explicit English choice suppresses that suggestion. Storage is optional; no language information is sent to a service.
+The flag dropdown uses native HTML details and links, so it works without JavaScript. With JavaScript, an explicit choice is remembered locally and used for the setup navigation link from other pages. On the English setup page, German browser preferences produce a suggestion, never a redirect. An explicit English choice suppresses that suggestion. Storage is optional; no language information is sent to a service.
 
 When updating startup instructions, update both setup files. The introduction, motivation, compatibility reference and developer guide do not need translated copies.

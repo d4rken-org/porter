@@ -21,11 +21,14 @@
   <header>
     <a class="brand" href="{{ '/' | relative_url }}">Porter</a>
     {% if page.translation_key %}
-      <nav class="language-switcher" aria-label="{{ ui.language }}">
-        {% for translation in translations %}
-          <a href="{{ translation.url | relative_url }}" lang="{{ translation.lang }}" hreflang="{{ translation.lang }}" data-setup-language="{{ translation.lang }}"{% if lang == translation.lang %} aria-current="page"{% endif %}>{{ translation.language_name }}</a>
-        {% endfor %}
-      </nav>
+      <details class="language-switcher">
+        <summary aria-label="{{ ui.language }}: {{ page.language_name }}"><span aria-hidden="true">{{ ui.flag }}</span> {{ page.language_name }}</summary>
+        <nav aria-label="{{ ui.language }}">
+          {% for translation in translations %}
+            <a href="{{ translation.url | relative_url }}" lang="{{ translation.lang }}" hreflang="{{ translation.lang }}" data-setup-language="{{ translation.lang }}"{% if lang == translation.lang %} aria-current="page"{% endif %}><span aria-hidden="true">{{ site.data.ui[translation.lang].flag }}</span> {{ translation.language_name }}</a>
+          {% endfor %}
+        </nav>
+      </details>
     {% endif %}
     <a href="{{ site.repository_url }}">GitHub</a>
   </header>

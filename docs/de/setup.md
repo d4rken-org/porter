@@ -7,7 +7,7 @@ description: So installierst du Porter und startest den Dienst über drahtloses 
 ---
 # Porter installieren und starten
 
-Porter befindet sich in Entwicklung. Eine öffentliche Version gibt es noch nicht. Sobald sie verfügbar ist, findest du die Downloads unter [GitHub Releases](https://github.com/d4rken-org/porter/releases).
+Lade Porter von [GitHub Releases](https://github.com/d4rken-org/porter/releases) herunter und folge den Schritten unten.
 
 ## Installieren
 {: #install }
@@ -16,7 +16,7 @@ Porter befindet sich in Entwicklung. Eine öffentliche Version gibt es noch nich
 2. Öffne die APK auf deinem Gerät. Falls Android danach fragt, erlaube deinem Browser oder Dateimanager, Apps aus dieser Quelle zu installieren.
 3. Öffne Porter.
 
-Für Apps, die Porter direkt unterstützen, reicht Porter allein. Unterstützt eine App nur Shizuku, brauchst du zusätzlich **Porter Compatibility** aus derselben Veröffentlichung. Deinstalliere vorher Shizuku: Die Kompatibilitäts-App kann nicht gleichzeitig mit Shizuku installiert sein. Lass sie installiert, solange du solche Apps mit Porter verwendest. Weitere Hinweise stehen im [Kompatibilitätsleitfaden (Englisch)](../compatibility.md).
+Für Apps, die Porter direkt unterstützen, reicht Porter allein. Unterstützt eine App nur Shizuku, brauchst du zusätzlich **Porter Compatibility** aus derselben Veröffentlichung. Deinstalliere vorher Shizuku: Die Kompatibilitäts-App kann nicht gleichzeitig mit Shizuku installiert sein. Lass sie installiert, solange du solche Apps mit Porter verwendest. Weitere Hinweise stehen im [Kompatibilitätsleitfaden](../compatibility.md).
 
 ## Startmethode auswählen
 {: #choose-how-to-start }
@@ -83,4 +83,4 @@ Falls die App eine Dienstauswahl hat, wähle dort Porter. Folge den Anweisungen 
 ## Porter aktualisieren
 {: #update-porter }
 
-Installiere die neuere APK über die vorhandene App und starte Porter erneut. Falls du Porter Compatibility verwendest, aktualisiere auch diese App aus derselben Veröffentlichung. Android verlangt für Updates passende Signaturen. Wenn die Installation scheitert, findest du Hilfe unter [Installationsprobleme (Englisch)](../troubleshooting.md#android-wont-install-an-apk).
+Installiere die neuere APK über die vorhandene App und starte Porter erneut. Falls du Porter Compatibility verwendest, aktualisiere auch diese App aus derselben Veröffentlichung. Android verlangt für Updates passende Signaturen. Wenn die Installation scheitert, findest du Hilfe unter [Installationsprobleme](../troubleshooting.md#android-wont-install-an-apk).

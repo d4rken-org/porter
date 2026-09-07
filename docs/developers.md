@@ -22,7 +22,7 @@ Copy the three Java files from [Porter's client adapter](https://github.com/d4rk
 - `PorterProvider.java`
 - `SelectedShizukuProvider.java`
 
-Record the Porter commit you copied so you can track adapter updates. Preserve its Apache 2.0 license and attribution. There is no published Porter adapter artifact yet; the source URL becomes available when the repository is published.
+Record the Porter commit you copied so you can track adapter updates. Preserve its Apache 2.0 license and attribution. The adapter is distributed as source; use the files linked above rather than a Maven dependency for the adapter itself.
 
 Include the adapter in one module only. Copying the same classes into multiple libraries can cause duplicate-class build errors.
 

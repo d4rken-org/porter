@@ -1,16 +1,14 @@
 # Porter
 
-**Give your Android apps the access they need.**
+**ADB access for your apps.**
 
-Porter lets supported apps perform tasks that Android normally restricts, such as managing other apps or accessing additional files. You choose which apps get access. Root is optional.
+Porter is a minimal, maintained fork of [Shizuku](https://github.com/thedjchi/Shizuku) that gives Android apps ADB access through the Shizuku APIs, with optional root support.
 
-Porter is an independent continuation of [Shizuku](https://github.com/thedjchi/Shizuku), with its own name and app identity.
-
-> Porter is in development. There is no public Porter release yet.
+Use it with compatible apps to manage other apps and access additional files. You choose which apps get access.
 
 ## Get started
 
-1. Install Porter from [GitHub Releases](https://github.com/d4rken-org/porter/releases) when a release is available.
+1. Install Porter from [GitHub Releases](https://github.com/d4rken-org/porter/releases).
 2. [Start Porter](docs/setup.md) using wireless debugging, a computer, or root.
 3. Open an app that supports Porter and approve its access request.
 
@@ -26,7 +24,7 @@ Apps with built-in Porter support only need Porter. For apps that only support S
 
 ## Help
 
-Read the [Porter user guide](https://d4rken-org.github.io/porter/) once the site is published, or use the guides in this repository:
+Read the [Porter user guide](https://d4rken-org.github.io/porter/) or use the guides in this repository:
 
 - Installation and startup: [English](docs/setup.md) · [Deutsch](docs/de/setup.md)
 - [App compatibility and switching from Shizuku](docs/compatibility.md)

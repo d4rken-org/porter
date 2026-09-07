@@ -8,6 +8,8 @@ Preserve public Shizuku protocol identifiers. Do not globally replace Java packa
 
 Keep Porter setup instructions app-neutral. The project motivation may name and link the maintainer's own apps. Setup instructions and supported-version information for specific client apps belong in those apps' own documentation.
 
+Write public documentation for the published product. The first repository/site publication will include a release; do not add pre-launch availability notices.
+
 Support independent Porter and Shizuku services. Do not kill the original service or silently restart/reconfigure shared ADB transports.
 
 Use isolated Android emulators with `-no-audio`. Do not adopt existing devices. Obtain the requested Claude review before committing significant changes.

@@ -1,4 +1,5 @@
 en:
+  flag: "🇬🇧"
   skip: Skip to content
   guide: Guide
   language: Setup language
@@ -12,15 +13,16 @@ en:
   help: Get help
   tagline: An independent continuation of Shizuku
 de:
+  flag: "🇩🇪"
   skip: Zum Inhalt springen
   guide: Anleitung
   language: Sprache der Anleitung
-  home: Porter (English)
+  home: Porter
   setup: Installieren und starten
-  compatibility: App compatibility (English)
-  troubleshooting: Troubleshooting (English)
-  terminal: Terminal apps (English)
-  developers: For app developers (English)
-  credits: Credits & Lizenzen (Englisch)
-  help: Hilfe (Englisch)
+  compatibility: App compatibility
+  troubleshooting: Troubleshooting
+  terminal: Terminal apps
+  developers: For app developers
+  credits: Credits & Lizenzen
+  help: Hilfe
   tagline: Eine unabhängige Weiterführung von Shizuku
