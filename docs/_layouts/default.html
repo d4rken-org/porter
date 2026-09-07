@@ -1,31 +1,29 @@
-{% assign lang = page.lang | default: 'en' %}
-{% assign ui = site.data.ui[lang] %}
+{% assign ui = site.data.ui.en %}
+{% assign translations = site.translations | where: 'translation_key', page.translation_key | sort: 'lang' %}
 <!doctype html>
-<html lang="{{ lang }}">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% if page.title != site.title %}{{ page.title | escape }} · {% endif %}{{ site.title | escape }}</title>
   <meta name="description" content="{{ page.description | default: site.description | escape }}">
   <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-  {% if page.translation_key %}
-    {% assign translations = site.pages | where: 'translation_key', page.translation_key | sort: 'lang' %}
-    {% for translation in translations %}
-      <link rel="alternate" hreflang="{{ translation.lang }}" href="{{ translation.url | absolute_url }}">
-    {% endfor %}
-  {% endif %}
-  <script src="{{ '/assets/language.js' | relative_url }}" defer></script>
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  {% if page.translation_key %}<script src="{{ '/assets/language.js' | relative_url }}" defer></script>{% endif %}
 </head>
 <body>
-  <a class="skip" href="#content">{{ ui.skip }}</a>
+  <a class="skip" href="#content" data-i18n="skip">{{ ui.skip }}</a>
   <header>
     <a class="brand" href="{{ '/' | relative_url }}">Porter</a>
     {% if page.translation_key %}
-      <details class="language-switcher">
-        <summary aria-label="{{ ui.language }}: {{ page.language_name }}"><span aria-hidden="true">{{ ui.flag }}</span> {{ page.language_name }}</summary>
-        <nav aria-label="{{ ui.language }}">
+      <details class="language-switcher" hidden>
+        <summary aria-label="{{ ui.language }}: {{ ui.name }}"><span id="language-flag" aria-hidden="true">{{ ui.flag }}</span> <span id="language-name">{{ ui.name }}</span></summary>
+        <nav aria-label="{{ ui.language }}" data-i18n-label="language">
+          <button type="button" data-language="auto" data-i18n="automatic">{{ ui.automatic }}</button>
+          <button type="button" lang="en" data-language="en"><span aria-hidden="true">{{ ui.flag }}</span> {{ ui.name }}</button>
           {% for translation in translations %}
-            <a href="{{ translation.url | relative_url }}" lang="{{ translation.lang }}" hreflang="{{ translation.lang }}" data-setup-language="{{ translation.lang }}"{% if lang == translation.lang %} aria-current="page"{% endif %}><span aria-hidden="true">{{ site.data.ui[translation.lang].flag }}</span> {{ translation.language_name }}</a>
+            {% assign language_ui = site.data.ui[translation.lang] %}
+            <button type="button" lang="{{ translation.lang }}" data-language="{{ translation.lang }}"><span aria-hidden="true">{{ language_ui.flag }}</span> {{ language_ui.name }}</button>
           {% endfor %}
         </nav>
       </details>
@@ -33,28 +31,28 @@
     <a href="{{ site.repository_url }}">GitHub</a>
   </header>
   <div class="page">
-    <nav class="guide-nav" aria-label="{{ ui.guide }}">
-      <a href="{{ '/' | relative_url }}"{% if page.path == 'index.md' %} aria-current="page"{% endif %}>{{ ui.home }}</a>
-      {% if lang == 'de' %}{% assign setup_url = '/de/setup.html' %}{% else %}{% assign setup_url = '/setup.html' %}{% endif %}
-      <a href="{{ setup_url | relative_url }}" data-setup-link data-en-url="{{ '/setup.html' | relative_url }}" data-de-url="{{ '/de/setup.html' | relative_url }}"{% if page.translation_key == 'setup' %} aria-current="page"{% endif %}>{{ ui.setup }}</a>
-      {% assign guides = 'compatibility,troubleshooting,terminal,developers' | split: ',' %}
+    <nav class="guide-nav" aria-label="{{ ui.guide }}" data-i18n-label="guide">
+      <h2 data-i18n="users">{{ ui.users }}</h2>
+      {% assign guides = 'index,setup,compatibility,troubleshooting,terminal' | split: ',' %}
       {% for name in guides %}
-        {% assign guide_path = name | append: '.md' %}
-        {% assign guide = site.pages | where: 'path', guide_path | first %}
-        <a href="{{ guide.url | relative_url }}" lang="en"{% if page.path == guide_path %} aria-current="page"{% endif %}>{{ ui[name] }}</a>
+        {% assign guide = site.pages | where: 'translation_key', name | first %}
+        <a href="{{ guide.url | relative_url }}" data-i18n="{{ name }}"{% if page.translation_key == name %} aria-current="page"{% endif %}>{{ ui[name] }}</a>
       {% endfor %}
+      <h2 data-i18n="developers">{{ ui.developers }}</h2>
+      <a href="{{ '/developers.html' | relative_url }}"{% if page.path == 'developers.md' %} aria-current="page"{% endif %} data-i18n="integration">{{ ui.integration }}</a>
     </nav>
-    <main id="content">
-      {% if page.translation_key == 'setup' and lang == 'en' %}
-        <p id="setup-language-suggestion" lang="de" hidden>Diese Anleitung gibt es auch <a href="{{ '/de/setup.html' | relative_url }}" hreflang="de" data-setup-language="de">auf Deutsch</a>.</p>
-      {% endif %}
-      {{ content }}
-    </main>
+    <main id="content">{{ content }}</main>
   </div>
   <footer>
-    <span>Porter · {{ ui.tagline }}</span>
-    <a href="{{ site.repository_url }}/issues">{{ ui.help }}</a>
-    <a href="{{ site.repository_url }}/blob/HEAD/NOTICE">{{ ui.credits }}</a>
+    <span>Porter · <span data-i18n="tagline">{{ ui.tagline }}</span></span>
+    <a href="{{ site.repository_url }}/issues" data-i18n="help">{{ ui.help }}</a>
+    <a href="{{ site.repository_url }}/blob/HEAD/NOTICE" data-i18n="credits">{{ ui.credits }}</a>
   </footer>
+  {% if page.translation_key %}
+    <script type="application/json" id="language-ui">{{ site.data.ui | jsonify }}</script>
+    {% for translation in translations %}
+      <template data-translation="{{ translation.lang }}" data-title="{% if translation.title != site.title %}{{ translation.title | escape }} · {% endif %}{{ site.title | escape }}" data-description="{{ translation.description | escape }}">{{ translation.content | markdownify }}</template>
+    {% endfor %}
+  {% endif %}
 </body>
 </html>

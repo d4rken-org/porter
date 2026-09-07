@@ -1,28 +1,36 @@
 en:
+  name: English
+  automatic: Automatic (browser)
   flag: "🇬🇧"
   skip: Skip to content
   guide: Guide
-  language: Setup language
-  home: Porter
+  language: Page language
+  index: Overview
   setup: Install and start
   compatibility: App compatibility
   troubleshooting: Troubleshooting
   terminal: Terminal apps
-  developers: For app developers
+  users: For users
+  developers: For developers
+  integration: App integration
   credits: Credits & licenses
   help: Get help
   tagline: An independent continuation of Shizuku
 de:
+  name: Deutsch
+  automatic: Automatisch (Browser)
   flag: "🇩🇪"
   skip: Zum Inhalt springen
   guide: Anleitung
-  language: Sprache der Anleitung
-  home: Porter
+  language: Seitensprache
+  index: Übersicht
   setup: Installieren und starten
-  compatibility: App compatibility
-  troubleshooting: Troubleshooting
-  terminal: Terminal apps
-  developers: For app developers
-  credits: Credits & Lizenzen
+  compatibility: App-Kompatibilität
+  troubleshooting: Probleme lösen
+  terminal: Terminal-Apps
+  users: Für Nutzer
+  developers: Für Entwickler
+  integration: App-Integration
+  credits: Mitwirkende & Lizenzen
   help: Hilfe
   tagline: Eine unabhängige Weiterführung von Shizuku

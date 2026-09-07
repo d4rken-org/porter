@@ -1,5 +1,8 @@
 ---
 title: Terminal apps
+lang: en
+translation_key: terminal
+language_name: English
 ---
 # Use Porter in a terminal
 

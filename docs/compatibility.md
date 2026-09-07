@@ -1,5 +1,8 @@
 ---
 title: App compatibility
+lang: en
+translation_key: compatibility
+language_name: English
 ---
 # App compatibility
 

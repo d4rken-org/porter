@@ -1,5 +1,8 @@
 ---
 title: Troubleshooting
+lang: en
+translation_key: troubleshooting
+language_name: English
 ---
 # Troubleshooting
 

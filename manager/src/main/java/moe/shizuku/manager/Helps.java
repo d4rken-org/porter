@@ -20,9 +20,7 @@ public class Helps {
 
     static {
         ADB.put("en", WEBSITE + "setup.html#with-a-computer");
-        ADB.put("de", WEBSITE + "de/setup.html#with-a-computer");
         ADB_ANDROID11.put("en", WEBSITE + "setup.html#wireless-debugging");
-        ADB_ANDROID11.put("de", WEBSITE + "de/setup.html#wireless-debugging");
         APPS.put("en", WEBSITE + "compatibility.html");
         HOME.put("en", WEBSITE + "developers.html");
         DOWNLOAD.put("en", SOURCE + "/releases");

@@ -151,4 +151,4 @@ Check these cases before releasing your app:
 - Service restart and app restart: the connection recovers without using stale Binder references.
 - Backend selection changed: it takes effect only after a full app restart, including any secondary processes.
 
-Link users to the [setup guide](setup.md), also available in [German](de/setup.md). Keep instructions for your app's settings and the app versions that support Porter in your own documentation.
+Link users to the [setup guide](setup.md). It automatically selects English or German from the browser language, with a dropdown to override the choice. The URL is the same in both languages. Keep instructions for your app's settings and the app versions that support Porter in your own documentation.

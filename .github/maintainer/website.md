@@ -28,7 +28,7 @@ Links to the planned repository and Pages site become usable after publication. 
 2. Enable private vulnerability reporting in GitHub's security settings. Test the route linked in `SECURITY.md`.
 3. In **Settings > Pages**, select **GitHub Actions** as the source. The `github-pages` environment should allow deployments only from the default branch.
 4. Run **User guide** manually from the default branch. Pull requests build the guide but cannot deploy it. The workflow does not publish on push.
-5. Confirm `https://d4rken-org.github.io/porter/` and the linked setup, compatibility, troubleshooting, terminal and developer pages work, including `/de/setup.html` and its language switcher. Set the GitHub About website field to the site address.
+5. Confirm `https://d4rken-org.github.io/porter/` and the linked setup, compatibility, troubleshooting, terminal and developer pages work, including automatic German selection and the language dropdown. Set the GitHub About website field to the site address.
 6. Publish the first production-signed release alongside the repository and guide. Public documentation is written for that launch and links directly to the downloads.
 
 The Android workflow builds development artifacts only. User downloads belong in GitHub Releases after signing and release preparation.
@@ -42,14 +42,14 @@ The Android workflow builds development artifacts only. User downloads belong in
 
 Do not configure the custom domain before the maintainer's DNS is ready. Stable page filenames and anchors let old links retain their destinations after the move.
 
-## Setup translations
+## User-guide translations
 
-Only the setup guide is translated. English stays at `/setup.html`; German lives at `/de/setup.html`. Other guide pages remain in English.
+The website groups its navigation into **For users** and **For developers**. The entire user guide is available in English and German: overview, setup, compatibility, troubleshooting and terminal use. The app integration guide stays in English.
 
-Setup translations declare `lang`, `language_name` and the shared `translation_key: setup` in front matter. Keep the same section IDs in every translation so app links and the language switcher preserve the current topic. Add translated navigation text in `docs/_data/ui.yml`. Porter's `Helps.java` maps German setup links directly to the German page.
+Each guide has one URL in every language. English Markdown lives in `docs/`; German text lives in `docs/_translations/de/`. Jekyll embeds the matching translation in an inert HTML template inside the English page. The collection does not generate separate pages. JavaScript selects the text locally without fetching translations, redirecting or changing the URL. Without JavaScript the English guide remains readable.
 
-For another language, also extend the setup navigation mapping in the layout and the supported languages in `assets/language.js`. The current preference handling supports English and German.
+The browser's first supported language selects the translation (regional variants such as `de-AT` match German). Unsupported languages fall back to English. The emoji-flag dropdown overrides detection and remembers the choice when local storage is available. **Automatic (browser)** clears that override. No language information is sent to a service. App help links use the same URLs for every locale; the browser controls the website language independently of the app's language.
 
-The flag dropdown uses native HTML details and links, so it works without JavaScript. With JavaScript, an explicit choice is remembered locally and used for the setup navigation link from other pages. On the English setup page, German browser preferences produce a suggestion, never a redirect. An explicit English choice suppresses that suggestion. Storage is optional; no language information is sent to a service.
+Translations declare `lang`, `language_name` and a `translation_key` matching their English counterpart (`index`, `setup`, `compatibility`, `troubleshooting` or `terminal`). Keep all heading IDs identical so switching preserves the current topic. Use canonical relative `.html` links in translation Markdown, since these fragments render inside the canonical page. Update both languages whenever user instructions change.
 
-When updating startup instructions, update both setup files. The introduction, motivation, compatibility reference and developer guide do not need translated copies.
+To add a language, add all five translated Markdown files to `docs/_translations/<language>/` and a matching entry in `docs/_data/ui.yml` for navigation, language name and flag. The layout and browser detection discover the available translations automatically. No JavaScript or app URL changes are needed.
