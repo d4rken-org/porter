@@ -33,7 +33,7 @@ Porter hat eine eigene App-Identität und kann parallel zu Shizuku laufen. Apps,
 ## Warum es Porter gibt
 {: #why-porter-exists }
 
-Ich nutze Shizuku in meinen eigenen Apps, [SD Maid SE](https://github.com/d4rken-org/sdmaid-se) und [Butler](https://github.com/d4rken-org/butler). Ich habe Porter gestartet, weil ich eine minimalistische, stabile und gepflegte Shizuku-Alternative wollte, die Apps ADB-Zugriff ermöglicht.
+Ich nutze Shizuku in meinen eigenen Apps, [SD Maid SE](https://github.com/d4rken-org/sdmaid-se) und [Butler](https://github.com/d4rken-org/butler). Die ursprüngliche Shizuku-App wurde nicht mehr aktiv gepflegt. Deshalb habe ich Porter gestartet, damit Apps, die ADB-Zugriff benötigen, weiterhin eine minimalistische, stabile und gepflegte Alternative haben.
 
 ## Für Entwickler
 {: #for-developers }

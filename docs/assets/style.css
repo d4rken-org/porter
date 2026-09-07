@@ -59,3 +59,7 @@ nav.guide-nav h2:first-child { margin-top: 0; }
 .language-switcher nav button { width: 100%; border: 0; background: transparent; color: var(--accent); font: inherit; text-align: left; cursor: pointer; }
 .language-switcher nav button:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
 .language-switcher nav button:hover, .language-switcher nav button[aria-pressed="true"] { background: var(--tint); }
+
+.brand { display: inline-flex; align-items: center; gap: .5rem; }
+.brand img { border-radius: .5rem; }
+.home-banner { display: block; width: 100%; height: auto; margin: 0 0 1.5rem; border-radius: .6rem; }

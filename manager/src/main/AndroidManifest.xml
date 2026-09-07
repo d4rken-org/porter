@@ -72,7 +72,7 @@
         android:name=".ShizukuApplication"
         android:allowBackup="true"
         android:autoRevokePermissions="allowed"
-        android:banner="@drawable/ic_launcher"
+        android:banner="@drawable/porter_banner"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:directBootAware="true"
         android:enableOnBackInvokedCallback="true"

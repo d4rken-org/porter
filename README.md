@@ -1,3 +1,5 @@
+![Porter](docs/assets/porter-banner.png)
+
 # Porter
 
 **ADB access for your apps.**
@@ -36,7 +38,7 @@ Include your Porter version, device, Android version and the name of the app you
 
 ## Why Porter exists
 
-I use Shizuku in my own apps, [SD Maid SE](https://github.com/d4rken-org/sdmaid-se) and [Butler](https://github.com/d4rken-org/butler). I started Porter because I wanted a minimal, stable and maintained Shizuku alternative that gives apps ADB access.
+I use Shizuku in my own apps, [SD Maid SE](https://github.com/d4rken-org/sdmaid-se) and [Butler](https://github.com/d4rken-org/butler). The original Shizuku app was no longer actively maintained, so I started Porter to keep a minimal, stable and maintained alternative available for apps that need ADB access.
 
 ## For developers
 

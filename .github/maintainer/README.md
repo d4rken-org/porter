@@ -22,5 +22,6 @@ For an existing checkout, run `git submodule update --init --recursive`. Debug A
 - [Validation record](validation.md)
 - [API source dependency](api.md)
 - [Website and repository setup](website.md)
+- [Artwork and replacement procedure](artwork.md)
 
 The `probe` module supplies test clients; it is not a user app. The `client` module contains the adapter for direct Porter support. Until an artifact is published, consumers that copy its source need to keep their copies synchronized.
