@@ -1,5 +1,8 @@
 ---
 title: Install and start
+lang: en
+translation_key: setup
+language_name: English
 ---
 # Install and start Porter
 
@@ -11,7 +14,7 @@ Porter is in development. These instructions are for Porter builds; public downl
 2. Open the APK on your device. If Android asks, allow your browser or file manager to install apps from this source.
 3. Open Porter.
 
-If your app only supports Shizuku, also follow the [compatibility guide](compatibility.md). Most users should start with the Porter APK alone.
+For apps that support Porter directly, Porter alone is enough. If an app only supports Shizuku, also install **Porter Compatibility** from the same release. Uninstall Shizuku first: the companion cannot be installed alongside it. Keep the companion installed while using those apps with Porter. See the [compatibility guide](compatibility.md) for more details.
 
 ## Choose how to start
 

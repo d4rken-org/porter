@@ -7,7 +7,7 @@
     <string name="home_status_service_version">Version %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Version %2$s, %1$s<br>Erneut starten, um auf Version %3$s zu aktualisieren]]></string>
     <!-- Home - Adb -->
-    <string name="home_adb_title"><![CDATA[Verbindung mit dem Compter herstellen]]></string>
+    <string name="home_adb_title"><![CDATA[Verbindung mit dem Computer herstellen]]></string>
     <string name="home_adb_description"><![CDATA[Bei Geräten ohne Root müssen Sie adb verwenden, um Porter zu starten (erfordert Computerverbindung). Dieser Vorgang muss bei jedem Neustart des Geräts wiederholt werden. Bitte <b><a href="%1$s">die Hilfe lesen</a></b>.]]></string>
     <string name="home_adb_button_view_help">Hilfe lesen</string>
     <string name="home_adb_button_view_command">Befehl anzeigen</string>
@@ -102,7 +102,7 @@
         Akkuoptimierungsfunktionen für Porter auf solchen Systemen.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Start (für gerootete Geräte)]]></string>
-    <string name="home_root_button_start">Anfangen</string>
+    <string name="home_root_button_start">Starten</string>
     <string name="home_root_button_restart">Neustart</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">App-Verwaltung</string>

@@ -1,0 +1,26 @@
+en:
+  skip: Skip to content
+  guide: Guide
+  language: Setup language
+  home: Porter
+  setup: Install and start
+  compatibility: App compatibility
+  troubleshooting: Troubleshooting
+  terminal: Terminal apps
+  developers: For app developers
+  credits: Credits & licenses
+  help: Get help
+  tagline: An independent continuation of Shizuku
+de:
+  skip: Zum Inhalt springen
+  guide: Anleitung
+  language: Sprache der Anleitung
+  home: Porter (English)
+  setup: Installieren und starten
+  compatibility: App compatibility (English)
+  troubleshooting: Troubleshooting (English)
+  terminal: Terminal apps (English)
+  developers: For app developers (English)
+  credits: Credits & Lizenzen (Englisch)
+  help: Hilfe (Englisch)
+  tagline: Eine unabhängige Weiterführung von Shizuku

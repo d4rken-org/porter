@@ -28,13 +28,19 @@ Apps with built-in Porter support only need Porter. For apps that only support S
 
 Read the [Porter user guide](https://d4rken-org.github.io/porter/) once the site is published, or use the guides in this repository:
 
-- [Installation and startup](docs/setup.md)
+- Installation and startup: [English](docs/setup.md) · [Deutsch](docs/de/setup.md)
 - [App compatibility and switching from Shizuku](docs/compatibility.md)
 - [Troubleshooting](docs/troubleshooting.md)
 - [Terminal apps](docs/terminal.md)
 - [Report a problem](https://github.com/d4rken-org/porter/issues)
 
 Include your Porter version, device, Android version and the name of the app you are trying to use. For security issues, see [security reports](SECURITY.md).
+
+## Why Porter exists
+
+I use Shizuku in my own apps, [SD Maid SE](https://github.com/d4rken-org/sdmaid-se) and [Butler](https://github.com/d4rken-org/butler). I started Porter because I wanted a minimal, stable and maintained Shizuku alternative that gives apps ADB access.
+
+Other app developers are welcome to support Porter's permission directly. [Add direct Porter support to your app](docs/developers.md).
 
 ## About
 

@@ -20,9 +20,11 @@ public class Helps {
 
     static {
         ADB.put("en", WEBSITE + "setup.html#with-a-computer");
+        ADB.put("de", WEBSITE + "de/setup.html#with-a-computer");
         ADB_ANDROID11.put("en", WEBSITE + "setup.html#wireless-debugging");
+        ADB_ANDROID11.put("de", WEBSITE + "de/setup.html#wireless-debugging");
         APPS.put("en", WEBSITE + "compatibility.html");
-        HOME.put("en", SOURCE + "/blob/HEAD/.github/maintainer/client-integration.md");
+        HOME.put("en", WEBSITE + "developers.html");
         DOWNLOAD.put("en", SOURCE + "/releases");
         ADB_PERMISSION.put("en", WEBSITE + "troubleshooting.html#access-is-allowed-but-an-operation-still-fails");
         SUI.put("en", "https://github.com/RikkaApps/Sui");

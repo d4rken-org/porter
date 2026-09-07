@@ -10,7 +10,7 @@ Porter helps supported apps manage files, storage and other apps using Android's
 ## Get started
 
 1. Get Porter from [GitHub Releases](https://github.com/d4rken-org/porter/releases) when a release is available.
-2. Follow the [startup guide](setup.md).
+2. Follow the startup guide: [English](setup.md) or [Deutsch](de/setup.md).
 3. Open your supported app and approve its Porter access request.
 
 Android 7.0 or newer is required. On Android 11 or newer, wireless debugging lets you start Porter without a computer. Older devices need a computer or root.
@@ -20,6 +20,12 @@ Android 7.0 or newer is required. On Android 11 or newer, wireless debugging let
 Porter has its own app identity and can run alongside Shizuku. Apps that only know about Shizuku need the optional Porter Compatibility companion, which replaces the installed Shizuku app.
 
 [Find the right setup for your apps](compatibility.md).
+
+## Why Porter exists
+
+I use Shizuku in my own apps, [SD Maid SE](https://github.com/d4rken-org/sdmaid-se) and [Butler](https://github.com/d4rken-org/butler). I started Porter because I wanted a minimal, stable and maintained Shizuku alternative that gives apps ADB access.
+
+Other app developers are welcome to support Porter's permission directly. [Add direct Porter support to your app](developers.md).
 
 ## Need help?
 

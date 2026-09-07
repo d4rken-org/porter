@@ -9,9 +9,9 @@ header, footer, .page { max-width: 1120px; margin: auto; padding: 1.5rem 2rem; }
 header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
 .brand { color: var(--ink); font-size: 1.8rem; font-weight: 750; text-decoration: none; letter-spacing: -.05em; }
 .page { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 3.5rem; padding-top: 3rem; padding-bottom: 4rem; }
-nav { display: flex; flex-direction: column; align-self: start; gap: .35rem; position: sticky; top: 1.5rem; }
-nav a { padding: .4rem .7rem; text-decoration: none; border-radius: .4rem; }
-nav a[aria-current] { background: var(--tint); font-weight: 650; }
+nav.guide-nav { display: flex; flex-direction: column; align-self: start; gap: .35rem; position: sticky; top: 1.5rem; }
+nav.guide-nav a { padding: .4rem .7rem; text-decoration: none; border-radius: .4rem; }
+nav.guide-nav a[aria-current] { background: var(--tint); font-weight: 650; }
 main { max-width: 740px; min-width: 0; }
 h1, h2, h3 { line-height: 1.2; letter-spacing: -.03em; }
 h1 { margin: 0 0 1.5rem; font-size: clamp(2rem, 4vw, 3.2rem); }
@@ -31,9 +31,15 @@ footer span { margin-right: auto; }
 @media (max-width: 720px) {
   header, footer, .page { padding-left: 1.25rem; padding-right: 1.25rem; }
   .page { display: block; padding-top: 1rem; }
-  nav { position: static; flex-direction: row; flex-wrap: wrap; gap: .2rem; margin-bottom: 2rem; font-size: .9rem; }
+  nav.guide-nav { position: static; flex-direction: row; flex-wrap: wrap; gap: .2rem; margin-bottom: 2rem; font-size: .9rem; }
   th, td { padding: .5rem; }
 }
 @media (prefers-color-scheme: dark) {
   :root { --paper: #162023; --ink: #e4efeb; --muted: #b0c3bd; --accent: #99d4c3; --line: #354946; --tint: #243733; }
 }
+
+.language-switcher { display: flex; gap: .75rem; flex-wrap: wrap; font-size: .9rem; }
+.language-switcher [aria-current] { font-weight: 700; text-decoration: none; }
+#setup-language-suggestion { padding: .75rem 1rem; background: var(--tint); border-radius: .4rem; }
+#setup-language-suggestion[hidden] { display: none; }
+header { gap: 1rem; flex-wrap: wrap; }
