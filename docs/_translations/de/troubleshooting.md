@@ -82,7 +82,11 @@ Porters Info-Dialog zeigt die Version der Porter-App. Die Karte zum laufenden Di
 ## Ein Problem melden
 {: #report-a-problem }
 
-[Erstelle eine Problemmeldung](https://github.com/d4rken-org/porter/issues) mit folgenden Angaben:
+Öffne über Porters Dreipunktmenü die **Einstellungen** und dann **Hilfe & Support**. Dort kannst du den Support per E-Mail kontaktieren, die [Discord-Community](https://discord.gg/5hXXgwKNgm) besuchen oder [ein Problem auf GitHub melden](https://github.com/d4rken-org/porter/issues).
+
+Für ein Diagnoseprotokoll wählst du **Diagnoseprotokoll aufnehmen**, reproduzierst das Problem und tippst auf **Aufnahme beenden**. Wähle die gespeicherte Aufnahme im Kontaktformular aus oder teile sie unter **Gespeicherte Protokolle**. Protokolle bleiben auf deinem Gerät, bis du sie teilst. Sie können App-Namen, Gerätedaten und Aktionen enthalten, die über Porter ausgeführt werden.
+
+Ergänze folgende Angaben:
 
 - Porter-Version und ob Porter Compatibility installiert ist.
 - Gerätemodell und Android-Version.

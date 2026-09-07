@@ -70,7 +70,11 @@ Porter's About dialog shows the Porter app version. The running-service card sho
 
 ## Report a problem
 
-[Open an issue](https://github.com/d4rken-org/porter/issues) with:
+Open **Settings**, then **Help & support** from Porter's overflow menu. You can contact support by email, visit the [Discord community](https://discord.gg/5hXXgwKNgm), or [open an issue](https://github.com/d4rken-org/porter/issues).
+
+To include a debug log, choose **Record debug log**, reproduce the problem, then **Stop recording**. Select the saved recording in the contact form or share it from **Saved debug logs**. Logs stay on your device until you share them. They may contain app names, device details and actions performed through Porter.
+
+Include:
 
 - Porter version and whether Porter Compatibility is installed.
 - Device model and Android version.

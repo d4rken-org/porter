@@ -79,7 +79,6 @@
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
@@ -121,13 +120,13 @@
         <activity
             android:name=".starter.StarterActivity"
             android:label="@string/starter" />
-        <activity
-            android:name=".settings.BugReportDialogActivity"
-            android:theme="@style/Theme.App.DialogHost"
-            android:taskAffinity=""
-            android:excludeFromRecents="true"
-            android:launchMode="singleTask"
-            android:exported="false" />
+        <activity android:name=".support.SupportActivity" android:exported="false"
+            android:directBootAware="false" android:label="@string/porter_support_title" />
+        <activity android:name=".support.DebugLogsActivity" android:exported="false"
+            android:directBootAware="false" android:label="@string/porter_debug_saved" />
+        <activity android:name=".support.ContactActivity" android:exported="false"
+            android:directBootAware="false" android:label="@string/porter_contact" />
+        <receiver android:name=".support.StopRecordingReceiver" android:exported="false" android:directBootAware="false" />
         <activity
             android:name=".authorization.RequestPermissionActivity"
             android:directBootAware="true"

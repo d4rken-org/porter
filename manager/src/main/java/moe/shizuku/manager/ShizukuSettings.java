@@ -30,7 +30,8 @@ public class ShizukuSettings {
         public static final String KEY_LANGUAGE = "language";
         public static final String KEY_TRANSLATION = "translation";
         public static final String KEY_TRANSLATION_CONTRIBUTORS = "translation_contributors";
-        public static final String KEY_LIGHT_THEME = "light_theme";
+        public static final String KEY_THEME_STYLE = "theme_style";
+        public static final String KEY_THEME_COLOR = "theme_color";
         public static final String KEY_NIGHT_MODE = "night_mode";
         public static final String KEY_BLACK_NIGHT_THEME = "black_night_theme";
         public static final String KEY_USE_SYSTEM_COLOR = "use_system_color";
@@ -74,6 +75,17 @@ public class ShizukuSettings {
         if (sPreferences == null) {
             sPreferences = getSettingsStorageContext(context)
                 .getSharedPreferences(NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sPreferences.edit().remove(Keys.KEY_LANGUAGE);
+            if (!sPreferences.contains(Keys.KEY_THEME_STYLE)) {
+                editor.putString(Keys.KEY_THEME_STYLE,
+                    Build.VERSION.SDK_INT >= 31 && !sPreferences.getAll().isEmpty() && sPreferences.getBoolean(Keys.KEY_USE_SYSTEM_COLOR, true)
+                        ? "MATERIAL_YOU" : "DEFAULT");
+            }
+            if (!sPreferences.contains(Keys.KEY_THEME_COLOR)) {
+                editor.putString(Keys.KEY_THEME_COLOR,
+                    sPreferences.getBoolean(Keys.KEY_BLACK_NIGHT_THEME, false) ? "AMOLED" : "BLUE");
+            }
+            editor.apply();
         }
     }
 
@@ -169,18 +181,10 @@ public class ShizukuSettings {
 
     @AppCompatDelegate.NightMode
     public static int getNightMode() {
-        int defValue = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-        if (EnvironmentUtils.isWatch()) {
-            defValue = AppCompatDelegate.MODE_NIGHT_YES;
-        }
-        return getPreferences().getInt(Keys.KEY_NIGHT_MODE, defValue);
+        return getPreferences().getInt(Keys.KEY_NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
     }
 
     public static Locale getLocale() {
-        String tag = getPreferences().getString(Keys.KEY_LANGUAGE, null);
-        if (TextUtils.isEmpty(tag) || "SYSTEM".equals(tag)) {
-            return Locale.getDefault();
-        }
-        return Locale.forLanguageTag(tag);
+        return android.content.res.Resources.getSystem().getConfiguration().getLocales().get(0);
     }
 }

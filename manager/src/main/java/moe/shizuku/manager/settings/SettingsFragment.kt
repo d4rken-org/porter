@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.text.InputType
-import android.text.TextUtils
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -55,26 +54,16 @@ import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import rikka.core.util.ResourceUtils
 import rikka.html.text.HtmlCompat
-import rikka.material.app.LocaleDelegate
 import rikka.recyclerview.addEdgeSpacing
 import rikka.recyclerview.addItemSpacing
 import rikka.recyclerview.fixEdgeEffect
-import rikka.shizuku.manager.ShizukuLocales
-import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var startOnBootPreference: TwoStatePreference
     private lateinit var watchdogPreference: TwoStatePreference
     private lateinit var tcpPortPreference: EditTextPreference
-    private lateinit var languagePreference: ListPreference
-    private lateinit var translationPreference: Preference
-    private lateinit var translationContributorsPreference: Preference
     private lateinit var nightModePreference: IntegerSimpleMenuPreference
-    private lateinit var blackNightThemePreference: TwoStatePreference
-    private lateinit var useSystemColorPreference: TwoStatePreference
-    private lateinit var helpPreference: Preference
-    private lateinit var reportBugPreference: Preference
     private lateinit var legacyPairingPreference: TwoStatePreference
     private lateinit var advancedCategory: PreferenceCategory
 
@@ -98,14 +87,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         startOnBootPreference = findPreference(KEY_START_ON_BOOT)!!
         watchdogPreference = findPreference(KEY_WATCHDOG)!!
         tcpPortPreference = findPreference(KEY_TCP_PORT)!!
-        languagePreference = findPreference(KEY_LANGUAGE)!!
-        translationPreference = findPreference(KEY_TRANSLATION)!!
-        translationContributorsPreference = findPreference(KEY_TRANSLATION_CONTRIBUTORS)!!
         nightModePreference = findPreference(KEY_NIGHT_MODE)!!
-        blackNightThemePreference = findPreference(KEY_BLACK_NIGHT_THEME)!!
-        useSystemColorPreference = findPreference(KEY_USE_SYSTEM_COLOR)!!
-        helpPreference = findPreference(KEY_HELP)!!
-        reportBugPreference = findPreference(KEY_REPORT_BUG)!!
         legacyPairingPreference = findPreference(KEY_LEGACY_PAIRING)!!
         advancedCategory = findPreference(KEY_CATEGORY_ADVANCED)!!
 
@@ -204,76 +186,64 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             }
         }
 
-        languagePreference.setOnPreferenceChangeListener { _, newValue ->
-            if (newValue is String) {
-                val locale: Locale = if ("SYSTEM" == newValue) {
-                    LocaleDelegate.systemLocale
-                } else {
-                    Locale.forLanguageTag(newValue)
-                }
-                LocaleDelegate.defaultLocale = locale
-                activity?.recreate()
-            }
-            true
-        }
-
-        setupLocalePreference(languagePreference)
-
         nightModePreference.apply {
             value = ShizukuSettings.getNightMode()
             setOnPreferenceChangeListener { _, value ->
                 if (value is Int) {
-                    if (ShizukuSettings.getNightMode() != value) {
-                        AppCompatDelegate.setDefaultNightMode(value)
-                        activity?.recreate()
-                    }
+                    ShizukuSettings.getPreferences().edit().putInt(KEY_NIGHT_MODE, value).apply()
+                    AppCompatDelegate.setDefaultNightMode(value)
                 }
                 true
             }
         }
 
-        blackNightThemePreference.apply {
-            if (ShizukuSettings.getNightMode() != AppCompatDelegate.MODE_NIGHT_NO) {
-                isChecked = ThemeHelper.isBlackNightTheme(context)
-                setOnPreferenceChangeListener { _, _ ->
-                    if (ResourceUtils.isNightMode(context.resources.configuration))
-                        activity?.recreate()
-                    true
-                }
-            } else isVisible = false
+        val style = findPreference<ListPreference>(KEY_THEME_STYLE)!!
+        val color = findPreference<ListPreference>(KEY_THEME_COLOR)!!
+        if (Build.VERSION.SDK_INT < 31) {
+            val supported = style.entryValues.indices.filter { style.entryValues[it] != "MATERIAL_YOU" }
+            style.entries = supported.map { style.entries[it] }.toTypedArray()
+            style.entryValues = supported.map { style.entryValues[it] }.toTypedArray()
+            if (ThemeHelper.getThemeStyle() == "MATERIAL_YOU") {
+                ShizukuSettings.getPreferences().edit().putString(KEY_THEME_STYLE, "DEFAULT").apply()
+            }
+        }
+        style.value = ThemeHelper.getThemeStyle()
+        color.value = ThemeHelper.getThemeColor()
+        color.isEnabled = !ThemeHelper.isUsingSystemColor()
+        if (!color.isEnabled) {
+            color.summaryProvider = null
+            color.summary = getString(R.string.porter_theme_color_system)
+        }
+        listOf(style, color).forEach { preference ->
+            preference.setOnPreferenceChangeListener { _, value ->
+                ShizukuSettings.getPreferences().edit().putString(preference.key, value as String).apply()
+                activity?.recreate()
+                true
+            }
         }
 
-        useSystemColorPreference.apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                isChecked = ThemeHelper.isUsingSystemColor()
-                setOnPreferenceChangeListener { _, value ->
-                    if (value is Boolean) {
-                        if (ThemeHelper.isUsingSystemColor() != value)
-                            activity?.recreate()
-                    }
-                    true
-                }
-            } else isVisible = false
-        }
-
-        // No translation project exists for Porter yet.
-        translationPreference.isVisible = false
-
-        translationContributorsPreference.apply {
-            val contributors = context.getString(R.string.translation_contributors).toHtml().toString()
-            if (contributors.isNotBlank()) {
-                summary = contributors
-            } else isVisible = false
-        }
-
-        helpPreference.setOnPreferenceClickListener {
-            CustomTabsHelper.launchUrlOrCopy(context, Helps.WEBSITE)
+        findPreference<Preference>("terminal")!!.setOnPreferenceClickListener {
+            startActivity(Intent(context, moe.shizuku.manager.shell.ShellTutorialActivity::class.java))
             true
         }
-
-        reportBugPreference.setOnPreferenceClickListener {
-            BugReportDialog().show(parentFragmentManager, "BugReportDialog")
+        findPreference<Preference>("automation")!!.setOnPreferenceClickListener {
+            AutomationDialog.show(context)
             true
+        }
+        findPreference<Preference>("developer_guide")!!.setOnPreferenceClickListener {
+            CustomTabsHelper.launchUrlOrCopy(context, Helps.HOME.get())
+            true
+        }
+        findPreference<Preference>("support")!!.setOnPreferenceClickListener {
+            startActivity(Intent(context, moe.shizuku.manager.support.SupportActivity::class.java))
+            true
+        }
+        findPreference<Preference>("about")!!.apply {
+            summary = context.packageManager.getPackageInfo(context.packageName, 0).versionName
+            setOnPreferenceClickListener {
+                AboutDialog().show(parentFragmentManager, "about")
+                true
+            }
         }
 
         legacyPairingPreference.apply {
@@ -405,62 +375,4 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-    private fun setupLocalePreference(languagePreference: ListPreference) {
-        val localeTags = ShizukuLocales.LOCALES
-        val displayLocaleTags = ShizukuLocales.DISPLAY_LOCALES
-
-        languagePreference.entries = displayLocaleTags
-        languagePreference.entryValues = localeTags
-
-        val currentLocaleTag = languagePreference.value
-        val currentLocaleIndex = localeTags.indexOf(currentLocaleTag)
-        val currentLocale = ShizukuSettings.getLocale()
-        val localizedLocales = mutableListOf<CharSequence>()
-
-        for ((index, displayLocale) in displayLocaleTags.withIndex()) {
-            if (index == 0) {
-                localizedLocales.add(getString(R.string.follow_system))
-                continue
-            }
-
-            val locale = Locale.forLanguageTag(displayLocale.toString())
-            val localeName = if (!TextUtils.isEmpty(locale.script))
-                locale.getDisplayScript(locale)
-            else
-                locale.getDisplayName(locale)
-
-            val localizedLocaleName = if (!TextUtils.isEmpty(locale.script))
-                locale.getDisplayScript(currentLocale)
-            else
-                locale.getDisplayName(currentLocale)
-
-            localizedLocales.add(
-                if (index != currentLocaleIndex) {
-                    "$localeName<br><small>$localizedLocaleName<small>".toHtml()
-                } else {
-                    localizedLocaleName
-                }
-            )
-        }
-
-        languagePreference.entries = localizedLocales.toTypedArray()
-
-        languagePreference.summary = when {
-            TextUtils.isEmpty(currentLocaleTag) || "SYSTEM" == currentLocaleTag -> {
-                getString(R.string.follow_system)
-            }
-            currentLocaleIndex != -1 -> {
-                val localizedLocale = localizedLocales[currentLocaleIndex]
-                val newLineIndex = localizedLocale.indexOf('\n')
-                if (newLineIndex == -1) {
-                    localizedLocale.toString()
-                } else {
-                    localizedLocale.subSequence(0, newLineIndex).toString()
-                }
-            }
-            else -> {
-                ""
-            }
-        }
-    }
 }

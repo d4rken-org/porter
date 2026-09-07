@@ -11,7 +11,6 @@ import moe.shizuku.manager.service.WatchdogService
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import rikka.core.util.BuildUtils.atLeast30
-import rikka.material.app.LocaleDelegate
 import rikka.shizuku.Shizuku
 
 class ShizukuApplication : Application() {
@@ -40,7 +39,11 @@ class ShizukuApplication : Application() {
 
     private fun init(context: Context) {
         ShizukuSettings.initialize(context)
-        LocaleDelegate.defaultLocale = ShizukuSettings.getLocale()
+        if (Build.VERSION.SDK_INT >= 33 && !ShizukuSettings.getPreferences().getBoolean("system_locale_migrated", false)) {
+            getSystemService(android.app.LocaleManager::class.java).applicationLocales = android.os.LocaleList.getEmptyLocaleList()
+            ShizukuSettings.getPreferences().edit().putBoolean("system_locale_migrated", true).apply()
+        }
+        moe.shizuku.manager.support.DebugRecorder.initialize(context)
         AppCompatDelegate.setDefaultNightMode(ShizukuSettings.getNightMode())
 
         if(ShizukuSettings.getWatchdog()) WatchdogService.start(context)

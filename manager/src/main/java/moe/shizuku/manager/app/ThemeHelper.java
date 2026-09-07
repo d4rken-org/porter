@@ -15,34 +15,40 @@ import rikka.core.util.ResourceUtils;
 
 public class ThemeHelper {
 
-    private static final String THEME_DEFAULT = "DEFAULT";
-    private static final String THEME_BLACK = "BLACK";
+    public static String getThemeStyle() {
+        return ShizukuSettings.getPreferences().getString(ShizukuSettings.Keys.KEY_THEME_STYLE, "DEFAULT");
+    }
 
-    public static boolean isBlackNightTheme(Context context) {
-        return ShizukuSettings.getPreferences().getBoolean(ShizukuSettings.Keys.KEY_BLACK_NIGHT_THEME, EnvironmentUtils.isWatch());
+    public static String getThemeColor() {
+        return ShizukuSettings.getPreferences().getString(ShizukuSettings.Keys.KEY_THEME_COLOR, "BLUE");
     }
 
     public static boolean isUsingSystemColor() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                && ShizukuSettings.getPreferences().getBoolean(ShizukuSettings.Keys.KEY_USE_SYSTEM_COLOR, true);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && "MATERIAL_YOU".equals(getThemeStyle());
     }
 
     public static String getTheme(Context context) {
-        if (isBlackNightTheme(context)
-                && ResourceUtils.isNightMode(context.getResources().getConfiguration()))
-            return THEME_BLACK;
-
-        return ShizukuSettings.getPreferences().getString(ShizukuSettings.Keys.KEY_LIGHT_THEME, THEME_DEFAULT);
+        return getThemeStyle() + ":" + getThemeColor();
     }
 
     @StyleRes
     public static int getThemeStyleRes(Context context) {
-        switch (getTheme(context)) {
-            case THEME_BLACK:
-                return R.style.ThemeOverlay_Black;
-            case THEME_DEFAULT:
+        boolean dark = ResourceUtils.isNightMode(context.getResources().getConfiguration());
+        int contrast = "HIGH_CONTRAST".equals(getThemeStyle()) ? 2 : "MEDIUM_CONTRAST".equals(getThemeStyle()) ? 1 : 0;
+        int index = contrast * 2 + (dark ? 1 : 0);
+        switch (getThemeColor()) {
+            case "GREEN":
+                return new int[] {
+                    R.style.PorterPalette_Green_LightDefault, R.style.PorterPalette_Green_DarkDefault, R.style.PorterPalette_Green_LightMediumContrast, R.style.PorterPalette_Green_DarkMediumContrast, R.style.PorterPalette_Green_LightHighContrast, R.style.PorterPalette_Green_DarkHighContrast
+                }[index];
+            case "AMOLED":
+                return new int[] {
+                    R.style.PorterPalette_Amoled_LightDefault, R.style.PorterPalette_Amoled_DarkDefault, R.style.PorterPalette_Amoled_LightMediumContrast, R.style.PorterPalette_Amoled_DarkMediumContrast, R.style.PorterPalette_Amoled_LightHighContrast, R.style.PorterPalette_Amoled_DarkHighContrast
+                }[index];
             default:
-                return R.style.ThemeOverlay;
+                return new int[] {
+                    R.style.PorterPalette_Blue_LightDefault, R.style.PorterPalette_Blue_DarkDefault, R.style.PorterPalette_Blue_LightMediumContrast, R.style.PorterPalette_Blue_DarkMediumContrast, R.style.PorterPalette_Blue_LightHighContrast, R.style.PorterPalette_Blue_DarkHighContrast
+                }[index];
         }
     }
 

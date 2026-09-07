@@ -11,7 +11,7 @@ description: So nutzt du Porters Debugging- oder Root-Zugriff in einer Terminal-
 Porter enthält **rish**, ein Startprogramm, das eine Terminal-Shell mit Porters Debugging- oder Root-Zugriff öffnet.
 
 1. Starte Porter.
-2. Tippe auf **Porter in Terminal-Apps verwenden**.
+2. Öffne das Dreipunktmenü, wähle **Einstellungen** und dann **Porter in Terminal-Apps verwenden**.
 3. Exportiere die Dateien in einen neuen Ordner. Kopiere sie dann mit deiner Terminal-App in deren privates Dateiverzeichnis.
 4. Folge den Anweisungen zu Befehlen und Umgebungsvariablen in der installierten Porter-App. Verwende überall dort, wo danach gefragt wird, den tatsächlichen Paketnamen deiner Terminal-App.
 5. Führe den angezeigten Befehl aus und bestätige die Zugriffsanfrage der Terminal-App in Porter.

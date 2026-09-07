@@ -34,7 +34,7 @@ import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.receiver.ShizukuReceiverStarter
 import moe.shizuku.manager.receiver.ShizukuReceiverStarter.WorkerState
 import moe.shizuku.manager.receiver.ShizukuReceiverStarter.updateNotification
-import moe.shizuku.manager.settings.BugReportDialogActivity
+import moe.shizuku.manager.support.SupportActivity
 import moe.shizuku.manager.starter.Starter
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.ShizukuStateMachine
@@ -175,7 +175,7 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
         val msgNotif = "$e. ${context.getString(R.string.wadb_error_notify_dev)}"
 
-        val intent = Intent(context, BugReportDialogActivity::class.java).apply {
+        val intent = Intent(context, SupportActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent = PendingIntent.getActivity(

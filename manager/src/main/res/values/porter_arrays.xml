@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="porter_theme_styles">
+        <item>@string/porter_theme_default</item><item>@string/porter_theme_material</item>
+        <item>@string/porter_theme_medium</item><item>@string/porter_theme_high</item>
+    </string-array>
+    <string-array name="porter_theme_style_values" translatable="false">
+        <item>DEFAULT</item><item>MATERIAL_YOU</item><item>MEDIUM_CONTRAST</item><item>HIGH_CONTRAST</item>
+    </string-array>
+    <string-array name="porter_theme_colors">
+        <item>@string/porter_theme_blue</item><item>@string/porter_theme_green</item><item>@string/porter_theme_amoled</item>
+    </string-array>
+    <string-array name="porter_theme_color_values" translatable="false">
+        <item>BLUE</item><item>GREEN</item><item>AMOLED</item>
+    </string-array>
+    <string-array name="porter_contact_categories">
+        <item>@string/porter_contact_bug</item><item>@string/porter_contact_question</item><item>@string/porter_contact_feature</item>
+    </string-array>
+</resources>

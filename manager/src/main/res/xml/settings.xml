@@ -28,61 +28,38 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:key="category_language"
-        android:title="@string/settings_language">
-
-        <rikka.preference.SimpleMenuPreference
-            android:defaultValue="SYSTEM"
-            android:key="language"
-            android:summary="%s"
-            android:title="@string/settings_language" />
-
-        <Preference
-            style="?preferenceInformationStyle"
-            android:key="translation_contributors"
-            android:title="@string/settings_translation_contributors" />
-
-        <Preference
-            android:key="translation"
-            android:title="@string/settings_translation" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:key="category_ui"
-        android:title="@string/settings_user_interface">
-
+    <PreferenceCategory android:title="@string/settings_user_interface">
         <moe.shizuku.manager.settings.IntegerSimpleMenuPreference
+            android:key="night_mode"
             android:entries="@array/night_mode"
             android:entryValues="@array/night_mode_value"
-            android:key="night_mode"
             android:summary="%s"
-            android:title="@string/dark_theme" />
-
-        <SwitchPreferenceCompat
-            android:key="black_night_theme"
-            android:summary="@string/settings_black_night_theme_summary"
-            android:title="@string/settings_black_night_theme" />
-
-        <SwitchPreferenceCompat
-            android:key="use_system_color"
-            android:title="@string/settings_use_system_color" />
-
+            android:title="@string/porter_theme_mode" />
+        <ListPreference
+            android:key="theme_style"
+            android:entries="@array/porter_theme_styles"
+            android:entryValues="@array/porter_theme_style_values"
+            android:title="@string/porter_theme_style"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            android:key="theme_color"
+            android:entries="@array/porter_theme_colors"
+            android:entryValues="@array/porter_theme_color_values"
+            android:title="@string/porter_theme_color"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:key="category_support"
-        android:title="@string/settings_support">
+    <PreferenceCategory android:title="@string/porter_tools">
+        <Preference android:key="terminal" android:title="@string/home_terminal_title"
+            android:summary="@string/home_terminal_description" />
+        <Preference android:key="automation" android:title="@string/home_automation_title" />
+        <Preference android:key="developer_guide" android:title="@string/porter_developer_guide" />
+    </PreferenceCategory>
 
-        <Preference
-            android:key="help"
-            android:title="@string/settings_help" />
-
-        <Preference
-            android:key="report_bug"
-            android:title="@string/settings_report_bug" />
-
+    <PreferenceCategory android:title="@string/settings_support">
+        <Preference android:key="support" android:title="@string/porter_support_title"
+            android:summary="@string/porter_support_summary" />
+        <Preference android:key="about" android:title="@string/action_about" />
     </PreferenceCategory>
 
     <PreferenceCategory

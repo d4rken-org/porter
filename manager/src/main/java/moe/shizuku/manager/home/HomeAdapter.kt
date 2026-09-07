@@ -7,7 +7,6 @@ import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.UserHandleCompat
 import rikka.recyclerview.IdBasedRecyclerViewAdapter
 import rikka.recyclerview.IndexCreatorPool
-import rikka.shizuku.Shizuku
 
 class HomeAdapter(private val homeModel: HomeViewModel, private val appsModel: AppsViewModel, private val scope: CoroutineScope) :
     IdBasedRecyclerViewAdapter(ArrayList()) {
@@ -21,13 +20,10 @@ class HomeAdapter(private val homeModel: HomeViewModel, private val appsModel: A
 
         private const val ID_STATUS = 0L
         private const val ID_APPS = 1L
-        private const val ID_TERMINAL = 2L
         private const val ID_START_ROOT = 3L
         private const val ID_START_WADB = 4L
         private const val ID_START_ADB = 5L
-        private const val ID_LEARN_MORE = 6L
         private const val ID_ADB_PERMISSION_LIMITED = 7L
-        private const val ID_AUTOMATION = 8L
     }
 
     override fun onCreateCreatorPool(): IndexCreatorPool {
@@ -46,17 +42,14 @@ class HomeAdapter(private val homeModel: HomeViewModel, private val appsModel: A
 
         if (adbPermission) {
             addItem(ManageAppsViewHolder.CREATOR, status to grantedCount, ID_APPS)
-            addItem(TerminalViewHolder.CREATOR, status, ID_TERMINAL)
         }
 
         if (running && !adbPermission) {
             addItem(AdbPermissionLimitedViewHolder.CREATOR, status, ID_ADB_PERMISSION_LIMITED)
         }
 
-        if (isPrimaryUser) {
-            val rootRestart = running && status.uid == 0
-
-            if (EnvironmentUtils.isRooted()) addItem(StartRootViewHolder.CREATOR, rootRestart, ID_START_ROOT)
+        if (isPrimaryUser && !running) {
+            if (EnvironmentUtils.isRooted()) addItem(StartRootViewHolder.CREATOR, false, ID_START_ROOT)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ||
                 EnvironmentUtils.isTelevision() ||
@@ -65,10 +58,6 @@ class HomeAdapter(private val homeModel: HomeViewModel, private val appsModel: A
 
             addItem(StartAdbViewHolder.CREATOR, null, ID_START_ADB)
         }
-        addItem(AutomationViewHolder.CREATOR, null, ID_AUTOMATION)
-
-
-        addItem(LearnMoreViewHolder.CREATOR, null, ID_LEARN_MORE)
         notifyDataSetChanged()
     }
 }

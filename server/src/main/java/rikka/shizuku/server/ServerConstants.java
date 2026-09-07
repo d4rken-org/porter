@@ -12,5 +12,6 @@ public class ServerConstants {
     public static final String COMPAT_APPLICATION_ID = "moe.shizuku.privileged.api";
     public static final String REQUEST_PERMISSION_ACTION = BuildConfig.MANAGER_APPLICATION_ID + ".intent.action.REQUEST_PERMISSION";
 
+    public static final int BINDER_TRANSACTION_getDiagnostics = 10002;
     public static final int BINDER_TRANSACTION_getApplications = 10001;
 }

@@ -2,8 +2,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string-array name="night_mode">
-        <item>@string/dark_theme_off</item>
-        <item>@string/dark_theme_on</item>
+        <item>@string/porter_theme_light</item>
+        <item>@string/porter_theme_dark</item>
         <item>@string/follow_system</item>
     </string-array>
 
