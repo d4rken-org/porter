@@ -92,13 +92,7 @@ abstract class HomeActivity : ComposeActivity() {
             }
         }) { padding ->
             LazyColumn(Modifier.padding(padding).consumeWindowInsets(padding), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                item { ServiceStatusCard(statusUi) { dialog = "status" } }
-                if (running && status.permission && appsState.pendingCompanionCount > 0) item {
-                    CompatibilityCard(resources.getQuantityString(R.plurals.porter_compatibility_pending,
-                        appsState.pendingCompanionCount, appsState.pendingCompanionCount)) {
-                        CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.DOWNLOAD.get())
-                    }
-                }
+                item { ServiceStatusCard(statusUi, accessPaused = appsState.accessEnabled == false) { dialog = "status" } }
                 if (running && status.permission) item {
                     val count = appsState.grantedCount
                     HomeCard(stringResource(R.string.porter_applications), R.drawable.ic_apps_outline_24,
@@ -110,7 +104,15 @@ abstract class HomeActivity : ComposeActivity() {
                             resources.getQuantityString(R.plurals.porter_apps_need_companion, appsState.companionRequiredCount, appsState.companionRequiredCount),
                             style = MaterialTheme.typography.bodyMedium)
                         if (appsState.failedUsers.isNotEmpty()) Text(stringResource(R.string.porter_discovery_partial), style = MaterialTheme.typography.bodySmall)
+                        if (appsState.accessEnabled == false) Text(stringResource(R.string.porter_access_paused),
+                            style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
                         Text(stringResource(R.string.home_app_management_view_authorized_apps), style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+                if (running && status.permission && appsState.pendingCompanionCount > 0) item {
+                    CompatibilityCard(resources.getQuantityString(R.plurals.porter_compatibility_pending,
+                        appsState.pendingCompanionCount, appsState.pendingCompanionCount)) {
+                        CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.DOWNLOAD.get())
                     }
                 }
                 if (restricted) item {

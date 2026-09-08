@@ -30,14 +30,24 @@ class DiscoveryUiStateTest {
         assertEquals(2, state.grantedCount)
         assertEquals(2, state.compatibleCount)
         assertEquals(1, state.companionRequiredCount)
-        assertFalse(state.allGranted)
     }
     @Test fun pendingIntentChecksTheSwitchButDoesNotCountAsEffectiveAuthorization() {
         val pending = app(Entry.NEEDS_COMPANION, Entry.PENDING_COMPANION)
         assertTrue(pending.granted)
         val state = AppsViewModel.State(listOf(pending))
-        assertTrue(state.allGranted)
         assertEquals(0, state.grantedCount)
         assertEquals(1, state.pendingCompanionCount)
+    }
+    @Test fun globalPauseDoesNotChangeIndividualDecisions() {
+        val apps = listOf(app(Entry.DIRECT, Entry.ALLOWED), app(Entry.DIRECT, Entry.DENIED),
+            app(Entry.NEEDS_COMPANION, Entry.PENDING_COMPANION), app(Entry.DIRECT))
+        val enabled = AppsViewModel.State(apps, accessEnabled = true)
+        val paused = enabled.copy(accessEnabled = false)
+        assertEquals(enabled.apps, paused.apps)
+        assertEquals(enabled.grantedCount, paused.grantedCount)
+        assertTrue(paused.apps[0].granted)
+        assertFalse(paused.apps[1].granted)
+        assertTrue(paused.apps[2].granted)
+        assertFalse(paused.apps[3].granted)
     }
 }

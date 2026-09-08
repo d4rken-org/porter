@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.IBinder
 import eu.darken.porter.common.DiscoveredApplication
+import eu.darken.porter.common.GlobalAccess
 import android.os.Parcel
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Manifest
@@ -59,6 +60,30 @@ object AuthorizationManager {
         } finally {
             data.recycle()
             reply.recycle()
+        }
+    }
+
+    internal fun globalAccess(binder: IBinder, enabled: Boolean? = null): Boolean? {
+        val data = Parcel.obtain()
+        val reply = Parcel.obtain()
+        return try {
+            data.writeInterfaceToken("moe.shizuku.server.IShizukuService")
+            data.writeInt(if (enabled == null) GlobalAccess.READ else GlobalAccess.WRITE)
+            enabled?.let { data.writeInt(if (it) 1 else 0) }
+            if (!binder.transact(GlobalAccess.TRANSACTION, data, reply, 0)) return null
+            reply.readException()
+            if (reply.readInt() != GlobalAccess.VERSION) return null
+            reply.readInt() != 0
+        } finally {
+            data.recycle()
+            reply.recycle()
+        }
+    }
+
+    fun getGlobalAccess(): Boolean? = globalAccess(Shizuku.getBinder() ?: error("Porter is not running"))
+    fun setGlobalAccess(enabled: Boolean) {
+        check(globalAccess(Shizuku.getBinder() ?: error("Porter is not running"), enabled) == enabled) {
+            "Restart Porter to use global access control."
         }
     }
 

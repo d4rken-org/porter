@@ -19,6 +19,8 @@ public class ShizukuUserServiceManager extends UserServiceManager {
     private final Map<UserServiceRecord, ApkChangedListener> apkChangedListeners = new ArrayMap<>();
     private final Map<String, List<UserServiceRecord>> userServiceRecords = Collections.synchronizedMap(new ArrayMap<>());
 
+    private volatile boolean accessPaused;
+
     public ShizukuUserServiceManager() {
         super();
     }
@@ -28,6 +30,7 @@ public class ShizukuUserServiceManager extends UserServiceManager {
             UserServiceRecord record, String key, String token, String packageName,
             String classname, String processNameSuffix, int callingUid, boolean use32Bits, boolean debug) {
 
+        if (accessPaused) throw new SecurityException("App access is paused");
         String appProcess = "/system/bin/app_process";
         if (use32Bits && new File("/system/bin/app_process32").exists()) {
             appProcess = "/system/bin/app_process32";
@@ -39,8 +42,19 @@ public class ShizukuUserServiceManager extends UserServiceManager {
                 token, packageName, classname, processNameSuffix, callingUid, debug);
     }
 
+    public synchronized void setAccessPaused(boolean paused) {
+        accessPaused = paused;
+        if (paused) {
+            for (UserServiceRecord record : new ArrayList<>(apkChangedListeners.keySet())) record.removeSelf();
+        }
+    }
+
     @Override
-    public void onUserServiceRecordCreated(UserServiceRecord record, PackageInfo packageInfo) {
+    public synchronized void onUserServiceRecordCreated(UserServiceRecord record, PackageInfo packageInfo) {
+        if (accessPaused) {
+            record.removeSelf();
+            throw new SecurityException("App access is paused");
+        }
         super.onUserServiceRecordCreated(record, packageInfo);
 
         String packageName = packageInfo.packageName;
@@ -73,7 +87,7 @@ public class ShizukuUserServiceManager extends UserServiceManager {
     }
 
     @Override
-    public void onUserServiceRecordRemoved(UserServiceRecord record) {
+    public synchronized void onUserServiceRecordRemoved(UserServiceRecord record) {
         super.onUserServiceRecordRemoved(record);
         ApkChangedListener listener = apkChangedListeners.get(record);
         if (listener != null) {

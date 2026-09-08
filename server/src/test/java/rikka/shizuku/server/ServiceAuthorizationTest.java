@@ -102,7 +102,7 @@ public class ServiceAuthorizationTest {
     }
 
     @Test public void diagnosticsAndApplicationsTransactionsRequireManager() {
-        for (int code : new int[]{ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications, eu.darken.porter.common.DiscoveredApplication.TRANSACTION}) {
+        for (int code : new int[]{ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications, eu.darken.porter.common.DiscoveredApplication.TRANSACTION, eu.darken.porter.common.GlobalAccess.TRANSACTION}) {
             Parcel request = Parcel.obtain();
             Parcel reply = Parcel.obtain();
             try {
@@ -375,5 +375,91 @@ public class ServiceAuthorizationTest {
         verify(record).dispatchRequestPermissionResult(42, false);
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
         assertFalse(record.allowed);
+    }
+
+    private void globalAccess(boolean enabled) throws Exception {
+        Method method = ShizukuService.class.getDeclaredMethod("setGlobalAccess", boolean.class);
+        method.setAccessible(true);
+        method.invoke(service, enabled);
+    }
+
+    @Test public void globalPauseBlocksEvenStaleAllowedRecordsAndRuntimePermissionFallback() {
+        when(config.isAccessPaused()).thenReturn(true);
+        assertThrows(SecurityException.class, () -> service.enforceCallingPermission("transactRemote"));
+        when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null);
+        activities.when(() -> ActivityManagerApis.checkPermission(ServerConstants.PERMISSION, CLIENT_PID, CLIENT_UID)).thenReturn(PackageManager.PERMISSION_GRANTED);
+        assertThrows(SecurityException.class, () -> service.enforceCallingPermission("newProcess"));
+        ShadowBinder.setCallingUid(MANAGER_UID);
+        service.enforceCallingPermission("manager operation");
+    }
+
+    @Test public void pauseAndResumeKeepSavedDecisionsAndUpdateClients() throws Exception {
+        var paused = new java.util.concurrent.atomic.AtomicBoolean(false);
+        when(config.isAccessPaused()).thenAnswer(inv -> paused.get());
+        doAnswer(inv -> { paused.set(inv.getArgument(0)); return null; }).when(config).setAccessPaused(anyBoolean());
+        when(clients.attachedClients()).thenReturn(List.of(client));
+        var entry = config.find(CLIENT_UID);
+        int before = entry.flags;
+        globalAccess(false);
+        assertFalse(client.allowed);
+        verify(userServices).setAccessPaused(true);
+        assertEquals(before, entry.flags);
+        verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
+        globalAccess(true);
+        assertTrue(client.allowed);
+        assertEquals(before, entry.flags);
+        verify(userServices).setAccessPaused(false);
+        verify(client.client, times(2)).bindApplication(any(Bundle.class));
+    }
+
+    @Test public void permissionRequestWhilePausedReturnsDenialWithoutChangingConfig() {
+        when(config.isAccessPaused()).thenReturn(true);
+        var record = spy(client);
+        service.showPermissionConfirmation(17, record, CLIENT_UID, CLIENT_PID, 0);
+        verify(record).dispatchRequestPermissionResult(17, false);
+        verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
+    }
+
+    @Test public void managerGrantWhilePausedKeepsRecordMasked() throws Exception {
+        ShadowBinder.setCallingUid(MANAGER_UID);
+        when(config.isAccessPaused()).thenReturn(true);
+        service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED);
+        assertFalse(client.allowed);
+        verify(config).update(CLIENT_UID, List.of(client.packageName),
+            ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION, ConfigManager.FLAG_ALLOWED);
+    }
+
+    @Test public void pendingActivationWhilePausedDoesNotEnableClient() throws Exception {
+        pendingLegacy();
+        when(config.isAccessPaused()).thenReturn(true);
+        companion.when(Compatibility::isAvailable).thenReturn(true);
+        permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
+        reconcile();
+        assertFalse(client.allowed);
+        verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION, ConfigManager.FLAG_ALLOWED);
+    }
+
+    @Test public void persistedPauseDoesNotModifyPermissionEntries() {
+        var saved = new ShizukuConfig(List.of(new ShizukuConfig.PackageEntry(CLIENT_UID, ConfigManager.FLAG_ALLOWED)));
+        saved.accessPaused = true;
+        var gson = new com.google.gson.Gson();
+        var restored = gson.fromJson(gson.toJson(saved), ShizukuConfig.class);
+        assertTrue(restored.accessPaused);
+        assertTrue(restored.packages.get(0).isAllowed());
+        assertFalse(gson.fromJson("{\"version\":2}", ShizukuConfig.class).accessPaused);
+    }
+
+    @Test public void newlyAttachedClientIsMaskedWhenPersistedPauseIsActive() {
+        var realClients = new ShizukuClientManager(config);
+        when(config.isAccessPaused()).thenReturn(true);
+        var callback = new IShizukuApplication.Stub() {
+            public void bindApplication(Bundle data) {}
+            public void dispatchRequestPermissionResult(int code, Bundle data) {}
+            public void showPermissionConfirmation(int uid, int pid, String name, int code) {}
+        };
+        var record = realClients.addClient(CLIENT_UID, CLIENT_PID, callback, client.packageName, 13);
+        assertNotNull(record);
+        assertFalse(record.allowed);
+        assertEquals(List.of(record), realClients.attachedClients());
     }
 }

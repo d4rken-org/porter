@@ -15,6 +15,9 @@ public class ShizukuConfig {
     @SerializedName("version")
     public int version = LATEST_VERSION;
 
+    @SerializedName("accessPaused")
+    public boolean accessPaused;
+
     @SerializedName("packages")
     public List<PackageEntry> packages = new ArrayList<>();
 

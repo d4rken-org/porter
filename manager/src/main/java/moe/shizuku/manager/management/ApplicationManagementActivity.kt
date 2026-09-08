@@ -38,9 +38,12 @@ class ApplicationManagementActivity : ComposeActivity() {
             LaunchedEffect(service) { if (service != ShizukuStateMachine.State.RUNNING) finish() }
             PorterScaffold(stringResource(R.string.home_app_management_title), onBack = { finish() }) { padding ->
                 LazyColumn(Modifier.padding(padding).consumeWindowInsets(padding)) {
-                    if (state.apps.any { it.canToggle }) item {
-                        SettingsSwitch(stringResource(R.string.app_management_toggle_all), R.drawable.ic_apps_outline_24,
-                            state.allGranted, enabled = !state.loading, onCheckedChange = model::toggleAll)
+                    item {
+                        SettingsSwitch(stringResource(R.string.porter_global_access), R.drawable.ic_apps_outline_24,
+                            state.accessEnabled ?: true, enabled = !state.loading && state.accessEnabled != null,
+                            summary = stringResource(if (state.accessEnabled == null && !state.loading) R.string.porter_global_access_restart
+                                else if (state.accessEnabled == false) R.string.porter_global_access_paused_summary else R.string.porter_global_access_summary),
+                            onCheckedChange = model::setGlobalAccess)
                     }
                     if (state.legacy) item { Text(stringResource(R.string.porter_discovery_legacy), Modifier.padding(16.dp)) }
                     if (state.failedUsers.isNotEmpty()) item { Text(stringResource(R.string.porter_discovery_partial), Modifier.padding(16.dp)) }

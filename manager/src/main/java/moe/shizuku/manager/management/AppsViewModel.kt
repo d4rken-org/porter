@@ -24,12 +24,11 @@ class AppsViewModel(application: Application) : AndroidViewModel(application) {
         val canToggle get() = granted || canAuthorize
     }
     data class State(val apps: List<App> = emptyList(), val loading: Boolean = true, val error: Throwable? = null,
-                     val failedUsers: List<Int> = emptyList(), val legacy: Boolean = false) {
+                     val failedUsers: List<Int> = emptyList(), val legacy: Boolean = false, val accessEnabled: Boolean? = null) {
         val grantedCount get() = apps.count { it.authorization == DiscoveredApplication.ALLOWED }
         val compatibleCount get() = apps.count { it.connectionStatus == DiscoveredApplication.DIRECT || it.connectionStatus == DiscoveredApplication.COMPANION }
         val companionRequiredCount get() = apps.count { it.connectionStatus == DiscoveredApplication.NEEDS_COMPANION }
         val pendingCompanionCount get() = apps.count { it.granted && it.connectionStatus == DiscoveredApplication.NEEDS_COMPANION }
-        val allGranted get() = apps.filter { it.canToggle }.let { it.isNotEmpty() && it.all { app -> app.granted } }
     }
     private val mutableState = MutableStateFlow(State())
     val state = mutableState.asStateFlow()
@@ -51,12 +50,25 @@ class AppsViewModel(application: Application) : AndroidViewModel(application) {
                 App(ai.packageName, ai.uid, label, icon, entry.authorization, entry.connectionStatus, entry.declaredApis,
                     entry.requiresRoot, entry.lastConnectedAt.takeIf { it > 0 })
             }.sortedBy { it.label.lowercase() }
-            mutableState.value = State(apps, false, failedUsers = discovery.failedUsers, legacy = discovery.legacy)
+            mutableState.value = State(apps, false, failedUsers = discovery.failedUsers, legacy = discovery.legacy, accessEnabled = AuthorizationManager.getGlobalAccess())
         } catch (e: CancellationException) { throw e }
         catch (e: Exception) { mutableState.update { it.copy(loading = false, error = e) } }
     }
     fun toggle(app: App, enabled: Boolean) = change(listOf(app), enabled)
-    fun toggleAll(enabled: Boolean) = change(state.value.apps, enabled)
+    fun setGlobalAccess(enabled: Boolean) {
+        if (state.value.loading || state.value.accessEnabled == null) return
+        mutableState.update { it.copy(loading = true) }
+        viewModelScope.launch {
+            mutex.withLock {
+                var failure: Exception? = null
+                try { withContext(Dispatchers.IO) { AuthorizationManager.setGlobalAccess(enabled) } }
+                catch (e: CancellationException) { throw e }
+                catch (e: Exception) { failure = e }
+                refresh()
+                failure?.let { e -> mutableState.update { it.copy(error = e) } }
+            }
+        }
+    }
     private fun change(apps: List<App>, enabled: Boolean) {
         if (state.value.loading) return
         mutableState.update { it.copy(loading = true) }

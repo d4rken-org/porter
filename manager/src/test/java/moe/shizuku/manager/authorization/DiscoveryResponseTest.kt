@@ -4,6 +4,7 @@ import android.content.pm.ApplicationInfo
 import android.os.Binder
 import android.os.Parcel
 import eu.darken.porter.common.DiscoveredApplication
+import eu.darken.porter.common.GlobalAccess
 import moe.shizuku.manager.TestApplication
 import org.junit.Assert.*
 import org.junit.Test
@@ -52,5 +53,31 @@ class DiscoveryResponseTest {
         assertFalse(response.legacy)
         assertEquals(DiscoveredApplication.DENIED, response.apps.single().authorization)
         assertEquals(1234L, response.apps.single().lastConnectedAt)
+    }
+    @Test fun globalAccessDoesNotFallBackToPerAppChangesOnOldService() {
+        val old = object : Binder() {
+            override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int) = false
+        }
+        assertNull(AuthorizationManager.globalAccess(old))
+        assertNull(AuthorizationManager.globalAccess(old, false))
+    }
+
+    @Test fun globalAccessUsesItsOwnTransactionAndReturnsServerState() {
+        var enabled = true
+        val service = object : Binder() {
+            override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+                assertEquals(GlobalAccess.TRANSACTION, code)
+                data.enforceInterface("moe.shizuku.server.IShizukuService")
+                if (data.readInt() == GlobalAccess.WRITE) enabled = data.readInt() != 0
+                reply!!.writeNoException()
+                reply.writeInt(GlobalAccess.VERSION)
+                reply.writeInt(if (enabled) 1 else 0)
+                return true
+            }
+        }
+        assertEquals(true, AuthorizationManager.globalAccess(service))
+        assertEquals(false, AuthorizationManager.globalAccess(service, false))
+        assertEquals(false, AuthorizationManager.globalAccess(service))
+        assertEquals(true, AuthorizationManager.globalAccess(service, true))
     }
 }

@@ -14,6 +14,7 @@ import static rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_IS_ONET
 import static rikka.shizuku.server.ServerConstants.PERMISSION;
 
 import eu.darken.porter.common.DiscoveredApplication;
+import eu.darken.porter.common.GlobalAccess;
 
 import android.content.Context;
 import android.content.IContentProvider;
@@ -122,6 +123,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
 
         configManager = getConfigManager();
         clientManager = getClientManager();
+        getUserServiceManager().setAccessPaused(configManager.isAccessPaused());
 
         ApkChangedObservers.start(ai.sourceDir, () -> {
             if (getManagerApplicationInfo() == null) {
@@ -199,6 +201,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         if (UserHandleCompat.getAppId(callingUid) == managerAppId) {
             return true;
         }
+        if (configManager.isAccessPaused()) throw new SecurityException("App access is paused");
         if (clientRecord == null && checkCallingPermission() == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
@@ -213,14 +216,15 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     }
 
     @Override
-    public void attachUserService(IBinder binder, Bundle options) {
+    public synchronized void attachUserService(IBinder binder, Bundle options) {
         enforceManagerPermission("func");
 
+        if (configManager.isAccessPaused()) throw new SecurityException("App access is paused");
         super.attachUserService(binder, options);
     }
 
     @Override
-    public void attachApplication(IShizukuApplication application, Bundle args) {
+    public synchronized void attachApplication(IShizukuApplication application, Bundle args) {
         if (application == null || args == null) {
             return;
         }
@@ -251,7 +255,8 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             reconcileRuntimePermission(callingUid);
         }
 
-        if (clientManager.findClient(callingUid, callingPid) == null) {
+        clientRecord = clientManager.findClient(callingUid, callingPid);
+        if (clientRecord == null) {
             synchronized (this) {
                 clientRecord = clientManager.addClient(callingUid, callingPid, application, requestPackageName, apiVersion);
                 newClient = clientRecord != null;
@@ -311,6 +316,10 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
 
     @Override
     public void showPermissionConfirmation(int requestCode, @NonNull ClientRecord clientRecord, int callingUid, int callingPid, int userId) {
+        if (configManager.isAccessPaused()) {
+            clientRecord.dispatchRequestPermissionResult(requestCode, false);
+            return;
+        }
         Boolean legacyOnly = uidUsesLegacyOnly(callingUid);
         if (legacyOnly == null || (legacyOnly && !Compatibility.isAvailable())) {
             clientRecord.dispatchRequestPermissionResult(requestCode, false);
@@ -368,9 +377,9 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             LOGGER.w("dispatchPermissionConfirmationResult: no client for uid %d was found", requestUid);
         } else {
             for (ClientRecord record : records) {
-                record.allowed = allowed;
+                record.allowed = allowed && !configManager.isAccessPaused();
                 if (record.pid == requestPid) {
-                    record.dispatchRequestPermissionResult(requestCode, allowed);
+                    record.dispatchRequestPermissionResult(requestCode, record.allowed);
                 }
             }
         }
@@ -465,7 +474,31 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         }
         if (pending) {
             configManager.update(uid, null, mask, ConfigManager.FLAG_ALLOWED);
-            for (ClientRecord record : clientManager.findClients(uid)) record.allowed = true;
+            for (ClientRecord record : clientManager.findClients(uid)) record.allowed = !configManager.isAccessPaused();
+        }
+    }
+
+    private synchronized void setGlobalAccess(boolean enabled) {
+        boolean paused = !enabled;
+        if (configManager.isAccessPaused() == paused) return;
+        configManager.setAccessPaused(paused);
+        getUserServiceManager().setAccessPaused(paused);
+        if (!paused) {
+            for (int uid : configManager.allowedUids()) reconcileRuntimePermission(uid);
+        }
+        for (ClientRecord record : clientManager.attachedClients()) {
+            if (UserHandleCompat.getAppId(record.uid) == managerAppId) continue;
+            ShizukuConfig.PackageEntry entry = configManager.find(record.uid);
+            record.allowed = !paused && entry != null && entry.isAllowed();
+            Bundle reply = new Bundle();
+            reply.putInt(BIND_APPLICATION_SERVER_UID, OsUtils.getUid());
+            reply.putInt(BIND_APPLICATION_SERVER_VERSION, record.apiVersion == -1 ? 12 : ShizukuApiConstants.SERVER_VERSION);
+            reply.putInt(BIND_APPLICATION_SERVER_PATCH_VERSION, ShizukuApiConstants.SERVER_PATCH_VERSION);
+            reply.putString(BIND_APPLICATION_SERVER_SECONTEXT, OsUtils.getSELinuxContext());
+            reply.putBoolean(BIND_APPLICATION_PERMISSION_GRANTED, record.allowed);
+            reply.putBoolean(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, entry != null && entry.isDenied());
+            try { record.client.bindApplication(reply); }
+            catch (Throwable e) { LOGGER.w(e, "Cannot notify client of global access change"); }
         }
     }
 
@@ -505,7 +538,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             List<ClientRecord> records = clientManager.findClients(uid);
             for (ClientRecord record : records) {
                 if (allowed) {
-                    record.allowed = true;
+                    record.allowed = !configManager.isAccessPaused();
                 } else {
                     record.allowed = false;
                     ActivityManagerApis.forceStopPackageNoThrow(record.packageName, UserHandleCompat.getUserId(record.uid));
@@ -614,6 +647,17 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     @Override
     public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
         //LOGGER.d("transact: code=%d, calling uid=%d", code, Binder.getCallingUid());
+        if (code == GlobalAccess.TRANSACTION) {
+            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
+            enforceManagerPermission("globalAccess");
+            int operation = data.readInt();
+            if (operation == GlobalAccess.WRITE) setGlobalAccess(data.readInt() != 0);
+            else if (operation != GlobalAccess.READ) throw new IllegalArgumentException("Unknown global access operation");
+            reply.writeNoException();
+            reply.writeInt(GlobalAccess.VERSION);
+            reply.writeInt(configManager.isAccessPaused() ? 0 : 1);
+            return true;
+        }
         if (code == DiscoveredApplication.TRANSACTION) {
             data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
             enforceManagerPermission("discoverApplications");

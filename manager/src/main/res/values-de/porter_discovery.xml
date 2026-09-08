@@ -21,4 +21,10 @@
         <item quantity="other">Du hast %d Apps Zugriff erlaubt, die die Porter-Kompatibilitäts-App benötigen. Ihr Zugriff wird verfügbar, sobald die Kompatibilitäts-App installiert ist.</item>
     </plurals>
     <string name="porter_access_pending_android">Der Zugriff konnte nicht aktiviert werden. Prüfe die Berechtigungen dieser App in den Android-Einstellungen.</string>
+    <string name="porter_global_access">App-Zugriff erlauben</string>
+    <string name="porter_global_access_summary">Den Zugriff für alle Apps vorübergehend deaktivieren, ohne ihre gespeicherten Berechtigungen zu ändern.</string>
+    <string name="porter_global_access_paused_summary">Der App-Zugriff ist pausiert. Deine individuellen App-Berechtigungen bleiben erhalten. Bereits gestartete Shell-Befehle können weiterlaufen.</string>
+    <string name="porter_global_access_restart">Starte Porter neu, um den globalen App-Zugriff zu steuern.</string>
+    <string name="porter_access_paused">App-Zugriff ist pausiert</string>
+    <string name="porter_status_access_paused">Porter läuft, aber der App-Zugriff ist pausiert. Du kannst ihn unter Anwendungen fortsetzen.</string>
 </resources>

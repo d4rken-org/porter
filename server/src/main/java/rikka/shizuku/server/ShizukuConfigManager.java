@@ -141,6 +141,16 @@ public class ShizukuConfigManager extends ConfigManager {
         }
     }
 
+    public synchronized boolean isAccessPaused() {
+        return config.accessPaused;
+    }
+
+    public synchronized void setAccessPaused(boolean paused) {
+        if (config.accessPaused == paused) return;
+        config.accessPaused = paused;
+        persistLocked();
+    }
+
     private void persistLocked() {
         write(config);
     }
