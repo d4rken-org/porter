@@ -1,8 +1,10 @@
 package moe.shizuku.manager.support
 
+import android.os.IBinder
 import android.os.Parcel
 import android.os.ParcelFileDescriptor
 import moe.shizuku.manager.ShizukuSettings
+import moe.shizuku.manager.model.PorterServiceVersion
 import moe.shizuku.server.IShizukuService
 import rikka.shizuku.Shizuku
 import rikka.shizuku.server.ServerConstants
@@ -12,6 +14,28 @@ import java.util.concurrent.TimeUnit
 
 internal object ServerDiagnostics {
     private val timeouts = Executors.newSingleThreadScheduledExecutor { Thread(it, "porter-log-timeout").apply { isDaemon = true } }
+    data class Info(val pid: Int, val version: PorterServiceVersion?)
+
+    fun readInfo(binder: IBinder): Info? {
+        val request = Parcel.obtain()
+        val reply = Parcel.obtain()
+        try {
+            request.writeInterfaceToken("moe.shizuku.server.IShizukuService")
+            if (!binder.transact(ServerConstants.BINDER_TRANSACTION_getDiagnostics, request, reply, 0)) return null
+            reply.readException()
+            val pid = reply.readInt().also { check(it > 0) }
+            // Older Porter services return only the PID.
+            val extra = if (reply.dataAvail() > 0) reply.readBundle() else null
+            val name = extra?.getString(ServerConstants.DIAGNOSTICS_VERSION_NAME)
+            val code = extra?.getInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, -1) ?: -1
+            val version = if (!name.isNullOrBlank() && code >= 0) PorterServiceVersion(name, code) else null
+            return Info(pid, version)
+        } finally {
+            request.recycle()
+            reply.recycle()
+        }
+    }
+
     fun capture(directory: File, phase: String) {
         val details = File(directory, "server-$phase.txt")
         try {
@@ -22,15 +46,9 @@ internal object ServerDiagnostics {
                 return
             }
             details.appendText("UID: ${Shizuku.getUid()}\nAPI: ${Shizuku.getVersion()}\nSELinux: ${Shizuku.getSELinuxContext()}\n")
-            val request = Parcel.obtain()
-            val reply = Parcel.obtain()
-            val pid = try {
-                request.writeInterfaceToken("moe.shizuku.server.IShizukuService")
-                check(binder.transact(ServerConstants.BINDER_TRANSACTION_getDiagnostics, request, reply, 0))
-                reply.readException()
-                reply.readInt().also { check(it > 0) }
-            } finally { request.recycle(); reply.recycle() }
-            details.appendText("PID: $pid\n")
+            val info = readInfo(binder) ?: error("Service diagnostics unsupported")
+            val pid = info.pid
+            details.appendText("PID: $pid\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nAPI patch: ${Shizuku.getServerPatchVersion()}\n")
             val remote = IShizukuService.Stub.asInterface(binder).newProcess(
                 arrayOf("logcat", "-d", "-v", "threadtime", "-t", "2000", "--pid=$pid"), null, null,
             )

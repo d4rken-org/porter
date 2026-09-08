@@ -302,4 +302,20 @@
     <string name="wadb_notification_attempt_now">Attempt now</string>
 
     <string name="porter_diagnostics_message">Copy these details and include them with your report to the Porter maintainer. Describe what happened and how to reproduce it.\n\n%1$s</string>
+    <string name="porter_status_running_adb">Running via ADB</string>
+    <string name="porter_status_running_root">Running via root</string>
+    <string name="porter_status_restart_service">Restart Porter to update the running service.</string>
+    <string name="porter_status_version_unknown">Unknown</string>
+    <string name="porter_status_versions">Installed Porter: %1$s\nRunning service: %2$s\nShizuku API: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Acknowledgements</string>
+    <string name="porter_acknowledgements_summary">Upstream projects, open-source libraries and licenses.</string>
+    <string name="porter_acknowledgements_thanks">Thank you</string>
+    <string name="porter_licenses">Licenses</string>
+    <string name="porter_ack_shizuku">To RikkaApps and all contributors for creating Shizuku and its APIs, the foundation of Porter.</string>
+    <string name="porter_ack_thedjchi">To thedjchi and contributors for maintaining the Shizuku fork that Porter is based on.</string>
+    <string name="porter_ack_symbuzzer">To symbuzzer and contributors for continuing work on Shizuku and sharing their fork.</string>
+    <string name="porter_ack_plus">To thejaustin and contributors for ShizukuPlus and the inspiration for an optional compatibility app.</string>
+    <string name="porter_license_porter">Porter and the original Shizuku application · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API and its Porter fork · MIT License</string>
+    <string name="porter_license_notice">Copyright and attribution notices</string>
 </resources>

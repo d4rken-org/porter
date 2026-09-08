@@ -299,4 +299,20 @@
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> hat moderne Porter-Unterstützung, aber es fordert Legacy Porter an. Dies könnte daran liegen, dass Porter nicht läuft. Bitte in der Porter-App überprüfen.<p>Legacy Porter wird seit März 2019 nicht mehr unterstützt.]]></string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Porter öffnen</string>
     <string name="wadb_notification_attempt_now">Jetzt versuchen</string>
+    <string name="porter_status_running_adb">Läuft über ADB</string>
+    <string name="porter_status_running_root">Läuft über Root</string>
+    <string name="porter_status_restart_service">Starte Porter erneut, um den laufenden Dienst zu aktualisieren.</string>
+    <string name="porter_status_version_unknown">Unbekannt</string>
+    <string name="porter_status_versions">Installierter Porter: %1$s\nLaufender Dienst: %2$s\nShizuku-API: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Danksagungen</string>
+    <string name="porter_acknowledgements_summary">Ursprungsprojekte, Open-Source-Bibliotheken und Lizenzen.</string>
+    <string name="porter_acknowledgements_thanks">Vielen Dank</string>
+    <string name="porter_licenses">Lizenzen</string>
+    <string name="porter_ack_shizuku">An RikkaApps und alle Mitwirkenden für Shizuku und seine APIs, die Grundlage von Porter.</string>
+    <string name="porter_ack_thedjchi">An thedjchi und alle Mitwirkenden für die Pflege des Shizuku-Forks, auf dem Porter basiert.</string>
+    <string name="porter_ack_symbuzzer">An symbuzzer und alle Mitwirkenden für die Weiterentwicklung von Shizuku und die Veröffentlichung ihres Forks.</string>
+    <string name="porter_ack_plus">An thejaustin und alle Mitwirkenden für ShizukuPlus und die Inspiration für eine optionale Kompatibilitäts-App.</string>
+    <string name="porter_license_porter">Porter und die ursprüngliche Shizuku-App · Apache-Lizenz 2.0</string>
+    <string name="porter_license_api">Shizuku-API und ihr Porter-Fork · MIT-Lizenz</string>
+    <string name="porter_license_notice">Urheberrechts- und Quellenhinweise</string>
 </resources>

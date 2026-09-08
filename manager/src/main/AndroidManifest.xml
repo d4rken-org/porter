@@ -124,6 +124,7 @@
         <activity
             android:name=".starter.StarterActivity"
             android:label="@string/starter" />
+        <activity android:name=".settings.AcknowledgementsActivity" android:exported="false" />
         <activity android:name=".support.SupportActivity" android:exported="false"
             android:directBootAware="false" android:label="@string/porter_support_title" />
         <activity android:name=".support.DebugLogsActivity" android:exported="false"

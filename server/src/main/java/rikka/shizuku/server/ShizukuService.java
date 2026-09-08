@@ -519,6 +519,10 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             enforceManagerPermission("getDiagnostics");
             reply.writeNoException();
             reply.writeInt(android.os.Process.myPid());
+            Bundle version = new Bundle();
+            version.putString(ServerConstants.DIAGNOSTICS_VERSION_NAME, moe.shizuku.server.BuildConfig.PORTER_VERSION_NAME);
+            version.putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, moe.shizuku.server.BuildConfig.PORTER_VERSION_CODE);
+            reply.writeBundle(version);
             return true;
         }
         return super.onTransact(code, data, reply, flags);

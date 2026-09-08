@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Manifest
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.model.ServiceStatus
+import moe.shizuku.manager.support.ServerDiagnostics
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.Logger.LOGGER
 import moe.shizuku.manager.utils.SettingsHelper
@@ -71,7 +71,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         // Before a526d6bb, server will not exit on uninstall, manager installed later will get not permission
         // Run a random remote transaction here, report no permission as not running
         ShizukuSystemApis.checkPermission(Manifest.permission.API_V23, appContext.packageName, 0)
-        return ServiceStatus(uid, apiVersion, patchVersion, seContext, permissionTest)
+        val porterVersion = try {
+            Shizuku.getBinder()?.let { ServerDiagnostics.readInfo(it)?.version }
+        } catch (e: Exception) {
+            LOGGER.w(e, "Read Porter service version")
+            null
+        }
+        return ServiceStatus(uid, apiVersion, patchVersion, seContext, permissionTest, porterVersion)
     }
 
     fun reload() {

@@ -10,6 +10,8 @@ android {
         buildConfig = true
     }
     defaultConfig {
+        buildConfigField "String", "PORTER_VERSION_NAME", "\"${rootProject.ext.versionName}\""
+        buildConfigField "int", "PORTER_VERSION_CODE", "${rootProject.ext.versionCode}"
         buildConfigField "String", "MANAGER_APPLICATION_ID", "\"${project(':manager').android.defaultConfig.applicationId}\""
     }
 }

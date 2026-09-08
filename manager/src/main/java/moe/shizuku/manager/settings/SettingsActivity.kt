@@ -94,6 +94,9 @@ class SettingsActivity : ComposeActivity() {
                 SettingsCategory(stringResource(R.string.settings_support))
                 SettingsItem(stringResource(R.string.porter_support_title), R.drawable.ic_help_outline_24dp, stringResource(R.string.porter_support_summary),
                     onClick = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.support.SupportActivity::class.java)) })
+                SettingsItem(stringResource(R.string.porter_acknowledgements), R.drawable.ic_favorite_outline_24,
+                    stringResource(R.string.porter_acknowledgements_summary),
+                    onClick = { startActivity(Intent(this@SettingsActivity, AcknowledgementsActivity::class.java)) })
                 SettingsItem(stringResource(R.string.porter_version), R.drawable.ic_outline_info_24, BuildConfig.VERSION_NAME,
                     onClick = { CustomTabsHelper.launchUrlOrCopy(this@SettingsActivity, Helps.DOWNLOAD.get()) })
             }

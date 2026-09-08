@@ -87,14 +87,20 @@ abstract class HomeActivity : ComposeActivity() {
         val restricted = running && !status.permission
         var dialog by rememberSaveable { mutableStateOf<String?>(null) }
         val title = plainText(stringResource(if (running) R.string.home_status_service_is_running else R.string.home_status_service_not_running, stringResource(R.string.app_name)))
-        val details = if (running) {
-            val user = if (status.uid == 0) "root" else "adb"
-            val version = "${status.apiVersion}.${status.patchVersion}"
-            plainText(if (status.apiVersion != Shizuku.getLatestServiceVersion() || status.patchVersion != ShizukuApiConstants.SERVER_PATCH_VERSION) {
-                stringResource(R.string.home_status_service_version_update, user, version, "${Shizuku.getLatestServiceVersion()}.${ShizukuApiConstants.SERVER_PATCH_VERSION}")
-            } else stringResource(R.string.home_status_service_version, user, version)) +
-                if (restricted) "\n" + stringResource(R.string.porter_status_restricted) else ""
-        } else ""
+        val needsRestart = running && (
+            status.porterVersion?.matches(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE) != true ||
+                status.apiVersion != Shizuku.getLatestServiceVersion() ||
+                status.patchVersion != ShizukuApiConstants.SERVER_PATCH_VERSION
+            )
+        val details = if (running) listOfNotNull(
+            stringResource(if (status.uid == 0) R.string.porter_status_running_root else R.string.porter_status_running_adb),
+            if (needsRestart) stringResource(R.string.porter_status_restart_service) else null,
+            if (restricted) stringResource(R.string.porter_status_restricted) else null,
+        ).joinToString("\n") else ""
+        val versionDetails = stringResource(R.string.porter_status_versions,
+            BuildConfig.VERSION_NAME,
+            status.porterVersion?.name ?: stringResource(R.string.porter_status_version_unknown),
+            status.apiVersion, status.patchVersion)
         PorterScaffold(stringResource(R.string.app_name), subtitle = stringResource(R.string.porter_home_subtitle), actions = {
             IconButton(onClick = { startActivity(Intent(this@HomeActivity, SettingsActivity::class.java)) }) {
                 Icon(painterResource(R.drawable.ic_action_settings_24dp), stringResource(R.string.settings_title))
@@ -151,7 +157,7 @@ abstract class HomeActivity : ComposeActivity() {
                 }
             }
         }
-        if (dialog == "status" && running) MessageDialog(title, "$details\n\n${stringResource(R.string.porter_status_stop_message)}", { dialog = null }, stringResource(R.string.action_stop), confirmColor = MaterialTheme.colorScheme.error) {
+        if (dialog == "status" && running) MessageDialog(title, "$details\n\n$versionDetails\n\n${stringResource(R.string.porter_status_stop_message)}", { dialog = null }, stringResource(R.string.action_stop), confirmColor = MaterialTheme.colorScheme.error) {
             dialog = null
             if (ShizukuStateMachine.isRunning()) {
                 ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
