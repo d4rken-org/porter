@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +28,7 @@ import moe.shizuku.manager.utils.ShizukuStateMachine
 class ApplicationManagementActivity : ComposeActivity() {
     override val protectTouches = true
     private val model: AppsViewModel by viewModels()
+    @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!ShizukuStateMachine.isRunning()) { finish(); return }
@@ -50,22 +52,33 @@ class ApplicationManagementActivity : ComposeActivity() {
                             .padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             app.icon?.let { Image(it.asImageBitmap(), null, Modifier.size(40.dp)) }
                             Column(Modifier.weight(1f)) {
-                                Text(app.label, style = MaterialTheme.typography.bodyLarge)
+                                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(app.label, Modifier.align(Alignment.CenterVertically), style = MaterialTheme.typography.bodyLarge)
+                                    listOf(DiscoveredApplication.API_PORTER to R.string.porter_api_badge_porter,
+                                        DiscoveredApplication.API_SHIZUKU to R.string.porter_api_badge_shizuku).forEach { (api, label) ->
+                                        if (app.declaredApis and api != 0) {
+                                            Surface(Modifier.align(Alignment.CenterVertically), shape = RoundedCornerShape(50),
+                                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer) {
+                                                Text(stringResource(label), Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                                                    style = MaterialTheme.typography.labelSmall)
+                                            }
+                                        }
+                                    }
+                                }
                                 Text(app.packageName, style = MaterialTheme.typography.bodySmall)
                                 val connection = when (app.connectionStatus) {
-                                    DiscoveredApplication.DIRECT -> R.string.porter_connection_direct
-                                    DiscoveredApplication.COMPANION -> R.string.porter_connection_companion
+                                    DiscoveredApplication.DIRECT, DiscoveredApplication.COMPANION -> null
                                     DiscoveredApplication.NEEDS_COMPANION -> R.string.porter_connection_needs_companion
                                     DiscoveredApplication.UNSUPPORTED -> R.string.porter_connection_unsupported
                                     DiscoveredApplication.MANAGED_ONLY -> R.string.porter_connection_managed
                                     else -> R.string.porter_connection_unknown
                                 }
-                                val authorization = when (app.authorization) {
-                                    DiscoveredApplication.ALLOWED -> R.string.porter_access_allowed
-                                    DiscoveredApplication.DENIED -> R.string.porter_access_denied
-                                    else -> R.string.porter_access_default
+                                connection?.let { Text(stringResource(it), style = MaterialTheme.typography.bodySmall) }
+                                if (app.authorization == DiscoveredApplication.DENIED) {
+                                    Text(stringResource(R.string.porter_access_blocked), style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.error)
                                 }
-                                Text("${stringResource(connection)} · ${stringResource(authorization)}", style = MaterialTheme.typography.bodySmall)
                                 Text(if (app.lastConnectedAt == null) stringResource(R.string.porter_connection_never_recorded)
                                     else stringResource(R.string.porter_connection_last, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(app.lastConnectedAt))),
                                     style = MaterialTheme.typography.bodySmall)

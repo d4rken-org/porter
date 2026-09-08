@@ -1,17 +1,15 @@
 <resources>
+    <string name="porter_api_badge_porter" translatable="false">Porter</string>
+    <string name="porter_api_badge_shizuku" translatable="false">Shizuku</string>
+    <string name="porter_access_blocked">Blocked</string>
     <string name="porter_apps_counts">Authorized: %1$d · Compatible: %2$d</string>
     <string name="porter_discovery_partial">Some profiles could not be checked. This list may be incomplete.</string>
     <string name="porter_discovery_legacy">Restart Porter to discover more apps and see connection history.</string>
     <string name="porter_connections_explanation">Apps can connect automatically when Porter starts. The connection time does not indicate when an app was last used.</string>
-    <string name="porter_connection_direct">Direct Porter support</string>
-    <string name="porter_connection_companion">Via compatibility app</string>
     <string name="porter_connection_needs_companion">Requires compatibility app</string>
     <string name="porter_connection_unsupported">Permission declared; integration not recognized</string>
     <string name="porter_connection_managed">Previously connected or managed</string>
     <string name="porter_connection_unknown">Connection details unavailable</string>
-    <string name="porter_access_allowed">Allowed</string>
-    <string name="porter_access_denied">Denied</string>
-    <string name="porter_access_default">Not authorized</string>
     <string name="porter_connection_never_recorded">Last connected: Unknown</string>
     <string name="porter_connection_last">Last connected: %1$s</string>
     <plurals name="porter_apps_need_companion">

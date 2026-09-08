@@ -1,17 +1,13 @@
 <resources>
+    <string name="porter_access_blocked">Blockiert</string>
     <string name="porter_apps_counts">Autorisiert: %1$d · Kompatibel: %2$d</string>
     <string name="porter_discovery_partial">Einige Profile konnten nicht geprüft werden. Diese Liste ist möglicherweise unvollständig.</string>
     <string name="porter_discovery_legacy">Starte Porter neu, um weitere Apps zu finden und Verbindungszeiten zu sehen.</string>
     <string name="porter_connections_explanation">Apps können sich beim Start von Porter automatisch verbinden. Die Verbindungszeit zeigt nicht, wann eine App zuletzt verwendet wurde.</string>
-    <string name="porter_connection_direct">Direkte Porter-Unterstützung</string>
-    <string name="porter_connection_companion">Über die Kompatibilitäts-App</string>
     <string name="porter_connection_needs_companion">Benötigt die Kompatibilitäts-App</string>
     <string name="porter_connection_unsupported">Berechtigung deklariert; Integration nicht erkannt</string>
     <string name="porter_connection_managed">Bereits verbunden oder verwaltet</string>
     <string name="porter_connection_unknown">Verbindungsdetails nicht verfügbar</string>
-    <string name="porter_access_allowed">Erlaubt</string>
-    <string name="porter_access_denied">Abgelehnt</string>
-    <string name="porter_access_default">Nicht autorisiert</string>
     <string name="porter_connection_never_recorded">Zuletzt verbunden: Unbekannt</string>
     <string name="porter_connection_last">Zuletzt verbunden: %1$s</string>
     <plurals name="porter_apps_need_companion">
