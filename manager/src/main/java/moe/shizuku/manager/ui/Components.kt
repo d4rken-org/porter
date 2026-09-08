@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import moe.shizuku.manager.R
 
@@ -23,6 +25,7 @@ import moe.shizuku.manager.R
 @Composable
 fun PorterScaffold(title: String, onBack: (() -> Unit)? = null, subtitle: String? = null,
                    @DrawableRes titleIcon: Int? = null,
+                   titleBadge: String? = null,
                    actions: @Composable RowScope.() -> Unit = {}, content: @Composable (PaddingValues) -> Unit) {
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -31,7 +34,16 @@ fun PorterScaffold(title: String, onBack: (() -> Unit)? = null, subtitle: String
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     titleIcon?.let { Image(painterResource(it), contentDescription = null, modifier = Modifier.size(44.dp)) }
                     Column(Modifier.weight(1f)) {
-                        Text(title)
+                        if (titleBadge == null) Text(title) else {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text(title, Modifier.weight(1f, fill = false), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Surface(shape = CircleShape, color = MaterialTheme.colorScheme.tertiaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer) {
+                                    Text(titleBadge, Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                                        style = MaterialTheme.typography.labelSmall, maxLines = 1)
+                                }
+                            }
+                        }
                         subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
                     }
                 }

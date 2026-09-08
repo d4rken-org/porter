@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.R
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.ShizukuSettings
@@ -79,7 +80,13 @@ abstract class HomeActivity : ComposeActivity() {
             if (running) ShizukuSettings.setLastLaunchMode(if (status.uid == 0) ShizukuSettings.LaunchMethod.ROOT else ShizukuSettings.LaunchMethod.ADB)
         }
         var dialog by rememberSaveable { mutableStateOf<String?>(null) }
-        PorterScaffold(stringResource(R.string.app_name), subtitle = stringResource(R.string.porter_home_subtitle), titleIcon = R.drawable.porter_mascot, actions = {
+        val buildBadge = when {
+            BuildConfig.DEBUG -> stringResource(R.string.porter_build_dev)
+            BuildConfig.VERSION_NAME.contains("-beta") -> stringResource(R.string.porter_build_beta)
+            else -> null
+        }
+        PorterScaffold(stringResource(R.string.app_name), subtitle = stringResource(R.string.porter_home_subtitle),
+            titleIcon = R.drawable.porter_mascot, titleBadge = buildBadge, actions = {
             IconButton(onClick = { startActivity(Intent(this@HomeActivity, SettingsActivity::class.java)) }) {
                 Icon(painterResource(R.drawable.ic_action_settings_24dp), stringResource(R.string.settings_title))
             }
