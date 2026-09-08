@@ -65,7 +65,13 @@ internal fun ServiceStatusCard(ui: ServiceStatusUi, onDetails: () -> Unit) {
     HomeCard(ui.title, when { ui.restricted -> R.drawable.ic_warning_24; ui.running -> R.drawable.ic_server_ok_24dp; else -> R.drawable.ic_server_error_24dp },
         if (ui.running) onDetails else null,
         when { ui.restricted -> colorResource(R.color.porter_status_warning); ui.running -> colorResource(R.color.porter_status_running); else -> MaterialTheme.colorScheme.onSurfaceVariant }) {
-        if (ui.running) Text("${ui.details}\n${stringResource(R.string.porter_status_details_hint)}", style = MaterialTheme.typography.bodyMedium)
+        if (ui.running) {
+            Text(ui.details, style = MaterialTheme.typography.bodyMedium)
+            if (!ui.restricted && !ui.needsRestart) {
+                Text(stringResource(R.string.porter_status_ready), style = MaterialTheme.typography.bodyMedium)
+            }
+            Text(stringResource(R.string.porter_status_details_hint), style = MaterialTheme.typography.bodyMedium)
+        }
     }
 }
 

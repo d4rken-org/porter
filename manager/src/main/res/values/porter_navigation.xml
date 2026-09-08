@@ -7,6 +7,7 @@
     <string name="porter_status_restricted">Some ADB permissions are restricted by Android.</string>
     <string name="porter_status_stop_message">Stopping Porter disconnects apps that use it. You must start Porter again manually, which may require a computer.</string>
     <string name="porter_status_details_hint">Tap for service details and stop options</string>
+    <string name="porter_status_ready">Porter is ready. Compatible apps can now connect and request access.</string>
     <string name="porter_pairing_notification">Notification</string>
     <string name="porter_pairing_dialog">In-app dialog</string>
     <string-array name="porter_pairing_methods">
