@@ -14,6 +14,7 @@ public final class DiscoveredApplication implements Parcelable {
     public static final int DEFAULT = 0;
     public static final int ALLOWED = 1;
     public static final int DENIED = 2;
+    public static final int PENDING_COMPANION = 3;
     public static final int DIRECT = 1;
     public static final int COMPANION = 2;
     public static final int NEEDS_COMPANION = 3;

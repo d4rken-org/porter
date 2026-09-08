@@ -24,7 +24,7 @@ final class ApplicationDiscovery {
         else if (!metadata) status = UNSUPPORTED;
         else if ((apis & API_PORTER) != 0) status = DIRECT;
         else status = companion ? COMPANION : NEEDS_COMPANION;
-        int authorization = (flags & ConfigManager.FLAG_ALLOWED) != 0 ? ALLOWED
+        int authorization = (flags & ShizukuConfig.FLAG_PENDING_COMPANION) != 0 ? PENDING_COMPANION : (flags & ConfigManager.FLAG_ALLOWED) != 0 ? ALLOWED
                 : (flags & ConfigManager.FLAG_DENIED) != 0 ? DENIED : DEFAULT;
         boolean root = info.applicationInfo.metaData != null
                 && info.applicationInfo.metaData.getBoolean("moe.shizuku.client.V3_REQUIRES_ROOT", false);

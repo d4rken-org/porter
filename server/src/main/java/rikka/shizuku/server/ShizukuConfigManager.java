@@ -158,7 +158,7 @@ public class ShizukuConfigManager extends ConfigManager {
         synchronized (this) {
             List<Integer> uids = new ArrayList<>();
             for (ShizukuConfig.PackageEntry entry : config.packages) {
-                if (entry.isAllowed()) uids.add(entry.uid);
+                if (entry.isAllowed() || entry.isPendingCompanion()) uids.add(entry.uid);
             }
             return uids;
         }

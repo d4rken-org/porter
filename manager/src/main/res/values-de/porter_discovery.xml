@@ -14,4 +14,11 @@
         <item quantity="one">%d App benötigt die Kompatibilitäts-App</item>
         <item quantity="other">%d Apps benötigen die Kompatibilitäts-App</item>
     </plurals>
+    <string name="porter_compatibility_needed">Kompatibilitäts-App benötigt</string>
+    <string name="porter_get_compatibility">Kompatibilitäts-App herunterladen</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Du hast %d App Zugriff erlaubt, die die Porter-Kompatibilitäts-App benötigt. Ihr Zugriff wird verfügbar, sobald die Kompatibilitäts-App installiert ist.</item>
+        <item quantity="other">Du hast %d Apps Zugriff erlaubt, die die Porter-Kompatibilitäts-App benötigen. Ihr Zugriff wird verfügbar, sobald die Kompatibilitäts-App installiert ist.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Der Zugriff konnte nicht aktiviert werden. Prüfe die Berechtigungen dieser App in den Android-Einstellungen.</string>
 </resources>

@@ -24,7 +24,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y bats
           bats tools/release/bump.bats
       - name: Unit tests
-        run: ./gradlew :manager:testDebugUnitTest :server:testDebugUnitTest :client:testDebugUnitTest
+        run: ./gradlew :manager:testFossDebugUnitTest :manager:testGplayDebugUnitTest :server:testDebugUnitTest :client:testDebugUnitTest
       - name: Upload unit test reports
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
@@ -37,12 +37,14 @@ jobs:
       - name: Build development APKs and adapter
         run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assembleDebug :client:assembleRelease
       - name: Verify APK identities
-        run: python3 tools/verify-apks.py manager/build/outputs/apk/debug/*.apk compat/build/outputs/apk/debug/*.apk
+        run: |
+          python3 tools/verify-apks.py manager/build/outputs/apk/foss/debug/*.apk compat/build/outputs/apk/debug/*.apk
+          python3 tools/verify-apks.py manager/build/outputs/apk/gplay/debug/*.apk compat/build/outputs/apk/debug/*.apk
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
           name: porter-development
           path: |
-            manager/build/outputs/apk/debug/*.apk
+            manager/build/outputs/apk/*/debug/*.apk
             compat/build/outputs/apk/debug/*.apk
             api/client/build/outputs/aar/*.aar
             probe/build/outputs/apk/**/*.apk
@@ -57,7 +59,7 @@ jobs:
           submodules: recursive
           persist-credentials: false
       - uses: ./.github/actions/android-setup
-      - run: ./gradlew :manager:lintVitalRelease :compat:lintVitalRelease -Pporter.developmentSigning=true
+      - run: ./gradlew :manager:lintVitalFossRelease :manager:lintVitalGplayRelease :compat:lintVitalRelease -Pporter.developmentSigning=true
       - name: Upload lint reports
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0

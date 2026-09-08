@@ -67,7 +67,9 @@ object AuthorizationManager {
         readDiscovery(binder)?.let { return it }
         val apps = getPackages().mapNotNull { info ->
             val ai = info.applicationInfo ?: return@mapNotNull null
-            DiscoveredApplication(ai, ai.uid / 100000, 0,
+            val declaredApis = (if (info.requestedPermissions?.contains(Manifest.permission.API_V23) == true) DiscoveredApplication.API_PORTER else 0) or
+                (if (info.requestedPermissions?.contains(ServerConstants.LEGACY_PERMISSION) == true) DiscoveredApplication.API_SHIZUKU else 0)
+            DiscoveredApplication(ai, ai.uid / 100000, declaredApis,
                 if (granted(info.packageName, ai.uid)) DiscoveredApplication.ALLOWED else DiscoveredApplication.DEFAULT,
                 DiscoveredApplication.UNKNOWN, ai.metaData?.getBoolean("moe.shizuku.client.V3_REQUIRES_ROOT") == true, 0)
         }

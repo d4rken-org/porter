@@ -16,4 +16,11 @@
         <item quantity="one">%d app requires the compatibility app</item>
         <item quantity="other">%d apps require the compatibility app</item>
     </plurals>
+    <string name="porter_compatibility_needed">Compatibility app needed</string>
+    <string name="porter_get_compatibility">Get compatibility app</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">You allowed access for %d app that needs the Porter compatibility app. Its access will become available when the compatibility app is installed.</item>
+        <item quantity="other">You allowed access for %d apps that need the Porter compatibility app. Their access will become available when the compatibility app is installed.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Access could not be activated. Check this app’s permissions in Android settings.</string>
 </resources>

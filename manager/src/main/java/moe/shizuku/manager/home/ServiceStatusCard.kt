@@ -93,9 +93,10 @@ internal fun HomeCardActions(content: @Composable FlowRowScope.() -> Unit) {
 @Composable
 internal fun HomeCard(title: String, icon: Int, onClick: (() -> Unit)? = null,
                       tint: Color = MaterialTheme.colorScheme.primary, subtitle: String? = null,
+                      containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLow,
                       content: @Composable ColumnScope.() -> Unit) {
     Card(Modifier.fillMaxWidth().clip(CardDefaults.shape).then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
+        colors = CardDefaults.cardColors(containerColor = containerColor)) {
         Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Icon(painterResource(icon), null, Modifier.size(24.dp), tint)
@@ -107,6 +108,18 @@ internal fun HomeCard(title: String, icon: Int, onClick: (() -> Unit)? = null,
                 }
             }
             content()
+        }
+    }
+}
+
+@Composable
+internal fun CompatibilityCard(description: String, onDownload: () -> Unit) {
+    HomeCard(stringResource(R.string.porter_compatibility_needed), R.drawable.ic_warning_24,
+        tint = MaterialTheme.colorScheme.onTertiaryContainer,
+        containerColor = MaterialTheme.colorScheme.tertiaryContainer) {
+        Text(description, style = MaterialTheme.typography.bodyMedium)
+        if (BuildConfig.IS_FOSS) HomeCardActions {
+            Button(onClick = onDownload) { Text(stringResource(R.string.porter_get_compatibility)) }
         }
     }
 }

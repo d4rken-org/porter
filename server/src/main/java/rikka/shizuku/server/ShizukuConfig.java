@@ -10,6 +10,7 @@ import java.util.List;
 public class ShizukuConfig {
 
     public static final int LATEST_VERSION = 2;
+    public static final int FLAG_PENDING_COMPANION = 1 << 3;
 
     @SerializedName("version")
     public int version = LATEST_VERSION;
@@ -37,6 +38,10 @@ public class ShizukuConfig {
         @Override
         public boolean isAllowed() {
             return (flags & ConfigManager.FLAG_ALLOWED) != 0;
+        }
+
+        public boolean isPendingCompanion() {
+            return (flags & FLAG_PENDING_COMPANION) != 0;
         }
 
         @Override

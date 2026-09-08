@@ -29,6 +29,17 @@ android {
     signingConfigs {
         sign {}
     }
+    flavorDimensions += "version"
+    productFlavors {
+        foss {
+            dimension = "version"
+            buildConfigField "boolean", "IS_FOSS", "true"
+        }
+        gplay {
+            dimension = "version"
+            buildConfigField "boolean", "IS_FOSS", "false"
+        }
+    }
     buildTypes {
         debug {
             signingConfig = signingConfigs.sign
@@ -81,14 +92,12 @@ autoResConfig {
     generateLocaleConfig = true
 }
 
-afterEvaluate {
-    tasks.getByName("preReleaseBuild").dependsOn(":shell:assembleRelease")
-    tasks.getByName("preDebugBuild").dependsOn(":shell:assembleDebug")
-}
-
 android.applicationVariants.configureEach { variant ->
+    variant.preBuildProvider.configure {
+        dependsOn(":shell:assemble${variant.buildType.name.capitalize()}")
+    }
     variant.outputs.configureEach {
-        outputFileName = "porter-v${variant.versionName}-${variant.name}.apk"
+        outputFileName = "porter-v${variant.versionName}-${variant.flavorName == 'foss' ? variant.buildType.name : variant.name}.apk"
 
         variant.assembleProvider.get().doLast {
             def outDir = new File(rootDir, "out")
@@ -99,7 +108,7 @@ android.applicationVariants.configureEach { variant ->
                 copy {
                     from variant.mappingFileProvider.get()
                     into mappingDir
-                    rename { String fileName -> "mapping-${variant.versionName}.txt" }
+                    rename { String fileName -> "mapping-${variant.versionName}-${variant.name}.txt" }
                 }
                 copy {
                     from outputFile

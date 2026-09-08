@@ -25,7 +25,7 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/android-setup
       - name: Build test APKs
-        run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug
+        run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug
       - name: Download pinned Shizuku for coexistence testing
         run: |
           curl --fail --location --retry 2 -o "$RUNNER_TEMP/shizuku.apk" \
@@ -49,7 +49,7 @@ jobs:
           disable-animations: true
           script: >-
             python3 tools/ci/emulator-smoke.py --serial emulator-5554
-            --manager manager/build/outputs/apk/debug/*.apk
+            --manager manager/build/outputs/apk/foss/debug/*.apk
             --compat compat/build/outputs/apk/debug/*.apk
             --native probe/build/outputs/apk/porter/debug/*.apk
             --legacy probe/build/outputs/apk/legacy/debug/*.apk

@@ -74,7 +74,6 @@ class ApplicationManagementActivity : ComposeActivity() {
                                     DiscoveredApplication.MANAGED_ONLY -> R.string.porter_connection_managed
                                     else -> R.string.porter_connection_unknown
                                 }
-                                connection?.let { Text(stringResource(it), style = MaterialTheme.typography.bodySmall) }
                                 if (app.authorization == DiscoveredApplication.DENIED) {
                                     Text(stringResource(R.string.porter_access_blocked), style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.error)
@@ -83,6 +82,15 @@ class ApplicationManagementActivity : ComposeActivity() {
                                     else stringResource(R.string.porter_connection_last, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(app.lastConnectedAt))),
                                     style = MaterialTheme.typography.bodySmall)
                                 if (app.requiresRoot) Text(stringResource(R.string.app_management_item_summary_requires_root), style = MaterialTheme.typography.bodySmall)
+                                if (app.authorization == DiscoveredApplication.PENDING_COMPANION && app.connectionStatus != DiscoveredApplication.NEEDS_COMPANION) {
+                                    Text(stringResource(R.string.porter_access_pending_android), style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.error)
+                                }
+                                connection?.let {
+                                    Text(stringResource(it), style = MaterialTheme.typography.bodySmall,
+                                        color = if (app.granted && app.connectionStatus == DiscoveredApplication.NEEDS_COMPANION)
+                                            MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
                             }
                             Switch(app.granted, null, enabled = !state.loading && app.canToggle)
                         }

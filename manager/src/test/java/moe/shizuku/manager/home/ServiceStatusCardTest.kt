@@ -3,6 +3,7 @@ package moe.shizuku.manager.home
 import android.content.Context
 import androidx.compose.ui.test.*
 import androidx.test.core.app.ApplicationProvider
+import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.ComposeTest
 import moe.shizuku.manager.R
 import moe.shizuku.manager.model.PorterServiceVersion
@@ -106,5 +107,19 @@ class ServiceStatusCardTest : ComposeTest() {
         composeTestRule.onNodeWithText(string(android.R.string.cancel)).performClick()
         assertEquals(0, stops)
         assertEquals(1, dismissals)
+    }
+    @Test fun compatibilityDownloadActionIsOnlyAvailableInFoss() {
+        var downloads = 0
+        val description = "Access is waiting for the compatibility app"
+        composeTestRule.setContent { PorterTheme { CompatibilityCard(description) { downloads++ } } }
+        composeTestRule.onNodeWithText(description).assertIsDisplayed()
+        val button = composeTestRule.onNodeWithText(string(R.string.porter_get_compatibility))
+        if (BuildConfig.IS_FOSS) {
+            button.assertIsDisplayed().performClick()
+            assertEquals(1, downloads)
+        } else {
+            button.assertDoesNotExist()
+            assertEquals(0, downloads)
+        }
     }
 }

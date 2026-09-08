@@ -93,6 +93,12 @@ abstract class HomeActivity : ComposeActivity() {
         }) { padding ->
             LazyColumn(Modifier.padding(padding).consumeWindowInsets(padding), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 item { ServiceStatusCard(statusUi) { dialog = "status" } }
+                if (running && status.permission && appsState.pendingCompanionCount > 0) item {
+                    CompatibilityCard(resources.getQuantityString(R.plurals.porter_compatibility_pending,
+                        appsState.pendingCompanionCount, appsState.pendingCompanionCount)) {
+                        CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.DOWNLOAD.get())
+                    }
+                }
                 if (running && status.permission) item {
                     val count = appsState.grantedCount
                     HomeCard(stringResource(R.string.porter_applications), R.drawable.ic_apps_outline_24,

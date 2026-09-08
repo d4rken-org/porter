@@ -112,4 +112,10 @@ public class ApplicationDiscoveryTest {
             }
         } finally { parcel.recycle(); }
     }
+    @Test public void pendingIntentIsSeparateFromEffectiveAuthorization() {
+        var entry = ApplicationDiscovery.describe(app("pending", 10123, ServerConstants.LEGACY_PERMISSION),
+            ShizukuConfig.FLAG_PENDING_COMPANION, false, 0);
+        assertEquals(eu.darken.porter.common.DiscoveredApplication.PENDING_COMPANION, entry.authorization);
+        assertEquals(eu.darken.porter.common.DiscoveredApplication.NEEDS_COMPANION, entry.connectionStatus);
+    }
 }

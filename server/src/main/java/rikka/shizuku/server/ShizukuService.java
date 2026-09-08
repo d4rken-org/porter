@@ -311,6 +311,11 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
 
     @Override
     public void showPermissionConfirmation(int requestCode, @NonNull ClientRecord clientRecord, int callingUid, int callingPid, int userId) {
+        Boolean legacyOnly = uidUsesLegacyOnly(callingUid);
+        if (legacyOnly == null || (legacyOnly && !Compatibility.isAvailable())) {
+            clientRecord.dispatchRequestPermissionResult(requestCode, false);
+            return;
+        }
         ApplicationInfo ai = Android17Compat.getApplicationInfo(clientRecord.packageName, 0, userId);
         if (ai == null) {
             return;
@@ -338,7 +343,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     }
 
     @Override
-    public void dispatchPermissionConfirmationResult(int requestUid, int requestPid, int requestCode, Bundle data) throws RemoteException {
+    public synchronized void dispatchPermissionConfirmationResult(int requestUid, int requestPid, int requestCode, Bundle data) throws RemoteException {
         enforceManagerPermission("dispatchPermissionConfirmationResult");
 
         if (data == null) {
@@ -347,17 +352,22 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
 
         boolean allowed = data.getBoolean(REQUEST_PERMISSION_REPLY_ALLOWED);
         boolean onetime = data.getBoolean(REQUEST_PERMISSION_REPLY_IS_ONETIME);
+        Boolean legacyOnly = uidUsesLegacyOnly(requestUid);
+        if (allowed && legacyOnly == null) {
+            allowed = false;
+            onetime = true;
+        }
+        boolean pending = allowed && Boolean.TRUE.equals(legacyOnly) && !Compatibility.isAvailable();
+        if (pending) allowed = false;
 
         LOGGER.i("dispatchPermissionConfirmationResult: uid=%d, pid=%d, requestCode=%d, allowed=%s, onetime=%s",
                 requestUid, requestPid, requestCode, Boolean.toString(allowed), Boolean.toString(onetime));
 
         List<ClientRecord> records = clientManager.findClients(requestUid);
-        List<String> packages = new ArrayList<>();
         if (records.isEmpty()) {
             LOGGER.w("dispatchPermissionConfirmationResult: no client for uid %d was found", requestUid);
         } else {
             for (ClientRecord record : records) {
-                packages.add(record.packageName);
                 record.allowed = allowed;
                 if (record.pid == requestPid) {
                     record.dispatchRequestPermissionResult(requestCode, allowed);
@@ -366,10 +376,12 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         }
 
         if (!onetime) {
-            configManager.update(requestUid, packages, ConfigManager.MASK_PERMISSION, allowed ? ConfigManager.FLAG_ALLOWED : ConfigManager.FLAG_DENIED);
+            configManager.update(requestUid, PackageManagerApis.getPackagesForUidNoThrow(requestUid),
+                    ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION,
+                    pending ? ShizukuConfig.FLAG_PENDING_COMPANION : allowed ? ConfigManager.FLAG_ALLOWED : ConfigManager.FLAG_DENIED);
         }
 
-        if (!onetime) {
+        if (!onetime && !pending) {
             setRuntimePermissionsForUid(requestUid, allowed);
         }
     }
@@ -393,45 +405,67 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         }
     }
 
-    /**
-     * Porter's config is canonical, but the runtime permission it mirrors can be revoked outside
-     * Porter (system settings, hibernation, device policy). A config grant whose primary runtime
-     * permission is missing is dropped, failing closed. The flags are cleared rather than set to
-     * denied so the client's next request shows the prompt again instead of being auto-denied.
-     */
-    private void reconcileRuntimePermission(int uid) {
+    @Nullable
+    private Boolean uidUsesLegacyOnly(int uid) {
+        boolean legacy = false;
+        boolean unresolved = false;
+        List<String> packages = PackageManagerApis.getPackagesForUidNoThrow(uid);
+        if (packages.isEmpty()) return null;
+        for (String name : packages) {
+            PackageInfo pi = Android17Compat.getPackageInfo(name, PackageManager.GET_PERMISSIONS, UserHandleCompat.getUserId(uid));
+            if (pi == null) { unresolved = true; continue; }
+            if (ClientRouting.requests(pi.requestedPermissions, PERMISSION)) return false;
+            legacy |= ClientRouting.requests(pi.requestedPermissions, ServerConstants.LEGACY_PERMISSION);
+        }
+        return unresolved ? null : legacy;
+    }
+
+    private void suspendUid(int uid) {
+        for (ClientRecord record : clientManager.findClients(uid)) record.allowed = false;
+        for (String name : PackageManagerApis.getPackagesForUidNoThrow(uid)) onPermissionRevoked(name);
+    }
+
+    private synchronized void reconcileRuntimePermission(int uid) {
         ShizukuConfig.PackageEntry entry = configManager.find(uid);
-        if (entry == null || !entry.isAllowed()) return;
-
+        if (entry == null || (!entry.isAllowed() && !entry.isPendingCompanion())) return;
         int userId = UserHandleCompat.getUserId(uid);
+        Boolean legacyOnly = uidUsesLegacyOnly(uid);
+        if (legacyOnly == null) return;
         boolean legacy = Compatibility.isAvailable();
-        for (String packageName : PackageManagerApis.getPackagesForUidNoThrow(uid)) {
-            PackageInfo pi = Android17Compat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS, userId);
-            if (pi == null) continue;
-            String permission;
-            boolean trustedRoute;
-            if (ClientRouting.requests(pi.requestedPermissions, PERMISSION)) {
-                permission = PERMISSION;
-                trustedRoute = true;
-            } else if (ClientRouting.requests(pi.requestedPermissions, ServerConstants.LEGACY_PERMISSION)) {
-                permission = ServerConstants.LEGACY_PERMISSION;
-                trustedRoute = legacy;
-            } else {
-                continue;
-            }
-            if (trustedRoute && Android17Compat.checkPermission(permission, packageName, userId) == PackageManager.PERMISSION_GRANTED) {
-                continue;
-            }
-
-            LOGGER.i("%s is no longer granted to %s (uid %d), dropping Porter grant", permission, packageName, uid);
-            for (ClientRecord record : clientManager.findClients(uid)) {
-                record.allowed = false;
-            }
-            configManager.update(uid, null, ConfigManager.MASK_PERMISSION, 0);
-            for (String revokedPackage : PackageManagerApis.getPackagesForUidNoThrow(uid)) {
-                onPermissionRevoked(revokedPackage);
-            }
+        int mask = ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION;
+        if (legacyOnly && !legacy) {
+            configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, ShizukuConfig.FLAG_PENDING_COMPANION);
+            suspendUid(uid);
             return;
+        }
+        boolean pending = entry.isPendingCompanion();
+        if (pending) {
+            if (!legacyOnly) {
+                configManager.update(uid, null, mask, 0);
+                suspendUid(uid);
+                return;
+            }
+            setRuntimePermissionsForUid(uid, true);
+        }
+        for (String name : PackageManagerApis.getPackagesForUidNoThrow(uid)) {
+            PackageInfo pi = Android17Compat.getPackageInfo(name, PackageManager.GET_PERMISSIONS, userId);
+            if (pi == null) {
+                if (pending) { suspendUid(uid); return; }
+                continue;
+            }
+            String permission;
+            if (ClientRouting.requests(pi.requestedPermissions, PERMISSION)) permission = PERMISSION;
+            else if (legacyOnly && ClientRouting.requests(pi.requestedPermissions, ServerConstants.LEGACY_PERMISSION)) permission = ServerConstants.LEGACY_PERMISSION;
+            else continue;
+            if (Android17Compat.checkPermission(permission, name, userId) == PackageManager.PERMISSION_GRANTED) continue;
+            // A pending grant may still be blocked by Android policy. Active grants respect revocation.
+            if (!pending) configManager.update(uid, null, mask, 0);
+            suspendUid(uid);
+            return;
+        }
+        if (pending) {
+            configManager.update(uid, null, mask, ConfigManager.FLAG_ALLOWED);
+            for (ClientRecord record : clientManager.findClients(uid)) record.allowed = true;
         }
     }
 
@@ -447,12 +481,24 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     }
 
     @Override
-    public void updateFlagsForUid(int uid, int mask, int value) throws RemoteException {
+    public synchronized void updateFlagsForUid(int uid, int mask, int value) throws RemoteException {
         enforceManagerPermission("updateFlagsForUid");
 
         int userId = UserHandleCompat.getUserId(uid);
 
         if ((mask & ConfigManager.MASK_PERMISSION) != 0) {
+            mask |= ShizukuConfig.FLAG_PENDING_COMPANION;
+            value &= ~ShizukuConfig.FLAG_PENDING_COMPANION;
+            Boolean legacyOnly = uidUsesLegacyOnly(uid);
+            if ((value & ConfigManager.FLAG_ALLOWED) != 0 && legacyOnly == null) {
+                throw new IllegalStateException("Cannot read application permissions. Try again.");
+            }
+            if ((value & ConfigManager.FLAG_ALLOWED) != 0 && Boolean.TRUE.equals(legacyOnly) && !Compatibility.isAvailable()) {
+                value = (value & ~ConfigManager.MASK_PERMISSION) | ShizukuConfig.FLAG_PENDING_COMPANION;
+                configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, value);
+                suspendUid(uid);
+                return;
+            }
             boolean allowed = (value & ConfigManager.FLAG_ALLOWED) != 0;
             boolean denied = (value & ConfigManager.FLAG_DENIED) != 0;
 
@@ -528,6 +574,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         List<DiscoveredApplication> apps = new ArrayList<>();
         List<Integer> failedUsers = new ArrayList<>();
         boolean companion = Compatibility.isAvailable();
+        for (int uid : configManager.allowedUids()) reconcileRuntimePermission(uid);
         for (int user : users) {
             try {
                 long snapshotStartedAt = System.currentTimeMillis();
@@ -544,7 +591,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
                             || ClientRouting.requests(info.requestedPermissions, ServerConstants.LEGACY_PERMISSION);
                     boolean managed = decision != null && (decision.packages == null || decision.packages.contains(info.packageName));
                     if (!declared && !managed && lastConnected == 0) continue;
-                    int authorization = decision != null ? decision.flags & ConfigManager.MASK_PERMISSION : 0;
+                    int authorization = decision != null ? decision.flags & (ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION) : 0;
                     try {
                         DiscoveredApplication app = ApplicationDiscovery.describe(info, authorization, companion, lastConnected);
                         if (app != null) apps.add(app);

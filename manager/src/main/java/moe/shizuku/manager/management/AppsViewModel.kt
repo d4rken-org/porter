@@ -18,16 +18,17 @@ class AppsViewModel(application: Application) : AndroidViewModel(application) {
     data class App(val packageName: String, val uid: Int, val label: String, val icon: Bitmap?,
                    val authorization: Int, val connectionStatus: Int, val declaredApis: Int,
                    val requiresRoot: Boolean, val lastConnectedAt: Long?) {
-        val granted get() = authorization == DiscoveredApplication.ALLOWED
+        val granted get() = authorization == DiscoveredApplication.ALLOWED || authorization == DiscoveredApplication.PENDING_COMPANION
         val canAuthorize get() = connectionStatus in setOf(DiscoveredApplication.DIRECT, DiscoveredApplication.COMPANION,
-            DiscoveredApplication.MANAGED_ONLY, DiscoveredApplication.UNKNOWN)
+            DiscoveredApplication.NEEDS_COMPANION, DiscoveredApplication.MANAGED_ONLY, DiscoveredApplication.UNKNOWN)
         val canToggle get() = granted || canAuthorize
     }
     data class State(val apps: List<App> = emptyList(), val loading: Boolean = true, val error: Throwable? = null,
                      val failedUsers: List<Int> = emptyList(), val legacy: Boolean = false) {
-        val grantedCount get() = apps.count { it.granted }
+        val grantedCount get() = apps.count { it.authorization == DiscoveredApplication.ALLOWED }
         val compatibleCount get() = apps.count { it.connectionStatus == DiscoveredApplication.DIRECT || it.connectionStatus == DiscoveredApplication.COMPANION }
         val companionRequiredCount get() = apps.count { it.connectionStatus == DiscoveredApplication.NEEDS_COMPANION }
+        val pendingCompanionCount get() = apps.count { it.granted && it.connectionStatus == DiscoveredApplication.NEEDS_COMPANION }
         val allGranted get() = apps.filter { it.canToggle }.let { it.isNotEmpty() && it.all { app -> app.granted } }
     }
     private val mutableState = MutableStateFlow(State())
