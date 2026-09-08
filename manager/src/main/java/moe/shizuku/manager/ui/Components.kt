@@ -1,6 +1,7 @@
 package moe.shizuku.manager.ui
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,14 +22,18 @@ import moe.shizuku.manager.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PorterScaffold(title: String, onBack: (() -> Unit)? = null, subtitle: String? = null,
+                   @DrawableRes titleIcon: Int? = null,
                    actions: @Composable RowScope.() -> Unit = {}, content: @Composable (PaddingValues) -> Unit) {
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
         topBar = {
             TopAppBar(title = {
-                Column {
-                    Text(title)
-                    subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    titleIcon?.let { Image(painterResource(it), contentDescription = null, modifier = Modifier.size(44.dp)) }
+                    Column(Modifier.weight(1f)) {
+                        Text(title)
+                        subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                    }
                 }
             }, navigationIcon = {
                 onBack?.let { back ->

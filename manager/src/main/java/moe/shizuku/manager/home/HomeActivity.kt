@@ -79,7 +79,7 @@ abstract class HomeActivity : ComposeActivity() {
             if (running) ShizukuSettings.setLastLaunchMode(if (status.uid == 0) ShizukuSettings.LaunchMethod.ROOT else ShizukuSettings.LaunchMethod.ADB)
         }
         var dialog by rememberSaveable { mutableStateOf<String?>(null) }
-        PorterScaffold(stringResource(R.string.app_name), subtitle = stringResource(R.string.porter_home_subtitle), actions = {
+        PorterScaffold(stringResource(R.string.app_name), subtitle = stringResource(R.string.porter_home_subtitle), titleIcon = R.drawable.porter_mascot, actions = {
             IconButton(onClick = { startActivity(Intent(this@HomeActivity, SettingsActivity::class.java)) }) {
                 Icon(painterResource(R.drawable.ic_action_settings_24dp), stringResource(R.string.settings_title))
             }
