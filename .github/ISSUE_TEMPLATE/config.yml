@@ -1,8 +1,5 @@
-blank_issues_enabled: false
+blank_issues_enabled: true
 contact_links:
   - name: Setup and troubleshooting
     url: https://porter.darken.eu/
     about: Instructions for starting Porter and connecting your apps.
-  - name: Security reporting
-    url: https://github.com/d4rken-org/porter/blob/HEAD/SECURITY.md
-    about: Use the private reporting route for security issues.

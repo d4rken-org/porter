@@ -21,10 +21,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
-import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ui.*
-import moe.shizuku.manager.utils.CustomTabsHelper
 import rikka.compatibility.DeviceCompatibility
 
 class ShellTutorialActivity : ComposeActivity() {
@@ -38,7 +36,6 @@ class ShellTutorialActivity : ComposeActivity() {
             PorterScaffold(stringResource(R.string.home_terminal_title), onBack = { finish() }) { padding ->
                 Column(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     HtmlText(stringResource(R.string.rish_description, "rish"))
-                    TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@ShellTutorialActivity, Helps.RISH.get()) }) { Text(stringResource(R.string.porter_documentation)) }
                     if (DeviceCompatibility.isMiui()) {
                         HtmlText(stringResource(R.string.terminal_tutorial_miui))
                         HtmlText(stringResource(R.string.terminal_tutorial_miui_2))

@@ -16,19 +16,19 @@ Du entscheidest, welche Apps darauf zugreifen dürfen.
 {: #for-users }
 
 1. Lade Porter von [GitHub Releases](https://github.com/d4rken-org/porter/releases) herunter.
-2. Folge der [Anleitung zum Installieren und Starten](setup.html).
+2. Folge der [Anleitung zum Installieren und Starten](/setup).
 3. Öffne eine unterstützte App und bestätige ihre Zugriffsanfrage in Porter.
 
 Du brauchst Android 7.0 oder neuer. Ab Android 11 kannst du Porter über drahtloses Debugging ohne Computer starten. Ältere Geräte brauchen einen Computer oder Root.
 
-Weitere Hilfe: [App-Kompatibilität](compatibility.html), [Probleme lösen](troubleshooting.html) und [Terminal-Apps](terminal.html).
+Weitere Hilfe: [App-Kompatibilität](/compatibility) und [Probleme lösen](/troubleshooting).
 
 ## Du nutzt bereits Shizuku?
 {: #already-using-shizuku }
 
 Porter hat eine eigene App-Identität und kann parallel zu Shizuku laufen. Apps, die nur Shizuku unterstützen, brauchen die optionale Begleit-App Porter Compatibility. Sie ersetzt die installierte Shizuku-App.
 
-[Finde die passende Einrichtung für deine Apps](compatibility.html).
+[Finde die passende Einrichtung für deine Apps](/compatibility).
 
 ## Warum es Porter gibt
 {: #why-porter-exists }
@@ -38,11 +38,11 @@ Ich nutze Shizuku in meinen eigenen Apps, [SD Maid SE](https://github.com/d4rken
 ## Für Entwickler
 {: #for-developers }
 
-Andere App-Entwickler sind willkommen, Porters Berechtigung direkt zu unterstützen. [Direkte Porter-Unterstützung in deine App einbauen](developers.html).
+Andere App-Entwickler sind willkommen, Porters Berechtigung direkt zu unterstützen. [Direkte Porter-Unterstützung in deine App einbauen](/developers).
 
 ## Du brauchst Hilfe?
 {: #need-help }
 
-Schau unter [Probleme lösen](troubleshooting.html) nach oder [melde ein Problem](https://github.com/d4rken-org/porter/issues).
+Schau unter [Probleme lösen](/troubleshooting) nach oder [melde ein Problem](https://github.com/d4rken-org/porter/issues).
 
 Porter ist eine unabhängige Weiterführung von Shizuku und basiert auf der Arbeit von [RikkaApps](https://github.com/RikkaApps/Shizuku), [thedjchi](https://github.com/thedjchi/Shizuku) und ihren Mitwirkenden.

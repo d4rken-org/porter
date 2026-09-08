@@ -12,7 +12,9 @@ build/
 /out
 /signing.properties
 /.kotlin
-/.claude/
+/.claude/*
+!/.claude/CLAUDE.md
+!/.claude/rules/
 /.local/
 
 # User-guide build output

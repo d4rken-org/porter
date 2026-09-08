@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/favicon.png" | relative_url }}">
   <meta property="og:image" content="{{ "/assets/porter-banner.png" | absolute_url }}">
   <meta property="og:image:alt" content="Porter">
-  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <link rel="canonical" href="{{ page.url | remove: '.html' | absolute_url }}">
   {% if page.translation_key %}<script src="{{ '/assets/language.js' | relative_url }}" defer></script>{% endif %}
 </head>
 <body>
@@ -36,13 +36,13 @@
   <div class="page">
     <nav class="guide-nav" aria-label="{{ ui.guide }}" data-i18n-label="guide">
       <h2 data-i18n="users">{{ ui.users }}</h2>
-      {% assign guides = 'index,setup,compatibility,troubleshooting,terminal' | split: ',' %}
+      {% assign guides = 'index,setup,compatibility,troubleshooting' | split: ',' %}
       {% for name in guides %}
         {% assign guide = site.pages | where: 'translation_key', name | first %}
-        <a href="{{ guide.url | relative_url }}" data-i18n="{{ name }}"{% if page.translation_key == name %} aria-current="page"{% endif %}>{{ ui[name] }}</a>
+        <a href="{{ guide.url | remove: '.html' | relative_url }}" data-i18n="{{ name }}"{% if page.translation_key == name %} aria-current="page"{% endif %}>{{ ui[name] }}</a>
       {% endfor %}
       <h2 data-i18n="developers">{{ ui.developers }}</h2>
-      <a href="{{ '/developers.html' | relative_url }}"{% if page.path == 'developers.md' %} aria-current="page"{% endif %} data-i18n="integration">{{ ui.integration }}</a>
+      <a href="{{ '/developers' | relative_url }}"{% if page.path == 'developers.md' %} aria-current="page"{% endif %} data-i18n="integration">{{ ui.integration }}</a>
     </nav>
     <main id="content">{% include home-banner.html %}{{ content }}</main>
   </div>

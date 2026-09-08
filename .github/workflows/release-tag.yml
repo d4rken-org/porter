@@ -106,12 +106,6 @@ jobs:
           jq -n --arg commit "$(git rev-parse HEAD)" --arg api "$(git -C api rev-parse HEAD)" \
             --arg run "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             '{commit: $commit, api_commit: $api, workflow_run: $run}' > dist/build-info.json
-          cat .github/release-notes.md > release-notes.md
-          {
-            printf '\n```text\n'
-            cat dist/verification.txt
-            printf '```\n'
-          } >> release-notes.md
       - name: Upload signed review artifacts
         if: steps.existing.outputs.published != 'true'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
@@ -124,7 +118,7 @@ jobs:
         if: env.DRY_RUN != 'true' && steps.existing.outputs.published != 'true'
         shell: bash
         run: |
-          args=(--draft --verify-tag --title "Porter $RELEASE_TAG" --notes-file release-notes.md --generate-notes)
+          args=(--draft --verify-tag --title "Porter $RELEASE_TAG" --generate-notes)
           if [[ "$RELEASE_TAG" == *-beta* ]]; then args+=(--prerelease); fi
           gh release create "$RELEASE_TAG" "${args[@]}" dist/*
       - name: Publish complete release

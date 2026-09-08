@@ -9,7 +9,6 @@ en:
   setup: Install and start
   compatibility: App compatibility
   troubleshooting: Troubleshooting
-  terminal: Terminal apps
   users: For users
   developers: For developers
   integration: App integration
@@ -27,7 +26,6 @@ de:
   setup: Installieren und starten
   compatibility: App-Kompatibilität
   troubleshooting: Probleme lösen
-  terminal: Terminal-Apps
   users: Für Nutzer
   developers: Für Entwickler
   integration: App-Integration

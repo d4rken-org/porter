@@ -11,7 +11,7 @@ description: Hilfe bei Problemen mit Porters Start, Kopplung, App-Verbindungen u
 ## Porter läuft nicht
 {: #porter-is-not-running }
 
-Wenn du Debugging-Zugriff nutzt, ist es normal, Porter nach einem Geräteneustart erneut starten zu müssen. Öffne Porter und nutze deine [Startmethode](setup.html). Die Kopplung über drahtloses Debugging allein startet den Dienst noch nicht.
+Wenn du Debugging-Zugriff nutzt, ist es normal, Porter nach einem Geräteneustart erneut starten zu müssen. Öffne Porter und nutze deine [Startmethode](/setup). Die Kopplung über drahtloses Debugging allein startet den Dienst noch nicht.
 
 ## Der automatische Start funktioniert nicht
 {: #automatic-start-does-not-work }
@@ -29,7 +29,7 @@ Der automatische Start hängt weiterhin davon ab, ob Android Debugging-Zugriff b
 - Wenn du den Kopplungscode in Porters Dialog eingibst, übernimm den Kopplungsport aus dem Kopplungscode-Dialog. Verwende nicht den Verbindungsport auf der Hauptseite für drahtloses Debugging.
 - Falls ein VPN oder eine Einschränkung im lokalen Netzwerk die Erkennung verhindert, versuche es in einem Netzwerk, das die Kommunikation zwischen Geräten erlaubt.
 
-Wenn drahtloses Debugging auf deinem Gerät nicht verfügbar oder unzuverlässig ist, [starte Porter über einen Computer](setup.html#with-a-computer).
+Wenn drahtloses Debugging auf deinem Gerät nicht verfügbar oder unzuverlässig ist, [starte Porter über einen Computer](/setup#with-a-computer).
 
 ## Der Computer findet das Gerät nicht
 {: #the-computer-cannot-find-the-device }
@@ -51,7 +51,7 @@ Melde wiederholte Abbrüche mit Gerätemodell, Android-Version, Startmethode und
 {: #an-app-cannot-connect }
 
 1. Prüfe, ob Porter **Porter läuft** anzeigt.
-2. Prüfe, [ob die App Porter Compatibility benötigt](compatibility.html).
+2. Prüfe, [ob die App Porter Compatibility benötigt](/compatibility).
 3. Falls die App eine Dienstauswahl hat, wähle Porter. Nutze für die App **Beenden erzwingen** in den Android-Einstellungen und öffne sie erneut.
 4. Aktiviere die Unterstützung in der App und bestätige Porters Anfrage.
 5. Prüfe den Eintrag der App in Porters Liste der autorisierten Apps.

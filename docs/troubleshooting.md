@@ -8,7 +8,7 @@ language_name: English
 
 ## Porter is not running
 
-Starting Porter again after a device restart is normal when using debugging access. Open Porter and use your [startup method](setup.md). Pairing with wireless debugging does not itself start the service.
+Starting Porter again after a device restart is normal when using debugging access. Open Porter and use your [startup method](/setup). Pairing with wireless debugging does not itself start the service.
 
 ## Automatic start does not work
 
@@ -24,7 +24,7 @@ Automatic start still depends on Android making debugging access available and a
 - If entering the pairing code in Porter's in-app dialog, copy the pairing port from the pairing-code dialog, not the connection port on the main Wireless debugging screen.
 - If a VPN or local-network restriction blocks discovery, try a network where device communication is allowed.
 
-When wireless debugging is unavailable or unreliable on your device, [start from a computer](setup.md#with-a-computer).
+When wireless debugging is unavailable or unreliable on your device, [start from a computer](/setup#with-a-computer).
 
 ## The computer cannot find the device
 
@@ -43,7 +43,7 @@ Report recurring stops with the device model, Android version, startup method an
 ## An app cannot connect
 
 1. Confirm that Porter says **Porter is running**.
-2. Check [whether the app needs Porter Compatibility](compatibility.md).
+2. Check [whether the app needs Porter Compatibility](/compatibility).
 3. If the app has a service selector, choose Porter, force-stop the app in Android Settings and reopen it.
 4. Enable the integration inside the app and approve the Porter prompt.
 5. Check the app under Porter's **Authorized applications**.
