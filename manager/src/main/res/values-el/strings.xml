@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">Το %1$s εκτελείται</string>
     <string name="home_status_service_not_running">Το %1$s δεν εκτελείται</string>
-    <string name="home_status_service_version">Έκδοση %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Έκδοση %2$s, %1$s<br>Κάντε ξανά εκκίνηση για ενημέρωση στην έκδοση %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Έναρξη μέσω σύνδεσης με υπολογιστή]]></string>
     <string name="home_adb_description"><![CDATA[Για συσκευές χωρίς πρόσβαση root, πρέπει να χρησιμοποιήσετε το adb για την εκκίνηση του Porter (απαιτεί σύνδεση σε υπολογιστή). Αυτή η διαδικασία θα πρέπει να επαναλαμβάνεται κάθε φορά που επανεκκινείται η συσκευή. <b><a href="%1$s">Διαβάστε τη βοήθεια</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Ανάγνωση βοήθειας</string>
     <string name="home_adb_button_view_command">Προβολή εντολής</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Υπάρχουν και άλλες σκέψεις, παρακαλούμε επιβεβαιώστε ότι έχετε διαβάσει πρώτα τη βοήθεια.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Αντίγραφο</string>
     <string name="home_adb_dialog_view_command_button_send">Στέλνω</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Έναρξη μέσω Ασύρματου εντοπισμού σφαλμάτων]]></string>
@@ -30,7 +25,6 @@
         απενεργοποιήσετε και να ενεργοποιήσετε την επιλογή \"Ασύρματη αποσφαλμάτωση\" εάν συνεχίζει
         να κάνει αναζήτηση.</string>
     <string name="dialog_adb_port">Θύρα</string>
-    <string name="dialog_adb_invalid_port">Η θύρα είναι ένας ακέραιος αριθμός μεταξύ 1 και 65535.</string>
     <string name="adb_pairing">Σύζευξη</string>
     <string name="dialog_adb_pairing_title">Σύζευξη με συσκευή</string>
     <string name="dialog_adb_pairing_discovery">Αναζήτηση για υπηρεσία σύζευξης</string>
@@ -45,11 +39,6 @@
         ασύρματη λειτουργία εντοπισμού σφαλμάτων, ήταν απαραίτητη η σύνδεση με τον υπολογιστή.</string>
     <string name="dialog_usb_debugging_not_enabled">Η λειτουργία εντοπισμού σφαλμάτων USB δεν είναι
         ενεργοποιημένη.\nΕνεργοποιήστε την στις \"Επιλογές προγραμματιστή\".</string>
-    <string name="dialog_adb_pairing_message">Ξεκινήστε τη σύζευξη ακολουθώντας τα παρακάτω
-        βήματα:\n- Μεταβείτε στις \"Επιλογές προγραμματιστή\"\n- Ενεργοποιήστε τις λειτουργίες \"USB
-        debugging\" και \"Wireless debugging\"\n- Πατήστε την αριστερή πλευρά του \"Wireless
-        debugging\"\n- Πατήστε \"Σύζευξη συσκευής με κωδικό σύζευξης\"\n- Εισαγάγετε τον κωδικό
-        σύζευξης στην ειδοποίηση</string>
     <string name="dialog_adb_pairing_accessibility_permission">Στο Android 14, η
         εγκατάσταση/ενημέρωση του Porter με το Package Installer ανακαλεί την άδεια ^1, η οποία
         απαιτείται για την ενεργοποίηση της υπηρεσίας προσβασιμότητας για τη σύζευξη.\n\nΓια να την
@@ -77,7 +66,6 @@
     <string name="enable">Ενεργοποιώ</string>
     <string name="development_settings">Επιλογές προγραμματιστή</string>
     <string name="notification_settings">Επιλογές ειδοποιήσεων</string>
-    <string name="adb_pairing_tutorial_title">Συνδέστε το Porter με τη συσκευή σας</string>
     <string name="adb_pairing_tutorial_content_notification">Μια ειδοποίηση από το Porter θα σας
         βοηθήσει να ολοκληρώσετε τη σύζευξη.</string>
     <string name="adb_pairing_tutorial_content_steps">Μεταβείτε στις \"Επιλογές προγραμματιστή\"
@@ -105,7 +93,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Έναρξη (για συσκευές με root)]]></string>
     <string name="home_root_button_start">Αρχή</string>
-    <string name="home_root_button_restart">Επανεκκίνηση</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Διαχείριση εφαρμογών</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -117,20 +104,6 @@
         Porter θα εμφανίζονται εδώ.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Ελέγξτε το Porter με εφαρμογές αυτοματισμού</string>
-    <string name="home_automation_description">Εφαρμογές όπως το Tasker και το MacroDroid μπορούν να
-        στείλουν intents για την αυτόματη εκκίνηση/διακοπή του Porter.</string>
-    <string name="home_automation_button_view_intents">Προβολή προθέσεων</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Οδηγός προγραμματιστή</string>
-    <string name="home_learn_more_description">Μάθετε πώς να αναπτύσσεστε με το Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Πρέπει να κάνεις ένα επιπλέον βήμα</string>
-    <string name="home_adb_is_limited_description">Ο κατασκευαστής της συσκευής σας έχει περιορίσει
-        τα δικαιώματα adb και οι εφαρμογές που χρησιμοποιούν το Porter δεν θα λειτουργούν
-        σωστά.\n\nΣυνήθως, αυτός ο περιορισμός μπορεί να αρθεί προσαρμόζοντας ορισμένες επιλογές
-        στις \"Επιλογές προγραμματιστή\". Διαβάστε τη βοήθεια για λεπτομέρειες σχετικά με το πώς να
-        το κάνετε αυτό.\n\nΕνδέχεται να χρειαστεί να επανεκκινήσετε το Porter για να τεθεί σε ισχύ
-        η λειτουργία.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Η άδεια του adb είναι περιορισμένη</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Είναι πολύ πιθανό ο κατασκευαστής της συσκευής σας να περιορίζει την άδεια του adb.<p>Μπορεί να υπάρχει μια λύση για το σύστημά σας σε <b><a href=\"%1$s\">αυτό το έγγραφο</a></b>.]]></string>
@@ -159,14 +132,12 @@
     <string name="rish_description"><![CDATA[Με το %1$s, μπορείτε να εκτελέσετε εντολές shell σε οποιαδήποτε εφαρμογή τερματικού.<p>Πατήστε για να μάθετε περισσότερα σχετικά με τον τρόπο χρήσης του.]]></string>
     <!-- Settings -->
     <string name="settings_title">Ρυθμίσεις</string>
-    <string name="settings_behavior">Συμπεριφορά</string>
     <string name="settings_start_on_boot">Ξεκινήστε από την εκκίνηση</string>
     <string name="settings_start_on_boot_summary">Απαιτεί Android 11+ ή root</string>
     <string name="settings_start_on_boot_bug">Λόγω ενός σφάλματος στο Android 11-12, η ασύρματη
         αποσφαλμάτωση δεν θυμάται κανένα εξουσιοδοτημένο δίκτυο.\n\nΘα χρειαστεί να εξουσιοδοτείτε
         ξανά το δίκτυο σε κάθε επανεκκίνηση πατώντας \"Να επιτρέπεται\" όταν εμφανιστεί το παράθυρο
         διαλόγου εξουσιοδότησης.</string>
-    <string name="settings_use_system_color">Χρήση χρώματος θέματος συστήματος</string>
     <string name="settings_watchdog">Άγρυπνος φρουρός</string>
     <string name="settings_watchdog_summary">Αυτόματη επανεκκίνηση του Porter σε περίπτωση διακοπής
         λειτουργίας</string>
@@ -175,35 +146,8 @@
         εφαρμοστεί αυτή η ρύθμιση.</string>
     <string name="settings_tcp_port">Θύρα TCP</string>
     <string name="settings_tcp_port_default">Προεπιλογή (5555)</string>
-    <string name="settings_tcp_port_hint">Αφήστε κενό για χρήση προεπιλογής (5555)</string>
-    <string name="settings_language">Γλώσσα</string>
-    <string name="settings_translation_contributors">Συνεισφέροντες στη μετάφραση</string>
-    <string name="settings_translation">Συμμετοχή στη μετάφραση</string>
-    <string name="settings_translation_summary">Βοηθήστε μας να μεταφράσουμε το %s στη γλώσσα σας</string>
     <string name="settings_user_interface">Εμφάνιση</string>
-    <string name="settings_black_night_theme">Θέμα μαύρης νύχτας</string>
-    <string name="settings_black_night_theme_summary">Χρησιμοποιήστε το θέμα καθαρού μαύρου εάν
-        είναι ενεργοποιημένη η νυχτερινή λειτουργία</string>
     <string name="settings_support">Υποστηρίζω</string>
-    <string name="settings_help">Βοήθεια</string>
-    <string name="settings_report_bug">Αναφορά σφάλματος</string>
-    <string name="settings_advanced">Προχωρημένος</string>
-    <string name="settings_legacy_pairing">Σύζευξη παλαιού τύπου</string>
-    <string name="settings_legacy_pairing_summary">Εισαγάγετε τον κωδικό σύζευξης σε ένα παράθυρο
-        διαλόγου αντί για μια ειδοποίηση</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Αρχικά, κάντε τα εξής:</string>
-    <string name="bug_report_dialog_update">Ελέγξτε ότι χρησιμοποιείτε το ^1.</string>
-    <string name="bug_report_dialog_link_update">τελευταία έκδοση</string>
-    <string name="bug_report_dialog_wiki">Διαβάστε το ^1 και ακολουθήστε όλα τα σχετικά βήματα
-        αντιμετώπισης προβλημάτων.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Αναζητήστε σε όλα τα ^1 για να δείτε αν το σφάλμα σας
-        έχει ήδη αναφερθεί.</string>
-    <string name="bug_report_dialog_link_issues">υπάρχοντα ζητήματα</string>
-    <string name="bug_report_dialog_method">Υποβάλετε ένα πρόβλημα στο ^1 εάν έχετε λογαριασμό.</string>
-    <string name="bug_report_dialog_method_2">Διαφορετικά, μπορείτε να στείλετε ένα email.</string>
-    <string name="bug_report_dialog_button_email">E-mail</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Η θύρα πρέπει να είναι μεταξύ 1 και 65535</string>
     <string name="snackbar_battery_optimization_home">Η βελτιστοποίηση μπαταρίας πρέπει να είναι
@@ -212,29 +156,13 @@
         μπαταρίας για να χρησιμοποιήσετε αυτήν τη δυνατότητα.</string>
     <string name="snackbar_action_fix">Διορθώνω</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Δεν βρέθηκε εφαρμογή email</string>
     <string name="toast_shizuku_already_starting">Το Porter ξεκινά ήδη στο παρασκήνιο</string>
     <string name="toast_accessibility_tv_only">Αυτή η υπηρεσία υποστηρίζεται μόνο σε συσκευές
         τηλεόρασης.</string>
     <string name="toast_pairing_timeout">Το χρονικό όριο της υπηρεσίας σύζευξης Porter έληξε.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Θέμα</string>
-    <string name="dark_theme_off">Πάντα ελαφρύ</string>
-    <string name="dark_theme_on">Πάντα σκοτεινό</string>
-    <!-- About -->
-    <string name="action_about">Για</string>
-    <string name="about_dialog_button_close">Κλείνω</string>
-    <string name="about_view_source_code"><![CDATA[Δείτε τον πηγαίο κώδικα στη διεύθυνση %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Σταματήστε το Porter</string>
-    <string name="dialog_stop_message">Η υπηρεσία Porter θα διακοπεί.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Κατάσταση έναρξης υπηρεσίας</string>
-    <string name="notification_service_starting">Η υπηρεσία Porter ξεκινά…</string>
-    <string name="notification_service_start_failed">Η έναρξη της υπηρεσίας Porter απέτυχε.</string>
-    <string name="notification_service_start_no_root">Αποτυχία αιτήματος δικαιωμάτων root.</string>
-    <string name="notification_working">Εργασία…</string>
     <string name="notification_channel_adb_pairing">Ασύρματη αντιστοίχιση εντοπισμού σφαλμάτων</string>
     <string name="notification_adb_pairing_input_paring_code">Εισαγάγετε τον κωδικό σύζευξης</string>
     <string name="notification_adb_pairing_searching_for_service_title">Αναζήτηση υπηρεσίας σύζευξης</string>
@@ -266,7 +194,6 @@
     <string name="wadb_permission_error_notification_content">Ο Porter χρειάζεται
         WRITE_SECURE_SETTINGS για να ξεκινήσει από την εκκίνηση. Αγγίξτε το για να μάθετε πώς
         μπορείτε να το εκχωρήσετε.</string>
-    <string name="wadb_notification_channel">Υπηρεσία αυτόματης εκκίνησης ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Το Watchdog τρέχει</string>
     <string name="watchdog_turn_off">Κλείνω</string>

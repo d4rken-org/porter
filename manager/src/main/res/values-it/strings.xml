@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s è in esecuzione</string>
     <string name="home_status_service_not_running">%1$s non è in esecuzione</string>
-    <string name="home_status_service_version">Versione %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Versione %2$s, %1$s<br>Riavvia per aggiornare alla versione %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Avvia collegandoti ad un computer]]></string>
     <string name="home_adb_description"><![CDATA[Per i dispositivi non rootati occorre usare adb per avviare Porter (serve una connessione ad un computer). Questo processo deve essere ripetuto ogni volta che il dispositivo viene riavviato. Per favore <b><a href="%1$s">leggi la guida</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Leggi la guida</string>
     <string name="home_adb_button_view_command">Visualizza comando</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Ci sono altre considerazioni, conferma di aver letto prima la guida.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Copia</string>
     <string name="home_adb_dialog_view_command_button_send">Invia</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Avvia tramite Debug Wireless]]></string>
@@ -29,7 +24,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Prova a disabilitare e
         abilitare \"Debug Wireless\" se continua a cercare.</string>
     <string name="dialog_adb_port">Porta</string>
-    <string name="dialog_adb_invalid_port">La porta è un numero intero compreso tra 1 e 65535.</string>
     <string name="adb_pairing">Accoppiamento</string>
     <string name="dialog_adb_pairing_title">Accoppia con il dispositivo</string>
     <string name="dialog_adb_pairing_discovery">Ricerca del servizio di accoppiamento</string>
@@ -43,10 +37,6 @@
         la connessione al computer.</string>
     <string name="dialog_usb_debugging_not_enabled">Il debug USB non è abilitato.\nAbilitalo in
         \"Opzioni sviluppatore\".</string>
-    <string name="dialog_adb_pairing_message">Per iniziare l\'associazione, procedere come segue:\n-
-        Vai su \"Opzioni sviluppatore\"\n- Abilita \"Debug USB\" e \"Debug wireless\"\n- Tocca il
-        lato sinistro di \"Debug wireless\"\n- Tocca \"Associa dispositivo con codice di
-        associazione\"\n- Inserisci il codice di associazione nella notifica</string>
     <string name="dialog_adb_pairing_accessibility_permission">Su Android 14,
         l\'installazione/aggiornamento di Porter con Package Installer revoca l\'autorizzazione ^1,
         necessaria per abilitare il servizio di accessibilità per l\'associazione.\n\nPer
@@ -72,7 +62,6 @@
     <string name="enable">Abilitare</string>
     <string name="development_settings">Modalitá sviluppatore</string>
     <string name="notification_settings">Opzioni di notifica</string>
-    <string name="adb_pairing_tutorial_title">Accoppia Porter col tuo dispositivo</string>
     <string name="adb_pairing_tutorial_content_notification">Una notifica da Porter ti aiuterà a
         completare l\'accoppiamento.</string>
     <string name="adb_pairing_tutorial_content_steps">Vai su \"Opzioni sviluppatore\", quindi
@@ -98,7 +87,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Avvia (per dispositivi rootati)]]></string>
     <string name="home_root_button_start">Avvia</string>
-    <string name="home_root_button_restart">Riavvia</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Gestione dell\'applicazione</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -110,22 +98,6 @@
         dichiarato l\'autorizzazione Porter.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Controlla Porter con le app di automazione</string>
-    <string name="home_automation_description">App come Tasker e MacroDroid possono inviare intent
-        per avviare/arrestare Porter automaticamente.</string>
-    <string name="home_automation_button_view_intents">Visualizza intenti</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Guida per gli sviluppatori</string>
-    <string name="home_learn_more_description">Impara a sviluppare con Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Devi fare un passo in più</string>
-    <string name="home_adb_is_limited_description">Il produttore del dispositivo dispone di
-        autorizzazioni adb limitate e le app che utilizzano Porter non funzioneranno correttamente.
-        \n
-        \nDi solito, questa limitazione può essere rimossa regolando alcune opzioni in \"Opzioni
-        sviluppatore\". Si prega di leggere la guida per i dettagli su come eseguire questa
-        operazione.
-        \n
-        \nPotrebbe essere necessario riavviare Porter per rendere effettiva l\'operazione.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Il permesso di adb è limitato</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[È molto probabile che il fabbricante del tuo dispositivo limiti i permessi di adb.<p>Ci potrebbe essere una soluzione per il vostro dispositivo in <b><a href="%1$s">questo documento</a></b>.]]></string>
@@ -153,13 +125,11 @@
     <string name="rish_description"><![CDATA[Con %1$spuoi eseguire comandi shell in qualsiasi app terminale.<p>Tocca per saperne di più su come utilizzarlo.]]></string>
     <!-- Settings -->
     <string name="settings_title">Impostazioni</string>
-    <string name="settings_behavior">Comportamento</string>
     <string name="settings_start_on_boot">Avvia all\'avvio</string>
     <string name="settings_start_on_boot_summary">Richiede Android 11+ o root</string>
     <string name="settings_start_on_boot_bug">A causa di un bug in Android 11-12, il debug wireless
         non ricorda nessuna rete autorizzata.\n\nDovrai riautorizzare la rete ad ogni riavvio
         toccando \"Consenti\" quando appare la finestra di autorizzazione.</string>
-    <string name="settings_use_system_color">Usa il colore del tema di sistema</string>
     <string name="settings_watchdog">Cane da guardia</string>
     <string name="settings_watchdog_summary">Riavvia automaticamente Porter se si blocca</string>
     <string name="settings_restart_dialog_title">Riavvio richiesto</string>
@@ -167,35 +137,8 @@
         questa impostazione.</string>
     <string name="settings_tcp_port">porta TCP</string>
     <string name="settings_tcp_port_default">Predefinito (5555)</string>
-    <string name="settings_tcp_port_hint">Lasciare vuoto per utilizzare il valore predefinito (5555)</string>
-    <string name="settings_language">Lingua</string>
-    <string name="settings_translation_contributors">Contributori alla traduzione</string>
-    <string name="settings_translation">Partecipa alla traduzione</string>
-    <string name="settings_translation_summary">Aiutaci a tradurre %s nella tua lingua</string>
     <string name="settings_user_interface">Aspetto</string>
-    <string name="settings_black_night_theme">Tema nero notte</string>
-    <string name="settings_black_night_theme_summary">Usa il tema nero puro se la modalità notte è
-        abilitata</string>
     <string name="settings_support">Supporto</string>
-    <string name="settings_help">Aiuto</string>
-    <string name="settings_report_bug">Segnala un bug</string>
-    <string name="settings_advanced">Avanzato</string>
-    <string name="settings_legacy_pairing">Abbinamento legacy</string>
-    <string name="settings_legacy_pairing_summary">Inserisci il codice di associazione in una
-        finestra di dialogo anziché in una notifica</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Per prima cosa, procedi come segue:</string>
-    <string name="bug_report_dialog_update">Verificare di utilizzare ^1.</string>
-    <string name="bug_report_dialog_link_update">ultima versione</string>
-    <string name="bug_report_dialog_wiki">Leggere ^1 e seguire tutti i passaggi pertinenti per la
-        risoluzione dei problemi.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Cerca in tutti i ^1 per vedere se il tuo bug è già stato
-        segnalato.</string>
-    <string name="bug_report_dialog_link_issues">problemi esistenti</string>
-    <string name="bug_report_dialog_method">Se hai un account, segnala un problema su ^1.</string>
-    <string name="bug_report_dialog_method_2">Altrimenti puoi inviare un\'e-mail.</string>
-    <string name="bug_report_dialog_button_email">E-mail</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">La porta deve essere compresa tra 1 e 65535</string>
     <string name="snackbar_battery_optimization_home">Per far sì che l\'avvio all\'avvio/watchdog
@@ -204,28 +147,12 @@
         disattivare l\'ottimizzazione della batteria.</string>
     <string name="snackbar_action_fix">Aggiustare</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Nessuna app di posta elettronica trovata</string>
     <string name="toast_shizuku_already_starting">Porter sta già iniziando sullo sfondo</string>
     <string name="toast_accessibility_tv_only">Questo servizio è supportato solo su dispositivi TV.</string>
     <string name="toast_pairing_timeout">Il servizio di accoppiamento di Porter è terminato.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Tema</string>
-    <string name="dark_theme_off">Sempre leggero</string>
-    <string name="dark_theme_on">Sempre buio</string>
-    <!-- About -->
-    <string name="action_about">Info</string>
-    <string name="about_dialog_button_close">Vicino</string>
-    <string name="about_view_source_code"><![CDATA[Visualizza il codice sorgente a %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Interrompi Porter</string>
-    <string name="dialog_stop_message">Il servizio Porter verrà interrotto.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Stato di avvio del servizio</string>
-    <string name="notification_service_starting">Il servizio Porter si sta avviando…</string>
-    <string name="notification_service_start_failed">Avvio del servizio Porter non riuscito.</string>
-    <string name="notification_service_start_no_root">Impossibile richiedere i permessi di root.</string>
-    <string name="notification_working">Esecuzione…</string>
     <string name="notification_channel_adb_pairing">Accoppiamento debug wireless</string>
     <string name="notification_adb_pairing_input_paring_code">Inserire codice di associazione</string>
     <string name="notification_adb_pairing_searching_for_service_title">Ricerca del servizio di
@@ -257,7 +184,6 @@
     <string name="wadb_permission_error_notification_title">Errore di autorizzazione</string>
     <string name="wadb_permission_error_notification_content">Porter necessita di
         WRITE_SECURE_SETTINGS per avviarsi all\'avvio. Tocca per scoprire come concederlo.</string>
-    <string name="wadb_notification_channel">Servizio di avvio automatico ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Il cane da guardia è in esecuzione</string>
     <string name="watchdog_turn_off">Spegni</string>

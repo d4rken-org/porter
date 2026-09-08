@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">A %1$s fut</string>
     <string name="home_status_service_not_running">A %1$s nem fut</string>
-    <string name="home_status_service_version">Verzió %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Verzió %2$s, %1$s<br>Kezdje újra a %3$s verzióra való frissítéshez]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Kezdje a számítógéphez való csatlakozással]]></string>
     <string name="home_adb_description"><![CDATA[Root nélküli eszközök esetén az adb-t kell használnia a Porter elindításához (számítógépes kapcsolat szükséges). Ezt a folyamatot minden alkalommal meg kell ismételni az eszköz újraindításakor. Kérem <b><a href=\"%1$s\">olvassa el a súgót</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Olvassa el a súgót</string>
     <string name="home_adb_button_view_command">Parancs megtekintés</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Vannak más szempontok is, kérjük erősítse meg, hogy először elolvasta a súgót.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Másolás</string>
     <string name="home_adb_dialog_view_command_button_send">Küldés</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Kezdje a vezeték nélküli hibakereséssel]]></string>
@@ -28,7 +23,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Próbálja kikapcsolni majd
         engedélyezni a \"Vezeték nélküli hibakeresés\" opciót, ha továbbra is keres.</string>
     <string name="dialog_adb_port">Kikötő</string>
-    <string name="dialog_adb_invalid_port">A port egy 1 és 65535 közötti egész szám.</string>
     <string name="adb_pairing">Párosítás</string>
     <string name="dialog_adb_pairing_title">Párosítás a készülékkel</string>
     <string name="dialog_adb_pairing_discovery">Párosítási szolgáltatás keresése</string>
@@ -43,11 +37,6 @@
         engedélyezéséhez számítógépes csatlakozásra van szükség.</string>
     <string name="dialog_usb_debugging_not_enabled">Az USB hibakeresés nincs engedélyezve.\nKérjük,
         engedélyezze a „Fejlesztői beállítások” között.</string>
-    <string name="dialog_adb_pairing_message">Kérjük, kezdje el a párosítást a következő lépések
-        végrehajtásával:\n- Navigáljon a „Fejlesztői beállítások” menüpontra\n- Engedélyezze az
-        „USB-hibakeresés” és a „Vezeték nélküli hibakeresés” lehetőséget\n- Koppintson a „Vezeték
-        nélküli hibakeresés” bal oldalára\n- Koppintson az „Eszköz párosítása párosító kóddal”
-        lehetőségre\n- Írja be az értesítésben megjelenő párosítási kódot</string>
     <string name="dialog_adb_pairing_accessibility_permission">Android 14 rendszeren a Porter
         csomagtelepítővel történő telepítése/frissítése visszavonja a ^1 engedélyt, amely a
         párosítás akadálymentesítési szolgáltatásának engedélyezéséhez szükséges.\n\nA megadásához
@@ -76,7 +65,6 @@
     <string name="enable">Engedélyezés</string>
     <string name="development_settings">Fejlesztői lehetőségek</string>
     <string name="notification_settings">Értesítési lehetőségek</string>
-    <string name="adb_pairing_tutorial_title">Párosítsa a Shizukut készülékével</string>
     <string name="adb_pairing_tutorial_content_notification">A Porter értesítése segít a párosítás
         befejezésében.</string>
     <string name="adb_pairing_tutorial_content_steps">Lépjen a „Fejlesztői beállítások” menüpontra,
@@ -103,7 +91,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Indítás (rootolt eszközökhöz)]]></string>
     <string name="home_root_button_start">Indítás</string>
-    <string name="home_root_button_restart">Újraindítás</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Alkalmazáskezelés</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -115,19 +102,6 @@
         vagy deklarálták a Porter engedélyt.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Irányítsd a Shizukut automatizálási alkalmazásokkal</string>
-    <string name="home_automation_description">Az olyan alkalmazások, mint a Tasker és a MacroDroid,
-        küldhetnek szándékokat a Porter automatikus indításához/leállításához.</string>
-    <string name="home_automation_button_view_intents">Szándékok megtekintése</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Fejlesztői útmutató</string>
-    <string name="home_learn_more_description">Tanuljon meg fejlődni a Shizukuval</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Egy plusz lépést kell tennie</string>
-    <string name="home_adb_is_limited_description">Az eszköz gyártója korlátozta az
-        adb-engedélyeket, és a Porter-t használó alkalmazások nem működnek
-        megfelelően.\n\nÁltalában ez a korlátozás bizonyos beállítások módosításával feloldható a
-        \"Fejlesztői lehetőségek\"-nél. Kérjük, olvassa el a súgót ennek részleteiért.\n\nLehet,
-        hogy újra kell indítania a Shizukut, hogy a művelet érvénybe lépjen.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Az adb engedélye korlátozott</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Nagyon valószínű, hogy az eszköz gyártója korlátozza az adb engedélyét.<p>Lehet, hogy van megoldás a rendszeréhez ebben a <b><a href=\"%1$s\">dokumentumban</a></b>.]]></string>
@@ -156,14 +130,12 @@
     <string name="rish_description"><![CDATA[A %1$sparanccsal shell parancsokat futtathatsz bármelyik terminálalkalmazásban.<p>Koppints ide, ha többet szeretnél megtudni a használatáról.]]></string>
     <!-- Settings -->
     <string name="settings_title">Beállítások</string>
-    <string name="settings_behavior">Viselkedés</string>
     <string name="settings_start_on_boot">Indítás rendszerindításkor</string>
     <string name="settings_start_on_boot_summary">Android 11+ vagy root szükséges</string>
     <string name="settings_start_on_boot_bug">Az Android 11-12-es verziójában található hiba miatt a
         vezeték nélküli hibakeresés nem emlékszik a jogosult hálózatokra.\n\nMinden újraindításkor
         újra engedélyezned kell a hálózatot az „Engedélyezés” gombra koppintva, amikor a
         hitelesítési párbeszédpanel felugrik.</string>
-    <string name="settings_use_system_color">Használja a rendszertéma színét</string>
     <string name="settings_watchdog">Őrzőkutya</string>
     <string name="settings_watchdog_summary">A Porter automatikus újraindítása összeomlás esetén</string>
     <string name="settings_restart_dialog_title">Újraindítás szükséges</string>
@@ -171,37 +143,8 @@
         Porter-t.</string>
     <string name="settings_tcp_port">TCP-port</string>
     <string name="settings_tcp_port_default">Alapértelmezett (5555)</string>
-    <string name="settings_tcp_port_hint">Hagyja üresen az alapértelmezett érték (5555)
-        használatához</string>
-    <string name="settings_language">Nyelv</string>
-    <string name="settings_translation_contributors">Fordítási közreműködők</string>
-    <string name="settings_translation">Vegyen részt a fordításban</string>
-    <string name="settings_translation_summary">Segítsen nekünk lefordítani a %s-t az Ön nyelvére</string>
     <string name="settings_user_interface">Megjelenés</string>
-    <string name="settings_black_night_theme">Sötét éj téma</string>
-    <string name="settings_black_night_theme_summary">Használja a tiszta fekete témát, ha az
-        éjszakai mód be van kapcsolva</string>
     <string name="settings_support">Támogatás</string>
-    <string name="settings_help">Segítség</string>
-    <string name="settings_report_bug">Hiba jelentése</string>
-    <string name="settings_advanced">Fejlett</string>
-    <string name="settings_legacy_pairing">Régi párosítás</string>
-    <string name="settings_legacy_pairing_summary">A párosítási kódot egy párbeszédpanelen, ne pedig
-        egy értesítésben add meg</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Először is, kérjük, tegye a következőket:</string>
-    <string name="bug_report_dialog_update">Ellenőrizd, hogy a ^1-et használod-e.</string>
-    <string name="bug_report_dialog_link_update">legújabb verzió</string>
-    <string name="bug_report_dialog_wiki">Olvasd el a ^1-et, és kövesd az összes vonatkozó
-        hibaelhárítási lépést.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Keresd át az összes ^1-et, hogy jelentették-e már a
-        hibádat.</string>
-    <string name="bug_report_dialog_link_issues">meglévő problémák</string>
-    <string name="bug_report_dialog_method">Kérjük, küldjön be egy problémát a ^1 oldalon, ha van
-        fiókja.</string>
-    <string name="bug_report_dialog_method_2">Egyébként küldhetsz egy e-mailt.</string>
-    <string name="bug_report_dialog_button_email">Email</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">A portszámnak 1 és 65535 között kell lennie.</string>
     <string name="snackbar_battery_optimization_home">A rendszerindításkor/watchdogkor történő
@@ -210,28 +153,12 @@
         akkumulátoroptimalizálást a funkció használatához.</string>
     <string name="snackbar_action_fix">Javítás</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Nem található e-mail alkalmazás</string>
     <string name="toast_shizuku_already_starting">A Porter már elindul a háttérben</string>
     <string name="toast_accessibility_tv_only">Ez a szolgáltatás csak TV-eszközökön támogatott.</string>
     <string name="toast_pairing_timeout">A Porter párosítási szolgáltatás időtúllépést okozott.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Téma</string>
-    <string name="dark_theme_off">Mindig könnyű</string>
-    <string name="dark_theme_on">Mindig sötét</string>
-    <!-- About -->
-    <string name="action_about">Rólunk</string>
-    <string name="about_dialog_button_close">Közeli</string>
-    <string name="about_view_source_code"><![CDATA[Forráskód megtekintése itt: %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">A Porter leállítása</string>
-    <string name="dialog_stop_message">A Porter szolgáltatás leáll.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Szolgáltatásindítási állapot</string>
-    <string name="notification_service_starting">A Porter szolgáltatás indul…</string>
-    <string name="notification_service_start_failed">A Porter szolgáltatás indítása nem sikerült.</string>
-    <string name="notification_service_start_no_root">Nem sikerült root engedélyt kérni.</string>
-    <string name="notification_working">Dolgozom…</string>
     <string name="notification_channel_adb_pairing">Vezeték nélküli hibakeresés pairing</string>
     <string name="notification_adb_pairing_input_paring_code">Írja be a párosítási kódot</string>
     <string name="notification_adb_pairing_searching_for_service_title">Párosítási szolgáltatás
@@ -263,7 +190,6 @@
     <string name="wadb_permission_error_notification_content">A Porter rendszerindításkor
         WRITE_SECURE_SETTINGS jogosultságra szorul. Koppintson ide, ha szeretné megtudni, hogyan
         engedélyezheti ezt.</string>
-    <string name="wadb_notification_channel">ADB automatikus indítási szolgáltatás</string>
     <!-- Watchdog -->
     <string name="watchdog_running">A felügyeleti szerv fut</string>
     <string name="watchdog_turn_off">Kikapcsolás</string>

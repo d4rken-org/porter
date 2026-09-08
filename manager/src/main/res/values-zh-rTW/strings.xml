@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s 正在執行</string>
     <string name="home_status_service_not_running">%1$s 未在執行</string>
-    <string name="home_status_service_version">版本 %2$s，%1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[版本 %2$s，%1$s<br>再次啟動來升級到版本 %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[透過與電腦連線來啟動 (使用 ADB)]]></string>
     <string name="home_adb_description"><![CDATA[沒有 Root 的裝置需藉助 ADB 來啟動 Porter (須與電腦連線)。在裝置每次重新啟動後，這項作業皆須重新進行。請<b><a href=\"%1$s\">閱讀說明</a></b>。]]></string>
-    <string name="home_adb_button_view_help">閱讀說明</string>
     <string name="home_adb_button_view_command">檢視命令</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* 還有一些其他注意事項，請確認你已閱讀說明。]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">複製</string>
     <string name="home_adb_dialog_view_command_button_send">傳送</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[透過無線偵錯啟動]]></string>
@@ -25,7 +20,6 @@
         偵錯」，否則 Porter 會被停止。</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">如果一直搜尋，請嘗試停用並啟用「無線偵錯」。</string>
     <string name="dialog_adb_port">通訊埠</string>
-    <string name="dialog_adb_invalid_port">通訊埠是一個 1 至 65535 的整數。</string>
     <string name="adb_pairing">配對</string>
     <string name="dialog_adb_pairing_title">與裝置配對</string>
     <string name="dialog_adb_pairing_discovery">正在尋找配對服務</string>
@@ -36,8 +30,6 @@
     <string name="dialog_wireless_adb_not_enabled">無線偵錯未啟用。
         \n請注意，在 Android 11 之前，要啟用無線偵錯必須先與電腦連線。</string>
     <string name="dialog_usb_debugging_not_enabled">USB 除錯功能未啟用。\n請在「開發者選項」中啟用它。</string>
-    <string name="dialog_adb_pairing_message">請開始配對，請執行以下步驟：\n- 導覽至「開發者選項」\n- 啟用「USB 除錯」與「無線除錯」\n-
-        點選「無線除錯」的左側\n- 點擊「配對裝置與配對碼的裝置」\n- 在通知中輸入配對代碼</string>
     <string name="dialog_adb_pairing_accessibility_permission">在 Android 14，使用套件安裝器安裝或更新 Porter
         會取消用於開啟無障礙服務配對的 ^1 權限。\n\n透過運行下面的 ADB 指令重新授權：\n\n^2\n\n運行指令之後，你可以繼續配對程序。\n\n備註：你可以透過 ADB 安裝
         Porter 繞過此限制。</string>
@@ -53,7 +45,6 @@
     <string name="enable">啟用</string>
     <string name="development_settings">開發人員選項</string>
     <string name="notification_settings">通知設定</string>
-    <string name="adb_pairing_tutorial_title">將 Porter 與您的裝置配對</string>
     <string name="adb_pairing_tutorial_content_notification">一則來自 Porter 的通知將協助您完成配對。</string>
     <string name="adb_pairing_tutorial_content_steps">進入“開發者選項”，然後啟用“USB調試”和“無線調試”。</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">
@@ -70,7 +61,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[啟動 (針對已 Root 裝置)]]></string>
     <string name="home_root_button_start">啟動</string>
-    <string name="home_root_button_restart">重新啟動</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">應用程式管理</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -80,16 +70,6 @@
     <string name="home_app_management_empty">申請或宣告 Porter 許可的應用程式會顯示在這裡。</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">使用自動化應用程式控制 Porter</string>
-    <string name="home_automation_description">Tasker 和 MacroDroid 等應用程式可以傳送 Intent 來自動啟動/停止
-        Porter。</string>
-    <string name="home_automation_button_view_intents">查看意圖</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">開發者指南</string>
-    <string name="home_learn_more_description">瞭解如何使用 Porter 開發</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">您需要進行額外的步驟</string>
-    <string name="home_adb_is_limited_description">您的裝置製造商限制了 ADB 的權限，使用 Porter
-        的應用程式無法正常運作。\n\n通常，在「開發人員選項」中調整一些選項即可解除此限制。請閱讀說明來瞭解具體的作業方式。\n\n您可能需要重新啟動 Porter 以使作業生效。</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB 權限受限</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[這極有可能是你的裝置製造商限制了 ADB 的權限。<p><b><a href=\"%1$s\">此文件</a></b>中可能有針對你的系統的解決方案。]]></string>
@@ -110,71 +90,31 @@
     <string name="rish_description"><![CDATA[使用 %1$s，您可以在任何終端應用程式中執行 shell 命令。<p>點選了解更多使用方法。]]></string>
     <!-- Settings -->
     <string name="settings_title">設定</string>
-    <string name="settings_behavior">行為</string>
     <string name="settings_start_on_boot">開機時啟動</string>
     <string name="settings_start_on_boot_summary">需要 Android 11+ 或 root 權限</string>
     <string name="settings_start_on_boot_bug">由於 Android 11-12
         的一個錯誤，無線除錯無法記住任何授權網路。\n\n每次重啟時，當授權對話框跳出時，點擊「允許」重新授權網路。</string>
-    <string name="settings_use_system_color">使用系統主題色彩</string>
     <string name="settings_watchdog">看門狗</string>
     <string name="settings_watchdog_summary">如果 Porter 崩潰，則自動重新啟動。</string>
     <string name="settings_restart_dialog_title">需要重啟</string>
     <string name="settings_restart_dialog_message">Porter 需要重啟才能套用此設定。</string>
     <string name="settings_tcp_port">TCP 埠</string>
     <string name="settings_tcp_port_default">預設值 (5555)</string>
-    <string name="settings_tcp_port_hint">留空使用預設值（5555）</string>
-    <string name="settings_language">語言</string>
-    <string name="settings_translation_contributors">翻譯貢獻者</string>
-    <string name="settings_translation">參與翻譯</string>
-    <string name="settings_translation_summary">協助我們將 %s 翻譯至您的語言</string>
     <string name="settings_user_interface">外觀</string>
-    <string name="settings_black_night_theme">黑色夜間主題</string>
-    <string name="settings_black_night_theme_summary">夜間模式啟用時使用純黑色主題</string>
     <string name="settings_support">支援</string>
-    <string name="settings_help">幫助</string>
-    <string name="settings_report_bug">回報錯誤</string>
-    <string name="settings_advanced">進階</string>
-    <string name="settings_legacy_pairing">傳統配對</string>
-    <string name="settings_legacy_pairing_summary">請在對話框中輸入配對代碼，而非通知</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">首先，請執行以下操作：</string>
-    <string name="bug_report_dialog_update">請檢查您是否使用了^1。</string>
-    <string name="bug_report_dialog_link_update">最新版本</string>
-    <string name="bug_report_dialog_wiki">請閱讀^1並按照所有相關的故障排除步驟進行操作。</string>
-    <string name="bug_report_dialog_link_wiki">維基百科</string>
-    <string name="bug_report_dialog_issues">搜尋所有^1，看看你的錯誤是否已經被報告過。</string>
-    <string name="bug_report_dialog_link_issues">現有問題</string>
-    <string name="bug_report_dialog_method">如果您有帳號，請在^1上提交問題。</string>
-    <string name="bug_report_dialog_method_2">或者，您也可以發送電子郵件。</string>
-    <string name="bug_report_dialog_button_email">電子郵件</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">端口必須介於1到65535之間</string>
     <string name="snackbar_battery_optimization_home">開機時啟動與看門狗功能必須關閉電池最佳化。</string>
     <string name="snackbar_battery_optimization_settings">請關閉電池最佳化以使用此功能。</string>
     <string name="snackbar_action_fix">修正</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">找不到電子郵件應用程式</string>
     <string name="toast_shizuku_already_starting">Porter 已在背景啟動了</string>
     <string name="toast_accessibility_tv_only">此服務僅支援電視裝置</string>
     <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">主題</string>
-    <string name="dark_theme_off">始終使用淺色主題</string>
-    <string name="dark_theme_on">始終使用深色主題</string>
     <string name="follow_system">跟隨系統</string>
-    <!-- About -->
-    <string name="action_about">關於</string>
-    <string name="about_dialog_button_close">關閉</string>
-    <string name="about_view_source_code"><![CDATA[在 %s 檢視原始碼]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">停止 Porter</string>
-    <string name="dialog_stop_message">Porter 服務將被停止。</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">服務啟動狀態</string>
-    <string name="notification_service_starting">Porter 服務正在啟動…</string>
-    <string name="notification_service_start_failed">啟動 Porter 服務時失敗。</string>
-    <string name="notification_service_start_no_root">無法要求 Root 權限。</string>
-    <string name="notification_working">正在處理…</string>
     <string name="notification_channel_adb_pairing">無線偵錯配對</string>
     <string name="notification_adb_pairing_input_paring_code">輸入配對碼</string>
     <string name="notification_adb_pairing_searching_for_service_title">正在尋找配對服務</string>
@@ -203,7 +143,6 @@
     <string name="wadb_permission_error_notification_title">權限錯誤</string>
     <string name="wadb_permission_error_notification_content">Porter
         需要WRITE_SECURE_SETTINGS才能於開機時啟動。點擊了解如何授予此權限。</string>
-    <string name="wadb_notification_channel">ADB 自動啟動服務</string>
     <!-- Watchdog -->
     <string name="watchdog_running">看門狗正在執行</string>
     <string name="watchdog_turn_off">關閉</string>

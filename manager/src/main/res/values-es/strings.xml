@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s se está ejecutando</string>
     <string name="home_status_service_not_running">%1$s no se está ejecutando</string>
-    <string name="home_status_service_version">Versión %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Versión %2$s, %1$s<br>Inicie nuevamente para actualizar a la versión %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Inicie conectándose a una computadora]]></string>
     <string name="home_adb_description"><![CDATA[Para dispositivos sin acceso root, se necesita ADB para ejecutar Porter (requiere conexión a una computadora). Este proceso debe repetirse cada vez que el dispositivo sea reiniciado.Favor <b><a href="%1$s">leer la guía</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Leer ayuda</string>
     <string name="home_adb_button_view_command">Ver comando</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Existen  otras consideraciones, por favor confirme que ha leído antes la ayuda.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Copiar</string>
     <string name="home_adb_dialog_view_command_button_send">Enviar</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Iniciar vía Depuración inalámbrica]]></string>
@@ -31,7 +26,6 @@
         deshabilitar y volver a habilitar \"Depuración inalámbrica\" si es que no deja de seguir en
         búsqueda.</string>
     <string name="dialog_adb_port">Puerto</string>
-    <string name="dialog_adb_invalid_port">Puerto es un número del 1 al 65535.</string>
     <string name="adb_pairing">Emparejar</string>
     <string name="dialog_adb_pairing_title">Emparejar con dispositivo</string>
     <string name="dialog_adb_pairing_discovery">Buscando servicio de emparejamiento</string>
@@ -46,11 +40,6 @@
         conexión a una computadora es requerida.</string>
     <string name="dialog_usb_debugging_not_enabled">La depuración USB no está
         habilitada.\nHabilítela en \"Opciones de desarrollador\".</string>
-    <string name="dialog_adb_pairing_message">Comience el emparejamiento realizando los siguientes
-        pasos:\n- Vaya a \"Opciones de desarrollador\"\n- Habilite \"Depuración USB\" y \"Depuración
-        inalámbrica\"\n- Toque el lado izquierdo de \"Depuración inalámbrica\"\n- Toque \"Emparejar
-        dispositivo con código de emparejamiento\"\n- Ingrese el código de emparejamiento en la
-        notificación</string>
     <string name="dialog_adb_pairing_accessibility_permission">En Android 14, instalar o actualizar
         Porter con el instalador de paquetes revoca el permiso ^1, que es necesario para habilitar
         el servicio de accesibilidad para el emparejamiento.\n\nPara otorgarlo, ejecute el siguiente
@@ -76,7 +65,6 @@
     <string name="enable">Permitir</string>
     <string name="development_settings">Opciones para desarrolladores</string>
     <string name="notification_settings">Opciones de notificación</string>
-    <string name="adb_pairing_tutorial_title">Vincular Porter con tu dispositivo</string>
     <string name="adb_pairing_tutorial_content_notification">Una notificación de Porter te ayudará
         a completar la vinculación.</string>
     <string name="adb_pairing_tutorial_content_steps">Vaya a “Opciones de desarrollador”, luego
@@ -102,7 +90,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Iniciar (dispositivo rooteado)]]></string>
     <string name="home_root_button_start">Iniciar</string>
-    <string name="home_root_button_restart">Reiniciar</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Gestión de aplicaciones</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -114,21 +101,6 @@
         permiso Porter se mostrarán aquí.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Controla Porter con aplicaciones de automatización</string>
-    <string name="home_automation_description">Aplicaciones como Tasker y MacroDroid pueden enviar
-        intenciones para iniciar/detener Porter automáticamente.</string>
-    <string name="home_automation_button_view_intents">Ver intenciones</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Guía para desarrolladores</string>
-    <string name="home_learn_more_description">Aprende a desarrollar con Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Necesitas dar un paso más</string>
-    <string name="home_adb_is_limited_description">El fabricante de su dispositivo ha restringido
-        los permisos ADB y las aplicaciones que usan Porter no funcionarán correctamente.
-        \n
-        \nUsualmente, estas limitaciones pueden deshacerse con algunos ajustes en \"Opciones para
-        desarrolladores\". Por favor lea la ayuda para mas detalles sobre como hacerlo.
-        \n
-        \nTal vez necesite reiniciar Porter para que la operación surta efecto.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">El permiso de ADB es limitado</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Es muy posible que el fabricante de su dispositivo haya limitado el permiso de ADB.<p>Puede que encuentre una solución para su sistema en <b><a href="%1$s">este documento</a></b>.]]></string>
@@ -157,13 +129,11 @@
     <string name="rish_description"><![CDATA[Con %1$s, puedes ejecutar comandos de shell en cualquier aplicación de terminal.<p>Toca para obtener más información sobre cómo usarlo.]]></string>
     <!-- Settings -->
     <string name="settings_title">Configuración</string>
-    <string name="settings_behavior">Comportamiento</string>
     <string name="settings_start_on_boot">Iniciar al arrancar</string>
     <string name="settings_start_on_boot_summary">Requiere Android 11 o superior, o acceso root.</string>
     <string name="settings_start_on_boot_bug">Debido a un error en Android 11-12, la depuración
         inalámbrica no recuerda ninguna red autorizada.\n\nTendrás que reautorizar la red en cada
         reinicio pulsando \"Permitir\" cuando aparezca el cuadro de autorización.</string>
-    <string name="settings_use_system_color">Usar el color del tema del sistema</string>
     <string name="settings_watchdog">Perro guardián</string>
     <string name="settings_watchdog_summary">Reiniciar automáticamente Porter si falla</string>
     <string name="settings_restart_dialog_title">Reinicio necesario</string>
@@ -171,35 +141,8 @@
         esta configuración.</string>
     <string name="settings_tcp_port">Puerto TCP</string>
     <string name="settings_tcp_port_default">Predeterminado (5555)</string>
-    <string name="settings_tcp_port_hint">Déjelo en blanco para usar el valor predeterminado (5555)</string>
-    <string name="settings_language">Idioma</string>
-    <string name="settings_translation_contributors">Colaboradores de la traducción</string>
-    <string name="settings_translation">Participar en la traducción</string>
-    <string name="settings_translation_summary">Ayúdanos a traducir %s a tu idioma</string>
     <string name="settings_user_interface">Apariencia</string>
-    <string name="settings_black_night_theme">Tema Noche cerrada</string>
-    <string name="settings_black_night_theme_summary">Use el tema Noche cerrada si el modo nocturno
-        está habilitado</string>
     <string name="settings_support">Apoyo</string>
-    <string name="settings_help">Ayuda</string>
-    <string name="settings_report_bug">Informar de un error</string>
-    <string name="settings_advanced">Avanzado</string>
-    <string name="settings_legacy_pairing">Emparejamiento heredado</string>
-    <string name="settings_legacy_pairing_summary">Introduzca el código de emparejamiento en un
-        cuadro de diálogo en lugar de una notificación</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Primero, haga lo siguiente:</string>
-    <string name="bug_report_dialog_update">Comprueba que estás utilizando ^1.</string>
-    <string name="bug_report_dialog_link_update">última versión</string>
-    <string name="bug_report_dialog_wiki">Lea el ^1 y siga todos los pasos de solución de problemas
-        relevantes.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Busque en todos los ^1 para ver si su error ya ha sido
-        informado.</string>
-    <string name="bug_report_dialog_link_issues">problemas existentes</string>
-    <string name="bug_report_dialog_method">Envíe un problema en ^1 si tiene una cuenta.</string>
-    <string name="bug_report_dialog_method_2">De lo contrario, puede enviar un correo electrónico.</string>
-    <string name="bug_report_dialog_button_email">Correo electrónico</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">El puerto debe estar entre 1 y 65535</string>
     <string name="snackbar_battery_optimization_home">La optimización de la batería debe estar
@@ -208,29 +151,13 @@
         para utilizar esta función.</string>
     <string name="snackbar_action_fix">Arreglar</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">No se encontró ninguna aplicación de correo electrónico</string>
     <string name="toast_shizuku_already_starting">Porter ya está empezando en segundo plano.</string>
     <string name="toast_accessibility_tv_only">Este servicio solo es compatible con dispositivos de
         televisión.</string>
     <string name="toast_pairing_timeout">El servicio de emparejamiento de Porter se agotó.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Tema</string>
-    <string name="dark_theme_off">Siempre ligero</string>
-    <string name="dark_theme_on">Siempre oscuro</string>
-    <!-- About -->
-    <string name="action_about">Acerca de</string>
-    <string name="about_dialog_button_close">Cerca</string>
-    <string name="about_view_source_code"><![CDATA[Ver código fuente en %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Detener Porter</string>
-    <string name="dialog_stop_message">El servicio Porter se detendrá.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Estado de inicio del servicio</string>
-    <string name="notification_service_starting">El servicio Porter está iniciandose…</string>
-    <string name="notification_service_start_failed">El inicio del servicio Porter a fallado.</string>
-    <string name="notification_service_start_no_root">Fallo al pedir permisos root.</string>
-    <string name="notification_working">En proceso…</string>
     <string name="notification_channel_adb_pairing">Emparejamiento de depuración inalámbrica</string>
     <string name="notification_adb_pairing_input_paring_code">Introducir el código de emparejamiento</string>
     <string name="notification_adb_pairing_searching_for_service_title">Buscando servicios de
@@ -263,7 +190,6 @@
     <string name="wadb_permission_error_notification_title">Error de permiso</string>
     <string name="wadb_permission_error_notification_content">Porter necesita WRITE_SECURE_SETTINGS
         para iniciarse al arrancar. Pulsa para saber cómo habilitarlo.</string>
-    <string name="wadb_notification_channel">Servicio de inicio automático de ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">El perro guardián está en marcha</string>
     <string name="watchdog_turn_off">Apaga</string>

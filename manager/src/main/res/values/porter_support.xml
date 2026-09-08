@@ -32,7 +32,6 @@
     <string name="porter_debug_consent">Recording may contain sensitive information such as app names, device details and actions performed through Porter. Logs stay on this device until you choose to share them.\n\nStart recording, reproduce the problem, then return here to stop. Recording pauses when Android closes Porter and resumes when it opens again, for up to 30 minutes.</string>
     <string name="porter_debug_short">This recording is very short. Have you reproduced the problem? You can cancel to keep recording.</string>
     <string name="porter_debug_stop_message">Save this recording? You can share it from Saved debug logs or attach it when contacting support.</string>
-    <string name="porter_debug_finished">Debug log saved</string>
     <string name="porter_debug_saved">Saved debug logs</string>
     <string name="porter_debug_storage">Keeps the five most recent saved recordings. Each recording is limited to 30 minutes and 8 MB of app logs, plus service diagnostics. Recordings are excluded from Android backups.</string>
     <string name="porter_debug_count">Saved recordings: %1$d</string>

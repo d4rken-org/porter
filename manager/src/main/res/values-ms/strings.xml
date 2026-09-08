@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s sedang berjalan</string>
     <string name="home_status_service_not_running">%1$s tidak berjalan</string>
-    <string name="home_status_service_version">Versi %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Versi %2$s, %1$s<br>Mula semula untuk mengemas kini kepada versi %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Mulakan dengan menyambung ke komputer]]></string>
     <string name="home_adb_description"><![CDATA[Untuk peranti tanpa akar, anda perlu menggunakan adb untuk memulakan Porter (memerlukan sambungan komputer). Proses ini perlu diulang setiap kali peranti dimulakan semula. Silakan <b><a href=\"%1$s\">baca bantuan</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Baca bantuan</string>
     <string name="home_adb_button_view_command">Lihat arahan</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Terdapat beberapa pertimbangan lain, sila sahkan bahawa anda telah membaca bantuan terlebih dahulu.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Salin</string>
     <string name="home_adb_dialog_view_command_button_send">Hantar</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Mulakan melalui penyahpepijatan wayarles]]></string>
@@ -28,7 +23,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Sila cuba lumpuhkan dan
         dayakan \"Penyahpepijatan wayarles\" jika ia terus mencari.</string>
     <string name="dialog_adb_port">Pelabuhan</string>
-    <string name="dialog_adb_invalid_port">Port ialah integer antara 1 hingga 65535.</string>
     <string name="adb_pairing">Berpasangan</string>
     <string name="dialog_adb_pairing_title">Pasangkan dengan peranti</string>
     <string name="dialog_adb_pairing_discovery">Mencari perkhidmatan berpasangan</string>
@@ -42,11 +36,6 @@
         adalah satu kemestian.</string>
     <string name="dialog_usb_debugging_not_enabled">Penyahpepijatan USB tidak didayakan.\nSila
         dayakannya dalam \"Pilihan Pembangun\".</string>
-    <string name="dialog_adb_pairing_message">Sila mulakan berpasangan dengan melakukan
-        langkah-langkah berikut:\n- Navigasi ke \"Pilihan Pemaju\"\n- Dayakan \"Penyahpepijatan
-        USB\" dan \"Penyahpepijatan tanpa wayar\"\n- Ketik sebelah kiri \"Penyahpepijatan tanpa
-        wayar\"\n- Ketik \"Pasangkan peranti dengan kod berpasangan\"\n- Masukkan kod gandingan
-        dalam pemberitahuan</string>
     <string name="dialog_adb_pairing_accessibility_permission">Pada Android 14, memasang/mengemas
         kini Porter dengan Package Installer akan membatalkan kebenaran ^1, yang diperlukan untuk
         mendayakan perkhidmatan kebolehcapaian bagi pemasangan.\n\nUntuk memberikannya, jalankan
@@ -73,7 +62,6 @@
     <string name="enable">Dayakan</string>
     <string name="development_settings">Pilihan pemaju</string>
     <string name="notification_settings">Pilihan pemberitahuan</string>
-    <string name="adb_pairing_tutorial_title">Gandingkan Porter dengan peranti anda</string>
     <string name="adb_pairing_tutorial_content_notification">Pemberitahuan daripada Porter akan
         membantu anda melengkapkan gandingan.</string>
     <string name="adb_pairing_tutorial_content_steps">Navigasi ke \"Pilihan Pembangun\", kemudian
@@ -99,7 +87,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Mula (untuk peranti berakar)]]></string>
     <string name="home_root_button_start">Mulakan</string>
-    <string name="home_root_button_restart">Mulakan semula</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Pengurusan aplikasi</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -110,19 +97,6 @@
         Porter akan dipaparkan di sini.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Kawal Porter dengan apl automasi</string>
-    <string name="home_automation_description">Apl seperti Tasker dan MacroDroid boleh menghantar
-        niat untuk memulakan/menghentikan Porter secara automatik.</string>
-    <string name="home_automation_button_view_intents">Lihat niat</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Panduan pembangun</string>
-    <string name="home_learn_more_description">Ketahui cara membangun dengan Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Anda perlu mengambil langkah tambahan</string>
-    <string name="home_adb_is_limited_description">Pengilang peranti anda telah mengehadkan
-        kebenaran adb dan apl yang menggunakan Porter tidak akan berfungsi dengan
-        betul.\n\nBiasanya, had ini boleh ditarik balik dengan melaraskan beberapa pilihan dalam
-        \"Pilihan pembangun\". Sila baca bantuan untuk mendapatkan butiran tentang cara melakukan
-        ini.\n\nAnda mungkin perlu memulakan semula Porter untuk operasi berkuat kuasa.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Kebenaran adb adalah terhad</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Kemungkinan besar pengeluar peranti anda mengehadkan kebenaran adb.<p>Mungkin terdapat penyelesaian untuk sistem anda dalam <b><a href=\"%1$s\">dokumen ini</a></b>.]]></string>
@@ -151,14 +125,12 @@
     <string name="rish_description"><![CDATA[Dengan %1$s, anda boleh menjalankan arahan shell dalam mana-mana apl terminal.<p>Ketik untuk mengetahui lebih lanjut tentang cara menggunakannya.]]></string>
     <!-- Settings -->
     <string name="settings_title">tetapan</string>
-    <string name="settings_behavior">Tingkah laku</string>
     <string name="settings_start_on_boot">Mulakan semasa but</string>
     <string name="settings_start_on_boot_summary">Memerlukan Android 11+ atau root</string>
     <string name="settings_start_on_boot_bug">Disebabkan oleh pepijat dalam Android 11-12,
         penyahpepijatan wayarles tidak mengingati mana-mana rangkaian yang dibenarkan.\n\nAnda perlu
         membenarkan semula rangkaian pada setiap but semula dengan mengetik \"Benarkan\" apabila
         dialog kebenaran muncul.</string>
-    <string name="settings_use_system_color">Gunakan warna tema sistem</string>
     <string name="settings_watchdog">Pengawas</string>
     <string name="settings_watchdog_summary">Mulakan semula Porter secara automatik jika ia ranap</string>
     <string name="settings_restart_dialog_title">Mulakan semula Diperlukan</string>
@@ -166,35 +138,8 @@
         tetapan ini.</string>
     <string name="settings_tcp_port">port TCP</string>
     <string name="settings_tcp_port_default">Lalai (5555)</string>
-    <string name="settings_tcp_port_hint">Biarkan kosong untuk menggunakan lalai (5555)</string>
-    <string name="settings_language">Bahasa</string>
-    <string name="settings_translation_contributors">Penyumbang terjemahan</string>
-    <string name="settings_translation">Mengambil bahagian dalam terjemahan</string>
-    <string name="settings_translation_summary">Bantu kami menterjemah %s ke dalam bahasa anda</string>
     <string name="settings_user_interface">Penampilan</string>
-    <string name="settings_black_night_theme">Tema malam hitam</string>
-    <string name="settings_black_night_theme_summary">Gunakan tema hitam tulen jika mod malam
-        didayakan</string>
     <string name="settings_support">Sokongan</string>
-    <string name="settings_help">Tolong</string>
-    <string name="settings_report_bug">Laporkan pepijat</string>
-    <string name="settings_advanced">Maju</string>
-    <string name="settings_legacy_pairing">Gandingan warisan</string>
-    <string name="settings_legacy_pairing_summary">Masukkan kod gandingan dalam dialog dan bukannya
-        pemberitahuan</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Pertama, sila lakukan perkara berikut:</string>
-    <string name="bug_report_dialog_update">Pastikan anda menggunakan ^1.</string>
-    <string name="bug_report_dialog_link_update">versi terkini</string>
-    <string name="bug_report_dialog_wiki">Baca ^1 dan ikuti semua langkah penyelesaian masalah yang
-        berkaitan.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Cari semua ^1 untuk melihat sama ada pepijat anda telah
-        dilaporkan.</string>
-    <string name="bug_report_dialog_link_issues">isu-isu sedia ada</string>
-    <string name="bug_report_dialog_method">Sila kemukakan isu pada ^1 jika anda mempunyai akaun.</string>
-    <string name="bug_report_dialog_method_2">Jika tidak, anda boleh menghantar e-mel.</string>
-    <string name="bug_report_dialog_button_email">E-mel</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Pelabuhan mestilah antara 1 dan 65535</string>
     <string name="snackbar_battery_optimization_home">Pengoptimuman bateri mesti dilumpuhkan untuk
@@ -203,28 +148,12 @@
         menggunakan ciri ini.</string>
     <string name="snackbar_action_fix">Betulkan</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Tiada apl e-mel ditemui</string>
     <string name="toast_shizuku_already_starting">Porter sudah bermula di latar belakang</string>
     <string name="toast_accessibility_tv_only">Perkhidmatan ini hanya disokong pada peranti TV.</string>
     <string name="toast_pairing_timeout">Perkhidmatan gandingan Porter tamat masa.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Tema</string>
-    <string name="dark_theme_off">Sentiasa ringan</string>
-    <string name="dark_theme_on">Sentiasa gelap</string>
-    <!-- About -->
-    <string name="action_about">Tentang</string>
-    <string name="about_dialog_button_close">tutup</string>
-    <string name="about_view_source_code"><![CDATA[Lihat kod sumber di %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Hentikan Porter</string>
-    <string name="dialog_stop_message">Perkhidmatan Porter akan dihentikan.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Status permulaan perkhidmatan</string>
-    <string name="notification_service_starting">Perkhidmatan Porter bermula…</string>
-    <string name="notification_service_start_failed">Mulakan perkhidmatan Porter gagal.</string>
-    <string name="notification_service_start_no_root">Gagal meminta kebenaran root.</string>
-    <string name="notification_working">Bekerja…</string>
     <string name="notification_channel_adb_pairing">Penyahpepijatan berpasangan tanpa wayar</string>
     <string name="notification_adb_pairing_input_paring_code">Masukkan kod berpasangan</string>
     <string name="notification_adb_pairing_searching_for_service_title">Mencari perkhidmatan
@@ -256,7 +185,6 @@
     <string name="wadb_permission_error_notification_title">Ralat Kebenaran</string>
     <string name="wadb_permission_error_notification_content">Porter memerlukan
         WRITE_SECURE_SETTINGS untuk bermula semasa but. Ketik untuk mengetahui cara memberikannya.</string>
-    <string name="wadb_notification_channel">Perkhidmatan automula ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Anjing pengawas sedang berjalan</string>
     <string name="watchdog_turn_off">Mati</string>

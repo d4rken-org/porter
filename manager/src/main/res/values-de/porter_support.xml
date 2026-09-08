@@ -32,7 +32,6 @@
     <string name="porter_debug_consent">Die Aufnahme kann sensible Informationen enthalten, etwa App-Namen, Gerätedaten und Aktionen, die über Porter ausgeführt werden. Protokolle bleiben auf diesem Gerät, bis du sie teilst.\n\nStarte die Aufnahme, reproduziere das Problem und kehre hierher zurück, um sie zu beenden. Wenn Android Porter schließt, pausiert die Aufnahme. Beim nächsten Öffnen wird sie fortgesetzt, insgesamt bis zu 30 Minuten.</string>
     <string name="porter_debug_short">Diese Aufnahme ist sehr kurz. Hast du das Problem reproduziert? Du kannst abbrechen, um weiter aufzunehmen.</string>
     <string name="porter_debug_stop_message">Diese Aufnahme speichern? Du kannst sie unter Gespeicherte Protokolle teilen oder bei einer Supportanfrage anhängen.</string>
-    <string name="porter_debug_finished">Diagnoseprotokoll gespeichert</string>
     <string name="porter_debug_saved">Gespeicherte Protokolle</string>
     <string name="porter_debug_storage">Die fünf neuesten gespeicherten Aufnahmen werden aufbewahrt. Jede Aufnahme ist auf 30 Minuten und 8 MB App-Protokolle sowie Dienstdiagnosen begrenzt. Aufnahmen werden nicht in Android-Sicherungen aufgenommen.</string>
     <string name="porter_debug_count">Gespeicherte Aufnahmen: %1$d</string>

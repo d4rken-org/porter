@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s กำลังทำงาน</string>
     <string name="home_status_service_not_running">%1$s ไม่ได้กำลังทำงาน</string>
-    <string name="home_status_service_version">เวอร์ชัน %2$s ผ่าน %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[เวอร์ชัน %2$s, %1$s<br>เริ่มใหม่อีกครั้งเพื่ออัปเดตเป็นเวอร์ชัน %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[เริ่มโดยเชื่อมต่อกับคอมพิวเตอร์]]></string>
     <string name="home_adb_description"><![CDATA[สำหรับอุปกรณ์ที่ไม่ได้ติดตั้งรูท จะต้องใช้ adb เพื่อเริ่ม Porter (จำเป็นต้องเชื่อมต่อกับคอมพิวเตอร์) กระบวนการนี้จะต้องทำทุกครั้งที่อุปกรณ์ปิดและเปิดใหม่ กรุณา<b><a href="%1$s">อ่านการช่วยเหลือ</a></b>]]></string>
-    <string name="home_adb_button_view_help">อ่านการช่วยเหลือ</string>
     <string name="home_adb_button_view_command">ดูคำสั่ง</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* มีข้อควรพิจารณาอื่น ๆ โปรดอ่านความช่วยเหลือให้เข้าใจก่อน]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">คัดลอก</string>
     <string name="home_adb_dialog_view_command_button_send">ส่ง</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[เริ่มผ่านการแก้ไขข้อบกพร่องผ่าน Wi-Fi]]></string>
@@ -30,7 +25,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">โปรดลองปิดและเปิดใช้งาน
         \"การแก้ไขข้อบกพร่องผ่าน Wi-Fi\" ใหม่ หากระบบยังคงค้นหาอยู่</string>
     <string name="dialog_adb_port">พอร์ต</string>
-    <string name="dialog_adb_invalid_port">พอร์ตคือเลขจำนวนเต็ม ค่าตั้งแต่ 1 ถึง 65535</string>
     <string name="adb_pairing">จับคู่</string>
     <string name="dialog_adb_pairing_title">จับคู่กับอุปกรณ์</string>
     <string name="dialog_adb_pairing_discovery">กำลังค้นหาบริการจับคู่</string>
@@ -44,10 +38,6 @@
         จำเป็นต้องมีการเชื่อมต่อกับคอมพิวเตอร์</string>
     <string name="dialog_usb_debugging_not_enabled">การดีบัก USB ไม่ได้เปิดใช้งาน\nโปรดเปิดใช้งานใน
         \"ตัวเลือกสำหรับนักพัฒนา\"</string>
-    <string name="dialog_adb_pairing_message">กรุณาเริ่มจับคู่โดยดำเนินการตามขั้นตอนต่อไปนี้:\n-
-        ไปที่ \"ตัวเลือกสำหรับนักพัฒนา\"\n- เปิดใช้งาน \"การแก้จุดบกพร่อง USB\" และ
-        \"การแก้จุดบกพร่องแบบไร้สาย\"\n- แตะด้านซ้ายของ \"การแก้จุดบกพร่องแบบไร้สาย\"\n- แตะ
-        \"จับคู่อุปกรณ์ด้วยรหัสจับคู่\"\n- ป้อนรหัสจับคู่ในข้อความแจ้งเตือน</string>
     <string name="dialog_adb_pairing_accessibility_permission">ใน Android 14 การติดตั้ง/อัปเดต
         Porter ด้วย Package Installer จะเพิกถอนสิทธิ์ ^1
         ซึ่งจำเป็นสำหรับการเปิดใช้งานบริการการเข้าถึงสำหรับการจับคู่\n\nหากต้องการให้สิทธิ์นั้น
@@ -70,7 +60,6 @@
     <string name="enable">เปิดใช้งาน</string>
     <string name="development_settings">ตัวเลือกสำหรับนักพัฒนาแอป</string>
     <string name="notification_settings">ตัวเลือกการแจ้งเตือน</string>
-    <string name="adb_pairing_tutorial_title">จับคู่ Porter กับอุปกรณ์</string>
     <string name="adb_pairing_tutorial_content_notification">การแจ้งเตือนจาก Porter
         จะช่วยให้เสร็จสิ้นกระบวนการจับคู่</string>
     <string name="adb_pairing_tutorial_content_steps">ไปที่ \"ตัวเลือกสำหรับนักพัฒนา\"
@@ -94,7 +83,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[เริ่ม (สำหรับอุปกรณ์ที่รูทแล้ว)]]></string>
     <string name="home_root_button_start">เริ่ม</string>
-    <string name="home_root_button_restart">เริ่มใหม่</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">การจัดการแอปพลิเคชัน</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -104,21 +92,6 @@
     <string name="home_app_management_empty">แอปที่ได้ร้องขอหรือประกาศการอนุญาต Porter จะแสดงที่นี่</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">ควบคุมชิซูกุด้วยแอปอัตโนมัติ</string>
-    <string name="home_automation_description">แอปเช่น Tasker และ MacroDroid
-        สามารถส่งอินเทนต์เพื่อเริ่ม/หยุด Porter ได้โดยอัตโนมัติ</string>
-    <string name="home_automation_button_view_intents">ดูความตั้งใจ</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">คู่มือนักพัฒนา</string>
-    <string name="home_learn_more_description">เรียนรู้การพัฒนาเพื่อใช้ร่วมกันกับ Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">คุณต้องทำขั้นตอนเพิ่มเติม</string>
-    <string name="home_adb_is_limited_description">ผู้ผลิตอุปกรณ์ของคุณ จำกัดการอนุญาต adb
-        ทำให้แอปที่ใช้ Porter จะไม่ทำงานอย่างถูกต้อง
-        \n
-        \nโดยปกติ ข้อจำกัดนี้สามารถจัดการได้โดยการปรับตัวเลือกใน \"ตัวเลือกสำหรับนักพัฒนาซอฟต์แวร์\"
-        โปรดอ่าน การช่วยเหลือสำหรับรายละเอียดวิธีการแก้ไข
-        \n
-        \nคุณอาจต้องรีสตาร์ท Porter เพื่อให้การดำเนินการมีผล</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">การอนุญาตของ adb นั้นจำกัด</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[เป็นไปได้สูงที่ผู้ผลิตอุปกรณ์ของคุณจะจำกัดการอนุญาตของ adb <p>อาจมีวิธีแก้ไขสำหรับอุปกรณ์ของคุณใน<b><a href="%1$s">เอกสารนี้</a></b>]]></string>
@@ -145,45 +118,19 @@
     <string name="rish_description"><![CDATA[ด้วย %1$sคุณสามารถรันคำสั่งเชลล์ในแอปพลิเคชันเทอร์มินัลใดก็ได้<p>แตะเพื่อเรียนรู้เพิ่มเติมเกี่ยวกับวิธีการใช้งาน]]></string>
     <!-- Settings -->
     <string name="settings_title">การตั้งค่า</string>
-    <string name="settings_behavior">พฤติกรรม</string>
     <string name="settings_start_on_boot">เริ่มต้นเมื่อบูตเครื่อง</string>
     <string name="settings_start_on_boot_summary">ต้องใช้ Android 11+ หรือรูท</string>
     <string name="settings_start_on_boot_bug">เนื่องจากข้อบกพร่องใน Android 11-12
         การดีบักแบบไร้สายจึงไม่จดจําเครือข่ายที่ได้รับอนุญาต\n\nคุณจะต้องอนุญาตเครือข่ายอีกครั้งในการรีบูตแต่ละครั้งโดยแตะ
         \"อนุญาต\" เมื่อกล่องโต้ตอบการอนุญาตปรากฏขึ้น</string>
-    <string name="settings_use_system_color">ใช้สีของธีมระบบ</string>
     <string name="settings_watchdog">สุนัขเฝ้าบ้าน</string>
     <string name="settings_watchdog_summary">รีสตาร์ทชิซูกุโดยอัตโนมัติหากเกิดการขัดข้อง</string>
     <string name="settings_restart_dialog_title">จำเป็นต้องรีสตาร์ท</string>
     <string name="settings_restart_dialog_message">Porter ต้องรีสตาร์ทเพื่อใช้การตั้งค่านี้</string>
     <string name="settings_tcp_port">พอร์ต TCP</string>
     <string name="settings_tcp_port_default">ค่าเริ่มต้น (5555)</string>
-    <string name="settings_tcp_port_hint">เว้นว่างไว้เพื่อใช้ค่าเริ่มต้น (5555)</string>
-    <string name="settings_language">ภาษา</string>
-    <string name="settings_translation_contributors">ผู้มีส่วนร่วมในการแปลภาษา</string>
-    <string name="settings_translation">มีส่วนร่วมในการแปล</string>
-    <string name="settings_translation_summary">ช่วยเราแปล %s เป็นภาษาของคุณ</string>
     <string name="settings_user_interface">ลักษณะ</string>
-    <string name="settings_black_night_theme">ธีมมืดมิด</string>
-    <string name="settings_black_night_theme_summary">ใช้ธีมสีดำสนิทหากธีมมืดถูกเปิดอยู่</string>
     <string name="settings_support">สนับสนุน</string>
-    <string name="settings_help">ช่วย</string>
-    <string name="settings_report_bug">รายงานจุดบกพร่อง</string>
-    <string name="settings_advanced">ขั้นสูง</string>
-    <string name="settings_legacy_pairing">การจับคู่แบบมรดก</string>
-    <string name="settings_legacy_pairing_summary">ป้อนรหัสการจับคู่ในกล่องโต้ตอบแทนการแจ้งเตือน</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">ขั้นแรก โปรดทำตามขั้นตอนต่อไปนี้:</string>
-    <string name="bug_report_dialog_update">ตรวจสอบให้แน่ใจว่าคุณใช้ ^1</string>
-    <string name="bug_report_dialog_link_update">เวอร์ชั่นล่าสุด</string>
-    <string name="bug_report_dialog_wiki">อ่าน ^1 และทำตามขั้นตอนการแก้ไขปัญหาที่เกี่ยวข้องทั้งหมด</string>
-    <string name="bug_report_dialog_link_wiki">วิกิ</string>
-    <string name="bug_report_dialog_issues">ค้นหาผ่าน ^1
-        ทั้งหมดเพื่อดูว่ามีรายงานข้อผิดพลาดของคุณแล้วหรือไม่</string>
-    <string name="bug_report_dialog_link_issues">ปัญหาที่มีอยู่</string>
-    <string name="bug_report_dialog_method">หากคุณมีบัญชี โปรดแจ้งปัญหาผ่านทาง ^1</string>
-    <string name="bug_report_dialog_method_2">หรืออีกวิธีหนึ่ง คุณสามารถส่งอีเมลได้</string>
-    <string name="bug_report_dialog_button_email">อีเมล</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">พอร์ตต้องอยู่ระหว่าง 1 ถึง 65535</string>
     <string name="snackbar_battery_optimization_home">
@@ -192,28 +139,12 @@
         โปรดปิดใช้งานการเพิ่มประสิทธิภาพแบตเตอรี่เพื่อใช้ฟีเจอร์นี้</string>
     <string name="snackbar_action_fix">แก้ไข</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">ไม่พบแอปอีเมล</string>
     <string name="toast_shizuku_already_starting">ชิซึกุเริ่มอยู่ด้านหลังแล้ว</string>
     <string name="toast_accessibility_tv_only">บริการนี้รองรับเฉพาะบนอุปกรณ์ทีวีเท่านั้น</string>
     <string name="toast_pairing_timeout">บริการจับคู่ Porter หมดเวลา</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">ธีม</string>
-    <string name="dark_theme_off">สว่างเสมอ</string>
-    <string name="dark_theme_on">มืดเสมอ</string>
-    <!-- About -->
-    <string name="action_about">เกี่ยวกับ</string>
-    <string name="about_dialog_button_close">ปิด</string>
-    <string name="about_view_source_code"><![CDATA[ดูซอร์สโค้ดใน %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">หยุดทำงาน Porter</string>
-    <string name="dialog_stop_message">บริการ Porter จะถูกหยุดทำงาน</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">สถานะการเริ่มบริการ</string>
-    <string name="notification_service_starting">บริการ Porter กำลังเริ่มต้น…</string>
-    <string name="notification_service_start_failed">ล้มเหลวในการเริ่มบริการ Porter</string>
-    <string name="notification_service_start_no_root">ล้มเหลวในการขอการอนุญาตรูท</string>
-    <string name="notification_working">กำลังทำงาน…</string>
     <string name="notification_channel_adb_pairing">การจับคู่การแก้ไขข้อบกพร่องผ่าน Wi-Fi</string>
     <string name="notification_adb_pairing_input_paring_code">ป้อนรหัสการจับคู่</string>
     <string name="notification_adb_pairing_searching_for_service_title">กำลังค้นหาบริการการจับคู่</string>
@@ -243,7 +174,6 @@
     <string name="wadb_permission_error_notification_title">ข้อผิดพลาดในการอนุญาต</string>
     <string name="wadb_permission_error_notification_content">ชิซูกุต้องใช้ WRITE_SECURE_SETTINGS
         เพื่อเริ่มต้นระบบเมื่อบูตเครื่อง แตะเพื่อดูวิธีให้สิทธิ์</string>
-    <string name="wadb_notification_channel">บริการเริ่มต้นอัตโนมัติของ ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">วอทช์ด็อกกำลังทำงาน</string>
     <string name="watchdog_turn_off">ปิด</string>

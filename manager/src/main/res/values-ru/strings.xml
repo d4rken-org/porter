@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s запущен</string>
     <string name="home_status_service_not_running">%1$s не запущен</string>
-    <string name="home_status_service_version">Версия %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Версия %2$s, %1$s<br>Запустите снова что бы обновиться до версии %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Запуск через соединение с ПК]]></string>
     <string name="home_adb_description"><![CDATA[Для устройств без root прав потребуется обращаться к adb для запуска Porter (не обойтись без соединения с компьютером). Этот процесс нужно повторять каждый раз, когда устройство перезагружается. Пожалуйста, <b><a href="%1$s">прочтите справку</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Читать справку</string>
     <string name="home_adb_button_view_command">Просмотр команды</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Есть и другие способы; сначала убедитесь, что сперва прочли справку.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Скопировать</string>
     <string name="home_adb_dialog_view_command_button_send">Отправить</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Запуск через отладку по Wi-Fi]]></string>
@@ -29,7 +24,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Попробуй выключить и снова
         включить \"Отладка по Wi-Fi\", если поиск продолжается.</string>
     <string name="dialog_adb_port">Порт</string>
-    <string name="dialog_adb_invalid_port">Порт – это целое число в диапазоне от 1 до 65535.</string>
     <string name="adb_pairing">Сопряжение</string>
     <string name="dialog_adb_pairing_title">Сопряжение с устройством</string>
     <string name="dialog_adb_pairing_discovery">Поиск службы соединения</string>
@@ -43,10 +37,6 @@
         компьютером.</string>
     <string name="dialog_usb_debugging_not_enabled">Отладка по USB не включена.\nВключите её в
         «Параметрах разработчика».</string>
-    <string name="dialog_adb_pairing_message">Пожалуйста, начните спаривать с выполнения следующих
-        шагов:\n- Перейти к разделу «Опции разработчика»\n- Включить «USB отладку» и «беспроводную
-        отладку»\n- Нажать на левую сторону раздела «Беспроводная отладка»\n- Нажмите «Сопарить
-        устройство с кодом сопряжения»\n- Введите код сопряжения в уведомление</string>
     <string name="dialog_adb_pairing_accessibility_permission">На Android 14 установка/обновление
         Porter с помощью Package Installer отменяет разрешение ^1, необходимое для включения службы
         специальных возможностей при сопряжении.\n\nЧтобы предоставить его, выполните следующую
@@ -72,7 +62,6 @@
     <string name="enable">Давать возможность</string>
     <string name="development_settings">Параметры разработчика</string>
     <string name="notification_settings">Настройки уведомлений</string>
-    <string name="adb_pairing_tutorial_title">Сопряжение Porter с вашим устройством</string>
     <string name="adb_pairing_tutorial_content_notification">Уведомление от Porter поможет
         завершить процедуру сопряжения.</string>
     <string name="adb_pairing_tutorial_content_steps">Перейдите в «Настройки разработчика», затем
@@ -97,7 +86,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Запуск (для устройств с root правами)]]></string>
     <string name="home_root_button_start">Запустить</string>
-    <string name="home_root_button_restart">Перезапустить</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Управление приложениями</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -111,21 +99,6 @@
         или заявили разрешение Porter.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Управляйте Сидзуку с помощью приложений автоматизации</string>
-    <string name="home_automation_description">Приложения, такие как Tasker и MacroDroid, могут
-        отправлять намерения на автоматический запуск/остановку Porter.</string>
-    <string name="home_automation_button_view_intents">Просмотр намерений</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Руководство разработчика</string>
-    <string name="home_learn_more_description">Узнайте, как начать разрабатывать с Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Нужен дополнительный шаг</string>
-    <string name="home_adb_is_limited_description">Производитель вашего устройства ограничил права
-        ADB, приложения использующие Porter будут работать не корректно.
-        \n
-        \nОбычно эти ограничения можно снять в настройках для разработчиков. Пожалуйста, прочитай
-        раздел помощи, чтобы узнать как это сделать.
-        \n
-        \nВозможно Вам понадобится перезапустить Porter для применения изменений.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Доступ к adb ограничен</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Возможно, что производитель вашего устройства ограничивает доступ к adb.<p>Решение для вашей системы может быть описано <b><a href="%1$s">здесь</a></b>.]]></string>
@@ -154,13 +127,11 @@
     <string name="rish_description"><![CDATA[С помощью %1$sвы можете запускать команды оболочки в любом терминальном приложении.<p>Нажмите, чтобы узнать больше об использовании.]]></string>
     <!-- Settings -->
     <string name="settings_title">Настройки</string>
-    <string name="settings_behavior">Поведение</string>
     <string name="settings_start_on_boot">Запуск при загрузке</string>
     <string name="settings_start_on_boot_summary">Требуется Android 11+ или root-доступ</string>
     <string name="settings_start_on_boot_bug">Из-за ошибки в Android 11-12 беспроводная отладка не
         запоминает ни одной авторизованной сети.\n\nПри каждой перезагрузке вам нужно будет повторно
         авторизировать сеть, нажав «Разрешить» при появлении диалога авторизации.</string>
-    <string name="settings_use_system_color">Палитра цветов из системы</string>
     <string name="settings_watchdog">Сторожевой пес</string>
     <string name="settings_watchdog_summary">Автоматически перезапускать Porter в случае сбоя</string>
     <string name="settings_restart_dialog_title">Требуется перезагрузка</string>
@@ -168,38 +139,8 @@
         сеттинг.</string>
     <string name="settings_tcp_port">TCP-порт</string>
     <string name="settings_tcp_port_default">По умолчанию (5555)</string>
-    <string name="settings_tcp_port_hint">Оставьте поле пустым, чтобы использовать значение по
-        умолчанию (5555)</string>
-    <string name="settings_language">Язык</string>
-    <string name="settings_translation_contributors">Авторы перевода</string>
-    <string name="settings_translation">Участвуйте в переводе</string>
-    <string name="settings_translation_summary">Помогите перевести %s на ваш язык</string>
     <string name="settings_user_interface">Внешний вид</string>
-    <string name="settings_black_night_theme">Черная тема</string>
-    <string name="settings_black_night_theme_summary">Глубокий черный цвет фона при работе темной
-        темы</string>
     <string name="settings_support">Поддерживать</string>
-    <string name="settings_help">Помощь</string>
-    <string name="settings_report_bug">Сообщить об ошибке</string>
-    <string name="settings_advanced">Передовой</string>
-    <string name="settings_legacy_pairing">Устаревшее сопряжение</string>
-    <string name="settings_legacy_pairing_summary">Введите код сопряжения в диалоговом окне вместо
-        уведомления.</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Для начала выполните следующие действия:</string>
-    <string name="bug_report_dialog_update">Убедитесь, что вы используете символ ^1.</string>
-    <string name="bug_report_dialog_link_update">последняя версия</string>
-    <string name="bug_report_dialog_wiki">Прочитайте инструкцию ^1 и выполните все соответствующие
-        шаги по устранению неполадок.</string>
-    <string name="bug_report_dialog_link_wiki">вики</string>
-    <string name="bug_report_dialog_issues">Просмотрите все сообщения об ошибке (^1), чтобы узнать,
-        не было ли уже сообщено о вашей ошибке.</string>
-    <string name="bug_report_dialog_link_issues">существующие проблемы</string>
-    <string name="bug_report_dialog_method">Пожалуйста, отправьте сообщение об ошибке на странице
-        ^1, если у вас есть учетная запись.</string>
-    <string name="bug_report_dialog_method_2">В противном случае вы можете отправить электронное
-        письмо.</string>
-    <string name="bug_report_dialog_button_email">Электронная почта</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Порт должен быть от 1 до 65535.</string>
     <string name="snackbar_battery_optimization_home">Для корректной работы функции оптимизации
@@ -208,29 +149,13 @@
         оптимизацию расхода заряда батареи.</string>
     <string name="snackbar_action_fix">Исправить</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Приложение электронной почты не найдено</string>
     <string name="toast_shizuku_already_starting">Сидзуку уже запускается в фоновом режиме.</string>
     <string name="toast_accessibility_tv_only">Эта услуга поддерживается только на телевизионных
         устройствах.</string>
     <string name="toast_pairing_timeout">Сервис пары Сидзуку истёк.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Тема</string>
-    <string name="dark_theme_off">Всегда светло</string>
-    <string name="dark_theme_on">Всегда темно</string>
-    <!-- About -->
-    <string name="action_about">О приложении</string>
-    <string name="about_dialog_button_close">Закрывать</string>
-    <string name="about_view_source_code"><![CDATA[Исходный код доступен на %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Остановить Porter</string>
-    <string name="dialog_stop_message">Служба Porter будет остановлена.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Состояние работы службы</string>
-    <string name="notification_service_starting">Служба Porter запускается…</string>
-    <string name="notification_service_start_failed">Не удалось запустить службу Porter.</string>
-    <string name="notification_service_start_no_root">Не удалось запросить root права.</string>
-    <string name="notification_working">Работает…</string>
     <string name="notification_channel_adb_pairing">Сопряжение с отладкой по Wi-Fi</string>
     <string name="notification_adb_pairing_input_paring_code">Введите код подключения</string>
     <string name="notification_adb_pairing_searching_for_service_title">Ожидание службы сопряжения</string>
@@ -260,7 +185,6 @@
     <string name="wadb_permission_error_notification_title">Ошибка разрешения</string>
     <string name="wadb_permission_error_notification_content">Для запуска Porter при загрузке
         требуется разрешение WRITE_SECURE_SETTINGS. Нажмите, чтобы узнать, как его предоставить.</string>
-    <string name="wadb_notification_channel">Служба автоматического запуска ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog работает</string>
     <string name="watchdog_turn_off">Отключить</string>

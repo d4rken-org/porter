@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s is actief</string>
     <string name="home_status_service_not_running">%1$s is niet actief</string>
-    <string name="home_status_service_version">Versie %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Versie %2$s, %1$s<br>Start opnieuw om te updaten naar versie %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Begin door te verbinden met een computer]]></string>
     <string name="home_adb_description"><![CDATA[Voor apparaten zonder root moet je adb gebruiken om Porter te starten (vereist computerverbinding). Dit proces moet elke keer worden herhaald wanneer het apparaat wordt herstart. Lees alsjeblieft <b><a href=\"%1$s\">de hulp</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Hulp lezen</string>
     <string name="home_adb_button_view_command">Commando bekijken</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Er zijn nog enkele andere overwegingen, bevestig alstublieft dat u de hulp eerst heeft gelezen.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Kopiëren</string>
     <string name="home_adb_dialog_view_command_button_send">Verzenden</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Starten via draadloze foutopsporing]]></string>
@@ -28,7 +23,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Probeer alsjeblieft
         \"Draadloze foutopsporing\" uit te schakelen en in te schakelen als het blijft zoeken.</string>
     <string name="dialog_adb_port">Poort</string>
-    <string name="dialog_adb_invalid_port">Poort is een geheel getal dat varieert van 1 tot 65535.</string>
     <string name="adb_pairing">Koppelen</string>
     <string name="dialog_adb_pairing_title">Koppelen met apparaat</string>
     <string name="dialog_adb_pairing_discovery">Zoeken naar koppelingsservice</string>
@@ -42,10 +36,6 @@
         foutopsporing in te schakelen.</string>
     <string name="dialog_usb_debugging_not_enabled">USB-foutopsporing is niet ingeschakeld.\nSchakel
         het alsjeblieft in via \"Ontwikkelaarsopties\".</string>
-    <string name="dialog_adb_pairing_message">Begin met koppelen door de volgende stappen uit te
-        voeren:\n- Navigeer naar \"Ontwikkelaarsopties\"\n- Schakel \"USB-foutopsporing\" en
-        \"Draadloze foutopsporing\" in\n- Klik op de linkerkant van \"Draadloze foutopsporing\"\n-
-        Tik op \"Apparaat koppelen met koppelingscode\"\n- Voer de koppelingscode in de melding in</string>
     <string name="dialog_adb_pairing_accessibility_permission">Op Android 14 wordt de ^1-machtiging
         ingetrokken wanneer Porter wordt geïnstalleerd/bijgewerkt met de pakketinstallateur. Deze
         toestemming is nodig om de toegankelijkheidsservice voor het koppelen in te schakelen.\n\nOm
@@ -72,7 +62,6 @@
     <string name="enable">Inschakelen</string>
     <string name="development_settings">Ontwikkelaarsopties</string>
     <string name="notification_settings">Meldingsopties</string>
-    <string name="adb_pairing_tutorial_title">Koppel Porter met je apparaat</string>
     <string name="adb_pairing_tutorial_content_notification">Een melding van Porter zal je helpen
         om de koppeling te voltooien.</string>
     <string name="adb_pairing_tutorial_content_steps">Ga naar \'Ontwikkelaarsopties\' en schakel
@@ -97,7 +86,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Starten (voor geroote apparaten)]]></string>
     <string name="home_root_button_start">Starten</string>
-    <string name="home_root_button_restart">Herstarten</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Applicatiebeheer</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -109,19 +97,6 @@
         verklaard, zullen hier weergegeven worden.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Bestuur Porter met automatiseringsapps</string>
-    <string name="home_automation_description">Apps zoals Tasker en MacroDroid kunnen intenties
-        verzenden om Porter automatisch te starten/stoppen.</string>
-    <string name="home_automation_button_view_intents">Bekijk intenties</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Ontwikkelaarsgids</string>
-    <string name="home_learn_more_description">Leer hoe je ontwikkelt met Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Je moet een extra stap nemen</string>
-    <string name="home_adb_is_limited_description">De fabrikant van je apparaat heeft ADB-rechten
-        beperkt en apps die Porter gebruiken zullen niet goed werken.\n\nMeestal kan deze beperking
-        worden opgeheven door enkele opties in \"Ontwikkelaarsopties\" aan te passen. Lees de hulp
-        voor details over hoe je dit kunt doen.\n\nJe moet Porter mogelijk opnieuw starten voordat
-        de wijziging effect neemt.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">De toestemming voor adb is beperkt</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Het is zeer goed mogelijk dat de fabrikant van je apparaat de toestemming van adb beperkt.<p>Er kan een oplossing voor jouw systeem zijn in <b><a href=\"%1$s\">dit document</a></b>.]]></string>
@@ -149,14 +124,12 @@
     <string name="rish_description"><![CDATA[Met %1$s kun je shell-opdrachten uitvoeren in elke terminal-app.<p>Klik om meer te weten te komen over het gebruik ervan.]]></string>
     <!-- Settings -->
     <string name="settings_title">Instellingen</string>
-    <string name="settings_behavior">Gedrag</string>
     <string name="settings_start_on_boot">Starten bij het opstarten</string>
     <string name="settings_start_on_boot_summary">Vereist Android 11+ of root</string>
     <string name="settings_start_on_boot_bug">Dankzij een bug in Android 11-12 onthoudt draadloos
         foutopsporing geen geautoriseerde netwerken.\n\nU moet het netwerk bij elke herstart opnieuw
         autoriseren door op \"Toestaan\" te klikken wanneer het autorisatiedialoogvenster
         verschijnt.</string>
-    <string name="settings_use_system_color">Gebruik systeemthemakleur</string>
     <string name="settings_watchdog">Bewaker</string>
     <string name="settings_watchdog_summary">Porter automatisch opnieuw opstarten als het vastloopt</string>
     <string name="settings_restart_dialog_title">Opnieuw opstarten vereist</string>
@@ -164,36 +137,8 @@
         instelling toe te passen.</string>
     <string name="settings_tcp_port">TCP-poort</string>
     <string name="settings_tcp_port_default">Standaard (5555)</string>
-    <string name="settings_tcp_port_hint">Laat leeg om de standaard (5555) te gebruiken</string>
-    <string name="settings_language">Taal</string>
-    <string name="settings_translation_contributors">Vertaalbijdragers</string>
-    <string name="settings_translation">Deelnemen aan vertaling</string>
-    <string name="settings_translation_summary">Help ons %s te vertalen in uw taal</string>
     <string name="settings_user_interface">Uiterlijk</string>
-    <string name="settings_black_night_theme">Puur zwarte thema</string>
-    <string name="settings_black_night_theme_summary">Gebruik het puur zwarte thema als de
-        nachtmodus is ingeschakeld</string>
     <string name="settings_support">Ondersteuning</string>
-    <string name="settings_help">Hulp</string>
-    <string name="settings_report_bug">Meld een bug</string>
-    <string name="settings_advanced">Geavanceerd</string>
-    <string name="settings_legacy_pairing">Oude koppeling</string>
-    <string name="settings_legacy_pairing_summary">Voer de koppelcode in via een dialoogvenster in
-        plaats van via een melding</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Doe allereerst het volgende:</string>
-    <string name="bug_report_dialog_update">Controleer of je de ^1 gebruikt.</string>
-    <string name="bug_report_dialog_link_update">nieuwste versie</string>
-    <string name="bug_report_dialog_wiki">Lees de ^1 en volg alle relevante stappen voor
-        probleemoplossing.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Doorzoek alle ^1 meldingen om te zien of jouw bug al is
-        gemeld.</string>
-    <string name="bug_report_dialog_link_issues">bestaande problemen</string>
-    <string name="bug_report_dialog_method">Als je een account hebt, kun je een probleem melden op
-        ^1.</string>
-    <string name="bug_report_dialog_method_2">Anders kunt u een e-mail sturen.</string>
-    <string name="bug_report_dialog_button_email">E-mail</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">De poort moet tussen 1 en 65535 liggen</string>
     <string name="snackbar_battery_optimization_home">Batterijoptimalisatie moet uitgeschakeld zijn
@@ -202,31 +147,14 @@
         uit om deze functie te gebruiken.</string>
     <string name="snackbar_action_fix">Repareren</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Geen e-mailapp gevonden</string>
     <string name="toast_shizuku_already_starting">Porter begint al op de achtergrond</string>
     <string name="toast_accessibility_tv_only">Deze service wordt alleen ondersteund op
         tv-apparaten.</string>
     <string name="toast_pairing_timeout">Er is een time-out opgetreden bij de
         Porter-koppelingsservice.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Thema</string>
-    <string name="dark_theme_off">Altijd licht</string>
-    <string name="dark_theme_on">Altijd donker</string>
-    <!-- About -->
-    <string name="action_about">Over</string>
-    <string name="about_dialog_button_close">Sluiten</string>
-    <string name="about_view_source_code"><![CDATA[Bekijk de broncode op %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Stop Porter</string>
-    <string name="dialog_stop_message">De Porter-service zal stopgezet worden.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Startstatus van de service</string>
-    <string name="notification_service_starting">De Porter-service is aan het starten…</string>
-    <string name="notification_service_start_failed">Start Porter-service faalde.</string>
-    <string name="notification_service_start_no_root">Niet geslaagd om root-toestemming aan te
-        vragen.</string>
-    <string name="notification_working">Werkend…</string>
     <string name="notification_channel_adb_pairing">Draadloos debugging-koppeling</string>
     <string name="notification_adb_pairing_input_paring_code">Voer de koppelingscode in</string>
     <string name="notification_adb_pairing_searching_for_service_title">Zoeken naar koppelingsdienst</string>
@@ -256,7 +184,6 @@
     <string name="wadb_permission_error_notification_title">Toestemmingsfout</string>
     <string name="wadb_permission_error_notification_content">Porter heeft WRITE_SECURE_SETTINGS
         nodig om bij het opstarten te starten. Klik om te leren hoe je het kunt toestaan.</string>
-    <string name="wadb_notification_channel">ADB automatische start service</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog loopt</string>
     <string name="watchdog_turn_off">Uitschakelen</string>

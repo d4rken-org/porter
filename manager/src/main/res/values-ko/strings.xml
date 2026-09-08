@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s가 실행 중입니다</string>
     <string name="home_status_service_not_running">%1$s가 실행 중이 아닙니다</string>
-    <string name="home_status_service_version">%1$s, 버전 %2$s</string>
-    <string name="home_status_service_version_update"><![CDATA[%1$s, 버전 %2$s<br>다시 시작하여 버전 %3$s로 업데이트]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[컴퓨터에 연결하여 시작]]></string>
     <string name="home_adb_description"><![CDATA[루링 없이 Shizuku를 시작하기 위해 adb가 필요합니다. (컴퓨터 연결 필수) 이 작업은 다시 시작 시 마다 필요로 합니다. 자세한 정보는 <b><a href="%1$s">도움말</a></b>을 확인하세요.]]></string>
-    <string name="home_adb_button_view_help">도움말 읽기</string>
     <string name="home_adb_button_view_command">명령어 보기</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* 몇 가지 다른 참고 사항이 있으므로, 도움말을 먼저 확인하세요.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">복사</string>
     <string name="home_adb_dialog_view_command_button_send">보내기</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[무선 디버깅으로 시작]]></string>
@@ -28,7 +23,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">\"무선 디버깅\"이 검색중으로 유지된다면
         비활성화했다가 다시 활성화해 보세요.</string>
     <string name="dialog_adb_port">포트 번호</string>
-    <string name="dialog_adb_invalid_port">포트 번호는 1에서 65535 사이의 정수입니다.</string>
     <string name="adb_pairing">페어링</string>
     <string name="dialog_adb_pairing_title">기기와 페어링</string>
     <string name="dialog_adb_pairing_discovery">페어링 서비스 검색 중</string>
@@ -39,9 +33,6 @@
     <string name="dialog_wireless_adb_not_enabled">무선 디버깅을 사용하고 있지 않습니다.
         \n안드로이드 11 이전은 무선 디버깅을 사용하기 위해서 컴퓨터 연결을 필수로 해야 합니다.</string>
     <string name="dialog_usb_debugging_not_enabled">USB 디버깅이 활성화되어 있지 않습니다.\n\"개발자 옵션\"에서 활성화해 주세요.</string>
-    <string name="dialog_adb_pairing_message">다음 단계를 수행하여 페어링을 시작하세요.\n- \"개발자 옵션\"으로 이동합니다.\n-
-        \"USB 디버깅\" 및 \"무선 디버깅\"을 활성화합니다.\n- \"무선 디버깅\"의 왼쪽을 탭합니다.\n- \"페어링 코드로 장치 페어링\"을 탭합니다.\n-
-        알림에 페어링 코드를 입력합니다.</string>
     <string name="dialog_adb_pairing_accessibility_permission">Android 14에서 패키지 설치 관리자를 사용하여
         Shizuku를 설치/업데이트하면 페어링을 위한 접근성 서비스를 활성화하는 데 필요한 ^1 권한이 취소됩니다.\n\n이 권한을 부여하려면 다음 ADB 명령을
         실행하세요.\n\n^2\n\n명령을 실행한 후 페어링 프로세스를 계속 진행할 수 있습니다.\n\n참고: ADB를 사용하여 Shizuku를 설치/업데이트하면 이 문제를
@@ -60,7 +51,6 @@
     <string name="enable">할 수 있게 하다</string>
     <string name="development_settings">개발자 옵션</string>
     <string name="notification_settings">알림 옵션</string>
-    <string name="adb_pairing_tutorial_title">기기와 Porter 페어링</string>
     <string name="adb_pairing_tutorial_content_notification">Shizuku의 알림이 페어링을 완료하는 데 도움이 될 수도 있습니다.</string>
     <string name="adb_pairing_tutorial_content_steps">\"개발자 옵션\"으로 이동한 다음 \"USB 디버깅\"과 \"무선 디버깅\"을
         활성화합니다.</string>
@@ -78,7 +68,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[시작 (루팅된 기기용)]]></string>
     <string name="home_root_button_start">시작</string>
-    <string name="home_root_button_restart">재시작</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">어플리케이션 관리</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -88,20 +77,6 @@
     <string name="home_app_management_empty">Porter 권한을 요청하거나 선언한 앱이 여기에 표시됩니다.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">자동화 앱으로 Porter 제어</string>
-    <string name="home_automation_description">Tasker 및 MacroDroid와 같은 앱은 Shizuku를 자동으로 시작/중지하는 인텐트를
-        보낼 수 있습니다.</string>
-    <string name="home_automation_button_view_intents">의도 보기</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">개발자 가이드</string>
-    <string name="home_learn_more_description">Shizuku로 개발하는 방법 알아보기</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">추가 단계를 진행해야 합니다</string>
-    <string name="home_adb_is_limited_description">디바이스 제조업체에서 ADB 권한을 제한하여 Shizuku를 사용하는 앱이 제대로
-        작동하지 않습니다.
-        \n
-        \n일반적으로 \'개발자 옵션\'에서 일부 옵션을 조정하여 이 제한을 해제할 수 있습니다. 자세한 방법은 도움말을 참조하세요.
-        \n
-        \n작업을 적용하려면 Shizuku를 다시 시작해야 할 수도 있습니다.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB의 권한이 제한됨</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[기기 제조사에서 ADB의 권한을 제한하고 있을 가능성이 높습니다.<p><b><a href="%1$s">이 문서</a></b>에 시스템에 대한 해결 방안이 있을 수 있습니다.]]></string>
@@ -126,71 +101,30 @@
     <string name="rish_description"><![CDATA[%1$s를 사용하면 모든 터미널 앱에서 셸 명령을 실행할 수 있습니다.<p>탭하여 사용 방법에 대한 자세한 내용을 알아보세요.]]></string>
     <!-- Settings -->
     <string name="settings_title">설정</string>
-    <string name="settings_behavior">행동</string>
     <string name="settings_start_on_boot">부팅 시 시작</string>
     <string name="settings_start_on_boot_summary">Android 11 이상 또는 루트가 필요합니다.</string>
     <string name="settings_start_on_boot_bug">Android 11-12의 버그로 인해 무선 디버깅은 권한이 부여된 네트워크를 기억하지
         못합니다.\n\n재부팅할 때마다 인증 대화상자가 뜰 때 \"허용\" 버튼을 눌러 네트워크를 재승인해야 합니다.</string>
-    <string name="settings_use_system_color">시스템 테마 색상 사용</string>
     <string name="settings_watchdog">지키는 개</string>
     <string name="settings_watchdog_summary">Shizuku가 충돌하면 자동으로 다시 시작합니다.</string>
     <string name="settings_restart_dialog_title">재시작 필요</string>
     <string name="settings_restart_dialog_message">시즈쿠는 이 설정을 적용하려면 다시 시작해야 합니다.</string>
     <string name="settings_tcp_port">TCP 포트</string>
     <string name="settings_tcp_port_default">기본값(5555)</string>
-    <string name="settings_tcp_port_hint">기본값(5555)을 사용하려면 비워두세요.</string>
-    <string name="settings_language">언어</string>
-    <string name="settings_translation_contributors">번역 기여자</string>
-    <string name="settings_translation">번역 참여</string>
-    <string name="settings_translation_summary">%s를 당신의 언어로 번역할 수 있도록 도와주세요</string>
     <string name="settings_user_interface">화면</string>
-    <string name="settings_black_night_theme">검은 테마</string>
-    <string name="settings_black_night_theme_summary">어두운 테마가 사용될 때 검은 테마를 사용</string>
     <string name="settings_support">지원하다</string>
-    <string name="settings_help">돕다</string>
-    <string name="settings_report_bug">버그 신고</string>
-    <string name="settings_advanced">고급의</string>
-    <string name="settings_legacy_pairing">레거시 페어링</string>
-    <string name="settings_legacy_pairing_summary">알림 대신 대화 상자에 페어링 코드를 입력하세요.</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">먼저 다음 사항을 수행해 주십시오.</string>
-    <string name="bug_report_dialog_update">^1을 사용하고 있는지 확인하세요.</string>
-    <string name="bug_report_dialog_link_update">최신 버전</string>
-    <string name="bug_report_dialog_wiki">^1을 읽고 관련된 모든 문제 해결 단계를 따르십시오.</string>
-    <string name="bug_report_dialog_link_wiki">위키</string>
-    <string name="bug_report_dialog_issues">버그가 이미 보고되었는지 확인하려면 ^1을 모두 검색해 보세요.</string>
-    <string name="bug_report_dialog_link_issues">기존 문제</string>
-    <string name="bug_report_dialog_method">계정이 있으시면 ^1에 이슈를 제출해 주세요.</string>
-    <string name="bug_report_dialog_method_2">아니면 이메일을 보내셔도 됩니다.</string>
-    <string name="bug_report_dialog_button_email">이메일</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">포트는 1~65535 사이여야 합니다.</string>
     <string name="snackbar_battery_optimization_home">부팅/워치독 시작 시 배터리 최적화를 비활성화해야 제대로 작동합니다.</string>
     <string name="snackbar_battery_optimization_settings">이 기능을 사용하려면 배터리 최적화를 비활성화하세요.</string>
     <string name="snackbar_action_fix">고치다</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">이메일 앱을 찾을 수 없습니다</string>
     <string name="toast_shizuku_already_starting">시즈쿠는 이미 배경에서 시작하고 있습니다</string>
     <string name="toast_accessibility_tv_only">이 서비스는 TV 기기에서만 지원됩니다.</string>
     <string name="toast_pairing_timeout">시즈쿠 페어링 서비스가 시간 초과되었다.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">주제</string>
-    <string name="dark_theme_off">항상 가볍다</string>
-    <string name="dark_theme_on">항상 어둡다</string>
-    <!-- About -->
-    <string name="action_about">정보</string>
-    <string name="about_dialog_button_close">닫다</string>
-    <string name="about_view_source_code"><![CDATA[%s에서 소스코드 보기]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Porter 중지</string>
-    <string name="dialog_stop_message">Porter 서비스가 중지됩니다.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">서비스 시작 상태</string>
-    <string name="notification_service_starting">Porter 서비스가 시작 중입니다…</string>
-    <string name="notification_service_start_failed">Porter 서비스를 시작할 수 없습니다.</string>
-    <string name="notification_service_start_no_root">루트 권한을 요청하지 못했습니다.</string>
-    <string name="notification_working">진행 중…</string>
     <string name="notification_channel_adb_pairing">무선 디버깅 페어링</string>
     <string name="notification_adb_pairing_input_paring_code">페어링 코드 입력</string>
     <string name="notification_adb_pairing_searching_for_service_title">페어링 서비스 검색중</string>
@@ -219,7 +153,6 @@
     <string name="wadb_permission_error_notification_title">권한 오류</string>
     <string name="wadb_permission_error_notification_content">Shizuku를 부팅 시 시작하려면
         WRITE_SECURE_SETTINGS 권한이 필요합니다. 탭하여 권한을 부여하는 방법을 알아보세요.</string>
-    <string name="wadb_notification_channel">ADB 자동 시작 서비스</string>
     <!-- Watchdog -->
     <string name="watchdog_running">워치독이 실행 중입니다</string>
     <string name="watchdog_turn_off">끄세요</string>

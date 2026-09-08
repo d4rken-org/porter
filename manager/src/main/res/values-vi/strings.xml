@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s đang chạy</string>
     <string name="home_status_service_not_running">%1$s đang không chạy</string>
-    <string name="home_status_service_version">Phiên bản %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Phiên bản %2$s, %1$s<br>Bắt đầu lại để cập nhật lên phiên bản %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Bắt đầu bằng cách kết nối với máy tính]]></string>
     <string name="home_adb_description"><![CDATA[Đối với thiết bị không có root, bạn cần sử dụng adb để khởi động Porter (yêu cầu kết nối máy tính). Quá trình này cần được lặp lại mỗi khi thiết bị được khởi động lại. Vui lòng <b><a href="%1$s">đọc phần trợ giúp</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Đọc trợ giúp</string>
     <string name="home_adb_button_view_command">Xem lệnh</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Có một số cân nhắc khác, vui lòng xác nhận rằng bạn đã đọc phần trợ giúp trước.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Sao chép</string>
     <string name="home_adb_dialog_view_command_button_send">Gửi</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Bắt đầu thông qua Gỡ lỗi không dây]]></string>
@@ -29,7 +24,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Vui lòng thử tắt và bật
         \"Gỡ lỗi không dây\" nếu nó tiếp tục tìm kiếm.</string>
     <string name="dialog_adb_port">Cổng</string>
-    <string name="dialog_adb_invalid_port">Cổng là một số nguyên nằm trong khoảng từ 1 đến 65535.</string>
     <string name="adb_pairing">Ghép nối</string>
     <string name="dialog_adb_pairing_title">Ghép nối với thiết bị</string>
     <string name="dialog_adb_pairing_discovery">Đang tìm kiếm dịch vụ ghép nối</string>
@@ -43,10 +37,6 @@
         bắt buộc.</string>
     <string name="dialog_usb_debugging_not_enabled">Chưa bật tính năng gỡ lỗi USB.\nVui lòng bật
         tính năng này trong \"Tùy chọn nhà phát triển\".</string>
-    <string name="dialog_adb_pairing_message">Vui lòng bắt đầu ghép nối bằng cách thực hiện các bước
-        sau:\n- Điều hướng đến \"Tùy chọn nhà phát triển\"\n- Bật \"Gỡ lỗi USB\" và \"Gỡ lỗi không
-        dây\"\n- Chạm vào bên trái của \"Gỡ lỗi không dây\"\n- Chạm vào \"Ghép nối thiết bị bằng mã
-        ghép nối\"\n- Nhập mã ghép nối vào thông báo</string>
     <string name="dialog_adb_pairing_accessibility_permission">Trên Android 14, việc cài đặt/cập
         nhật Porter bằng Trình cài đặt gói sẽ thu hồi quyền ^1, quyền này cần thiết để kích hoạt
         dịch vụ trợ năng cho việc ghép nối.\n\nĐể cấp lại quyền này, hãy chạy lệnh ADB
@@ -70,7 +60,6 @@
     <string name="enable">Cho phép</string>
     <string name="development_settings">Tùy chọn nhà phát triển</string>
     <string name="notification_settings">Tùy chọn thông báo</string>
-    <string name="adb_pairing_tutorial_title">Ghép nối Porter với thiết bị của bạn</string>
     <string name="adb_pairing_tutorial_content_notification">Một thông báo từ Porter sẽ giúp bạn
         hoàn thành việc ghép nối.</string>
     <string name="adb_pairing_tutorial_content_steps">Điều hướng đến \"Tùy chọn nhà phát triển\",
@@ -94,7 +83,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Bắt đầu (cho các thiết bị đã root)]]></string>
     <string name="home_root_button_start">Bắt đầu</string>
-    <string name="home_root_button_restart">Khởi động lại</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Quản lí ứng dụng</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -105,20 +93,6 @@
         hiển thị ở đây.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Kiểm soát Porter bằng ứng dụng tự động hóa</string>
-    <string name="home_automation_description">Các ứng dụng như Tasker và MacroDroid có thể gửi ý
-        định để tự động khởi động/dừng Porter.</string>
-    <string name="home_automation_button_view_intents">Xem ý định</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Hướng dẫn dành cho nhà phát triển</string>
-    <string name="home_learn_more_description">Tìm hiểu cách phát triển với Porter hoặc tải ứng
-        dụng bằng Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Bạn cần phải thực hiện thêm một bước</string>
-    <string name="home_adb_is_limited_description">Nhà sản xuất thiết bị của bạn đã hạn chế quyền
-        adb và các ứng dụng sử dụng Porter sẽ không hoạt động bình thường.\n\nThông thường, hạn chế
-        này có thể được gỡ bỏ bằng cách điều chỉnh một số tùy chọn trong \"Tùy chọn nhà phát
-        triển\". Vui lòng đọc phần trợ giúp để biết chi tiết về cách thực hiện việc này.\n\nBạn có
-        thể cần khởi động lại Porter để thao tác có hiệu lực.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Quyền của adb bị hạn chế</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Rất có thể nhà sản xuất thiết bị của bạn giới hạn quyền của adb.<p>Có thể có giải pháp cho hệ thống của bạn trong <b><a href="%1$s">tài liệu này</a></b>.]]></string>
@@ -146,47 +120,19 @@
     <string name="rish_description"><![CDATA[Với %1$s, bạn có thể chạy lệnh shell trong bất kỳ ứng dụng đầu cuối nào.<p>Nhấn để tìm hiểu thêm về cách sử dụng.]]></string>
     <!-- Settings -->
     <string name="settings_title">Cài đặt</string>
-    <string name="settings_behavior">Hành vi</string>
     <string name="settings_start_on_boot">Bắt đầu khi khởi động</string>
     <string name="settings_start_on_boot_summary">Yêu cầu Android 11 trở lên hoặc root</string>
     <string name="settings_start_on_boot_bug">Do lỗi trong Android 11-12, gỡ lỗi không dây không ghi
         nhớ bất kỳ mạng được ủy quyền nào.\n\nBạn sẽ cần ủy quyền lại mạng trong mỗi lần khởi động
         lại bằng cách nhấn vào \"Cho phép\" khi hộp thoại ủy quyền bật lên.</string>
-    <string name="settings_use_system_color">Sử dụng màu chủ đề hệ thống</string>
     <string name="settings_watchdog">Chó canh gác</string>
     <string name="settings_watchdog_summary">Tự động khởi động lại Porter nếu nó bị sập</string>
     <string name="settings_restart_dialog_title">Cần khởi động lại</string>
     <string name="settings_restart_dialog_message">Porter cần khởi động lại để áp dụng cài đặt này.</string>
     <string name="settings_tcp_port">Cổng TCP</string>
     <string name="settings_tcp_port_default">Mặc định (5555)</string>
-    <string name="settings_tcp_port_hint">Để trống để sử dụng mặc định (5555)</string>
-    <string name="settings_language">Ngôn ngữ</string>
-    <string name="settings_translation_contributors">Người đóng góp bản dịch</string>
-    <string name="settings_translation">Tham gia phiên dịch</string>
-    <string name="settings_translation_summary">Giúp chúng tôi dịch %s sang ngôn ngữ của bạn</string>
     <string name="settings_user_interface">Hiển thị</string>
-    <string name="settings_black_night_theme">Chủ đề đen</string>
-    <string name="settings_black_night_theme_summary">Sử dụng chủ đề đen tuyền nếu chế độ ban đêm
-        được bật</string>
     <string name="settings_support">Ủng hộ</string>
-    <string name="settings_help">Giúp đỡ</string>
-    <string name="settings_report_bug">Báo cáo lỗi</string>
-    <string name="settings_advanced">Trình độ cao</string>
-    <string name="settings_legacy_pairing">Cặp đôi di sản</string>
-    <string name="settings_legacy_pairing_summary">Nhập mã ghép nối vào hộp thoại thay vì thông báo</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Trước tiên, vui lòng thực hiện các bước sau:</string>
-    <string name="bug_report_dialog_update">Hãy kiểm tra xem bạn có đang sử dụng ^1 hay không.</string>
-    <string name="bug_report_dialog_link_update">phiên bản mới nhất</string>
-    <string name="bug_report_dialog_wiki">Hãy đọc phần ^1 và làm theo tất cả các bước khắc phục sự
-        cố có liên quan.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Tìm kiếm trong tất cả các bài viết ^1 để xem lỗi của bạn
-        đã được báo cáo chưa.</string>
-    <string name="bug_report_dialog_link_issues">các vấn đề hiện có</string>
-    <string name="bug_report_dialog_method">Vui lòng báo cáo sự cố trên ^1 nếu bạn có tài khoản.</string>
-    <string name="bug_report_dialog_method_2">Nếu không, bạn có thể gửi email.</string>
-    <string name="bug_report_dialog_button_email">E-mail</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Cổng phải nằm trong khoảng từ 1 đến 65535</string>
     <string name="snackbar_battery_optimization_home">Phải tắt tính năng tối ưu hóa pin để khởi động
@@ -195,28 +141,12 @@
         sử dụng tính năng này.</string>
     <string name="snackbar_action_fix">Sửa chữa</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Không tìm thấy ứng dụng email</string>
     <string name="toast_shizuku_already_starting">Porter đã bắt đầu ở phía sau</string>
     <string name="toast_accessibility_tv_only">Dịch vụ này chỉ được hỗ trợ trên các thiết bị TV.</string>
     <string name="toast_pairing_timeout">Dịch vụ ghép nối Porter đã hết thời gian chờ.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Đề tài</string>
-    <string name="dark_theme_off">Luôn nhẹ nhàng</string>
-    <string name="dark_theme_on">Luôn tối</string>
-    <!-- About -->
-    <string name="action_about">Giới thiệu</string>
-    <string name="about_dialog_button_close">Đóng</string>
-    <string name="about_view_source_code"><![CDATA[Xem mã nguồn tại %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Dừng Porter</string>
-    <string name="dialog_stop_message">Dịch vụ Porter sẽ ngừng hoạt động.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Trạng thái khởi động dịch vụ</string>
-    <string name="notification_service_starting">Dịch vụ Porter đang khởi động…</string>
-    <string name="notification_service_start_failed">Khởi động dịch vụ Porter thất bại.</string>
-    <string name="notification_service_start_no_root">Yêu cầu quyền root thất bại.</string>
-    <string name="notification_working">Đang làm việc…</string>
     <string name="notification_channel_adb_pairing">Ghép nối gỡ lỗi qua Wi-Fi</string>
     <string name="notification_adb_pairing_input_paring_code">Nhập mã ghép nối</string>
     <string name="notification_adb_pairing_searching_for_service_title">Đang tìm kiếm dịch vụ ghép
@@ -248,7 +178,6 @@
     <string name="wadb_permission_error_notification_title">Lỗi quyền</string>
     <string name="wadb_permission_error_notification_content">Porter cần WRITE_SECURE_SETTINGS để
         bắt đầu khởi động. Nhấn để tìm hiểu cách cấp nó.</string>
-    <string name="wadb_notification_channel">Dịch vụ tự động khởi động ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Cơ quan giám sát đang hoạt động</string>
     <string name="watchdog_turn_off">Tắt</string>

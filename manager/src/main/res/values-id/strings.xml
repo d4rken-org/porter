@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s aktif</string>
     <string name="home_status_service_not_running">%1$s tidak berjalan</string>
-    <string name="home_status_service_version">Versi %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Versi %2$s, %1$s <br> Mulai ulang untuk upgrade ke versi %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Mulai dengan menghubungkan ke komputer]]></string>
     <string name="home_adb_description"><![CDATA[Untuk perangkat tanpa akses root, Anda harus menggunakan adb untuk memulai Porter (perlu terhubung dengan komputer). Proses ini harus diulang setiap kali perangkat di-restart. Harap <b><a href="%1$s">baca dokumentasi</a></b> untuk info lebih lanjut.]]></string>
-    <string name="home_adb_button_view_help">Baca dokumentasi</string>
     <string name="home_adb_button_view_command">Lihat perintah</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Terdapat beberapa pertimbangan tambahan, harap pastikan bahwa Anda telah membaca dokumentasi.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Salin</string>
     <string name="home_adb_dialog_view_command_button_send">Kirim</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Mulai melalui Debug Nirkabel]]></string>
@@ -30,7 +25,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Coba untuk matikan dan
         hidupkan kembali \"Debug nirkabel\" jika terus mencari.</string>
     <string name="dialog_adb_port">Pelabuhan</string>
-    <string name="dialog_adb_invalid_port">Port adalah integer antara 1 sampai 65535.</string>
     <string name="adb_pairing">Sambungkan</string>
     <string name="dialog_adb_pairing_title">Sambungkan dengan perangkat</string>
     <string name="dialog_adb_pairing_discovery">Mencari layanan penyambung</string>
@@ -44,10 +38,6 @@
         perangkat sebelum Android 11.</string>
     <string name="dialog_usb_debugging_not_enabled">USB debugging tidak diaktifkan.\nHarap aktifkan
         di \"Opsi Pengembang\".</string>
-    <string name="dialog_adb_pairing_message">Silakan mulai memasangkan dengan melakukan
-        langkah-langkah berikut:\n- Arahkan ke \"Opsi Pengembang\"\n- Aktifkan \"Debugging USB\" dan
-        \"Debugging Nirkabel\"\n- Ketuk sisi kiri \"Debugging Nirkabel\"\n- Ketuk \"Pasangkan
-        perangkat dengan kode pemasangan\"\n- Masukkan kode pemasangan di notifikasi</string>
     <string name="dialog_adb_pairing_accessibility_permission">Pada Android 14,
         menginstal/memperbarui Porter dengan Package Installer akan mencabut izin ^1, yang
         diperlukan untuk mengaktifkan layanan aksesibilitas untuk pemasangan.\n\nUntuk
@@ -73,7 +63,6 @@
     <string name="enable">Memungkinkan</string>
     <string name="development_settings">Pilihan pengembang</string>
     <string name="notification_settings">Pengaturan notifikasi</string>
-    <string name="adb_pairing_tutorial_title">Pasangkan Porter dengan perangkat Anda</string>
     <string name="adb_pairing_tutorial_content_notification">Notifikasi dari Porter akan membantu
         Anda untuk menyelesaikan pemasangan.</string>
     <string name="adb_pairing_tutorial_content_steps">Arahkan ke \"Opsi Pengembang\", lalu aktifkan
@@ -99,7 +88,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Mulai (untuk perangkat dengan root)]]></string>
     <string name="home_root_button_start">Mulai</string>
-    <string name="home_root_button_restart">Mulai ulang</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Manajemen Aplikasi</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -110,21 +98,6 @@
         Porter akan ditampilkan di sini.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Kontrol Porter dengan aplikasi otomatisasi</string>
-    <string name="home_automation_description">Aplikasi seperti Tasker dan MacroDroid dapat mengirim
-        intent untuk memulai/menghentikan Porter secara otomatis.</string>
-    <string name="home_automation_button_view_intents">Lihat maksud</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Panduan pengembang</string>
-    <string name="home_learn_more_description">Pelajari cara mengembangkan dengan Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Anda perlu mengambil langkah ekstra</string>
-    <string name="home_adb_is_limited_description">Produsen perangkat Anda telah membatasi izin adb
-        dan aplikasi yang menggunakan Porter tidak akan berfungsi dengan baik.
-        \n
-        \nBiasanya, batasan ini dapat dihilangkan dengan menyesuaikan beberapa opsi di \"Opsi
-        pengembang\". Silakan baca bantuan untuk detail tentang cara melakukan ini.
-        \n
-        \nAnda mungkin perlu memulai ulang Porter agar operasi dapat diterapkan.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Izin adb terbatas</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Kemungkinan besar merk perangkat Anda membatasi perizinan adb.<p>Solusi untuk perangkat Anda mungkin ada pada <b><a href="%1$s">dokumentasi ini</a></b>.]]></string>
@@ -152,13 +125,11 @@
     <string name="rish_description"><![CDATA[Dengan %1$s, Anda dapat menjalankan perintah shell di aplikasi terminal apa pun.<p>Ketuk untuk mempelajari lebih lanjut tentang cara menggunakannya.]]></string>
     <!-- Settings -->
     <string name="settings_title">Pengaturan</string>
-    <string name="settings_behavior">Perilaku</string>
     <string name="settings_start_on_boot">Mulai saat boot</string>
     <string name="settings_start_on_boot_summary">Membutuhkan Android 11+ atau root</string>
     <string name="settings_start_on_boot_bug">Karena bug di Android 11-12, debugging nirkabel tidak
         mengingat jaringan yang diotorisasi.\n\nAnda perlu mengotorisasi ulang jaringan setiap kali
         melakukan boot ulang dengan mengetuk \"Izinkan\" saat dialog otorisasi muncul.</string>
-    <string name="settings_use_system_color">Gunakan tema warna sistem</string>
     <string name="settings_watchdog">Penjaga</string>
     <string name="settings_watchdog_summary">Mulai ulang Porter secara otomatis jika macet</string>
     <string name="settings_restart_dialog_title">Diperlukan Restart</string>
@@ -166,35 +137,8 @@
         pengaturan ini.</string>
     <string name="settings_tcp_port">Pelabuhan TCP</string>
     <string name="settings_tcp_port_default">Standar (5555)</string>
-    <string name="settings_tcp_port_hint">Biarkan kosong untuk menggunakan default (5555)</string>
-    <string name="settings_language">Bahasa</string>
-    <string name="settings_translation_contributors">Kontributor penerjemah</string>
-    <string name="settings_translation">Ikut menerjemahkan</string>
-    <string name="settings_translation_summary">Bantu kami menerjemahkan %s dengan bahasa Anda</string>
     <string name="settings_user_interface">Penampilan</string>
-    <string name="settings_black_night_theme">Tema hitam gelap</string>
-    <string name="settings_black_night_theme_summary">Gunakan tema hitam gelap jika mode malam
-        diaktifkan</string>
     <string name="settings_support">Mendukung</string>
-    <string name="settings_help">Membantu</string>
-    <string name="settings_report_bug">Laporkan bug</string>
-    <string name="settings_advanced">Canggih</string>
-    <string name="settings_legacy_pairing">Pasangan warisan</string>
-    <string name="settings_legacy_pairing_summary">Masukkan kode pemasangan dalam dialog, bukan
-        notifikasi</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Pertama, mohon lakukan hal berikut:</string>
-    <string name="bug_report_dialog_update">Pastikan Anda menggunakan ^1.</string>
-    <string name="bug_report_dialog_link_update">versi terbaru</string>
-    <string name="bug_report_dialog_wiki">Bacalah poin ^1 dan ikuti semua langkah pemecahan masalah
-        yang relevan.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Telusuri semua ^1 untuk melihat apakah bug Anda sudah
-        dilaporkan.</string>
-    <string name="bug_report_dialog_link_issues">masalah yang ada</string>
-    <string name="bug_report_dialog_method">Silakan laporkan masalah di ^1 jika Anda memiliki akun.</string>
-    <string name="bug_report_dialog_method_2">Atau, Anda bisa mengirim email.</string>
-    <string name="bug_report_dialog_button_email">E-mail</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Port harus antara 1 dan 65535</string>
     <string name="snackbar_battery_optimization_home">Optimalisasi baterai harus dinonaktifkan agar
@@ -203,28 +147,12 @@
         menggunakan fitur ini.</string>
     <string name="snackbar_action_fix">Memperbaiki</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Tidak ada aplikasi email yang ditemukan</string>
     <string name="toast_shizuku_already_starting">Porter sudah mulai di latar belakang</string>
     <string name="toast_accessibility_tv_only">Layanan ini hanya didukung pada perangkat TV.</string>
     <string name="toast_pairing_timeout">Layanan pemasangan Porter telah habis waktunya.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Tema</string>
-    <string name="dark_theme_off">Selalu terang</string>
-    <string name="dark_theme_on">Selalu gelap</string>
-    <!-- About -->
-    <string name="action_about">Tentang</string>
-    <string name="about_dialog_button_close">Menutup</string>
-    <string name="about_view_source_code"><![CDATA[Lihat kode sumbernya di %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Hentikan Porter</string>
-    <string name="dialog_stop_message">Layanan Porter akan berhenti.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Status layanan</string>
-    <string name="notification_service_starting">Memulai layanan Porter…</string>
-    <string name="notification_service_start_failed">Layanan Porter gagal dimulai.</string>
-    <string name="notification_service_start_no_root">Gagal mendapat izin root.</string>
-    <string name="notification_working">Sedang bekerja…</string>
     <string name="notification_channel_adb_pairing">Pemasangan debug nirkabel</string>
     <string name="notification_adb_pairing_input_paring_code">Masukkan kode penyambungan</string>
     <string name="notification_adb_pairing_searching_for_service_title">Mencari layanan penyambungan</string>
@@ -255,7 +183,6 @@
     <string name="wadb_permission_error_notification_title">Kesalahan Izin</string>
     <string name="wadb_permission_error_notification_content">Porter membutuhkan
         WRITE_SECURE_SETTINGS untuk memulai saat boot. Ketuk untuk mempelajari cara memberikannya.</string>
-    <string name="wadb_notification_channel">Layanan mulai otomatis ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog sedang berjalan</string>
     <string name="watchdog_turn_off">Mematikan</string>

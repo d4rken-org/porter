@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s در حال اجرا است</string>
     <string name="home_status_service_not_running">%1$s در حال اجرا نیست</string>
-    <string name="home_status_service_version">نسخه %2$s، %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[نسخه %2$s، %1$s<br>برای به‌روزرسانی به نسخه %3$s برنامه را راه‌اندازی مجدد نمایید]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[با اتصال به رایانه شروع کنید]]></string>
     <string name="home_adb_description"><![CDATA[برای دستگاه‌های بدون دسترسی ریشه (روت)، باید از adb برای راه‌اندازی Porter استفاده کنید (نیاز به اتصال به رایانه دارد). این فرآیند باید هر بار که دستگاه راه اندازی مجدد می شود تکرار شود. لطفاً <b><a href=\"%1$s\">راهنما را بخوانید</a></b>.]]></string>
-    <string name="home_adb_button_view_help">خواندن راهنما</string>
     <string name="home_adb_button_view_command">مشاهده دستور</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* ملاحظات دیگری نیز وجود دارد، لطفاً تأیید کنید که ابتدا راهنما را خوانده اید.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">رونوشت</string>
     <string name="home_adb_dialog_view_command_button_send">ارسال</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[از طریق اشکال زدایی بی‌سیم شروع کنید]]></string>
@@ -28,7 +23,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">لطفاً در صورتی که به جستجو
         ادامه داد \"اشکال‌زدایی بی‌سیم\" را غیرفعال و فعال کنید.</string>
     <string name="dialog_adb_port">درگاه</string>
-    <string name="dialog_adb_invalid_port">درگاه یک عدد صحیح از ۱ تا ۶۵۵۳۵ است.</string>
     <string name="adb_pairing">مرتبط کردن</string>
     <string name="dialog_adb_pairing_title">مرتبط کردن با دستگاه</string>
     <string name="dialog_adb_pairing_discovery">جستجوی خدمات مرتبط کردن</string>
@@ -41,10 +35,6 @@
         قبل از اندروید ۱۱، برای فعال کردن اشکال‌زدایی بی‌سیم، اتصال به رایانه ضروری است.</string>
     <string name="dialog_usb_debugging_not_enabled">اشکال‌زدایی USB فعال نیست.\nلطفاً آن را در
         «گزینه‌های توسعه‌دهنده» فعال کنید.</string>
-    <string name="dialog_adb_pairing_message">لطفاً با انجام مراحل زیر، جفت‌سازی را شروع کنید:\n- به
-        «گزینه‌های توسعه‌دهنده» بروید\n- «اشکال‌زدایی USB» و «اشکال‌زدایی بی‌سیم» را فعال کنید\n-
-        روی سمت چپ «اشکال‌زدایی بی‌سیم» ضربه بزنید\n- روی «جفت کردن دستگاه با کد جفت‌سازی» ضربه
-        بزنید\n- کد جفت‌سازی را در اعلان وارد کنید</string>
     <string name="dialog_adb_pairing_accessibility_permission">در اندروید ۱۴، نصب/به‌روزرسانی
         Porter با استفاده از Package Installer، مجوز ^1 را که برای فعال کردن سرویس دسترسی برای
         جفت‌سازی لازم است، لغو می‌کند.\n\nبرای اعطای آن، دستور ADB زیر را اجرا کنید:\n\n^2\n\nپس از
@@ -68,7 +58,6 @@
     <string name="enable">فعال کردن</string>
     <string name="development_settings">گزینه های توسعه دهنده</string>
     <string name="notification_settings">گزینه های اعلان</string>
-    <string name="adb_pairing_tutorial_title">برنامه Porter را با دستگاه خود مرتبط کنید</string>
     <string name="adb_pairing_tutorial_content_notification">یک اعلان از Porter به شما امکان می دهد
         مرتبط کردن را تکمیل کنید.</string>
     <string name="adb_pairing_tutorial_content_steps">به «گزینه‌های توسعه‌دهنده» بروید، سپس
@@ -93,7 +82,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[راه‌اندازی (برای دستگاه‌هایی با دسترسی ریشه)]]></string>
     <string name="home_root_button_start">راه‌اندازی</string>
-    <string name="home_root_button_restart">راه‌اندازی مجدد</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">مدیریت برنامه</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -105,19 +93,6 @@
         را اعلام کرده‌اند، اینجا نمایش داده می‌شوند.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">کنترل شیزوکو با برنامه‌های اتوماسیون</string>
-    <string name="home_automation_description">برنامه‌هایی مانند Tasker و MacroDroid می‌توانند برای
-        شروع/توقف خودکار Porter، اینتنت ارسال کنند.</string>
-    <string name="home_automation_button_view_intents">مشاهده اهداف</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">راهنمای توسعه‌دهنده</string>
-    <string name="home_learn_more_description">یاد بگیرید که چگونه با Porter توسعه دهید</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">شما باید یک قدم اضافی بردارید</string>
-    <string name="home_adb_is_limited_description">سازنده دستگاه شما مجوزهای adb را محدود کرده است و
-        برنامه هایی که از Porter استفاده می کنند به درستی کار نمی کنند.\n\nمعمولاً با تنظیم برخی از
-        گزینه‌ها در \"گزینه‌های توسعه دهنده\" می‌توان این محدودیت را برطرف کرد. لطفاً راهنما را برای
-        جزئیات نحوه انجام این کار بخوانید.\n\nشاید لازم باشد Porter را مجدداً راه اندازی کنید تا
-        عملیات اجرایی شود.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">مجوز adb محدود است</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[این احتمال وجود دارد که سازنده دستگاه شما مجوز adb را محدود کند.<p>ممکن است راه حلی برای دستگاه شما در <b><a href=\"%1$s\">این سند</a></b> وجود داشته باشد.]]></string>
@@ -146,13 +121,11 @@
     <string name="rish_description"><![CDATA[با %1$sمی‌توانید دستورات shell را در هر برنامه ترمینالی اجرا کنید.<p>برای کسب اطلاعات بیشتر در مورد نحوه استفاده از آن، ضربه بزنید.]]></string>
     <!-- Settings -->
     <string name="settings_title">تنظیمات</string>
-    <string name="settings_behavior">رفتار</string>
     <string name="settings_start_on_boot">شروع در بوت</string>
     <string name="settings_start_on_boot_summary">نیاز به اندروید ۱۱+ یا روت دارد</string>
     <string name="settings_start_on_boot_bug">به دلیل یک باگ در اندروید ۱۱-۱۲، اشکال زدایی بی سیم
         هیچ شبکه مجاز را به یاد نمی آورد.\n\nدر هر راه اندازی مجدد باید شبکه را با ضربه زدن روی
         «اجازه» هنگام ظاهر شدن دیالوگ مجوزدهی مجددا، مجددا تأیید کنید.</string>
-    <string name="settings_use_system_color">از رنگ طرح زمینه دستگاه استفاده کنید</string>
     <string name="settings_watchdog">دیده‌بان</string>
     <string name="settings_watchdog_summary">در صورت خرابی، شیزوکو را به طور خودکار مجدداً راه
         اندازی کنید</string>
@@ -161,35 +134,8 @@
         تنظیم را اعمال کند.</string>
     <string name="settings_tcp_port">پورت TCP</string>
     <string name="settings_tcp_port_default">پیش‌فرض (۵۵۵۵)</string>
-    <string name="settings_tcp_port_hint">برای استفاده از مقدار پیش‌فرض (۵۵۵۵) خالی بگذارید.</string>
-    <string name="settings_language">زبان</string>
-    <string name="settings_translation_contributors">مشارکت کنندگان ترجمه</string>
-    <string name="settings_translation">در ترجمه شرکت کنید</string>
-    <string name="settings_translation_summary">با ما همکاری کنید تا %s را به زبان شما ترجمه کنیم</string>
     <string name="settings_user_interface">ظاهر</string>
-    <string name="settings_black_night_theme">طرح زمینه شب سیاه</string>
-    <string name="settings_black_night_theme_summary">اگر حالت شب فعال است از طرح زمینه سیاه خالص
-        استفاده کنید</string>
     <string name="settings_support">پشتیبانی</string>
-    <string name="settings_help">کمک</string>
-    <string name="settings_report_bug">گزارش اشکال</string>
-    <string name="settings_advanced">پیشرفته</string>
-    <string name="settings_legacy_pairing">جفت‌سازی قدیمی</string>
-    <string name="settings_legacy_pairing_summary">کد جفت‌سازی را به جای اعلان، در یک کادر محاوره‌ای
-        وارد کنید</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">ابتدا لطفا موارد زیر را انجام دهید:</string>
-    <string name="bug_report_dialog_update">بررسی کنید که از ^1 استفاده می‌کنید.</string>
-    <string name="bug_report_dialog_link_update">آخرین نسخه</string>
-    <string name="bug_report_dialog_wiki">^1 را بخوانید و تمام مراحل عیب‌یابی مربوطه را دنبال کنید.</string>
-    <string name="bug_report_dialog_link_wiki">ویکی</string>
-    <string name="bug_report_dialog_issues">برای اینکه ببینید آیا باگ شما قبلاً گزارش شده است یا
-        خیر، تمام ^1 را جستجو کنید.</string>
-    <string name="bug_report_dialog_link_issues">مسائل موجود</string>
-    <string name="bug_report_dialog_method">اگر حساب کاربری دارید، لطفاً مشکل خود را در ^1 مطرح
-        کنید.</string>
-    <string name="bug_report_dialog_method_2">در غیر این صورت، می‌توانید ایمیل ارسال کنید.</string>
-    <string name="bug_report_dialog_button_email">ایمیل</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">پورت باید بین ۱ تا ۶۵۵۳۵ باشد</string>
     <string name="snackbar_battery_optimization_home">برای اینکه شروع به کار در هنگام بوت/واچ‌داگ به
@@ -198,29 +144,13 @@
         بهینه‌سازی باتری را غیرفعال کنید.</string>
     <string name="snackbar_action_fix">رفع</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">هیچ برنامه ایمیلی یافت نشد</string>
     <string name="toast_shizuku_already_starting">شیزوکو از قبل در پس‌زمینه شروع به کار کرده است</string>
     <string name="toast_accessibility_tv_only">این سرویس فقط روی دستگاه های تلویزیونی پشتیبانی می
         شود.</string>
     <string name="toast_pairing_timeout">سرویس جفت سازی شیزوکو تمام شد.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">تم</string>
-    <string name="dark_theme_off">همیشه روشن</string>
-    <string name="dark_theme_on">همیشه تاریک</string>
-    <!-- About -->
-    <string name="action_about">درباره</string>
-    <string name="about_dialog_button_close">بستن</string>
-    <string name="about_view_source_code"><![CDATA[کد منبع را در %s مشاهده کنید]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">توقف Porter</string>
-    <string name="dialog_stop_message">خدمات Porter متوقف خواهد شد.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">وضعیت شروع خدمات</string>
-    <string name="notification_service_starting">خدمات Porter شروع می شود…</string>
-    <string name="notification_service_start_failed">راه‌اندازی خدمات Porter ناموفق بود.</string>
-    <string name="notification_service_start_no_root">درخواست مجوز دسترسی ریشه (روت) انجام نشد.</string>
-    <string name="notification_working">در حال کار کردن…</string>
     <string name="notification_channel_adb_pairing">مرتبط سازی اشکال‌زدایی بی‌سیم</string>
     <string name="notification_adb_pairing_input_paring_code">وارد کردن رمز مرتبط سازی</string>
     <string name="notification_adb_pairing_searching_for_service_title">جستجوی خدمات مرتبط سازی</string>
@@ -251,7 +181,6 @@
     <string name="wadb_permission_error_notification_title">خطای مجوز</string>
     <string name="wadb_permission_error_notification_content">شیزوکو برای شروع به کار در هنگام بوت
         شدن به WRITE_SECURE_SETTINGS نیاز دارد. برای یادگیری نحوه اعطای آن، روی ضربه بزنید.</string>
-    <string name="wadb_notification_channel">سرویس شروع خودکار ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">واچ داگ در حال اجرا است</string>
     <string name="watchdog_turn_off">خاموش</string>

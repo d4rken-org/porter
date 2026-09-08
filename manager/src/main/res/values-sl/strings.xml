@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s teče</string>
     <string name="home_status_service_not_running">%1$s ne teče</string>
-    <string name="home_status_service_version">Verzija %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Verzija %2$s, %1$s<br>Začni znova za posodobitev na verzijo %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Začni z povezovanjem na računalnik]]></string>
     <string name="home_adb_description"><![CDATA[Za naprave brez root-a, potrebujete adb, da zaženete Porter (potrebna je računalniška povezava). Ta proces je potrebno ponoviti vsakič, ko se naprava ponovno zažene. Prosimo <b><a href="%1$s">preberite pomoč</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Preberite pomoč</string>
     <string name="home_adb_button_view_command">Pokaži ukaz</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Obstaja nekaj premislekov. Prosimo, potrdite, da ste najprej prebrali pomoč.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Kopiraj</string>
     <string name="home_adb_dialog_view_command_button_send">Pošlji</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Začni preko Brezžičnega razhroščevanja]]></string>
@@ -30,7 +25,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Če iskanje še naprej
         traja, poskusite onemogočiti in nato omogočiti »Brezžično odpravljanje napak«.</string>
     <string name="dialog_adb_port">Vrata</string>
-    <string name="dialog_adb_invalid_port">Vrata so število v obsegu od 1 do 65535.</string>
     <string name="adb_pairing">Seznanjanje</string>
     <string name="dialog_adb_pairing_title">Seznani z napravo</string>
     <string name="dialog_adb_pairing_discovery">Iskanje storitve za seznanjanje</string>
@@ -43,11 +37,6 @@
         \nPozor! Pred Androidom 11, je za omogočanje brezžičnega razhroščevanja potreben računalnik.</string>
     <string name="dialog_usb_debugging_not_enabled">Odpravljanje napak prek USB-ja ni
         omogočeno.\nOmogočite ga v »Možnostih za razvijalce«.</string>
-    <string name="dialog_adb_pairing_message">Začnite z združevanjem tako, da izvedete naslednje
-        korake:\n- Pomaknite se do »Možnosti za razvijalce«\n- Omogočite »Odpravljanje napak USB« in
-        »Brezžično odpravljanje napak«\n- Dotaknite se leve strani »Brezžično odpravljanje napak«\n-
-        Dotaknite se »Seznani napravo s kodo za združevanje«\n- V obvestilo vnesite kodo za
-        združevanje</string>
     <string name="dialog_adb_pairing_accessibility_permission">V sistemu Android 14
         namestitev/posodabljanje programa Porter z namestitvenim programom paketov prekliče
         dovoljenje ^1, ki je potrebno za omogočanje storitve dostopnosti za seznanjanje.\n\nČe ga
@@ -73,7 +62,6 @@
     <string name="enable">Omogoči</string>
     <string name="development_settings">Možnosti za razvijalce</string>
     <string name="notification_settings">Možnosti obveščanja</string>
-    <string name="adb_pairing_tutorial_title">Združite Porter s svojo napravo</string>
     <string name="adb_pairing_tutorial_content_notification">Obvestilo Shizukuja vam bo pomagalo
         dokončati seznanjanje.</string>
     <string name="adb_pairing_tutorial_content_steps">Pojdite na »Možnosti za razvijalce« in nato
@@ -97,7 +85,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Začni (za naprave s korenskim dostopom)]]></string>
     <string name="home_root_button_start">Začni</string>
-    <string name="home_root_button_restart">Ponovni zagon</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Upravljanje aplikacij</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -111,19 +98,6 @@
         prijavile dovoljenje Porter.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Upravljajte Porter z aplikacijami za avtomatizacijo</string>
-    <string name="home_automation_description">Aplikacije, kot sta Tasker in MacroDroid, lahko
-        pošiljajo namere za samodejni zagon/ustavitev aplikacije Porter.</string>
-    <string name="home_automation_button_view_intents">Ogled namenov</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Vodnik za razvijalce</string>
-    <string name="home_learn_more_description">Naučite se razvijati s Shizukujem</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Morate narediti dodaten korak</string>
-    <string name="home_adb_is_limited_description">Proizvajalec vaše naprave je omejil dovoljenja
-        adb in aplikacije, ki uporabljajo Porter, ne bodo delovale pravilno.\n\nObičajno je to
-        omejitev mogoče odpraviti s prilagoditvijo nekaterih možnosti v »Možnostih za razvijalce«.
-        Za podrobnosti o tem preberite pomoč.\n\nMorda boste morali znova zagnati Porter, da bo
-        operacija začela veljati.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Dovoljenje adb je omejeno</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Zelo možno je, da proizvajalec vaše naprave omejuje dovoljenja adb.<p>Rešitev za vaš sistem je morda v <b><a href=\"%1$s\">tem dokumentu</a></b>.]]></string>
@@ -151,13 +125,11 @@
     <string name="rish_description"><![CDATA[Z %1$slahko zaženete ukaze lupine v kateri koli terminalski aplikaciji.<p>Dotaknite se, če želite izvedeti več o uporabi.]]></string>
     <!-- Settings -->
     <string name="settings_title">Nastavitve</string>
-    <string name="settings_behavior">Vedenje</string>
     <string name="settings_start_on_boot">Zaženi ob zagonu</string>
     <string name="settings_start_on_boot_summary">Zahteva Android 11+ ali root</string>
     <string name="settings_start_on_boot_bug">Zaradi napake v Androidu 11-12 brezžično odpravljanje
         napak ne pomni nobenih pooblaščenih omrežij.\n\nOb vsakem ponovnem zagonu boste morali
         ponovno avtorizirati omrežje tako, da tapnete »Dovoli«, ko se pojavi okno za avtorizacijo.</string>
-    <string name="settings_use_system_color">Uporabi sistemsko barvo teme</string>
     <string name="settings_watchdog">Nadzorni pes</string>
     <string name="settings_watchdog_summary">Samodejni ponovni zagon Shizukuja, če se sesuje</string>
     <string name="settings_restart_dialog_title">Potreben je ponovni zagon</string>
@@ -165,35 +137,8 @@
         nastavitev.</string>
     <string name="settings_tcp_port">TCP priključek</string>
     <string name="settings_tcp_port_default">Privzeto (5555)</string>
-    <string name="settings_tcp_port_hint">Pustite prazno za privzeto (5555)</string>
-    <string name="settings_language">Jezik</string>
-    <string name="settings_translation_contributors">Sodelavci prevodov</string>
-    <string name="settings_translation">Sodelujte pri prevajanju</string>
-    <string name="settings_translation_summary">Pomagajte nam prevajati %s v vaš jezik</string>
     <string name="settings_user_interface">Videz</string>
-    <string name="settings_black_night_theme">Tema črne noči</string>
-    <string name="settings_black_night_theme_summary">Če je omogočen nočni način, uporabite čisto
-        črno temo</string>
     <string name="settings_support">Podpora</string>
-    <string name="settings_help">Pomoč</string>
-    <string name="settings_report_bug">Prijavite napako</string>
-    <string name="settings_advanced">Napreden</string>
-    <string name="settings_legacy_pairing">Zapuščina parov</string>
-    <string name="settings_legacy_pairing_summary">Namesto obvestila vnesite kodo za povezovanje v
-        pogovorno okno</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Najprej storite naslednje:</string>
-    <string name="bug_report_dialog_update">Preverite, ali uporabljate ^1.</string>
-    <string name="bug_report_dialog_link_update">najnovejša različica</string>
-    <string name="bug_report_dialog_wiki">Preberite ^1 in sledite vsem ustreznim korakom za
-        odpravljanje težav.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Prebrskaj vse ^1, da vidiš, ali je bila tvoja napaka že
-        prijavljena.</string>
-    <string name="bug_report_dialog_link_issues">obstoječe težave</string>
-    <string name="bug_report_dialog_method">Če imate račun, prosim, oddajte težavo na ^1.</string>
-    <string name="bug_report_dialog_method_2">Sicer pa lahko pošljete e-pošto.</string>
-    <string name="bug_report_dialog_button_email">E-pošta</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Pristanišče mora biti med 1 in 65535</string>
     <string name="snackbar_battery_optimization_home">Optimizacija baterije mora biti onemogočena,
@@ -202,29 +147,13 @@
         baterije za uporabo te funkcije.</string>
     <string name="snackbar_action_fix">Popraviti</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Ni najdene aplikacije za e-pošto</string>
     <string name="toast_shizuku_already_starting">Porter že začne v ozadju</string>
     <string name="toast_accessibility_tv_only">Ta storitev je podprta samo na televizijskih
         napravah.</string>
     <string name="toast_pairing_timeout">Storitev za parjenje Porter je potekla.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Tema</string>
-    <string name="dark_theme_off">Vedno svetloba</string>
-    <string name="dark_theme_on">Vedno temno</string>
-    <!-- About -->
-    <string name="action_about">O</string>
-    <string name="about_dialog_button_close">Blizu</string>
-    <string name="about_view_source_code"><![CDATA[Poglej izvorno kodo na %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Ustavi Porter</string>
-    <string name="dialog_stop_message">Storitev Porter bo bila ustavljena.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Status zagona storitve</string>
-    <string name="notification_service_starting">Storitev Porter se zaganja…</string>
-    <string name="notification_service_start_failed">Zagon storitve Porter ni uspel.</string>
-    <string name="notification_service_start_no_root">Neuspešna zahteva za root dovoljenje.</string>
-    <string name="notification_working">V teku…</string>
     <string name="notification_channel_adb_pairing">Seznanjanje brezžičnega razhroščevanja</string>
     <string name="notification_adb_pairing_input_paring_code">Vnesite seznantitveno kodo</string>
     <string name="notification_adb_pairing_searching_for_service_title">Iskanje storitve za
@@ -255,7 +184,6 @@
     <string name="wadb_permission_error_notification_title">Napaka pri dovoljenju</string>
     <string name="wadb_permission_error_notification_content">Porter potrebuje
         WRITE_SECURE_SETTINGS, da začne na začetku. Tapnite, da izveste, kako ga odobriti.</string>
-    <string name="wadb_notification_channel">ADB storitev samodejnega zagona</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog teče</string>
     <string name="watchdog_turn_off">Izklop</string>

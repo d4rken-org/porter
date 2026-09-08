@@ -1,6 +1,4 @@
 <resources>
     <color name="porter_status_running">#8DDAA2</color>
-    <color name="porter_status_running_container">#003916</color>
     <color name="porter_status_warning">#FFDA72</color>
-    <color name="porter_status_warning_container">#402D00</color>
 </resources>

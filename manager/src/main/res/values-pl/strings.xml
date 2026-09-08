@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s działa</string>
     <string name="home_status_service_not_running">%1$s nie działa</string>
-    <string name="home_status_service_version">Wersja %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Wersja %2$s, %1$s<br>Uruchom ponownie, aby zaktualizować do wersji %3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Uruchom przez podłączenie do komputera]]></string>
     <string name="home_adb_description"><![CDATA[W przypadku urządzeń bez roota musisz użyć ADB, aby uruchomić Porter (wymaga połączenia z komputerem). Ten proces należy powtarzać po każdym ponownym uruchomieniu urządzenia. <b><a href=\"%1$s\">Przeczytaj pomoc</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Przeczytaj pomoc</string>
     <string name="home_adb_button_view_command">Wyświetl komendę</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Istnieją też inne ważne uwagi, upewnij się, że najpierw przeczytałeś pomoc.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Kopiuj</string>
     <string name="home_adb_dialog_view_command_button_send">Wyślij</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Uruchom przez debugowanie bezprzewodowe]]></string>
@@ -28,7 +23,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Spróbuj wyłączyć i
         ponownie włączyć \"Debugowanie bezprzewodowe\", jeśli wyszukiwanie nadal trwa.</string>
     <string name="dialog_adb_port">Port</string>
-    <string name="dialog_adb_invalid_port">Port musi być liczbą całkowitą z zakresu od 1 do 65535.</string>
     <string name="adb_pairing">Parowanie</string>
     <string name="dialog_adb_pairing_title">Sparuj z urządzeniem</string>
     <string name="dialog_adb_pairing_discovery">Szukanie usługi parowania</string>
@@ -42,10 +36,6 @@
         wymaga połączenia z komputerem.</string>
     <string name="dialog_usb_debugging_not_enabled">Debugowanie USB nie jest włączone.\nWłącz je w
         \"Opcjach programisty\".</string>
-    <string name="dialog_adb_pairing_message">Rozpocznij parowanie, wykonując następujące kroki:\n-
-        Przejdź do „Opcji programisty”\n- Włącz „Debugowanie USB” i „Debugowanie bezprzewodowe”\n-
-        Dotknij lewej strony „Debugowania bezprzewodowego”\n- Dotknij „Sparuj urządzenie za pomocą
-        kodu parowania”\n- Wprowadź kod parowania w powiadomieniu</string>
     <string name="dialog_adb_pairing_accessibility_permission">W systemie Android 14
         instalacja/aktualizacja programu Porter za pomocą instalatora pakietów powoduje cofnięcie
         uprawnienia ^1, które jest wymagane do włączenia usługi ułatwień dostępu w celu
@@ -69,7 +59,6 @@
     <string name="enable">Włącz</string>
     <string name="development_settings">Opcje programisty</string>
     <string name="notification_settings">Opcje powiadomień</string>
-    <string name="adb_pairing_tutorial_title">Sparuj Porter z urządzeniem</string>
     <string name="adb_pairing_tutorial_content_notification">Powiadomienie od Porter pomoże ci
         ukończyć parowanie.</string>
     <string name="adb_pairing_tutorial_content_steps">Przejdź do „Opcji programistycznych”, a
@@ -93,7 +82,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Uruchom (dla urządzeń z rootem)]]></string>
     <string name="home_root_button_start">Uruchom</string>
-    <string name="home_root_button_restart">Uruchom ponownie</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Zarządzanie aplikacjami</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -107,20 +95,6 @@
         zadeklarowały uprawnienia Porter.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Kontroluj Porter za pomocą aplikacji automatyzacyjnych</string>
-    <string name="home_automation_description">Aplikacje takie jak Tasker i MacroDroid mogą wysyłać
-        intencje automatycznego uruchamiania/zatrzymywania Porter.</string>
-    <string name="home_automation_button_view_intents">Wyświetl intencje</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Przewodnik dla programistów</string>
-    <string name="home_learn_more_description">Dowiedz się, jak tworzyć aplikacje z wykorzystaniem
-        Porter</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Wymagany dodatkowy krok</string>
-    <string name="home_adb_is_limited_description">Producent urządzenia ograniczył uprawnienia ADB i
-        aplikacje korzystające z Porter nie będą działać poprawnie.\n\nZazwyczaj to ograniczenie
-        można znieść, zmieniając opcje w sekcji \"Opcje programisty\". Przeczytaj pomoc, aby
-        dowiedzieć się, jak to zrobić.\n\nMoże być konieczne ponowne uruchomienie Porter, aby
-        zmiany weszły w życie.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Uprawnienia ADB są ograniczone</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Jest wysoce prawdopodobne, że producent urządzenia ogranicza uprawnienia ADB.<p>Rozwiązanie dla Twojego systemu może znajdować się w <b><a href=\"%1$s\">tym dokumencie</a></b>.]]></string>
@@ -148,14 +122,12 @@
     <string name="rish_description"><![CDATA[Za pomocą %1$smożesz uruchamiać polecenia powłoki w dowolnej aplikacji terminalowej.<p>Kliknij, aby dowiedzieć się więcej o sposobie korzystania z tej opcji.]]></string>
     <!-- Settings -->
     <string name="settings_title">Ustawienia</string>
-    <string name="settings_behavior">Zachowanie</string>
     <string name="settings_start_on_boot">Uruchamiaj przy starcie</string>
     <string name="settings_start_on_boot_summary">Wymaga Androida 11+ lub roota</string>
     <string name="settings_start_on_boot_bug">Z powodu błędu w systemie Android 11-12 debugowanie
         bezprzewodowe nie zapamiętuje autoryzowanych sieci.\n\nBędziesz musiał ponownie autoryzować
         sieć przy każdym ponownym uruchomieniu, dotykając \"Zezwól\", gdy pojawi się okno
         autoryzacji.</string>
-    <string name="settings_use_system_color">Użyj koloru motywu systemowego</string>
     <string name="settings_watchdog">Nadzorowanie</string>
     <string name="settings_watchdog_summary">Automatycznie uruchom ponownie Porter, jeśli ulegnie
         awarii</string>
@@ -164,35 +136,8 @@
         ustawienie.</string>
     <string name="settings_tcp_port">Port TCP</string>
     <string name="settings_tcp_port_default">Domyślne (5555)</string>
-    <string name="settings_tcp_port_hint">Zostaw puste, aby użyć domyślnego (5555)</string>
-    <string name="settings_language">Język</string>
-    <string name="settings_translation_contributors">Współtwórcy tłumaczenia</string>
-    <string name="settings_translation">Pomóż w tłumaczeniu</string>
-    <string name="settings_translation_summary">Pomóż nam tłumaczyć %s na Twój język</string>
     <string name="settings_user_interface">Wygląd</string>
-    <string name="settings_black_night_theme">Czysta czerń</string>
-    <string name="settings_black_night_theme_summary">Używaj czystej czerni, gdy włączony jest tryb
-        nocny</string>
     <string name="settings_support">Wsparcie</string>
-    <string name="settings_help">Pomoc</string>
-    <string name="settings_report_bug">Zgłoś błąd</string>
-    <string name="settings_advanced">Zaawansowane</string>
-    <string name="settings_legacy_pairing">Starsza metoda parowania</string>
-    <string name="settings_legacy_pairing_summary">Wpisz kod parowania w oknie dialogowym zamiast w
-        powiadomieniu</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Najpierw wykonaj następujące czynności:</string>
-    <string name="bug_report_dialog_update">Sprawdź, czy używasz ^1.</string>
-    <string name="bug_report_dialog_link_update">najnowsza wersja</string>
-    <string name="bug_report_dialog_wiki">Przeczytaj ^1 i wykonaj wszystkie odpowiednie kroki
-        rozwiązywania problemów.</string>
-    <string name="bug_report_dialog_link_wiki">wiki</string>
-    <string name="bug_report_dialog_issues">Przeszukaj wszystkie ^1, aby sprawdzić, czy Twój błąd
-        został już zgłoszony.</string>
-    <string name="bug_report_dialog_link_issues">istniejące problemy</string>
-    <string name="bug_report_dialog_method">Jeśli masz konto, zgłoś problem na ^1.</string>
-    <string name="bug_report_dialog_method_2">Alternatywnie możesz wysłać wiadomość e-mail.</string>
-    <string name="bug_report_dialog_button_email">E-mail</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Port musi mieścić się w zakresie od 1 do 65535</string>
     <string name="snackbar_battery_optimization_home">Aby start przy uruchomieniu systemu i
@@ -201,28 +146,12 @@
         korzystać z tej funkcji.</string>
     <string name="snackbar_action_fix">Napraw</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Nie znaleziono aplikacji pocztowej</string>
     <string name="toast_shizuku_already_starting">Porter już uruchamia się w tle</string>
     <string name="toast_accessibility_tv_only">Ta usługa jest obsługiwana tylko na urządzeniach TV.</string>
     <string name="toast_pairing_timeout">Upłynął limit czasu usługi parowania Porter.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Motyw</string>
-    <string name="dark_theme_off">Zawsze jasny</string>
-    <string name="dark_theme_on">Zawsze ciemny</string>
-    <!-- About -->
-    <string name="action_about">O aplikacji</string>
-    <string name="about_dialog_button_close">Zamknij</string>
-    <string name="about_view_source_code"><![CDATA[Zobacz kod źródłowy na %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Zatrzymaj Porter</string>
-    <string name="dialog_stop_message">Usługa Porter zostanie zatrzymana.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Status uruchamiania usługi</string>
-    <string name="notification_service_starting">Uruchamianie usługi Porter…</string>
-    <string name="notification_service_start_failed">Uruchamianie usługi Porter nie powiodło się.</string>
-    <string name="notification_service_start_no_root">Nie udało się uzyskać uprawnień roota.</string>
-    <string name="notification_working">Działa…</string>
     <string name="notification_channel_adb_pairing">Parowanie debugowania bezprzewodowego</string>
     <string name="notification_adb_pairing_input_paring_code">Wpisz kod parowania</string>
     <string name="notification_adb_pairing_searching_for_service_title">Szukanie usługi parowania</string>
@@ -254,7 +183,6 @@
     <string name="wadb_permission_error_notification_content">Porter wymaga uprawnienia
         WRITE_SECURE_SETTINGS, aby uruchamiać się przy starcie. Dotknij, aby dowiedzieć się, jak je
         nadać.</string>
-    <string name="wadb_notification_channel">Usługa autostartu ADB</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Nadzorowanie działa</string>
     <string name="watchdog_turn_off">Wyłącz</string>

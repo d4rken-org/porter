@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s davam edir</string>
     <string name="home_status_service_not_running">%1$s davam etmir</string>
-    <string name="home_status_service_version">Versiya %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Versiya %2$s, %1$s <br> %3$s Versiyasına güncəlləmək üçün proqramı yenidən başladın]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Kompüterə qoşularaq başlayın]]></string>
     <string name="home_adb_description"><![CDATA[Root olmayan cihazlarda Porter-nu işə salmaq üçün adb-dən istifadə etməlisiniz (kompüter bağlantısı tələb olunur). Cihaz hər dəfə yenidən işə salındıqda bu proses təkrarlanmalıdır. Lütfən, <b><a href="%1$s">yardımı oxuyun</a></b>.]]></string>
-    <string name="home_adb_button_view_help">Yardım</string>
     <string name="home_adb_button_view_command">Əmirə baxın</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Bəzi başqa mülahizələr də var, lütfən, əvvəlcə yardımı oxuduğunuzu təsdiqləyin.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Kopyala</string>
     <string name="home_adb_dialog_view_command_button_send">Göndər</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Simsiz debaq ilə başladın]]></string>
@@ -28,7 +23,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Əgər axtarış davam edirsə,
         zəhmət olmasa \"Wireless debugging\" funksiyasını söndürüb aktiv etməyə çalışın.</string>
     <string name="dialog_adb_port">Liman</string>
-    <string name="dialog_adb_invalid_port">Port 1 ilə 65535 arasında dəyişən tam ədəddir.</string>
     <string name="adb_pairing">Cütləşmə</string>
     <string name="dialog_adb_pairing_title">Cihaz ilə cütləşdir</string>
     <string name="dialog_adb_pairing_discovery">Cütləşdirmə servisi axtarılır</string>
@@ -42,11 +36,6 @@
         mütləqdir.</string>
     <string name="dialog_usb_debugging_not_enabled">USB debugging aktiv deyil.\nZəhmət olmasa, onu
         \"İnkişaf etdirici seçimləri\" bölməsində aktiv edin.</string>
-    <string name="dialog_adb_pairing_message">Zəhmət olmasa, cütləşdirməyə aşağıdakı addımları
-        yerinə yetirməklə başlayın:\n- \"İnkişaf etdirici Seçimləri\"nə keçid edin\n- \"USB
-        debugging\" və \"Wireless debugging\"i aktiv edin\n- \"Simsiz debugging\" bölməsinin sol
-        tərəfinə toxunun\n- \"Cihazı cütləşdirmə kodu ilə qoş\" düyməsini basın\n- Bildirişdə
-        cütləşdirmə kodunu daxil edin</string>
     <string name="dialog_adb_pairing_accessibility_permission">Android 14-də, Paket Quraşdırıcısı
         ilə Porter-nu quraşdırmaq/yeniləmək, cütləşmə üçün əlçatanlıq xidmətini aktivləşdirmək üçün
         tələb olunan ^1 icazəsini ləğv edir.\n\nBunu etmək üçün aşağıdakı ADB əmrini
@@ -72,7 +61,6 @@
     <string name="enable">Aktiv et</string>
     <string name="development_settings">Tərtibatçı seçimləri</string>
     <string name="notification_settings">Bildiriş seçimləri</string>
-    <string name="adb_pairing_tutorial_title">Porter-nu cihazınızla cütləşdirin</string>
     <string name="adb_pairing_tutorial_content_notification">Shizukudan gələn bildiriş cütləşdirməni
         tamamlamağınız üçün sizə kömək edə bilər</string>
     <string name="adb_pairing_tutorial_content_steps">\"Developer Options\"a keçin, sonra \"USB
@@ -97,7 +85,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Başlat (root edilmiş cihazlar üçün)]]></string>
     <string name="home_root_button_start">Başlat</string>
-    <string name="home_root_button_restart">Yenidən Başlat</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">tətbiqin idarə edilməsi</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -109,20 +96,6 @@
         burada göstəriləcək.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Avtomatlaşdırma proqramları ilə Porter-ya nəzarət edin</string>
-    <string name="home_automation_description">Tasker və MacroDroid kimi proqramlar Porter-nu
-        avtomatik başlatmaq/dayandırmaq niyyətlərini göndərə bilər.</string>
-    <string name="home_automation_button_view_intents">Niyyətlərə baxın</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Tərtibatçı təlimatı</string>
-    <string name="home_learn_more_description">Necə Porter dəstəkli proqram hazırlaya biləcəyinizi
-        öyrənin və ya Porter dəstəkli proqramları əldə edin</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Əlavə bir addım atmalısan</string>
-    <string name="home_adb_is_limited_description">Cihaz istehsalçınız adb icazələrini
-        məhdudlaşdırıb və Porter istifadə edən tətbiqlər düzgün işləməyəcək.\n\nAdətən, bu
-        məhdudiyyət \"İnkişaf etdirici seçimləri\"ndə bəzi seçimləri tənzimləməklə aradan qaldırıla
-        bilər. Bunun necə ediləcəyi barədə ətraflı məlumat üçün zəhmət olmasa, köməkçi səhifəni
-        oxuyun.\n\nƏməliyyatın təsir etməsi üçün Porter-nu yenidən başlatmaq lazım ola bilər.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">adb icazəsi məhduddur</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Çox güman ki, cihazınızın istehsalçısı adb icazəsini məhdudlaşdırır.<p>Sisteminiz üçün <b><a href="%1$s">bu sənəddə</a></b> həll yolu ola bilər.]]></string>
@@ -150,13 +123,11 @@
     <string name="rish_description"><![CDATA[%1$silə siz istənilən terminal proqramında qabıq əmrlərini işlədə bilərsiniz.<p>Onu necə istifadə etmək barədə ətraflı öyrənmək üçün toxunun.]]></string>
     <!-- Settings -->
     <string name="settings_title">Parametrlər</string>
-    <string name="settings_behavior">Davranış</string>
     <string name="settings_start_on_boot">Bootda başla</string>
     <string name="settings_start_on_boot_summary">Android 11+ və ya root tələb edir</string>
     <string name="settings_start_on_boot_bug">Android 11-12-də bir səhvə görə, simsiz sazlama heç
         bir səlahiyyətli şəbəkəni xatırlamır.\n\nAvtorizasiya dialoqu açıldıqda \"İcazə verin\"
         üzərinə klikləməklə, hər bir yenidən yükləmədə şəbəkəyə yenidən icazə verməli olacaqsınız.</string>
-    <string name="settings_use_system_color">Sistem teması rəngindən istifadə edin</string>
     <string name="settings_watchdog">Nəzarətçi</string>
     <string name="settings_watchdog_summary">Porter qəzaya uğradıqda onu avtomatik olaraq yenidən
         başladın</string>
@@ -165,37 +136,8 @@
         başlamalıdır.</string>
     <string name="settings_tcp_port">TCP portu</string>
     <string name="settings_tcp_port_default">Defolt (5555)</string>
-    <string name="settings_tcp_port_hint">Default (5555) istifadə etmək üçün boş buraxın</string>
-    <string name="settings_language">Dil</string>
-    <string name="settings_translation_contributors">Tərcümədə iştirak edənlər</string>
-    <string name="settings_translation">Tərcümədə iştirak et</string>
-    <string name="settings_translation_summary">%s dilini öz dilinizə tərcümə etməkdə bizə kömək
-        edin</string>
     <string name="settings_user_interface">Görünüş</string>
-    <string name="settings_black_night_theme">Qara gecə teması</string>
-    <string name="settings_black_night_theme_summary">Gecə rejimi aktivdirsə, saf qara temasından
-        istifadə edin</string>
     <string name="settings_support">Dəstək</string>
-    <string name="settings_help">Kömək edin</string>
-    <string name="settings_report_bug">Bir səhv bildir</string>
-    <string name="settings_advanced">İrəliləyişçilər</string>
-    <string name="settings_legacy_pairing">İrs cütlüyü</string>
-    <string name="settings_legacy_pairing_summary">Cütləşdirmə kodunu bildiriş əvəzinə dialoqda
-        daxil edin</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Əvvəlcə aşağıdakıları edin:</string>
-    <string name="bug_report_dialog_update">^1-dən istifadə etdiyinizi yoxlayın.</string>
-    <string name="bug_report_dialog_link_update">ən son versiya</string>
-    <string name="bug_report_dialog_wiki">^1-i oxuyun və bütün müvafiq problemlərin aradan
-        qaldırılması addımlarını izləyin.</string>
-    <string name="bug_report_dialog_link_wiki">viki</string>
-    <string name="bug_report_dialog_issues">Səhvinizin artıq bildirilib-bilinmədiyini görmək üçün
-        bütün ^1-ləri axtarın.</string>
-    <string name="bug_report_dialog_link_issues">mövcud problemlər</string>
-    <string name="bug_report_dialog_method">Hesabınız varsa, xahiş edirəm ^1-də bir məsələ təqdim
-        edin.</string>
-    <string name="bug_report_dialog_method_2">Əks halda, bir e-poçt göndərə bilərsiniz.</string>
-    <string name="bug_report_dialog_button_email">E-poçt</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Port 1 ilə 65535 arasında olmalıdır</string>
     <string name="snackbar_battery_optimization_home">Start on boot/watchdog düzgün işləməsi üçün
@@ -204,28 +146,12 @@
         etmək üçün batareya optimizasiyasını söndürün.</string>
     <string name="snackbar_action_fix">Düzəlt</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Heç bir e-poçt tətbiqi tapılmadı</string>
     <string name="toast_shizuku_already_starting">Porter artıq arxa planda başlayır</string>
     <string name="toast_accessibility_tv_only">Bu xidmət yalnız TV cihazlarında dəstəklənir.</string>
     <string name="toast_pairing_timeout">Porter cütləşdirmə xidmətinin vaxtı bitdi.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Mövzu</string>
-    <string name="dark_theme_off">Həmişə yüngül</string>
-    <string name="dark_theme_on">Həmişə qaranlıq</string>
-    <!-- About -->
-    <string name="action_about">Haqqında</string>
-    <string name="about_dialog_button_close">Bağlan</string>
-    <string name="about_view_source_code"><![CDATA[Qaynaq kodlarına buradan baxın %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Shizikunu dayandır</string>
-    <string name="dialog_stop_message">Porter xidməti dayandırılacaq.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Xidmətin başlama statusu</string>
-    <string name="notification_service_starting">Porter servisi başladılır…</string>
-    <string name="notification_service_start_failed">Porter servisini başlatmaq mümkün olmadı</string>
-    <string name="notification_service_start_no_root">Root icazəsini tələb etmək alınmadı.</string>
-    <string name="notification_working">İşləyir…</string>
     <string name="notification_channel_adb_pairing">Simsiz debaq qoşulur...</string>
     <string name="notification_adb_pairing_input_paring_code">Cütləşmə kodunu daxil edin</string>
     <string name="notification_adb_pairing_searching_for_service_title">Qoşulma xidməti axtarılır</string>
@@ -257,7 +183,6 @@
     <string name="wadb_permission_error_notification_title">İcazə xətası</string>
     <string name="wadb_permission_error_notification_content">Porter işə başlamaq üçün
         WRITE_SECURE_SETTINGS lazımdır. Onu necə vermək lazım olduğunu öyrənmək üçün toxun.</string>
-    <string name="wadb_notification_channel">ADB avtomatik işə salma xidməti</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog qaçır</string>
     <string name="watchdog_turn_off">Söndürün</string>

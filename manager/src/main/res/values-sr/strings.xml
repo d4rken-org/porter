@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s se izvršava</string>
     <string name="home_status_service_not_running">%1$s se ne izvršava</string>
-    <string name="home_status_service_version">Verzija %2$s, %1$s</string>
-    <string name="home_status_service_version_update"><![CDATA[Verzija %2$s, %1$s<br>Počni ispočetka zbog ažuriranja na verziju%3$s]]></string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Pokreni uz pomoć konekcije preko računara]]></string>
     <string name="home_adb_description"><![CDATA[Za uređaje koji nisu root-ovani, potrebno je izvršiti adb komandu radi pokretanja Porter aplikacije (zahteva konekciju sa računarom). Ovaj proces je neophodno svaki put ponoviti nakon restarta uređaja. Molim Vas <b><a href="%1$s">pročitajte pomoć </a></b>.]]></string>
-    <string name="home_adb_button_view_help">Pročitajte pomoć</string>
     <string name="home_adb_button_view_command">Pregled komande</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Постоје још нека разматрања, молимо вас да прво потврдите да сте прочитали помоћ.]]></string>
-    <string name="home_adb_dialog_view_command_copy_button">Kopiraj</string>
     <string name="home_adb_dialog_view_command_button_send">Pošalji</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Pokreni preko Bežičnog otklanjanja grešaka]]></string>
@@ -30,7 +25,6 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Молимо вас да покушате да
         онемогућите и омогућите „Бежично отклањање грешака“ ако се претрага настави.</string>
     <string name="dialog_adb_port">Лука</string>
-    <string name="dialog_adb_invalid_port">Порт је цео број у распону од 1 до 65535.</string>
     <string name="adb_pairing">Упаривање</string>
     <string name="dialog_adb_pairing_title">Upari sa uređajem</string>
     <string name="dialog_adb_pairing_discovery">Traženje uređaja za uparivanje</string>
@@ -44,10 +38,6 @@
         postojanjem konekcije sa računarom.</string>
     <string name="dialog_usb_debugging_not_enabled">Отклањање грешака преко USB-а није
         омогућено.\nОмогућите га у „Опцијама за програмере“.</string>
-    <string name="dialog_adb_pairing_message">Почните упаривање пратећи следеће кораке:\n- Идите на
-        „Опције за програмере“\n- Омогућите „USB отклањање грешака“ и „Бежично отклањање грешака“\n-
-        Додирните леву страну „Бежично отклањање грешака“\n- Додирните „Упари уређај са кодом за
-        упаривање“\n- Унесите код за упаривање у обавештење</string>
     <string name="dialog_adb_pairing_accessibility_permission">На Андроиду 14, инсталирање/ажурирање
         Шизукуа помоћу инсталера пакета опозива дозволу ^1, која је потребна за омогућавање услуге
         приступачности за упаривање.\n\nДа бисте је доделили, покрените следећу ADB
@@ -72,7 +62,6 @@
     <string name="enable">Омогући</string>
     <string name="development_settings">Razvojne opcije programera</string>
     <string name="notification_settings">Opcije obaveštenja</string>
-    <string name="adb_pairing_tutorial_title">Uparite Porter sa Vašim uređajem</string>
     <string name="adb_pairing_tutorial_content_notification">Notifikacija iz Porter aplikacije će
         Vam pomoći da dovršite uparivanje.</string>
     <string name="adb_pairing_tutorial_content_steps">Идите на „Опције за програмере“, затим
@@ -96,7 +85,6 @@
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Покрени (за рутоване уређаје)]]></string>
     <string name="home_root_button_start">Почетак</string>
-    <string name="home_root_button_restart">Поново покрени</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Управљање апликацијама</string>
     <plurals name="home_app_management_authorized_apps_count">
@@ -109,19 +97,6 @@
         дозволу биће приказане овде.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">Контролишите Шизуку помоћу апликација за аутоматизацију</string>
-    <string name="home_automation_description">Апликације попут Таскера и МакроДроида могу слати
-        намере за аутоматско покретање/заустављање Шизукуа.</string>
-    <string name="home_automation_button_view_intents">Прикажи намере</string>
-    <!-- Home - Learn more -->
-    <string name="home_learn_more_title">Водич за програмере</string>
-    <string name="home_learn_more_description">Научите како да развијате уз Шизуку</string>
-    <!-- Home - Adb permissions limited -->
-    <string name="home_adb_is_limited_title">Морате направити додатни корак</string>
-    <string name="home_adb_is_limited_description">Произвођач вашег уређаја је ограничио adb дозволе
-        и апликације које користе Porter неће исправно радити.\n\nОбично се ово ограничење може
-        уклонити подешавањем неких опција у „Опцијама за програмере“. Молимо вас да прочитате помоћ
-        за детаље о томе како да то урадите.\n\nМожда ћете морати поново да покренете Porter да би
-        операција ступила на снагу.</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Дозвола adb-а је ограничена</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Врло је могуће да произвођач вашег уређаја ограничава дозволе adb-а.<p>Можда постоји решење за ваш систем у <b><a href=\"%1$s\">овом документу</a></b>.]]></string>
@@ -149,14 +124,12 @@
     <string name="rish_description"><![CDATA[Са %1$s, можете покренути команде шкољке у било којој терминалној апликацији.<p>Додирните да бисте сазнали више о томе како да га користите.]]></string>
     <!-- Settings -->
     <string name="settings_title">Подешавања</string>
-    <string name="settings_behavior">Понашање</string>
     <string name="settings_start_on_boot">Покрени при покретању</string>
     <string name="settings_start_on_boot_summary">Захтева Андроид 11+ или рут</string>
     <string name="settings_start_on_boot_bug">Zbog greške u Androidu 11-12, bežično otklanjanje
         grešaka ne pamti nijednu ovlašćenu mrežu.\n\nMoraćete da ponovo autorizujete mrežu pri
         svakom ponovnom pokretanju tako što ćete dodirnuti \"Dozvoli\" kada se pojavi dijalog za
         autorizaciju.</string>
-    <string name="settings_use_system_color">Користи боју системске теме</string>
     <string name="settings_watchdog">Чувар</string>
     <string name="settings_watchdog_summary">Аутоматски поново покрените Шизуку ако се сруши</string>
     <string name="settings_restart_dialog_title">Потребно је поновно покретање</string>
@@ -164,35 +137,8 @@
         primenila ova postavka.</string>
     <string name="settings_tcp_port">ТЦП порт</string>
     <string name="settings_tcp_port_default">Подразумевано (5555)</string>
-    <string name="settings_tcp_port_hint">Оставите празно да бисте користили подразумевано (5555)</string>
-    <string name="settings_language">Језик</string>
-    <string name="settings_translation_contributors">Сарадници на преводу</string>
-    <string name="settings_translation">Учествујте у преводу</string>
-    <string name="settings_translation_summary">Помозите нам да преведемо %s на ваш језик</string>
     <string name="settings_user_interface">Изглед</string>
-    <string name="settings_black_night_theme">Тема црне ноћи</string>
-    <string name="settings_black_night_theme_summary">Користите чисто црну тему ако је омогућен
-        ноћни режим</string>
     <string name="settings_support">Подршка</string>
-    <string name="settings_help">Помоћ</string>
-    <string name="settings_report_bug">Пријави грешку</string>
-    <string name="settings_advanced">Напредно</string>
-    <string name="settings_legacy_pairing">Упаривање са старим уређајима</string>
-    <string name="settings_legacy_pairing_summary">Унесите код за упаривање у дијалогу уместо у
-        обавештењу</string>
-    <!-- Bug Report Dialog -->
-    <string name="bug_report_dialog_before_reporting">Прво, урадите следеће:</string>
-    <string name="bug_report_dialog_update">Проверите да ли користите ^1.</string>
-    <string name="bug_report_dialog_link_update">најновија верзија</string>
-    <string name="bug_report_dialog_wiki">Прочитајте ^1 и пратите све релевантне кораке за решавање
-        проблема.</string>
-    <string name="bug_report_dialog_link_wiki">вики</string>
-    <string name="bug_report_dialog_issues">Претражите све ^1 да бисте видели да ли је ваша грешка
-        већ пријављена.</string>
-    <string name="bug_report_dialog_link_issues">постојећи проблеми</string>
-    <string name="bug_report_dialog_method">Молимо вас да пријавите проблем на ^1 ако имате налог.</string>
-    <string name="bug_report_dialog_method_2">У супротном, можете послати е-пошту.</string>
-    <string name="bug_report_dialog_button_email">Е-пошта</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Порт мора бити између 1 и 65535</string>
     <string name="snackbar_battery_optimization_home">Оптимизација батерије мора бити онемогућена да
@@ -201,28 +147,12 @@
         користили ову функцију.</string>
     <string name="snackbar_action_fix">Поправи</string>
     <!-- Toast -->
-    <string name="toast_no_email_app">Није пронађена апликација за е-пошту</string>
     <string name="toast_shizuku_already_starting">Шизуку већ почиње у позадини</string>
     <string name="toast_accessibility_tv_only">Ova usluga je podržana samo na TV uređajima.</string>
     <string name="toast_pairing_timeout">Porter uparivanje servis je isteklo.</string>
-    <!-- Dark Mode Setting Override -->
-    <string name="dark_theme">Тема</string>
-    <string name="dark_theme_off">Увек светло</string>
-    <string name="dark_theme_on">Увек мрачно</string>
-    <!-- About -->
-    <string name="action_about">О нама</string>
-    <string name="about_dialog_button_close">Затвори</string>
-    <string name="about_view_source_code"><![CDATA[Погледајте изворни код на %s]]></string>
-    <!-- Start -->
     <!-- Stop -->
     <string name="action_stop">Заустави Шизуку</string>
-    <string name="dialog_stop_message">Шизуку линија ће бити обустављена.</string>
     <!-- Notification -->
-    <string name="notification_channel_service_status">Статус покретања услуге</string>
-    <string name="notification_service_starting">Шизуку линија почиње…</string>
-    <string name="notification_service_start_failed">Покретање Шизуку услуге није успело.</string>
-    <string name="notification_service_start_no_root">Није успело захтевање root дозволе.</string>
-    <string name="notification_working">Ради…</string>
     <string name="notification_channel_adb_pairing">Бежично упаривање за отклањање грешака</string>
     <string name="notification_adb_pairing_input_paring_code">Унесите код за упаривање</string>
     <string name="notification_adb_pairing_searching_for_service_title">Тражење услуге упаривања</string>
@@ -252,7 +182,6 @@
     <string name="wadb_permission_error_notification_title">Грешка дозволе</string>
     <string name="wadb_permission_error_notification_content">Шизуку захтева WRITE_SECURE_SETTINGS
         да би се покренуо при покретању система. Додирните да бисте сазнали како да га одобрите.</string>
-    <string name="wadb_notification_channel">ADB услуга аутоматског покретања</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Чуварски орган ради</string>
     <string name="watchdog_turn_off">Ugasi</string>
