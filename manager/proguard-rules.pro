@@ -65,3 +65,6 @@
 -repackageclasses rikka.shizuku
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
+
+# Manager and a running service can come from different APK versions.
+-keep class eu.darken.porter.common.DiscoveredApplication { *; }

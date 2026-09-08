@@ -1,6 +1,9 @@
 package moe.shizuku.manager.management
 
 import android.os.Bundle
+import eu.darken.porter.common.DiscoveredApplication
+import java.text.DateFormat
+import java.util.Date
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -33,22 +36,42 @@ class ApplicationManagementActivity : ComposeActivity() {
             LaunchedEffect(service) { if (service != ShizukuStateMachine.State.RUNNING) finish() }
             PorterScaffold(stringResource(R.string.home_app_management_title), onBack = { finish() }) { padding ->
                 LazyColumn(Modifier.padding(padding).consumeWindowInsets(padding)) {
-                    if (state.apps.isNotEmpty()) item {
+                    if (state.apps.any { it.canToggle }) item {
                         SettingsSwitch(stringResource(R.string.app_management_toggle_all), R.drawable.ic_apps_outline_24,
-                            state.apps.all { it.granted }, enabled = !state.loading, onCheckedChange = model::toggleAll)
+                            state.allGranted, enabled = !state.loading, onCheckedChange = model::toggleAll)
                     }
+                    if (state.legacy) item { Text(stringResource(R.string.porter_discovery_legacy), Modifier.padding(16.dp)) }
+                    if (state.failedUsers.isNotEmpty()) item { Text(stringResource(R.string.porter_discovery_partial), Modifier.padding(16.dp)) }
+                    if (state.apps.isNotEmpty()) item { Text(stringResource(R.string.porter_connections_explanation), Modifier.padding(16.dp), style = MaterialTheme.typography.bodySmall) }
                     if (state.loading) item { LinearProgressIndicator(Modifier.fillMaxWidth()) }
                     if (!state.loading && state.apps.isEmpty()) item { Text(stringResource(R.string.home_app_management_empty), Modifier.padding(24.dp)) }
                     items(state.apps, key = { "${it.uid}:${it.packageName}" }) { app ->
-                        Row(Modifier.fillMaxWidth().toggleable(value = app.granted, enabled = !state.loading, role = Role.Switch, onValueChange = { model.toggle(app, it) })
+                        Row(Modifier.fillMaxWidth().toggleable(value = app.granted, enabled = !state.loading && app.canToggle, role = Role.Switch, onValueChange = { model.toggle(app, it) })
                             .padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             app.icon?.let { Image(it.asImageBitmap(), null, Modifier.size(40.dp)) }
                             Column(Modifier.weight(1f)) {
                                 Text(app.label, style = MaterialTheme.typography.bodyLarge)
                                 Text(app.packageName, style = MaterialTheme.typography.bodySmall)
+                                val connection = when (app.connectionStatus) {
+                                    DiscoveredApplication.DIRECT -> R.string.porter_connection_direct
+                                    DiscoveredApplication.COMPANION -> R.string.porter_connection_companion
+                                    DiscoveredApplication.NEEDS_COMPANION -> R.string.porter_connection_needs_companion
+                                    DiscoveredApplication.UNSUPPORTED -> R.string.porter_connection_unsupported
+                                    DiscoveredApplication.MANAGED_ONLY -> R.string.porter_connection_managed
+                                    else -> R.string.porter_connection_unknown
+                                }
+                                val authorization = when (app.authorization) {
+                                    DiscoveredApplication.ALLOWED -> R.string.porter_access_allowed
+                                    DiscoveredApplication.DENIED -> R.string.porter_access_denied
+                                    else -> R.string.porter_access_default
+                                }
+                                Text("${stringResource(connection)} · ${stringResource(authorization)}", style = MaterialTheme.typography.bodySmall)
+                                Text(if (app.lastConnectedAt == null) stringResource(R.string.porter_connection_never_recorded)
+                                    else stringResource(R.string.porter_connection_last, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(app.lastConnectedAt))),
+                                    style = MaterialTheme.typography.bodySmall)
                                 if (app.requiresRoot) Text(stringResource(R.string.app_management_item_summary_requires_root), style = MaterialTheme.typography.bodySmall)
                             }
-                            Switch(app.granted, null, enabled = !state.loading)
+                            Switch(app.granted, null, enabled = !state.loading && app.canToggle)
                         }
                     }
                 }

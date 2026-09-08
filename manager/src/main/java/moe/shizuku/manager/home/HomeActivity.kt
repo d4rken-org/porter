@@ -97,7 +97,13 @@ abstract class HomeActivity : ComposeActivity() {
                     val count = appsState.grantedCount
                     HomeCard(stringResource(R.string.porter_applications), R.drawable.ic_apps_outline_24,
                         { startActivity(Intent(this@HomeActivity, ApplicationManagementActivity::class.java)) },
-                        subtitle = resources.getQuantityString(R.plurals.home_app_management_authorized_apps_count, count, count)) {
+                        subtitle = if (appsState.legacy || appsState.failedUsers.isNotEmpty())
+                            resources.getQuantityString(R.plurals.home_app_management_authorized_apps_count, count, count)
+                        else stringResource(R.string.porter_apps_counts, count, appsState.compatibleCount)) {
+                        if (appsState.companionRequiredCount > 0) Text(
+                            resources.getQuantityString(R.plurals.porter_apps_need_companion, appsState.companionRequiredCount, appsState.companionRequiredCount),
+                            style = MaterialTheme.typography.bodyMedium)
+                        if (appsState.failedUsers.isNotEmpty()) Text(stringResource(R.string.porter_discovery_partial), style = MaterialTheme.typography.bodySmall)
                         Text(stringResource(R.string.home_app_management_view_authorized_apps), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
@@ -123,9 +129,11 @@ abstract class HomeActivity : ComposeActivity() {
                     if (Build.VERSION.SDK_INT >= 30 || EnvironmentUtils.isTelevision() || EnvironmentUtils.getAdbTcpPort() > 0) item {
                         HomeCard(stringResource(R.string.home_wireless_adb_title), R.drawable.ic_wadb_24) {
                             HtmlText(stringResource(if (EnvironmentUtils.isTlsSupported()) R.string.home_wireless_adb_description else R.string.home_wireless_adb_description_pre_11))
+                            if (EnvironmentUtils.isTlsSupported()) {
+                                TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) }) { Text(stringResource(R.string.home_wireless_adb_view_guide_button)) }
+                            }
                             HomeCardActions {
                                 if (EnvironmentUtils.isTlsSupported()) {
-                                    TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) }) { Text(stringResource(R.string.home_wireless_adb_view_guide_button)) }
                                     OutlinedButton(onClick = { WirelessStart.pair(this@HomeActivity) }) { Text(stringResource(R.string.adb_pairing)) }
                                 }
                                 Button(onClick = { WirelessStart.start(this@HomeActivity, lifecycleScope) }, enabled = serviceState != ShizukuStateMachine.State.STARTING) { Text(stringResource(R.string.home_root_button_start)) }

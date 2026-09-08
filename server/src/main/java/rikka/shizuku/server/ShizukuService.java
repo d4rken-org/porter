@@ -13,6 +13,8 @@ import static rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED
 import static rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_IS_ONETIME;
 import static rikka.shizuku.server.ServerConstants.PERMISSION;
 
+import eu.darken.porter.common.DiscoveredApplication;
+
 import android.content.Context;
 import android.content.IContentProvider;
 import android.content.Intent;
@@ -94,6 +96,9 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     private final ShizukuClientManager clientManager;
     private final ShizukuConfigManager configManager;
     private final int managerAppId;
+    private final java.util.concurrent.Executor historyWriter = java.util.concurrent.Executors.newSingleThreadExecutor();
+    private final ConnectionHistory connectionHistory = new ConnectionHistory(
+            new File("/data/user_de/0/com.android.shell/porter-connections.json"));
 
     public ShizukuService() {
         super();
@@ -230,6 +235,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         int callingUid = Binder.getCallingUid();
         boolean isManager;
         ClientRecord clientRecord = null;
+        boolean newClient = false;
 
         List<String> packages = PackageManagerApis.getPackagesForUidNoThrow(callingUid);
         if (!packages.contains(requestPackageName)) {
@@ -248,6 +254,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         if (clientManager.findClient(callingUid, callingPid) == null) {
             synchronized (this) {
                 clientRecord = clientManager.addClient(callingUid, callingPid, application, requestPackageName, apiVersion);
+                newClient = clientRecord != null;
             }
             if (clientRecord == null) {
                 LOGGER.w("Add client failed");
@@ -284,6 +291,19 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         }
         try {
             application.bindApplication(reply);
+            if (!isManager && newClient) {
+                long connectedAt = System.currentTimeMillis();
+                historyWriter.execute(() -> {
+                    try {
+                        PackageInfo info = Android17Compat.getPackageInfo(requestPackageName, 0, callingUid / 100000);
+                        if (info != null && info.applicationInfo != null && info.applicationInfo.uid == callingUid) {
+                            connectionHistory.connected(info, connectedAt);
+                        }
+                    } catch (RuntimeException e) {
+                        LOGGER.w(e, "Cannot record client connection");
+                    }
+                });
+            }
         } catch (Throwable e) {
             LOGGER.w(e, "attachApplication");
         }
@@ -455,7 +475,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             setRuntimePermissionsForUid(uid, allowed);
         }
 
-        configManager.update(uid, null, mask, value);
+        configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, value);
     }
 
     private void onPermissionRevoked(String packageName) {
@@ -502,9 +522,57 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         return new ParcelableListSlice<>(list);
     }
 
+    private void writeDiscovery(int userId, Parcel reply) {
+        java.util.Collection<Integer> users = userId == -1 ? UserManagerApis.getUserIdsNoThrow() : java.util.Collections.singletonList(userId);
+        if (users.isEmpty()) throw new IllegalStateException("Cannot enumerate Android users");
+        List<DiscoveredApplication> apps = new ArrayList<>();
+        List<Integer> failedUsers = new ArrayList<>();
+        boolean companion = Compatibility.isAvailable();
+        for (int user : users) {
+            try {
+                long snapshotStartedAt = System.currentTimeMillis();
+                List<PackageInfo> installed = InstalledPackagesCompat.getInstalledPackages(
+                        PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS, user);
+                if (installed == null || installed.isEmpty()) throw new IllegalStateException("Empty package enumeration");
+                connectionHistory.pruneUser(user, installed, snapshotStartedAt);
+                for (PackageInfo info : installed) {
+                    if (info.applicationInfo == null || MANAGER_APPLICATION_ID.equals(info.packageName)
+                            || ServerConstants.COMPAT_APPLICATION_ID.equals(info.packageName)) continue;
+                    ShizukuConfig.PackageEntry decision = configManager.find(info.applicationInfo.uid);
+                    long lastConnected = connectionHistory.get(info);
+                    boolean declared = ClientRouting.requests(info.requestedPermissions, PERMISSION)
+                            || ClientRouting.requests(info.requestedPermissions, ServerConstants.LEGACY_PERMISSION);
+                    boolean managed = decision != null && (decision.packages == null || decision.packages.contains(info.packageName));
+                    if (!declared && !managed && lastConnected == 0) continue;
+                    int authorization = decision != null ? decision.flags & ConfigManager.MASK_PERMISSION : 0;
+                    try {
+                        DiscoveredApplication app = ApplicationDiscovery.describe(info, authorization, companion, lastConnected);
+                        if (app != null) apps.add(app);
+                    } catch (RuntimeException e) {
+                        if (!failedUsers.contains(user)) failedUsers.add(user);
+                        LOGGER.w(e, "Cannot describe application " + info.packageName);
+                    }
+                }
+            } catch (Exception e) {
+                if (!failedUsers.contains(user)) failedUsers.add(user);
+                LOGGER.w(e, "Cannot discover applications for user " + user);
+            }
+        }
+        reply.writeNoException();
+        reply.writeInt(DiscoveredApplication.WIRE_VERSION);
+        reply.writeIntArray(failedUsers.stream().mapToInt(Integer::intValue).toArray());
+        new ParcelableListSlice<>(apps).writeToParcel(reply, 0);
+    }
+
     @Override
     public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
         //LOGGER.d("transact: code=%d, calling uid=%d", code, Binder.getCallingUid());
+        if (code == DiscoveredApplication.TRANSACTION) {
+            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
+            enforceManagerPermission("discoverApplications");
+            writeDiscovery(data.readInt(), reply);
+            return true;
+        }
         if (code == ServerConstants.BINDER_TRANSACTION_getApplications) {
             data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
             enforceManagerPermission("getApplications");

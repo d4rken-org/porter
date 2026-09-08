@@ -3,6 +3,8 @@ package moe.shizuku.manager.authorization
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.os.IBinder
+import eu.darken.porter.common.DiscoveredApplication
 import android.os.Parcel
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Manifest
@@ -37,6 +39,39 @@ object AuthorizationManager {
             reply.recycle()
             data.recycle()
         }
+    }
+
+    data class Discovery(val apps: List<DiscoveredApplication>, val failedUsers: List<Int> = emptyList(), val legacy: Boolean = false)
+
+    internal fun readDiscovery(binder: IBinder): Discovery? {
+        val data = Parcel.obtain()
+        val reply = Parcel.obtain()
+        try {
+            data.writeInterfaceToken("moe.shizuku.server.IShizukuService")
+            data.writeInt(-1)
+            if (!binder.transact(DiscoveredApplication.TRANSACTION, data, reply, 0)) return null
+            reply.readException()
+            if (reply.readInt() != DiscoveredApplication.WIRE_VERSION) return null
+            val failedUsers = reply.createIntArray()?.toList().orEmpty()
+            @Suppress("UNCHECKED_CAST")
+            val apps = (ParcelableListSlice.CREATOR.createFromParcel(reply) as ParcelableListSlice<DiscoveredApplication>).list.orEmpty()
+            return Discovery(apps, failedUsers)
+        } finally {
+            data.recycle()
+            reply.recycle()
+        }
+    }
+
+    fun discover(): Discovery {
+        val binder = Shizuku.getBinder() ?: throw IllegalStateException("Porter is not running")
+        readDiscovery(binder)?.let { return it }
+        val apps = getPackages().mapNotNull { info ->
+            val ai = info.applicationInfo ?: return@mapNotNull null
+            DiscoveredApplication(ai, ai.uid / 100000, 0,
+                if (granted(info.packageName, ai.uid)) DiscoveredApplication.ALLOWED else DiscoveredApplication.DEFAULT,
+                DiscoveredApplication.UNKNOWN, ai.metaData?.getBoolean("moe.shizuku.client.V3_REQUIRES_ROOT") == true, 0)
+        }
+        return Discovery(apps, legacy = true)
     }
 
     fun getPackages(exclude: List<String> = emptyList<String>()): List<PackageInfo> {

@@ -102,7 +102,7 @@ public class ServiceAuthorizationTest {
     }
 
     @Test public void diagnosticsAndApplicationsTransactionsRequireManager() {
-        for (int code : new int[]{ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications}) {
+        for (int code : new int[]{ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications, eu.darken.porter.common.DiscoveredApplication.TRANSACTION}) {
             Parcel request = Parcel.obtain();
             Parcel reply = Parcel.obtain();
             try {
@@ -176,9 +176,9 @@ public class ServiceAuthorizationTest {
         ShadowBinder.setCallingUid(MANAGER_UID);
         installed.requestedPermissions = new String[]{ServerConstants.PERMISSION, ServerConstants.LEGACY_PERMISSION};
         service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED);
+        verify(config).update(CLIENT_UID, List.of(client.packageName), ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED);
         permissions.verify(() -> Android17Compat.grantRuntimePermission(client.packageName, ServerConstants.PERMISSION, 0));
         permissions.verify(() -> Android17Compat.grantRuntimePermission(client.packageName, ServerConstants.LEGACY_PERMISSION, 0), never());
-        verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED);
     }
 
     @Test public void explicitRevocationStopsAttachedClientAndItsUserServices() throws Exception {
@@ -188,7 +188,7 @@ public class ServiceAuthorizationTest {
         activities.verify(() -> ActivityManagerApis.forceStopPackageNoThrow(client.packageName, 0));
         permissions.verify(() -> Android17Compat.revokeRuntimePermission(client.packageName, ServerConstants.PERMISSION, 0));
         verify(userServices).removeUserServicesForPackage(client.packageName);
-        verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION, 0);
+        verify(config).update(CLIENT_UID, List.of(client.packageName), ConfigManager.MASK_PERMISSION, 0);
     }
 
     @Test public void explicitRevocationAlsoStopsDaemonWithoutAttachedClient() throws Exception {
@@ -205,4 +205,72 @@ public class ServiceAuthorizationTest {
         installed.permissions = new android.content.pm.PermissionInfo[]{managerPermission};
         assertNull(ShizukuService.providerSuffix(installed));
     }
+    @Test public void acceptedNewConnectionIsRecordedWithoutGrantingAccess() throws Exception {
+        var history = mock(ConnectionHistory.class);
+        field(ShizukuService.class, "connectionHistory", history);
+        field(ShizukuService.class, "historyWriter", (java.util.concurrent.Executor) Runnable::run);
+        when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null);
+        when(clients.addClient(eq(CLIENT_UID), eq(CLIENT_PID), any(), eq(client.packageName), anyInt())).thenReturn(client);
+        installed.applicationInfo = new android.content.pm.ApplicationInfo();
+        installed.applicationInfo.uid = CLIENT_UID;
+        installed.firstInstallTime = 100;
+        Bundle args = new Bundle();
+        args.putString(ShizukuApiConstants.ATTACH_APPLICATION_PACKAGE_NAME, client.packageName);
+        var callback = mock(IShizukuApplication.class);
+        service.attachApplication(callback, args);
+        verify(callback).bindApplication(any());
+        verify(history).connected(eq(installed), anyLong());
+        verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
+    }
+
+    @Test public void failedConnectionReplyDoesNotCreateHistory() throws Exception {
+        var history = mock(ConnectionHistory.class);
+        field(ShizukuService.class, "connectionHistory", history);
+        field(ShizukuService.class, "historyWriter", (java.util.concurrent.Executor) Runnable::run);
+        when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null);
+        when(clients.addClient(eq(CLIENT_UID), eq(CLIENT_PID), any(), eq(client.packageName), anyInt())).thenReturn(client);
+        Bundle args = new Bundle();
+        args.putString(ShizukuApiConstants.ATTACH_APPLICATION_PACKAGE_NAME, client.packageName);
+        var callback = mock(IShizukuApplication.class);
+        doThrow(new android.os.RemoteException()).when(callback).bindApplication(any());
+        service.attachApplication(callback, args);
+        verifyNoInteractions(history);
+    }
+
+    @Test public void discoveryKeepsOtherAppsAfterOversizedEntryAndPreservesFailedProfileHistory() throws Exception {
+        var history = mock(ConnectionHistory.class);
+        field(ShizukuService.class, "connectionHistory", history);
+        ShadowBinder.setCallingUid(MANAGER_UID);
+        var nativeApp = ApplicationDiscoveryTest.app("native", CLIENT_UID, ServerConstants.PERMISSION);
+        var oversized = ApplicationDiscoveryTest.app("x".repeat(30000), CLIENT_UID + 1, ServerConstants.PERMISSION);
+        var legacy = ApplicationDiscoveryTest.app("legacy", CLIENT_UID + 2, ServerConstants.LEGACY_PERMISSION);
+        var ownerPackages = List.of(nativeApp, oversized, legacy);
+        try (var users = mockStatic(rikka.hidden.compat.UserManagerApis.class);
+             var installedApps = mockStatic(rikka.shizuku.server.util.InstalledPackagesCompat.class)) {
+            users.when(rikka.hidden.compat.UserManagerApis::getUserIdsNoThrow).thenReturn(List.of(0, 10));
+            installedApps.when(() -> rikka.shizuku.server.util.InstalledPackagesCompat.getInstalledPackages(anyLong(), eq(0))).thenReturn(ownerPackages);
+            installedApps.when(() -> rikka.shizuku.server.util.InstalledPackagesCompat.getInstalledPackages(anyLong(), eq(10))).thenThrow(new SecurityException("profile unavailable"));
+            Parcel request = Parcel.obtain();
+            Parcel reply = Parcel.obtain();
+            try {
+                request.writeInterfaceToken(ShizukuApiConstants.BINDER_DESCRIPTOR);
+                request.writeInt(-1);
+                request.setDataPosition(0);
+                assertTrue(service.onTransact(eu.darken.porter.common.DiscoveredApplication.TRANSACTION, request, reply, 0));
+                reply.setDataPosition(0);
+                reply.readException();
+                assertEquals(eu.darken.porter.common.DiscoveredApplication.WIRE_VERSION, reply.readInt());
+                assertArrayEquals(new int[]{0, 10}, reply.createIntArray());
+                @SuppressWarnings("unchecked")
+                var apps = ((rikka.parcelablelist.ParcelableListSlice<eu.darken.porter.common.DiscoveredApplication>) rikka.parcelablelist.ParcelableListSlice.CREATOR.createFromParcel(reply)).getList();
+                assertEquals(2, apps.size());
+                assertEquals("native", apps.get(0).applicationInfo.packageName);
+                assertEquals(eu.darken.porter.common.DiscoveredApplication.ALLOWED, apps.get(0).authorization);
+                assertEquals(eu.darken.porter.common.DiscoveredApplication.NEEDS_COMPANION, apps.get(1).connectionStatus);
+                verify(history).pruneUser(eq(0), eq(ownerPackages), anyLong());
+                verify(history, never()).pruneUser(eq(10), anyList(), anyLong());
+            } finally { request.recycle(); reply.recycle(); }
+        }
+    }
+
 }
