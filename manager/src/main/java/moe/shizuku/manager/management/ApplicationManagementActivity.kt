@@ -41,10 +41,10 @@ class ApplicationManagementActivity : ComposeActivity() {
                     item {
                         SettingsSwitch(stringResource(R.string.porter_global_access), R.drawable.ic_apps_outline_24,
                             state.accessEnabled ?: true, enabled = !state.loading && state.accessEnabled != null,
-                            summary = stringResource(if (state.accessEnabled == null && !state.loading) R.string.porter_global_access_restart
-                                else if (state.accessEnabled == false) R.string.porter_global_access_paused_summary else R.string.porter_global_access_summary),
+                            summary = stringResource(R.string.porter_global_access_summary),
                             onCheckedChange = model::setGlobalAccess)
                     }
+                    if (state.accessEnabled == null && !state.loading) item { Text(stringResource(R.string.porter_global_access_restart), Modifier.padding(16.dp)) }
                     if (state.legacy) item { Text(stringResource(R.string.porter_discovery_legacy), Modifier.padding(16.dp)) }
                     if (state.failedUsers.isNotEmpty()) item { Text(stringResource(R.string.porter_discovery_partial), Modifier.padding(16.dp)) }
                     if (state.apps.isNotEmpty()) item { Text(stringResource(R.string.porter_connections_explanation), Modifier.padding(16.dp), style = MaterialTheme.typography.bodySmall) }

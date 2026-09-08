@@ -25,7 +25,6 @@
     <string name="porter_access_pending_android">Access could not be activated. Check this app’s permissions in Android settings.</string>
     <string name="porter_global_access">Allow app access</string>
     <string name="porter_global_access_summary">Temporarily disable access for all apps without changing their saved permissions.</string>
-    <string name="porter_global_access_paused_summary">App access is paused. Your individual app permissions are preserved. Already-started shell commands may continue.</string>
     <string name="porter_global_access_restart">Restart Porter to use global access control.</string>
     <string name="porter_access_paused">App access is paused</string>
     <string name="porter_status_access_paused">Porter is running, but app access is paused. Resume access in Applications.</string>
