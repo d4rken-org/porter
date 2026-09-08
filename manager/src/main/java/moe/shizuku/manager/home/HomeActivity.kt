@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -150,7 +151,7 @@ abstract class HomeActivity : ComposeActivity() {
                 }
             }
         }
-        if (dialog == "status" && running) MessageDialog(title, "$details\n\n${stringResource(R.string.porter_status_stop_message)}", { dialog = null }, stringResource(R.string.action_stop)) {
+        if (dialog == "status" && running) MessageDialog(title, "$details\n\n${stringResource(R.string.porter_status_stop_message)}", { dialog = null }, stringResource(R.string.action_stop), confirmColor = MaterialTheme.colorScheme.error) {
             dialog = null
             if (ShizukuStateMachine.isRunning()) {
                 ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
@@ -178,7 +179,7 @@ abstract class HomeActivity : ComposeActivity() {
 @Composable
 private fun HomeCard(title: String, icon: Int, onClick: (() -> Unit)? = null,
                      tint: Color = MaterialTheme.colorScheme.primary, content: @Composable ColumnScope.() -> Unit) {
-    Card(Modifier.fillMaxWidth().then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
+    Card(Modifier.fillMaxWidth().clip(CardDefaults.shape).then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
         Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {

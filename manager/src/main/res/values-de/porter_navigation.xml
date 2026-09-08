@@ -5,7 +5,7 @@
     <string name="porter_version">Version</string>
     <string name="porter_pairing_method">Kopplungsmethode</string>
     <string name="porter_status_restricted">Android schränkt einige ADB-Berechtigungen ein.</string>
-    <string name="porter_status_stop_message">Wenn du Porter stoppst, werden verbundene Apps getrennt. Sie verlieren den Zugriff, bis du Porter erneut startest.</string>
+    <string name="porter_status_stop_message">Wenn du Porter stoppst, werden verbundene Apps getrennt. Du musst Porter manuell erneut starten. Dafür kann ein Computer erforderlich sein.</string>
     <string name="porter_status_details_hint">Tippen für Dienstdetails und zum Stoppen</string>
     <string name="porter_pairing_notification">Benachrichtigung</string>
     <string name="porter_pairing_dialog">Dialog in der App</string>

@@ -1,7 +1,7 @@
 title: Porter
 description: A minimal, maintained Shizuku fork that gives Android apps ADB access through the Shizuku APIs, with optional root support.
-url: https://d4rken-org.github.io
-baseurl: /porter
+url: https://porter.darken.eu
+baseurl: ""
 repository_url: https://github.com/d4rken-org/porter
 markdown: kramdown
 kramdown:

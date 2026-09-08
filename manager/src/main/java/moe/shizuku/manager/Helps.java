@@ -13,7 +13,7 @@ public class Helps {
     public static final MultiLocaleEntity RISH = new MultiLocaleEntity();
     public static final MultiLocaleEntity ADB_PERMISSION = new MultiLocaleEntity();
 
-    public static final String WEBSITE = "https://d4rken-org.github.io/porter/";
+    public static final String WEBSITE = "https://porter.darken.eu/";
     public static final String SOURCE = "https://github.com/d4rken-org/porter";
     public static final String STOPPING = WEBSITE + "troubleshooting.html#porter-keeps-stopping";
     public static final String STARTUP = WEBSITE + "troubleshooting.html#automatic-start-does-not-work";

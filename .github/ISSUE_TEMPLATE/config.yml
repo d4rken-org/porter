@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Setup and troubleshooting
-    url: https://d4rken-org.github.io/porter/
+    url: https://porter.darken.eu/
     about: Instructions for starting Porter and connecting your apps.
   - name: Security reporting
     url: https://github.com/d4rken-org/porter/blob/HEAD/SECURITY.md

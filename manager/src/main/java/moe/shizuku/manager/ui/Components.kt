@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -90,9 +91,10 @@ fun ChoiceDialog(title: String, choices: List<String>, selected: Int, onDismiss:
 
 @Composable
 fun MessageDialog(title: String, message: String, onDismiss: () -> Unit,
-                  confirm: String = stringResource(android.R.string.ok), onConfirm: () -> Unit = onDismiss) {
+                  confirm: String = stringResource(android.R.string.ok), confirmColor: Color = MaterialTheme.colorScheme.primary,
+                  onConfirm: () -> Unit = onDismiss) {
     AlertDialog(onDismissRequest = onDismiss, title = { Text(title) },
         text = { Text(message, Modifier.verticalScroll(rememberScrollState())) },
-        confirmButton = { TextButton(onClick = onConfirm) { Text(confirm) } },
+        confirmButton = { TextButton(onClick = onConfirm, colors = ButtonDefaults.textButtonColors(contentColor = confirmColor)) { Text(confirm) } },
         dismissButton = if (onConfirm !== onDismiss) {{ TextButton(onClick = onDismiss) { Text(stringResource(android.R.string.cancel)) } }} else null)
 }
