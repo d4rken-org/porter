@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Volver</string>
+    <string name="porter_local_network_permission">Permite el acceso a tu red local para que Porter pueda encontrar el servicio de depuración inalámbrica de Android y conectarse a él.</string>
+    <string name="porter_pairing_dialog_instructions">Abre Depuración inalámbrica en las opciones para desarrolladores de Android y elige Emparejar dispositivo con código de sincronización. Introduce aquí el puerto y el código de vinculación.</string>
+</resources>

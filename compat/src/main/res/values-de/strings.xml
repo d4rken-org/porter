@@ -1,0 +1,5 @@
+<resources>
+    <string name="permission_label">Porter verwenden</string>
+    <string name="permission_description">Erlaubt dieser App, System-APIs über Porter zu verwenden.</string>
+    <string name="porter_missing">Installiere Porter mit dem passenden Signaturzertifikat, um diese Begleit-App zu verwenden.</string>
+</resources>

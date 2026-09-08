@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Aplikasi</string>
+    <string name="porter_home_subtitle">Akses ADB untuk aplikasi Anda</string>
+    <string name="porter_startup">Memulai Porter</string>
+    <string name="porter_version">Versi</string>
+    <string name="porter_pairing_method">Metode penyambungan</string>
+    <string name="porter_status_restricted">Beberapa izin ADB dibatasi oleh Android.</string>
+    <string name="porter_status_stop_message">Menghentikan Porter akan memutus aplikasi yang menggunakannya. Anda harus memulai Porter lagi secara manual, yang mungkin memerlukan komputer.</string>
+    <string name="porter_status_details_hint">Ketuk untuk detail layanan dan opsi berhenti</string>
+    <string name="porter_status_ready">Porter siap. Aplikasi yang kompatibel kini dapat terhubung dan meminta akses.</string>
+    <string name="porter_pairing_notification">Notifikasi</string>
+    <string name="porter_pairing_dialog">Dialog dalam aplikasi</string>
+</resources>

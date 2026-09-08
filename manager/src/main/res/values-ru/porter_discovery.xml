@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_access_blocked">Заблокировано</string>
+    <string name="porter_apps_counts">Авторизовано: %1$d · Совместимо: %2$d</string>
+    <string name="porter_discovery_partial">Не удалось проверить некоторые профили. Список может быть неполным.</string>
+    <string name="porter_discovery_legacy">Перезапустите Porter, чтобы найти больше приложений и увидеть историю подключений.</string>
+    <string name="porter_connections_explanation">Приложения могут подключаться автоматически при запуске Porter. Время подключения не показывает, когда приложение использовалось в последний раз.</string>
+    <string name="porter_connection_needs_companion">Требуется приложение совместимости</string>
+    <string name="porter_connection_unsupported">Разрешение объявлено; интеграция не распознана</string>
+    <string name="porter_connection_managed">Ранее подключалось или управлялось</string>
+    <string name="porter_connection_unknown">Сведения о подключении недоступны</string>
+    <string name="porter_connection_never_recorded">Последнее подключение: неизвестно</string>
+    <string name="porter_connection_last">Последнее подключение: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d приложению требуется приложение совместимости</item>
+        <item quantity="few">%d приложениям требуется приложение совместимости</item>
+        <item quantity="many">%d приложениям требуется приложение совместимости</item>
+        <item quantity="other">%d приложениям требуется приложение совместимости</item>
+    </plurals>
+    <string name="porter_compatibility_needed">Требуется приложение совместимости</string>
+    <string name="porter_get_compatibility">Установить приложение совместимости</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Вы разрешили доступ для %d приложения, которому требуется приложение совместимости Porter. Доступ откроется после установки приложения совместимости.</item>
+        <item quantity="few">Вы разрешили доступ для %d приложений, которым требуется приложение совместимости Porter. Доступ откроется после установки приложения совместимости.</item>
+        <item quantity="many">Вы разрешили доступ для %d приложений, которым требуется приложение совместимости Porter. Доступ откроется после установки приложения совместимости.</item>
+        <item quantity="other">Вы разрешили доступ для %d приложений, которым требуется приложение совместимости Porter. Доступ откроется после установки приложения совместимости.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Не удалось активировать доступ. Проверьте разрешения этого приложения в настройках Android.</string>
+    <string name="porter_global_access">Разрешить доступ приложениям</string>
+    <string name="porter_global_access_summary">Временно отключить доступ для всех приложений, не меняя их сохранённые разрешения.</string>
+    <string name="porter_global_access_restart">Перезапустите Porter, чтобы использовать общее управление доступом.</string>
+    <string name="porter_access_paused">Доступ приложений приостановлен</string>
+    <string name="porter_status_access_paused">Porter запущен, но доступ приложений приостановлен. Возобновите доступ в разделе «Приложения».</string>
+</resources>

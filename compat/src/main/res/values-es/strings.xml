@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">usar Porter</string>
+    <string name="permission_description">Permite que esta app use las API del sistema a través de Porter.</string>
+    <string name="porter_missing">Instala Porter con el mismo certificado de firma para usar esta app complementaria.</string>
+</resources>

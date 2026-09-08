@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_access_blocked">Diblokir</string>
+    <string name="porter_apps_counts">Diizinkan: %1$d · Kompatibel: %2$d</string>
+    <string name="porter_discovery_partial">Beberapa profil tidak dapat diperiksa. Daftar ini mungkin tidak lengkap.</string>
+    <string name="porter_discovery_legacy">Mulai ulang Porter untuk menemukan lebih banyak aplikasi dan melihat riwayat koneksi.</string>
+    <string name="porter_connections_explanation">Aplikasi dapat terhubung secara otomatis saat Porter dimulai. Waktu koneksi tidak menunjukkan kapan aplikasi terakhir digunakan.</string>
+    <string name="porter_connection_needs_companion">Memerlukan aplikasi kompatibilitas</string>
+    <string name="porter_connection_unsupported">Izin dideklarasikan; integrasi tidak dikenali</string>
+    <string name="porter_connection_managed">Pernah terhubung atau dikelola</string>
+    <string name="porter_connection_unknown">Detail koneksi tidak tersedia</string>
+    <string name="porter_connection_never_recorded">Terakhir terhubung: Tidak diketahui</string>
+    <string name="porter_connection_last">Terakhir terhubung: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="other">%d aplikasi memerlukan aplikasi kompatibilitas</item>
+    </plurals>
+    <string name="porter_compatibility_needed">Aplikasi kompatibilitas diperlukan</string>
+    <string name="porter_get_compatibility">Dapatkan aplikasi kompatibilitas</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="other">Anda mengizinkan akses untuk %d aplikasi yang memerlukan aplikasi kompatibilitas Porter. Aksesnya akan tersedia setelah aplikasi kompatibilitas diinstal.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Akses tidak dapat diaktifkan. Periksa izin aplikasi ini di setelan Android.</string>
+    <string name="porter_global_access">Izinkan akses aplikasi</string>
+    <string name="porter_global_access_summary">Nonaktifkan akses untuk semua aplikasi sementara tanpa mengubah izin yang tersimpan.</string>
+    <string name="porter_global_access_restart">Mulai ulang Porter untuk menggunakan kontrol akses global.</string>
+    <string name="porter_access_paused">Akses aplikasi dijeda</string>
+    <string name="porter_status_access_paused">Porter sedang berjalan, tetapi akses aplikasi dijeda. Lanjutkan akses di Aplikasi.</string>
+</resources>

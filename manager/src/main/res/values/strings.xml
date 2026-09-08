@@ -146,9 +146,9 @@
     <string name="notification_adb_pairing_failed_title">Pairing failed</string>
     <string name="notification_adb_pairing_retry">Retry</string>
     <string name="notification_auth_missing_title">Auth token required</string>
-    <string name="notification_auth_missing_message">Add the “auth” extra to your intent. You can find your token by tapping “View intents” in the app.</string>
+    <string name="notification_auth_missing_message">Add the “auth” extra to your intent. Find your token in Settings under “Control Porter with automation apps”.</string>
     <string name="notification_auth_invalid_title">Invalid auth token</string>
-    <string name="notification_auth_invalid_message">Make sure the token in your intent matches the one shown under “View intents” in the app.</string>
+    <string name="notification_auth_invalid_message">Make sure the token in your intent matches the one in Settings under “Control Porter with automation apps”.</string>
 
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_group_label" translatable="false">Porter</string>

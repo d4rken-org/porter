@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Retour</string>
+    <string name="porter_local_network_permission">Autorisez l\'accès à votre réseau local pour que Porter puisse trouver le service de débogage sans fil d\'Android et s\'y connecter.</string>
+    <string name="porter_pairing_dialog_instructions">Ouvrez Débogage sans fil dans les options pour les développeurs d\'Android et choisissez Associer l\'appareil avec un code d\'association. Saisissez ici le port et le code d\'association.</string>
+</resources>

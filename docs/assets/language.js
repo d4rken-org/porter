@@ -23,13 +23,23 @@
   } catch (_) { /* Storage is optional. */ }
   if (!translations.has(choice)) choice = 'auto';
 
+  const supportedLanguage = value => {
+    const parts = value.toLowerCase().split('-');
+    // Traditional Chinese should fall through to the next browser preference.
+    if (parts[0] === 'zh') {
+      if (parts.includes('hant') || (!parts.includes('hans') && parts.some(part => ['tw', 'hk', 'mo'].includes(part)))) return null;
+      return translations.has('zh-Hans') ? 'zh-Hans' : null;
+    }
+    const lang = parts[0] === 'pt' ? 'pt-BR' : parts[0];
+    return translations.has(lang) ? lang : null;
+  };
   const browserLanguage = () => (navigator.languages || [navigator.language])
-    .map(value => value.toLowerCase().split('-')[0])
-    .find(value => translations.has(value)) || 'en';
+    .map(supportedLanguage).find(Boolean) || 'en';
   let active = 'en';
   const applyLanguage = () => {
     const lang = choice === 'auto' ? browserLanguage() : choice;
     const text = ui[lang];
+    document.documentElement.dir = text.dir || 'ltr';
     if (lang !== active) {
       const translation = translations.get(lang);
       main.replaceChildren(translation.content.cloneNode(true));

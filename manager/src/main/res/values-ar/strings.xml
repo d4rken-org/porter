@@ -1,200 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Home - Status -->
-    <string name="home_status_service_is_running">%1$s يعمل بنجاح</string>
+    <string name="home_status_service_is_running">%1$s يعمل</string>
     <string name="home_status_service_not_running">%1$s لا يعمل</string>
+
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[ابدأ بالاتصال بجهاز كمبيوتر]]></string>
-    <string name="home_adb_description"><![CDATA[بالنسبة للأجهزة التي لا تحتوي على الجذر (Root) ، تحتاج إلى استخدام adb لبدء Porter (يتطلب اتصال الكمبيوتر). يجب تكرار هذه العملية في كل مرة يتم فيها إعادة تشغيل الجهاز. يرجى <b><a href="%1$s"> قراءة التعليمات </a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[بالنسبة للأجهزة غير المزوّدة بصلاحيات الجذر (root)، عليك استخدام adb لبدء Porter (يتطلب الاتصال بجهاز كمبيوتر). يجب تكرار هذه العملية في كل مرة يُعاد فيها تشغيل الجهاز. يُرجى <b><a href=\"%1$s\">قراءة المساعدة</a></b>.]]></string>
     <string name="home_adb_button_view_command">عرض الأمر</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[font face=monospace>%1$s</font><br><br>* هناك بعض الاعتبارات الأخرى، يرجى تأكيد أنك قرأت التعليمات أولا.]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* هناك بعض الاعتبارات الأخرى، يُرجى التأكد من أنك قرأت المساعدة أولًا.]]></string>
     <string name="home_adb_dialog_view_command_button_send">إرسال</string>
+
     <!-- Home - Wireless Adb -->
-    <string name="home_wireless_adb_title"><![CDATA[البدء باستخدام التصحيح اللاسلكي]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[على أندرويد 11 وما فوق ، يمكنك تفعيل التصحيح اللاسلكي وبدء Porter مباشرة من جهازك ، دون الاحتياج إتصال بالكمبيوتر.<p>يرجى الإطلاع أولاً على التعليمات المفصلة خطوة بخطوة.]]></string>
-    <string name="home_wireless_adb_description_pre_11"><![CDATA[على الأجهزة الأقدم من إصدار الأندرويد 11 ، يلزم الاتصال بجهاز كمبيوتر لتمكين المعالجة/التصحيح اللاسلكي.]]></string>
-    <string name="home_wireless_adb_view_guide_button">‌دليل خطوة بخطوة</string>
+    <string name="home_wireless_adb_title"><![CDATA[البدء عبر تصحيح الأخطاء اللاسلكي]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[على Android 11 أو الأحدث، يمكنك تفعيل تصحيح الأخطاء اللاسلكي وبدء Porter مباشرةً من جهازك دون الاتصال بجهاز كمبيوتر.<p>يُرجى الاطلاع على الدليل التفصيلي أولًا.]]></string>
+    <string name="home_wireless_adb_description_pre_11"><![CDATA[قبل Android 11، يلزم الاتصال بجهاز كمبيوتر لتفعيل تصحيح الأخطاء اللاسلكي.]]></string>
+    <string name="home_wireless_adb_view_guide_button">دليل خطوة بخطوة</string>
+
     <!-- Adb -->
-    <string name="dialog_adb_discovery">البحث عن خدمة التصحيح اللاسلكي</string>
-    <string name="dialog_adb_discovery_message">يرجى تمكين \"التصحيح اللاسلكي\" في \"خيارات
-        المطور\". \"تصحيح لاسلكي\" يتم تعطيلها عندما تتغير الشبكة تلقائيا.
-        \n
-        \n ملاحظة، لا تعطل \"خيارات المطور\" أو \"تصحيح USB\"، أو سيتم إيقاف شيزوكو</string>
-    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">يرجى محاولة تعطيل
-        \"التصحيح اللاسلكي\" وتمكينه إذا استمر في البحث.</string>
+    <string name="dialog_adb_discovery">جارٍ البحث عن خدمة تصحيح الأخطاء اللاسلكي</string>
+    <string name="dialog_adb_discovery_message">يُرجى تفعيل \"تصحيح الأخطاء اللاسلكي\" في \"خيارات المطوّر\". يتم إيقاف \"تصحيح الأخطاء اللاسلكي\" تلقائيًا عند تغيّر الشبكة.\n\nملاحظة: لا توقف \"خيارات المطوّر\" أو \"تصحيح أخطاء USB\"، وإلا سيتوقف Porter.</string>
+    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">إذا استمر البحث، يُرجى محاولة إيقاف \"تصحيح الأخطاء اللاسلكي\" ثم إعادة تفعيله.</string>
     <string name="dialog_adb_port">المنفذ</string>
-    <string name="adb_pairing">الاقتران</string>
-    <string name="dialog_adb_pairing_title">إقران مع الجهاز</string>
-    <string name="dialog_adb_pairing_discovery">جاري البحث على جهاز للإتصال</string>
-    <string name="dialog_adb_pairing_paring_code">كود الاقتران</string>
-    <string name="paring_code_is_wrong">رمز الاقتران خاطئ.</string>
-    <string name="cannot_connect_port">لا يمكن الاتصال بخدمة تصحيح الأخطاء اللاسلكية.\n\nيرجى التأكد
-        من إدراج Porter في القائمة البيضاء لجميع جدران الحماية، أو تطبيقات حظر الإعلانات، أو VPN،
-        أو التطبيقات المماثلة التي يمكنها تقييد الوصول إلى الشبكة.</string>
-    <string name="dialog_wireless_adb_not_enabled">التصحيح اللاسلكي غير ممكّن.
-        \nملاحظة ، قبل Android 11 ، لتمكين التصحيح اللاسلكي ، يجب أن يكون الاتصال بالكمبيوتر أمرًا
-        ضروريًا.</string>
-    <string name="dialog_usb_debugging_not_enabled">لم يتم تمكين تصحيح أخطاء USB.\nيرجى تمكينه في
-        \"خيارات المطور\".</string>
-    <string name="dialog_adb_pairing_accessibility_permission">في نظام Android 14، يؤدي تثبيت/تحديث
-        تطبيق Porter باستخدام مُثبِّت الحزم إلى إلغاء إذن ^1، وهو الإذن المطلوب لتفعيل خدمة إمكانية
-        الوصول للاقتران.\n\nلمنحه، شغِّل أمر ADB التالي:\n\n^2\n\nبعد تشغيل الأمر، يمكنك متابعة
-        عملية الاقتران.\n\nملاحظة: يمكنك تجاوز هذا الإجراء بتثبيت/تحديث Porter باستخدام ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">يرجى تفعيل خدمة إمكانية الوصول لبدء عملية
-        الاقتران. هذا يسمح لـ Porter باكتشاف رمز الاقتران.\n\nسيتم إيقاف خدمة إمكانية الوصول عند
-        العثور على الرمز أو بعد دقيقة واحدة لتوفير الطاقة.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">يرجى بدء عملية الاقتران من خلال تنفيذ
-        الخطوات التالية:\n- انتقل إلى \"خيارات المطور\"\n- قم بتمكين \"تصحيح أخطاء USB\" و\"تصحيح
-        الأخطاء اللاسلكية\"\n- انقر على الجانب الأيسر من \"تصحيح الأخطاء اللاسلكية\"\n- انقر على
-        \"إقران الجهاز برمز الاقتران\". سيكتشف Porter رمز الاقتران تلقائيًا.</string>
-    <string name="adb_pairing_requires_multi_window">الرجاء إدخال وضع تقسيم الشاشة (متعدد النوافذ)
-        أولاً.</string>
-    <string name="adb_pairing_requires_multi_window_reason">يتطلب النظام أن يكون مربع حوار الاقتران
-        مرئيًا دائمًا. استخدام وضع تقسيم الشاشة هو الطريقة الوحيدة لإظهار هذا التطبيق ومربع حوار
-        النظام في آنٍ واحد.</string>
-    <string name="adb_error_key_store">غير قادر على إنشاء مفتاح لتصحيح الأخطاء اللاسلكية.\nقد يكون
-        هذا بسبب تعطل آلية KeyStore لهذا الجهاز.</string>
-    <string name="adb_pair_required">يرجى المرور بخطوة الاقتران أولاً.</string>
-    <string name="enable">يُمكَِن</string>
-    <string name="development_settings">خيارات للمطور</string>
-    <string name="notification_settings">إعداد الإشعارات</string>
-    <string name="adb_pairing_tutorial_content_notification">سيساعدك إشعار من Porter على إكمال
-        الاقتران.</string>
-    <string name="adb_pairing_tutorial_content_steps">انتقل إلى \"خيارات المطور\"، ثم قم بتمكين
-        \"تصحيح أخطاء USB\" و\"تصحيح أخطاء اللاسلكي\".</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">انقر على الجانب الأيسر من \"تصحيح
-        الأخطاء اللاسلكية\"، ثم انقر على \"إقران الجهاز برمز الاقتران\". أدخل الرمز في الإشعار
-        لإكمال عملية الاقتران.</string>
-    <string name="adb_pairing_tutorial_content_notification_blocked">تحتاج عملية الاقتران إلى
-        التفاعل مع إشعار من Porter. يرجى السماح لشيزوكو بنشر الإخطارات.</string>
-    <string name="adb_pairing_tutorial_content_miui">قد يحتاج مستخدمو MIUI إلى تبديل نمط الإعلام إلى
-        \"Android\" من \"Notification\" - \"Notification Shade\" في إعدادات النظام.</string>
-    <string name="adb_pairing_tutorial_content_miui_2">وإلا، فقد لا تتمكن من إدخال رمز الاقتران من
-        الإشعار.</string>
-    <string name="adb_pairing_tutorial_content_finish">ارجع إلى شيزوكو وابدأ في شيزوكو.</string>
-    <string name="adb_pairing_tutorial_content_network">يحتاج شيزوكو إلى الوصول إلى الشبكة المحلية.
-        يتم التحكم به من خلال أذونات الشبكة.</string>
-    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">بعض الأنظمة (مثل
-        MIUI) تمنع التطبيقات من الوصول إلى الشبكة عند عدم ظهورها، حتى لو كانت تستخدم خدمة الواجهة
-        الأمامية. يُرجى تعطيل ميزات تحسين أداء البطارية لتطبيق Porter على هذه الأنظمة.</string>
+    <string name="adb_pairing">الإقران</string>
+    <string name="dialog_adb_pairing_title">الإقران مع الجهاز</string>
+    <string name="dialog_adb_pairing_discovery">جارٍ البحث عن خدمة الإقران</string>
+    <string name="dialog_adb_pairing_paring_code">رمز الإقران</string>
+    <string name="paring_code_is_wrong">رمز الإقران غير صحيح.</string>
+    <string name="cannot_connect_port">تعذّر الاتصال بخدمة تصحيح الأخطاء اللاسلكي.\n\nيُرجى التأكد من إدراج Porter في القائمة المسموح بها في جميع تطبيقات جدار الحماية أو حظر الإعلانات أو VPN أو التطبيقات المشابهة التي قد تقيّد الوصول إلى الشبكة.</string>
+    <string name="dialog_wireless_adb_not_enabled">تصحيح الأخطاء اللاسلكي غير مفعّل.\nملاحظة: قبل Android 11، يلزم الاتصال بجهاز كمبيوتر لتفعيل تصحيح الأخطاء اللاسلكي.</string>
+    <string name="dialog_usb_debugging_not_enabled">تصحيح أخطاء USB غير مفعّل.\nيُرجى تفعيله في \"خيارات المطوّر\".</string>
+    <string name="dialog_adb_pairing_accessibility_permission">على Android 14، يؤدي تثبيت Porter أو تحديثه عبر مثبّت الحزم إلى إلغاء إذن ^1، وهو مطلوب لتفعيل خدمة تسهيل الاستخدام الخاصة بالإقران.\n\nلمنحه، نفّذ أمر ADB التالي:\n\n^2\n\nبعد تنفيذ الأمر، يمكنك متابعة عملية الإقران.\n\nملاحظة: يمكنك تجاوز ذلك بتثبيت Porter أو تحديثه عبر ADB.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">يُرجى تفعيل خدمة تسهيل الاستخدام لبدء عملية الإقران. يتيح ذلك لـ Porter اكتشاف رمز الإقران.\n\nسيتم إيقاف خدمة تسهيل الاستخدام عند العثور على الرمز أو بعد دقيقة واحدة لتوفير الطاقة.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">يُرجى بدء الإقران بتنفيذ الخطوات التالية:\n- انتقل إلى \"خيارات المطوّر\"\n- فعّل \"تصحيح أخطاء USB\" و\"تصحيح الأخطاء اللاسلكي\"\n- انقر على نص \"تصحيح الأخطاء اللاسلكي\" (وليس مفتاح التبديل)\n- انقر على \"إقران الجهاز باستخدام رمز الإقران\". سيكتشف Porter رمز الإقران تلقائيًا.</string>
+    <string name="adb_pairing_requires_multi_window">يُرجى الدخول إلى وضع تقسيم الشاشة (النوافذ المتعددة) أولًا.</string>
+    <string name="adb_pairing_requires_multi_window_reason">يتطلب النظام أن يبقى مربع حوار الإقران مرئيًا دائمًا. استخدام وضع تقسيم الشاشة هو الطريقة الوحيدة لعرض هذا التطبيق ومربع حوار النظام في الوقت نفسه.</string>
+    <string name="adb_error_key_store">تعذّر إنشاء مفتاح لتصحيح الأخطاء اللاسلكي.\nقد يكون السبب أن آلية KeyStore في هذا الجهاز معطّلة.</string>
+    <string name="adb_pair_required">يُرجى إكمال خطوة الإقران أولًا.</string>
+    <string name="enable">تفعيل</string>
+    <string name="development_settings">خيارات المطوّر</string>
+    <string name="notification_settings">خيارات الإشعارات</string>
+    <string name="adb_pairing_tutorial_content_notification">سيساعدك إشعار من Porter على إكمال الإقران.</string>
+    <string name="adb_pairing_tutorial_content_steps">انتقل إلى \"خيارات المطوّر\"، ثم فعّل \"تصحيح أخطاء USB\" و\"تصحيح الأخطاء اللاسلكي\".</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">انقر على نص \"تصحيح الأخطاء اللاسلكي\" (وليس مفتاح التبديل)، ثم انقر على \"إقران الجهاز باستخدام رمز الإقران\". أدخل الرمز في الإشعار لإكمال الإقران.</string>
+    <string name="adb_pairing_tutorial_content_notification_blocked">تتطلب عملية الإقران التفاعل مع إشعار من Porter. يُرجى السماح لـ Porter بإرسال الإشعارات.</string>
+    <string name="adb_pairing_tutorial_content_miui">قد يحتاج مستخدمو MIUI إلى تغيير نمط الإشعارات إلى \"Android\" من \"الإشعارات\" - \"لوحة الإشعارات\" في إعدادات النظام.</string>
+    <string name="adb_pairing_tutorial_content_miui_2">وإلا فقد لا تتمكن من إدخال رمز الإقران من الإشعار.</string>
+    <string name="adb_pairing_tutorial_content_finish">ارجع إلى Porter وابدأ تشغيل Porter.</string>
+    <string name="adb_pairing_tutorial_content_network">يحتاج Porter إلى الوصول إلى الشبكة المحلية. يتم التحكم في ذلك عبر إذن الشبكة.</string>
+    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">تمنع بعض الأنظمة (مثل MIUI) التطبيقات من الوصول إلى الشبكة عندما لا تكون ظاهرة، حتى لو كان التطبيق يستخدم خدمة تعمل في المقدّمة. يُرجى إيقاف ميزات تحسين البطارية لتطبيق Porter على هذه الأنظمة.</string>
+
     <!-- Home - Root -->
-    <string name="home_root_title"><![CDATA[ابدأ (للأجهزة المجذرة)]]></string>
-    <string name="home_root_button_start">البدء بالتشغيل</string>
+    <string name="home_root_title"><![CDATA[البدء (للأجهزة المزوّدة بصلاحيات الجذر)]]></string>
+    <string name="home_root_description"><![CDATA[إذا كنت تستخدم Magisk، فإن %1$s خيار آخر. تحتاج التطبيقات إلى دعم صريح لـ %2$s.]]></string>
+    <string name="home_root_button_start">بدء</string>
+
     <!-- Home - Application management -->
-    <string name="home_app_management_title">الإدارة التطبيقية</string>
+    <string name="home_app_management_title">إدارة التطبيقات</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="zero"><![CDATA[تطبيق %d معتمد]]></item>
-        <item quantity="one"><![CDATA[تطبيقات %d معتمدة]]></item>
-        <item quantity="two"><![CDATA[تطبيقات %d معتمدة]]></item>
-        <item quantity="few"><![CDATA[تطبيقات %d معتمدة]]></item>
-        <item quantity="many"><![CDATA[تطبيقات %d معتمدة]]></item>
-        <item quantity="other"><![CDATA[تطبيقات %d معتمدة]]></item>
+        <item quantity="zero"><![CDATA[لا توجد تطبيقات مصرّح لها (%d)]]></item>
+        <item quantity="one"><![CDATA[تطبيق واحد مصرّح له (%d)]]></item>
+        <item quantity="two"><![CDATA[تطبيقان مصرّح لهما (%d)]]></item>
+        <item quantity="few"><![CDATA[%d تطبيقات مصرّح لها]]></item>
+        <item quantity="many"><![CDATA[%d تطبيقًا مصرّح لها]]></item>
+        <item quantity="other"><![CDATA[%d تطبيق مصرّح له]]></item>
     </plurals>
-    <string name="home_app_management_view_authorized_apps"><![CDATA[انقر لإدارة التطبيقات المصرح بها]]></string>
-    <string name="home_app_management_empty">ستظهر هنا التطبيقات التي طلبت أو أعلنت عن إذن Porter.</string>
+    <string name="home_app_management_view_authorized_apps"><![CDATA[انقر لإدارة التطبيقات المصرّح لها]]></string>
+    <string name="home_app_management_empty">ستظهر هنا التطبيقات التي طلبت إذن Porter أو أعلنت عنه.</string>
+
     <!-- Home - Automation -->
-    <string name="home_automation_title">التحكم في شيزوكو باستخدام تطبيقات الأتمتة</string>
+    <string name="home_automation_title">التحكم في Porter عبر تطبيقات الأتمتة</string>
+    <string name="home_automation_bottom_sheet_intents">الأوامر (Intents)</string>
+    <string name="home_automation_bottom_sheet_label_action">الإجراء (Action)</string>
+    <string name="home_automation_bottom_sheet_label_package">الحزمة (Package)</string>
+    <string name="home_automation_bottom_sheet_label_target">الهدف (Target)</string>
+    <string name="home_automation_bottom_sheet_label_extras">الإضافات (Extras)</string>
+    <string name="home_automation_regenerate_token">هل تريد إعادة إنشاء الرمز المميز؟</string>
+    <string name="home_automation_regenerate_token_message">ستحتاج إلى إعادة ضبط أوامر intents باستخدام الرمز المميز الجديد.</string>
+
+    <!-- Home - Dialogs -->
+    <string name="home_dialog_reboot_required_title">يلزم إعادة تشغيل الجهاز</string>
+    <string name="home_dialog_reboot_required_message">يلزم إعادة تشغيل الجهاز ليعمل Porter بشكل صحيح. للمتابعة، يُرجى إعادة تشغيل جهازك.</string>
+    <string name="home_dialog_duplicate_app_detected_title">تم اكتشاف تطبيق مكرر</string>
+    <string name="home_dialog_duplicate_app_detected_message">هناك إصدار آخر من هذا التطبيق مثبّت على جهازك. للمتابعة، يُرجى إلغاء تثبيت جميع الإصدارات المكررة وإعادة تشغيل جهازك.</string>
+    <string name="home_dialog_button_exit">خروج</string>
+
     <!-- Application management -->
-    <string name="app_management_dialog_adb_is_limited_title">إذن الADB محدود</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[من المحتمل جدًا أن تحدد الشركة المصنعة للجهاز إذن adb. <p> قد يكون هناك حل لنظامك في <b><a href="%1$s">هذا المستند</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* يطلب Porter الجذر (الروت) للعمل</string>
+    <string name="app_management_dialog_adb_is_limited_title">صلاحيات adb مقيّدة</string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[من المرجّح جدًا أن الشركة المصنّعة لجهازك تقيّد صلاحيات adb.<p>قد يوجد حل لنظامك في <b><a href=\"%1$s\">هذا المستند</a></b>.]]></string>
+    <string name="app_management_item_summary_requires_root">* يتطلب تشغيل Porter بصلاحيات الجذر</string>
     <string name="app_management_toggle_all">تبديل الكل</string>
+
     <!-- Terminal -->
-    <string name="home_terminal_title">استخدم Porter في تطبيقات المحطة</string>
-    <string name="home_terminal_description">تشغيل أوامر shell في تطبيقات المحطة الطرفية من خلال
-        Porter</string>
-    <string name="terminal_tutorial_miui">أبلغ المستخدمون أن MIUI يكسر إطار عمل الوصول إلى التخزين،
-        والذي تستخدمه وظيفة التصدير.</string>
-    <string name="terminal_tutorial_miui_2">إذا كنت تستخدم MIUI، فقد تحتاج إلى استخراج الملف من مجلد
-        الأصول في ملف APK الخاص بـ Porter.</string>
-    <string name="terminal_tutorial_1">تصدير الملفات إلى مجلد جديد.</string>
-    <string name="terminal_tutorial_1_description">سيتم تصدير ملفين: %1$s و %2$s. إذا كانت الملفات
-        موجودة بالفعل في المجلد المحدد، فسيتم حذفها.</string>
+    <string name="home_terminal_title">استخدام Porter في تطبيقات الطرفية</string>
+    <string name="home_terminal_description">تنفيذ أوامر shell في تطبيقات الطرفية عبر Porter</string>
+    <string name="terminal_tutorial_miui">أبلغ مستخدمون أن MIUI يعطّل إطار عمل الوصول إلى مساحة التخزين (Storage Access Framework) الذي تستخدمه وظيفة التصدير.</string>
+    <string name="terminal_tutorial_miui_2">إذا كنت تستخدم MIUI، فقد تضطر إلى استخراج الملف من مجلد assets داخل ملف APK الخاص بـ Porter.</string>
+    <string name="terminal_tutorial_1">صدّر الملفات إلى مجلد جديد.</string>
+    <string name="terminal_tutorial_1_description">سيتم تصدير ملفين: %1$s و%2$s. إذا كانت الملفات موجودة بالفعل في المجلد المحدد، فسيتم حذفها.</string>
     <string name="terminal_export_files">تصدير الملفات</string>
-    <string name="terminal_tutorial_2">استخدم تطبيق المحطة الطرفية الخاص بك لنسخ الملفات إلى دليل
-        الملفات الخاص به.</string>
-    <string name="terminal_tutorial_2_description">نصيحة: إذا كان دليل الصفحة الرئيسية لتطبيقك
-        الطرفي (~) موجودًا في دليل الملفات الخاصة، فإن وضع الملفات هناك سيسمح لك بتشغيل %1$s دون
-        كتابة المسار.\n\nوإلا، يمكنك إنشاء اسم مستعار لـ %2$s في ملف تكوين تطبيقك الطرفي %3$s .</string>
+    <string name="terminal_tutorial_2">استخدم تطبيق الطرفية لنسخ الملفات إلى دليل ملفاته الخاص.</string>
+    <string name="terminal_tutorial_2_description">نصيحة: إذا كان الدليل الرئيسي (~) لتطبيق الطرفية موجودًا في دليل الملفات الخاص، فإن وضع الملفات هناك سيتيح لك تشغيل %1$s دون كتابة المسار.\n\nوإلا يمكنك إنشاء اسم بديل (alias) لـ %2$s في ملف إعدادات %3$s الخاص بتطبيق الطرفية.</string>
     <string name="terminal_tutorial_3">افتح shell باستخدام الأمر التالي:</string>
-    <string name="rish_description"><![CDATA[باستخدام %1$s، يمكنك تشغيل أوامر shell في أي تطبيق طرفي. انقر فوق<p>لمعرفة المزيد حول كيفية استخدامه.]]></string>
+    <string name="rish_description"><![CDATA[باستخدام %1$s، يمكنك تنفيذ أوامر shell في أي تطبيق طرفية.<p>انقر لمعرفة المزيد حول كيفية استخدامه.]]></string>
+
     <!-- Settings -->
     <string name="settings_title">الإعدادات</string>
-    <string name="settings_start_on_boot">البدء عند التمهيد</string>
-    <string name="settings_start_on_boot_summary">يتطلب Android 11+ أو الجذر</string>
-    <string name="settings_start_on_boot_bug">بسبب وجود خلل في نظامي التشغيل Android 11-12، لا يتذكر
-        التصحيح اللاسلكي أي شبكات معتمدة.\n\nستحتاج إلى إعادة تفويض الشبكة عند كل إعادة تشغيل من
-        خلال النقر على \"السماح\" عند ظهور مربع حوار التفويض.</string>
-    <string name="settings_watchdog">مراقب</string>
-    <string name="settings_watchdog_summary">إعادة تشغيل Porter تلقائيًا في حالة تعطله</string>
-    <string name="settings_restart_dialog_title">مطلوب إعادة التشغيل</string>
-    <string name="settings_restart_dialog_message">يجب على Porter إعادة التشغيل لتطبيق هذا الإعداد.</string>
+    <string name="settings_start_on_boot">البدء عند تشغيل الجهاز</string>
+    <string name="settings_start_on_boot_summary">يتطلب Android 11 أو الأحدث أو صلاحيات الجذر</string>
+    <string name="settings_start_on_boot_bug">بسبب خلل في Android 11 و12، لا يتذكر تصحيح الأخطاء اللاسلكي أي شبكات مصرّح بها.\n\nستحتاج إلى إعادة التصريح للشبكة عند كل إعادة تشغيل بالنقر على \"السماح\" عند ظهور مربع حوار التصريح.</string>
+    <string name="settings_watchdog">المراقب</string>
+    <string name="settings_watchdog_summary">إعادة تشغيل Porter تلقائيًا عند تعطّله</string>
+    <string name="settings_restart_dialog_title">يلزم إعادة التشغيل</string>
+    <string name="settings_restart_dialog_message">يحتاج Porter إلى إعادة التشغيل لتطبيق هذا الإعداد.</string>
     <string name="settings_tcp_port">منفذ TCP</string>
-    <string name="settings_tcp_port_default">افتراضي (5555)</string>
+    <string name="settings_tcp_port_default">الافتراضي (5555)</string>
     <string name="settings_user_interface">المظهر</string>
-    <string name="settings_support">يدعم</string>
+    <string name="settings_support">الدعم</string>
+
     <!-- Snackbar -->
-    <string name="snackbar_invalid_port">يجب أن يكون المنفذ بين 1 و 65535</string>
-    <string name="snackbar_battery_optimization_home">يجب تعطيل تحسين البطارية حتى يعمل التشغيل عند
-        التمهيد/مراقبة التشغيل بشكل صحيح.</string>
-    <string name="snackbar_battery_optimization_settings">يرجى تعطيل تحسين البطارية لاستخدام هذه
-        الميزة.</string>
-    <string name="snackbar_action_fix">يصلح</string>
+    <string name="snackbar_invalid_port">يجب أن يكون المنفذ بين 1 و65535</string>
+    <string name="snackbar_battery_optimization_home">يجب إيقاف تحسين البطارية ليعمل البدء عند تشغيل الجهاز/المراقب بشكل صحيح.</string>
+    <string name="snackbar_battery_optimization_settings">يُرجى إيقاف تحسين البطارية لاستخدام هذه الميزة.</string>
+    <string name="snackbar_action_fix">إصلاح</string>
+
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">شيزوكو بدأت بالفعل في الخلفية</string>
-    <string name="toast_accessibility_tv_only">هذه الخدمة مدعومة فقط على أجهزة التلفزيون.</string>
-    <string name="toast_pairing_timeout">انتهت مهلة خدمة إقران شيزوكو.</string>
-    <!-- Stop -->
+    <string name="toast_shizuku_already_starting">Porter قيد البدء بالفعل في الخلفية</string>
+    <string name="toast_accessibility_tv_only">هذه الخدمة مدعومة فقط على أجهزة التلفزيون</string>
+    <string name="toast_pairing_timeout">انتهت مهلة خدمة الإقران في Porter</string>
+
+    <!-- Dark Mode Setting Override -->
+    <string name="follow_system">اتباع النظام</string>
+
+    <!-- Start/Stop -->
+    <string name="start">بدء</string>
+    <string name="stop">إيقاف</string>
     <string name="action_stop">إيقاف Porter</string>
+
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">اقتران التصحيح/العلاج اللاسلكي</string>
-    <string name="notification_adb_pairing_input_paring_code">أدخل رمز الاقتران</string>
-    <string name="notification_adb_pairing_searching_for_service_title">البحث عن خدمة الاقتران</string>
-    <string name="notification_adb_pairing_service_found_title">تم العثور على خدمة الاقتران</string>
-    <string name="notification_adb_pairing_stop_searching">توقف عن البحث</string>
-    <string name="notification_adb_pairing_working_title">الاقتران قيد التقدم</string>
-    <string name="notification_adb_pairing_succeed_title">تم الاقتران بنجاح</string>
+    <string name="notification_channel_adb_pairing">إقران تصحيح الأخطاء اللاسلكي</string>
+    <string name="notification_adb_pairing_input_paring_code">أدخل رمز الإقران</string>
+    <string name="notification_adb_pairing_searching_for_service_title">جارٍ البحث عن خدمة الإقران</string>
+    <string name="notification_adb_pairing_service_found_title">تم العثور على خدمة الإقران</string>
+    <string name="notification_adb_pairing_stop_searching">إيقاف البحث</string>
+    <string name="notification_adb_pairing_working_title">الإقران قيد التقدّم</string>
+    <string name="notification_adb_pairing_succeed_title">تم الإقران بنجاح</string>
     <string name="notification_adb_pairing_succeed_text">يمكنك بدء خدمة Porter الآن.</string>
-    <string name="notification_adb_pairing_failed_title">فشل الاقتران</string>
-    <string name="notification_adb_pairing_retry">أعد المحاولة</string>
+    <string name="notification_adb_pairing_failed_title">فشل الإقران</string>
+    <string name="notification_adb_pairing_retry">إعادة المحاولة</string>
+    <string name="notification_auth_missing_title">يلزم رمز المصادقة</string>
+    <string name="notification_auth_missing_message">أضف البيان الإضافي “auth” إلى الأمر (intent). ستجد رمزك المميز في الإعدادات ضمن “التحكم في Porter عبر تطبيقات الأتمتة”.</string>
+    <string name="notification_auth_invalid_title">رمز المصادقة غير صالح</string>
+    <string name="notification_auth_invalid_message">تأكد من أن الرمز المميز في الأمر (intent) يطابق الرمز الموجود في الإعدادات ضمن “التحكم في Porter عبر تطبيقات الأتمتة”.</string>
+
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">الوصول إلى Porter</string>
-    <string name="permission_description">اسمح للتطبيق باستخدام Porter.</string>
+    <string name="permission_description">السماح للتطبيق باستخدام Porter.</string>
     <string name="permission_warning_template"><![CDATA[هل تريد السماح لـ <b>%1$s</b> بـ %2$s؟]]></string>
-    <string name="grant_dialog_button_allow_always">السماح في كل وقت</string>
-    <string name="grant_dialog_button_deny">"منع"</string>
+    <string name="grant_dialog_button_allow_always">السماح دائمًا</string>
+    <string name="grant_dialog_button_deny">"رفض"</string>
+
     <!-- Starter -->
-    <string name="starter">مفتاح التشغيل</string>
-    <string name="start_with_root_failed">لا يمكن بدء الخدمة لأنه لم يتم منح إذن الجذر (الروت) أو قد
-        يكون هذا الجهاز ليس مزوّدًا بحق الوصول إلى الجذر (الروت).</string>
+    <string name="starter">المشغّل</string>
+    <string name="start_with_root_failed">تعذّر بدء الخدمة لأن إذن الجذر لم يُمنح أو لأن هذا الجهاز غير مزوّد بصلاحيات الجذر.</string>
+
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">بداية شيزوكو…</string>
-    <string name="wadb_notification_wifi_required">في انتظار اتصال Wi-Fi قبل المتابعة</string>
+    <string name="wadb_notification_title">جارٍ بدء Porter…</string>
+    <string name="wadb_notification_wifi_required">في انتظار الاتصال بشبكة Wi-Fi قبل المتابعة</string>
     <string name="wadb_notification_retry">في انتظار إعادة المحاولة</string>
-    <string name="wadb_error_title">حدث خطأ أثناء بدء التشغيل</string>
-    <string name="wadb_error_notify_dev">انقر هنا لإعلام المطور.</string>
+    <string name="wadb_error_title">حدث خطأ أثناء البدء عند تشغيل الجهاز</string>
+    <string name="wadb_error_notify_dev">انقر لإبلاغ المطوّر.</string>
     <string name="wadb_permission_error_notification_title">خطأ في الإذن</string>
-    <string name="wadb_permission_error_notification_content">يحتاج شيزوكو إلى WRITE_SECURE_SETTINGS
-        للبدء عند بدء التشغيل. انقر لمعرفة كيفية تفعيله.</string>
+    <string name="wadb_permission_error_notification_content">يحتاج Porter إلى إذن WRITE_SECURE_SETTINGS للبدء عند تشغيل الجهاز. انقر لمعرفة كيفية منحه.</string>
+
     <!-- Watchdog -->
-    <string name="watchdog_running">مراقب يعمل</string>
-    <string name="watchdog_turn_off">إيقاف التشغيل</string>
-    <string name="watchdog_shizuku_crashed_title">تحطمت شيزوكو مؤخرًا</string>
-    <string name="watchdog_shizuku_crashed_text">أعاد برنامج المراقبة تشغيل الخدمة. انقر لمعرفة
-        المزيد عن الحلول الممكنة لمنع الأعطال المستقبلية.</string>
+    <string name="watchdog_running">المراقب يعمل</string>
+    <string name="watchdog_turn_off">إيقاف</string>
+    <string name="watchdog_shizuku_crashed_title">تعطّل Porter مؤخرًا</string>
+    <string name="watchdog_shizuku_crashed_text">أعاد المراقب تشغيل الخدمة. انقر لمعرفة الحلول المحتملة لمنع الأعطال مستقبلًا.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">إيقاف التنبيهات</string>
+
     <!-- Misc -->
-    <string name="dialog_cannot_open_browser_title">لا يمكن بدء المتصفح</string>
-    <string name="toast_copied_to_clipboard">تم نسخها إلى الحافظة</string>
-    <string name="accessibility_service_description">يوفر دعمًا للاقتران للأجهزة (مثل أجهزة
-        التلفزيون التي تعمل بنظام أندرويد 14+) التي لا يمكن فيها استخدام الإشعارات أو تقسيم
-        الشاشة.\n\nيُمكّن شيزوكو من استخراج رمز الاقتران من شاشة اقتران تصحيح أخطاء الشبكة
-        اللاسلكية. سيُعطّل تلقائيًا بمجرد العثور على رمز الاقتران.</string>
+    <string name="dialog_cannot_open_browser_title">تعذّر فتح المتصفح</string>
+    <string name="toast_copied_to_clipboard">تم النسخ إلى الحافظة</string>
+    <string name="accessibility_service_description">توفّر دعم الإقران للأجهزة (مثل أجهزة التلفزيون التي تعمل بنظام Android 14 أو الأحدث) التي لا يمكن فيها استخدام الإشعارات أو تقسيم الشاشة.\n\nتتيح لـ Porter استخراج رمز الإقران من شاشة إقران تصحيح الأخطاء اللاسلكي. وستوقف نفسها تلقائيًا بمجرد العثور على رمز الإقران.</string>
+
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s لا يدعم النسخة الحديثة من Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[تم إهمال Legacy Porter منذ آذار (مارس) 2019. أيضًا ، لا يعمل Porter القديم على أنظمة Android الأحدث. <p> يُرجى مطالبة مطور <b> %1$s </b> بالتحديث.]]></string>
-    <string name="dialog_requesting_legacy_title">يطلب %1$s تطبيق Porter القديم</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[يحتوي <b> %1$s </b> على دعم Porter الحديث ، لكنه يتطلب شيزوكو القديم. قد يكون هذا بسبب عدم تشغيل Porter ، يرجى التحقق في تطبيق Porter. <p> تم إيقاف Legacy Porter منذ آذار (مارس) 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">افتح Porter</string>
-    <string name="wadb_notification_attempt_now">حاول الآن</string>
+    <string name="dialog_legacy_not_support_title">%1$s لا يدعم إصدار Porter الحديث</string>
+    <string name="dialog_legacy_not_support_message"><![CDATA[تم إيقاف دعم إصدار Porter القديم منذ مارس 2019. كما أن إصدار Porter القديم لا يعمل على أنظمة Android الأحدث.<p>يُرجى مطالبة مطوّر <b>%1$s</b> بتحديثه.]]></string>
+    <string name="dialog_requesting_legacy_title">%1$s يطلب إصدار Porter القديم</string>
+    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> يدعم إصدار Porter الحديث، لكنه يطلب إصدار Porter القديم. قد يكون السبب أن Porter لا يعمل، يُرجى التحقق في تطبيق Porter.<p>تم إيقاف دعم إصدار Porter القديم منذ مارس 2019.]]></string>
+    <string name="dialog_requesting_legacy_button_open_shizuku">فتح Porter</string>
+    <string name="wadb_notification_attempt_now">المحاولة الآن</string>
+
+    <string name="porter_status_running_adb">يعمل عبر ADB</string>
+    <string name="porter_status_running_root">يعمل عبر صلاحيات الجذر</string>
+    <string name="porter_status_restart_service">أعد تشغيل Porter لتحديث الخدمة قيد التشغيل.</string>
+    <string name="porter_status_version_unknown">غير معروف</string>
+    <string name="porter_status_versions">Porter المثبّت: %1$s\nالخدمة قيد التشغيل: %2$s\nShizuku API: %3$d · التصحيح: %4$d</string>
+    <string name="porter_acknowledgements">شكر وتقدير</string>
+    <string name="porter_acknowledgements_summary">المشاريع الأصلية والمكتبات مفتوحة المصدر والتراخيص.</string>
+    <string name="porter_acknowledgements_thanks">شكرًا لكم</string>
+    <string name="porter_licenses">التراخيص</string>
+    <string name="porter_ack_shizuku">إلى RikkaApps وجميع المساهمين لإنشاء Shizuku وواجهاته البرمجية، الأساس الذي يقوم عليه Porter.</string>
+    <string name="porter_ack_thedjchi">إلى thedjchi والمساهمين لصيانة نسخة Shizuku المشتقة التي يستند إليها Porter.</string>
+    <string name="porter_ack_symbuzzer">إلى symbuzzer والمساهمين لمواصلة العمل على Shizuku ومشاركة نسختهم المشتقة.</string>
+    <string name="porter_ack_plus">إلى thejaustin والمساهمين لمشروع ShizukuPlus وللإلهام بفكرة تطبيق توافق اختياري.</string>
+    <string name="porter_license_porter">Porter وتطبيق Shizuku الأصلي · رخصة Apache 2.0</string>
+    <string name="porter_license_api">Shizuku API ونسخته المشتقة في Porter · رخصة MIT</string>
+    <string name="porter_license_notice">إشعارات حقوق النشر والإسناد</string>
 </resources>

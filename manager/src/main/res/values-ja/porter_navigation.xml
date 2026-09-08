@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">アプリケーション</string>
+    <string name="porter_home_subtitle">アプリにADBアクセスを提供</string>
+    <string name="porter_startup">起動</string>
+    <string name="porter_version">バージョン</string>
+    <string name="porter_pairing_method">ペア設定方法</string>
+    <string name="porter_status_restricted">一部のADB権限はAndroidによって制限されています。</string>
+    <string name="porter_status_stop_message">Porterを停止すると、Porterを使用しているアプリとの接続が切断されます。再度使用するには手動でPorterを起動する必要があり、コンピュータが必要になる場合があります。</string>
+    <string name="porter_status_details_hint">タップしてサービスの詳細と停止オプションを表示</string>
+    <string name="porter_status_ready">Porterの準備ができました。対応アプリが接続してアクセスを要求できます。</string>
+    <string name="porter_pairing_notification">通知</string>
+    <string name="porter_pairing_dialog">アプリ内ダイアログ</string>
+</resources>

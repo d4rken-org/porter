@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">应用</string>
+    <string name="porter_home_subtitle">为您的应用提供 ADB 访问权限</string>
+    <string name="porter_startup">启动</string>
+    <string name="porter_version">版本</string>
+    <string name="porter_pairing_method">配对方式</string>
+    <string name="porter_status_restricted">部分 ADB 权限受到 Android 限制。</string>
+    <string name="porter_status_stop_message">停止 Porter 会断开使用它的应用的连接。您必须手动重新启动 Porter，这可能需要电脑。</string>
+    <string name="porter_status_details_hint">点按查看服务详情和停止选项</string>
+    <string name="porter_status_ready">Porter 已就绪。兼容的应用现在可以连接并请求访问权限。</string>
+    <string name="porter_pairing_notification">通知</string>
+    <string name="porter_pairing_dialog">应用内对话框</string>
+</resources>

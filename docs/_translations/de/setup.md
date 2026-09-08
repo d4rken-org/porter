@@ -24,21 +24,21 @@ Für Apps, die Porter direkt unterstützen, reicht Porter allein. Unterstützt e
 
 | Dein Gerät | Startmethode |
 | --- | --- |
-| Android 11 oder neuer mit drahtlosem Debugging | [Drahtloses Debugging](#wireless-debugging) |
+| Android 11 oder neuer mit drahtlosem Debugging | [Debugging über WLAN](#wireless-debugging) |
 | Android 7.0 oder neuer und ein Computer | [USB-Debugging](#with-a-computer) |
 | Bereits gerootet | [Root](#root) |
 
-## Drahtloses Debugging
+## Debugging über WLAN
 {: #wireless-debugging }
 
-Du brauchst eine WLAN-Verbindung und Android 11 oder neuer. Manche Hersteller schränken drahtloses Debugging ein. Falls es auf deinem Gerät nicht verfügbar ist, nutze einen Computer. Die Bezeichnungen in den Einstellungen können je nach Gerät abweichen.
+Du brauchst eine WLAN-Verbindung und Android 11 oder neuer. Manche Hersteller schränken drahtloses Debugging ein. Falls es auf deinem Gerät nicht verfügbar ist, nutze einen Computer.
 
-1. Aktiviere die **Entwickleroptionen** in den Android-Einstellungen. Meist öffnest du dafür **Über das Telefon** und tippst siebenmal auf **Build-Nummer**.
-2. Aktiviere in den Entwickleroptionen **USB-Debugging** und **Drahtloses Debugging** beziehungsweise **Wireless-Debugging**. Bestätige gegebenenfalls die Abfrage für das WLAN.
-3. Tippe in Porter unter **Über Wireless-Debugging starten** auf **Kopplung**. Erlaube Benachrichtigungen und, falls angefragt, den Zugriff auf Geräte in der Nähe oder das lokale Netzwerk.
-4. Öffne in Android die Einstellungen für **Drahtloses Debugging** und wähle **Gerät mit Kopplungscode koppeln**. Lass den Dialog geöffnet.
+1. Aktiviere die **Entwickleroptionen** in den Android-Einstellungen. Meist öffnest du dafür **Über das Telefon** und tippst siebenmal auf **Build-Nummer**. Die Position variiert je nach Gerät.
+2. Aktiviere in den Entwickleroptionen **USB-Debugging** und **Debugging über WLAN**. Bestätige gegebenenfalls die Abfrage für das WLAN.
+3. Tippe in Porter unter **Per Debugging über WLAN starten** auf **Kopplung**. Erlaube Benachrichtigungen und, falls angefragt, den Zugriff auf Geräte in der Nähe oder das lokale Netzwerk.
+4. Öffne in Android die Einstellungen für **Debugging über WLAN** und wähle **Gerät mit Kopplungscode koppeln**. Lass den Dialog geöffnet.
 5. Klappe Porters Kopplungsbenachrichtigung auf und gib den von Android angezeigten Code ein. Warte, bis die Kopplung erfolgreich abgeschlossen ist.
-6. Kehre zu Porter zurück und starte den Dienst im Abschnitt für Wireless-Debugging.
+6. Kehre zu Porter zurück und tippe unter **Per Debugging über WLAN starten** auf **Starten**.
 7. Prüfe, ob Porter **Porter läuft** anzeigt.
 
 Wenn Porter stoppt, bleiben die Debugging-Einstellungen von Android aktiviert. Du kannst sie in den Entwickleroptionen ausschalten, wenn du keinen Debugging-Zugriff mehr brauchst.
@@ -77,14 +77,16 @@ Stoppe den laufenden Porter-Dienst, bevor du zwischen Root und Debugging-Zugriff
 
 Öffne die gewünschte App, aktiviere dort die Unterstützung für Porter oder Shizuku und bestätige Porters Zugriffsanfrage. Erlaube den Zugriff nur Apps, denen du vertraust: Sie können Aufgaben mit Porters Debugging- oder Root-Rechten ausführen.
 
-Um den Zugriff zu entziehen, öffne in Porter die Liste der autorisierten Apps und schalte die Berechtigung für die betreffende App aus. Porter und Shizuku verwalten ihre Freigaben getrennt.
+Um den Zugriff zu entziehen, öffne in Porter **Anwendungen** und schalte die Berechtigung für die betreffende App aus. Porter und Shizuku verwalten ihre Freigaben getrennt.
+
+Um den Zugriff für alle Apps zu pausieren, schalte oben auf diesem Bildschirm **App-Zugriff erlauben** aus. Die einzelnen Freigaben bleiben gespeichert. Schalte die Option wieder ein, um den Zugriff fortzusetzen. Bereits gestartete Shell-Befehle können während der Pause weiterlaufen.
 
 Falls die App eine Dienstauswahl hat, wähle dort Porter. Folge den Anweisungen der jeweiligen App. Wenn ein Wechsel einen Neustart der App erfordert, nutze **Beenden erzwingen** in den Android-App-Einstellungen und öffne die App erneut.
 
 ## Porter stoppen
 {: #stop-porter }
 
-Tippe auf der Startseite auf **Porter läuft** und dann auf **Porter anhalten**. Verbundene Apps verlieren den Zugriff, bis du Porter erneut startest.
+Tippe auf der Startseite auf **Porter läuft** und dann auf **Porter stoppen**. Verbundene Apps verlieren den Zugriff, bis du Porter erneut startest.
 
 ## Porter aktualisieren
 {: #update-porter }

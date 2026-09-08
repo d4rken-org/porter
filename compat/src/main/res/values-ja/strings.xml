@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Porterの使用</string>
+    <string name="permission_description">このアプリにPorterを介したシステムAPIの使用を許可します。</string>
+    <string name="porter_missing">このコンパニオンアプリを使用するには、同じ署名証明書のPorterをインストールしてください。</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Menggunakan Porter</string>
+    <string name="permission_description">Mengizinkan aplikasi ini menggunakan API sistem melalui Porter.</string>
+    <string name="porter_missing">Instal Porter dengan sertifikat penandatanganan yang cocok untuk menggunakan aplikasi pendamping ini.</string>
+</resources>

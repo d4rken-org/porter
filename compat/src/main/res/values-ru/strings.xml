@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">использовать Porter</string>
+    <string name="permission_description">Разрешить этому приложению использовать системные API через Porter.</string>
+    <string name="porter_missing">Установите Porter с соответствующим сертификатом подписи, чтобы использовать это дополнительное приложение.</string>
+</resources>

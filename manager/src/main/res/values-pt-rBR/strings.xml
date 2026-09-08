@@ -1,215 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Home - Status -->
-    <string name="home_status_service_is_running">%1$s em execução</string>
+    <string name="home_status_service_is_running">%1$s está em execução</string>
     <string name="home_status_service_not_running">%1$s não está em execução</string>
+
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Comece conectando-se a um computador]]></string>
-    <string name="home_adb_description"><![CDATA[Para aparelhos sem ROOT, será necessário usar o ADB para iniciar o Porter (requer conexão ao computador). Este processo precisa ser repetido sempre que o aparelho for reiniciado. Por favor <b><a href="%1$s">leia a ajuda</a></b>.]]></string>
-    <string name="home_adb_button_view_command">Ver o comando</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Existem algumas outras considerações, por favor confirme se você leu o documento de ajuda primeiro.]]></string>
+    <string name="home_adb_description"><![CDATA[Em dispositivos sem root, é necessário usar o adb para iniciar o Porter (requer conexão com um computador). Esse processo precisa ser repetido sempre que o dispositivo for reiniciado. Por favor, <b><a href=\"%1$s\">leia a ajuda</a></b>.]]></string>
+    <string name="home_adb_button_view_command">Ver comando</string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Há algumas outras considerações, confirme que você leu a ajuda primeiro.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Enviar</string>
+
     <!-- Home - Wireless Adb -->
-    <string name="home_wireless_adb_title"><![CDATA[Começar pela Depuração via Wireless]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[No Android 11 ou superior, você pode ativar a Depuração via Wireless e iniciar o Porter diretamente do seu dispositivo, sem se conectar a um computador. <p> Primeiro, consulte esse guia passo a passo.]]></string>
-    <string name="home_wireless_adb_description_pre_11"><![CDATA[Antes do Android 11, é necessário conectar-se a um computador para habilitar a Depuração via Wireless.]]></string>
+    <string name="home_wireless_adb_title"><![CDATA[Iniciar pela Depuração por Wi-Fi]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[No Android 11 ou superior, você pode ativar a Depuração por Wi-Fi e iniciar o Porter diretamente do seu dispositivo, sem conectar a um computador.<p>Consulte o guia passo a passo primeiro.]]></string>
+    <string name="home_wireless_adb_description_pre_11"><![CDATA[Antes do Android 11, é necessário conectar a um computador para ativar a Depuração por Wi-Fi.]]></string>
     <string name="home_wireless_adb_view_guide_button">Guia passo a passo</string>
+
     <!-- Adb -->
-    <string name="dialog_adb_discovery">Procurando o serviço de Depuração via Wireless</string>
-    <string name="dialog_adb_discovery_message">Por favor, ative \"Depuração via Wireless\" ou
-        \"Depuração via Wi-Fi\" nas \"Opções do Desenvolvedor\". A Depuração via Wireless é,
-        automaticamente, desativada ao trocar de rede.
-        \n
-        \nObserve, não desative \"Opções do Desenvolvedor\" ou \"Depuração via USB\", ou o Porter
-        será interrompido.</string>
-    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Por favor, tente desativar
-        e reativar a \"Depuração por Wi-Fi\" se não parar de ficar procurando.</string>
+    <string name="dialog_adb_discovery">Procurando o serviço de depuração por Wi-Fi</string>
+    <string name="dialog_adb_discovery_message">Ative a \"Depuração por Wi-Fi\" nas \"Opções do desenvolvedor\". A \"Depuração por Wi-Fi\" é desativada automaticamente quando a rede muda.\n\nObservação: não desative as \"Opções do desenvolvedor\" nem a \"Depuração USB\", ou o Porter será interrompido.</string>
+    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Se a busca não terminar, tente desativar e reativar a \"Depuração por Wi-Fi\".</string>
     <string name="dialog_adb_port">Porta</string>
     <string name="adb_pairing">Pareamento</string>
     <string name="dialog_adb_pairing_title">Parear com o dispositivo</string>
     <string name="dialog_adb_pairing_discovery">Procurando o serviço de pareamento</string>
     <string name="dialog_adb_pairing_paring_code">Código de pareamento</string>
     <string name="paring_code_is_wrong">O código de pareamento está errado.</string>
-    <string name="cannot_connect_port">Não consigo conectar ao serviço de depuração sem fio.\n\nPor
-        favor, certifique-se de que o Porter esteja na lista branca em todos os apps de firewall,
-        bloqueador de anúncios, VPN ou similares que possam restringir o acesso à rede.</string>
-    <string name="dialog_wireless_adb_not_enabled">A Depuração via Wireless não está ativada.
-        \nObserve que, antes do Android 11, para habilitar a Depuração via Wireless a conexão com um
-        computador é obrigatória.</string>
-    <string name="dialog_usb_debugging_not_enabled">A depuração USB não está ativada.\nAtive-a nas
-        \"Opções do desenvolvedor\".</string>
-    <string name="dialog_adb_pairing_accessibility_permission">No Android 14, instalar/atualizar o
-        Porter com o Instalador de Pacotes revoga a permissão ^1, necessária para habilitar o
-        serviço de acessibilidade para o emparelhamento.\n\nPara concedê-la, execute o seguinte
-        comando ADB:\n\n^2\n\nApós executar o comando, você pode continuar com o processo de
-        emparelhamento.\n\nObservação: você pode contornar isso instalando/atualizando o Porter com
-        o ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Por favor, habilite o serviço de
-        acessibilidade para iniciar o processo de emparelhamento. Isso permite que Porter detecte o
-        código de emparelhamento.\n\nO serviço de acessibilidade será desativado quando o código for
-        encontrado ou após 1 minuto para economizar energia.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">Para iniciar o emparelhamento, siga
-        estes passos:\n- Acesse \"Opções do desenvolvedor\"\n- Ative \"Depuração USB\" e \"Depuração
-        sem fio\"\n- Toque no lado esquerdo de \"Depuração sem fio\"\n- Toque em \"Emparelhar
-        dispositivo com código de emparelhamento\". O Porter detectará o código de emparelhamento
-        automaticamente.</string>
-    <string name="adb_pairing_requires_multi_window">Primeiramente, ative o modo de janela dividida,
-        por favor.</string>
-    <string name="adb_pairing_requires_multi_window_reason">O sistema exige que o diálogo de
-        pareamento esteja sempre visível. Usar o modo tela dividida é a única forma de deixar esse
-        app e o diálogo do sistema visíveis ao mesmo tempo.</string>
-    <string name="adb_error_key_store">Não é possível gerar a chave para depuração sem fio.\nIsso
-        pode ser porque o mecanismo KeyStore desse dispositivo está com defeito.</string>
-    <string name="adb_pair_required">Execute o primeiro passo de pareamento.</string>
-    <string name="enable">Habilitar</string>
-    <string name="development_settings">Opções do Desenvolvedor</string>
-    <string name="notification_settings">Opções de notificações</string>
-    <string name="adb_pairing_tutorial_content_notification">Uma notificação do Porter ajudará você
-        a concluir o pareamento.</string>
-    <string name="adb_pairing_tutorial_content_steps">Acesse as \"Opções do desenvolvedor\" e ative
-        a \"Depuração USB\" e a \"Depuração sem fio\".</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">Toque no lado esquerdo de
-        \"Depuração sem fio\" e, em seguida, toque em \"Emparelhar dispositivo com código de
-        emparelhamento\". Insira o código na notificação para concluir o emparelhamento.</string>
-    <string name="adb_pairing_tutorial_content_notification_blocked">O processo de pareamento
-        precisa que você interaja com uma notificação do Porter. Por favor, permita que o Porter
-        envie notificações.</string>
-    <string name="adb_pairing_tutorial_content_miui">Os usuários da MIUI podem precisar mudar o
-        estilo de notificação de \"MIUI\" para \"Android\". Para isso, acesse \"Configurações\", em
-        seguida toque em \"Notificações\", em seguida toque em \"Área de Notificação\". Se você não
-        usa MIUI, ignore isso.</string>
-    <string name="adb_pairing_tutorial_content_miui_2">Caso contrário, você pode não conseguir
-        inserir o código de pareamento a partir da notificação.</string>
-    <string name="adb_pairing_tutorial_content_finish">Volte para a Porter e comece a Porter.</string>
-    <string name="adb_pairing_tutorial_content_network">Porter precisa acessar a rede local. Ele é
-        controlado pela permissão da rede.</string>
-    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Alguns sistemas
-        (como o MIUI) impedem que aplicativos acessem a rede quando não estão visíveis, mesmo que o
-        app use um serviço em primeiro plano. Por favor, desative os recursos de otimização de
-        bateria para Porter nesses sistemas.</string>
+    <string name="cannot_connect_port">Não foi possível conectar ao serviço de depuração por Wi-Fi.\n\nVerifique se o Porter está na lista de permissões de todos os apps de firewall, bloqueio de anúncios, VPN ou similares que possam restringir o acesso à rede.</string>
+    <string name="dialog_wireless_adb_not_enabled">A Depuração por Wi-Fi não está ativada.\nObservação: antes do Android 11, é obrigatório conectar a um computador para ativar a depuração por Wi-Fi.</string>
+    <string name="dialog_usb_debugging_not_enabled">A depuração USB não está ativada.\nAtive-a nas \"Opções do desenvolvedor\".</string>
+    <string name="dialog_adb_pairing_accessibility_permission">No Android 14, instalar/atualizar o Porter pelo Instalador de pacotes revoga a permissão ^1, necessária para ativar o serviço de acessibilidade usado no pareamento.\n\nPara concedê-la, execute o seguinte comando ADB:\n\n^2\n\nDepois de executar o comando, você pode continuar o processo de pareamento.\n\nObservação: você pode evitar isso instalando/atualizando o Porter pelo ADB.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Ative o serviço de acessibilidade para iniciar o processo de pareamento. Isso permite que o Porter detecte o código de pareamento.\n\nO serviço de acessibilidade será desativado quando o código for encontrado ou após 1 minuto, para economizar energia.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">Para iniciar o pareamento, siga estes passos:\n- Acesse as \"Opções do desenvolvedor\"\n- Ative a \"Depuração USB\" e a \"Depuração por Wi-Fi\"\n- Toque no lado esquerdo de \"Depuração por Wi-Fi\"\n- Toque em \"Parear dispositivo com código de pareamento\". O Porter detectará o código de pareamento automaticamente.</string>
+    <string name="adb_pairing_requires_multi_window">Ative o modo de tela dividida (multijanela) primeiro.</string>
+    <string name="adb_pairing_requires_multi_window_reason">O sistema exige que a caixa de diálogo de pareamento fique sempre visível. Usar o modo de tela dividida é a única forma de manter este app e a caixa de diálogo do sistema visíveis ao mesmo tempo.</string>
+    <string name="adb_error_key_store">Não foi possível gerar a chave para a depuração por Wi-Fi.\nIsso pode acontecer porque o mecanismo KeyStore deste dispositivo está com defeito.</string>
+    <string name="adb_pair_required">Conclua a etapa de pareamento primeiro.</string>
+    <string name="enable">Ativar</string>
+    <string name="development_settings">Opções do desenvolvedor</string>
+    <string name="notification_settings">Opções de notificação</string>
+    <string name="adb_pairing_tutorial_content_notification">Uma notificação do Porter ajudará você a concluir o pareamento.</string>
+    <string name="adb_pairing_tutorial_content_steps">Acesse as \"Opções do desenvolvedor\" e ative a \"Depuração USB\" e a \"Depuração por Wi-Fi\".</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">Toque no lado esquerdo de \"Depuração por Wi-Fi\" e, em seguida, toque em \"Parear dispositivo com código de pareamento\". Digite o código na notificação para concluir o pareamento.</string>
+    <string name="adb_pairing_tutorial_content_notification_blocked">O processo de pareamento exige que você interaja com uma notificação do Porter. Permita que o Porter envie notificações.</string>
+    <string name="adb_pairing_tutorial_content_miui">Usuários da MIUI podem precisar mudar o estilo de notificação para \"Android\" em \"Notificações\" - \"Área de notificações\" nas configurações do sistema.</string>
+    <string name="adb_pairing_tutorial_content_miui_2">Caso contrário, talvez você não consiga digitar o código de pareamento pela notificação.</string>
+    <string name="adb_pairing_tutorial_content_finish">Volte ao Porter e inicie o Porter.</string>
+    <string name="adb_pairing_tutorial_content_network">O Porter precisa acessar a rede local. Isso é controlado pela permissão de rede.</string>
+    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Alguns sistemas (como a MIUI) impedem que apps acessem a rede quando não estão visíveis, mesmo que o app use um serviço em primeiro plano. Nesses sistemas, desative os recursos de otimização de bateria para o Porter.</string>
+
     <!-- Home - Root -->
-    <string name="home_root_title"><![CDATA[Começar (para aparelhos rooteados)]]></string>
-    <string name="home_root_button_start">Começar</string>
+    <string name="home_root_title"><![CDATA[Iniciar (para dispositivos com root)]]></string>
+    <string name="home_root_description"><![CDATA[Se você usa o Magisk, %1$s é outra opção. Os apps precisam ter suporte explícito a %2$s.]]></string>
+    <string name="home_root_button_start">Iniciar</string>
+
     <!-- Home - Application management -->
-    <string name="home_app_management_title">Gerenciador de aplicativos</string>
+    <string name="home_app_management_title">Gerenciamento de aplicativos</string>
     <plurals name="home_app_management_authorized_apps_count">
         <item quantity="one"><![CDATA[%d aplicativo autorizado]]></item>
+        <item quantity="many"><![CDATA[%d de aplicativos autorizados]]></item>
         <item quantity="other"><![CDATA[%d aplicativos autorizados]]></item>
     </plurals>
-    <string name="home_app_management_view_authorized_apps"><![CDATA[Toque para gerenciar os aplicativos autorizados]]></string>
-    <string name="home_app_management_empty">Os aplicativos que solicitaram ou declararam a
-        permissão Porter serão exibidos aqui.</string>
+    <string name="home_app_management_view_authorized_apps"><![CDATA[Toque para gerenciar os apps autorizados]]></string>
+    <string name="home_app_management_empty">Os apps que solicitaram ou declararam a permissão do Porter aparecerão aqui.</string>
+
     <!-- Home - Automation -->
-    <string name="home_automation_title">Controle Porter com aplicativos de automação</string>
+    <string name="home_automation_title">Controle o Porter com apps de automação</string>
+    <string name="home_automation_bottom_sheet_intents">Intents</string>
+    <string name="home_automation_bottom_sheet_label_action">Ação</string>
+    <string name="home_automation_bottom_sheet_label_package">Pacote</string>
+    <string name="home_automation_bottom_sheet_label_target">Destino</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extras</string>
+    <string name="home_automation_regenerate_token">Gerar novo token?</string>
+    <string name="home_automation_regenerate_token_message">Você precisará reconfigurar seus intents com o novo token.</string>
+
+    <!-- Home - Dialogs -->
+    <string name="home_dialog_reboot_required_title">Reinicialização necessária</string>
+    <string name="home_dialog_reboot_required_message">É necessário reiniciar o dispositivo para que o Porter funcione corretamente. Para continuar, reinicie o dispositivo.</string>
+    <string name="home_dialog_duplicate_app_detected_title">App duplicado detectado</string>
+    <string name="home_dialog_duplicate_app_detected_message">Outra versão deste app está instalada no seu dispositivo. Para continuar, desinstale todas as versões duplicadas e reinicie o dispositivo.</string>
+    <string name="home_dialog_button_exit">Sair</string>
+
     <!-- Application management -->
-    <string name="app_management_dialog_adb_is_limited_title">A permissão do ADB é limitada</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[É bem provável que o fabricante do seu dispositivo limite a permissão do ADB.<p>Pode haver uma solução para seu sistema <b><a href="%1$s">neste documento</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* precisa do Porter executado com
-        privilégios de root</string>
+    <string name="app_management_dialog_adb_is_limited_title">A permissão do adb é limitada</string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[É bem provável que o fabricante do seu dispositivo limite a permissão do adb.<p>Pode haver uma solução para o seu sistema <b><a href=\"%1$s\">neste documento</a></b>.]]></string>
+    <string name="app_management_item_summary_requires_root">* requer que o Porter esteja em execução com root</string>
     <string name="app_management_toggle_all">Alternar tudo</string>
+
     <!-- Terminal -->
-    <string name="home_terminal_title">Usar o Porter em apps de terminal</string>
-    <string name="home_terminal_description">Execute comandos de shell em aplicativos de terminal
-        através do Porter.</string>
-    <string name="terminal_tutorial_miui">Usuários relataram que a MIUI quebra o Storage Access
-        Framework, que é usado pela função de exportação.</string>
-    <string name="terminal_tutorial_miui_2">Se você estiver usando MIUI, talvez precise extrair o
-        arquivo da pasta \"assets\" no APK da Porter.</string>
+    <string name="home_terminal_title">Use o Porter em apps de terminal</string>
+    <string name="home_terminal_description">Execute comandos de shell em apps de terminal por meio do Porter</string>
+    <string name="terminal_tutorial_miui">Usuários relataram que a MIUI quebra o Storage Access Framework, que é usado pela função de exportação.</string>
+    <string name="terminal_tutorial_miui_2">Se você usa a MIUI, talvez precise extrair o arquivo da pasta assets do APK do Porter.</string>
     <string name="terminal_tutorial_1">Exporte os arquivos para uma nova pasta.</string>
-    <string name="terminal_tutorial_1_description">Dois arquivos serão exportados: %1$s e %2$s. Se
-        os arquivos já existirem na pasta selecionada, eles serão excluídos.</string>
+    <string name="terminal_tutorial_1_description">Dois arquivos serão exportados: %1$s e %2$s. Se os arquivos já existirem na pasta selecionada, eles serão excluídos.</string>
     <string name="terminal_export_files">Exportar arquivos</string>
-    <string name="terminal_tutorial_2">Use o aplicativo de terminal para copiar os arquivos para o
-        diretório de arquivos privados.</string>
-    <string name="terminal_tutorial_2_description">Dica: Se o diretório inicial do seu aplicativo de
-        terminal (~) estiver no diretório de arquivos privados, colocar os arquivos lá permitirá que
-        você execute %1$s sem precisar escrever o caminho.\n\nCaso contrário, você pode criar um
-        alias para %2$s no arquivo de configuração do seu aplicativo de terminal. %3$s</string>
-    <string name="terminal_tutorial_3">Abra um terminal com o seguinte comando:</string>
-    <string name="rish_description"><![CDATA[Com %1$s, você pode executar comandos do shell em qualquer aplicativo de terminal.<p>Toque para saber mais sobre como usá-lo.]]></string>
+    <string name="terminal_tutorial_2">Use seu app de terminal para copiar os arquivos para o diretório de arquivos privados dele.</string>
+    <string name="terminal_tutorial_2_description">Dica: se o diretório inicial (~) do seu app de terminal estiver no diretório de arquivos privados, colocar os arquivos lá permitirá executar %1$s sem digitar o caminho.\n\nCaso contrário, você pode criar um alias para %2$s no arquivo de configuração %3$s do seu app de terminal.</string>
+    <string name="terminal_tutorial_3">Abra um shell com o seguinte comando:</string>
+    <string name="rish_description"><![CDATA[Com o %1$s, você pode executar comandos de shell em qualquer app de terminal.<p>Toque para saber mais sobre como usá-lo.]]></string>
+
     <!-- Settings -->
     <string name="settings_title">Configurações</string>
     <string name="settings_start_on_boot">Iniciar na inicialização</string>
-    <string name="settings_start_on_boot_summary">Requer Android 11 ou superior ou root.</string>
-    <string name="settings_start_on_boot_bug">Devido a um bug no Android 11-12, a depuração sem fio
-        não lembra nenhuma rede autorizada.\n\nVocê precisará reautorizar a rede a cada
-        reinicialização tocando \"Permitir\" quando aparecer o diálogo de autorização.</string>
-    <string name="settings_watchdog">Cão de guarda</string>
-    <string name="settings_watchdog_summary">Reiniciar Porter automaticamente se ele travar</string>
-    <string name="settings_restart_dialog_title">É necessário reiniciar.</string>
-    <string name="settings_restart_dialog_message">Porter precisa reiniciar para aplicar essa
-        configuração.</string>
-    <string name="settings_tcp_port">porta TCP</string>
+    <string name="settings_start_on_boot_summary">Requer Android 11 ou superior, ou root</string>
+    <string name="settings_start_on_boot_bug">Devido a um bug no Android 11-12, a depuração por Wi-Fi não memoriza as redes autorizadas.\n\nVocê precisará autorizar a rede novamente a cada reinicialização, tocando em \"Permitir\" quando a caixa de diálogo de autorização aparecer.</string>
+    <string name="settings_watchdog">Watchdog</string>
+    <string name="settings_watchdog_summary">Reiniciar o Porter automaticamente se ele travar</string>
+    <string name="settings_restart_dialog_title">Reinicialização necessária</string>
+    <string name="settings_restart_dialog_message">O Porter precisa ser reiniciado para aplicar esta configuração.</string>
+    <string name="settings_tcp_port">Porta TCP</string>
     <string name="settings_tcp_port_default">Padrão (5555)</string>
     <string name="settings_user_interface">Aparência</string>
-    <string name="settings_support">Apoiar</string>
+    <string name="settings_support">Suporte</string>
+
     <!-- Snackbar -->
-    <string name="snackbar_invalid_port">A porta deve estar entre 1 e 65535.</string>
-    <string name="snackbar_battery_optimization_home">A otimização de bateria deve estar desativada
-        para que a inicialização na inicialização/vigilância funcione corretamente.</string>
-    <string name="snackbar_battery_optimization_settings">Desative a otimização de bateria para usar
-        este recurso.</string>
-    <string name="snackbar_action_fix">Consertar</string>
+    <string name="snackbar_invalid_port">A porta deve estar entre 1 e 65535</string>
+    <string name="snackbar_battery_optimization_home">A otimização de bateria precisa estar desativada para que o início na inicialização e o watchdog funcionem corretamente.</string>
+    <string name="snackbar_battery_optimization_settings">Desative a otimização de bateria para usar este recurso.</string>
+    <string name="snackbar_action_fix">Corrigir</string>
+
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Porter já está começando em segundo plano.</string>
-    <string name="toast_accessibility_tv_only">Esse serviço é suportado apenas em dispositivos de
-        TV.</string>
-    <string name="toast_pairing_timeout">Serviço de emparelhamento com Porter expirou.</string>
-    <!-- Stop -->
+    <string name="toast_shizuku_already_starting">O Porter já está iniciando em segundo plano</string>
+    <string name="toast_accessibility_tv_only">Este serviço só é compatível com dispositivos de TV</string>
+    <string name="toast_pairing_timeout">O serviço de pareamento do Porter expirou</string>
+
+    <!-- Dark Mode Setting Override -->
+    <string name="follow_system">Seguir o sistema</string>
+
+    <!-- Start/Stop -->
+    <string name="start">Iniciar</string>
+    <string name="stop">Parar</string>
     <string name="action_stop">Parar o Porter</string>
+
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">Pareamento da Depuração via Wireless</string>
+    <string name="notification_channel_adb_pairing">Pareamento da depuração por Wi-Fi</string>
     <string name="notification_adb_pairing_input_paring_code">Digite o código de pareamento</string>
-    <string name="notification_adb_pairing_searching_for_service_title">Procurando serviço de
-        pareamento</string>
+    <string name="notification_adb_pairing_searching_for_service_title">Procurando o serviço de pareamento</string>
     <string name="notification_adb_pairing_service_found_title">Serviço de pareamento encontrado</string>
     <string name="notification_adb_pairing_stop_searching">Parar de procurar</string>
-    <string name="notification_adb_pairing_working_title">Processando pareamento</string>
+    <string name="notification_adb_pairing_working_title">Pareamento em andamento</string>
     <string name="notification_adb_pairing_succeed_title">Pareamento concluído</string>
-    <string name="notification_adb_pairing_succeed_text">Agora, você pode iniciar o serviço do
-        Porter.</string>
+    <string name="notification_adb_pairing_succeed_text">Agora você pode iniciar o serviço do Porter.</string>
     <string name="notification_adb_pairing_failed_title">Falha no pareamento</string>
     <string name="notification_adb_pairing_retry">Tentar novamente</string>
+    <string name="notification_auth_missing_title">Token de autenticação necessário</string>
+    <string name="notification_auth_missing_message">Adicione o extra “auth” ao seu intent. Você encontra o token em Configurações, em “Controle o Porter com apps de automação”.</string>
+    <string name="notification_auth_invalid_title">Token de autenticação inválido</string>
+    <string name="notification_auth_invalid_message">Verifique se o token do seu intent corresponde ao exibido em Configurações, em “Controle o Porter com apps de automação”.</string>
+
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">acessar Porter</string>
-    <string name="permission_description">Permita que o aplicativo use o Porter.</string>
-    <string name="permission_warning_template"><![CDATA[Permitir que o app <b>%1$s</b> %2$s\?]]></string>
-    <string name="grant_dialog_button_allow_always">Permitir o tempo todo</string>
+    <string name="permission_label">acessar o Porter</string>
+    <string name="permission_description">Permite que o app use o Porter.</string>
+    <string name="permission_warning_template"><![CDATA[Permitir que <b>%1$s</b> possa %2$s?]]></string>
+    <string name="grant_dialog_button_allow_always">Permitir sempre</string>
     <string name="grant_dialog_button_deny">"Negar"</string>
+
     <!-- Starter -->
-    <string name="starter">Iniciante</string>
-    <string name="start_with_root_failed">Não é possível iniciar o serviço porque a permissão de
-        root não foi concedida ou este aparelho não está rooteado.</string>
+    <string name="starter">Inicializador</string>
+    <string name="start_with_root_failed">Não é possível iniciar o serviço porque a permissão de root não foi concedida ou este dispositivo não tem root.</string>
+
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Começando Porter…</string>
-    <string name="wadb_notification_wifi_required">Aguardando conexão Wi-Fi antes de prosseguir.</string>
-    <string name="wadb_notification_retry">Aguardando para tentar novamente.</string>
-    <string name="wadb_error_title">Erro ao iniciar o sistema.</string>
+    <string name="wadb_notification_title">Iniciando o Porter…</string>
+    <string name="wadb_notification_wifi_required">Aguardando conexão Wi-Fi antes de continuar</string>
+    <string name="wadb_notification_retry">Aguardando para tentar novamente</string>
+    <string name="wadb_error_title">Erro ao iniciar na inicialização</string>
     <string name="wadb_error_notify_dev">Toque para notificar o desenvolvedor.</string>
     <string name="wadb_permission_error_notification_title">Erro de permissão</string>
-    <string name="wadb_permission_error_notification_content">Porter precisa da permissão
-        WRITE_SECURE_SETTINGS para iniciar na inicialização do sistema. Toque para saber como
-        concedê-la.</string>
+    <string name="wadb_permission_error_notification_content">O Porter precisa da permissão WRITE_SECURE_SETTINGS para iniciar na inicialização. Toque para saber como concedê-la.</string>
+
     <!-- Watchdog -->
-    <string name="watchdog_running">O cão de vigilância está em execução.</string>
+    <string name="watchdog_running">O watchdog está em execução</string>
     <string name="watchdog_turn_off">Desativar</string>
-    <string name="watchdog_shizuku_crashed_title">Porter sofreu um acidente recentemente</string>
-    <string name="watchdog_shizuku_crashed_text">O serviço foi reiniciado pelo Watchdog. Toque para
-        saber mais sobre possíveis soluções para evitar futuras falhas.</string>
+    <string name="watchdog_shizuku_crashed_title">O Porter travou recentemente</string>
+    <string name="watchdog_shizuku_crashed_text">O watchdog reiniciou o serviço. Toque para conhecer possíveis correções que evitam novas falhas.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Desativar alertas</string>
+
     <!-- Misc -->
-    <string name="dialog_cannot_open_browser_title">Não consigo iniciar o navegador</string>
+    <string name="dialog_cannot_open_browser_title">Não foi possível abrir o navegador</string>
     <string name="toast_copied_to_clipboard">Copiado para a área de transferência</string>
-    <string name="accessibility_service_description">Fornece suporte para emparelhamento com
-        dispositivos (por exemplo, TVs com Android 14 ou superior) onde as notificações ou a tela
-        dividida não podem ser usadas.\n\nPermite que o Porter extraia o código de emparelhamento
-        da tela de depuração sem fio. Ele será desativado assim que o código de emparelhamento for
-        encontrado.</string>
+    <string name="accessibility_service_description">Fornece suporte ao pareamento em dispositivos (por exemplo, TVs com Android 14 ou superior) em que não é possível usar notificações ou tela dividida.\n\nPermite que o Porter extraia o código de pareamento da tela de pareamento da depuração por Wi-Fi. O serviço será desativado sozinho assim que o código de pareamento for encontrado.</string>
+
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s não suporta as versões novas do Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[O Porter legado está obsoleto desde março de 2019. Além disso, o Porter legado não funciona em sistemas Android mais recentes.<p>Peça ao desenvolvedor de <b>%1$s</b> para atualizar.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s está pedindo o Porter legado</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> tem suporte a Porter moderno, mas está solicitando o Porter legado. Isso pode acontecer porque o Porter não está funcionando, verifique no aplicativo Porter.<p>O Porter legado foi descontinuado desde março de 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Abrir Porter</string>
-    <string name="wadb_notification_attempt_now">Tente agora</string>
+    <string name="dialog_legacy_not_support_title">%1$s não é compatível com o Porter moderno</string>
+    <string name="dialog_legacy_not_support_message"><![CDATA[O Porter legado está descontinuado desde março de 2019. Além disso, o Porter legado não funciona em sistemas Android mais recentes.<p>Peça ao desenvolvedor de <b>%1$s</b> para atualizar.]]></string>
+    <string name="dialog_requesting_legacy_title">%1$s está solicitando o Porter legado</string>
+    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> tem suporte ao Porter moderno, mas está solicitando o Porter legado. Isso pode acontecer porque o Porter não está em execução; verifique no app do Porter.<p>O Porter legado está descontinuado desde março de 2019.]]></string>
+    <string name="dialog_requesting_legacy_button_open_shizuku">Abrir o Porter</string>
+    <string name="wadb_notification_attempt_now">Tentar agora</string>
+
+    <string name="porter_status_running_adb">Em execução via ADB</string>
+    <string name="porter_status_running_root">Em execução via root</string>
+    <string name="porter_status_restart_service">Reinicie o Porter para atualizar o serviço em execução.</string>
+    <string name="porter_status_version_unknown">Desconhecida</string>
+    <string name="porter_status_versions">Porter instalado: %1$s\nServiço em execução: %2$s\nAPI Shizuku: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Agradecimentos</string>
+    <string name="porter_acknowledgements_summary">Projetos de origem, bibliotecas de código aberto e licenças.</string>
+    <string name="porter_acknowledgements_thanks">Obrigado</string>
+    <string name="porter_licenses">Licenças</string>
+    <string name="porter_ack_shizuku">À RikkaApps e a todos os colaboradores por criarem o Shizuku e suas APIs, a base do Porter.</string>
+    <string name="porter_ack_thedjchi">A thedjchi e colaboradores por manterem o fork do Shizuku no qual o Porter se baseia.</string>
+    <string name="porter_ack_symbuzzer">A symbuzzer e colaboradores por continuarem o trabalho no Shizuku e compartilharem seu fork.</string>
+    <string name="porter_ack_plus">A thejaustin e colaboradores pelo ShizukuPlus e pela inspiração para um app de compatibilidade opcional.</string>
+    <string name="porter_license_porter">Porter e o aplicativo Shizuku original · Licença Apache 2.0</string>
+    <string name="porter_license_api">API Shizuku e seu fork do Porter · Licença MIT</string>
+    <string name="porter_license_notice">Avisos de copyright e atribuição</string>
 </resources>

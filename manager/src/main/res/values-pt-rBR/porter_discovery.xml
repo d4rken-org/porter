@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_access_blocked">Bloqueado</string>
+    <string name="porter_apps_counts">Autorizados: %1$d · Compatíveis: %2$d</string>
+    <string name="porter_discovery_partial">Não foi possível verificar alguns perfis. Esta lista pode estar incompleta.</string>
+    <string name="porter_discovery_legacy">Reinicie o Porter para descobrir mais apps e ver o histórico de conexões.</string>
+    <string name="porter_connections_explanation">Os apps podem se conectar automaticamente quando o Porter inicia. O horário da conexão não indica quando o app foi usado pela última vez.</string>
+    <string name="porter_connection_needs_companion">Requer o app de compatibilidade</string>
+    <string name="porter_connection_unsupported">Permissão declarada; integração não reconhecida</string>
+    <string name="porter_connection_managed">Conectado ou gerenciado anteriormente</string>
+    <string name="porter_connection_unknown">Detalhes da conexão indisponíveis</string>
+    <string name="porter_connection_never_recorded">Última conexão: desconhecida</string>
+    <string name="porter_connection_last">Última conexão: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d app requer o app de compatibilidade</item>
+        <item quantity="many">%d de apps requerem o app de compatibilidade</item>
+        <item quantity="other">%d apps requerem o app de compatibilidade</item>
+    </plurals>
+    <string name="porter_compatibility_needed">App de compatibilidade necessário</string>
+    <string name="porter_get_compatibility">Obter app de compatibilidade</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Você permitiu o acesso de %d app que precisa do app de compatibilidade do Porter. O acesso dele ficará disponível quando o app de compatibilidade for instalado.</item>
+        <item quantity="many">Você permitiu o acesso de %d de apps que precisam do app de compatibilidade do Porter. O acesso deles ficará disponível quando o app de compatibilidade for instalado.</item>
+        <item quantity="other">Você permitiu o acesso de %d apps que precisam do app de compatibilidade do Porter. O acesso deles ficará disponível quando o app de compatibilidade for instalado.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Não foi possível ativar o acesso. Verifique as permissões deste app nas configurações do Android.</string>
+    <string name="porter_global_access">Permitir acesso dos apps</string>
+    <string name="porter_global_access_summary">Desativa temporariamente o acesso de todos os apps sem alterar as permissões salvas.</string>
+    <string name="porter_global_access_restart">Reinicie o Porter para usar o controle de acesso global.</string>
+    <string name="porter_access_paused">O acesso dos apps está pausado</string>
+    <string name="porter_status_access_paused">O Porter está em execução, mas o acesso dos apps está pausado. Retome o acesso em Aplicativos.</string>
+</resources>

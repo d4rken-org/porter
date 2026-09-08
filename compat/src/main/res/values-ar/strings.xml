@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">استخدام Porter</string>
+    <string name="permission_description">السماح لهذا التطبيق باستخدام واجهات النظام البرمجية عبر Porter.</string>
+    <string name="porter_missing">ثبّت Porter بشهادة التوقيع المطابقة لاستخدام هذا التطبيق المصاحب.</string>
+</resources>

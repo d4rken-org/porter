@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">使用 Porter</string>
+    <string name="permission_description">允许此应用通过 Porter 使用系统 API。</string>
+    <string name="porter_missing">请安装签名证书匹配的 Porter 以使用此配套应用。</string>
+</resources>

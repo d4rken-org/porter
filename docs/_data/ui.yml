@@ -1,7 +1,7 @@
 en:
   name: English
   automatic: Automatic (browser)
-  flag: "🇬🇧"
+  flag: 🇬🇧
   skip: Skip to content
   guide: Guide
   language: Page language
@@ -18,7 +18,7 @@ en:
 de:
   name: Deutsch
   automatic: Automatisch (Browser)
-  flag: "🇩🇪"
+  flag: 🇩🇪
   skip: Zum Inhalt springen
   guide: Anleitung
   language: Seitensprache
@@ -32,3 +32,140 @@ de:
   credits: Mitwirkende & Lizenzen
   help: Hilfe
   tagline: Eine unabhängige Weiterführung von Shizuku
+es:
+  name: Español
+  automatic: Automático (navegador)
+  flag: 🇪🇸
+  skip: Saltar al contenido
+  guide: Guía
+  language: Idioma de la página
+  index: Resumen
+  setup: Instalar e iniciar
+  compatibility: Compatibilidad de apps
+  troubleshooting: Solución de problemas
+  users: Para usuarios
+  developers: Para desarrolladores
+  integration: Integración de apps
+  credits: Créditos y licencias
+  help: Obtener ayuda
+  tagline: Una continuación independiente de Shizuku
+pt-BR:
+  name: Português (Brasil)
+  automatic: Automático (navegador)
+  flag: 🇧🇷
+  skip: Pular para o conteúdo
+  guide: Guia
+  language: Idioma da página
+  index: Visão geral
+  setup: Instalar e iniciar
+  compatibility: Compatibilidade de apps
+  troubleshooting: Solução de problemas
+  users: Para usuários
+  developers: Para desenvolvedores
+  integration: Integração de apps
+  credits: Créditos e licenças
+  help: Obter ajuda
+  tagline: Uma continuação independente do Shizuku
+zh-Hans:
+  name: 简体中文
+  automatic: 自动（浏览器）
+  flag: 🇨🇳
+  skip: 跳转到正文
+  guide: 指南
+  language: 页面语言
+  index: 概览
+  setup: 安装与启动
+  compatibility: 应用兼容性
+  troubleshooting: 故障排除
+  users: 用户指南
+  developers: 开发者指南
+  integration: 应用集成
+  credits: 致谢与许可证
+  help: 获取帮助
+  tagline: Shizuku 的独立延续
+fr:
+  name: Français
+  automatic: Automatique (navigateur)
+  flag: 🇫🇷
+  skip: Aller au contenu
+  guide: Guide
+  language: Langue de la page
+  index: Présentation
+  setup: Installer et démarrer
+  compatibility: Compatibilité des applications
+  troubleshooting: Dépannage
+  users: Pour les utilisateurs
+  developers: Pour les développeurs
+  integration: Intégration des applications
+  credits: Crédits et licences
+  help: Obtenir de l’aide
+  tagline: Une continuation indépendante de Shizuku
+ru:
+  name: Русский
+  automatic: Автоматически (браузер)
+  flag: 🇷🇺
+  skip: Перейти к содержимому
+  guide: Руководство
+  language: Язык страницы
+  index: Обзор
+  setup: Установка и запуск
+  compatibility: Совместимость приложений
+  troubleshooting: Решение проблем
+  users: Пользователям
+  developers: Разработчикам
+  integration: Интеграция приложений
+  credits: Благодарности и лицензии
+  help: Получить помощь
+  tagline: Независимое продолжение Shizuku
+id:
+  name: Bahasa Indonesia
+  automatic: Otomatis (browser)
+  flag: 🇮🇩
+  skip: Langsung ke konten
+  guide: Panduan
+  language: Bahasa halaman
+  index: Ringkasan
+  setup: Pasang dan jalankan
+  compatibility: Kompatibilitas aplikasi
+  troubleshooting: Pemecahan masalah
+  users: Untuk pengguna
+  developers: Untuk pengembang
+  integration: Integrasi aplikasi
+  credits: Kredit & lisensi
+  help: Dapatkan bantuan
+  tagline: Kelanjutan independen Shizuku
+ja:
+  name: 日本語
+  automatic: 自動（ブラウザー）
+  flag: 🇯🇵
+  skip: 本文へスキップ
+  guide: ガイド
+  language: ページの言語
+  index: 概要
+  setup: インストールと起動
+  compatibility: アプリの互換性
+  troubleshooting: トラブルシューティング
+  users: ユーザー向け
+  developers: 開発者向け
+  integration: アプリへの組み込み
+  credits: 謝辞とライセンス
+  help: ヘルプ
+  tagline: Shizuku を独立して継承
+ar:
+  name: العربية
+  automatic: تلقائي (المتصفح)
+  flag: 🇸🇦
+  skip: انتقل إلى المحتوى
+  guide: الدليل
+  language: لغة الصفحة
+  index: نظرة عامة
+  setup: التثبيت والتشغيل
+  compatibility: توافق التطبيقات
+  troubleshooting: حل المشكلات
+  users: للمستخدمين
+  developers: للمطورين
+  integration: تكامل التطبيقات
+  credits: المساهمون والتراخيص
+  help: الحصول على مساعدة
+  tagline: امتداد مستقل لمشروع Shizuku
+  dir: rtl

@@ -46,7 +46,7 @@ Report recurring stops with the device model, Android version, startup method an
 2. Check [whether the app needs Porter Compatibility](/compatibility).
 3. If the app has a service selector, choose Porter, force-stop the app in Android Settings and reopen it.
 4. Enable the integration inside the app and approve the Porter prompt.
-5. Check the app under Porter's **Authorized applications**.
+5. Check the app under Porter's **Applications** and make sure **Allow app access** is on.
 
 If you use the companion, both Porter APKs must come from the same release source and have matching signing certificates. Removing the companion prevents older clients from using Porter.
 
@@ -66,7 +66,7 @@ Some OPPO/OnePlus systems have a **Permission monitoring** switch in Developer o
 
 ## The version shown while running is different
 
-The **Version** entry in **Settings** shows the Porter app version. The running-service card shows the compatible Shizuku service version. These version numbers serve different purposes.
+The **Version** entry in **Settings** shows the Porter app version. Tap **Porter is running** to see the installed app version, running Porter service version and compatible Shizuku API version. The API version describes compatibility, not Porter's release number. If Porter asks you to restart the service after an update, stop and start it again.
 
 ## Report a problem
 

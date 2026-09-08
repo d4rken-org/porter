@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Приложения</string>
+    <string name="porter_home_subtitle">ADB-доступ для ваших приложений</string>
+    <string name="porter_startup">Запуск</string>
+    <string name="porter_version">Версия</string>
+    <string name="porter_pairing_method">Способ сопряжения</string>
+    <string name="porter_status_restricted">Некоторые разрешения ADB ограничены Android.</string>
+    <string name="porter_status_stop_message">Остановка Porter отключит использующие его приложения. Запускать Porter снова придётся вручную, и для этого может понадобиться компьютер.</string>
+    <string name="porter_status_details_hint">Нажмите, чтобы посмотреть сведения о службе и варианты остановки</string>
+    <string name="porter_status_ready">Porter готов. Совместимые приложения теперь могут подключаться и запрашивать доступ.</string>
+    <string name="porter_pairing_notification">Уведомление</string>
+    <string name="porter_pairing_dialog">Диалог в приложении</string>
+</resources>

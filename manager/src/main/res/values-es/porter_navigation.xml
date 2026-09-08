@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Aplicaciones</string>
+    <string name="porter_home_subtitle">Acceso ADB para tus apps</string>
+    <string name="porter_startup">Inicio</string>
+    <string name="porter_version">Versión</string>
+    <string name="porter_pairing_method">Método de vinculación</string>
+    <string name="porter_status_restricted">Android restringe algunos permisos de ADB.</string>
+    <string name="porter_status_stop_message">Detener Porter desconecta las apps que lo usan. Tendrás que volver a iniciar Porter manualmente, lo que puede requerir una computadora.</string>
+    <string name="porter_status_details_hint">Toca para ver los detalles del servicio y las opciones para detenerlo</string>
+    <string name="porter_status_ready">Porter está listo. Las apps compatibles ya pueden conectarse y solicitar acceso.</string>
+    <string name="porter_pairing_notification">Notificación</string>
+    <string name="porter_pairing_dialog">Diálogo en la app</string>
+</resources>

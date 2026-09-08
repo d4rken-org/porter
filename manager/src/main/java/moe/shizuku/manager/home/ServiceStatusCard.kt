@@ -1,5 +1,7 @@
 package moe.shizuku.manager.home
 
+import android.text.BidiFormatter
+import android.text.TextDirectionHeuristics
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -8,10 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.LayoutDirection
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.R
 import moe.shizuku.manager.model.PorterServiceVersion
@@ -54,9 +58,11 @@ internal fun serviceStatusUi(
         if (needsRestart) stringResource(R.string.porter_status_restart_service) else null,
         if (restricted) stringResource(R.string.porter_status_restricted) else null,
     ).joinToString("\n") else ""
+    val bidiFormatter = BidiFormatter.getInstance(LocalLayoutDirection.current == LayoutDirection.Rtl)
     val versionDetails = stringResource(R.string.porter_status_versions,
-        installed.name,
-        status.porterVersion?.name ?: stringResource(R.string.porter_status_version_unknown),
+        bidiFormatter.unicodeWrap(installed.name, TextDirectionHeuristics.LTR),
+        status.porterVersion?.name?.let { bidiFormatter.unicodeWrap(it, TextDirectionHeuristics.LTR) }
+            ?: stringResource(R.string.porter_status_version_unknown),
         status.apiVersion, status.patchVersion)
     return ServiceStatusUi(running, restricted, needsRestart, title, subtitle, details, versionDetails)
 }

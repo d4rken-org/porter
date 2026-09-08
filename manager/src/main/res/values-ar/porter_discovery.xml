@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_access_blocked">محظور</string>
+    <string name="porter_apps_counts">المصرّح لها: %1$d · المتوافقة: %2$d</string>
+    <string name="porter_discovery_partial">تعذّر التحقق من بعض الملفات الشخصية. قد تكون هذه القائمة غير مكتملة.</string>
+    <string name="porter_discovery_legacy">أعد تشغيل Porter لاكتشاف المزيد من التطبيقات وعرض سجل الاتصالات.</string>
+    <string name="porter_connections_explanation">يمكن للتطبيقات الاتصال تلقائيًا عند بدء Porter. لا يشير وقت الاتصال إلى آخر مرة استُخدم فيها التطبيق.</string>
+    <string name="porter_connection_needs_companion">يتطلب تطبيق التوافق</string>
+    <string name="porter_connection_unsupported">الإذن مُعلَن؛ التكامل غير معروف</string>
+    <string name="porter_connection_managed">تم الاتصال أو الإدارة سابقًا</string>
+    <string name="porter_connection_unknown">تفاصيل الاتصال غير متاحة</string>
+    <string name="porter_connection_never_recorded">آخر اتصال: غير معروف</string>
+    <string name="porter_connection_last">آخر اتصال: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="zero">لا توجد تطبيقات تتطلب تطبيق التوافق (%d)</item>
+        <item quantity="one">تطبيق واحد (%d) يتطلب تطبيق التوافق</item>
+        <item quantity="two">تطبيقان (%d) يتطلبان تطبيق التوافق</item>
+        <item quantity="few">%d تطبيقات تتطلب تطبيق التوافق</item>
+        <item quantity="many">%d تطبيقًا تتطلب تطبيق التوافق</item>
+        <item quantity="other">%d تطبيق يتطلب تطبيق التوافق</item>
+    </plurals>
+    <string name="porter_compatibility_needed">يلزم تطبيق التوافق</string>
+    <string name="porter_get_compatibility">الحصول على تطبيق التوافق</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="zero">لم تسمح بالوصول لأي تطبيق (%d) يحتاج إلى تطبيق التوافق الخاص بـ Porter. سيصبح الوصول متاحًا عند تثبيت تطبيق التوافق.</item>
+        <item quantity="one">سمحت بالوصول لتطبيق واحد (%d) يحتاج إلى تطبيق التوافق الخاص بـ Porter. سيصبح وصوله متاحًا عند تثبيت تطبيق التوافق.</item>
+        <item quantity="two">سمحت بالوصول لتطبيقين (%d) يحتاجان إلى تطبيق التوافق الخاص بـ Porter. سيصبح وصولهما متاحًا عند تثبيت تطبيق التوافق.</item>
+        <item quantity="few">سمحت بالوصول لـ %d تطبيقات تحتاج إلى تطبيق التوافق الخاص بـ Porter. سيصبح وصولها متاحًا عند تثبيت تطبيق التوافق.</item>
+        <item quantity="many">سمحت بالوصول لـ %d تطبيقًا تحتاج إلى تطبيق التوافق الخاص بـ Porter. سيصبح وصولها متاحًا عند تثبيت تطبيق التوافق.</item>
+        <item quantity="other">سمحت بالوصول لـ %d تطبيق يحتاج إلى تطبيق التوافق الخاص بـ Porter. سيصبح وصوله متاحًا عند تثبيت تطبيق التوافق.</item>
+    </plurals>
+    <string name="porter_access_pending_android">تعذّر تفعيل الوصول. تحقق من أذونات هذا التطبيق في إعدادات Android.</string>
+    <string name="porter_global_access">السماح بوصول التطبيقات</string>
+    <string name="porter_global_access_summary">إيقاف الوصول مؤقتًا لجميع التطبيقات دون تغيير أذوناتها المحفوظة.</string>
+    <string name="porter_global_access_restart">أعد تشغيل Porter لاستخدام التحكم العام في الوصول.</string>
+    <string name="porter_access_paused">وصول التطبيقات متوقف مؤقتًا</string>
+    <string name="porter_status_access_paused">Porter يعمل، لكن وصول التطبيقات متوقف مؤقتًا. استأنف الوصول من قسم التطبيقات.</string>
+</resources>

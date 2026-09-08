@@ -69,7 +69,9 @@ Stop the current Porter service before switching between root and debugging acce
 
 Open the app you want to use, enable its Porter or Shizuku integration, then approve Porter's access prompt. Only approve apps you trust: they can perform tasks with Porter's debugging or root access.
 
-To remove access, tap **Authorized applications** in Porter and turn off the app's authorization. Porter and Shizuku keep separate approvals.
+To remove access, tap **Applications** in Porter and turn off the app's authorization. Porter and Shizuku keep separate approvals.
+
+To pause access for all apps, turn off **Allow app access** at the top of that screen. Individual approvals are preserved. Turn it back on to resume access. Already-started shell commands may continue while access is paused.
 
 If the app has a service selector, choose Porter there. Follow the app's own setup instructions. If changing the selection requires restarting the app, use **Force stop** in Android's app settings and reopen it.
 

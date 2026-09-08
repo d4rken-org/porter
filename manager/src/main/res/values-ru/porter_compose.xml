@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Назад</string>
+    <string name="porter_local_network_permission">Разрешите доступ к локальной сети, чтобы Porter мог найти службу отладки по Wi-Fi Android и подключиться к ней.</string>
+    <string name="porter_pairing_dialog_instructions">Откройте «Отладку по Wi-Fi» в разделе «Для разработчиков» Android и выберите «Подключить устройство с помощью кода подключения». Введите здесь порт и код сопряжения.</string>
+</resources>

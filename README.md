@@ -30,7 +30,7 @@ Apps with built-in Porter support only need Porter. For apps that only support S
 
 ## For users
 
-Read the [Porter user guide](https://porter.darken.eu/), available in English and German with automatic language selection.
+Read the [Porter user guide](https://porter.darken.eu/), available in ten languages with automatic language selection.
 
 ## For developers
 

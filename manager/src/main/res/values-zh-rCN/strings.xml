@@ -2,164 +2,206 @@
 <resources>
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s 正在运行</string>
-    <string name="home_status_service_not_running">%1$s未运行</string>
+    <string name="home_status_service_not_running">%1$s 未运行</string>
+
     <!-- Home - Adb -->
-    <string name="home_adb_title"><![CDATA[通过连接电脑启动（使用 adb）]]></string>
-    <string name="home_adb_description"><![CDATA[对于没有 root 的设备需要借助 adb 来启动 Porter（需要连接电脑）。这个过程每次设备重新启动后需要重新进行。请<b><a href=\"%1$s\">阅读帮助</a></b>。]]></string>
-    <string name="home_adb_button_view_command">查看指令</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* 还有一些其他注意事项，请确认你已阅读帮助。]]></string>
+    <string name="home_adb_title"><![CDATA[通过连接电脑启动]]></string>
+    <string name="home_adb_description"><![CDATA[对于没有 root 的设备，需要借助 adb 来启动 Porter（需要连接电脑）。设备每次重启后都需要重新进行此过程。请<b><a href=\"%1$s\">阅读帮助</a></b>。]]></string>
+    <string name="home_adb_button_view_command">查看命令</string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* 还有一些其他注意事项，请确认您已先阅读帮助。]]></string>
     <string name="home_adb_dialog_view_command_button_send">发送</string>
+
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[通过无线调试启动]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[在 Android 11 或更高版本上，您可以直接从您的设备启用无线调试并启动 Porter，无需连接到计算机。<p>请先查看分步骤指南。]]></string>
-    <string name="home_wireless_adb_description_pre_11"><![CDATA[在 Android 11 之前，需要连接到计算机才能启用无线调试。]]></string>
-    <string name="home_wireless_adb_view_guide_button">分步骤指南</string>
+    <string name="home_wireless_adb_description"><![CDATA[在 Android 11 或更高版本上，您可以启用无线调试并直接从设备启动 Porter，无需连接电脑。<p>请先查看分步指南。]]></string>
+    <string name="home_wireless_adb_description_pre_11"><![CDATA[在 Android 11 之前，需要连接电脑才能启用无线调试。]]></string>
+    <string name="home_wireless_adb_view_guide_button">分步指南</string>
+
     <!-- Adb -->
     <string name="dialog_adb_discovery">正在搜索无线调试服务</string>
-    <string name="dialog_adb_discovery_message">请在“开发者选项”中启用“无线调试”功能。当网络变化时“无线调试”会被自动禁用。
-        \n
-        \n注意：请不要禁用“开发者选项”或“USB 调试”，否则 Porter 会被停止。</string>
-    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">如果一直搜索，请尝试禁用并启用“无线调试”。</string>
-    <string name="dialog_adb_port">端口号</string>
+    <string name="dialog_adb_discovery_message">请在“开发者选项”中启用“无线调试”。网络变化时，“无线调试”会被自动关闭。\n\n注意：请勿关闭“开发者选项”或“USB 调试”，否则 Porter 会停止运行。</string>
+    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">如果一直在搜索，请尝试关闭再重新启用“无线调试”。</string>
+    <string name="dialog_adb_port">端口</string>
     <string name="adb_pairing">配对</string>
     <string name="dialog_adb_pairing_title">与设备配对</string>
     <string name="dialog_adb_pairing_discovery">正在搜索配对服务</string>
     <string name="dialog_adb_pairing_paring_code">配对码</string>
     <string name="paring_code_is_wrong">配对码错误。</string>
-    <string name="cannot_connect_port">无法连接到无线调试服务。\n\n请确保将 Porter 添加到所有防火墙、广告拦截器、VPN
-        或类似可能限制网络访问的应用程序中的白名单。</string>
-    <string name="dialog_wireless_adb_not_enabled">无线调试未启用。
-        \n请注意，在 Android 11 之前，要启用无线调试必须连接电脑。</string>
-    <string name="dialog_usb_debugging_not_enabled">USB调试未启用。\n请在“开发者选项”中启用它。</string>
-    <string name="dialog_adb_pairing_accessibility_permission">在 Android 14上，安装/更新Shizuku 软件包安装程序撤销了
-        ^1 权限，这是启用配对辅助辅助功能所必需的。\n\n要授予它，请运行以下ADB 命令：\n\n^2\n\n运行命令后， 您可以继续配对。\n\n注意：您可以通过 ADB
-        安装/更新Shizuku 来绕过此操作。</string>
-    <string name="dialog_adb_pairing_accessibility_enable">请启用辅助功能服务以开始配对过程。这将使 Porter
-        能够检测到配对码。\n\n辅助功能服务将在找到配对码后或1分钟后关闭以节省电量。</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">请按照以下步骤开始配对：\n- 进入“开发者选项”\n-
-        启用“USB调试”和“无线调试”\n- 点击“无线调试”左侧\n- 点击“使用配对码配对设备”。Porter 将自动检测配对码。</string>
+    <string name="cannot_connect_port">无法连接到无线调试服务。\n\n请确保已在所有防火墙、广告拦截、VPN 或其他可能限制网络访问的应用中将 Porter 加入白名单。</string>
+    <string name="dialog_wireless_adb_not_enabled">无线调试未启用。\n注意：在 Android 11 之前，必须连接电脑才能启用无线调试。</string>
+    <string name="dialog_usb_debugging_not_enabled">USB 调试未启用。\n请在“开发者选项”中启用。</string>
+    <string name="dialog_adb_pairing_accessibility_permission">在 Android 14 上，通过软件包安装程序安装/更新 Porter 会撤销 ^1 权限，而启用配对所需的无障碍服务需要该权限。\n\n要授予该权限，请运行以下 ADB 命令：\n\n^2\n\n运行命令后，即可继续配对。\n\n注意：通过 ADB 安装/更新 Porter 可以避免此问题。</string>
+    <string name="dialog_adb_pairing_accessibility_enable">请启用无障碍服务以开始配对。这样 Porter 才能检测到配对码。\n\n为节省电量，无障碍服务会在找到配对码后或 1 分钟后自动关闭。</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">请按以下步骤开始配对：\n- 进入“开发者选项”\n- 启用“USB 调试”和“无线调试”\n- 点按“无线调试”左侧\n- 点按“使用配对码配对设备”。Porter 会自动检测配对码。</string>
     <string name="adb_pairing_requires_multi_window">请先进入分屏（多窗口）模式。</string>
     <string name="adb_pairing_requires_multi_window_reason">系统要求配对对话框始终可见。只有使用分屏模式才能让此应用和系统对话框同时可见。</string>
     <string name="adb_error_key_store">无法生成无线调试密钥。\n这可能是因为此设备的密钥库机制已损坏。</string>
-    <string name="adb_pair_required">请先进行配对步骤。</string>
+    <string name="adb_pair_required">请先完成配对步骤。</string>
     <string name="enable">启用</string>
     <string name="development_settings">开发者选项</string>
     <string name="notification_settings">通知设置</string>
     <string name="adb_pairing_tutorial_content_notification">一条来自 Porter 的通知将帮助您完成配对。</string>
-    <string name="adb_pairing_tutorial_content_steps">进入“开发者选项”，然后启用“USB调试”和“无线调试”。</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">
-        点击“无线调试”左侧，然后点击“使用配对码配对设备”。输入通知中的代码以完成配对。</string>
-    <string name="adb_pairing_tutorial_content_notification_blocked">配对过程需要您与 Porter 的通知交互。请允许
-        Porter 发布通知。</string>
-    <string name="adb_pairing_tutorial_content_miui">MIUI
-        用户可能需要在系统设置中从“通知管理”-“通知显示设置”将通知样式切换为“原生样式”。</string>
-    <string name="adb_pairing_tutorial_content_miui_2">否则，您可能无法输入通知中的配对码。</string>
+    <string name="adb_pairing_tutorial_content_steps">进入“开发者选项”，然后启用“USB 调试”和“无线调试”。</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">点按“无线调试”左侧，然后点按“使用配对码配对设备”。在通知中输入配对码以完成配对。</string>
+    <string name="adb_pairing_tutorial_content_notification_blocked">配对过程需要您与 Porter 的通知进行交互。请允许 Porter 发送通知。</string>
+    <string name="adb_pairing_tutorial_content_miui">MIUI 用户可能需要在系统设置中的“通知管理”-“通知显示设置”里将通知样式切换为“原生样式”。</string>
+    <string name="adb_pairing_tutorial_content_miui_2">否则，您可能无法在通知中输入配对码。</string>
     <string name="adb_pairing_tutorial_content_finish">回到 Porter 并启动 Porter。</string>
-    <string name="adb_pairing_tutorial_content_network">Porter 需要访问本地网络。这受网络权限控制。</string>
-    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">某些系统（例如
-        MIUI）会禁止应用在不可见时访问网络，即使该应用使用了前台服务。请在这些系统上为 Porter 关闭电池优化功能。</string>
+    <string name="adb_pairing_tutorial_content_network">Porter 需要访问本地网络，此功能由网络权限控制。</string>
+    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">某些系统（例如 MIUI）会禁止应用在不可见时访问网络，即使该应用使用了前台服务。请在这些系统上为 Porter 关闭电池优化功能。</string>
+
     <!-- Home - Root -->
-    <string name="home_root_title"><![CDATA[启动（针对已 root 设备）]]></string>
+    <string name="home_root_title"><![CDATA[启动（针对已 root 的设备）]]></string>
+    <string name="home_root_description"><![CDATA[如果您使用 Magisk，%1$s 是另一种选择。应用需要明确支持 %2$s。]]></string>
     <string name="home_root_button_start">启动</string>
+
     <!-- Home - Application management -->
     <string name="home_app_management_title">应用管理</string>
     <plurals name="home_app_management_authorized_apps_count">
         <item quantity="other"><![CDATA[已授权 %d 个应用]]></item>
     </plurals>
-    <string name="home_app_management_view_authorized_apps"><![CDATA[点按以管理授权的应用]]></string>
+    <string name="home_app_management_view_authorized_apps"><![CDATA[点按以管理已授权的应用]]></string>
     <string name="home_app_management_empty">已请求或声明 Porter 权限的应用将显示在此处。</string>
+
     <!-- Home - Automation -->
-    <string name="home_automation_title">使用自动化应用程序控制 Porter</string>
+    <string name="home_automation_title">使用自动化应用控制 Porter</string>
+    <string name="home_automation_bottom_sheet_intents">Intent</string>
+    <string name="home_automation_bottom_sheet_label_action">操作</string>
+    <string name="home_automation_bottom_sheet_label_package">包名</string>
+    <string name="home_automation_bottom_sheet_label_target">目标</string>
+    <string name="home_automation_bottom_sheet_label_extras">附加数据</string>
+    <string name="home_automation_regenerate_token">重新生成令牌？</string>
+    <string name="home_automation_regenerate_token_message">您需要使用新令牌重新配置您的 Intent。</string>
+
+    <!-- Home - Dialogs -->
+    <string name="home_dialog_reboot_required_title">需要重启设备</string>
+    <string name="home_dialog_reboot_required_message">Porter 需要重启设备才能正常工作。要继续，请重启您的设备。</string>
+    <string name="home_dialog_duplicate_app_detected_title">检测到重复的应用</string>
+    <string name="home_dialog_duplicate_app_detected_message">您的设备上安装了此应用的另一个版本。要继续，请卸载所有重复的版本并重启设备。</string>
+    <string name="home_dialog_button_exit">退出</string>
+
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">adb 权限受限</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[这极有可能是你的设备制造商限制了 adb 的权限。<p><b><a href="%1$s">此文档</a></b>中可能有针对你的系统的解决方案。]]></string>
-    <string name="app_management_item_summary_requires_root">* 需要以 root 执行的 Porter</string>
-    <string name="app_management_toggle_all">切换全部</string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[很可能是您的设备制造商限制了 adb 的权限。<p><b><a href=\"%1$s\">此文档</a></b>中可能有针对您的系统的解决方案。]]></string>
+    <string name="app_management_item_summary_requires_root">* 需要 Porter 以 root 运行</string>
+    <string name="app_management_toggle_all">全部切换</string>
+
     <!-- Terminal -->
     <string name="home_terminal_title">在终端应用中使用 Porter</string>
-    <string name="home_terminal_description">通过 Porter 在终端应用程序中运行 shell 命令</string>
-    <string name="terminal_tutorial_miui">用户反映 MIUI 破坏了导出功能所使用的存储访问框架。</string>
-    <string name="terminal_tutorial_miui_2">如果您使用的是 MIUI 系统，则可能需要从 Porter 的 APK 的 assets 文件夹中提取该文件。</string>
+    <string name="home_terminal_description">通过 Porter 在终端应用中运行 shell 命令</string>
+    <string name="terminal_tutorial_miui">有用户反映 MIUI 破坏了导出功能所使用的存储访问框架。</string>
+    <string name="terminal_tutorial_miui_2">如果您使用的是 MIUI，可能需要从 Porter APK 的 assets 文件夹中提取该文件。</string>
     <string name="terminal_tutorial_1">将文件导出到新文件夹。</string>
-    <string name="terminal_tutorial_1_description">将导出两个文件： %1$s 和 %2$s。如果所选文件夹中已存在这些文件，则会将其删除。</string>
+    <string name="terminal_tutorial_1_description">将导出两个文件：%1$s 和 %2$s。如果所选文件夹中已存在这些文件，它们将被删除。</string>
     <string name="terminal_export_files">导出文件</string>
-    <string name="terminal_tutorial_2">使用终端应用程序将文件复制到其私有文件目录。</string>
-    <string name="terminal_tutorial_2_description">提示：如果你的终端应用程序的主目录（~）位于私有文件目录中，将文件放在那里就可以直接运行 %1$s
-        而无需输入路径。\n\n否则，你可以在终端应用程序的 %3$s 配置文件中为 %2$s 创建一个别名。</string>
+    <string name="terminal_tutorial_2">使用您的终端应用将文件复制到其私有文件目录。</string>
+    <string name="terminal_tutorial_2_description">提示：如果您的终端应用的主目录（~）位于私有文件目录中，将文件放在那里即可直接运行 %1$s 而无需输入路径。\n\n否则，您可以在终端应用的 %3$s 配置文件中为 %2$s 创建一个别名。</string>
     <string name="terminal_tutorial_3">使用以下命令打开 shell：</string>
-    <string name="rish_description"><![CDATA[使用 %1$s，您可以在任何终端应用程序中运行 shell 命令。<p>点击了解更多使用方法。]]></string>
+    <string name="rish_description"><![CDATA[使用 %1$s，您可以在任何终端应用中运行 shell 命令。<p>点按了解更多使用方法。]]></string>
+
     <!-- Settings -->
     <string name="settings_title">设置</string>
-    <string name="settings_start_on_boot">自启动</string>
-    <string name="settings_start_on_boot_summary">需要 Android 11 或更高版本或 root 权限</string>
-    <string name="settings_start_on_boot_bug">由于 Android 11-12
-        中的一个漏洞，无线调试不会记住任何授权网络。\n\n每次重启时，当授权对话框弹出时，点击“允许”重新授权网络。</string>
-    <string name="settings_watchdog">Watchdog</string>
-    <string name="settings_watchdog_summary">如果 Porter 崩溃，则自动重启</string>
+    <string name="settings_start_on_boot">开机启动</string>
+    <string name="settings_start_on_boot_summary">需要 Android 11 及以上版本或 root</string>
+    <string name="settings_start_on_boot_bug">由于 Android 11-12 的一个 bug，无线调试不会记住任何已授权的网络。\n\n每次重启后，当授权对话框弹出时，您需要点按“允许”来重新授权网络。</string>
+    <string name="settings_watchdog">看门狗</string>
+    <string name="settings_watchdog_summary">Porter 崩溃时自动重启</string>
     <string name="settings_restart_dialog_title">需要重启</string>
     <string name="settings_restart_dialog_message">Porter 需要重启才能应用此设置。</string>
     <string name="settings_tcp_port">TCP 端口</string>
-    <string name="settings_tcp_port_default">默认值 (5555)</string>
-    <string name="settings_user_interface">界面外观</string>
+    <string name="settings_tcp_port_default">默认（5555）</string>
+    <string name="settings_user_interface">外观</string>
     <string name="settings_support">支持</string>
+
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">端口必须介于 1 和 65535 之间</string>
-    <string name="snackbar_battery_optimization_home">要使 开机启动/watchdog 功能正常工作，必须禁用电池优化。</string>
-    <string name="snackbar_battery_optimization_settings">请禁用电池优化功能以使用此功能。</string>
+    <string name="snackbar_battery_optimization_home">必须关闭电池优化，开机启动/看门狗才能正常工作。</string>
+    <string name="snackbar_battery_optimization_settings">请关闭电池优化以使用此功能。</string>
     <string name="snackbar_action_fix">修复</string>
+
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Porter 已在后台启动</string>
-    <string name="toast_accessibility_tv_only">该服务仅支持电视设备</string>
-    <string name="toast_pairing_timeout">Shizuku配对服务超时</string>
+    <string name="toast_shizuku_already_starting">Porter 已在后台启动中</string>
+    <string name="toast_accessibility_tv_only">此服务仅支持电视设备</string>
+    <string name="toast_pairing_timeout">Porter 配对服务超时</string>
+
     <!-- Dark Mode Setting Override -->
     <string name="follow_system">跟随系统</string>
-    <!-- Stop -->
+
+    <!-- Start/Stop -->
+    <string name="start">启动</string>
+    <string name="stop">停止</string>
     <string name="action_stop">停止 Porter</string>
+
     <!-- Notification -->
     <string name="notification_channel_adb_pairing">无线调试配对</string>
     <string name="notification_adb_pairing_input_paring_code">输入配对码</string>
     <string name="notification_adb_pairing_searching_for_service_title">正在搜索配对服务</string>
     <string name="notification_adb_pairing_service_found_title">已找到配对服务</string>
     <string name="notification_adb_pairing_stop_searching">停止搜索</string>
-    <string name="notification_adb_pairing_working_title">正在进行配对</string>
+    <string name="notification_adb_pairing_working_title">正在配对</string>
     <string name="notification_adb_pairing_succeed_title">配对成功</string>
     <string name="notification_adb_pairing_succeed_text">您现在可以启动 Porter 服务了。</string>
     <string name="notification_adb_pairing_failed_title">配对失败</string>
     <string name="notification_adb_pairing_retry">重试</string>
+    <string name="notification_auth_missing_title">需要身份验证令牌</string>
+    <string name="notification_auth_missing_message">请在您的 Intent 中添加“auth”附加数据。您可以在“设置”中的“使用自动化应用控制 Porter”下找到您的令牌。</string>
+    <string name="notification_auth_invalid_title">身份验证令牌无效</string>
+    <string name="notification_auth_invalid_message">请确保 Intent 中的令牌与“设置”中“使用自动化应用控制 Porter”下显示的令牌一致。</string>
+
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">使用 Porter</string>
-    <string name="permission_description">允许应用使用 Porter。</string>
+    <string name="permission_label">访问 Porter</string>
+    <string name="permission_description">允许该应用使用 Porter。</string>
     <string name="permission_warning_template"><![CDATA[要允许<b>%1$s</b>%2$s吗？]]></string>
     <string name="grant_dialog_button_allow_always">始终允许</string>
     <string name="grant_dialog_button_deny">"拒绝"</string>
+
     <!-- Starter -->
-    <string name="starter">启动程序</string>
-    <string name="start_with_root_failed">未授予 root 权限或是该设备没有 root，因此无法启动服务。</string>
+    <string name="starter">启动器</string>
+    <string name="start_with_root_failed">未授予 root 权限或此设备未 root，因此无法启动服务。</string>
+
     <!-- WADB Starter -->
     <string name="wadb_notification_title">正在启动 Porter…</string>
-    <string name="wadb_notification_wifi_required">正在等待 Wi-Fi 连接，连接成功后才能继续</string>
+    <string name="wadb_notification_wifi_required">正在等待 Wi-Fi 连接，连接后继续</string>
     <string name="wadb_notification_retry">等待重试</string>
-    <string name="wadb_error_title">在系统启动时启动出现错误</string>
-    <string name="wadb_error_notify_dev">点击通知开发者。</string>
+    <string name="wadb_error_title">开机启动时出错</string>
+    <string name="wadb_error_notify_dev">点按以通知开发者。</string>
     <string name="wadb_permission_error_notification_title">权限错误</string>
-    <string name="wadb_permission_error_notification_content">Porter 需要 WRITE_SECURE_SETTINGS
-        权限才能开机启动。点击了解如何授予此权限。</string>
+    <string name="wadb_permission_error_notification_content">Porter 需要 WRITE_SECURE_SETTINGS 权限才能开机启动。点按了解如何授予该权限。</string>
+
     <!-- Watchdog -->
-    <string name="watchdog_running">Watchdog 正在运行</string>
-    <string name="watchdog_turn_off">关</string>
+    <string name="watchdog_running">看门狗正在运行</string>
+    <string name="watchdog_turn_off">关闭</string>
     <string name="watchdog_shizuku_crashed_title">Porter 最近崩溃了</string>
-    <string name="watchdog_shizuku_crashed_text">Watchdog 已重启服务。点击了解可防止未来崩溃的潜在修复方案。</string>
+    <string name="watchdog_shizuku_crashed_text">看门狗已重启服务。点按了解可能的修复方法，以防止再次崩溃。</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">关闭提醒</string>
+
     <!-- Misc -->
-    <string name="dialog_cannot_open_browser_title">无法启动浏览器</string>
+    <string name="dialog_cannot_open_browser_title">无法打开浏览器</string>
     <string name="toast_copied_to_clipboard">已复制到剪贴板</string>
-    <string name="accessibility_service_description">为无法使用通知或分屏功能的设备（例如，运行 Android 14
-        及更高版本的电视）提供配对支持。\n\n使 Porter 能够从无线调试配对屏幕中提取配对码。找到配对码后，它将自动禁用。</string>
+    <string name="accessibility_service_description">为无法使用通知或分屏的设备（例如运行 Android 14 及以上版本的电视）提供配对支持。\n\n使 Porter 能够从无线调试配对界面中提取配对码。找到配对码后，它会自动关闭。</string>
+
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s 不支持现代 Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[旧式 Porter 已于 2019 年 3 月被弃用。此外，旧式 Porter 无法在较新版本的 Android 系统上工作。<p>请要求 <b>%1$s</b> 的开发者进行更新。]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s 正在请求旧式 Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> 支持现代 Porter，但它正在请求旧式 Porter。这可能是因为 Porter 没有运行，请在 Porter 应用内检查。<p>旧式 Porter 已于 2019 年 3 月被弃用。]]></string>
+    <string name="dialog_legacy_not_support_message"><![CDATA[旧版 Porter 已于 2019 年 3 月弃用。此外，旧版 Porter 无法在较新的 Android 系统上运行。<p>请要求 <b>%1$s</b> 的开发者进行更新。]]></string>
+    <string name="dialog_requesting_legacy_title">%1$s 正在请求旧版 Porter</string>
+    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> 支持现代 Porter，但它正在请求旧版 Porter。这可能是因为 Porter 没有运行，请在 Porter 应用内检查。<p>旧版 Porter 已于 2019 年 3 月弃用。]]></string>
     <string name="dialog_requesting_legacy_button_open_shizuku">打开 Porter</string>
-    <string name="wadb_notification_attempt_now">现在尝试</string>
+    <string name="wadb_notification_attempt_now">立即尝试</string>
+
+    <string name="porter_status_running_adb">通过 ADB 运行</string>
+    <string name="porter_status_running_root">通过 root 运行</string>
+    <string name="porter_status_restart_service">重启 Porter 以更新正在运行的服务。</string>
+    <string name="porter_status_version_unknown">未知</string>
+    <string name="porter_status_versions">已安装的 Porter：%1$s\n运行中的服务：%2$s\nShizuku API：%3$d · 补丁：%4$d</string>
+    <string name="porter_acknowledgements">致谢</string>
+    <string name="porter_acknowledgements_summary">上游项目、开源库及许可证。</string>
+    <string name="porter_acknowledgements_thanks">感谢</string>
+    <string name="porter_licenses">许可证</string>
+    <string name="porter_ack_shizuku">感谢 RikkaApps 及所有贡献者创建了 Shizuku 及其 API，它们是 Porter 的基础。</string>
+    <string name="porter_ack_thedjchi">感谢 thedjchi 及贡献者维护 Porter 所基于的 Shizuku 分支。</string>
+    <string name="porter_ack_symbuzzer">感谢 symbuzzer 及贡献者持续开发 Shizuku 并分享他们的分支。</string>
+    <string name="porter_ack_plus">感谢 thejaustin 及贡献者开发 ShizukuPlus，为可选的兼容应用提供了灵感。</string>
+    <string name="porter_license_porter">Porter 及原版 Shizuku 应用 · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API 及其 Porter 分支 · MIT License</string>
+    <string name="porter_license_notice">版权与署名声明</string>
 </resources>

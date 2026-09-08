@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Voltar</string>
+    <string name="porter_local_network_permission">Permita o acesso à sua rede local para que o Porter possa encontrar o serviço de depuração por Wi-Fi do Android e se conectar a ele.</string>
+    <string name="porter_pairing_dialog_instructions">Abra Depuração por Wi-Fi nas opções do desenvolvedor do Android e escolha Parear dispositivo com código de pareamento. Digite a porta e o código de pareamento aqui.</string>
+</resources>

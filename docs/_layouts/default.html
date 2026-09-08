@@ -26,7 +26,7 @@
           <button type="button" lang="en" data-language="en"><span aria-hidden="true">{{ ui.flag }}</span> {{ ui.name }}</button>
           {% for translation in translations %}
             {% assign language_ui = site.data.ui[translation.lang] %}
-            <button type="button" lang="{{ translation.lang }}" data-language="{{ translation.lang }}"><span aria-hidden="true">{{ language_ui.flag }}</span> {{ language_ui.name }}</button>
+            <button type="button" lang="{{ translation.lang }}" dir="{{ language_ui.dir | default: 'ltr' }}" data-language="{{ translation.lang }}"><span aria-hidden="true">{{ language_ui.flag }}</span> {{ language_ui.name }}</button>
           {% endfor %}
         </nav>
       </details>

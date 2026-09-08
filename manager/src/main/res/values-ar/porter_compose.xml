@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">الرجوع</string>
+    <string name="porter_local_network_permission">اسمح بالوصول إلى شبكتك المحلية ليتمكن Porter من العثور على خدمة تصحيح الأخطاء اللاسلكي في Android والاتصال بها.</string>
+    <string name="porter_pairing_dialog_instructions">افتح تصحيح الأخطاء اللاسلكي في خيارات المطوّر في Android واختر إقران الجهاز باستخدام رمز الإقران. أدخل المنفذ ورمز الإقران هنا.</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">戻る</string>
+    <string name="porter_local_network_permission">PorterがAndroidのワイヤレスデバッグサービスを検出して接続できるように、ローカルネットワークへのアクセスを許可してください。</string>
+    <string name="porter_pairing_dialog_instructions">Androidの開発者向けオプションで「ワイヤレスデバッグ」を開き、「ペア設定コードによるデバイスのペア設定」を選択します。表示されたポートとペア設定コードをここに入力してください。</string>
+</resources>

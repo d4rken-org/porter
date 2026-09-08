@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">التطبيقات</string>
+    <string name="porter_home_subtitle">وصول ADB لتطبيقاتك</string>
+    <string name="porter_startup">بدء التشغيل</string>
+    <string name="porter_version">الإصدار</string>
+    <string name="porter_pairing_method">طريقة الإقران</string>
+    <string name="porter_status_restricted">بعض أذونات ADB مقيّدة من قِبل Android.</string>
+    <string name="porter_status_stop_message">يؤدي إيقاف Porter إلى قطع اتصال التطبيقات التي تستخدمه. سيتعين عليك بدء Porter مجددًا يدويًا، وقد يتطلب ذلك جهاز كمبيوتر.</string>
+    <string name="porter_status_details_hint">انقر لعرض تفاصيل الخدمة وخيارات الإيقاف</string>
+    <string name="porter_status_ready">Porter جاهز. يمكن للتطبيقات المتوافقة الآن الاتصال وطلب الوصول.</string>
+    <string name="porter_pairing_notification">إشعار</string>
+    <string name="porter_pairing_dialog">مربع حوار داخل التطبيق</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_access_blocked">已阻止</string>
+    <string name="porter_apps_counts">已授权：%1$d · 兼容：%2$d</string>
+    <string name="porter_discovery_partial">部分用户资料无法检查，此列表可能不完整。</string>
+    <string name="porter_discovery_legacy">重启 Porter 以发现更多应用并查看连接记录。</string>
+    <string name="porter_connections_explanation">应用可以在 Porter 启动时自动连接。连接时间并不表示应用上次使用的时间。</string>
+    <string name="porter_connection_needs_companion">需要兼容应用</string>
+    <string name="porter_connection_unsupported">已声明权限，但未识别到集成</string>
+    <string name="porter_connection_managed">曾经连接或已管理</string>
+    <string name="porter_connection_unknown">连接详情不可用</string>
+    <string name="porter_connection_never_recorded">上次连接：未知</string>
+    <string name="porter_connection_last">上次连接：%1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="other">%d 个应用需要兼容应用</item>
+    </plurals>
+    <string name="porter_compatibility_needed">需要兼容应用</string>
+    <string name="porter_get_compatibility">获取兼容应用</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="other">您已允许 %d 个需要 Porter 兼容应用的应用访问。安装兼容应用后，其访问权限即可生效。</item>
+    </plurals>
+    <string name="porter_access_pending_android">无法激活访问权限。请在 Android 设置中检查此应用的权限。</string>
+    <string name="porter_global_access">允许应用访问</string>
+    <string name="porter_global_access_summary">暂时禁用所有应用的访问权限，而不更改其已保存的权限。</string>
+    <string name="porter_global_access_restart">重启 Porter 以使用全局访问控制。</string>
+    <string name="porter_access_paused">应用访问已暂停</string>
+    <string name="porter_status_access_paused">Porter 正在运行，但应用访问已暂停。请在“应用”中恢复访问。</string>
+</resources>

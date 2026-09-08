@@ -16,7 +16,7 @@ Wenn du Debugging-Zugriff nutzt, ist es normal, Porter nach einem Geräteneustar
 ## Der automatische Start funktioniert nicht
 {: #automatic-start-does-not-work }
 
-Starte Porter nach der Installation einmal manuell, bevor du dich auf **Start beim Booten** verlässt. Ein erfolgreicher Start über Debugging erteilt die Android-Einstellungsberechtigung, die für spätere automatische Starts nötig ist. Falls eine Benachrichtigung `WRITE_SECURE_SETTINGS` erwähnt, starte Porter erneut über einen Computer und versuche es danach noch einmal.
+Starte Porter nach der Installation einmal manuell, bevor du dich auf **Beim Systemstart starten** verlässt. Ein erfolgreicher Start über Debugging erteilt die Android-Einstellungsberechtigung, die für spätere automatische Starts nötig ist. Falls eine Benachrichtigung `WRITE_SECURE_SETTINGS` erwähnt, starte Porter erneut über einen Computer und versuche es danach noch einmal.
 
 Der automatische Start hängt weiterhin davon ab, ob Android Debugging-Zugriff bereitstellt und Porter im Hintergrund laufen lässt. Falls er scheitert, nutze eine manuelle Startmethode.
 
@@ -54,7 +54,7 @@ Melde wiederholte Abbrüche mit Gerätemodell, Android-Version, Startmethode und
 2. Prüfe, [ob die App Porter Compatibility benötigt](/compatibility).
 3. Falls die App eine Dienstauswahl hat, wähle Porter. Nutze für die App **Beenden erzwingen** in den Android-Einstellungen und öffne sie erneut.
 4. Aktiviere die Unterstützung in der App und bestätige Porters Anfrage.
-5. Prüfe den Eintrag der App in Porters Liste der autorisierten Apps.
+5. Prüfe den Eintrag der App unter **Anwendungen** in Porter und stelle sicher, dass **App-Zugriff erlauben** eingeschaltet ist.
 
 Wenn du die Begleit-App nutzt, müssen beide Porter-APKs aus derselben Veröffentlichungsquelle stammen und mit passenden Zertifikaten signiert sein. Ohne die Begleit-App können ältere Apps Porter nicht mehr verwenden.
 
@@ -77,7 +77,7 @@ Manche OPPO-/OnePlus-Systeme haben in den Entwickleroptionen einen Schalter zur 
 ## Die angezeigte Version des laufenden Dienstes weicht ab
 {: #the-version-shown-while-running-is-different }
 
-Der Eintrag **Version** in den **Einstellungen** zeigt die Version der Porter-App. Die Karte zum laufenden Dienst zeigt die kompatible Shizuku-Dienstversion. Diese Versionsnummern haben unterschiedliche Zwecke.
+Der Eintrag **Version** in den **Einstellungen** zeigt die Version der Porter-App. Tippe auf **Porter läuft**, um die installierte App-Version, die Version des laufenden Porter-Dienstes und die kompatible Shizuku-API-Version anzuzeigen. Die API-Version beschreibt die Kompatibilität, nicht Porters Versionsnummer. Wenn Porter nach einem Update zum Neustart des Dienstes auffordert, stoppe und starte ihn erneut.
 
 ## Ein Problem melden
 {: #report-a-problem }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">返回</string>
+    <string name="porter_local_network_permission">允许访问您的本地网络，以便 Porter 查找并连接到 Android 的无线调试服务。</string>
+    <string name="porter_pairing_dialog_instructions">在 Android 开发者选项中打开“无线调试”，然后选择“使用配对码配对设备”。在此处输入端口和配对码。</string>
+</resources>

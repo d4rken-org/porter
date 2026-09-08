@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Porter Compatibility</string>
+    <string name="app_name" translatable="false">Porter Compatibility</string>
     <string name="permission_label">Use Porter</string>
     <string name="permission_description">Allow this app to use system APIs through Porter.</string>
     <string name="porter_missing">Install Porter with the matching signing certificate to use this companion.</string>
