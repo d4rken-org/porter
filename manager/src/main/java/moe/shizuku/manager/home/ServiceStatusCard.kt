@@ -28,6 +28,7 @@ internal data class ServiceStatusUi(
     val restricted: Boolean,
     val needsRestart: Boolean,
     val title: String,
+    val subtitle: String?,
     val details: String,
     val versionDetails: String,
 )
@@ -48,8 +49,8 @@ internal fun serviceStatusUi(
             status.patchVersion != latestPatch
         )
     val title = plainText(stringResource(if (running) R.string.home_status_service_is_running else R.string.home_status_service_not_running, stringResource(R.string.app_name)))
+    val subtitle = if (running) stringResource(if (status.uid == 0) R.string.porter_status_running_root else R.string.porter_status_running_adb) else null
     val details = if (running) listOfNotNull(
-        stringResource(if (status.uid == 0) R.string.porter_status_running_root else R.string.porter_status_running_adb),
         if (needsRestart) stringResource(R.string.porter_status_restart_service) else null,
         if (restricted) stringResource(R.string.porter_status_restricted) else null,
     ).joinToString("\n") else ""
@@ -57,16 +58,17 @@ internal fun serviceStatusUi(
         installed.name,
         status.porterVersion?.name ?: stringResource(R.string.porter_status_version_unknown),
         status.apiVersion, status.patchVersion)
-    return ServiceStatusUi(running, restricted, needsRestart, title, details, versionDetails)
+    return ServiceStatusUi(running, restricted, needsRestart, title, subtitle, details, versionDetails)
 }
 
 @Composable
 internal fun ServiceStatusCard(ui: ServiceStatusUi, onDetails: () -> Unit) {
     HomeCard(ui.title, when { ui.restricted -> R.drawable.ic_warning_24; ui.running -> R.drawable.ic_server_ok_24dp; else -> R.drawable.ic_server_error_24dp },
         if (ui.running) onDetails else null,
-        when { ui.restricted -> colorResource(R.color.porter_status_warning); ui.running -> colorResource(R.color.porter_status_running); else -> MaterialTheme.colorScheme.onSurfaceVariant }) {
+        when { ui.restricted -> colorResource(R.color.porter_status_warning); ui.running -> colorResource(R.color.porter_status_running); else -> MaterialTheme.colorScheme.onSurfaceVariant },
+        subtitle = ui.subtitle) {
         if (ui.running) {
-            Text(ui.details, style = MaterialTheme.typography.bodyMedium)
+            if (ui.details.isNotEmpty()) Text(ui.details, style = MaterialTheme.typography.bodyMedium)
             if (!ui.restricted && !ui.needsRestart) {
                 Text(stringResource(R.string.porter_status_ready), style = MaterialTheme.typography.bodyMedium)
             }
@@ -77,19 +79,26 @@ internal fun ServiceStatusCard(ui: ServiceStatusUi, onDetails: () -> Unit) {
 
 @Composable
 internal fun ServiceStatusDialog(ui: ServiceStatusUi, onDismiss: () -> Unit, onStop: () -> Unit) {
-    MessageDialog(ui.title, "${ui.details}\n\n${ui.versionDetails}\n\n${stringResource(R.string.porter_status_stop_message)}", onDismiss,
+    val details = listOfNotNull(ui.subtitle, ui.details.takeIf { it.isNotEmpty() }).joinToString("\n")
+    MessageDialog(ui.title, "$details\n\n${ui.versionDetails}\n\n${stringResource(R.string.porter_status_stop_message)}", onDismiss,
         stringResource(R.string.action_stop), confirmColor = MaterialTheme.colorScheme.error, onConfirm = onStop)
 }
 
 @Composable
 internal fun HomeCard(title: String, icon: Int, onClick: (() -> Unit)? = null,
-                      tint: Color = MaterialTheme.colorScheme.primary, content: @Composable ColumnScope.() -> Unit) {
+                      tint: Color = MaterialTheme.colorScheme.primary, subtitle: String? = null,
+                      content: @Composable ColumnScope.() -> Unit) {
     Card(Modifier.fillMaxWidth().clip(CardDefaults.shape).then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
         Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Icon(painterResource(icon), null, Modifier.size(24.dp), tint)
-                Text(title, style = MaterialTheme.typography.titleMedium)
+                Column(Modifier.weight(1f)) {
+                    Text(title, style = MaterialTheme.typography.titleMedium)
+                    subtitle?.let {
+                        Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
             }
             content()
         }

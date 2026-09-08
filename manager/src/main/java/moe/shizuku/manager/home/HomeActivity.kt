@@ -95,8 +95,9 @@ abstract class HomeActivity : ComposeActivity() {
                 item { ServiceStatusCard(statusUi) { dialog = "status" } }
                 if (running && status.permission) item {
                     val count = appsState.grantedCount
-                    HomeCard(resources.getQuantityString(R.plurals.home_app_management_authorized_apps_count, count, count), R.drawable.ic_apps_outline_24,
-                        { startActivity(Intent(this@HomeActivity, ApplicationManagementActivity::class.java)) }) {
+                    HomeCard(stringResource(R.string.porter_applications), R.drawable.ic_apps_outline_24,
+                        { startActivity(Intent(this@HomeActivity, ApplicationManagementActivity::class.java)) },
+                        subtitle = resources.getQuantityString(R.plurals.home_app_management_authorized_apps_count, count, count)) {
                         Text(stringResource(R.string.home_app_management_view_authorized_apps), style = MaterialTheme.typography.bodyMedium)
                     }
                 }

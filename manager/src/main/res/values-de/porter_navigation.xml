@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="porter_applications">Anwendungen</string>
     <string name="porter_home_subtitle">ADB-Zugriff für deine Apps</string>
     <string name="porter_startup">Startverhalten</string>
     <string name="porter_version">Version</string>
