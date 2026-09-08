@@ -1,0 +1,64 @@
+name: Emulator integration tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: ADB integration (Android ${{ matrix.api }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [30, 36]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: ./.github/actions/android-setup
+      - name: Build test APKs
+        run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug
+      - name: Download pinned Shizuku for coexistence testing
+        run: |
+          curl --fail --location --retry 2 -o "$RUNNER_TEMP/shizuku.apk" \
+            https://github.com/RikkaApps/Shizuku/releases/download/v13.6.0/shizuku-v13.6.0.r1086.2650830c-release.apk
+          echo "6e273ab0e991c4e79bc8b1bbb9b9dd739ccac1a8712a541a214078886b7b790f  $RUNNER_TEMP/shizuku.apk" | sha256sum --check
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run real Binder and permission scenarios
+        uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d #v2.38.0
+        with:
+          api-level: ${{ matrix.api }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          avd-name: porter-ci
+          emulator-port: 5554
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: >-
+            python3 tools/ci/emulator-smoke.py --serial emulator-5554
+            --manager manager/build/outputs/apk/debug/*.apk
+            --compat compat/build/outputs/apk/debug/*.apk
+            --native probe/build/outputs/apk/porter/debug/*.apk
+            --legacy probe/build/outputs/apk/legacy/debug/*.apk
+            --shizuku "$RUNNER_TEMP/shizuku.apk"
+            --output build/emulator-results
+      - name: Upload device test evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+        with:
+          name: porter-emulator-api-${{ matrix.api }}
+          path: build/emulator-results/
+          if-no-files-found: warn
