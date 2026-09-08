@@ -112,10 +112,6 @@
     <string name="home_automation_description">Aplicații precum Tasker și MacroDroid pot trimite
         intenții de pornire/oprire automată a Porter.</string>
     <string name="home_automation_button_view_intents">Vizualizați intențiile</string>
-    <string name="home_automation_dialog_label_action">Acţiune</string>
-    <string name="home_automation_dialog_label_package">Pachet</string>
-    <string name="home_automation_dialog_label_class">Clasă</string>
-    <string name="home_automation_dialog_label_target">Ţintă</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Ghid pentru dezvoltatori</string>
     <string name="home_learn_more_description">Află cum să dezvolți cu Porter</string>
@@ -171,8 +167,6 @@
     <string name="settings_tcp_port_default">Implicit (5555)</string>
     <string name="settings_tcp_port_hint">Lăsați necompletat pentru a utiliza valoarea implicită
         (5555)</string>
-    <string name="settings_tcp_learn_more">Află mai multe despre utilizarea aplicațiilor de
-        automatizare pentru a controla Porter</string>
     <string name="settings_language">Limba</string>
     <string name="settings_translation_contributors">Colaboratori de traduceri</string>
     <string name="settings_translation">Participă la traducere</string>
@@ -222,7 +216,6 @@
     <string name="about_dialog_button_close">Aproape</string>
     <string name="about_view_source_code"><![CDATA[Vizualizează codul sursă la %s]]></string>
     <!-- Start -->
-    <string name="action_start">Începe Porter</string>
     <!-- Stop -->
     <string name="action_stop">Oprire Porter</string>
     <string name="dialog_stop_message">Serviciul Porter va fi oprit.</string>

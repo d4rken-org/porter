@@ -118,10 +118,6 @@
     <string name="home_automation_description">Az olyan alkalmazások, mint a Tasker és a MacroDroid,
         küldhetnek szándékokat a Porter automatikus indításához/leállításához.</string>
     <string name="home_automation_button_view_intents">Szándékok megtekintése</string>
-    <string name="home_automation_dialog_label_action">Akció</string>
-    <string name="home_automation_dialog_label_package">Csomag</string>
-    <string name="home_automation_dialog_label_class">Osztály</string>
-    <string name="home_automation_dialog_label_target">Cél</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Fejlesztői útmutató</string>
     <string name="home_learn_more_description">Tanuljon meg fejlődni a Shizukuval</string>
@@ -177,8 +173,6 @@
     <string name="settings_tcp_port_default">Alapértelmezett (5555)</string>
     <string name="settings_tcp_port_hint">Hagyja üresen az alapértelmezett érték (5555)
         használatához</string>
-    <string name="settings_tcp_learn_more">Tudjon meg többet az automatizálási alkalmazások
-        használatáról a Porter vezérléséhez</string>
     <string name="settings_language">Nyelv</string>
     <string name="settings_translation_contributors">Fordítási közreműködők</string>
     <string name="settings_translation">Vegyen részt a fordításban</string>
@@ -229,7 +223,6 @@
     <string name="about_dialog_button_close">Közeli</string>
     <string name="about_view_source_code"><![CDATA[Forráskód megtekintése itt: %s]]></string>
     <!-- Start -->
-    <string name="action_start">Indítsa el a Shizukut</string>
     <!-- Stop -->
     <string name="action_stop">A Porter leállítása</string>
     <string name="dialog_stop_message">A Porter szolgáltatás leáll.</string>

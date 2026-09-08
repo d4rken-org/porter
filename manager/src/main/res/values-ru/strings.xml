@@ -114,10 +114,6 @@
     <string name="home_automation_description">Приложения, такие как Tasker и MacroDroid, могут
         отправлять намерения на автоматический запуск/остановку Porter.</string>
     <string name="home_automation_button_view_intents">Просмотр намерений</string>
-    <string name="home_automation_dialog_label_action">Действие</string>
-    <string name="home_automation_dialog_label_package">Упаковка</string>
-    <string name="home_automation_dialog_label_class">Сорт</string>
-    <string name="home_automation_dialog_label_target">Цель</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Руководство разработчика</string>
     <string name="home_learn_more_description">Узнайте, как начать разрабатывать с Porter</string>
@@ -174,8 +170,6 @@
     <string name="settings_tcp_port_default">По умолчанию (5555)</string>
     <string name="settings_tcp_port_hint">Оставьте поле пустым, чтобы использовать значение по
         умолчанию (5555)</string>
-    <string name="settings_tcp_learn_more">Узнайте больше об использовании приложений автоматизации
-        для управления Сидзуку</string>
     <string name="settings_language">Язык</string>
     <string name="settings_translation_contributors">Авторы перевода</string>
     <string name="settings_translation">Участвуйте в переводе</string>
@@ -228,7 +222,6 @@
     <string name="about_dialog_button_close">Закрывать</string>
     <string name="about_view_source_code"><![CDATA[Исходный код доступен на %s]]></string>
     <!-- Start -->
-    <string name="action_start">Запустить Шизуку</string>
     <!-- Stop -->
     <string name="action_stop">Остановить Porter</string>
     <string name="dialog_stop_message">Служба Porter будет остановлена.</string>

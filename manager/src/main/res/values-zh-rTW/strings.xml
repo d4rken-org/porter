@@ -83,10 +83,6 @@
     <string name="home_automation_description">Tasker 和 MacroDroid 等應用程式可以傳送 Intent 來自動啟動/停止
         Porter。</string>
     <string name="home_automation_button_view_intents">查看意圖</string>
-    <string name="home_automation_dialog_label_action">動作</string>
-    <string name="home_automation_dialog_label_package">套件名</string>
-    <string name="home_automation_dialog_label_class">類別名</string>
-    <string name="home_automation_dialog_label_target">目標</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">開發者指南</string>
     <string name="home_learn_more_description">瞭解如何使用 Porter 開發</string>
@@ -127,7 +123,6 @@
     <string name="settings_tcp_port">TCP 埠</string>
     <string name="settings_tcp_port_default">預設值 (5555)</string>
     <string name="settings_tcp_port_hint">留空使用預設值（5555）</string>
-    <string name="settings_tcp_learn_more">了解更多關於使用自動化應用程式控制 Porter 的方法</string>
     <string name="settings_language">語言</string>
     <string name="settings_translation_contributors">翻譯貢獻者</string>
     <string name="settings_translation">參與翻譯</string>
@@ -171,7 +166,6 @@
     <string name="about_dialog_button_close">關閉</string>
     <string name="about_view_source_code"><![CDATA[在 %s 檢視原始碼]]></string>
     <!-- Start -->
-    <string name="action_start">開始 Porter</string>
     <!-- Stop -->
     <string name="action_stop">停止 Porter</string>
     <string name="dialog_stop_message">Porter 服務將被停止。</string>

@@ -117,10 +117,6 @@
     <string name="home_automation_description">Такі програми, як Tasker та MacroDroid, можуть
         надсилати наміри для автоматичного запуску/зупинки Porter.</string>
     <string name="home_automation_button_view_intents">Переглянути наміри</string>
-    <string name="home_automation_dialog_label_action">Дія</string>
-    <string name="home_automation_dialog_label_package">Пакет</string>
-    <string name="home_automation_dialog_label_class">Клас</string>
-    <string name="home_automation_dialog_label_target">Ціль</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Посібник розробника</string>
     <string name="home_learn_more_description">Дізнайтеся, як розробляти з Porter</string>
@@ -177,8 +173,6 @@
     <string name="settings_tcp_port_default">За замовчуванням (5555)</string>
     <string name="settings_tcp_port_hint">Залиште порожнім, щоб використовувати значення за
         замовчуванням (5555)</string>
-    <string name="settings_tcp_learn_more">Дізнайтеся більше про використання програм автоматизації
-        для керування Porter</string>
     <string name="settings_language">Мова</string>
     <string name="settings_translation_contributors">Співробітники перекладу</string>
     <string name="settings_translation">Беріть участь у перекладі</string>
@@ -231,7 +225,6 @@
     <string name="about_dialog_button_close">Закрити</string>
     <string name="about_view_source_code"><![CDATA[Переглянути вихідний код на %s]]></string>
     <!-- Start -->
-    <string name="action_start">Почніть Porter</string>
     <!-- Stop -->
     <string name="action_stop">Зупинити Porter</string>
     <string name="dialog_stop_message">Сервіс Porter буде зупинено.</string>

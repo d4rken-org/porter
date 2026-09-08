@@ -116,10 +116,6 @@
     <string name="home_automation_description">Ang mga app tulad ng Tasker at MacroDroid ay maaaring
         magpadala ng mga layunin upang awtomatikong simulan/ihinto ang Porter.</string>
     <string name="home_automation_button_view_intents">Tingnan ang mga layunin</string>
-    <string name="home_automation_dialog_label_action">Aksyon</string>
-    <string name="home_automation_dialog_label_package">Package</string>
-    <string name="home_automation_dialog_label_class">Klase</string>
-    <string name="home_automation_dialog_label_target">Target</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Gabay ng developer</string>
     <string name="home_learn_more_description">Matuto kung paano mag-develop gamit ang Porter</string>
@@ -177,8 +173,6 @@
     <string name="settings_tcp_port">TCP port</string>
     <string name="settings_tcp_port_default">Default (5555)</string>
     <string name="settings_tcp_port_hint">Mag-iwan ng blangko upang magamit ang default (5555)</string>
-    <string name="settings_tcp_learn_more">Matuto nang higit pa tungkol sa paggamit ng mga
-        automation app upang makontrol ang Porter</string>
     <string name="settings_language">Wika</string>
     <string name="settings_translation_contributors">Mga nag-ambag sa pagsasalin</string>
     <string name="settings_translation">Sumali sa pagsasalin</string>
@@ -230,7 +224,6 @@
     <string name="about_dialog_button_close">Isara</string>
     <string name="about_view_source_code"><![CDATA[Tingnan ang source code sa %s]]></string>
     <!-- Start -->
-    <string name="action_start">Simulan ang Porter</string>
     <!-- Stop -->
     <string name="action_stop">Ihinto ang Porter</string>
     <string name="dialog_stop_message">Ihihinto ang serbisyo ng Porter.</string>

@@ -113,10 +113,6 @@
     <string name="home_automation_description">Aplikasi seperti Tasker dan MacroDroid dapat mengirim
         intent untuk memulai/menghentikan Porter secara otomatis.</string>
     <string name="home_automation_button_view_intents">Lihat maksud</string>
-    <string name="home_automation_dialog_label_action">Tindakan</string>
-    <string name="home_automation_dialog_label_package">Kemasan</string>
-    <string name="home_automation_dialog_label_class">Kelas</string>
-    <string name="home_automation_dialog_label_target">Target</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Panduan pengembang</string>
     <string name="home_learn_more_description">Pelajari cara mengembangkan dengan Porter</string>
@@ -171,8 +167,6 @@
     <string name="settings_tcp_port">Pelabuhan TCP</string>
     <string name="settings_tcp_port_default">Standar (5555)</string>
     <string name="settings_tcp_port_hint">Biarkan kosong untuk menggunakan default (5555)</string>
-    <string name="settings_tcp_learn_more">Pelajari lebih lanjut tentang penggunaan aplikasi
-        otomatisasi untuk mengontrol Porter</string>
     <string name="settings_language">Bahasa</string>
     <string name="settings_translation_contributors">Kontributor penerjemah</string>
     <string name="settings_translation">Ikut menerjemahkan</string>
@@ -222,7 +216,6 @@
     <string name="about_dialog_button_close">Menutup</string>
     <string name="about_view_source_code"><![CDATA[Lihat kode sumbernya di %s]]></string>
     <!-- Start -->
-    <string name="action_start">Mulai Porter</string>
     <!-- Stop -->
     <string name="action_stop">Hentikan Porter</string>
     <string name="dialog_stop_message">Layanan Porter akan berhenti.</string>

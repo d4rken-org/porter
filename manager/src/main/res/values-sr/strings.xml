@@ -112,10 +112,6 @@
     <string name="home_automation_description">Апликације попут Таскера и МакроДроида могу слати
         намере за аутоматско покретање/заустављање Шизукуа.</string>
     <string name="home_automation_button_view_intents">Прикажи намере</string>
-    <string name="home_automation_dialog_label_action">Акција</string>
-    <string name="home_automation_dialog_label_package">Пакет</string>
-    <string name="home_automation_dialog_label_class">Класа</string>
-    <string name="home_automation_dialog_label_target">Циљ</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Водич за програмере</string>
     <string name="home_learn_more_description">Научите како да развијате уз Шизуку</string>
@@ -169,8 +165,6 @@
     <string name="settings_tcp_port">ТЦП порт</string>
     <string name="settings_tcp_port_default">Подразумевано (5555)</string>
     <string name="settings_tcp_port_hint">Оставите празно да бисте користили подразумевано (5555)</string>
-    <string name="settings_tcp_learn_more">Сазнајте више о коришћењу апликација за аутоматизацију за
-        контролу Шизукуа</string>
     <string name="settings_language">Језик</string>
     <string name="settings_translation_contributors">Сарадници на преводу</string>
     <string name="settings_translation">Учествујте у преводу</string>
@@ -220,7 +214,6 @@
     <string name="about_dialog_button_close">Затвори</string>
     <string name="about_view_source_code"><![CDATA[Погледајте изворни код на %s]]></string>
     <!-- Start -->
-    <string name="action_start">Покрени Схизуку</string>
     <!-- Stop -->
     <string name="action_stop">Заустави Шизуку</string>
     <string name="dialog_stop_message">Шизуку линија ће бити обустављена.</string>

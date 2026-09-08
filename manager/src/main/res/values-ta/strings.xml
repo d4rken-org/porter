@@ -114,10 +114,6 @@
     <string name="home_automation_description">Tasker மற்றும் MacroDroid போன்ற பயன்பாடுகள் Porter ஐ
         தானாகத் தொடங்க/நிறுத்த இன்டென்ட்களை அனுப்ப முடியும்.</string>
     <string name="home_automation_button_view_intents">நோக்கங்களைக் காண்க</string>
-    <string name="home_automation_dialog_label_action">செயல்</string>
-    <string name="home_automation_dialog_label_package">தொகுப்பு</string>
-    <string name="home_automation_dialog_label_class">வர்க்கம்</string>
-    <string name="home_automation_dialog_label_target">இலக்கு</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">டெவலப்பர் வழிகாட்டி</string>
     <string name="home_learn_more_description">ஷிசுகுவுடன் எவ்வாறு உருவாக்குவது என்பதை அறிக</string>
@@ -174,8 +170,6 @@
     <string name="settings_tcp_port">TCP போர்ட்</string>
     <string name="settings_tcp_port_default">இயல்புநிலை (5555)</string>
     <string name="settings_tcp_port_hint">இயல்புநிலையைப் பயன்படுத்த காலியாக விடவும் (5555)</string>
-    <string name="settings_tcp_learn_more">ஷிசுகுவை கட்டுப்படுத்த ஆட்டோமேஷன் பயன்பாடுகளைப்
-        பயன்படுத்துவது பற்றி மேலும் அறிக.</string>
     <string name="settings_language">மொழி</string>
     <string name="settings_translation_contributors">மொழிபெயர்ப்பு பங்களிப்பாளர்கள்</string>
     <string name="settings_translation">மொழிபெயர்ப்பில் பங்கேற்கவும்.</string>
@@ -228,7 +222,6 @@
     <string name="about_dialog_button_close">மூடு</string>
     <string name="about_view_source_code"><![CDATA[%sஇல் மூலக் குறியீட்டைக் காண்க]]></string>
     <!-- Start -->
-    <string name="action_start">Porter ஐத் தொடங்கவும்</string>
     <!-- Stop -->
     <string name="action_stop">ஷிசுகுவை நிறுத்து</string>
     <string name="dialog_stop_message">ஷிசுகு சேவை நிறுத்தப்படும்.</string>

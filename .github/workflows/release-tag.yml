@@ -75,6 +75,18 @@ jobs:
       - name: Set up Android build
         if: steps.existing.outputs.published != 'true'
         uses: ./.github/actions/android-setup
+      - name: Unit tests
+        if: steps.existing.outputs.published != 'true'
+        run: ./gradlew :manager:testDebugUnitTest :server:testDebugUnitTest :client:testDebugUnitTest
+      - name: Upload unit test reports
+        if: always() && steps.existing.outputs.published != 'true'
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+        with:
+          name: porter-release-unit-tests
+          path: |
+            **/build/test-results/**/*.xml
+            **/build/reports/tests/**
+          if-no-files-found: warn
       - name: Decode keystore
         if: steps.existing.outputs.published != 'true'
         env:
@@ -89,7 +101,7 @@ jobs:
           echo "STORE_PATH=$RUNNER_TEMP/porter-signing/keystore.jks" >> "$GITHUB_ENV"
       - name: Assemble signed APKs
         if: steps.existing.outputs.published != 'true'
-        run: ./gradlew :manager:assembleRelease :compat:assembleRelease :server:testDebugUnitTest :manager:testDebugUnitTest
+        run: ./gradlew :manager:assembleRelease :compat:assembleRelease
         env:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}

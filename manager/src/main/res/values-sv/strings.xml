@@ -111,10 +111,6 @@
     <string name="home_automation_description">Appar som Tasker och MacroDroid kan skicka avsikter
         för att starta/stoppa Porter automatiskt.</string>
     <string name="home_automation_button_view_intents">Visa avsikter</string>
-    <string name="home_automation_dialog_label_action">Handling</string>
-    <string name="home_automation_dialog_label_package">Paket</string>
-    <string name="home_automation_dialog_label_class">Klass</string>
-    <string name="home_automation_dialog_label_target">Mål</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Utvecklarguide</string>
     <string name="home_learn_more_description">Lär dig hur du utvecklar med Porter</string>
@@ -166,8 +162,6 @@
     <string name="settings_tcp_port">TCP-port</string>
     <string name="settings_tcp_port_default">Standard (5555)</string>
     <string name="settings_tcp_port_hint">Lämna tomt för att använda standardfältet (5555)</string>
-    <string name="settings_tcp_learn_more">Läs mer om att använda automatiseringsappar för att styra
-        Porter</string>
     <string name="settings_language">Språk</string>
     <string name="settings_translation_contributors">Översättningsbidragsgivare</string>
     <string name="settings_translation">Delta i översättningen</string>
@@ -216,7 +210,6 @@
     <string name="about_dialog_button_close">Nära</string>
     <string name="about_view_source_code"><![CDATA[Visa källkoden på %s]]></string>
     <!-- Start -->
-    <string name="action_start">Starta Porter</string>
     <!-- Stop -->
     <string name="action_stop">Stoppa Porter</string>
     <string name="dialog_stop_message">Porter-tjänsten kommer att upphöra.</string>

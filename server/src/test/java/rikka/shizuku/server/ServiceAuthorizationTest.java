@@ -1,0 +1,208 @@
+package rikka.shizuku.server;
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Parcel;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowBinder;
+import rikka.hidden.compat.PackageManagerApis;
+import rikka.hidden.compat.ActivityManagerApis;
+import rikka.shizuku.ShizukuApiConstants;
+import rikka.shizuku.server.util.Android17Compat;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
+import moe.shizuku.server.IShizukuApplication;
+
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = 34, manifest = Config.NONE)
+public class ServiceAuthorizationTest {
+    private static final int MANAGER_UID = 10100;
+    private static final int CLIENT_UID = 10200;
+    private static final int CLIENT_PID = 45678;
+    private ShizukuService service;
+    private ShizukuConfigManager config;
+    private ShizukuClientManager clients;
+    private ShizukuUserServiceManager userServices;
+    private ClientRecord client;
+    private PackageInfo installed;
+    private MockedStatic<PackageManagerApis> packages;
+    private MockedStatic<Android17Compat> permissions;
+    private MockedStatic<Compatibility> companion;
+    private MockedStatic<ActivityManagerApis> activities;
+
+    @Before public void setup() throws Exception {
+        // Skip the constructor's native rish startup; permission methods below remain real.
+        service = mock(ShizukuService.class, CALLS_REAL_METHODS);
+        config = mock(ShizukuConfigManager.class);
+        clients = mock(ShizukuClientManager.class);
+        userServices = mock(ShizukuUserServiceManager.class);
+        field(ShizukuService.class, "managerAppId", MANAGER_UID);
+        field(ShizukuService.class, "configManager", config);
+        field(ShizukuService.class, "clientManager", clients);
+        field(Service.class, "clientManager", clients);
+        field(Service.class, "userServiceManager", userServices);
+        client = new ClientRecord(CLIENT_UID, CLIENT_PID, mock(IShizukuApplication.class), "test.client", 13);
+        client.allowed = true;
+        when(clients.findClients(CLIENT_UID)).thenReturn(List.of(client));
+        when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(client);
+        when(config.find(CLIENT_UID)).thenReturn(new ShizukuConfig.PackageEntry(CLIENT_UID, ConfigManager.FLAG_ALLOWED));
+        installed = new PackageInfo();
+        installed.packageName = client.packageName;
+        installed.requestedPermissions = new String[]{ServerConstants.PERMISSION};
+        packages = mockStatic(PackageManagerApis.class);
+        packages.when(() -> PackageManagerApis.getPackagesForUidNoThrow(CLIENT_UID)).thenReturn(List.of(client.packageName));
+        permissions = mockStatic(Android17Compat.class);
+        permissions.when(() -> Android17Compat.getPackageInfo(eq(client.packageName), anyLong(), eq(0))).thenReturn(installed);
+        activities = mockStatic(ActivityManagerApis.class);
+        companion = mockStatic(Compatibility.class);
+        companion.when(Compatibility::isAvailable).thenReturn(false);
+        ShadowBinder.setCallingUid(CLIENT_UID);
+        ShadowBinder.setCallingPid(CLIENT_PID);
+    }
+
+    private void field(Class<?> owner, String name, Object value) throws Exception {
+        Field field = owner.getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(service, value);
+    }
+
+    @After public void close() {
+        activities.close();
+        companion.close();
+        permissions.close();
+        packages.close();
+        ShadowBinder.reset();
+    }
+
+    private void reconcile() throws Exception {
+        Method method = ShizukuService.class.getDeclaredMethod("reconcileRuntimePermission", int.class);
+        method.setAccessible(true);
+        method.invoke(service, CLIENT_UID);
+    }
+
+    @Test public void grantedClientStillCannotInvokeManagerOperations() {
+        assertThrows(SecurityException.class, () -> service.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION));
+        assertThrows(SecurityException.class, () -> service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED));
+        assertThrows(SecurityException.class, () -> service.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 1, new Bundle()));
+        assertThrows(SecurityException.class, () -> service.attachUserService(null, new Bundle()));
+        assertThrows(SecurityException.class, service::exit);
+        verifyNoInteractions(config, userServices);
+    }
+
+    @Test public void diagnosticsAndApplicationsTransactionsRequireManager() {
+        for (int code : new int[]{ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications}) {
+            Parcel request = Parcel.obtain();
+            Parcel reply = Parcel.obtain();
+            try {
+                request.writeInterfaceToken(ShizukuApiConstants.BINDER_DESCRIPTOR);
+                request.setDataPosition(0);
+                assertThrows(SecurityException.class, () -> service.onTransact(code, request, reply, 0));
+            } finally { request.recycle(); reply.recycle(); }
+        }
+    }
+
+    @Test public void managerUidCanReadFlagsButOtherAppsCannot() {
+        ShadowBinder.setCallingUid(MANAGER_UID);
+        assertEquals(ConfigManager.FLAG_ALLOWED, service.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION));
+        ShadowBinder.setCallingUid(CLIENT_UID);
+        assertThrows(SecurityException.class, () -> service.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION));
+    }
+
+    @Test public void permissionRevocationDropsGrantAndTerminatesUserServices() throws Exception {
+        permissions.when(() -> Android17Compat.checkPermission(ServerConstants.PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_DENIED);
+        reconcile();
+        assertFalse(client.allowed);
+        verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION, 0);
+        verify(userServices).removeUserServicesForPackage(client.packageName);
+        assertThrows(SecurityException.class, () -> service.enforceCallingPermission("client operation"));
+    }
+
+    @Test public void existingGrantSurvivesWhilePrimaryRuntimePermissionIsGranted() throws Exception {
+        permissions.when(() -> Android17Compat.checkPermission(ServerConstants.PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
+        reconcile();
+        assertTrue(client.allowed);
+        verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
+        verifyNoInteractions(userServices);
+        service.enforceCallingPermission("client operation");
+    }
+
+    @Test public void legacyGrantRequiresCompanionEvenWhenAndroidPermissionRemainsGranted() throws Exception {
+        installed.requestedPermissions = new String[]{ServerConstants.LEGACY_PERMISSION};
+        permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
+        reconcile();
+        assertFalse(client.allowed);
+        verify(userServices).removeUserServicesForPackage(client.packageName);
+    }
+
+    @Test public void trustedLegacyGrantSurvives() throws Exception {
+        installed.requestedPermissions = new String[]{ServerConstants.LEGACY_PERMISSION};
+        companion.when(Compatibility::isAvailable).thenReturn(true);
+        permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
+        reconcile();
+        assertTrue(client.allowed);
+        verifyNoInteractions(userServices);
+    }
+
+    @Test public void legacyGrantCannotOverrideRevokedPorterPermissionForDualClient() throws Exception {
+        installed.requestedPermissions = new String[]{ServerConstants.PERMISSION, ServerConstants.LEGACY_PERMISSION};
+        companion.when(Compatibility::isAvailable).thenReturn(true);
+        permissions.when(() -> Android17Compat.checkPermission(ServerConstants.PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_DENIED);
+        permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
+        reconcile();
+        assertFalse(client.allowed);
+        verify(userServices).removeUserServicesForPackage(client.packageName);
+    }
+
+    @Test public void terminalClientWithoutRuntimePermissionKeepsExplicitConsent() throws Exception {
+        installed.requestedPermissions = null;
+        reconcile();
+        assertTrue(client.allowed);
+        verifyNoInteractions(userServices);
+    }
+
+    @Test public void grantingPorterAccessDoesNotTouchLegacyPermissionWithoutCompanion() throws Exception {
+        ShadowBinder.setCallingUid(MANAGER_UID);
+        installed.requestedPermissions = new String[]{ServerConstants.PERMISSION, ServerConstants.LEGACY_PERMISSION};
+        service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED);
+        permissions.verify(() -> Android17Compat.grantRuntimePermission(client.packageName, ServerConstants.PERMISSION, 0));
+        permissions.verify(() -> Android17Compat.grantRuntimePermission(client.packageName, ServerConstants.LEGACY_PERMISSION, 0), never());
+        verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED);
+    }
+
+    @Test public void explicitRevocationStopsAttachedClientAndItsUserServices() throws Exception {
+        ShadowBinder.setCallingUid(MANAGER_UID);
+        service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, 0);
+        assertFalse(client.allowed);
+        activities.verify(() -> ActivityManagerApis.forceStopPackageNoThrow(client.packageName, 0));
+        permissions.verify(() -> Android17Compat.revokeRuntimePermission(client.packageName, ServerConstants.PERMISSION, 0));
+        verify(userServices).removeUserServicesForPackage(client.packageName);
+        verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION, 0);
+    }
+
+    @Test public void explicitRevocationAlsoStopsDaemonWithoutAttachedClient() throws Exception {
+        ShadowBinder.setCallingUid(MANAGER_UID);
+        when(clients.findClients(CLIENT_UID)).thenReturn(List.of());
+        service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, 0);
+        verify(userServices).removeUserServicesForPackage(client.packageName);
+        permissions.verify(() -> Android17Compat.revokeRuntimePermission(client.packageName, ServerConstants.PERMISSION, 0));
+    }
+
+    @Test public void managerPackagesNeverReceiveClientBinder() {
+        android.content.pm.PermissionInfo managerPermission = new android.content.pm.PermissionInfo();
+        managerPermission.name = "foreign.fork.permission.MANAGER";
+        installed.permissions = new android.content.pm.PermissionInfo[]{managerPermission};
+        assertNull(ShizukuService.providerSuffix(installed));
+    }
+}

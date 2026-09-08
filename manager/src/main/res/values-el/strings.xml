@@ -120,10 +120,6 @@
     <string name="home_automation_description">Εφαρμογές όπως το Tasker και το MacroDroid μπορούν να
         στείλουν intents για την αυτόματη εκκίνηση/διακοπή του Porter.</string>
     <string name="home_automation_button_view_intents">Προβολή προθέσεων</string>
-    <string name="home_automation_dialog_label_action">Δράση</string>
-    <string name="home_automation_dialog_label_package">Πακέτο</string>
-    <string name="home_automation_dialog_label_class">Τάξη</string>
-    <string name="home_automation_dialog_label_target">Στόχος</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Οδηγός προγραμματιστή</string>
     <string name="home_learn_more_description">Μάθετε πώς να αναπτύσσεστε με το Porter</string>
@@ -180,8 +176,6 @@
     <string name="settings_tcp_port">Θύρα TCP</string>
     <string name="settings_tcp_port_default">Προεπιλογή (5555)</string>
     <string name="settings_tcp_port_hint">Αφήστε κενό για χρήση προεπιλογής (5555)</string>
-    <string name="settings_tcp_learn_more">Μάθετε περισσότερα σχετικά με τη χρήση εφαρμογών
-        αυτοματισμού για τον έλεγχο του Porter</string>
     <string name="settings_language">Γλώσσα</string>
     <string name="settings_translation_contributors">Συνεισφέροντες στη μετάφραση</string>
     <string name="settings_translation">Συμμετοχή στη μετάφραση</string>
@@ -232,7 +226,6 @@
     <string name="about_dialog_button_close">Κλείνω</string>
     <string name="about_view_source_code"><![CDATA[Δείτε τον πηγαίο κώδικα στη διεύθυνση %s]]></string>
     <!-- Start -->
-    <string name="action_start">Ξεκινήστε το Porter</string>
     <!-- Stop -->
     <string name="action_stop">Σταματήστε το Porter</string>
     <string name="dialog_stop_message">Η υπηρεσία Porter θα διακοπεί.</string>

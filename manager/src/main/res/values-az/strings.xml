@@ -112,10 +112,6 @@
     <string name="home_automation_description">Tasker və MacroDroid kimi proqramlar Porter-nu
         avtomatik başlatmaq/dayandırmaq niyyətlərini göndərə bilər.</string>
     <string name="home_automation_button_view_intents">Niyyətlərə baxın</string>
-    <string name="home_automation_dialog_label_action">Fəaliyyət</string>
-    <string name="home_automation_dialog_label_package">Paket</string>
-    <string name="home_automation_dialog_label_class">Sinif</string>
-    <string name="home_automation_dialog_label_target">Hədəf</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Tərtibatçı təlimatı</string>
     <string name="home_learn_more_description">Necə Porter dəstəkli proqram hazırlaya biləcəyinizi
@@ -170,8 +166,6 @@
     <string name="settings_tcp_port">TCP portu</string>
     <string name="settings_tcp_port_default">Defolt (5555)</string>
     <string name="settings_tcp_port_hint">Default (5555) istifadə etmək üçün boş buraxın</string>
-    <string name="settings_tcp_learn_more">Porter-nu idarə etmək üçün avtomatlaşdırma
-        tətbiqlərindən istifadə haqqında daha çox məlumat əldə edin</string>
     <string name="settings_language">Dil</string>
     <string name="settings_translation_contributors">Tərcümədə iştirak edənlər</string>
     <string name="settings_translation">Tərcümədə iştirak et</string>
@@ -223,7 +217,6 @@
     <string name="about_dialog_button_close">Bağlan</string>
     <string name="about_view_source_code"><![CDATA[Qaynaq kodlarına buradan baxın %s]]></string>
     <!-- Start -->
-    <string name="action_start">Şizukuya başlayın</string>
     <!-- Stop -->
     <string name="action_stop">Shizikunu dayandır</string>
     <string name="dialog_stop_message">Porter xidməti dayandırılacaq.</string>

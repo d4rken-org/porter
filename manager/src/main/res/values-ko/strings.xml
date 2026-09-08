@@ -91,10 +91,6 @@
     <string name="home_automation_description">Tasker 및 MacroDroid와 같은 앱은 Shizuku를 자동으로 시작/중지하는 인텐트를
         보낼 수 있습니다.</string>
     <string name="home_automation_button_view_intents">의도 보기</string>
-    <string name="home_automation_dialog_label_action">행동</string>
-    <string name="home_automation_dialog_label_package">패키지</string>
-    <string name="home_automation_dialog_label_class">수업</string>
-    <string name="home_automation_dialog_label_target">목표</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">개발자 가이드</string>
     <string name="home_learn_more_description">Shizuku로 개발하는 방법 알아보기</string>
@@ -143,7 +139,6 @@
     <string name="settings_tcp_port">TCP 포트</string>
     <string name="settings_tcp_port_default">기본값(5555)</string>
     <string name="settings_tcp_port_hint">기본값(5555)을 사용하려면 비워두세요.</string>
-    <string name="settings_tcp_learn_more">자동화 앱을 사용하여 Shizuku를 제어하는 방법에 대해 자세히 알아보세요.</string>
     <string name="settings_language">언어</string>
     <string name="settings_translation_contributors">번역 기여자</string>
     <string name="settings_translation">번역 참여</string>
@@ -187,7 +182,6 @@
     <string name="about_dialog_button_close">닫다</string>
     <string name="about_view_source_code"><![CDATA[%s에서 소스코드 보기]]></string>
     <!-- Start -->
-    <string name="action_start">시즈쿠 시작</string>
     <!-- Stop -->
     <string name="action_stop">Porter 중지</string>
     <string name="dialog_stop_message">Porter 서비스가 중지됩니다.</string>

@@ -5,37 +5,29 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import moe.shizuku.manager.R
-import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.AdbPairingService
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.management.ApplicationManagementActivity
-import moe.shizuku.manager.model.ServiceStatus
 import moe.shizuku.manager.settings.SettingsActivity
 import moe.shizuku.manager.starter.Starter
 import moe.shizuku.manager.starter.StarterActivity
 import moe.shizuku.manager.ui.*
 import moe.shizuku.manager.utils.*
 import rikka.shizuku.Shizuku
-import rikka.shizuku.ShizukuApiConstants
 
 abstract class HomeActivity : ComposeActivity() {
     private val homeModel: HomeViewModel by viewModels()
@@ -80,40 +72,20 @@ abstract class HomeActivity : ComposeActivity() {
         val battery by homeModel.shouldShowBatteryOptimizationSnackbar.collectAsStateWithLifecycle()
         val serviceState by remember { ShizukuStateMachine.asFlow() }.collectAsStateWithLifecycle(ShizukuStateMachine.get())
         LaunchedEffect(serviceState) { homeModel.reload(); if (serviceState == ShizukuStateMachine.State.RUNNING) appsModel.load() }
-        val running = serviceState == ShizukuStateMachine.State.RUNNING && status.uid != -1
+        val statusUi = serviceStatusUi(status, serviceState)
+        val running = statusUi.running
+        val restricted = statusUi.restricted
         LaunchedEffect(status) {
             if (running) ShizukuSettings.setLastLaunchMode(if (status.uid == 0) ShizukuSettings.LaunchMethod.ROOT else ShizukuSettings.LaunchMethod.ADB)
         }
-        val restricted = running && !status.permission
         var dialog by rememberSaveable { mutableStateOf<String?>(null) }
-        val title = plainText(stringResource(if (running) R.string.home_status_service_is_running else R.string.home_status_service_not_running, stringResource(R.string.app_name)))
-        val needsRestart = running && (
-            status.porterVersion?.matches(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE) != true ||
-                status.apiVersion != Shizuku.getLatestServiceVersion() ||
-                status.patchVersion != ShizukuApiConstants.SERVER_PATCH_VERSION
-            )
-        val details = if (running) listOfNotNull(
-            stringResource(if (status.uid == 0) R.string.porter_status_running_root else R.string.porter_status_running_adb),
-            if (needsRestart) stringResource(R.string.porter_status_restart_service) else null,
-            if (restricted) stringResource(R.string.porter_status_restricted) else null,
-        ).joinToString("\n") else ""
-        val versionDetails = stringResource(R.string.porter_status_versions,
-            BuildConfig.VERSION_NAME,
-            status.porterVersion?.name ?: stringResource(R.string.porter_status_version_unknown),
-            status.apiVersion, status.patchVersion)
         PorterScaffold(stringResource(R.string.app_name), subtitle = stringResource(R.string.porter_home_subtitle), actions = {
             IconButton(onClick = { startActivity(Intent(this@HomeActivity, SettingsActivity::class.java)) }) {
                 Icon(painterResource(R.drawable.ic_action_settings_24dp), stringResource(R.string.settings_title))
             }
         }) { padding ->
             LazyColumn(Modifier.padding(padding).consumeWindowInsets(padding), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                item {
-                    HomeCard(title, when { restricted -> R.drawable.ic_warning_24; running -> R.drawable.ic_server_ok_24dp; else -> R.drawable.ic_server_error_24dp },
-                        if (running) ({ dialog = "status" }) else null,
-                        when { restricted -> colorResource(R.color.porter_status_warning); running -> colorResource(R.color.porter_status_running); else -> MaterialTheme.colorScheme.onSurfaceVariant }) {
-                        if (running) Text("$details\n${stringResource(R.string.porter_status_details_hint)}", style = MaterialTheme.typography.bodyMedium)
-                    }
-                }
+                item { ServiceStatusCard(statusUi) { dialog = "status" } }
                 if (running && status.permission) item {
                     val count = appsState.grantedCount
                     HomeCard(resources.getQuantityString(R.plurals.home_app_management_authorized_apps_count, count, count), R.drawable.ic_apps_outline_24,
@@ -157,7 +129,7 @@ abstract class HomeActivity : ComposeActivity() {
                 }
             }
         }
-        if (dialog == "status" && running) MessageDialog(title, "$details\n\n$versionDetails\n\n${stringResource(R.string.porter_status_stop_message)}", { dialog = null }, stringResource(R.string.action_stop), confirmColor = MaterialTheme.colorScheme.error) {
+        if (dialog == "status" && running) ServiceStatusDialog(statusUi, { dialog = null }) {
             dialog = null
             if (ShizukuStateMachine.isRunning()) {
                 ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
@@ -179,20 +151,5 @@ abstract class HomeActivity : ComposeActivity() {
     companion object {
         const val EXTRA_SHOW_PAIRING_DIALOG = "show_pairing_dialog"
         const val EXTRA_START_SERVICE_VIA_WADB = "start_service_via_wadb"
-    }
-}
-
-@Composable
-private fun HomeCard(title: String, icon: Int, onClick: (() -> Unit)? = null,
-                     tint: Color = MaterialTheme.colorScheme.primary, content: @Composable ColumnScope.() -> Unit) {
-    Card(Modifier.fillMaxWidth().clip(CardDefaults.shape).then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
-        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Icon(painterResource(icon), null, Modifier.size(24.dp), tint)
-                Text(title, style = MaterialTheme.typography.titleMedium)
-            }
-            content()
-        }
     }
 }

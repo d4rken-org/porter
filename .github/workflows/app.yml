@@ -16,14 +16,26 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
         with:
           submodules: recursive
+          persist-credentials: false
       - uses: ./.github/actions/android-setup
       - name: Check release version and scripts
         run: |
           bash tools/release/bump.sh --mode=check
           sudo apt-get update && sudo apt-get install -y bats
           bats tools/release/bump.bats
+      - name: Unit tests
+        run: ./gradlew :manager:testDebugUnitTest :server:testDebugUnitTest :client:testDebugUnitTest
+      - name: Upload unit test reports
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+        with:
+          name: porter-unit-tests
+          path: |
+            **/build/test-results/**/*.xml
+            **/build/reports/tests/**
+          if-no-files-found: warn
       - name: Build development APKs and adapter
-        run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assembleDebug :client:assembleRelease :server:testDebugUnitTest :manager:testDebugUnitTest
+        run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assembleDebug :client:assembleRelease
       - name: Verify APK identities
         run: python3 tools/verify-apks.py manager/build/outputs/apk/debug/*.apk compat/build/outputs/apk/debug/*.apk
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
@@ -35,3 +47,31 @@ jobs:
             api/client/build/outputs/aar/*.aar
             probe/build/outputs/apk/**/*.apk
           if-no-files-found: error
+
+  lint:
+    name: Android lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: ./.github/actions/android-setup
+      - run: ./gradlew :manager:lintVitalRelease :compat:lintVitalRelease -Pporter.developmentSigning=true
+      - name: Upload lint reports
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+        with:
+          name: porter-lint
+          path: |
+            **/build/reports/lint-*
+            **/build/intermediates/lint_vital_intermediate_text_report/**
+
+  wrapper:
+    name: Gradle wrapper validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          persist-credentials: false
+      - uses: gradle/actions/wrapper-validation@3f131e8634966bd73d06cc69884922b02e6faf92 #v6.2.0

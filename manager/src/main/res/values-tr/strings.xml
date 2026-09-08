@@ -114,10 +114,6 @@
     <string name="home_automation_description">Tasker ve MacroDroid gibi uygulamalar Porter\'yu
         otomatik olarak başlatmak/durdurmak için niyetler gönderebilir.</string>
     <string name="home_automation_button_view_intents">Görünüm amaçları</string>
-    <string name="home_automation_dialog_label_action">Aksiyon</string>
-    <string name="home_automation_dialog_label_package">Paket</string>
-    <string name="home_automation_dialog_label_class">Sınıf</string>
-    <string name="home_automation_dialog_label_target">Hedef</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Geliştirici kılavuzu</string>
     <string name="home_learn_more_description">Porter ile nasıl uygulama geliştireceğinizi öğrenin</string>
@@ -173,8 +169,6 @@
     <string name="settings_tcp_port">TCP bağlantı noktası</string>
     <string name="settings_tcp_port_default">Varsayılan (5555)</string>
     <string name="settings_tcp_port_hint">Varsayılanı (5555) kullanmak için boş bırakın</string>
-    <string name="settings_tcp_learn_more">Porter\'yu kontrol etmek için otomasyon uygulamalarının
-        kullanımı hakkında daha fazla bilgi edinin</string>
     <string name="settings_language">Dil</string>
     <string name="settings_translation_contributors">Çeviriye katkıda bulunanlar</string>
     <string name="settings_translation">Çeviriye katılın</string>
@@ -223,7 +217,6 @@
     <string name="about_dialog_button_close">Kapalı</string>
     <string name="about_view_source_code"><![CDATA[%s ’da kaynak kodunu görüntüle]]></string>
     <!-- Start -->
-    <string name="action_start">Porter\'yu başlat</string>
     <!-- Stop -->
     <string name="action_stop">Porter’yu durdur</string>
     <string name="dialog_stop_message">Porter hizmeti durdurulacak.</string>

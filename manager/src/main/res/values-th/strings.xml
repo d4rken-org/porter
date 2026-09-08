@@ -107,10 +107,6 @@
     <string name="home_automation_description">แอปเช่น Tasker และ MacroDroid
         สามารถส่งอินเทนต์เพื่อเริ่ม/หยุด Porter ได้โดยอัตโนมัติ</string>
     <string name="home_automation_button_view_intents">ดูความตั้งใจ</string>
-    <string name="home_automation_dialog_label_action">การกระทำ</string>
-    <string name="home_automation_dialog_label_package">บรรจุุภัณฑ์</string>
-    <string name="home_automation_dialog_label_class">ระดับ</string>
-    <string name="home_automation_dialog_label_target">เป้า</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">คู่มือนักพัฒนา</string>
     <string name="home_learn_more_description">เรียนรู้การพัฒนาเพื่อใช้ร่วมกันกับ Porter</string>
@@ -163,8 +159,6 @@
     <string name="settings_tcp_port">พอร์ต TCP</string>
     <string name="settings_tcp_port_default">ค่าเริ่มต้น (5555)</string>
     <string name="settings_tcp_port_hint">เว้นว่างไว้เพื่อใช้ค่าเริ่มต้น (5555)</string>
-    <string name="settings_tcp_learn_more">
-        เรียนรู้เพิ่มเติมเกี่ยวกับการใช้แอปอัตโนมัติเพื่อควบคุมชิซูกุ</string>
     <string name="settings_language">ภาษา</string>
     <string name="settings_translation_contributors">ผู้มีส่วนร่วมในการแปลภาษา</string>
     <string name="settings_translation">มีส่วนร่วมในการแปล</string>
@@ -211,7 +205,6 @@
     <string name="about_dialog_button_close">ปิด</string>
     <string name="about_view_source_code"><![CDATA[ดูซอร์สโค้ดใน %s]]></string>
     <!-- Start -->
-    <string name="action_start">เริ่มชิซึกุ</string>
     <!-- Stop -->
     <string name="action_stop">หยุดทำงาน Porter</string>
     <string name="dialog_stop_message">บริการ Porter จะถูกหยุดทำงาน</string>

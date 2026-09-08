@@ -109,10 +109,6 @@
     <string name="home_automation_description">يمكن للتطبيقات مثل Tasker وMacroDroid إرسال نوايا
         لبدء/إيقاف Porter تلقائيًا.</string>
     <string name="home_automation_button_view_intents">عرض النوايا</string>
-    <string name="home_automation_dialog_label_action">فعل</string>
-    <string name="home_automation_dialog_label_package">طَرد</string>
-    <string name="home_automation_dialog_label_class">فصل</string>
-    <string name="home_automation_dialog_label_target">هدف</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">دليل المطور</string>
     <string name="home_learn_more_description">تعلم كيف تطور مع Porter</string>
@@ -165,8 +161,6 @@
     <string name="settings_tcp_port">منفذ TCP</string>
     <string name="settings_tcp_port_default">افتراضي (5555)</string>
     <string name="settings_tcp_port_hint">اتركه فارغًا لاستخدام الإعداد الافتراضي (5555)</string>
-    <string name="settings_tcp_learn_more">تعرف على المزيد حول استخدام تطبيقات الأتمتة للتحكم في
-        Porter</string>
     <string name="settings_language">اللغة</string>
     <string name="settings_translation_contributors">المساهمون في الترجمة</string>
     <string name="settings_translation">شارك في الترجمة</string>
@@ -215,7 +209,6 @@
     <string name="about_dialog_button_close">يغلق</string>
     <string name="about_view_source_code"><![CDATA[عرض التعليمات البرمجية المصدر في %s]]></string>
     <!-- Start -->
-    <string name="action_start">ابدأ شيزوكو</string>
     <!-- Stop -->
     <string name="action_stop">إيقاف Porter</string>
     <string name="dialog_stop_message">سيتم إيقاف خدمة Porter.</string>

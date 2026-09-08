@@ -110,10 +110,6 @@
     <string name="home_automation_description">Aplikacje takie jak Tasker i MacroDroid mogą wysyłać
         intencje automatycznego uruchamiania/zatrzymywania Porter.</string>
     <string name="home_automation_button_view_intents">Wyświetl intencje</string>
-    <string name="home_automation_dialog_label_action">Działanie</string>
-    <string name="home_automation_dialog_label_package">Pakiet</string>
-    <string name="home_automation_dialog_label_class">Klasa</string>
-    <string name="home_automation_dialog_label_target">Cel</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Przewodnik dla programistów</string>
     <string name="home_learn_more_description">Dowiedz się, jak tworzyć aplikacje z wykorzystaniem
@@ -169,8 +165,6 @@
     <string name="settings_tcp_port">Port TCP</string>
     <string name="settings_tcp_port_default">Domyślne (5555)</string>
     <string name="settings_tcp_port_hint">Zostaw puste, aby użyć domyślnego (5555)</string>
-    <string name="settings_tcp_learn_more">Dowiedz się więcej o sterowaniu Porter za pomocą
-        aplikacji do automatyzacji</string>
     <string name="settings_language">Język</string>
     <string name="settings_translation_contributors">Współtwórcy tłumaczenia</string>
     <string name="settings_translation">Pomóż w tłumaczeniu</string>
@@ -220,7 +214,6 @@
     <string name="about_dialog_button_close">Zamknij</string>
     <string name="about_view_source_code"><![CDATA[Zobacz kod źródłowy na %s]]></string>
     <!-- Start -->
-    <string name="action_start">Uruchom Porter</string>
     <!-- Stop -->
     <string name="action_stop">Zatrzymaj Porter</string>
     <string name="dialog_stop_message">Usługa Porter zostanie zatrzymana.</string>

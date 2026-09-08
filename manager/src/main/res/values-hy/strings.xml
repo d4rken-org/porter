@@ -113,10 +113,6 @@
     <string name="home_automation_description">Tasker-ի և MacroDroid-ի նման հավելվածները կարող են
         ավտոմատ կերպով ուղարկել Porter-ն մեկնարկելու/անջատելու մտադրություններ:</string>
     <string name="home_automation_button_view_intents">Դիտել մտադրությունները</string>
-    <string name="home_automation_dialog_label_action">Գործողություն</string>
-    <string name="home_automation_dialog_label_package">Փաթեթ</string>
-    <string name="home_automation_dialog_label_class">Դաս</string>
-    <string name="home_automation_dialog_label_target">Նպատակակետ</string>
     <!-- Home - Learn more -->
     <string name="home_learn_more_title">Մշակողի ուղեցույց</string>
     <string name="home_learn_more_description">Սովորեք ծրագրավորել Porter-ով կամ Porter-ն ուրիշ
@@ -173,8 +169,6 @@
     <string name="settings_tcp_port">TCP նավահանգիստ</string>
     <string name="settings_tcp_port_default">Լռելյայն (5555)</string>
     <string name="settings_tcp_port_hint">Թողնել դատարկ՝ լռելյայն օգտագործելու համար (5555)</string>
-    <string name="settings_tcp_learn_more">Իմացեք ավելին ավտոմատացման հավելվածների օգտագործման
-        մասին՝ Porter-ն վերահսկելու համար</string>
     <string name="settings_language">Լեզու</string>
     <string name="settings_translation_contributors">Թարգմանության աջակցողներ</string>
     <string name="settings_translation">Մասնակցել թարգմանության մեջ</string>
@@ -225,7 +219,6 @@
     <string name="about_dialog_button_close">Փակել</string>
     <string name="about_view_source_code"><![CDATA[Տեսնել կոդի աղբյուրը %s-ում]]></string>
     <!-- Start -->
-    <string name="action_start">Սկսեք Porter-ն</string>
     <!-- Stop -->
     <string name="action_stop">Անջատել Porter-ն</string>
     <string name="dialog_stop_message">Porter-ի ծառայությունը կանջատվի։</string>
