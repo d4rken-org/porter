@@ -85,6 +85,12 @@ internal fun ServiceStatusDialog(ui: ServiceStatusUi, onDismiss: () -> Unit, onS
 }
 
 @Composable
+internal fun HomeCardActions(content: @Composable FlowRowScope.() -> Unit) {
+    FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+        verticalArrangement = Arrangement.spacedBy(8.dp), content = content)
+}
+
+@Composable
 internal fun HomeCard(title: String, icon: Int, onClick: (() -> Unit)? = null,
                       tint: Color = MaterialTheme.colorScheme.primary, subtitle: String? = null,
                       content: @Composable ColumnScope.() -> Unit) {

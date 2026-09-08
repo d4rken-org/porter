@@ -115,23 +115,29 @@ abstract class HomeActivity : ComposeActivity() {
                     if (EnvironmentUtils.isRooted()) item {
                         HomeCard(stringResource(R.string.home_root_title), R.drawable.ic_root_24dp) {
                             HtmlText(stringResource(R.string.home_root_description, "<a href=\"${Helps.SUI.get()}\">Sui</a>", "Sui"))
-                            Button(onClick = { startActivity(Intent(this@HomeActivity, StarterActivity::class.java).putExtra(StarterActivity.EXTRA_IS_ROOT, true)) }) { Text(stringResource(R.string.home_root_button_start)) }
+                            HomeCardActions {
+                                Button(onClick = { startActivity(Intent(this@HomeActivity, StarterActivity::class.java).putExtra(StarterActivity.EXTRA_IS_ROOT, true)) }) { Text(stringResource(R.string.home_root_button_start)) }
+                            }
                         }
                     }
                     if (Build.VERSION.SDK_INT >= 30 || EnvironmentUtils.isTelevision() || EnvironmentUtils.getAdbTcpPort() > 0) item {
                         HomeCard(stringResource(R.string.home_wireless_adb_title), R.drawable.ic_wadb_24) {
                             HtmlText(stringResource(if (EnvironmentUtils.isTlsSupported()) R.string.home_wireless_adb_description else R.string.home_wireless_adb_description_pre_11))
-                            if (EnvironmentUtils.isTlsSupported()) {
-                                TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) }) { Text(stringResource(R.string.home_wireless_adb_view_guide_button)) }
-                                OutlinedButton(onClick = { WirelessStart.pair(this@HomeActivity) }) { Text(stringResource(R.string.adb_pairing)) }
+                            HomeCardActions {
+                                if (EnvironmentUtils.isTlsSupported()) {
+                                    TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) }) { Text(stringResource(R.string.home_wireless_adb_view_guide_button)) }
+                                    OutlinedButton(onClick = { WirelessStart.pair(this@HomeActivity) }) { Text(stringResource(R.string.adb_pairing)) }
+                                }
+                                Button(onClick = { WirelessStart.start(this@HomeActivity, lifecycleScope) }, enabled = serviceState != ShizukuStateMachine.State.STARTING) { Text(stringResource(R.string.home_root_button_start)) }
                             }
-                            Button(onClick = { WirelessStart.start(this@HomeActivity, lifecycleScope) }, enabled = serviceState != ShizukuStateMachine.State.STARTING) { Text(stringResource(R.string.home_root_button_start)) }
                         }
                     }
                     item {
                         HomeCard(stringResource(R.string.home_adb_title), R.drawable.ic_adb_24dp) {
                             HtmlText(stringResource(R.string.home_adb_description, Helps.ADB.get()))
-                            OutlinedButton(onClick = { dialog = "command" }) { Text(stringResource(R.string.home_adb_button_view_command)) }
+                            HomeCardActions {
+                                OutlinedButton(onClick = { dialog = "command" }) { Text(stringResource(R.string.home_adb_button_view_command)) }
+                            }
                         }
                     }
                 }
