@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.PermissionInfo
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -20,24 +18,22 @@ import moe.shizuku.manager.utils.Logger.LOGGER
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import moe.shizuku.manager.utils.ShizukuSystemApis
-import rikka.lifecycle.Resource
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import rikka.shizuku.Shizuku
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val appContext: Context = getApplication<Application>().applicationContext
 
-    private val _serviceStatus = MutableLiveData<Resource<ServiceStatus>>()
-    val serviceStatus = _serviceStatus as LiveData<Resource<ServiceStatus>>
-
-    private val _shouldShowBatteryOptimizationSnackbar = MutableLiveData<Boolean>(false)
-    val shouldShowBatteryOptimizationSnackbar: LiveData<Boolean> = _shouldShowBatteryOptimizationSnackbar
-
-    private val _shouldShowRebootDialog = MutableLiveData<Boolean>(false)
-    val shouldShowRebootDialog: LiveData<Boolean> = _shouldShowRebootDialog
-
-    private val _shouldShowUninstallDialog = MutableLiveData<Boolean>(false)
-    val shouldShowUninstallDialog: LiveData<Boolean> = _shouldShowUninstallDialog
+    private val mutableStatus = MutableStateFlow(ServiceStatus())
+    val serviceStatus = mutableStatus.asStateFlow()
+    val shouldShowBatteryOptimizationSnackbar = MutableStateFlow(false)
+    val shouldShowRebootDialog = MutableStateFlow(false)
+    val shouldShowUninstallDialog = MutableStateFlow(false)
+    private val reloadMutex = Mutex()
 
     private fun load(): ServiceStatus {
         // In certain cases when user re-installs Shizuku with different package name (e.g., when using stealth mode), the system doesn't recognize the Shizuku permission.
@@ -48,10 +44,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             val permissionGroup = appContext.packageManager.getPermissionGroupInfo(Manifest.permission_group.API, 0)
             val permission = appContext.packageManager.getPermissionInfo(Manifest.permission.API_V23, 0)
             if (permission.packageName != appContext.packageName) {
-                _shouldShowUninstallDialog.postValue(true)
+                shouldShowUninstallDialog.value = true
             }
         } catch (e: PackageManager.NameNotFoundException) {
-            _shouldShowRebootDialog.postValue(true)
+            shouldShowRebootDialog.value = true
         }
 
         if (!ShizukuStateMachine.isRunning()) {
@@ -80,23 +76,18 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun reload() {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val status = load()
-                _serviceStatus.postValue(Resource.success(status))
-            } catch (e: CancellationException) {
-
-            } catch (e: Throwable) {
-                _serviceStatus.postValue(Resource.error(e, ServiceStatus()))
+            reloadMutex.withLock {
+                try { mutableStatus.value = load() }
+                catch (e: CancellationException) { throw e }
+                catch (e: Exception) { LOGGER.w(e, "Load service status"); mutableStatus.value = ServiceStatus() }
             }
         }
     }
 
     fun checkBatteryOptimization() {
         if (EnvironmentUtils.isTelevision()) return
-        if (!ShizukuSettings.getStartOnBoot(appContext) && !ShizukuSettings.getWatchdog()) return
-        _shouldShowBatteryOptimizationSnackbar.postValue(
-            !SettingsHelper.isIgnoringBatteryOptimizations(appContext)
-        )
+        if (!ShizukuSettings.getStartOnBoot(appContext) && !ShizukuSettings.getWatchdog()) { shouldShowBatteryOptimizationSnackbar.value = false; return }
+        shouldShowBatteryOptimizationSnackbar.value = !SettingsHelper.isIgnoringBatteryOptimizations(appContext)
     }
 
 }

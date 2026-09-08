@@ -8,7 +8,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.topjohnwu.superuser.CallbackList
 import com.topjohnwu.superuser.Shell
 import java.net.ConnectException
@@ -26,91 +25,71 @@ import moe.shizuku.manager.AppConstants.EXTRA
 import moe.shizuku.manager.R
 import moe.shizuku.manager.adb.AdbKeyException
 import moe.shizuku.manager.adb.AdbStarter
-import moe.shizuku.manager.app.AppBarActivity
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import moe.shizuku.manager.databinding.StarterActivityBinding
-import rikka.lifecycle.Resource
-import rikka.lifecycle.Status
+
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import moe.shizuku.manager.ui.*
 
 private class NotRootedException: Exception()
 
-class StarterActivity : AppBarActivity() {
-
-    private val viewModel: ViewModel by viewModels()
-
+class StarterActivity : ComposeActivity() {
+    private val model: StarterViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_24)
-
-        val binding = StarterActivityBinding.inflate(layoutInflater, rootView, true)
-
-        viewModel.output.observe(this) {
-            val output = it.data!!.trim()
-            if (output.endsWith(Starter.serviceStartedMessage)) {
-                window?.decorView?.postDelayed({
-                    if (!isFinishing) finish()
-                }, 3000)
-            } else if (it.status == Status.ERROR) {
-                var message = 0
-                when (it.error) {
-                    is AdbKeyException -> {
-                        message = R.string.adb_error_key_store
-                    }
-                    is NotRootedException -> {
-                        message = R.string.start_with_root_failed
-                    }
-                    is SocketTimeoutException -> {
-                        message = R.string.cannot_connect_port
-                    }
-                    is ConnectException -> {
-                        message = R.string.cannot_connect_port
-                    }
-                    is SSLProtocolException -> {
-                        message = R.string.adb_pair_required
-                    }
-                }
-
-                if (message != 0) {
-                    MaterialAlertDialogBuilder(this)
-                        .setMessage(message)
-                        .setPositiveButton(android.R.string.ok, null)
-                        .show()
+        porterContent {
+            val output by model.output.collectAsStateWithLifecycle()
+            var dismissed by rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(output.text) {
+                if (output.text.trim().endsWith(Starter.serviceStartedMessage)) { delay(3000); finish() }
+            }
+            PorterScaffold(stringResource(R.string.home_root_button_start), onBack = { finish() }) { padding ->
+                SelectionContainer(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState()).padding(16.dp)) {
+                    Text(output.text.trim(), fontFamily = FontFamily.Monospace, style = MaterialTheme.typography.bodySmall)
                 }
             }
-            binding.text1.text = output
+            val message = when (output.error) {
+                is AdbKeyException -> R.string.adb_error_key_store
+                is NotRootedException -> R.string.start_with_root_failed
+                is SocketTimeoutException, is ConnectException -> R.string.cannot_connect_port
+                is SSLProtocolException -> R.string.adb_pair_required
+                else -> null
+            }
+            if (message != null && !dismissed) MessageDialog(stringResource(R.string.porter_support_error), stringResource(message), { dismissed = true })
         }
     }
-
-    private var hasStarted = false
-
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && !hasStarted) {
-            hasStarted = true
-            viewModel.start(
-                intent.getBooleanExtra(EXTRA_IS_ROOT, false),
-                intent.getIntExtra(EXTRA_PORT, 0)
-            )
-        }
+        if (hasFocus) model.start(intent.getBooleanExtra(EXTRA_IS_ROOT, false), intent.getIntExtra(EXTRA_PORT, 0))
     }
-
     companion object {
-
         const val EXTRA_IS_ROOT = "$EXTRA.IS_ROOT"
         const val EXTRA_PORT = "$EXTRA.PORT"
     }
 }
 
-class ViewModel(application: Application) : AndroidViewModel(application) {
+class StarterViewModel(application: Application) : AndroidViewModel(application) {
 
     private val appContext = getApplication<Application>().applicationContext
 
     private val sb = StringBuilder()
-    private val _output = MutableLiveData<Resource<StringBuilder>>()
-
-    val output = _output as LiveData<Resource<StringBuilder>>
+    data class Output(val text: String = "", val error: Throwable? = null)
+    private val _output = MutableStateFlow(Output())
+    val output = _output.asStateFlow()
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
         ShizukuStateMachine.update()
@@ -130,12 +109,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    @Synchronized
     private fun log(line: String? = null, error: Throwable? = null) {
         line?.let { sb.appendLine(it) }
         error?.let { sb.appendLine().appendLine(Log.getStackTraceString(it)) }
 
-        if (error == null) _output.postValue(Resource.success(sb))
-        else _output.postValue(Resource.error(error, sb))
+        _output.value = Output(sb.toString(), error)
     }
 
     private suspend fun startRoot() {

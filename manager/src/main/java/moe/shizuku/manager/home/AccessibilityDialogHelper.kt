@@ -3,76 +3,58 @@ package moe.shizuku.manager.home
 import android.Manifest.permission.WRITE_SECURE_SETTINGS
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Bundle
 import android.os.Build
 import android.provider.Settings
-import android.text.Spannable
-import android.text.SpannableString
 import android.text.TextUtils
-import android.text.style.TypefaceSpan
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
 import moe.shizuku.manager.R
 import moe.shizuku.manager.adb.AdbPairingAccessibilityService
-import moe.shizuku.manager.utils.SettingsHelper
+import moe.shizuku.manager.ui.ComposeDialogFragment
 import moe.shizuku.manager.utils.SettingsPage
+import rikka.core.content.asActivity
 
 fun Context.showAccessibilityDialog() {
-    val hasWriteSecureSettings = (checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED)
-
     val installer = packageManager.getInstallerPackageName(packageName)
-    val isInstalledByPlayOrAdb = (installer == "com.android.vending") || (installer == null)
-    val hasAccessRestrictedSettings = isInstalledByPlayOrAdb || Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE
-
-    if (isAccessibilityEnabled()) {
-        showNavigateDialog()
-    } else if (hasWriteSecureSettings) {
-        if (enableAccessibilityService()) return
-        showPermissionDialog()
-    } else if (!hasAccessRestrictedSettings) {
-        showPermissionDialog()
-    } else {
-        showEnableDialog()
-    }
-}
-
-private fun Context.showPermissionDialog() {
-    val permissionName = "ACCESS_RESTRICTED_SETTINGS"
-    val permissionCommand = "adb shell cmd appops set $packageName $permissionName allow"
-    val styledPermissionCommand =
-        SpannableString(permissionCommand).apply {
-            setSpan(TypefaceSpan("monospace"), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    val step = when {
+        isAccessibilityEnabled() -> "navigate"
+        checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED -> {
+            if (enableAccessibilityService()) return
+            "permission"
         }
-
-    MaterialAlertDialogBuilder(this)
-        .setTitle(android.R.string.dialog_alert_title)
-        .setMessage(
-            TextUtils.expandTemplate(
-                getString(R.string.dialog_adb_pairing_accessibility_permission),
-                permissionName,
-                styledPermissionCommand,
-            ),
-        ).setPositiveButton("Continue") { _, _ -> showEnableDialog() }
-        .setNegativeButton(android.R.string.cancel, null)
-        .show()
+        installer != "com.android.vending" && installer != null && Build.VERSION.SDK_INT <= 34 -> "permission"
+        else -> "enable"
+    }
+    AccessibilityDialogFragment().apply { arguments = Bundle().apply { putString("step", step) } }
+        .show(asActivity<FragmentActivity>().supportFragmentManager)
 }
 
-private fun Context.showEnableDialog() {
-    MaterialAlertDialogBuilder(this)
-        .setTitle(R.string.dialog_adb_pairing_title)
-        .setMessage(R.string.dialog_adb_pairing_accessibility_enable)
-        .setPositiveButton(R.string.enable) { _, _ ->
-            SettingsPage.Accessibility.launch(this)
-        }.setNegativeButton(android.R.string.cancel, null)
-        .show()
-}
-
-private fun Context.showNavigateDialog() {
-    MaterialAlertDialogBuilder(this)
-        .setTitle(R.string.dialog_adb_pairing_title)
-        .setMessage(R.string.dialog_adb_pairing_accessibility_navigate)
-        .setPositiveButton(R.string.development_settings) { _, _ ->
-            SettingsPage.Developer.HighlightWirelessDebugging.launch(this)
-        }.setNegativeButton(android.R.string.cancel, null)
-        .show()
+class AccessibilityDialogFragment : ComposeDialogFragment() {
+    @Composable override fun Content() {
+        val context = requireContext()
+        var step by rememberSaveable { mutableStateOf(arguments?.getString("step") ?: "enable") }
+        Text(stringResource(R.string.dialog_adb_pairing_title), style = MaterialTheme.typography.headlineSmall)
+        when (step) {
+            "permission" -> {
+                Text(TextUtils.expandTemplate(stringResource(R.string.dialog_adb_pairing_accessibility_permission),
+                    "ACCESS_RESTRICTED_SETTINGS", "adb shell cmd appops set ${context.packageName} ACCESS_RESTRICTED_SETTINGS allow").toString())
+                TextButton(onClick = { step = "enable" }) { Text(stringResource(android.R.string.ok)) }
+            }
+            "enable" -> {
+                Text(stringResource(R.string.dialog_adb_pairing_accessibility_enable))
+                TextButton(onClick = { SettingsPage.Accessibility.launch(context); dismissAllowingStateLoss() }) { Text(stringResource(R.string.enable)) }
+            }
+            "navigate" -> {
+                Text(stringResource(R.string.dialog_adb_pairing_accessibility_navigate))
+                TextButton(onClick = { SettingsPage.Developer.HighlightWirelessDebugging.launch(context); dismissAllowingStateLoss() }) { Text(stringResource(R.string.development_settings)) }
+            }
+        }
+        TextButton(onClick = { dismissAllowingStateLoss() }) { Text(stringResource(android.R.string.cancel)) }
+    }
 }
 
 private fun Context.getEnabledAccessibilityServices(): List<String>? {

@@ -1,0 +1,5 @@
+<resources>
+    <string name="porter_navigate_back">Zurück</string>
+    <string name="porter_local_network_permission">Erlaube den Zugriff auf dein lokales Netzwerk, damit Porter den Dienst für drahtloses Debugging von Android finden und eine Verbindung herstellen kann.</string>
+    <string name="porter_pairing_dialog_instructions">Öffne Drahtloses Debugging in den Android-Entwickleroptionen und wähle Gerät mit Kopplungscode koppeln. Gib den Port und den Kopplungscode hier ein.</string>
+</resources>

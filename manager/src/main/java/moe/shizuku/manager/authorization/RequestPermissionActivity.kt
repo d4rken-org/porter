@@ -1,134 +1,104 @@
 package moe.shizuku.manager.authorization
 
-import android.app.Dialog
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.lifecycleScope
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.TimeoutCancellationException
+import android.text.TextUtils
+import androidx.activity.compose.BackHandler
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
-import moe.shizuku.manager.app.AppActivity
-import moe.shizuku.manager.databinding.ConfirmationDialogBinding
-import moe.shizuku.manager.ktx.toHtml
+import moe.shizuku.manager.ui.*
 import moe.shizuku.manager.utils.Logger.LOGGER
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import rikka.core.res.resolveColor
-import rikka.html.text.HtmlCompat
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED
 import rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_IS_ONETIME
 
-class RequestPermissionActivity : AppActivity() {
-
-    private lateinit var dialog: Dialog
-
-    private fun setResult(requestUid: Int, requestPid: Int, requestCode: Int, allowed: Boolean, onetime: Boolean) {
-        val data = Bundle()
-        data.putBoolean(REQUEST_PERMISSION_REPLY_ALLOWED, allowed)
-        data.putBoolean(REQUEST_PERMISSION_REPLY_IS_ONETIME, onetime)
-        try {
-            Shizuku.dispatchPermissionConfirmationResult(requestUid, requestPid, requestCode, data)
-        } catch (e: Throwable) {
-            LOGGER.e("dispatchPermissionConfirmationResult")
-        }
-    }
-
-    private fun checkSelfPermission(): Boolean {
-        val permission = Shizuku.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
-        if (permission) return true
-
-        val icon = getDrawable(R.drawable.ic_system_icon)
-        icon?.setTint(theme.resolveColor(android.R.attr.colorAccent))
-
-        val dialog = MaterialAlertDialogBuilder(this)
-                .setIcon(icon)
-                .setTitle("${getString(R.string.app_name)}: ${getString(R.string.app_management_dialog_adb_is_limited_title)}")
-                .setMessage(getString(R.string.app_management_dialog_adb_is_limited_message, Helps.ADB_PERMISSION.get()).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE))
-                .setPositiveButton(android.R.string.ok, null)
-                .setOnDismissListener { finish() }
-                .create()
-        dialog.setOnShowListener {
-            (it as AlertDialog).findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
-        }
-        try {
-            dialog.show()
-        } catch (ignored: Throwable) {
-        }
-        return false
-    }
-
-    // The RUNNING transition is posted to the main thread, so the wait must not block it.
-    private suspend fun waitForBinder(): Boolean {
-        return try {
-            withTimeout(5000) {
-                ShizukuStateMachine.asFlow().first { it == ShizukuStateMachine.State.RUNNING }
-            }
-            true
-        } catch (e: TimeoutCancellationException) {
-            LOGGER.e(e, "Binder not received in 5s")
-            false
-        }
-    }
-
+class RequestPermissionActivity : ComposeActivity() {
+    override val protectTouches = true
+    override val rejectPartialTouches = true
+    override val edgeToEdge = false
+    private val model: PermissionViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setFinishOnTouchOutside(false)
         val uid = intent.getIntExtra("uid", -1)
         val pid = intent.getIntExtra("pid", -1)
-        val requestCode = intent.getIntExtra("requestCode", -1)
+        val code = intent.getIntExtra("requestCode", -1)
         val ai = intent.getParcelableExtra<ApplicationInfo>("applicationInfo")
-        if (uid == -1 || pid == -1 || ai == null) {
-            finish()
-            return
-        }
-
-        lifecycleScope.launch {
-            if (!waitForBinder()) {
-                finish()
-                return@launch
+        if (uid == -1 || pid == -1 || ai == null) { finish(); return }
+        val label = runCatching { ai.loadLabel(packageManager).toString() }.getOrDefault(ai.packageName)
+        model.initialize(uid, pid, code)
+        porterContent {
+            val stage by model.stage.collectAsStateWithLifecycle()
+            BackHandler(enabled = stage == "waiting" || stage == "ready") {}
+            LaunchedEffect(stage) { if (stage == "finished") finish() }
+            DialogSurface {
+                when (stage) {
+                    "ready" -> {
+                        HtmlText(stringResource(R.string.permission_warning_template, TextUtils.htmlEncode(label), stringResource(R.string.permission_group_description)))
+                        Button(onClick = { model.reply(true) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.grant_dialog_button_allow_always)) }
+                        OutlinedButton(onClick = { model.reply(false) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.grant_dialog_button_deny)) }
+                    }
+                    "limited" -> {
+                        Text(stringResource(R.string.app_management_dialog_adb_is_limited_title), style = MaterialTheme.typography.headlineSmall)
+                        HtmlText(stringResource(R.string.app_management_dialog_adb_is_limited_message, Helps.ADB_PERMISSION.get()))
+                        TextButton(onClick = { finish() }) { Text(stringResource(android.R.string.ok)) }
+                    }
+                    else -> CircularProgressIndicator()
+                }
             }
-            if (!checkSelfPermission()) {
-                setResult(uid, pid, requestCode, allowed = false, onetime = true)
-                return@launch
-            }
-            showConfirmation(uid, pid, requestCode, ai)
         }
     }
+}
 
-    private fun showConfirmation(uid: Int, pid: Int, requestCode: Int, ai: ApplicationInfo) {
-        val label = try {
-            ai.loadLabel(packageManager)
-        } catch (e: Exception) {
-            ai.packageName
+class PermissionViewModel(private val savedState: SavedStateHandle) : ViewModel() {
+    val stage = savedState.getStateFlow("stage", "waiting")
+    private val gate = PermissionReplyGate(savedState["replied"] ?: false)
+    private var initialized = false
+    private var uid = -1
+    private var pid = -1
+    private var code = -1
+    fun initialize(uid: Int, pid: Int, code: Int) {
+        if (initialized) return
+        initialized = true
+        this.uid = uid; this.pid = pid; this.code = code
+        if (gate.replied) { if (stage.value != "limited") savedState["stage"] = "finished"; return }
+        viewModelScope.launch {
+            try {
+                withTimeout(5000) { ShizukuStateMachine.asFlow().first { it == ShizukuStateMachine.State.RUNNING } }
+                val permission = withContext(Dispatchers.IO) { Shizuku.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED }
+                if (permission) savedState["stage"] = "ready"
+                else { reply(false, limited = true) }
+            } catch (e: TimeoutCancellationException) {
+                LOGGER.e(e, "Binder not received in 5s")
+                savedState["stage"] = "finished"
+            } catch (e: CancellationException) { throw e }
+            catch (e: Exception) { LOGGER.e(e, "Permission request failed"); savedState["stage"] = "finished" }
         }
-
-        val binding = ConfirmationDialogBinding.inflate(layoutInflater).apply {
-            button1.setOnClickListener {
-                setResult(uid, pid, requestCode, allowed = true, onetime = false)
-                dialog.dismiss()
+    }
+    fun reply(allowed: Boolean, limited: Boolean = false) {
+        gate.reply {
+            savedState["replied"] = true
+            savedState["stage"] = if (limited) "limited" else "finished"
+            val data = Bundle().apply {
+                putBoolean(REQUEST_PERMISSION_REPLY_ALLOWED, allowed)
+                putBoolean(REQUEST_PERMISSION_REPLY_IS_ONETIME, !allowed)
             }
-            button3.setOnClickListener {
-                setResult(uid, pid, requestCode, allowed = false, onetime = true)
-                dialog.dismiss()
-            }
-            title.text = HtmlCompat.fromHtml(getString(R.string.permission_warning_template,
-                    label, getString(R.string.permission_group_description)))
+            try { Shizuku.dispatchPermissionConfirmationResult(uid, pid, code, data) }
+            catch (e: Exception) { LOGGER.e(e, "dispatchPermissionConfirmationResult") }
         }
-
-        dialog = MaterialAlertDialogBuilder(this)
-                .setView(binding.root)
-                .setCancelable(false)
-                .setOnDismissListener { finish() }
-                .create()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
     }
 }

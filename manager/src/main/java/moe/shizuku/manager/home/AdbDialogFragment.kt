@@ -1,86 +1,59 @@
 package moe.shizuku.manager.home
 
 import android.Manifest.permission.WRITE_SECURE_SETTINGS
-import android.app.Dialog
-import android.content.ActivityNotFoundException
-import android.content.DialogInterface
+import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Bundle
 import android.provider.Settings
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.MutableLiveData
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.MutableStateFlow
 import moe.shizuku.manager.R
 import moe.shizuku.manager.adb.AdbMdns
-import moe.shizuku.manager.databinding.AdbDialogBinding
 import moe.shizuku.manager.starter.StarterActivity
-import moe.shizuku.manager.utils.EnvironmentUtils
+import moe.shizuku.manager.ui.ComposeDialogFragment
+import moe.shizuku.manager.ui.LocalNetworkPermission
 import moe.shizuku.manager.utils.SettingsPage
 
-@RequiresApi(Build.VERSION_CODES.R)
-class AdbDialogFragment : DialogFragment() {
-
-    private lateinit var binding: AdbDialogBinding
-    private lateinit var adbMdns: AdbMdns
-    private val port = MutableLiveData<Int>()
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = requireContext()
-        binding = AdbDialogBinding.inflate(layoutInflater)
-        adbMdns = AdbMdns(context, AdbMdns.TLS_CONNECT) {
-            port.postValue(it.second)
+class AdbDialogFragment : ComposeDialogFragment() {
+    private val model: DiscoveryViewModel by viewModels()
+    @Composable override fun Content() {
+        if (!LocalNetworkPermission { model.startDiscovery() }) {
+            TextButton(onClick = { dismissAllowingStateLoss() }) { Text(stringResource(android.R.string.cancel)) }
+            return
         }
-
-        val builder = MaterialAlertDialogBuilder(context).apply {
-            setTitle(R.string.dialog_adb_discovery)
-            setView(binding.root)
-            setNegativeButton(android.R.string.cancel, null)
-            setPositiveButton(R.string.development_settings, null)
+        val port by model.port.collectAsStateWithLifecycle()
+        LaunchedEffect(port) {
+            if (port in 1..65535 && model.consume()) {
+                startActivity(Intent(requireContext(), StarterActivity::class.java).putExtra(StarterActivity.EXTRA_PORT, port))
+                dismissAllowingStateLoss()
+            }
         }
-        val dialog = builder.create()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setOnShowListener { onDialogShow(dialog) }
-        return dialog
+        Text(stringResource(R.string.dialog_adb_discovery), style = MaterialTheme.typography.headlineSmall)
+        Text(stringResource(R.string.dialog_adb_discovery_message))
+        Text(stringResource(R.string.dialog_adb_discovery_message_toggle_wireless_debugging))
+        LinearProgressIndicator()
+        TextButton(onClick = { SettingsPage.Developer.HighlightWirelessDebugging.launch(requireContext()) }) { Text(stringResource(R.string.development_settings)) }
+        TextButton(onClick = { dismissAllowingStateLoss() }) { Text(stringResource(android.R.string.cancel)) }
     }
+}
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        adbMdns.stop()
+class DiscoveryViewModel(application: Application) : AndroidViewModel(application) {
+    val port = MutableStateFlow(-1)
+    private var consumed = false
+    private val mdns = AdbMdns(application, AdbMdns.TLS_CONNECT) { port.value = it.second }
+    private var discovering = false
+    fun startDiscovery() {
+        if (discovering) return
+        discovering = true
+        val application = getApplication<Application>()
+        if (application.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) Settings.Global.putInt(application.contentResolver, "adb_wifi_enabled", 1)
+        mdns.start()
     }
-
-    private fun onDialogShow(dialog: AlertDialog) {
-        adbMdns.start()
-        val context = dialog.context
-        if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED)
-            Settings.Global.putInt(context.contentResolver, "adb_wifi_enabled", 1)
-
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            SettingsPage.Developer.HighlightWirelessDebugging.launch(context)
-        }
-
-        port.observe(this) {
-            if (it > 65535 || it < 1) return@observe
-            port.removeObservers(this)
-            startAndDismiss(it)
-        }
-    }
-
-    private fun startAndDismiss(port: Int) {
-        val intent = Intent(context, StarterActivity::class.java).apply {
-            putExtra(StarterActivity.EXTRA_PORT, port)
-        }
-        requireContext().startActivity(intent)
-
-        dismissAllowingStateLoss()
-    }
-
-    fun show(fragmentManager: FragmentManager) {
-        if (fragmentManager.isStateSaved) return
-        show(fragmentManager, javaClass.simpleName)
-    }
+    fun consume(): Boolean { if (consumed) return false; consumed = true; return true }
+    override fun onCleared() { mdns.stop() }
 }

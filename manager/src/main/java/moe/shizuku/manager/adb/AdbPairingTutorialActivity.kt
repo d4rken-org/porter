@@ -17,82 +17,63 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import moe.shizuku.manager.AppConstants
-import moe.shizuku.manager.app.AppBarActivity
-import moe.shizuku.manager.databinding.AdbPairingTutorialActivityBinding
+
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.SettingsPage
 import rikka.compatibility.DeviceCompatibility
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import moe.shizuku.manager.R
+import moe.shizuku.manager.ui.*
+
 @RequiresApi(Build.VERSION_CODES.R)
-class AdbPairingTutorialActivity : AppBarActivity() {
-
-    private lateinit var binding: AdbPairingTutorialActivityBinding
-
-    private var notificationEnabled: Boolean = false
-
+class AdbPairingTutorialActivity : ComposeActivity() {
+    private var notificationEnabled by mutableStateOf(false)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val context = this
-
-        binding = AdbPairingTutorialActivityBinding.inflate(layoutInflater, rootView, true)
-        
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         notificationEnabled = isNotificationEnabled()
-
-        if (notificationEnabled) {
-            startPairingService()
-        }
-
-        binding.apply {
-            syncNotificationEnabled()
-
-            if (DeviceCompatibility.isMiui()) {
-                miui.isVisible = true
+        if (notificationEnabled) startPairingService()
+        porterContent {
+            PorterScaffold(stringResource(R.string.adb_pairing), onBack = { finish() }) { padding ->
+                Column(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    if (notificationEnabled) {
+                        HtmlText(stringResource(R.string.adb_pairing_tutorial_content_notification))
+                        HtmlText(stringResource(R.string.adb_pairing_tutorial_content_network))
+                        HtmlText(stringResource(R.string.adb_pairing_tutorial_content_network_limation_not_foreground))
+                    } else {
+                        HtmlText(stringResource(R.string.adb_pairing_tutorial_content_notification_blocked))
+                        Button(onClick = { SettingsPage.Notifications.NotificationSettings.launch(this@AdbPairingTutorialActivity) }) { Text(stringResource(R.string.notification_settings)) }
+                    }
+                    if (DeviceCompatibility.isMiui()) {
+                        HtmlText(stringResource(R.string.adb_pairing_tutorial_content_miui))
+                        HtmlText(stringResource(R.string.adb_pairing_tutorial_content_miui_2))
+                    }
+                    if (notificationEnabled) {
+                        HtmlText(stringResource(R.string.adb_pairing_tutorial_content_steps))
+                        Button(onClick = { SettingsHelper.launchOrHighlightWirelessDebugging(this@AdbPairingTutorialActivity) }) { Text(stringResource(R.string.development_settings)) }
+                        HtmlText(stringResource(R.string.adb_pairing_tutorial_content_enter_pairing_code))
+                        HtmlText(stringResource(R.string.adb_pairing_tutorial_content_finish))
+                    }
+                }
             }
-
-            developerOptions.setOnClickListener {
-                SettingsHelper.launchOrHighlightWirelessDebugging(context)
-            }
-
-            notificationOptions.setOnClickListener {
-                SettingsPage.Notifications.NotificationSettings.launch(context)
-            }
-        }
-    }
-
-    private fun syncNotificationEnabled() {
-        binding.apply {
-            step1.isVisible = notificationEnabled
-            step2.isVisible = notificationEnabled
-            step3.isVisible = notificationEnabled
-            network.isVisible = notificationEnabled
-            notification.isVisible = notificationEnabled
-            notificationDisabled.isGone = notificationEnabled
         }
     }
-
     private fun isNotificationEnabled(): Boolean {
-        val context = this
-
-        val nm = context.getSystemService(NotificationManager::class.java)
+        val nm = getSystemService(NotificationManager::class.java)
         val channel = nm.getNotificationChannel(AdbPairingService.NOTIFICATION_CHANNEL)
-        return nm.areNotificationsEnabled() &&
-                (channel == null || channel.importance != NotificationManager.IMPORTANCE_NONE)
+        return nm.areNotificationsEnabled() && (channel == null || channel.importance != NotificationManager.IMPORTANCE_NONE)
     }
-
     override fun onResume() {
         super.onResume()
-
-        val newNotificationEnabled = isNotificationEnabled()
-        if (newNotificationEnabled != notificationEnabled) {
-            notificationEnabled = newNotificationEnabled
-            syncNotificationEnabled()
-
-            if (newNotificationEnabled) {
-                startPairingService()
-            }
-        }
+        val enabled = isNotificationEnabled()
+        if (enabled != notificationEnabled) { notificationEnabled = enabled; if (enabled) startPairingService() }
     }
 
     // Android 17 (SDK 37) gates local-network access behind ACCESS_LOCAL_NETWORK;

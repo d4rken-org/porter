@@ -1,84 +1,48 @@
 package moe.shizuku.manager.support
 
-import android.content.ClipData
-import android.content.Intent
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.text.format.Formatter
-import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.preference.Preference
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.launch
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moe.shizuku.manager.R
-import moe.shizuku.manager.app.AppBarFragmentActivity
-import java.io.File
-import java.util.Date
+import moe.shizuku.manager.ui.*
 
-class DebugLogsActivity : AppBarFragmentActivity() {
-    override fun createFragment(): Fragment = DebugLogsFragment()
-}
-
-internal fun Fragment.shareLog(file: File) {
-    val uri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", file)
-    startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
-        type = "application/zip"
-        putExtra(Intent.EXTRA_STREAM, uri)
-        clipData = ClipData.newRawUri("Porter debug log", uri)
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    }, getString(R.string.porter_debug_share)))
-}
-
-class DebugLogsFragment : SupportPreferences() {
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        preferenceScreen = preferenceManager.createPreferenceScreen(requireContext())
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                DebugRecorder.state.collect { refresh() }
-            }
-        }
-    }
-    private fun refresh() {
-        lifecycleScope.launch {
-            try {
-                val sessions = DebugRecorder.sessions(requireContext())
-                preferenceScreen.removeAll()
-                if (sessions.isEmpty()) preferenceScreen.addPreference(Preference(requireContext()).apply {
-                    setTitle(R.string.porter_debug_empty)
-                    isSelectable = false
-                })
-                sessions.forEach { session ->
-                    preferenceScreen.addPreference(Preference(requireContext()).apply {
-                        title = DateFormat.getMediumDateFormat(context).format(Date(session.started)) + " " + DateFormat.getTimeFormat(context).format(Date(session.started))
-                        summary = if (session.active) getString(R.string.porter_debug_recording) else Formatter.formatShortFileSize(context, session.size)
-                        setOnPreferenceClickListener {
-                            if (session.active) RecordingDialogs.toggle(this@DebugLogsFragment) else actions(session.id)
-                            true
-                        }
-                    })
-                }
-            } catch (e: Exception) { RecordingDialogs.error(this@DebugLogsFragment, e) }
-        }
-    }
-    private fun actions(id: String) {
-        MaterialAlertDialogBuilder(requireContext()).setItems(arrayOf(
-            getString(R.string.porter_debug_share), getString(R.string.porter_debug_delete),
-        )) { _, which ->
-            if (which == 0) lifecycleScope.launch {
-                try { shareLog(DebugRecorder.export(requireContext(), id)) }
-                catch (e: Exception) { RecordingDialogs.error(this@DebugLogsFragment, e) }
-            } else MaterialAlertDialogBuilder(requireContext())
-                .setMessage(R.string.porter_debug_delete_message)
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(R.string.porter_debug_delete) { _, _ ->
-                    lifecycleScope.launch {
-                        try { DebugRecorder.delete(requireContext(), id); refresh() }
-                        catch (e: Exception) { RecordingDialogs.error(this@DebugLogsFragment, e) }
+class DebugLogsActivity : ComposeActivity() {
+    private val model: SupportViewModel by viewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        porterContent {
+            val sessions by model.sessions.collectAsStateWithLifecycle()
+            val busy by model.busy.collectAsStateWithLifecycle()
+            var selected by rememberSaveable { mutableStateOf<String?>(null) }
+            var deleting by rememberSaveable { mutableStateOf(false) }
+            PorterScaffold(stringResource(R.string.porter_debug_saved), onBack = { finish() }) { padding ->
+                LazyColumn(Modifier.padding(padding).consumeWindowInsets(padding)) {
+                    if (sessions.isEmpty()) item { Text(stringResource(R.string.porter_debug_empty), Modifier.padding(24.dp)) }
+                    items(sessions, key = { it.id }) { session ->
+                        SettingsItem(sessionLabel(this@DebugLogsActivity, session.started), R.drawable.ic_terminal_24,
+                            if (session.active) stringResource(R.string.porter_debug_recording) else Formatter.formatShortFileSize(this@DebugLogsActivity, session.size),
+                            enabled = !busy, onClick = { if (session.active) model.requestRecording() else selected = session.id })
                     }
-                }.show()
-        }.show()
+                }
+            }
+            selected?.let { id ->
+                if (deleting) MessageDialog(stringResource(R.string.porter_debug_delete), stringResource(R.string.porter_debug_delete_message),
+                    { deleting = false; selected = null }, stringResource(R.string.porter_debug_delete), onConfirm = { model.delete(id); selected = null; deleting = false })
+                else ChoiceDialog(stringResource(R.string.porter_debug_saved), listOf(stringResource(R.string.porter_debug_share), stringResource(R.string.porter_debug_delete)), -1,
+                    { selected = null }) { if (it == 0) { model.share(id); selected = null } else deleting = true }
+            }
+            SupportDialogs(model)
+        }
     }
+    override fun onResume() { super.onResume(); model.refresh() }
 }

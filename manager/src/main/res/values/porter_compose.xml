@@ -1,0 +1,5 @@
+<resources>
+    <string name="porter_navigate_back">Navigate back</string>
+    <string name="porter_local_network_permission">Allow access to your local network so Porter can find and connect to Android’s wireless debugging service.</string>
+    <string name="porter_pairing_dialog_instructions">Open Wireless debugging in Android’s developer options and choose Pair device with pairing code. Enter the port and pairing code here.</string>
+</resources>

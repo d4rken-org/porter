@@ -13,6 +13,7 @@ import rikka.shizuku.Shizuku;
 public class ProbeActivity extends Activity {
     private TextView status;
     private Shizuku.UserServiceArgs args;
+    private boolean bound;
     private final Shizuku.OnBinderReceivedListener received = () -> runOnUiThread(this::connect);
     private final Shizuku.OnBinderDeadListener died = () -> report("BINDER_DEAD");
     private final Shizuku.OnRequestPermissionResultListener permission = (code, result) -> {
@@ -53,6 +54,7 @@ public class ProbeActivity extends Activity {
             catch (SecurityException expected) { managerDenied = true; }
             report("AUTHORIZED managerOperationDenied=" + managerDenied);
             Shizuku.bindUserService(args, connection);
+            bound = true;
         } catch (Exception e) { report("FAILED " + e); }
     }
 
@@ -65,7 +67,10 @@ public class ProbeActivity extends Activity {
         Shizuku.removeBinderReceivedListener(received);
         Shizuku.removeBinderDeadListener(died);
         Shizuku.removeRequestPermissionResultListener(permission);
-        if (Shizuku.pingBinder()) Shizuku.unbindUserService(args, connection, true);
+        if (bound && Shizuku.pingBinder()) {
+            try { Shizuku.unbindUserService(args, connection, true); }
+            catch (RuntimeException e) { Log.w("PorterProbe", "Service disconnected during teardown", e); }
+        }
         super.onDestroy();
     }
 }

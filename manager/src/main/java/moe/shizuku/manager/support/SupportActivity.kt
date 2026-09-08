@@ -1,73 +1,51 @@
 package moe.shizuku.manager.support
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import kotlinx.coroutines.launch
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
-import moe.shizuku.manager.app.AppBarFragmentActivity
+import moe.shizuku.manager.ui.*
 import moe.shizuku.manager.utils.CustomTabsHelper
 
-class SupportActivity : AppBarFragmentActivity() {
-    override fun createFragment(): Fragment = SupportFragment()
-}
-
-class SupportFragment : SupportPreferences() {
-    private lateinit var recording: Preference
-    private lateinit var sessions: Preference
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        preferenceScreen = preferenceManager.createPreferenceScreen(requireContext())
-        val help = category(R.string.porter_support_title)
-        link(help, R.string.porter_documentation, Helps.WEBSITE)
-        link(help, R.string.porter_issue_tracker, Helps.SOURCE + "/issues")
-        link(help, R.string.porter_discord, "https://discord.gg/5hXXgwKNgm")
-        help.addPreference(Preference(requireContext()).apply {
-            setTitle(R.string.porter_contact)
-            setSummary(R.string.porter_contact_summary)
-            setOnPreferenceClickListener {
-                startActivity(android.content.Intent(context, ContactActivity::class.java)); true
-            }
-        })
-        val debug = category(R.string.porter_debug_title)
-        recording = Preference(requireContext()).apply {
-            setOnPreferenceClickListener {
-                RecordingDialogs.toggle(this@SupportFragment); true
-            }
-        }.also(debug::addPreference)
-        sessions = Preference(requireContext()).apply {
-            setTitle(R.string.porter_debug_saved)
-            setOnPreferenceClickListener {
-                startActivity(android.content.Intent(context, DebugLogsActivity::class.java)); true
-            }
-        }.also(debug::addPreference)
-        debug.addPreference(Preference(requireContext()).apply {
-            setSummary(R.string.porter_debug_storage)
-            isSelectable = false
-        })
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                DebugRecorder.state.collect { state ->
-                    recording.setTitle(if (state.active) R.string.porter_debug_stop else R.string.porter_debug_start)
-                    recording.summary = state.error ?: getString(if (state.active) R.string.porter_debug_recording_summary else R.string.porter_debug_start_summary)
-                    val saved = DebugRecorder.sessions(requireContext()).filterNot { it.active }
-                    sessions.summary = getString(R.string.porter_debug_count, saved.size)
+class SupportActivity : ComposeActivity() {
+    private val model: SupportViewModel by viewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        porterContent {
+            val state by model.recording.collectAsStateWithLifecycle()
+            val sessions by model.sessions.collectAsStateWithLifecycle()
+            val busy by model.busy.collectAsStateWithLifecycle()
+            PorterScaffold(stringResource(R.string.porter_support_title), onBack = { finish() }) { padding ->
+                Column(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState())) {
+                    SettingsCategory(stringResource(R.string.porter_support_title))
+                    listOf(
+                        Triple(R.string.porter_documentation, R.drawable.ic_help_outline_24dp, Helps.WEBSITE),
+                        Triple(R.string.porter_issue_tracker, R.drawable.ic_code_24dp, Helps.SOURCE + "/issues"),
+                        Triple(R.string.porter_discord, R.drawable.ic_baseline_link_24, "https://discord.gg/5hXXgwKNgm")
+                    ).forEach { (title, icon, url) -> SettingsItem(stringResource(title), icon, onClick = { CustomTabsHelper.launchUrlOrCopy(this@SupportActivity, url) }) }
+                    SettingsItem(stringResource(R.string.porter_contact), R.drawable.ic_outline_open_in_new_24, stringResource(R.string.porter_contact_summary),
+                        onClick = { startActivity(Intent(this@SupportActivity, ContactActivity::class.java)) })
+                    SettingsCategory(stringResource(R.string.porter_debug_title))
+                    SettingsItem(stringResource(if (state.active) R.string.porter_debug_stop else R.string.porter_debug_start), R.drawable.ic_terminal_24,
+                        state.error ?: stringResource(if (state.active) R.string.porter_debug_recording_summary else R.string.porter_debug_start_summary),
+                        enabled = !busy, onClick = model::requestRecording)
+                    SettingsItem(stringResource(R.string.porter_debug_saved), R.drawable.ic_outline_info_24, stringResource(R.string.porter_debug_count, sessions.count { !it.active }),
+                        onClick = { startActivity(Intent(this@SupportActivity, DebugLogsActivity::class.java)) })
+                    Text(stringResource(R.string.porter_debug_storage), Modifier.padding(16.dp), style = MaterialTheme.typography.bodySmall)
                 }
             }
+            SupportDialogs(model)
         }
     }
-    private fun category(title: Int) = PreferenceCategory(requireContext()).apply {
-        setTitle(title)
-        preferenceScreen.addPreference(this)
-    }
-    private fun link(category: PreferenceCategory, title: Int, url: String) {
-        category.addPreference(Preference(requireContext()).apply {
-            setTitle(title)
-            setOnPreferenceClickListener { CustomTabsHelper.launchUrlOrCopy(context, url); true }
-        })
-    }
+    override fun onResume() { super.onResume(); model.refresh() }
 }
