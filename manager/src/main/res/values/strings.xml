@@ -215,4 +215,11 @@
     <string name="porter_pairing_attempt_timeout">The pairing connection timed out. Open a new pairing-code dialog in Wireless debugging and try again.</string>
     <string name="porter_pairing_failed_retry">Pairing failed. Open a new pairing-code dialog in Wireless debugging and try again.</string>
     <string name="porter_pairing_notification_timeout">Pairing has stopped because the notification timed out. Choose Retry, then open a new pairing-code dialog in Wireless debugging.</string>
+    <string name="porter_tv_pairing_progress_title">Porter pairing</string>
+    <string name="porter_tv_pairing_wait">Please leave the pairing-code window open and wait.</string>
+    <string name="porter_tv_pairing_return">Returning to Porter to turn off the pairing accessibility service…</string>
+    <string name="porter_tv_pairing_disabling">Turning off the pairing accessibility service…</string>
+    <string name="porter_tv_pairing_complete">The pairing accessibility service is off. All pairing steps are complete. You can close this window.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">The pairing accessibility service is still enabled. Turn it off in Accessibility settings.</string>
+    <string name="porter_tv_pairing_open_accessibility">Open Accessibility settings</string>
 </resources>

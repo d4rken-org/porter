@@ -66,7 +66,7 @@ private fun Context.getEnabledAccessibilityServices(): List<String>? {
     return enabledServices?.split(":")
 }
 
-private fun Context.isAccessibilityEnabled(): Boolean {
+internal fun Context.isAccessibilityEnabled(): Boolean {
     val accessibilityServiceName = "$packageName/${AdbPairingAccessibilityService::class.java.canonicalName}"
     return getEnabledAccessibilityServices()?.any { it.equals(accessibilityServiceName) } ?: false
 }

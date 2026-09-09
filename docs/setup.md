@@ -46,7 +46,7 @@ If you selected **In-app dialog** under **Settings**, **Startup**, **Pairing met
 
 On a TV with wireless debugging, choose **Pairing** in Porter and follow the instructions to enable its pairing accessibility service. Within one minute, open **Developer options**, **Wireless debugging**, then **Pair device with pairing code**. Keep that dialog open while Porter reads the code and completes pairing.
 
-Porter shows the result and turns off its pairing accessibility service. Choose **Start** after success, or **Retry** after a failure or timeout. If Porter does not open automatically, open it to see the result. For installation controls that cannot be selected with a remote, see [TV installation warnings](/troubleshooting#a-tv-installation-warning-cannot-be-selected-with-the-remote).
+Porter displays a progress panel over the pairing-code screen. Leave that screen open until the pairing result appears. Porter then opens its result screen and turns off its pairing accessibility service. The result screen confirms when the service is off, separately from whether pairing worked. Choose **Start** after success, or **Retry** after a failure or timeout. If Porter does not open automatically, open it to see the result. For installation controls that cannot be selected with a remote, see [TV installation warnings](/troubleshooting#a-tv-installation-warning-cannot-be-selected-with-the-remote).
 
 ## With a computer
 

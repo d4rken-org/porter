@@ -212,4 +212,11 @@
     <string name="porter_pairing_attempt_timeout">Zeitüberschreitung bei der Kopplungsverbindung. Öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog und versuche es erneut.</string>
     <string name="porter_pairing_failed_retry">Kopplung fehlgeschlagen. Öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog und versuche es erneut.</string>
     <string name="porter_pairing_notification_timeout">Die Kopplung wurde beendet, weil die Benachrichtigung abgelaufen ist. Wähle „Erneut versuchen“ und öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog.</string>
+    <string name="porter_tv_pairing_progress_title">Porter-Kopplung</string>
+    <string name="porter_tv_pairing_wait">Bitte lasse das Fenster mit dem Kopplungscode geöffnet und warte.</string>
+    <string name="porter_tv_pairing_return">Porter wird geöffnet, um den Bedienungshilfen-Dienst für die Kopplung zu deaktivieren…</string>
+    <string name="porter_tv_pairing_disabling">Der Bedienungshilfen-Dienst für die Kopplung wird deaktiviert…</string>
+    <string name="porter_tv_pairing_complete">Der Bedienungshilfen-Dienst für die Kopplung ist deaktiviert. Alle Kopplungsschritte sind abgeschlossen. Du kannst dieses Fenster schließen.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Der Bedienungshilfen-Dienst für die Kopplung ist noch aktiviert. Deaktiviere ihn in den Einstellungen für Bedienungshilfen.</string>
+    <string name="porter_tv_pairing_open_accessibility">Einstellungen für Bedienungshilfen öffnen</string>
 </resources>
