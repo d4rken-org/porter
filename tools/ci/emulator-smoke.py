@@ -63,15 +63,24 @@ class Smoke:
         (self.output / "last-ui.xml").write_text(xml)
         return ET.fromstring(xml)
 
-    def tap(self, text, package=MANAGER, prefix=False, screenshot=None):
+    def tap(self, text, package=MANAGER, prefix=False, screenshot=None, scroll=False):
         def locate():
-            for node in self.ui().iter("node"):
+            root = self.ui()
+            for node in root.iter("node"):
                 label = node.get("text", "")
                 matches = label.startswith(text) if prefix else label == text
                 if node.get("package") == package and matches and node.get("enabled") == "true":
                     bounds = list(map(int, re.findall(r"\d+", node.get("bounds", ""))))
                     if len(bounds) == 4:
                         return bounds
+            if scroll:
+                container = next((n for n in root.iter("node") if n.get("package") == package
+                                  and n.get("scrollable") == "true"), None)
+                if container is not None:
+                    left, top, right, bottom = map(int, re.findall(r"\d+", container.get("bounds", "")))
+                    x = (left + right) // 2
+                    inset = (bottom - top) // 5
+                    self.shell("input", "swipe", x, bottom - inset, x, top + inset, 300)
             return None
         left, top, right, bottom = self.until(f"button {text!r} in {package}", locate)
         if screenshot:

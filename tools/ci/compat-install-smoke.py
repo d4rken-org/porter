@@ -21,9 +21,9 @@ def main():
     args = parser.parse_args()
     smoke = base.Smoke(args)
 
-    def activate(label, description=False):
+    def activate(label, description=False, scroll=False):
         if not args.dpad and not description:
-            smoke.tap(label)
+            smoke.tap(label, scroll=scroll)
             return
         visited = {}
         for _ in range(50):
@@ -114,7 +114,7 @@ def main():
         smoke.shell("am", "force-stop", base.MANAGER)
         smoke.shell("run-as", base.MANAGER, "chmod", "700", "cache/compat")
         setup_screen()
-        activate("Install automatically")
+        activate("Install automatically", scroll=True)
         smoke.until("replacement and import complete", lambda: any(n.get("text") == "Import complete" for n in smoke.ui().iter("node")), timeout=90)
         smoke.screenshot("replacement-imported")
         smoke.shell("am", "force-stop", base.MANAGER)
