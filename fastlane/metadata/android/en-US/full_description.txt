@@ -1,0 +1,27 @@
+Porter gives Android apps ADB access through the Shizuku APIs, with optional root support. Apps that would otherwise need a computer for every action can do their work directly on the device, and you decide which ones are allowed to.
+
+Porter is a minimal, maintained fork of Shizuku. The original app is no longer actively developed, so Porter exists to keep a small, stable and maintained option available for the apps that rely on it.
+
+WHAT YOU CAN DO
+- Start the service over wireless debugging, from a computer, or with root
+- Approve or block each app individually
+- Pause access for every app at once
+- See which of your installed apps support Porter and which have connected
+
+GETTING STARTED
+1. Install Porter.
+2. Start it using wireless debugging, a computer, or root.
+3. Open an app that supports Porter and approve its access request.
+
+Porter requires Android 7.0 or newer. Starting without a computer needs Android 11 or newer with wireless debugging, or a device that is already rooted. After a reboot, start Porter again before using apps that depend on it.
+
+APPS THAT ONLY SUPPORT SHIZUKU
+Apps built for Porter need nothing extra. For apps that only know Shizuku, there is an optional Porter Compatibility companion. It replaces an installed Shizuku app, so remove Shizuku first. Porter itself can sit alongside Shizuku; the companion cannot.
+
+PRIVACY
+Porter has no accounts, no ads and no tracking. It grants access only to the apps you approve, and you can revoke that access at any time.
+
+FOR DEVELOPERS
+App developers are welcome to support Porter's permission directly. The developer guide is at https://porter.darken.eu/developers
+
+Porter is open source under the Apache 2.0 license. It builds on RikkaApps/Shizuku and later maintenance work, and is not affiliated with the original Shizuku maintainers.
