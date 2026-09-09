@@ -14,6 +14,6 @@ Support independent Porter and Shizuku services. Do not kill the original servic
 
 Use isolated Android emulators with `-no-audio`. Do not adopt existing devices. Obtain the requested Claude review before committing significant changes.
 
-Final artwork, production key custody and public repository ownership belong to the maintainer. Development builds use temporary artwork and development signing. Do not publish or configure external destinations without the corresponding authorization.
+Final artwork, production key custody and public repository ownership belong to the maintainer. Development builds use development signing. Do not publish or configure external destinations without the corresponding authorization.
 
 Keep agent context under `.claude/`; do not add top-level AGENTS files or directories. Use only DebugBadger or ADB for device interaction. Never control the host mouse or keyboard.

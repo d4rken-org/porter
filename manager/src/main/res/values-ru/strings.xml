@@ -204,6 +204,7 @@
     <string name="porter_ack_thedjchi">thedjchi и участникам за поддержку форка Shizuku, на котором основан Porter.</string>
     <string name="porter_ack_symbuzzer">symbuzzer и участникам за продолжение работы над Shizuku и публикацию своего форка.</string>
     <string name="porter_ack_plus">thejaustin и участникам за ShizukuPlus и идею необязательного приложения совместимости.</string>
+    <string name="porter_ack_maxpatchs">Спасибо за иконку, дизайн маскота и баннер.</string>
     <string name="porter_license_porter">Porter и оригинальное приложение Shizuku · Apache License 2.0</string>
     <string name="porter_license_api">Shizuku API и его форк для Porter · MIT License</string>
     <string name="porter_license_notice">Уведомления об авторских правах и атрибуции</string>
