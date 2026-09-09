@@ -122,7 +122,13 @@ class CompatibilityActivity : ComposeActivity() {
                     CompatibilityRepository.Status.INVALID -> R.string.compat_status_invalid
                 }), if (state.status == CompatibilityRepository.Status.INSTALLED) R.drawable.ic_baseline_link_24 else R.drawable.ic_outline_info_24) {
                     if (state.isCompanion) {
-                        OutlinedCard(Modifier.fillMaxWidth()) {
+                        OutlinedCard(
+                            onClick = {
+                                startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.parse("package:${CompatibilityRepository.PACKAGE}")))
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
                             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Text(state.installedLabel, style = MaterialTheme.typography.titleSmall)
                                 Text(android.text.BidiFormatter.getInstance().unicodeWrap(CompatibilityRepository.PACKAGE, android.text.TextDirectionHeuristics.LTR), style = MaterialTheme.typography.bodySmall)
