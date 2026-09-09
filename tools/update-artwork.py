@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Generate app and website assets from .github/artwork (requires Pillow)."""
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["Pillow==12.3.0", "CairoSVG==2.9.1"]
+# ///
+"""Generate app and website assets: uv run tools/update-artwork.py."""
+from io import BytesIO
 from pathlib import Path
 from math import hypot
 
-from PIL import Image, ImageOps
+import cairosvg
+from PIL import Image, ImageChops, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / '.github/artwork'
@@ -16,10 +22,11 @@ def save(image, path):
 
 
 def silhouette(name):
-    image = Image.open(SOURCE / f'{name}.png').convert('RGBA')
+    png = cairosvg.svg2png(url=str(SOURCE / f'{name}.svg'), output_width=1024)
+    image = Image.open(BytesIO(png)).convert('RGBA')
     bounds = image.getchannel('A').point(lambda alpha: 255 if alpha > 8 else 0).getbbox()
     if not bounds:
-        raise ValueError(f'{name}.png has no visible artwork')
+        raise ValueError(f'{name}.svg has no visible artwork')
     return image.crop(bounds)
 
 
@@ -37,11 +44,11 @@ def adaptive_layer(image):
 
 
 background = Image.open(SOURCE / 'background.png').convert('RGB').resize((432, 432), RESAMPLE)
-foreground = adaptive_layer(silhouette('foreground'))
+foreground = adaptive_layer(silhouette('icon'))
 mono_source = silhouette('monochrome')
 # Android tints the alpha mask for themed icons and notifications.
 monochrome = Image.new('RGBA', mono_source.size, 'white')
-monochrome.putalpha(mono_source.getchannel('A'))
+monochrome.putalpha(ImageChops.multiply(mono_source.convert('L'), mono_source.getchannel('A')))
 mono_layer = adaptive_layer(monochrome)
 composite = background.convert('RGBA')
 composite.alpha_composite(foreground)
@@ -67,16 +74,21 @@ small = ImageOps.contain(monochrome, (88, 88), RESAMPLE)
 notification.alpha_composite(small, ((96 - small.width) // 2, (96 - small.height) // 2))
 save(notification, ROOT / 'manager/src/main/res/drawable-xxxhdpi/ic_system_icon.png')
 
+mascot = Image.new('RGBA', (176, 176))
+body = ImageOps.contain(silhouette('mascot'), mascot.size, RESAMPLE)
+mascot.alpha_composite(body, ((176 - body.width) // 2, (176 - body.height) // 2))
+save(mascot, ROOT / 'manager/src/main/res/drawable-xxxhdpi/porter_mascot.png')
+
 banner = Image.open(SOURCE / 'banner.png').convert('RGB')
 def padded_banner(size):
-    canvas = Image.new('RGB', size, '#122126')
+    canvas = Image.new('RGB', size, banner.getpixel((0, 0)))
     art = ImageOps.contain(banner, size, RESAMPLE)
     canvas.paste(art, ((size[0] - art.width) // 2, (size[1] - art.height) // 2))
     return canvas
 
 save(padded_banner((320, 180)), ROOT / 'manager/src/main/res/drawable-xhdpi/porter_banner.png')
 assets = ROOT / 'docs/assets'
-save(padded_banner((1280, 640)), assets / 'porter-banner.png')
+save(banner, assets / 'porter-banner.png')
 save(legacy, assets / 'porter-icon.png')
 save(legacy.resize((32, 32), RESAMPLE), assets / 'favicon.png')
-print('Updated launcher, adaptive, monochrome, notification, TV and website artwork.')
+print('Updated launcher, adaptive, monochrome, notification, mascot, TV and website artwork.')

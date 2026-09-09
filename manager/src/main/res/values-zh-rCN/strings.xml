@@ -201,6 +201,7 @@
     <string name="porter_ack_thedjchi">感谢 thedjchi 及贡献者维护 Porter 所基于的 Shizuku 分支。</string>
     <string name="porter_ack_symbuzzer">感谢 symbuzzer 及贡献者持续开发 Shizuku 并分享他们的分支。</string>
     <string name="porter_ack_plus">感谢 thejaustin 及贡献者开发 ShizukuPlus，为可选的兼容应用提供了灵感。</string>
+    <string name="porter_ack_maxpatchs">感谢你设计的图标、吉祥物和横幅。</string>
     <string name="porter_license_porter">Porter 及原版 Shizuku 应用 · Apache License 2.0</string>
     <string name="porter_license_api">Shizuku API 及其 Porter 分支 · MIT License</string>
     <string name="porter_license_notice">版权与署名声明</string>

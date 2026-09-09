@@ -201,6 +201,7 @@
     <string name="porter_ack_thedjchi">PorterのベースとなっているShizukuフォークを保守している、thedjchiと貢献者に。</string>
     <string name="porter_ack_symbuzzer">Shizukuの開発を継続し、そのフォークを公開している、symbuzzerと貢献者に。</string>
     <string name="porter_ack_plus">ShizukuPlusを開発し、オプションの互換アプリという着想をもたらした、thejaustinと貢献者に。</string>
+    <string name="porter_ack_maxpatchs">アイコン、マスコットのデザイン、バナーをありがとうございます。</string>
     <string name="porter_license_porter">PorterおよびオリジナルのShizukuアプリケーション · Apache License 2.0</string>
     <string name="porter_license_api">Shizuku APIとそのPorterフォーク · MIT License</string>
     <string name="porter_license_notice">著作権および帰属表示</string>

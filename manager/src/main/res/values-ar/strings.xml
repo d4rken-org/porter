@@ -206,6 +206,7 @@
     <string name="porter_ack_thedjchi">إلى thedjchi والمساهمين لصيانة نسخة Shizuku المشتقة التي يستند إليها Porter.</string>
     <string name="porter_ack_symbuzzer">إلى symbuzzer والمساهمين لمواصلة العمل على Shizuku ومشاركة نسختهم المشتقة.</string>
     <string name="porter_ack_plus">إلى thejaustin والمساهمين لمشروع ShizukuPlus وللإلهام بفكرة تطبيق توافق اختياري.</string>
+    <string name="porter_ack_maxpatchs">شكرًا على الأيقونة وتصاميم الشخصية واللافتة.</string>
     <string name="porter_license_porter">Porter وتطبيق Shizuku الأصلي · رخصة Apache 2.0</string>
     <string name="porter_license_api">Shizuku API ونسخته المشتقة في Porter · رخصة MIT</string>
     <string name="porter_license_notice">إشعارات حقوق النشر والإسناد</string>
