@@ -17,6 +17,8 @@ jobs:
         with:
           submodules: recursive
           persist-credentials: false
+      - name: Test CI helpers
+        run: python3 -m unittest discover -s tools/ci -p 'test_*.py'
       - uses: ./.github/actions/android-setup
       - name: Check release version and scripts
         run: |

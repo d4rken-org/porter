@@ -36,6 +36,10 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+      - name: Install emulator packages
+        env:
+          EMULATOR_API: ${{ matrix.api }}
+        run: python3 tools/ci/install-sdk.py platform-tools "platforms;android-$EMULATOR_API" emulator "system-images;android-$EMULATOR_API;google_apis;x86_64"
       - name: Run real Binder and permission scenarios
         uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d #v2.38.0
         with:

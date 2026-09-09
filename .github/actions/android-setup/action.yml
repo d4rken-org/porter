@@ -8,7 +8,9 @@ runs:
         distribution: temurin
         java-version: '21'
     - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 #v3.2.2
+      with:
+        packages: platform-tools
     - uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c #v5.0.2
     - name: Install Android tools
       shell: bash
-      run: sdkmanager "platforms;android-37.0" "build-tools;37.0.0" "ndk;29.0.13113456" "cmake;3.31.6"
+      run: python3 tools/ci/install-sdk.py "platforms;android-37.0" "build-tools;37.0.0" "ndk;29.0.13113456" "cmake;3.31.6"
