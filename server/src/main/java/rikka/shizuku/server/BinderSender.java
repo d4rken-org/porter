@@ -34,6 +34,13 @@ public class BinderSender {
 
     private static ShizukuService sShizukuService;
 
+    static void resetDelivery() {
+        synchronized (ProcessObserver.PID_LIST) { ProcessObserver.PID_LIST.clear(); }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            synchronized (UidObserver.UID_LIST) { UidObserver.UID_LIST.clear(); }
+        }
+    }
+
     private static class ProcessObserver extends ProcessObserverAdapter {
 
         private static final List<Integer> PID_LIST = new ArrayList<>();

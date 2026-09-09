@@ -14,7 +14,7 @@ Download Porter from [GitHub Releases](https://github.com/d4rken-org/porter/rele
 2. Open the APK on your device. If Android asks, allow your browser or file manager to install apps from this source.
 3. Open Porter.
 
-For apps that support Porter directly, Porter alone is enough. If an app only supports Shizuku, also install **Porter Compatibility** from the same release. Uninstall Shizuku first: the companion cannot be installed alongside it. Keep the companion installed while using those apps with Porter. See the [compatibility guide](/compatibility) for more details.
+For apps that support Porter directly, Porter alone is enough. If an app only supports Shizuku, open **Shizuku compatibility** in the FOSS build to install the included companion and review a replacement/import before removing Shizuku. The separate **Porter Compatibility** APK from the same release is also available. For manual installation, uninstall Shizuku first: the companion cannot be installed alongside it. Keep the companion installed while using those apps with Porter. See the [compatibility guide](/compatibility) for more details.
 
 ## Choose how to start
 

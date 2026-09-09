@@ -16,7 +16,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import moe.shizuku.manager.BuildConfig
+import moe.shizuku.manager.compatibility.CompatibilityRepository
 import moe.shizuku.manager.R
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.ShizukuSettings
@@ -34,10 +39,16 @@ import rikka.shizuku.Shizuku
 abstract class HomeActivity : ComposeActivity() {
     private val homeModel: HomeViewModel by viewModels()
     private val appsModel: AppsViewModel by viewModels()
+    private val compatibility by lazy { CompatibilityRepository.get(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         porterContent { HomeScreen() }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) { compatibility.refresh(); delay(3000) }
+            }
+        }
         if (savedInstanceState == null) consumeIntent(intent)
     }
 
@@ -59,6 +70,7 @@ abstract class HomeActivity : ComposeActivity() {
         homeModel.reload()
         homeModel.checkBatteryOptimization()
         appsModel.load()
+        compatibility.refresh()
     }
 
     override fun onPostResume() {
@@ -79,6 +91,7 @@ abstract class HomeActivity : ComposeActivity() {
     private fun HomeScreen() {
         val status by homeModel.serviceStatus.collectAsStateWithLifecycle()
         val appsState by appsModel.state.collectAsStateWithLifecycle()
+        val compatState by compatibility.state.collectAsStateWithLifecycle()
         val reboot by homeModel.shouldShowRebootDialog.collectAsStateWithLifecycle()
         val duplicate by homeModel.shouldShowUninstallDialog.collectAsStateWithLifecycle()
         val battery by homeModel.shouldShowBatteryOptimizationSnackbar.collectAsStateWithLifecycle()
@@ -87,6 +100,9 @@ abstract class HomeActivity : ComposeActivity() {
         val statusUi = serviceStatusUi(status, serviceState)
         val running = statusUi.running
         val restricted = statusUi.restricted
+        LaunchedEffect(compatState.status, compatState.installedVersionCode) {
+            if (running) appsModel.load()
+        }
         LaunchedEffect(status) {
             if (running) ShizukuSettings.setLastLaunchMode(if (status.uid == 0) ShizukuSettings.LaunchMethod.ROOT else ShizukuSettings.LaunchMethod.ADB)
         }
@@ -110,20 +126,37 @@ abstract class HomeActivity : ComposeActivity() {
                         { startActivity(Intent(this@HomeActivity, ApplicationManagementActivity::class.java)) },
                         subtitle = if (appsState.legacy || appsState.failedUsers.isNotEmpty())
                             resources.getQuantityString(R.plurals.home_app_management_authorized_apps_count, count, count)
-                        else stringResource(R.string.porter_apps_counts, count, appsState.compatibleCount)) {
+                        else stringResource(R.string.porter_apps_counts, count, appsState.compatibleCount),
+                        actionLabel = stringResource(R.string.porter_manage_apps_action)) {
                         if (appsState.companionRequiredCount > 0) Text(
                             resources.getQuantityString(R.plurals.porter_apps_need_companion, appsState.companionRequiredCount, appsState.companionRequiredCount),
                             style = MaterialTheme.typography.bodyMedium)
                         if (appsState.failedUsers.isNotEmpty()) Text(stringResource(R.string.porter_discovery_partial), style = MaterialTheme.typography.bodySmall)
                         if (appsState.accessEnabled == false) Text(stringResource(R.string.porter_access_paused),
                             style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
-                        Text(stringResource(R.string.home_app_management_view_authorized_apps), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
-                if (running && status.permission && appsState.pendingCompanionCount > 0) item {
-                    CompatibilityCard(resources.getQuantityString(R.plurals.porter_compatibility_pending,
-                        appsState.pendingCompanionCount, appsState.pendingCompanionCount)) {
-                        CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.DOWNLOAD.get())
+                if (compatState.isCompanion) item {
+                    InstalledCompatibilityCard(
+                        compatibilityVersionText(compatState.installedVersionName, compatState.installedVersionCode),
+                        compatibilityUsageText(running, appsState),
+                        notice = when (compatState.status) {
+                            CompatibilityRepository.Status.UPDATE -> stringResource(R.string.compat_status_update)
+                            CompatibilityRepository.Status.INVALID -> stringResource(R.string.compat_status_invalid)
+                            else -> null
+                        }
+                    ) { startActivity(Intent(this@HomeActivity, moe.shizuku.manager.compatibility.CompatibilityActivity::class.java)) }
+                } else if ((BuildConfig.IS_FOSS && (compatState.status == CompatibilityRepository.Status.UPDATE
+                        || compatState.status == CompatibilityRepository.Status.INVALID
+                        || (compatState.status != CompatibilityRepository.Status.INSTALLED && appsState.companionRequiredCount > 0)))
+                    || (running && status.permission && appsState.pendingCompanionCount > 0)) item {
+                    CompatibilityCard(stringResource(when (compatState.status) {
+                        CompatibilityRepository.Status.UPDATE -> R.string.compat_status_update
+                        CompatibilityRepository.Status.CONFLICT -> R.string.compat_status_conflict
+                        CompatibilityRepository.Status.INVALID -> R.string.compat_status_invalid
+                        else -> R.string.compat_card_description
+                    })) {
+                        startActivity(Intent(this@HomeActivity, moe.shizuku.manager.compatibility.CompatibilityActivity::class.java))
                     }
                 }
                 if (restricted) item {
@@ -133,7 +166,14 @@ abstract class HomeActivity : ComposeActivity() {
                 }
                 if (battery) item {
                     HomeCard(stringResource(R.string.snackbar_battery_optimization_home), R.drawable.ic_outline_info_24) {
-                        TextButton(onClick = { SettingsHelper.requestIgnoreBatteryOptimizations(this@HomeActivity) }) { Text(stringResource(R.string.snackbar_action_fix)) }
+                        HomeCardActions {
+                            TextButton(onClick = { SettingsHelper.requestIgnoreBatteryOptimizations(this@HomeActivity) }) { Text(stringResource(R.string.snackbar_action_fix)) }
+                        }
+                    }
+                }
+                if (!running && UserHandleCompat.myUserId() != 0) item {
+                    HomeCard(stringResource(R.string.porter_primary_user_title), R.drawable.ic_outline_info_24) {
+                        Text(stringResource(R.string.porter_primary_user_description), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
                 if (!running && UserHandleCompat.myUserId() == 0) {
@@ -149,7 +189,9 @@ abstract class HomeActivity : ComposeActivity() {
                         HomeCard(stringResource(R.string.home_wireless_adb_title), R.drawable.ic_wadb_24) {
                             HtmlText(stringResource(if (EnvironmentUtils.isTlsSupported()) R.string.home_wireless_adb_description else R.string.home_wireless_adb_description_pre_11))
                             if (EnvironmentUtils.isTlsSupported()) {
-                                TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) }) { Text(stringResource(R.string.home_wireless_adb_view_guide_button)) }
+                                HomeCardActions {
+                                    TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) }) { Text(stringResource(R.string.home_wireless_adb_view_guide_button)) }
+                                }
                             }
                             HomeCardActions {
                                 if (EnvironmentUtils.isTlsSupported()) {
@@ -170,7 +212,7 @@ abstract class HomeActivity : ComposeActivity() {
                 }
             }
         }
-        if (dialog == "status" && running) ServiceStatusDialog(statusUi, { dialog = null }) {
+        if (dialog == "status" && running) ServiceStatusDialog(statusUi, { dialog = null }, secondaryUser = UserHandleCompat.myUserId() != 0) {
             dialog = null
             if (ShizukuStateMachine.isRunning()) {
                 ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)

@@ -7,8 +7,12 @@
     <string name="porter_pairing_method">ペア設定方法</string>
     <string name="porter_status_restricted">一部のADB権限はAndroidによって制限されています。</string>
     <string name="porter_status_stop_message">Porterを停止すると、Porterを使用しているアプリとの接続が切断されます。再度使用するには手動でPorterを起動する必要があり、コンピュータが必要になる場合があります。</string>
-    <string name="porter_status_details_hint">タップしてサービスの詳細と停止オプションを表示</string>
+    <string name="porter_status_details_hint">サービスの詳細と停止オプションを開く</string>
     <string name="porter_status_ready">Porterの準備ができました。対応アプリが接続してアクセスを要求できます。</string>
     <string name="porter_pairing_notification">通知</string>
     <string name="porter_pairing_dialog">アプリ内ダイアログ</string>
+    <string name="porter_manage_apps_action">アプリを管理</string>
+    <string name="porter_primary_user_title">Android のメインユーザーを使用</string>
+    <string name="porter_primary_user_description">この Android ユーザーまたはプロファイルから Porter を起動することはできません。端末のメインユーザーに切り替え、必要に応じて Porter をインストールしてサービスを起動してください。その後、ここに戻ってアプリを管理できます。</string>
+    <string name="porter_secondary_user_stop_message">Porter を停止すると、すべての Android ユーザーのアプリが切断されます。再起動するには、端末のメインユーザーに切り替えて Porter を開いてください。</string>
 </resources>

@@ -89,6 +89,7 @@
         tools:remove="android:appComponentFactory"
         tools:targetApi="33">
 
+        <activity android:name=".compatibility.CompatibilityActivity" android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:banner="@drawable/porter_banner"

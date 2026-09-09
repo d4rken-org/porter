@@ -1,5 +1,21 @@
 import com.android.build.gradle.internal.tasks.CompileArtProfileTask
 
+abstract class EmbedCompatibilityApk extends DefaultTask {
+    @InputFiles @PathSensitive(PathSensitivity.RELATIVE)
+    abstract ConfigurableFileCollection getApkDirectories()
+    @OutputDirectory
+    abstract DirectoryProperty getOutputDirectory()
+
+    @TaskAction
+    void embed() {
+        def apks = apkDirectories.asFileTree.matching { include "**/*.apk" }.files
+        if (apks.size() != 1) throw new GradleException("Expected one signed compatibility APK, found ${apks.size()}")
+        def target = outputDirectory.file("compat/porter-compat.apk").get().asFile
+        target.parentFile.mkdirs()
+        java.nio.file.Files.copy(apks.first().toPath(), target.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+    }
+}
+
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
@@ -83,6 +99,18 @@ android {
 androidComponents.onVariants(androidComponents.selector().all()) { variant ->
     // Refine must leave Robolectric's signed JVM crypto provider byte-for-byte intact.
     variant.unitTest?.instrumentation?.excludes?.addAll(["org/conscrypt/**", "org/bouncycastle/**"])
+    if (variant.productFlavors.any { it.second == "foss" }) {
+        def embedded = configurations.create("${variant.name}CompatibilityApk") {
+            canBeConsumed = false
+            canBeResolved = true
+        }
+        dependencies.add(embedded.name, dependencies.project(path: ":compat", configuration: "embedded${variant.buildType.capitalize()}"))
+        def task = tasks.register("embed${variant.name.capitalize()}Compatibility", EmbedCompatibilityApk) {
+            apkDirectories.from(embedded)
+            outputDirectory.set(layout.buildDirectory.dir("generated/compatibilityAssets/${variant.name}"))
+        }
+        variant.sources.assets.addGeneratedSourceDirectory(task) { it.outputDirectory }
+    }
 }
 
 autoResConfig {

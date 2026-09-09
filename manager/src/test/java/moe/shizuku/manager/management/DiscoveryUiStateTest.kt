@@ -29,6 +29,7 @@ class DiscoveryUiStateTest {
             app(Entry.COMPANION), app(Entry.NEEDS_COMPANION), app(Entry.MANAGED_ONLY, Entry.ALLOWED)))
         assertEquals(2, state.grantedCount)
         assertEquals(2, state.compatibleCount)
+        assertEquals(1, state.companionCount)
         assertEquals(1, state.companionRequiredCount)
     }
     @Test fun pendingIntentChecksTheSwitchButDoesNotCountAsEffectiveAuthorization() {
@@ -38,6 +39,18 @@ class DiscoveryUiStateTest {
         assertEquals(0, state.grantedCount)
         assertEquals(1, state.pendingCompanionCount)
     }
+    @Test fun pendingAccessUpdatesEveryPackageSharingTheUid() {
+        val first = app(Entry.DIRECT)
+        val second = first.copy(packageName = "second.example")
+        val state = AppsViewModel.State(listOf(first, second), loading = false,
+            accessEnabled = true, pendingAccess = mapOf(first.uid to true), pendingGlobalAccess = false)
+        assertTrue(state.isGranted(first))
+        assertTrue(state.isGranted(second))
+        assertFalse(state.effectiveAccessEnabled!!)
+        assertTrue(state.saving)
+        assertFalse(first.granted)
+    }
+
     @Test fun globalPauseDoesNotChangeIndividualDecisions() {
         val apps = listOf(app(Entry.DIRECT, Entry.ALLOWED), app(Entry.DIRECT, Entry.DENIED),
             app(Entry.NEEDS_COMPANION, Entry.PENDING_COMPANION), app(Entry.DIRECT))

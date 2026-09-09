@@ -646,6 +646,33 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
 
     @Override
     public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+        if (code == eu.darken.porter.common.CompatibilitySetup.TRANSACTION) {
+            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
+            enforceManagerPermission("compatibilitySetup");
+            if (Binder.getCallingUid() / 100000 != 0)
+                throw new SecurityException("Compatibility setup requires the primary Android user");
+            int operation = data.readInt();
+            String snapshot = data.readString();
+            try {
+                Bundle result;
+                synchronized (this) {
+                    result = new CompatibilitySetupHandler(configManager,
+                        (uid, value) -> updateFlagsForUid(uid, ConfigManager.MASK_PERMISSION, value),
+                        () -> {
+                            for (int uid : configManager.allowedUids()) reconcileRuntimePermission(uid);
+                            mainHandler.post(() -> {
+                                BinderSender.resetDelivery();
+                                sendBinderToClient();
+                            });
+                        }).execute(operation, snapshot);
+                }
+                reply.writeNoException();
+                reply.writeBundle(result);
+            } catch (Exception e) {
+                reply.writeException(e instanceof RuntimeException ? (RuntimeException) e : new IllegalStateException(e.getMessage(), e));
+            }
+            return true;
+        }
         //LOGGER.d("transact: code=%d, calling uid=%d", code, Binder.getCallingUid());
         if (code == GlobalAccess.TRANSACTION) {
             data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);

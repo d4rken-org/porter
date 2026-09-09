@@ -11,13 +11,21 @@ permissions:
 
 jobs:
   smoke:
-    name: ADB integration (Android ${{ matrix.api }})
+    name: ${{ matrix.suite }} (Android ${{ matrix.api }})
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
         api: [30, 36]
+        suite: [emulator, compat-install]
+        include:
+          - api: 34
+            suite: compat-install
+            target: android-tv
+            arch: x86
+            profile: tv_1080p
+            input: --dpad
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
         with:
@@ -39,20 +47,22 @@ jobs:
       - name: Install emulator packages
         env:
           EMULATOR_API: ${{ matrix.api }}
-        run: python3 tools/ci/install-sdk.py platform-tools "platforms;android-$EMULATOR_API" emulator "system-images;android-$EMULATOR_API;google_apis;x86_64"
+          EMULATOR_TARGET: ${{ matrix.target || 'google_apis' }}
+          EMULATOR_ARCH: ${{ matrix.arch || 'x86_64' }}
+        run: python3 tools/ci/install-sdk.py platform-tools "platforms;android-$EMULATOR_API" emulator "system-images;android-$EMULATOR_API;$EMULATOR_TARGET;$EMULATOR_ARCH"
       - name: Run real Binder and permission scenarios
         uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d #v2.38.0
         with:
           api-level: ${{ matrix.api }}
-          target: google_apis
-          arch: x86_64
-          profile: pixel_2
+          target: ${{ matrix.target || 'google_apis' }}
+          arch: ${{ matrix.arch || 'x86_64' }}
+          profile: ${{ matrix.profile || 'pixel_2' }}
           avd-name: porter-ci
           emulator-port: 5554
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
           disable-animations: true
           script: >-
-            python3 tools/ci/emulator-smoke.py --serial emulator-5554
+            python3 tools/ci/${{ matrix.suite }}-smoke.py --serial emulator-5554 ${{ matrix.input }}
             --manager manager/build/outputs/apk/foss/debug/*.apk
             --compat compat/build/outputs/apk/debug/*.apk
             --native probe/build/outputs/apk/porter/debug/*.apk
@@ -63,6 +73,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
-          name: porter-emulator-api-${{ matrix.api }}
+          name: porter-${{ matrix.suite }}-api-${{ matrix.api }}
           path: build/emulator-results/
           if-no-files-found: warn

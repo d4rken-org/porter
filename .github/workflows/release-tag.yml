@@ -113,7 +113,7 @@ jobs:
           set -euo pipefail
           mkdir -p dist
           cp manager/build/outputs/apk/foss/release/*.apk compat/build/outputs/apk/release/*.apk dist/
-          python3 tools/verify-apks.py manager/build/outputs/apk/foss/release/*.apk compat/build/outputs/apk/release/*.apk | tee dist/verification.txt
+          python3 tools/verify-apks.py manager/build/outputs/apk/foss/release/*.apk compat/build/outputs/apk/release/*.apk --embedded required | tee dist/verification.txt
           (cd dist && sha256sum -- *.apk > SHA256SUMS)
           jq -n --arg commit "$(git rev-parse HEAD)" --arg api "$(git -C api rev-parse HEAD)" \
             --arg run "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \

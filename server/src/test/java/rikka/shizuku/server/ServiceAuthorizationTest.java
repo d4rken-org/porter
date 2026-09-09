@@ -102,7 +102,7 @@ public class ServiceAuthorizationTest {
     }
 
     @Test public void diagnosticsAndApplicationsTransactionsRequireManager() {
-        for (int code : new int[]{ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications, eu.darken.porter.common.DiscoveredApplication.TRANSACTION, eu.darken.porter.common.GlobalAccess.TRANSACTION}) {
+        for (int code : new int[]{ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications, eu.darken.porter.common.DiscoveredApplication.TRANSACTION, eu.darken.porter.common.GlobalAccess.TRANSACTION, eu.darken.porter.common.CompatibilitySetup.TRANSACTION}) {
             Parcel request = Parcel.obtain();
             Parcel reply = Parcel.obtain();
             try {

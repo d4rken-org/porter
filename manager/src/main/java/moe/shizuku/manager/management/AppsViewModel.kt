@@ -24,9 +24,14 @@ class AppsViewModel(application: Application) : AndroidViewModel(application) {
         val canToggle get() = granted || canAuthorize
     }
     data class State(val apps: List<App> = emptyList(), val loading: Boolean = true, val error: Throwable? = null,
-                     val failedUsers: List<Int> = emptyList(), val legacy: Boolean = false, val accessEnabled: Boolean? = null) {
+                     val failedUsers: List<Int> = emptyList(), val legacy: Boolean = false, val accessEnabled: Boolean? = null,
+                     val pendingAccess: Map<Int, Boolean> = emptyMap(), val pendingGlobalAccess: Boolean? = null) {
+        val saving get() = pendingAccess.isNotEmpty() || pendingGlobalAccess != null
+        val effectiveAccessEnabled get() = pendingGlobalAccess ?: accessEnabled
+        fun isGranted(app: App) = pendingAccess[app.uid] ?: app.granted
         val grantedCount get() = apps.count { it.authorization == DiscoveredApplication.ALLOWED }
         val compatibleCount get() = apps.count { it.connectionStatus == DiscoveredApplication.DIRECT || it.connectionStatus == DiscoveredApplication.COMPANION }
+        val companionCount get() = apps.count { it.connectionStatus == DiscoveredApplication.COMPANION }
         val companionRequiredCount get() = apps.count { it.connectionStatus == DiscoveredApplication.NEEDS_COMPANION }
         val pendingCompanionCount get() = apps.count { it.granted && it.connectionStatus == DiscoveredApplication.NEEDS_COMPANION }
     }
@@ -35,7 +40,12 @@ class AppsViewModel(application: Application) : AndroidViewModel(application) {
     private val mutex = Mutex()
     private val context = getApplication<Application>()
 
-    fun load() = viewModelScope.launch { mutex.withLock { refresh() } }
+    private val icons = mutableMapOf<String, Bitmap?>()
+    private var nextRevision = 0L
+    private var globalRevision = 0L
+    private val appRevisions = mutableMapOf<Int, Long>()
+
+    fun load() = viewModelScope.launch { mutex.withLock { icons.clear(); refresh() } }
     private suspend fun refresh() = withContext(Dispatchers.IO) {
         try {
             val pm = context.packageManager
@@ -46,45 +56,60 @@ class AppsViewModel(application: Application) : AndroidViewModel(application) {
                 val baseLabel = runCatching { ai.loadLabel(pm).toString() }.getOrDefault(ai.packageName)
                 val label = if (userId == UserHandleCompat.myUserId()) baseLabel
                     else "$baseLabel - ${ShizukuSystemApis.getUserInfo(userId).name} ($userId)"
-                val icon = runCatching { ai.loadIcon(pm).toBitmap(96, 96) }.getOrNull()
+                val iconKey = "${ai.uid}:${ai.packageName}:${ai.sourceDir}"
+                val icon = if (icons.containsKey(iconKey)) icons[iconKey] else {
+                    runCatching { ai.loadIcon(pm).toBitmap(96, 96) }.getOrNull().also { icons[iconKey] = it }
+                }
                 App(ai.packageName, ai.uid, label, icon, entry.authorization, entry.connectionStatus, entry.declaredApis,
                     entry.requiresRoot, entry.lastConnectedAt.takeIf { it > 0 })
             }.sortedBy { it.label.lowercase() }
-            mutableState.value = State(apps, false, failedUsers = discovery.failedUsers, legacy = discovery.legacy, accessEnabled = AuthorizationManager.getGlobalAccess())
+            val accessEnabled = AuthorizationManager.getGlobalAccess()
+            mutableState.update { it.copy(apps = apps, loading = false, error = null,
+                failedUsers = discovery.failedUsers, legacy = discovery.legacy, accessEnabled = accessEnabled) }
         } catch (e: CancellationException) { throw e }
         catch (e: Exception) { mutableState.update { it.copy(loading = false, error = e) } }
     }
-    fun toggle(app: App, enabled: Boolean) = change(listOf(app), enabled)
-    fun setGlobalAccess(enabled: Boolean) {
-        if (state.value.loading || state.value.accessEnabled == null) return
-        mutableState.update { it.copy(loading = true) }
+    fun toggle(app: App, enabled: Boolean) {
+        if (state.value.loading || (enabled && !app.canAuthorize)) return
+        val revision = ++nextRevision
+        appRevisions[app.uid] = revision
+        mutableState.update { it.copy(pendingAccess = it.pendingAccess + (app.uid to enabled)) }
         viewModelScope.launch {
             mutex.withLock {
+                if (appRevisions[app.uid] != revision) return@withLock
+                var failure: Exception? = null
+                try {
+                    withContext(Dispatchers.IO) {
+                        if (enabled) AuthorizationManager.grant(app.packageName, app.uid)
+                        else AuthorizationManager.revoke(app.packageName, app.uid)
+                    }
+                } catch (e: CancellationException) { throw e }
+                catch (e: Exception) { failure = e }
+                refresh()
+                if (appRevisions[app.uid] == revision) {
+                    appRevisions.remove(app.uid)
+                    mutableState.update { it.copy(pendingAccess = it.pendingAccess - app.uid, error = failure ?: it.error) }
+                }
+            }
+        }
+    }
+
+    fun setGlobalAccess(enabled: Boolean) {
+        if (state.value.loading || state.value.accessEnabled == null) return
+        val revision = ++nextRevision
+        globalRevision = revision
+        mutableState.update { it.copy(pendingGlobalAccess = enabled) }
+        viewModelScope.launch {
+            mutex.withLock {
+                if (globalRevision != revision) return@withLock
                 var failure: Exception? = null
                 try { withContext(Dispatchers.IO) { AuthorizationManager.setGlobalAccess(enabled) } }
                 catch (e: CancellationException) { throw e }
                 catch (e: Exception) { failure = e }
                 refresh()
-                failure?.let { e -> mutableState.update { it.copy(error = e) } }
-            }
-        }
-    }
-    private fun change(apps: List<App>, enabled: Boolean) {
-        if (state.value.loading) return
-        mutableState.update { it.copy(loading = true) }
-        viewModelScope.launch {
-            mutex.withLock {
-                var failure: Exception? = null
-                withContext(Dispatchers.IO) {
-                    apps.filter { !enabled || it.canAuthorize }.distinctBy { it.uid }.forEach {
-                        try {
-                            if (enabled) AuthorizationManager.grant(it.packageName, it.uid)
-                            else AuthorizationManager.revoke(it.packageName, it.uid)
-                        } catch (e: Exception) { if (e is CancellationException) throw e; failure = e }
-                    }
+                if (globalRevision == revision) {
+                    mutableState.update { it.copy(pendingGlobalAccess = null, error = failure ?: it.error) }
                 }
-                refresh()
-                failure?.let { e -> mutableState.update { it.copy(error = e) } }
             }
         }
     }

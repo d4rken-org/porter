@@ -24,3 +24,11 @@ android {
 }
 
 apply from: rootProject.file("signing.gradle")
+
+androidComponents.onVariants(androidComponents.selector().all()) { variant ->
+    configurations.create("embedded${variant.name.capitalize()}") {
+        canBeConsumed = true
+        canBeResolved = false
+        outgoing.artifact(variant.artifacts.get(com.android.build.api.artifact.SingleArtifact.APK.INSTANCE))
+    }
+}

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="porter_access_blocked">ブロック済み</string>
     <string name="porter_apps_counts">許可済み: %1$d · 対応: %2$d</string>
     <string name="porter_discovery_partial">一部のプロファイルを確認できませんでした。この一覧は不完全な可能性があります。</string>
     <string name="porter_discovery_legacy">Porterを再起動すると、さらに多くのアプリを検出し、接続履歴を表示できます。</string>
@@ -20,8 +19,8 @@
         <item quantity="other">Porter互換アプリを必要とする %d 個のアプリにアクセスを許可しました。互換アプリをインストールすると、アクセスが有効になります。</item>
     </plurals>
     <string name="porter_access_pending_android">アクセスを有効にできませんでした。Androidの設定でこのアプリの権限を確認してください。</string>
-    <string name="porter_global_access">アプリのアクセスを許可</string>
-    <string name="porter_global_access_summary">保存されている権限を変更せずに、すべてのアプリのアクセスを一時的に無効にします。</string>
+    <string name="porter_pause_access">アクセスを一時停止</string>
+    <string name="porter_pause_access_summary">保存されている権限を変更せずに、すべてのアプリのアクセスを一時的に無効にします。</string>
     <string name="porter_global_access_restart">グローバルアクセス制御を使用するには、Porterを再起動してください。</string>
     <string name="porter_access_paused">アプリのアクセスは一時停止中です</string>
     <string name="porter_status_access_paused">Porterは実行中ですが、アプリのアクセスは一時停止中です。「アプリケーション」でアクセスを再開してください。</string>

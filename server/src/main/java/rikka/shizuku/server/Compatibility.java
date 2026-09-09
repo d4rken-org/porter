@@ -37,7 +37,7 @@ final class Compatibility {
         return false;
     }
 
-    private static Signature[] signatures(PackageInfo info) {
+    static Signature[] signatures(PackageInfo info) {
         if (Build.VERSION.SDK_INT >= 28) {
             return info.signingInfo == null ? null : info.signingInfo.getApkContentsSigners();
         }
