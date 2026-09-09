@@ -20,7 +20,7 @@ object AdbStarter {
         log?.invoke("Starting with wireless adb...\n")
 
         withContext(Dispatchers.IO) {
-            val key = runCatching { AdbKey(PreferenceAdbKeyStore(ShizukuSettings.getPreferences()), "shizuku") }
+            val key = runCatching { AdbKey(PreferenceAdbKeyStore(ShizukuSettings.getPreferences())) }
                 .getOrElse {
                     if (it is CancellationException) throw it
                     else throw AdbKeyException(it)

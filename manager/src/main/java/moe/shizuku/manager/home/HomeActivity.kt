@@ -20,6 +20,7 @@ import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.R
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.ShizukuSettings
+import moe.shizuku.manager.adb.TvPairingResultStore
 import moe.shizuku.manager.adb.AdbPairingService
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.management.ApplicationManagementActivity
@@ -46,10 +47,6 @@ abstract class HomeActivity : ComposeActivity() {
     }
 
     private fun consumeIntent(intent: Intent) {
-        if (intent.getBooleanExtra(EXTRA_SHOW_PAIRING_DIALOG, false)) {
-            intent.removeExtra(EXTRA_SHOW_PAIRING_DIALOG)
-            showAccessibilityDialog()
-        }
         if (intent.getBooleanExtra(EXTRA_START_SERVICE_VIA_WADB, false)) {
             intent.removeExtra(EXTRA_START_SERVICE_VIA_WADB)
             getSystemService(NotificationManager::class.java).cancel(AdbPairingService.NOTIFICATION_ID)
@@ -62,6 +59,20 @@ abstract class HomeActivity : ComposeActivity() {
         homeModel.reload()
         homeModel.checkBatteryOptimization()
         appsModel.load()
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        val result = TvPairingResultStore(ShizukuSettings.getPreferences()).read()
+        if (result != null) {
+            (supportFragmentManager.findFragmentByTag(AccessibilityDialogFragment::class.java.simpleName)
+                as? AccessibilityDialogFragment)?.dismiss()
+            intent.removeExtra(EXTRA_SHOW_PAIRING_DIALOG)
+            TvPairingResultDialogFragment.create(result).show(supportFragmentManager)
+        } else if (intent.getBooleanExtra(EXTRA_SHOW_PAIRING_DIALOG, false)) {
+            intent.removeExtra(EXTRA_SHOW_PAIRING_DIALOG)
+            showAccessibilityDialog()
+        }
     }
 
     @Composable

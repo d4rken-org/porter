@@ -39,7 +39,7 @@ class AdbPairingTutorialActivity : ComposeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         notificationEnabled = isNotificationEnabled()
-        if (notificationEnabled) startPairingService()
+        if (notificationEnabled && savedInstanceState == null) startPairingService()
         porterContent {
             PorterScaffold(stringResource(R.string.adb_pairing), onBack = { finish() }) { padding ->
                 Column(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -60,6 +60,10 @@ class AdbPairingTutorialActivity : ComposeActivity() {
                         Button(onClick = { SettingsHelper.launchOrHighlightWirelessDebugging(this@AdbPairingTutorialActivity) }) { Text(stringResource(R.string.development_settings)) }
                         HtmlText(stringResource(R.string.adb_pairing_tutorial_content_enter_pairing_code))
                         HtmlText(stringResource(R.string.adb_pairing_tutorial_content_finish))
+                        Text(stringResource(R.string.porter_pairing_retry_instructions))
+                        OutlinedButton(onClick = { startPairingService() }) {
+                            Text(stringResource(R.string.porter_pairing_restart))
+                        }
                     }
                 }
             }

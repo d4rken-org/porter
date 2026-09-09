@@ -24,6 +24,12 @@ Automatic start still depends on Android making debugging access available and a
 - If entering the pairing code in Porter's in-app dialog, copy the pairing port from the pairing-code dialog, not the connection port on the main Wireless debugging screen.
 - If a VPN or local-network restriction blocks discovery, try a network where device communication is allowed.
 
+If a code was rejected, choose **Retry** in the notification. If the notification is missing or still shows an old code, return to **Pairing** in Porter and choose **Restart pairing**. Close Android's old pairing-code dialog and open a new one, then enter the new code. You do not need to clear Porter's cache or app data.
+
+On Android TV, Porter shows a result when pairing succeeds, fails or times out. Choose **Retry** after a failure; enable the pairing accessibility service again if asked. If Porter does not open automatically, open it to see the saved result. Pairing success is followed by a separate **Start** step.
+
+New pairings appear as **Porter** in Android's paired-device list. An existing entry may still say **shizuku** until you forget that entry and pair again. Renaming the display label does not require replacing the saved key, and an existing pairing can keep working. This label is separate from the Shizuku API badges in Porter's app list.
+
 When wireless debugging is unavailable or unreliable on your device, [start from a computer](/setup#with-a-computer).
 
 ## The computer cannot find the device
@@ -55,6 +61,20 @@ If you use the companion, both Porter APKs must come from the same release sourc
 If you are installing **Porter Compatibility**, remove Shizuku first. The companion cannot update a differently signed Shizuku installation, even though Android sees the same app identity.
 
 For Porter itself, an older development build may have a different signature from a public release. Android will not install one over the other. Removing the old installation also removes its app data; record your setup before doing so. Reinstall from the intended source and approve your apps again.
+
+## A TV installation warning cannot be selected with the remote
+
+The Play Protect warning and its **More details** or **Install anyway** controls belong to Android's installer. Porter cannot change their remote-control focus behavior, and the warning alone does not tell us why Google flagged an APK.
+
+Check that the APK came from the [Porter release page](https://github.com/d4rken-org/porter/releases). If you decide to continue after reading the warning, a USB or Bluetooth mouse may let you select its controls. If you already have an authorized ADB connection to the TV, you can also try installing the downloaded APK from that computer:
+
+```sh
+adb -s TV_SERIAL install -r /path/to/porter-compat.apk
+```
+
+Replace `TV_SERIAL` with the TV's entry from `adb devices` and use the actual downloaded APK path. Android may still block installation or require confirmation. This does not fix Play Protect's controls or guarantee that installation is allowed.
+
+If installation remains blocked, report the exact warning text, TV model, Android version and Porter Compatibility version. Apps with direct Porter support do not need the compatibility APK.
 
 ## Access is allowed, but an operation still fails
 

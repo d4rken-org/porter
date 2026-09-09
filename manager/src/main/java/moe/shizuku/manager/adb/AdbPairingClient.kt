@@ -8,6 +8,7 @@ import java.io.Closeable
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.net.Socket
+import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.net.ssl.SSLSocket
@@ -171,7 +172,7 @@ class AdbPairingClient(private val host: String, private val port: Int, private 
         Stopped
     }
 
-    private lateinit var socket: Socket
+    private val socket = Socket()
     private lateinit var inputStream: DataInputStream
     private lateinit var outputStream: DataOutputStream
 
@@ -201,11 +202,13 @@ class AdbPairingClient(private val host: String, private val port: Int, private 
     }
 
     private fun setupTlsConnection() {
-        socket = Socket(host, port)
+        socket.connect(InetSocketAddress(host, port), 10_000)
+        socket.soTimeout = 15_000
         socket.tcpNoDelay = true
 
         val sslContext = key.sslContext
         val sslSocket = sslContext.socketFactory.createSocket(socket, host, port, true) as SSLSocket
+        sslSocket.soTimeout = 15_000
         sslSocket.startHandshake()
         Log.d(TAG, "Handshake succeeded.")
 
@@ -285,6 +288,11 @@ class AdbPairingClient(private val host: String, private val port: Int, private 
         return true
     }
 
+    fun cancel() {
+        // Only interrupt I/O here; the pairing thread owns native-context cleanup.
+        runCatching { socket.close() }
+    }
+
     override fun close() {
         try {
             inputStream.close()
@@ -299,7 +307,7 @@ class AdbPairingClient(private val host: String, private val port: Int, private 
         } catch (e: Exception) {
         }
 
-        if (state != State.Ready) {
+        if (::pairingContext.isInitialized) {
             pairingContext.destroy()
         }
     }

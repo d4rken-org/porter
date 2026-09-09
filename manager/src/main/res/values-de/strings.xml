@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">Debugging über WLAN ist nicht aktiviert.\nHinweis: Vor Android 11 ist zum Aktivieren von Debugging über WLAN eine Verbindung mit einem Computer erforderlich.</string>
     <string name="dialog_usb_debugging_not_enabled">USB-Debugging ist nicht aktiviert.\nBitte aktiviere es in den \"Entwickleroptionen\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">Unter Android 14 widerruft das Installieren/Aktualisieren von Porter über den Paketinstaller die Berechtigung ^1, die zum Aktivieren der Bedienungshilfe für die Kopplung benötigt wird.\n\nFühre zum Erteilen folgenden ADB-Befehl aus:\n\n^2\n\nNach dem Ausführen des Befehls kannst du mit der Kopplung fortfahren.\n\nHinweis: Du kannst das umgehen, indem du Porter über ADB installierst/aktualisierst.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Bitte aktiviere die Bedienungshilfe, um die Kopplung zu starten. Dadurch kann Porter den Kopplungscode erkennen.\n\nDie Bedienungshilfe wird ausgeschaltet, sobald der Code gefunden wurde oder nach 1 Minute, um Energie zu sparen.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Aktiviere den Bedienungshilfedienst, um die Kopplung zu starten. Damit kann Porter den Kopplungscode erkennen.\n\nDer Dienst wird nach dem Kopplungsversuch ausgeschaltet oder wenn innerhalb einer Minute kein Code gefunden wurde. Porter zeigt das Ergebnis an und bietet einen erneuten Versuch an.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Bitte starte die Kopplung mit folgenden Schritten:\n- Öffne die \"Entwickleroptionen\"\n- Aktiviere \"USB-Debugging\" und \"Debugging über WLAN\"\n- Tippe links auf \"Debugging über WLAN\"\n- Tippe auf \"Gerät mit Kopplungscode koppeln\". Porter erkennt den Kopplungscode automatisch.</string>
     <string name="adb_pairing_requires_multi_window">Bitte wechsle zuerst in den Splitscreen-Modus (Mehrfenstermodus).</string>
     <string name="adb_pairing_requires_multi_window_reason">Das System verlangt, dass der Kopplungsdialog immer sichtbar ist. Nur im Splitscreen-Modus können diese App und der Systemdialog gleichzeitig sichtbar sein.</string>
@@ -205,4 +205,10 @@
     <string name="porter_license_porter">Porter und die ursprüngliche Shizuku-App · Apache-Lizenz 2.0</string>
     <string name="porter_license_api">Shizuku-API und ihr Porter-Fork · MIT-Lizenz</string>
     <string name="porter_license_notice">Urheberrechts- und Quellenhinweise</string>
+    <string name="porter_pairing_restart">Kopplung neu starten</string>
+    <string name="porter_pairing_retry_instructions">Wenn ein Code abgelehnt wurde oder die Benachrichtigung verschwunden ist, starte die Kopplung hier neu. Schließe danach Androids alten Kopplungscode-Dialog und öffne einen neuen. Verwende den neuen Code; Porters App-Daten musst du nicht löschen.</string>
+    <string name="porter_pairing_search_timeout">Innerhalb einer Minute wurde kein Kopplungscode empfangen. Die Kopplung wurde beendet. Wähle „Erneut versuchen“ und öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog.</string>
+    <string name="porter_pairing_attempt_timeout">Zeitüberschreitung bei der Kopplungsverbindung. Öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog und versuche es erneut.</string>
+    <string name="porter_pairing_failed_retry">Kopplung fehlgeschlagen. Öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog und versuche es erneut.</string>
+    <string name="porter_pairing_notification_timeout">Die Kopplung wurde beendet, weil die Benachrichtigung abgelaufen ist. Wähle „Erneut versuchen“ und öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog.</string>
 </resources>
