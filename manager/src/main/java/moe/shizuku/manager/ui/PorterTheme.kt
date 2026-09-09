@@ -32,14 +32,6 @@ fun PorterTheme(content: @Composable () -> Unit) {
     val color = remember(revision) { preferences.getString(ShizukuSettings.Keys.KEY_THEME_COLOR, "BLUE") }
     val dark = when (mode) { 1 -> false; 2 -> true; else -> isSystemInDarkTheme() }
     val context = LocalContext.current
-    val schemes = when (color) {
-        "GREEN" -> listOf(PorterColorsGreen.LightDefault, PorterColorsGreen.DarkDefault, PorterColorsGreen.LightMediumContrast, PorterColorsGreen.DarkMediumContrast, PorterColorsGreen.LightHighContrast, PorterColorsGreen.DarkHighContrast)
-        "AMOLED" -> listOf(PorterColorsAmoled.LightDefault, PorterColorsAmoled.DarkDefault, PorterColorsAmoled.LightMediumContrast, PorterColorsAmoled.DarkMediumContrast, PorterColorsAmoled.LightHighContrast, PorterColorsAmoled.DarkHighContrast)
-        else -> listOf(PorterColorsBlue.LightDefault, PorterColorsBlue.DarkDefault, PorterColorsBlue.LightMediumContrast, PorterColorsBlue.DarkMediumContrast, PorterColorsBlue.LightHighContrast, PorterColorsBlue.DarkHighContrast)
-    }
-    val scheme = if (style == "MATERIAL_YOU" && Build.VERSION.SDK_INT >= 31) {
-        if (dark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else schemes[(when (style) { "MEDIUM_CONTRAST" -> 2; "HIGH_CONTRAST" -> 4; else -> 0 }) + if (dark) 1 else 0]
     val view = LocalView.current
     SideEffect {
         (context as? AppActivity)?.window?.let { window ->
@@ -49,5 +41,21 @@ fun PorterTheme(content: @Composable () -> Unit) {
             }
         }
     }
+    PorterTheme(dark, style ?: "DEFAULT", color ?: "BLUE", content)
+}
+
+/** Scheme selection with the three inputs stated, for callers that have no [ShizukuSettings] preferences. */
+@Composable
+fun PorterTheme(dark: Boolean, style: String = "DEFAULT", color: String = "BLUE",
+                content: @Composable () -> Unit) {
+    val context = LocalContext.current
+    val schemes = when (color) {
+        "GREEN" -> listOf(PorterColorsGreen.LightDefault, PorterColorsGreen.DarkDefault, PorterColorsGreen.LightMediumContrast, PorterColorsGreen.DarkMediumContrast, PorterColorsGreen.LightHighContrast, PorterColorsGreen.DarkHighContrast)
+        "AMOLED" -> listOf(PorterColorsAmoled.LightDefault, PorterColorsAmoled.DarkDefault, PorterColorsAmoled.LightMediumContrast, PorterColorsAmoled.DarkMediumContrast, PorterColorsAmoled.LightHighContrast, PorterColorsAmoled.DarkHighContrast)
+        else -> listOf(PorterColorsBlue.LightDefault, PorterColorsBlue.DarkDefault, PorterColorsBlue.LightMediumContrast, PorterColorsBlue.DarkMediumContrast, PorterColorsBlue.LightHighContrast, PorterColorsBlue.DarkHighContrast)
+    }
+    val scheme = if (style == "MATERIAL_YOU" && Build.VERSION.SDK_INT >= 31) {
+        if (dark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } else schemes[(when (style) { "MEDIUM_CONTRAST" -> 2; "HIGH_CONTRAST" -> 4; else -> 0 }) + if (dark) 1 else 0]
     MaterialTheme(colorScheme = scheme, content = content)
 }
