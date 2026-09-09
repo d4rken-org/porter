@@ -47,6 +47,13 @@ Die Kopplung ist normalerweise nur einmal nötig. Den Dienst zu starten ist ein 
 
 Wenn du unter **Einstellungen**, **Startverhalten**, **Kopplungsmethode** die Option **Dialog in der App** ausgewählt hast, warte im Dialog auf die Erkennung des Kopplungsdienstes und gib den Code dort ein. Falls nach einem Port gefragt wird, verwende den Kopplungsport aus Androids Kopplungscode-Dialog. Er unterscheidet sich vom Verbindungsport auf der Hauptseite für drahtloses Debugging.
 
+### Android TV
+{: #android-tv }
+
+Wähle auf einem Fernseher mit drahtlosem Debugging in Porter **Kopplung** und folge den Anweisungen zum Aktivieren des Bedienungshilfedienstes für die Kopplung. Öffne innerhalb einer Minute die **Entwickleroptionen**, **Debugging über WLAN** und anschließend **Gerät mit Kopplungscode koppeln**. Lass diesen Dialog geöffnet, während Porter den Code liest und die Kopplung abschließt.
+
+Porter zeigt das Ergebnis an und schaltet seinen Bedienungshilfedienst für die Kopplung aus. Wähle nach erfolgreicher Kopplung **Starten** oder nach einem Fehler beziehungsweise einer Zeitüberschreitung **Erneut versuchen**. Öffnet sich Porter nicht automatisch, öffne die App, um das Ergebnis zu sehen. Bei Installationsschaltflächen, die sich nicht mit der Fernbedienung auswählen lassen, helfen die Hinweise zu [Installationswarnungen auf dem Fernseher](/troubleshooting#a-tv-installation-warning-cannot-be-selected-with-the-remote).
+
 ## Mit einem Computer
 {: #with-a-computer }
 

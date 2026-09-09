@@ -42,6 +42,12 @@ Pairing normally only needs to be done once. Starting the service is a separate 
 
 If you selected **In-app dialog** under **Settings**, **Startup**, **Pairing method**, wait for Porter's dialog to discover the pairing service, then enter the code there. If it asks for a port, use the pairing port from Android's pairing-code dialog, not the connection port on the main Wireless debugging screen.
 
+### Android TV
+
+On a TV with wireless debugging, choose **Pairing** in Porter and follow the instructions to enable its pairing accessibility service. Within one minute, open **Developer options**, **Wireless debugging**, then **Pair device with pairing code**. Keep that dialog open while Porter reads the code and completes pairing.
+
+Porter shows the result and turns off its pairing accessibility service. Choose **Start** after success, or **Retry** after a failure or timeout. If Porter does not open automatically, open it to see the result. For installation controls that cannot be selected with a remote, see [TV installation warnings](/troubleshooting#a-tv-installation-warning-cannot-be-selected-with-the-remote).
+
 ## With a computer
 
 1. Install Google's [Android SDK Platform-Tools](https://developer.android.com/tools/releases/platform-tools) on your computer.

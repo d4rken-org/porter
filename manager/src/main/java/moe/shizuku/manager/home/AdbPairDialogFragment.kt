@@ -16,12 +16,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import moe.shizuku.manager.R
-import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.*
 import moe.shizuku.manager.ui.ComposeDialogFragment
 import moe.shizuku.manager.ui.LocalNetworkPermission
 import moe.shizuku.manager.utils.SettingsHelper
-import java.net.ConnectException
 
 class AdbPairDialogFragment : ComposeDialogFragment() {
     private val model: PairingViewModel by viewModels()
@@ -34,9 +32,11 @@ class AdbPairDialogFragment : ComposeDialogFragment() {
         val busy by model.busy.collectAsStateWithLifecycle()
         val error by model.error.collectAsStateWithLifecycle()
         val success by model.success.collectAsStateWithLifecycle()
-        var code by rememberSaveable { mutableStateOf("") }
-        var port by rememberSaveable { mutableStateOf("") }
-        LaunchedEffect(endpoint) { if (endpoint.second in 1..65535) port = endpoint.second.toString() }
+        var code by rememberSaveable(endpoint) { mutableStateOf("") }
+        var port by rememberSaveable(endpoint) {
+            mutableStateOf(if (endpoint.second in 1..65535) endpoint.second.toString() else "")
+        }
+        LaunchedEffect(error) { if (error != null) code = "" }
         LaunchedEffect(success) { if (success) dismissAllowingStateLoss() }
         val multi = requireActivity().isInMultiWindowMode || (requireActivity().window.decorView.display?.displayId ?: -1) > 0
         Text(stringResource(if (endpoint.second > 0) R.string.dialog_adb_pairing_title else R.string.dialog_adb_pairing_discovery), style = MaterialTheme.typography.headlineSmall)
@@ -49,16 +49,14 @@ class AdbPairDialogFragment : ComposeDialogFragment() {
             label = { Text(stringResource(R.string.dialog_adb_port)) }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
         OutlinedTextField(code, { code = it.take(6); model.error.value = null }, Modifier.fillMaxWidth(), enabled = !busy,
             label = { Text(stringResource(R.string.dialog_adb_pairing_paring_code)) }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
-        error?.let { failure -> Text(when (failure) {
-            is ConnectException -> stringResource(R.string.cannot_connect_port)
-            is AdbInvalidPairingCodeException -> stringResource(R.string.paring_code_is_wrong)
-            is AdbKeyException -> stringResource(R.string.adb_error_key_store)
-            else -> failure.localizedMessage ?: failure.javaClass.simpleName
-        }, color = MaterialTheme.colorScheme.error) }
+        error?.let { Text(requireContext().pairingFailureMessage(it), color = MaterialTheme.colorScheme.error) }
         if (busy) LinearProgressIndicator()
         TextButton(enabled = !busy, onClick = { SettingsHelper.launchOrHighlightWirelessDebugging(requireContext()) }) { Text(stringResource(R.string.development_settings)) }
         Button(enabled = !busy && port.toIntOrNull()?.let { it in 1..65535 } == true && code.length == 6,
             onClick = { model.pair(port.toInt(), code) }) { Text(stringResource(android.R.string.ok)) }
+        TextButton(enabled = !busy, onClick = { code = ""; port = ""; model.restartDiscovery() }) {
+            Text(stringResource(R.string.porter_pairing_restart))
+        }
         TextButton(onClick = { dismissAllowingStateLoss() }) { Text(stringResource(android.R.string.cancel)) }
     }
 }
@@ -71,6 +69,13 @@ class PairingViewModel(application: Application) : AndroidViewModel(application)
     private val mdns = AdbMdns(application, AdbMdns.TLS_PAIRING) { endpoint.value = it }
     private var discovering = false
     fun startDiscovery() { if (!discovering) { discovering = true; mdns.start() } }
+    fun restartDiscovery() {
+        mdns.stop()
+        discovering = false
+        endpoint.value = "127.0.0.1" to -1
+        error.value = null
+        startDiscovery()
+    }
     fun pair(port: Int, password: String) {
         if (busy.value) return
         val host = endpoint.value.first
@@ -78,14 +83,7 @@ class PairingViewModel(application: Application) : AndroidViewModel(application)
         error.value = null
         viewModelScope.launch {
             try {
-                // Finish an accepted pairing attempt even when its dialog is dismissed.
-                withContext(NonCancellable + Dispatchers.IO) {
-                    val key = try { AdbKey(PreferenceAdbKeyStore(ShizukuSettings.getPreferences()), "shizuku") }
-                    catch (e: Exception) { throw AdbKeyException(e) }
-                    AdbPairingClient(host, port, password, key).use { client ->
-                        if (!client.start()) throw AdbInvalidPairingCodeException()
-                    }
-                }
+                pairAdb(host.ifEmpty { "127.0.0.1" }, port, password)
                 success.value = true
             } catch (e: CancellationException) { throw e }
             catch (e: Exception) { error.value = e }

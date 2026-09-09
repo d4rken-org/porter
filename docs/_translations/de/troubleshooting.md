@@ -29,6 +29,12 @@ Der automatische Start hängt weiterhin davon ab, ob Android Debugging-Zugriff b
 - Wenn du den Kopplungscode in Porters Dialog eingibst, übernimm den Kopplungsport aus dem Kopplungscode-Dialog. Verwende nicht den Verbindungsport auf der Hauptseite für drahtloses Debugging.
 - Falls ein VPN oder eine Einschränkung im lokalen Netzwerk die Erkennung verhindert, versuche es in einem Netzwerk, das die Kommunikation zwischen Geräten erlaubt.
 
+Wenn ein Code abgelehnt wurde, wähle in der Benachrichtigung **Erneut versuchen**. Fehlt die Benachrichtigung oder zeigt sie noch einen alten Code, kehre in Porter zur **Kopplung** zurück und wähle **Kopplung neu starten**. Schließe Androids alten Kopplungscode-Dialog, öffne einen neuen und gib den neuen Code ein. Porters Cache oder App-Daten musst du nicht löschen.
+
+Auf Android TV zeigt Porter an, ob die Kopplung erfolgreich war, fehlgeschlagen ist oder abgelaufen ist. Wähle nach einem Fehler **Erneut versuchen** und aktiviere den Bedienungshilfedienst für die Kopplung erneut, falls du dazu aufgefordert wirst. Öffnet sich Porter nicht automatisch, öffne die App, um das gespeicherte Ergebnis zu sehen. Nach erfolgreicher Kopplung folgt der separate Schritt **Starten**.
+
+Neue Kopplungen erscheinen in Androids Liste gekoppelter Geräte als **Porter**. Ein vorhandener Eintrag kann weiterhin **shizuku** heißen, bis du ihn entfernst und erneut koppelst. Der gespeicherte Schlüssel muss für die neue Bezeichnung nicht ersetzt werden; bestehende Kopplungen können weiter funktionieren. Diese Bezeichnung ist unabhängig von den Shizuku-API-Kennzeichnungen in Porters App-Liste.
+
 Wenn drahtloses Debugging auf deinem Gerät nicht verfügbar oder unzuverlässig ist, [starte Porter über einen Computer](/setup#with-a-computer).
 
 ## Der Computer findet das Gerät nicht
@@ -64,6 +70,21 @@ Wenn du die Begleit-App nutzt, müssen beide Porter-APKs aus derselben Veröffen
 Falls du **Porter Compatibility** installierst, deinstalliere zuerst Shizuku. Die Begleit-App kann eine anders signierte Shizuku-Installation nicht aktualisieren, obwohl Android dieselbe App-Identität erkennt.
 
 Bei Porter selbst kann ein älterer Entwicklungsbuild eine andere Signatur als eine öffentliche Veröffentlichung haben. Android installiert die eine Version nicht über die andere. Eine Deinstallation entfernt auch die App-Daten. Notiere daher vorher deine Einrichtung. Installiere Porter aus der gewünschten Quelle neu und erlaube deinen Apps erneut den Zugriff.
+
+## Eine Installationswarnung auf dem Fernseher lässt sich nicht mit der Fernbedienung bedienen
+{: #a-tv-installation-warning-cannot-be-selected-with-the-remote }
+
+Die Play-Protect-Warnung und ihre Schaltflächen **Weitere Details** oder **Trotzdem installieren** gehören zum Android-Installationsprogramm. Porter kann deren Fokussteuerung per Fernbedienung nicht ändern. Die Warnung allein erklärt auch nicht, warum Google eine APK beanstandet.
+
+Prüfe, ob die APK von der [Porter-Veröffentlichungsseite](https://github.com/d4rken-org/porter/releases) stammt. Wenn du die Warnung gelesen hast und fortfahren möchtest, lassen sich die Schaltflächen möglicherweise mit einer USB- oder Bluetooth-Maus auswählen. Besteht bereits eine autorisierte ADB-Verbindung zum Fernseher, kannst du die heruntergeladene APK auch von diesem Computer aus installieren:
+
+```sh
+adb -s TV_SERIAL install -r /pfad/zu/porter-compat.apk
+```
+
+Ersetze `TV_SERIAL` durch den Eintrag des Fernsehers aus `adb devices` und verwende den tatsächlichen Pfad zur heruntergeladenen APK. Android kann die Installation weiterhin blockieren oder eine Bestätigung verlangen. Das repariert die Play-Protect-Steuerung nicht und garantiert keine erfolgreiche Installation.
+
+Falls die Installation blockiert bleibt, melde den genauen Warntext, das TV-Modell, die Android-Version und die Version von Porter Compatibility. Apps mit direkter Porter-Unterstützung benötigen die Kompatibilitäts-APK nicht.
 
 ## Zugriff ist erlaubt, aber ein Vorgang schlägt trotzdem fehl
 {: #access-is-allowed-but-an-operation-still-fails }

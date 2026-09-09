@@ -32,7 +32,7 @@
     <string name="dialog_wireless_adb_not_enabled">Wireless debugging is not enabled.\nNote, before Android 11, to enable wireless debugging, computer connection is a must.</string>
     <string name="dialog_usb_debugging_not_enabled">USB debugging is not enabled.\nPlease enable it in \"Developer Options\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">On Android 14, installing/updating Porter with the Package Installer revokes the ^1 permission, which is required to enable the accessibility service for pairing.\n\nTo grant it, run the following ADB command:\n\n^2\n\nAfter running the command, you may continue with the pairing process.\n\nNote: you can bypass this by installing/updating Porter with ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Please enable the accessibility service to start the pairing process. This allows Porter to detect the pairing code.\n\nThe accessibility service will be turned off when the code is found or after 1 minute to save energy.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Please enable the accessibility service to start the pairing process. This allows Porter to detect the pairing code.\n\nThe accessibility service will turn off after the pairing attempt, or if no code is found within one minute. Porter will show the result and let you retry.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Please start pairing by performing the following steps:\n- Navigate to \"Developer Options\"\n- Enable \"USB debugging\" and \"Wireless debugging\"\n- Tap the left side of \"Wireless debugging\"\n- Tap \"Pair device with pairing code.\" Porter will automatically detect the pairing code.</string>
     <string name="adb_pairing_requires_multi_window">Please enter split-screen (multi-window) mode first.</string>
     <string name="adb_pairing_requires_multi_window_reason">The system requires the pairing dialog to always be visible. Using split-screen mode is the only way to let this app and the system dialog be visible at the same time.</string>
@@ -208,4 +208,10 @@
     <string name="porter_license_porter">Porter and the original Shizuku application · Apache License 2.0</string>
     <string name="porter_license_api">Shizuku API and its Porter fork · MIT License</string>
     <string name="porter_license_notice">Copyright and attribution notices</string>
+    <string name="porter_pairing_restart">Restart pairing</string>
+    <string name="porter_pairing_retry_instructions">If a code was rejected or the notification disappeared, restart pairing here. Then close Android’s old pairing-code dialog and open a new one. Use the new code; you do not need to clear Porter’s data.</string>
+    <string name="porter_pairing_search_timeout">No pairing code was received within one minute. Pairing has stopped. Choose Retry, then open a new pairing-code dialog in Wireless debugging.</string>
+    <string name="porter_pairing_attempt_timeout">The pairing connection timed out. Open a new pairing-code dialog in Wireless debugging and try again.</string>
+    <string name="porter_pairing_failed_retry">Pairing failed. Open a new pairing-code dialog in Wireless debugging and try again.</string>
+    <string name="porter_pairing_notification_timeout">Pairing has stopped because the notification timed out. Choose Retry, then open a new pairing-code dialog in Wireless debugging.</string>
 </resources>
