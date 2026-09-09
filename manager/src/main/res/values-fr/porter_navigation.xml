@@ -7,8 +7,12 @@
     <string name="porter_pairing_method">Méthode d\'association</string>
     <string name="porter_status_restricted">Certaines autorisations ADB sont restreintes par Android.</string>
     <string name="porter_status_stop_message">Arrêter Porter déconnecte les applications qui l\'utilisent. Vous devrez redémarrer Porter manuellement, ce qui peut nécessiter un ordinateur.</string>
-    <string name="porter_status_details_hint">Appuyez pour voir les détails du service et les options d\'arrêt</string>
+    <string name="porter_status_details_hint">Ouvrir les détails du service et les options d’arrêt</string>
     <string name="porter_status_ready">Porter est prêt. Les applications compatibles peuvent maintenant se connecter et demander l\'accès.</string>
     <string name="porter_pairing_notification">Notification</string>
     <string name="porter_pairing_dialog">Boîte de dialogue dans l\'application</string>
+    <string name="porter_manage_apps_action">Gérer les applications</string>
+    <string name="porter_primary_user_title">Utilisez l’utilisateur principal d’Android</string>
+    <string name="porter_primary_user_description">Porter ne peut pas être démarré depuis cet utilisateur ou profil Android. Passez à l’utilisateur principal de l’appareil, installez Porter si nécessaire et démarrez son service. Revenez ensuite ici pour gérer vos applications.</string>
+    <string name="porter_secondary_user_stop_message">Arrêter Porter déconnecte les applications de tous les utilisateurs Android. Pour le redémarrer, passez à l’utilisateur principal de l’appareil et ouvrez Porter.</string>
 </resources>

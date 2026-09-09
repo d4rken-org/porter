@@ -40,8 +40,8 @@ jobs:
         run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assembleDebug :client:assembleRelease
       - name: Verify APK identities
         run: |
-          python3 tools/verify-apks.py manager/build/outputs/apk/foss/debug/*.apk compat/build/outputs/apk/debug/*.apk
-          python3 tools/verify-apks.py manager/build/outputs/apk/gplay/debug/*.apk compat/build/outputs/apk/debug/*.apk
+          python3 tools/verify-apks.py manager/build/outputs/apk/foss/debug/*.apk compat/build/outputs/apk/debug/*.apk --embedded required
+          python3 tools/verify-apks.py manager/build/outputs/apk/gplay/debug/*.apk compat/build/outputs/apk/debug/*.apk --embedded absent
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
           name: porter-development

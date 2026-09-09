@@ -25,13 +25,15 @@ Porter 支持兼容应用使用的 Shizuku API。是否需要可选的兼容应�
 
 对于仅支持 Shizuku 的应用：
 
+FOSS 版本内置了匹配的兼容 APK。先安装并启动 Porter，然后从主屏幕或设置打开 Shizuku 兼容性设置。查看并确认替换。Porter 会停止 Shizuku 并自动迁移可验证的访问决定。如果 Porter 无法停止服务，Porter 会提示你在 Shizuku 中停止服务后重试。如果未安装 Shizuku，可直接安装兼容支持。手动安装步骤如下：
+
 1. 停止 Shizuku 并卸载其管理应用。使用 Shizuku 的其他应用可以保留。
 2. 安装同一发布版本中的 Porter 与 Porter Compatibility APK。
 3. 启动 Porter。
 4. 在 Android 设置中强行停止客户端应用，重新打开，并启用其 Shizuku 集成。
 5. 批准 Porter 显示的访问请求。
 
-之前的 Shizuku 授权不会迁移。你需要重新选择哪些应用可以使用 Porter。
+内置设置会自动导入能够验证的访问决定，并保留 Porter 中已有的决定。Shizuku 的应用设置和配对信息不会迁移。请在卸载前查看替换确认。安装失败时，访问决定会保留以便重试。
 
 ## Porter 和 Shizuku 可以同时运行吗？
 {: #can-porter-and-shizuku-run-together }

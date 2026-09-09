@@ -25,13 +25,15 @@ Para una app con soporte directo de Porter, puedes mantener Shizuku instalado. I
 
 Para una app que solo admite Shizuku:
 
+La versión FOSS incluye el APK de compatibilidad correspondiente. Instala e inicia Porter y abre la configuración de compatibilidad con Shizuku desde el inicio o los ajustes. Revisa y confirma el reemplazo. Porter detiene Shizuku e importa automáticamente los accesos verificables. Si Porter no puede detener el servicio, Porter te pedirá que lo detengas desde Shizuku y lo intentes de nuevo. Si Shizuku no está instalado, elige directamente instalar la compatibilidad. Para la instalación manual:
+
 1. Detén Shizuku y desinstala su app de gestión. Las apps que usas con Shizuku pueden seguir instaladas.
 2. Instala Porter y el APK de Porter Compatibility de la misma versión.
 3. Inicia Porter.
 4. Fuerza la detención de la app cliente en los ajustes de Android, ábrela de nuevo y activa su integración con Shizuku.
 5. Aprueba la solicitud de acceso que muestra Porter.
 
-Las autorizaciones anteriores de Shizuku no se transfieren. Debes elegir de nuevo qué apps pueden usar Porter.
+La configuración integrada importa automáticamente las decisiones de acceso que se puedan verificar. Se conservan las decisiones existentes de Porter. No se transfieren los ajustes ni el emparejamiento de Shizuku. Revisa la confirmación del reemplazo antes de desinstalar. Si la instalación falla, las decisiones quedan guardadas para reintentar.
 
 ## ¿Pueden ejecutarse Porter y Shizuku a la vez?
 {: #can-porter-and-shizuku-run-together }

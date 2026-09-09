@@ -7,8 +7,12 @@
     <string name="porter_pairing_method">配对方式</string>
     <string name="porter_status_restricted">部分 ADB 权限受到 Android 限制。</string>
     <string name="porter_status_stop_message">停止 Porter 会断开使用它的应用的连接。您必须手动重新启动 Porter，这可能需要电脑。</string>
-    <string name="porter_status_details_hint">点按查看服务详情和停止选项</string>
+    <string name="porter_status_details_hint">打开服务详情和停止选项</string>
     <string name="porter_status_ready">Porter 已就绪。兼容的应用现在可以连接并请求访问权限。</string>
     <string name="porter_pairing_notification">通知</string>
     <string name="porter_pairing_dialog">应用内对话框</string>
+    <string name="porter_manage_apps_action">管理应用</string>
+    <string name="porter_primary_user_title">使用 Android 主用户</string>
+    <string name="porter_primary_user_description">无法从当前 Android 用户或个人资料启动 Porter。请切换到设备的主用户，按需安装 Porter 并启动服务，然后返回此处管理应用。</string>
+    <string name="porter_secondary_user_stop_message">停止 Porter 会断开所有 Android 用户的应用连接。要再次启动，请切换到设备的主用户并在那里打开 Porter。</string>
 </resources>

@@ -6,6 +6,6 @@ https://github.com/thedjchi/Shizuku
 
 Porter modifications include independent application identity, provider routing, optional legacy compatibility, authorization handling, service coexistence, release configuration and temporary artwork.
 
-The original Shizuku name and artwork are not used as Porter's product identity. Legacy API identifiers remain where required for protocol interoperability and in the optional compatibility companion.
+The original Shizuku name and artwork are not used as Porter's product identity. The Shizuku icon is shown only to identify Shizuku compatibility, using the upstream artwork from the baseline preceding 6c796250. Legacy API identifiers remain where required for protocol interoperability and in the optional compatibility companion.
 
 Third-party libraries retain their respective licenses and copyrights.

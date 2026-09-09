@@ -7,7 +7,7 @@
     <string name="porter_pairing_method">Pairing method</string>
     <string name="porter_status_restricted">Some ADB permissions are restricted by Android.</string>
     <string name="porter_status_stop_message">Stopping Porter disconnects apps that use it. You must start Porter again manually, which may require a computer.</string>
-    <string name="porter_status_details_hint">Tap for service details and stop options</string>
+    <string name="porter_status_details_hint">Open service details and stop options</string>
     <string name="porter_status_ready">Porter is ready. Compatible apps can now connect and request access.</string>
     <string name="porter_pairing_notification">Notification</string>
     <string name="porter_pairing_dialog">In-app dialog</string>
@@ -15,4 +15,8 @@
         <item>@string/porter_pairing_notification</item>
         <item>@string/porter_pairing_dialog</item>
     </string-array>
+    <string name="porter_manage_apps_action">Manage apps</string>
+    <string name="porter_primary_user_title">Use the primary Android user</string>
+    <string name="porter_primary_user_description">Porter cannot be started from this Android user or profile. Switch to the device’s primary user, install Porter there if needed, and start its service. Then return here to manage your apps.</string>
+    <string name="porter_secondary_user_stop_message">Stopping Porter disconnects apps in all Android users. To start it again, switch to the device’s primary user and open Porter there.</string>
 </resources>

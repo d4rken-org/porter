@@ -1,7 +1,6 @@
 <resources>
     <string name="porter_api_badge_porter" translatable="false">Porter</string>
     <string name="porter_api_badge_shizuku" translatable="false">Shizuku</string>
-    <string name="porter_access_blocked">Blocked</string>
     <string name="porter_apps_counts">Authorized: %1$d · Compatible: %2$d</string>
     <string name="porter_discovery_partial">Some profiles could not be checked. This list may be incomplete.</string>
     <string name="porter_discovery_legacy">Restart Porter to discover more apps and see connection history.</string>
@@ -23,8 +22,8 @@
         <item quantity="other">You allowed access for %d apps that need the Porter compatibility app. Their access will become available when the compatibility app is installed.</item>
     </plurals>
     <string name="porter_access_pending_android">Access could not be activated. Check this app’s permissions in Android settings.</string>
-    <string name="porter_global_access">Allow app access</string>
-    <string name="porter_global_access_summary">Temporarily disable access for all apps without changing their saved permissions.</string>
+    <string name="porter_pause_access">Pause access</string>
+    <string name="porter_pause_access_summary">Pause access for all apps. Their saved permissions are kept.</string>
     <string name="porter_global_access_restart">Restart Porter to use global access control.</string>
     <string name="porter_access_paused">App access is paused</string>
     <string name="porter_status_access_paused">Porter is running, but app access is paused. Resume access in Applications.</string>

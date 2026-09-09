@@ -89,7 +89,9 @@ class Smoke:
         previous = self.pid(name)
         apk = self.shell("pm", "path", package).removeprefix("package:").splitlines()[0]
         assert apk.startswith("/data/app/") and apk.endswith("/base.apk"), apk
-        self.shell(str(Path(apk).parent / "lib/x86_64/libshizuku.so"))
+        abi = self.shell("getprop", "ro.product.cpu.abi")
+        library_dir = {"x86": "x86", "x86_64": "x86_64", "arm64-v8a": "arm64", "armeabi-v7a": "arm"}[abi]
+        self.shell(str(Path(apk).parent / "lib" / library_dir / "libshizuku.so"))
         self.until(f"new {name} process", lambda: (pid := self.pid(name)) and pid != previous)
 
     def launch_probe(self, package):
@@ -125,7 +127,7 @@ class Smoke:
         return {"revoked_user_service_pid": service_pid}
 
     def stop_porter(self):
-        self.shell("am", "start", "-W", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
+        self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
         self.tap("Porter is running", prefix=True)
         self.tap("Stop Porter", screenshot="running-service-dialog")
         self.until("Porter stopped", lambda: not self.pid("porter_server"))
@@ -156,7 +158,7 @@ class Smoke:
             self.adb("install", str(apk.resolve()))
         # The app sandbox cannot read this file; the user service must run as the ADB shell.
         self.shell("sh", "-c", f"printf %s {shlex.quote(PAYLOAD)} > /data/local/tmp/porter-probe.txt; chmod 600 /data/local/tmp/porter-probe.txt")
-        self.shell("am", "start", "-W", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
+        self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
         self.start_service()
 
     def run(self):

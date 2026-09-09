@@ -60,14 +60,14 @@ public class ShizukuConfigManager extends ConfigManager {
         return new ShizukuConfig();
     }
 
-    public static void write(ShizukuConfig config) {
+    public static boolean write(ShizukuConfig config) {
         synchronized (ATOMIC_FILE) {
             FileOutputStream stream;
             try {
                 stream = ATOMIC_FILE.startWrite();
             } catch (IOException e) {
                 LOGGER.w("failed to write state: " + e);
-                return;
+                return false;
             }
 
             try {
@@ -79,9 +79,11 @@ public class ShizukuConfigManager extends ConfigManager {
                 Os.fchmod(stream.getFD(), 0600);
                 ATOMIC_FILE.finishWrite(stream);
                 LOGGER.v("config saved");
+                return true;
             } catch (Throwable tr) {
                 LOGGER.w(tr, "can't save %s, restoring backup.", ATOMIC_FILE.getBaseFile());
                 ATOMIC_FILE.failWrite(stream);
+                return false;
             }
         }
     }
@@ -153,6 +155,10 @@ public class ShizukuConfigManager extends ConfigManager {
 
     private void persistLocked() {
         write(config);
+    }
+
+    synchronized void persistImport() {
+        if (!write(config)) throw new IllegalStateException("App access could not be saved; retry the import");
     }
 
     private ShizukuConfig.PackageEntry findLocked(int uid) {

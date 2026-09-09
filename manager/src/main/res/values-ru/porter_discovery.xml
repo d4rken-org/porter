@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="porter_access_blocked">Заблокировано</string>
     <string name="porter_apps_counts">Авторизовано: %1$d · Совместимо: %2$d</string>
     <string name="porter_discovery_partial">Не удалось проверить некоторые профили. Список может быть неполным.</string>
     <string name="porter_discovery_legacy">Перезапустите Porter, чтобы найти больше приложений и увидеть историю подключений.</string>
@@ -26,8 +25,8 @@
         <item quantity="other">Вы разрешили доступ для %d приложений, которым требуется приложение совместимости Porter. Доступ откроется после установки приложения совместимости.</item>
     </plurals>
     <string name="porter_access_pending_android">Не удалось активировать доступ. Проверьте разрешения этого приложения в настройках Android.</string>
-    <string name="porter_global_access">Разрешить доступ приложениям</string>
-    <string name="porter_global_access_summary">Временно отключить доступ для всех приложений, не меняя их сохранённые разрешения.</string>
+    <string name="porter_pause_access">Приостановить доступ</string>
+    <string name="porter_pause_access_summary">Временно отключить доступ для всех приложений, не меняя их сохранённые разрешения.</string>
     <string name="porter_global_access_restart">Перезапустите Porter, чтобы использовать общее управление доступом.</string>
     <string name="porter_access_paused">Доступ приложений приостановлен</string>
     <string name="porter_status_access_paused">Porter запущен, но доступ приложений приостановлен. Возобновите доступ в разделе «Приложения».</string>

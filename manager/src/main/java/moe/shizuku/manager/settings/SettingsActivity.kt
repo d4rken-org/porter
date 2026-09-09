@@ -87,6 +87,8 @@ class SettingsActivity : ComposeActivity() {
                     else colors.getOrElse(colorValues.indexOf(color)) { colors.first() },
                     enabled = style != "MATERIAL_YOU" || Build.VERSION.SDK_INT < 31, onClick = { model.show("color") })
                 SettingsCategory(stringResource(R.string.porter_tools))
+                SettingsItem(stringResource(R.string.compat_setup_title), R.drawable.ic_apps_outline_24,
+                    onClick = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.compatibility.CompatibilityActivity::class.java)) })
                 SettingsItem(stringResource(R.string.home_terminal_title), R.drawable.ic_terminal_24, stringResource(R.string.home_terminal_description),
                     onClick = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.shell.ShellTutorialActivity::class.java)) })
                 SettingsItem(stringResource(R.string.home_automation_title), R.drawable.ic_integration_instructions_24, onClick = { model.show("automation") })

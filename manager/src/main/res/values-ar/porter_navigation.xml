@@ -7,8 +7,12 @@
     <string name="porter_pairing_method">طريقة الإقران</string>
     <string name="porter_status_restricted">بعض أذونات ADB مقيّدة من قِبل Android.</string>
     <string name="porter_status_stop_message">يؤدي إيقاف Porter إلى قطع اتصال التطبيقات التي تستخدمه. سيتعين عليك بدء Porter مجددًا يدويًا، وقد يتطلب ذلك جهاز كمبيوتر.</string>
-    <string name="porter_status_details_hint">انقر لعرض تفاصيل الخدمة وخيارات الإيقاف</string>
+    <string name="porter_status_details_hint">عرض تفاصيل الخدمة وخيارات الإيقاف</string>
     <string name="porter_status_ready">Porter جاهز. يمكن للتطبيقات المتوافقة الآن الاتصال وطلب الوصول.</string>
     <string name="porter_pairing_notification">إشعار</string>
     <string name="porter_pairing_dialog">مربع حوار داخل التطبيق</string>
+    <string name="porter_manage_apps_action">إدارة التطبيقات</string>
+    <string name="porter_primary_user_title">استخدم مستخدم Android الأساسي</string>
+    <string name="porter_primary_user_description">لا يمكن بدء Porter من مستخدم Android أو الملف الشخصي هذا. انتقل إلى المستخدم الأساسي للجهاز، وثبّت Porter هناك إذا لزم الأمر، ثم ابدأ خدمته. بعد ذلك، عد إلى هنا لإدارة تطبيقاتك.</string>
+    <string name="porter_secondary_user_stop_message">يؤدي إيقاف Porter إلى قطع اتصال التطبيقات لدى جميع مستخدمي Android. لبدئه مجددًا، انتقل إلى المستخدم الأساسي للجهاز وافتح Porter هناك.</string>
 </resources>

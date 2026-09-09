@@ -7,8 +7,12 @@
     <string name="porter_pairing_method">Способ сопряжения</string>
     <string name="porter_status_restricted">Некоторые разрешения ADB ограничены Android.</string>
     <string name="porter_status_stop_message">Остановка Porter отключит использующие его приложения. Запускать Porter снова придётся вручную, и для этого может понадобиться компьютер.</string>
-    <string name="porter_status_details_hint">Нажмите, чтобы посмотреть сведения о службе и варианты остановки</string>
+    <string name="porter_status_details_hint">Открыть сведения о службе и параметры остановки</string>
     <string name="porter_status_ready">Porter готов. Совместимые приложения теперь могут подключаться и запрашивать доступ.</string>
     <string name="porter_pairing_notification">Уведомление</string>
     <string name="porter_pairing_dialog">Диалог в приложении</string>
+    <string name="porter_manage_apps_action">Управлять приложениями</string>
+    <string name="porter_primary_user_title">Используйте основного пользователя Android</string>
+    <string name="porter_primary_user_description">Porter нельзя запустить из этого пользователя или профиля Android. Переключитесь на основного пользователя устройства, при необходимости установите там Porter и запустите службу. Затем вернитесь сюда для управления приложениями.</string>
+    <string name="porter_secondary_user_stop_message">Остановка Porter отключит приложения всех пользователей Android. Для повторного запуска переключитесь на основного пользователя устройства и откройте там Porter.</string>
 </resources>

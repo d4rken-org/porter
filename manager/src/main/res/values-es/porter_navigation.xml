@@ -7,8 +7,12 @@
     <string name="porter_pairing_method">Método de vinculación</string>
     <string name="porter_status_restricted">Android restringe algunos permisos de ADB.</string>
     <string name="porter_status_stop_message">Detener Porter desconecta las apps que lo usan. Tendrás que volver a iniciar Porter manualmente, lo que puede requerir una computadora.</string>
-    <string name="porter_status_details_hint">Toca para ver los detalles del servicio y las opciones para detenerlo</string>
+    <string name="porter_status_details_hint">Abrir los detalles del servicio y las opciones para detenerlo</string>
     <string name="porter_status_ready">Porter está listo. Las apps compatibles ya pueden conectarse y solicitar acceso.</string>
     <string name="porter_pairing_notification">Notificación</string>
     <string name="porter_pairing_dialog">Diálogo en la app</string>
+    <string name="porter_manage_apps_action">Gestionar apps</string>
+    <string name="porter_primary_user_title">Usa el usuario principal de Android</string>
+    <string name="porter_primary_user_description">Porter no se puede iniciar desde este usuario o perfil de Android. Cambia al usuario principal del dispositivo, instala Porter allí si es necesario e inicia su servicio. Después, vuelve aquí para gestionar tus apps.</string>
+    <string name="porter_secondary_user_stop_message">Detener Porter desconecta las apps de todos los usuarios de Android. Para iniciarlo de nuevo, cambia al usuario principal del dispositivo y abre Porter allí.</string>
 </resources>

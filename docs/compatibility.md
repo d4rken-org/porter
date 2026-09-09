@@ -20,15 +20,21 @@ The companion helps existing Shizuku apps find Porter. Porter still starts the s
 
 For an app with direct Porter support, you can keep Shizuku installed. Start Porter, choose it in the app and approve the new request. If the app says a restart is needed, force-stop it in Android Settings and reopen it.
 
-For an app that only supports Shizuku:
+For an app that only supports Shizuku, the FOSS build includes the matching Porter Compatibility APK:
 
-1. Stop Shizuku and uninstall its manager app. Apps you use with Shizuku can stay installed.
-2. Install Porter and the Porter Compatibility APK from the same release.
-3. Start Porter.
-4. Force-stop the client app in Android Settings, reopen it and enable its Shizuku integration.
-5. Approve the access request shown by Porter.
+1. Install and start Porter. Keep Shizuku installed until you have reviewed the replacement.
+2. Open **Shizuku compatibility** from the home screen or **Settings**.
+3. If Shizuku is installed, choose **Replace**. Confirm **Switch to Porter**. Porter stops Shizuku, replaces its app and carries over eligible access choices automatically. If Porter cannot stop the service, it asks you to stop it in Shizuku and retry.
+4. Otherwise, choose **Install automatically**.
+5. Return to the client app. Approve access if you did not import an existing decision. If the client still cannot connect, force-stop it in Android Settings and reopen it.
 
-Previous Shizuku approvals are not transferred. You choose which apps may use Porter again.
+Porter automatically imports decisions that can be checked against installed apps and their current access. Existing Porter decisions take precedence. Shizuku's app settings and pairing configuration are not imported. If the access database cannot be read, you can continue and approve apps again. Porter saves eligible access choices before removing Shizuku; if installation fails, retry or use **Manual**, then **Import saved approvals**.
+
+Integrated replacement is available from the primary Android user. If Shizuku is installed for another user or profile, resolve that installation separately. Porter does not remove another user's apps automatically.
+
+The companion APK remains available as a separate download from the same release. For manual installation, stop and uninstall Shizuku, install Porter Compatibility, and start Porter. Use Porter's integrated replacement to transfer eligible access decisions; opening the replacement dialog alone does not save an import. Device installation restrictions can also apply to the integrated installer; the **Manual** action opens the Android installer.
+
+Once installed, the home screen shows the compatibility app version and how many installed apps connect through it. Tap its card to see details, reinstall the included copy, or uninstall it. Porter tries to uninstall through its service first and opens the Android uninstaller if that fails. Removing it interrupts apps that need compatibility support; direct Porter apps keep working. The compatibility screen checks for changes automatically while open.
 
 ## Can Porter and Shizuku run together?
 

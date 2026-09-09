@@ -7,7 +7,7 @@
     <string name="porter_pairing_method">Kopplungsmethode</string>
     <string name="porter_status_restricted">Android schränkt einige ADB-Berechtigungen ein.</string>
     <string name="porter_status_stop_message">Wenn du Porter stoppst, werden verbundene Apps getrennt. Du musst Porter manuell erneut starten. Dafür kann ein Computer erforderlich sein.</string>
-    <string name="porter_status_details_hint">Tippen für Dienstdetails und zum Stoppen</string>
+    <string name="porter_status_details_hint">Dienstdetails und Stoppoptionen öffnen</string>
     <string name="porter_status_ready">Porter ist bereit. Kompatible Apps können sich jetzt verbinden und Zugriff anfordern.</string>
     <string name="porter_pairing_notification">Benachrichtigung</string>
     <string name="porter_pairing_dialog">Dialog in der App</string>
@@ -15,4 +15,8 @@
         <item>@string/porter_pairing_notification</item>
         <item>@string/porter_pairing_dialog</item>
     </string-array>
+    <string name="porter_manage_apps_action">Apps verwalten</string>
+    <string name="porter_primary_user_title">Hauptnutzer verwenden</string>
+    <string name="porter_primary_user_description">Porter kann in diesem Android-Nutzer oder Profil nicht gestartet werden. Wechsle zum Hauptnutzer des Geräts, installiere dort bei Bedarf Porter und starte den Dienst. Kehre danach hierher zurück, um deine Apps zu verwalten.</string>
+    <string name="porter_secondary_user_stop_message">Wenn du Porter beendest, werden Apps aller Android-Nutzer getrennt. Zum erneuten Starten musst du zum Hauptnutzer des Geräts wechseln und dort Porter öffnen.</string>
 </resources>

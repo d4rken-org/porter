@@ -7,8 +7,12 @@
     <string name="porter_pairing_method">Metode penyambungan</string>
     <string name="porter_status_restricted">Beberapa izin ADB dibatasi oleh Android.</string>
     <string name="porter_status_stop_message">Menghentikan Porter akan memutus aplikasi yang menggunakannya. Anda harus memulai Porter lagi secara manual, yang mungkin memerlukan komputer.</string>
-    <string name="porter_status_details_hint">Ketuk untuk detail layanan dan opsi berhenti</string>
+    <string name="porter_status_details_hint">Buka detail layanan dan opsi berhenti</string>
     <string name="porter_status_ready">Porter siap. Aplikasi yang kompatibel kini dapat terhubung dan meminta akses.</string>
     <string name="porter_pairing_notification">Notifikasi</string>
     <string name="porter_pairing_dialog">Dialog dalam aplikasi</string>
+    <string name="porter_manage_apps_action">Kelola aplikasi</string>
+    <string name="porter_primary_user_title">Gunakan pengguna utama Android</string>
+    <string name="porter_primary_user_description">Porter tidak dapat dimulai dari pengguna atau profil Android ini. Beralihlah ke pengguna utama perangkat, pasang Porter di sana jika perlu, lalu mulai layanannya. Setelah itu, kembali ke sini untuk mengelola aplikasi Anda.</string>
+    <string name="porter_secondary_user_stop_message">Menghentikan Porter memutus koneksi aplikasi di semua pengguna Android. Untuk memulainya lagi, beralihlah ke pengguna utama perangkat dan buka Porter di sana.</string>
 </resources>
