@@ -24,3 +24,10 @@ build/
 /docs/.bundle/
 /docs/vendor/
 /_site/
+
+# Play Store screenshots: only the English set is committed, the localized runs are generated
+fastlane/metadata/android/*/images/
+!fastlane/metadata/android/en-US/images/
+
+# Rendered Compose preview references: a source set path, not covered by build/
+manager/src/screenshotTest*/reference/
