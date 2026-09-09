@@ -4,8 +4,11 @@ Based on Shizuku by RikkaApps and contributors and the Shizuku maintenance fork 
 https://github.com/RikkaApps/Shizuku
 https://github.com/thedjchi/Shizuku
 
-Porter modifications include independent application identity, provider routing, optional legacy compatibility, authorization handling, service coexistence, release configuration and temporary artwork.
+Porter modifications include independent application identity, provider routing, optional legacy compatibility, authorization handling, service coexistence, release configuration and artwork.
 
 The original Shizuku name and artwork are not used as Porter's product identity. Legacy API identifiers remain where required for protocol interoperability and in the optional compatibility companion.
+
+Porter icon, mascot and banner artwork by Max Patchs.
+https://x.com/maxpatchs
 
 Third-party libraries retain their respective licenses and copyrights.

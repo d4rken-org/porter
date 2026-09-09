@@ -203,6 +203,7 @@
     <string name="porter_ack_thedjchi">A thedjchi e colaboradores por manterem o fork do Shizuku no qual o Porter se baseia.</string>
     <string name="porter_ack_symbuzzer">A symbuzzer e colaboradores por continuarem o trabalho no Shizuku e compartilharem seu fork.</string>
     <string name="porter_ack_plus">A thejaustin e colaboradores pelo ShizukuPlus e pela inspiração para um app de compatibilidade opcional.</string>
+    <string name="porter_ack_maxpatchs">Obrigado pelo ícone, pelos designs do mascote e pelo banner.</string>
     <string name="porter_license_porter">Porter e o aplicativo Shizuku original · Licença Apache 2.0</string>
     <string name="porter_license_api">API Shizuku e seu fork do Porter · Licença MIT</string>
     <string name="porter_license_notice">Avisos de copyright e atribuição</string>

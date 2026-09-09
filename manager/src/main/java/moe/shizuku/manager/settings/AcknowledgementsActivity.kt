@@ -33,7 +33,7 @@ class AcknowledgementsActivity : ComposeActivity() {
         PorterScaffold(stringResource(R.string.porter_acknowledgements), onBack = { finish() }) { padding ->
             LazyColumn(Modifier.padding(padding).consumeWindowInsets(padding)) {
                 item { SettingsCategory(stringResource(R.string.porter_acknowledgements_thanks)) }
-                items(upstream) { credit ->
+                items(credits) { credit ->
                     SettingsItem(credit.name, R.drawable.ic_favorite_outline_24, stringResource(credit.description),
                         onClick = { CustomTabsHelper.launchUrlOrCopy(this@AcknowledgementsActivity, credit.url) })
                 }
@@ -66,11 +66,12 @@ class AcknowledgementsActivity : ComposeActivity() {
     private data class Library(val name: String, val license: String, val url: String)
 
     companion object {
-        private val upstream = listOf(
+        private val credits = listOf(
             Credit("Shizuku · RikkaApps", R.string.porter_ack_shizuku, "https://github.com/RikkaApps/Shizuku"),
             Credit("Shizuku · thedjchi", R.string.porter_ack_thedjchi, "https://github.com/thedjchi/Shizuku"),
             Credit("Shizuku · symbuzzer", R.string.porter_ack_symbuzzer, "https://github.com/symbuzzer/fork-Shizuku"),
             Credit("ShizukuPlus · thejaustin", R.string.porter_ack_plus, "https://github.com/thejaustin/ShizukuPlus"),
+            Credit("Max Patchs", R.string.porter_ack_maxpatchs, "https://x.com/maxpatchs"),
         )
         private val libraries = listOf(
             Library("AndroidX & Jetpack Compose", "Apache License 2.0", "https://source.android.com/docs/setup/about/licenses"),
