@@ -5,15 +5,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.Lifecycle
@@ -99,7 +94,6 @@ abstract class HomeActivity : ComposeActivity() {
         LaunchedEffect(serviceState) { homeModel.reload(); if (serviceState == ShizukuStateMachine.State.RUNNING) appsModel.load() }
         val statusUi = serviceStatusUi(status, serviceState)
         val running = statusUi.running
-        val restricted = statusUi.restricted
         LaunchedEffect(compatState.status, compatState.installedVersionCode) {
             if (running) appsModel.load()
         }
@@ -112,106 +106,37 @@ abstract class HomeActivity : ComposeActivity() {
             BuildConfig.VERSION_NAME.contains("-beta") -> stringResource(R.string.porter_build_beta)
             else -> null
         }
-        PorterScaffold(stringResource(R.string.app_name), subtitle = stringResource(R.string.porter_home_subtitle),
-            titleIcon = R.drawable.porter_mascot, titleBadge = buildBadge, actions = {
-            IconButton(onClick = { startActivity(Intent(this@HomeActivity, SettingsActivity::class.java)) }) {
-                Icon(painterResource(R.drawable.ic_action_settings_24dp), stringResource(R.string.settings_title))
-            }
-        }) { padding ->
-            LazyColumn(Modifier.padding(padding).consumeWindowInsets(padding), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                item { ServiceStatusCard(statusUi, accessPaused = appsState.accessEnabled == false) { dialog = "status" } }
-                if (running && status.permission) item {
-                    val count = appsState.grantedCount
-                    HomeCard(stringResource(R.string.porter_applications), R.drawable.ic_apps_outline_24,
-                        { startActivity(Intent(this@HomeActivity, ApplicationManagementActivity::class.java)) },
-                        subtitle = if (appsState.legacy || appsState.failedUsers.isNotEmpty())
-                            resources.getQuantityString(R.plurals.home_app_management_authorized_apps_count, count, count)
-                        else stringResource(R.string.porter_apps_counts, count, appsState.compatibleCount),
-                        actionLabel = stringResource(R.string.porter_manage_apps_action)) {
-                        if (appsState.companionRequiredCount > 0) Text(
-                            resources.getQuantityString(R.plurals.porter_apps_need_companion, appsState.companionRequiredCount, appsState.companionRequiredCount),
-                            style = MaterialTheme.typography.bodyMedium)
-                        if (appsState.failedUsers.isNotEmpty()) Text(stringResource(R.string.porter_discovery_partial), style = MaterialTheme.typography.bodySmall)
-                        if (appsState.accessEnabled == false) Text(stringResource(R.string.porter_access_paused),
-                            style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
-                    }
-                }
-                if (compatState.isCompanion) item {
-                    InstalledCompatibilityCard(
-                        compatibilityVersionText(compatState.installedVersionName, compatState.installedVersionCode),
-                        compatibilityUsageText(running, appsState),
-                        notice = when (compatState.status) {
-                            CompatibilityRepository.Status.UPDATE -> stringResource(R.string.compat_status_update)
-                            CompatibilityRepository.Status.INVALID -> stringResource(R.string.compat_status_invalid)
-                            else -> null
-                        }
-                    ) { startActivity(Intent(this@HomeActivity, moe.shizuku.manager.compatibility.CompatibilityActivity::class.java)) }
-                } else if ((BuildConfig.IS_FOSS && (compatState.status == CompatibilityRepository.Status.UPDATE
-                        || compatState.status == CompatibilityRepository.Status.INVALID
-                        || (compatState.status != CompatibilityRepository.Status.INSTALLED && appsState.companionRequiredCount > 0)))
-                    || (running && status.permission && appsState.pendingCompanionCount > 0)) item {
-                    CompatibilityCard(stringResource(when (compatState.status) {
-                        CompatibilityRepository.Status.UPDATE -> R.string.compat_status_update
-                        CompatibilityRepository.Status.CONFLICT -> R.string.compat_status_conflict
-                        CompatibilityRepository.Status.INVALID -> R.string.compat_status_invalid
-                        else -> R.string.compat_card_description
-                    })) {
-                        startActivity(Intent(this@HomeActivity, moe.shizuku.manager.compatibility.CompatibilityActivity::class.java))
-                    }
-                }
-                if (restricted) item {
-                    HomeCard(stringResource(R.string.app_management_dialog_adb_is_limited_title), R.drawable.ic_warning_24) {
-                        HtmlText(stringResource(R.string.app_management_dialog_adb_is_limited_message, Helps.ADB_PERMISSION.get()))
-                    }
-                }
-                if (battery) item {
-                    HomeCard(stringResource(R.string.snackbar_battery_optimization_home), R.drawable.ic_outline_info_24) {
-                        HomeCardActions {
-                            TextButton(onClick = { SettingsHelper.requestIgnoreBatteryOptimizations(this@HomeActivity) }) { Text(stringResource(R.string.snackbar_action_fix)) }
-                        }
-                    }
-                }
-                if (!running && UserHandleCompat.myUserId() != 0) item {
-                    HomeCard(stringResource(R.string.porter_primary_user_title), R.drawable.ic_outline_info_24) {
-                        Text(stringResource(R.string.porter_primary_user_description), style = MaterialTheme.typography.bodyMedium)
-                    }
-                }
-                if (!running && UserHandleCompat.myUserId() == 0) {
-                    if (EnvironmentUtils.isRooted()) item {
-                        HomeCard(stringResource(R.string.home_root_title), R.drawable.ic_root_24dp) {
-                            HtmlText(stringResource(R.string.home_root_description, "<a href=\"${Helps.SUI.get()}\">Sui</a>", "Sui"))
-                            HomeCardActions {
-                                Button(onClick = { startActivity(Intent(this@HomeActivity, StarterActivity::class.java).putExtra(StarterActivity.EXTRA_IS_ROOT, true)) }) { Text(stringResource(R.string.home_root_button_start)) }
-                            }
-                        }
-                    }
-                    if (Build.VERSION.SDK_INT >= 30 || EnvironmentUtils.isTelevision() || EnvironmentUtils.getAdbTcpPort() > 0) item {
-                        HomeCard(stringResource(R.string.home_wireless_adb_title), R.drawable.ic_wadb_24) {
-                            HtmlText(stringResource(if (EnvironmentUtils.isTlsSupported()) R.string.home_wireless_adb_description else R.string.home_wireless_adb_description_pre_11))
-                            if (EnvironmentUtils.isTlsSupported()) {
-                                HomeCardActions {
-                                    TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) }) { Text(stringResource(R.string.home_wireless_adb_view_guide_button)) }
-                                }
-                            }
-                            HomeCardActions {
-                                if (EnvironmentUtils.isTlsSupported()) {
-                                    OutlinedButton(onClick = { WirelessStart.pair(this@HomeActivity) }) { Text(stringResource(R.string.adb_pairing)) }
-                                }
-                                Button(onClick = { WirelessStart.start(this@HomeActivity, lifecycleScope) }, enabled = serviceState != ShizukuStateMachine.State.STARTING) { Text(stringResource(R.string.home_root_button_start)) }
-                            }
-                        }
-                    }
-                    item {
-                        HomeCard(stringResource(R.string.home_adb_title), R.drawable.ic_adb_24dp) {
-                            HtmlText(stringResource(R.string.home_adb_description, Helps.ADB.get()))
-                            HomeCardActions {
-                                OutlinedButton(onClick = { dialog = "command" }) { Text(stringResource(R.string.home_adb_button_view_command)) }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // isRooted() blocks on Shell.getShell(), which can ask for root, and the wireless probe
+        // reads system properties: both stay behind the condition that used to guard their cards.
+        val isSecondaryUser = UserHandleCompat.myUserId() != 0
+        val setup = !running && !isSecondaryUser
+        HomeScreenContent(
+            HomeUiState(
+                statusUi = statusUi,
+                permitted = status.permission,
+                appsState = appsState,
+                compatState = compatState,
+                buildBadge = buildBadge,
+                showBatteryCard = battery,
+                isSecondaryUser = isSecondaryUser,
+                isRooted = setup && EnvironmentUtils.isRooted(),
+                wirelessAdbAvailable = setup && (Build.VERSION.SDK_INT >= 30 || EnvironmentUtils.isTelevision() || EnvironmentUtils.getAdbTcpPort() > 0),
+                tlsSupported = EnvironmentUtils.isTlsSupported(),
+                serviceState = serviceState,
+            ),
+            HomeActions(
+                onOpenSettings = { startActivity(Intent(this@HomeActivity, SettingsActivity::class.java)) },
+                onOpenApps = { startActivity(Intent(this@HomeActivity, ApplicationManagementActivity::class.java)) },
+                onOpenCompatibility = { startActivity(Intent(this@HomeActivity, moe.shizuku.manager.compatibility.CompatibilityActivity::class.java)) },
+                onShowStatusDetails = { dialog = "status" },
+                onFixBatteryOptimization = { SettingsHelper.requestIgnoreBatteryOptimizations(this@HomeActivity) },
+                onStartRoot = { startActivity(Intent(this@HomeActivity, StarterActivity::class.java).putExtra(StarterActivity.EXTRA_IS_ROOT, true)) },
+                onPairWireless = { WirelessStart.pair(this@HomeActivity) },
+                onStartWireless = { WirelessStart.start(this@HomeActivity, lifecycleScope) },
+                onViewWirelessGuide = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) },
+                onShowAdbCommand = { dialog = "command" },
+            ),
+        )
         if (dialog == "status" && running) ServiceStatusDialog(statusUi, { dialog = null }, secondaryUser = UserHandleCompat.myUserId() != 0) {
             dialog = null
             if (ShizukuStateMachine.isRunning()) {
