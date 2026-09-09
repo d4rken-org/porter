@@ -6,14 +6,10 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -57,52 +53,42 @@ class SettingsActivity : ComposeActivity() {
         val pairings = stringArrayResource(R.array.porter_pairing_methods).toList()
         var tcpText by rememberSaveable { mutableStateOf(preferences.getString(ShizukuSettings.Keys.KEY_TCP_PORT, "") ?: "") }
         val canBoot = Build.VERSION.SDK_INT >= 30 || EnvironmentUtils.isTelevision() || EnvironmentUtils.isRooted()
-        PorterScaffold(stringResource(R.string.settings_title), onBack = { finish() }) { padding ->
-            Column(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState())) {
-                SettingsCategory(stringResource(R.string.porter_startup))
-                SettingsSwitch(stringResource(R.string.settings_start_on_boot), R.drawable.ic_outline_play_arrow_24,
-                    ShizukuSettings.getStartOnBoot(this@SettingsActivity), enabled = canBoot,
-                    summary = if (canBoot) null else stringResource(R.string.settings_start_on_boot_summary)) {
-                    model.toggle(ShizukuSettings.Keys.KEY_START_ON_BOOT, it)
-                }
-                SettingsSwitch(stringResource(R.string.settings_watchdog), R.drawable.ic_autorenew,
-                    values[ShizukuSettings.Keys.KEY_WATCHDOG] as? Boolean ?: false,
-                    stringResource(R.string.settings_watchdog_summary)) { model.toggle(ShizukuSettings.Keys.KEY_WATCHDOG, it) }
-                if (!EnvironmentUtils.isTelevision() && Build.VERSION.SDK_INT >= 30) {
-                    SettingsItem(stringResource(R.string.porter_pairing_method), R.drawable.ic_baseline_link_24,
-                        pairings[if (values[ShizukuSettings.Keys.KEY_LEGACY_PAIRING] == true) 1 else 0], onClick = { model.show("pairing") })
-                }
-                if (EnvironmentUtils.isTelevision() && !EnvironmentUtils.isTlsSupported()) {
-                    val needsRestart = EnvironmentUtils.getAdbTcpPort().let { it > 0 && it != ShizukuSettings.getTcpPort() }
-                    SettingsItem(stringResource(R.string.settings_tcp_port), if (needsRestart) R.drawable.ic_server_restart else R.drawable.ic_wadb_24,
-                        (values[ShizukuSettings.Keys.KEY_TCP_PORT] as? String) ?: stringResource(R.string.settings_tcp_port_default), onClick = { model.show("tcp") })
-                }
-                SettingsCategory(stringResource(R.string.settings_user_interface))
-                SettingsItem(stringResource(R.string.porter_theme_mode), R.drawable.ic_outline_dark_mode_24,
-                    modes.getOrElse(modeValues.indexOf(mode)) { modes.first() }, onClick = { model.show("mode") })
-                SettingsItem(stringResource(R.string.porter_theme_style), R.drawable.ic_contrast_24,
-                    styles.getOrElse(styleValues.indexOf(style)) { styles.first() }, onClick = { model.show("style") })
-                SettingsItem(stringResource(R.string.porter_theme_color), R.drawable.ic_palette_24,
-                    if (style == "MATERIAL_YOU" && Build.VERSION.SDK_INT >= 31) stringResource(R.string.porter_theme_color_system)
+        val showTcpPort = EnvironmentUtils.isTelevision() && !EnvironmentUtils.isTlsSupported()
+        SettingsScreenContent(
+            SettingsUiState(
+                startOnBoot = ShizukuSettings.getStartOnBoot(this@SettingsActivity),
+                startOnBootEnabled = canBoot,
+                watchdog = values[ShizukuSettings.Keys.KEY_WATCHDOG] as? Boolean ?: false,
+                showPairingMethod = !EnvironmentUtils.isTelevision() && Build.VERSION.SDK_INT >= 30,
+                pairingMethodLabel = pairings[if (values[ShizukuSettings.Keys.KEY_LEGACY_PAIRING] == true) 1 else 0],
+                showTcpPort = showTcpPort,
+                tcpPortLabel = (values[ShizukuSettings.Keys.KEY_TCP_PORT] as? String) ?: stringResource(R.string.settings_tcp_port_default),
+                tcpPortNeedsRestart = showTcpPort && EnvironmentUtils.getAdbTcpPort().let { it > 0 && it != ShizukuSettings.getTcpPort() },
+                themeModeLabel = modes.getOrElse(modeValues.indexOf(mode)) { modes.first() },
+                themeStyleLabel = styles.getOrElse(styleValues.indexOf(style)) { styles.first() },
+                themeColorLabel = if (style == "MATERIAL_YOU" && Build.VERSION.SDK_INT >= 31) stringResource(R.string.porter_theme_color_system)
                     else colors.getOrElse(colorValues.indexOf(color)) { colors.first() },
-                    enabled = style != "MATERIAL_YOU" || Build.VERSION.SDK_INT < 31, onClick = { model.show("color") })
-                SettingsCategory(stringResource(R.string.porter_tools))
-                SettingsItem(stringResource(R.string.compat_setup_title), R.drawable.ic_apps_outline_24,
-                    onClick = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.compatibility.CompatibilityActivity::class.java)) })
-                SettingsItem(stringResource(R.string.home_terminal_title), R.drawable.ic_terminal_24, stringResource(R.string.home_terminal_description),
-                    onClick = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.shell.ShellTutorialActivity::class.java)) })
-                SettingsItem(stringResource(R.string.home_automation_title), R.drawable.ic_integration_instructions_24, onClick = { model.show("automation") })
-                SettingsItem(stringResource(R.string.porter_developer_guide), R.drawable.ic_code_24dp, onClick = { CustomTabsHelper.launchUrlOrCopy(this@SettingsActivity, Helps.HOME.get()) })
-                SettingsCategory(stringResource(R.string.settings_support))
-                SettingsItem(stringResource(R.string.porter_support_title), R.drawable.ic_help_outline_24dp, stringResource(R.string.porter_support_summary),
-                    onClick = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.support.SupportActivity::class.java)) })
-                SettingsItem(stringResource(R.string.porter_acknowledgements), R.drawable.ic_favorite_outline_24,
-                    stringResource(R.string.porter_acknowledgements_summary),
-                    onClick = { startActivity(Intent(this@SettingsActivity, AcknowledgementsActivity::class.java)) })
-                SettingsItem(stringResource(R.string.porter_version), R.drawable.ic_outline_info_24, BuildConfig.VERSION_NAME,
-                    onClick = { CustomTabsHelper.launchUrlOrCopy(this@SettingsActivity, Helps.DOWNLOAD.get()) })
-            }
-        }
+                themeColorEnabled = style != "MATERIAL_YOU" || Build.VERSION.SDK_INT < 31,
+                versionName = BuildConfig.VERSION_NAME,
+            ),
+            SettingsActions(
+                onBack = { finish() },
+                onStartOnBootChange = { model.toggle(ShizukuSettings.Keys.KEY_START_ON_BOOT, it) },
+                onWatchdogChange = { model.toggle(ShizukuSettings.Keys.KEY_WATCHDOG, it) },
+                onPairingMethod = { model.show("pairing") },
+                onTcpPort = { model.show("tcp") },
+                onThemeMode = { model.show("mode") },
+                onThemeStyle = { model.show("style") },
+                onThemeColor = { model.show("color") },
+                onCompatibility = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.compatibility.CompatibilityActivity::class.java)) },
+                onTerminal = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.shell.ShellTutorialActivity::class.java)) },
+                onAutomation = { model.show("automation") },
+                onDeveloperGuide = { CustomTabsHelper.launchUrlOrCopy(this@SettingsActivity, Helps.HOME.get()) },
+                onSupport = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.support.SupportActivity::class.java)) },
+                onAcknowledgements = { startActivity(Intent(this@SettingsActivity, AcknowledgementsActivity::class.java)) },
+                onVersion = { CustomTabsHelper.launchUrlOrCopy(this@SettingsActivity, Helps.DOWNLOAD.get()) },
+            ),
+        )
         val dismiss = { model.show(null) }
         when (dialog) {
             "mode" -> ChoiceDialog(stringResource(R.string.porter_theme_mode), modes, modeValues.indexOf(mode), dismiss) {
