@@ -26,15 +26,28 @@ class AdbPairingAccessibilityService : AccessibilityService() {
     private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var pairing = false
     private var finished = false
+    private var overlay: TvPairingOverlay? = null
+    private val returnToPorter = Runnable {
+        dismissOverlay()
+        openPorter()
+        disableSelf()
+    }
+    private val visibilityPoll = object : Runnable {
+        override fun run() {
+            val panel = overlay ?: return
+            rootInActiveWindow?.packageName?.let { panel.setVisible(it == TV_SETTINGS_PACKAGE) }
+            handler.postDelayed(this, 1_000)
+        }
+    }
     internal var pair: suspend (String, Int, String) -> Unit = ::pairAdb
     private val timeout = Runnable {
-        finishPairing(false, getString(R.string.porter_pairing_search_timeout))
+        finishPairing(false, tvPairingUiContext().getString(R.string.porter_pairing_search_timeout))
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
         if (!(EnvironmentUtils.isTelevision() && EnvironmentUtils.isTlsSupported())) {
-            Toast.makeText(this, R.string.toast_accessibility_tv_only, Toast.LENGTH_SHORT).show()
+            Toast.makeText(tvPairingUiContext(), R.string.toast_accessibility_tv_only, Toast.LENGTH_SHORT).show()
             disableSelf()
             return
         }
@@ -42,6 +55,8 @@ class AdbPairingAccessibilityService : AccessibilityService() {
     }
 
     internal fun startPairing() {
+        handler.removeCallbacks(returnToPorter)
+        dismissOverlay()
         scope.cancel()
         scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
         pairing = false
@@ -66,21 +81,35 @@ class AdbPairingAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null || pairing || finished) return
         val root = rootInActiveWindow ?: event.source ?: return
-        val credentials = readPairingCredentials(root) ?: return
+        if (root.packageName != TV_SETTINGS_PACKAGE) return
+        val credentials = readPairingCredentials(root)
+        if (credentials != null || isPairingCodeWindow(root)) showOverlay()
+        if (credentials == null) return
         pairing = true
         handler.removeCallbacks(timeout)
         scope.launch {
             try {
                 pair(credentials.host, credentials.port, credentials.code)
                 coroutineContext.ensureActive()
-                finishPairing(true, getString(R.string.notification_adb_pairing_succeed_text))
+                finishPairing(true, tvPairingUiContext().getString(R.string.notification_adb_pairing_succeed_text))
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 coroutineContext.ensureActive()
                 Log.w("AdbPairingAccessibility", "Pairing failed", e)
-                finishPairing(false, pairingFailureMessage(e))
+                finishPairing(false, tvPairingUiContext().pairingFailureMessage(e))
             }
+        }
+    }
+
+    private fun showOverlay() {
+        if (overlay != null) return
+        try {
+            overlay = TvPairingOverlay(this).also { it.show() }
+            handler.postDelayed(visibilityPoll, 1_000)
+        } catch (e: Exception) {
+            Log.w("AdbPairingAccessibility", "Cannot show pairing progress", e)
+            dismissOverlay()
         }
     }
 
@@ -89,8 +118,18 @@ class AdbPairingAccessibilityService : AccessibilityService() {
         finished = true
         handler.removeCallbacks(timeout)
         TvPairingResultStore(ShizukuSettings.getPreferences()).save(TvPairingResult(success, message))
-        openPorter()
-        disableSelf()
+        if (overlay?.isVisible == true) {
+            overlay?.showResult(success)
+            handler.postDelayed(returnToPorter, 2_500)
+        } else {
+            returnToPorter.run()
+        }
+    }
+
+    private fun dismissOverlay() {
+        handler.removeCallbacks(visibilityPoll)
+        overlay?.dismiss()
+        overlay = null
     }
 
     override fun onInterrupt() {}
@@ -98,17 +137,29 @@ class AdbPairingAccessibilityService : AccessibilityService() {
     override fun onUnbind(intent: Intent?): Boolean {
         handler.removeCallbacksAndMessages(null)
         scope.cancel()
+        dismissOverlay()
         return super.onUnbind(intent)
     }
 
     override fun onDestroy() {
         handler.removeCallbacksAndMessages(null)
         scope.cancel()
+        dismissOverlay()
         super.onDestroy()
     }
 }
 
 internal data class PairingCredentials(val host: String, val port: Int, val code: String)
+
+internal const val TV_SETTINGS_PACKAGE = "com.android.tv.settings"
+
+internal fun isPairingCodeWindow(root: AccessibilityNodeInfo): Boolean {
+    if (root.viewIdResourceName == "$TV_SETTINGS_PACKAGE:id/pairing_code") return true
+    for (index in 0 until root.childCount) {
+        if (root.getChild(index)?.let(::isPairingCodeWindow) == true) return true
+    }
+    return false
+}
 
 internal fun readPairingCredentials(root: AccessibilityNodeInfo): PairingCredentials? {
     var endpoint: Pair<String, Int>? = null
