@@ -1,0 +1,5 @@
+package_name("eu.darken.porter")
+
+# Path to the Play service account JSON. Kept out of the repository: set SUPPLY_JSON_KEY in the
+# environment before running a lane.
+json_key_file(ENV["SUPPLY_JSON_KEY"])
