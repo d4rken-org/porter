@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,6 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
@@ -129,11 +131,15 @@ class CompatibilityActivity : ComposeActivity() {
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Text(state.installedLabel, style = MaterialTheme.typography.titleSmall)
-                                Text(android.text.BidiFormatter.getInstance().unicodeWrap(CompatibilityRepository.PACKAGE, android.text.TextDirectionHeuristics.LTR), style = MaterialTheme.typography.bodySmall)
-                                Text(compatibilityVersionText(state.installedVersionName, state.installedVersionCode),
-                                    style = MaterialTheme.typography.bodySmall)
+                            Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                                state.installedIcon?.let { Image(it.asImageBitmap(), null, Modifier.size(40.dp)) }
+                                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(state.installedLabel, style = MaterialTheme.typography.titleSmall)
+                                    Text(android.text.BidiFormatter.getInstance().unicodeWrap(CompatibilityRepository.PACKAGE, android.text.TextDirectionHeuristics.LTR), style = MaterialTheme.typography.bodySmall)
+                                    Text(compatibilityVersionText(state.installedVersionName, state.installedVersionCode),
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
                             }
                         }
                         Text(compatibilityUsageText(state.running, apps), style = MaterialTheme.typography.bodyMedium)

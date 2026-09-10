@@ -31,3 +31,7 @@ fastlane/metadata/android/*/images/
 
 # Rendered Compose preview references: a source set path, not covered by build/
 manager/src/screenshotTest*/reference/
+
+# Python bytecode caches
+__pycache__/
+*.pyc
