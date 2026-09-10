@@ -15,14 +15,16 @@ notifications. White becomes visible ink; black becomes transparent cutouts.
 Keep its geometry in sync when changing the icon. Eyes, collar, hat band,
 buttons and the key must remain distinguishable at small sizes.
 
-`icon-compat.svg` and `monochrome-compat.svg` are the companion's pair, built
-from the same mascot with the key swapped for a luggage tag. The key stands for
-access, which is Porter's job; the companion's job is translation, holding the
-legacy `moe.shizuku.privileged.api` package so Shizuku-only apps keep working,
-and a luggage tag says that. Everything else in the two files matches the
-manager's, so a change to the mascot has to be made in all four sources.
-`monochrome-compat.svg` follows the same recipe as `monochrome.svg`: the tag is
-white ink outlined in black, with a separate black path for its punched hole.
+`icon-compat.svg` is the supplied neutral puzzle mascot without arms or legs
+(from the supplied Puzzle artwork: `SVG Normal - Happy - Sad/body no hands.svg`).
+The puzzle piece distinguishes Porter Compatibility from Porter's key mascot.
+Preserve the supplied vector geometry when updating this source.
+
+`monochrome-compat.svg` derives from that same artwork: the body is white ink;
+eyes, collar, hat band and buttons are black cutouts. The puzzle piece is white
+with a black outline separating it from the body. Keep the pair in sync.
+Apart from the puzzle piece, the mascot body shares its geometry with `icon.svg`
+and `monochrome.svg`; a change to the shared body has to be made in both pairs.
 
 Regenerate the checked-in Android and website images from the repository root:
 
