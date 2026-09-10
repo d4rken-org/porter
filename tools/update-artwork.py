@@ -65,7 +65,7 @@ def adaptive_layer(image, shift=None):
                                          (432 - art.height) // 2))
             return canvas
 
-        # Centre the body, not the bounding box: the luggage tag and the key both overhang
+        # Centre the body, not the bounding box: the puzzle piece and the key both overhang
         # further left than anything overhangs right, so balancing the box leaves the figure
         # sitting right of centre.
         placement = round(216 - body_axis(place(0))) if shift is None else shift
@@ -99,7 +99,7 @@ def tinted(name):
 background = plate('background')
 background_compat = plate('background-compat')
 
-# The companion carries a luggage tag where Porter carries the key, so each module scales and
+# The companion carries a puzzle piece where Porter carries the key, so each module scales and
 # centres its own artwork.
 for module, launcher, plate_image, icon, mono in [
         ('manager', 'ic_launcher', background, 'icon', 'monochrome'),
