@@ -3,9 +3,11 @@ package moe.shizuku.manager.compatibility
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Process
 import android.util.AtomicFile
+import androidx.core.graphics.drawable.toBitmap
 import eu.darken.porter.common.CompatibilitySetup
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +42,7 @@ internal class CompatibilityRepository private constructor(private val context: 
         val hasSnapshot: Boolean = false,
         val otherUsers: Boolean = false,
         val installedLabel: String = "Shizuku",
+        val installedIcon: Bitmap? = null,
         val installedVersionName: String? = null,
         val installedVersionCode: Long? = null,
         val isCompanion: Boolean = false,
@@ -56,6 +59,8 @@ internal class CompatibilityRepository private constructor(private val context: 
     private val snapshot = CompatibilityImportStore(context.noBackupFilesDir)
     private val resultFile = AtomicFile(File(context.noBackupFilesDir, "compatibility-result.json"))
     private var previewCertificate: String? = null
+    private var cachedIconKey: String? = null
+    private var cachedIcon: Bitmap? = null
     private val flags = PackageManager.GET_PERMISSIONS or if (Build.VERSION.SDK_INT >= 28) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES
     private val pm get() = context.packageManager
     val primaryUser get() = Process.myUid() / 100000 == 0
@@ -103,6 +108,7 @@ internal class CompatibilityRepository private constructor(private val context: 
         val wasCompleted = mutable.value.completed
         mutable.update { it.copy(status = status, running = running, supported = supported, otherUsers = otherUsers,
             hasSnapshot = snapshot.exists, installedLabel = installed?.applicationInfo?.loadLabel(pm)?.toString() ?: "Shizuku",
+            installedIcon = icon(installed),
             installedVersionName = installed?.versionName, installedVersionCode = installed?.let(::version), isCompanion = sameSigner,
             inspectionError = inspectionError, completed = it.completed && status == Status.INSTALLED) }
         if (wasCompleted && !mutable.value.completed) persistResult()
@@ -256,6 +262,22 @@ internal class CompatibilityRepository private constructor(private val context: 
     }
 
     fun clearStagedApk() { File(context.cacheDir, "compat/porter-compat.apk").delete() }
+    // refresh() polls every couple of seconds, and State compares its Bitmap by identity, so a
+    // freshly decoded icon per pass would emit a new state and recompose on every tick.
+    private fun icon(info: PackageInfo?): Bitmap? {
+        val application = info?.applicationInfo
+        if (info == null || application == null) {
+            cachedIconKey = null
+            cachedIcon = null
+            return null
+        }
+        val key = "${info.packageName}:${version(info)}:${application.sourceDir}:${info.lastUpdateTime}:${info.firstInstallTime}"
+        if (key != cachedIconKey) {
+            cachedIcon = runCatching { application.loadIcon(pm).toBitmap(96, 96) }.getOrNull()
+            cachedIconKey = key
+        }
+        return cachedIcon
+    }
     private fun installed(): PackageInfo? = try { pm.getPackageInfo(PACKAGE, flags) } catch (_: PackageManager.NameNotFoundException) { null }
     private fun ownsPermission(info: PackageInfo) = info.permissions?.any {
         it.name == PERMISSION && (it.protectionLevel and android.content.pm.PermissionInfo.PROTECTION_MASK_BASE) == android.content.pm.PermissionInfo.PROTECTION_DANGEROUS

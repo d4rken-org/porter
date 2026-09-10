@@ -55,7 +55,7 @@ internal fun HomeScreenContent(state: HomeUiState, actions: HomeActions, modifie
     val running = statusUi.running
     val restricted = statusUi.restricted
     PorterScaffold(stringResource(R.string.app_name), subtitle = stringResource(R.string.porter_home_subtitle),
-        titleIcon = R.drawable.porter_mascot, titleBadge = state.buildBadge, actions = {
+        titleIcon = homeTitleIcon(running), titleBadge = state.buildBadge, actions = {
         IconButton(onClick = actions.onOpenSettings) {
             Icon(painterResource(R.drawable.ic_action_settings_24dp), stringResource(R.string.settings_title))
         }

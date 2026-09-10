@@ -2,6 +2,7 @@ package moe.shizuku.manager.home
 
 import android.text.BidiFormatter
 import android.text.TextDirectionHeuristics
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -68,6 +69,9 @@ internal fun serviceStatusUi(
         status.apiVersion, status.patchVersion)
     return ServiceStatusUi(running, restricted, needsRestart, title, subtitle, details, versionDetails)
 }
+
+@DrawableRes internal fun homeTitleIcon(running: Boolean): Int =
+    if (running) R.drawable.porter_mascot_happy else R.drawable.porter_mascot
 
 @Composable
 internal fun ServiceStatusCard(ui: ServiceStatusUi, accessPaused: Boolean = false, onDetails: () -> Unit) {
