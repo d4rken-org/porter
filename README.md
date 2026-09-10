@@ -20,10 +20,6 @@ I use Shizuku in my own apps, [SD Maid SE](https://github.com/d4rken-org/sdmaid-
 
 Porter requires Android 7.0 or newer. Starting without a computer requires Android 11 or newer with wireless debugging, or an already rooted device. After restarting your device, start Porter again before using apps that rely on it.
 
-## Screenshots
-
-<img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1_home_running.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2_apps.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3_home_compatibility.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4_home_setup.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5_settings.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/6_apps_dark.png" width="100">
-
 ## Using apps that support Shizuku
 
 Apps with built-in Porter support only need Porter. For apps that only support Shizuku, install the optional **Porter Compatibility** APK from the same release.
@@ -39,6 +35,10 @@ Read the [Porter user guide](https://porter.darken.eu/), available in ten langua
 ## For developers
 
 Other app developers are welcome to support Porter's permission directly. [Add direct Porter support to your app](https://porter.darken.eu/developers).
+
+## Screenshots
+
+<img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1_home_running.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2_apps.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3_home_compatibility.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4_home_setup.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5_settings.png" width="100"><img src="https://github.com/d4rken-org/porter/raw/main/fastlane/metadata/android/en-US/images/phoneScreenshots/6_apps_dark.png" width="100">
 
 ## About
 
