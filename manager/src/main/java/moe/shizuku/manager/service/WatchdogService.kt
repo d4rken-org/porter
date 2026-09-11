@@ -40,6 +40,9 @@ class WatchdogService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == "ACTION_STOP_SERVICE") {
+            // Only the notification's stop action turns the watchdog off; onDestroy cannot tell
+            // a user stop from a low-memory kill or an app update.
+            ShizukuSettings.setWatchdogPreference(false)
             stopSelf()
             return START_NOT_STICKY
         }
@@ -61,7 +64,6 @@ class WatchdogService : Service() {
     override fun onDestroy() {
         ShizukuStateMachine.removeListener(stateListener)
         isRunning.set(false)
-        ShizukuSettings.setWatchdog(applicationContext, false)
         super.onDestroy()
     }
 
