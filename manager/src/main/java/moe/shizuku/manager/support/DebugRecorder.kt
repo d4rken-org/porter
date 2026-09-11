@@ -157,8 +157,8 @@ object DebugRecorder {
             events.appendText("Server stream unavailable at ${System.currentTimeMillis()}\n")
             return
         }
-        events.appendText("Server stream attached pid=${handle.pid} at ${System.currentTimeMillis()}\n")
         serverStream = handle
+        events.appendText("Server stream attached pid=${handle.pid} at ${System.currentTimeMillis()}\n")
         serverReader = scope.launch { readServerStream(handle, directory, SERVER_MAX_LOG_BYTES) }
     }
 

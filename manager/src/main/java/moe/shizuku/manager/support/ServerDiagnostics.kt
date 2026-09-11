@@ -97,8 +97,16 @@ internal object ServerDiagnostics {
         var error: InputStream? = null
         var drain: Job? = null
         try {
-            val binder = Shizuku.getBinder()?.takeIf { it.pingBinder() } ?: return null
-            val pid = readInfo(binder)?.pid ?: return null
+            val binder = Shizuku.getBinder()?.takeIf { it.pingBinder() }
+            if (binder == null) {
+                runCatching { notes.appendText("Porter service unavailable\n") }
+                return null
+            }
+            val pid = readInfo(binder)?.pid
+            if (pid == null) {
+                runCatching { notes.appendText("Service diagnostics unsupported\n") }
+                return null
+            }
             val process = IShizukuService.Stub.asInterface(binder)
                 .newProcess(arrayOf("sh", "-c", supervisor(pid)), null, null).also { remote = it }
             val output = ParcelFileDescriptor.AutoCloseInputStream(process.inputStream).also { input = it }
