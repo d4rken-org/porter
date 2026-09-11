@@ -6,8 +6,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moe.shizuku.manager.starter.ServiceReplacement
 import moe.shizuku.manager.ui.ComposeActivity
-import moe.shizuku.manager.utils.ShizukuStateMachine
-import rikka.shizuku.Shizuku
 
 class ServiceActivity : ComposeActivity() {
     override val protectTouches = true
@@ -30,10 +28,7 @@ class ServiceActivity : ComposeActivity() {
             }
             if (dialog == "stop" && snapshot.canStop) StopServiceDialog(!snapshot.primaryUser, { dialog = null }) {
                 dialog = null
-                if (repository.state.value.canStop) {
-                    ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
-                    runCatching { Shizuku.exit() }.onFailure { ShizukuStateMachine.update() }
-                }
+                if (repository.state.value.canStop) ServiceStatusRepository.stop()
             }
         }
     }
