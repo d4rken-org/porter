@@ -33,7 +33,7 @@
     <string name="porter_debug_short">This recording is very short. Have you reproduced the problem? You can cancel to keep recording.</string>
     <string name="porter_debug_stop_message">Save this recording? You can share it from Saved debug logs or attach it when contacting support.</string>
     <string name="porter_debug_saved">Saved debug logs</string>
-    <string name="porter_debug_storage">Keeps the five most recent saved recordings. Each recording is limited to 30 minutes and 8 MB of app logs, plus service diagnostics. Recordings are excluded from Android backups.</string>
+    <string name="porter_debug_storage">Keeps the five most recent saved recordings. Each recording includes app logs and service diagnostics, and stops automatically after a time or size limit. Recordings are excluded from Android backups.</string>
     <string name="porter_debug_count">Saved recordings: %1$d</string>
     <string name="porter_debug_empty">No saved debug logs</string>
     <string name="porter_debug_share">Share debug log</string>

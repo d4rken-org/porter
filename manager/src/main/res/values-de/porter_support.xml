@@ -33,7 +33,7 @@
     <string name="porter_debug_short">Diese Aufnahme ist sehr kurz. Hast du das Problem reproduziert? Du kannst abbrechen, um weiter aufzunehmen.</string>
     <string name="porter_debug_stop_message">Diese Aufnahme speichern? Du kannst sie unter Gespeicherte Protokolle teilen oder bei einer Supportanfrage anhängen.</string>
     <string name="porter_debug_saved">Gespeicherte Protokolle</string>
-    <string name="porter_debug_storage">Die fünf neuesten gespeicherten Aufnahmen werden aufbewahrt. Jede Aufnahme ist auf 30 Minuten und 8 MB App-Protokolle sowie Dienstdiagnosen begrenzt. Aufnahmen werden nicht in Android-Sicherungen aufgenommen.</string>
+    <string name="porter_debug_storage">Die fünf neuesten gespeicherten Aufnahmen werden aufbewahrt. Jede Aufnahme enthält App-Protokolle und Dienstdiagnosen und endet automatisch bei Erreichen einer Zeit- oder Größenbegrenzung. Aufnahmen sind von Android-Backups ausgeschlossen.</string>
     <string name="porter_debug_count">Gespeicherte Aufnahmen: %1$d</string>
     <string name="porter_debug_empty">Keine gespeicherten Protokolle</string>
     <string name="porter_debug_share">Diagnoseprotokoll teilen</string>

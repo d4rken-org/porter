@@ -33,7 +33,7 @@
     <string name="porter_debug_short">この記録は非常に短いです。問題は再現できましたか？キャンセルすると記録を続行できます。</string>
     <string name="porter_debug_stop_message">この記録を保存しますか？保存したデバッグログから共有するか、サポートへの問い合わせ時に添付できます。</string>
     <string name="porter_debug_saved">保存したデバッグログ</string>
-    <string name="porter_debug_storage">最新の5件の記録を保持します。各記録はアプリログが最長30分・8 MBまでに制限され、これにサービス診断情報が加わります。記録はAndroidのバックアップから除外されます。</string>
+    <string name="porter_debug_storage">最新の5件の記録を保持します。各記録にはアプリログとサービス診断が含まれ、時間またはサイズの上限に達すると自動的に停止します。記録はAndroidのバックアップから除外されます。</string>
     <string name="porter_debug_count">保存した記録: %1$d 件</string>
     <string name="porter_debug_empty">保存したデバッグログはありません</string>
     <string name="porter_debug_share">デバッグログを共有</string>

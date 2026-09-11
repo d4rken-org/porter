@@ -33,7 +33,7 @@
     <string name="porter_debug_short">Cet enregistrement est très court. Avez-vous reproduit le problème ? Vous pouvez annuler pour continuer l\'enregistrement.</string>
     <string name="porter_debug_stop_message">Conserver cet enregistrement ? Vous pourrez le partager depuis les journaux de débogage enregistrés ou le joindre lorsque vous contactez l\'assistance.</string>
     <string name="porter_debug_saved">Journaux de débogage enregistrés</string>
-    <string name="porter_debug_storage">Conserve les cinq enregistrements les plus récents. Chaque enregistrement est limité à 30 minutes et à 8 Mo de journaux d\'application, plus les diagnostics du service. Les enregistrements sont exclus des sauvegardes Android.</string>
+    <string name="porter_debug_storage">Conserve les cinq enregistrements les plus récents. Chaque enregistrement contient les journaux de l\'application et les diagnostics du service, et s\'arrête automatiquement lorsqu\'une limite de durée ou de taille est atteinte. Les enregistrements sont exclus des sauvegardes Android.</string>
     <string name="porter_debug_count">Enregistrements conservés : %1$d</string>
     <string name="porter_debug_empty">Aucun journal de débogage enregistré</string>
     <string name="porter_debug_share">Partager le journal de débogage</string>

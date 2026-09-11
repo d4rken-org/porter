@@ -33,7 +33,7 @@
     <string name="porter_debug_short">此录制非常短。您已重现问题了吗？您可以取消以继续录制。</string>
     <string name="porter_debug_stop_message">保存此录制？您可以在“已保存的调试日志”中分享，或在联系支持时附加。</string>
     <string name="porter_debug_saved">已保存的调试日志</string>
-    <string name="porter_debug_storage">最多保留最近五次保存的录制。每次录制限制为 30 分钟和 8 MB 的应用日志，外加服务诊断信息。录制内容不会包含在 Android 备份中。</string>
+    <string name="porter_debug_storage">最多保留最近五次保存的录制。每次录制包含应用日志和服务诊断，并在达到时间或大小上限时自动停止。录制不会包含在 Android 备份中。</string>
     <string name="porter_debug_count">已保存的录制：%1$d</string>
     <string name="porter_debug_empty">没有已保存的调试日志</string>
     <string name="porter_debug_share">分享调试日志</string>
