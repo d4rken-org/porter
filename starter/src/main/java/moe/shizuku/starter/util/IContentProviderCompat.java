@@ -19,6 +19,8 @@ public class IContentProviderCompat {
             try {
                 reply = provider.call((new AttributionSource.Builder(Os.getuid())).setAttributionTag(attributeTag).setPackageName(callingPkg).build(), authority, method, arg, extras);
             } catch (LinkageError e) {
+                // SDK 31 and above whose IContentProvider still carries the Android 11 signature
+                // instead of the AttributionSource one.
                 reply = provider.call(callingPkg, attributeTag, authority, method, arg, extras);
             }
         } else if (Build.VERSION.SDK_INT >= 30) {
