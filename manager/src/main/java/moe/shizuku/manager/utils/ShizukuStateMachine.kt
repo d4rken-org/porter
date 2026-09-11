@@ -62,7 +62,15 @@ object ShizukuStateMachine {
                 pending.removeFirstOrNull().also { if (it == null) draining = false }
             } ?: return
             recipients.forEach { listener ->
-                if (listeners.contains(listener)) listener(newState)
+                if (!listeners.contains(listener)) return@forEach
+                try {
+                    listener(newState)
+                } catch (e: Throwable) {
+                    // Per listener, so the others still get this transition, and so the frame keeps
+                    // draining: unwinding here would leave draining set and silence every later
+                    // transition for the life of the process.
+                    Log.w("ShizukuStateMachine", "listener failed on $newState", e)
+                }
             }
             Log.d("ShizukuStateMachine", newState.toString())
         }
