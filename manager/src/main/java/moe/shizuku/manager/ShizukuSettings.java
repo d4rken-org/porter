@@ -26,6 +26,7 @@ public class ShizukuSettings {
     public static class Keys {
         public static final String KEY_START_ON_BOOT = "start_on_boot";
         public static final String KEY_WATCHDOG = "watchdog";
+        public static final String KEY_AUTO_UPDATE_SERVICE = "auto_update_service";
         public static final String KEY_TCP_PORT = "tcp_port";
         public static final String KEY_LANGUAGE = "language";
         public static final String KEY_TRANSLATION = "translation";
@@ -142,6 +143,10 @@ public class ShizukuSettings {
     
     public static boolean getWatchdog() {
         return getPreferences().getBoolean(Keys.KEY_WATCHDOG, false);
+    }
+
+    public static boolean getAutoUpdateService() {
+        return getPreferences().getBoolean(Keys.KEY_AUTO_UPDATE_SERVICE, false);
     }
 
     public static boolean isWatchdogRunning() {

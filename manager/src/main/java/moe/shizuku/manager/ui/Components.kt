@@ -9,11 +9,14 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -49,7 +52,7 @@ fun PorterScaffold(title: String, onBack: (() -> Unit)? = null, subtitle: String
                 }
             }, navigationIcon = {
                 onBack?.let { back ->
-                    IconButton(onClick = back) { Icon(painterResource(R.drawable.ic_arrow_back_24dp), stringResource(R.string.porter_navigate_back)) }
+                    IconButton(onClick = back) { Icon(Icons.AutoMirrored.TwoTone.ArrowBack, stringResource(R.string.porter_navigate_back)) }
                 }
             }, actions = actions, windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top))
         }, content = content
@@ -63,13 +66,13 @@ fun SettingsCategory(title: String) {
 }
 
 @Composable
-fun SettingsItem(title: String, @DrawableRes icon: Int, summary: String? = null,
+fun SettingsItem(title: String, icon: ImageVector, summary: String? = null,
                  enabled: Boolean = true, onClick: () -> Unit, trailing: @Composable (() -> Unit)? = null) {
     SettingsRow(title, icon, summary, enabled, Modifier.clickable(enabled = enabled, onClick = onClick), trailing)
 }
 
 @Composable
-fun SettingsSwitch(title: String, @DrawableRes icon: Int, checked: Boolean, summary: String? = null,
+fun SettingsSwitch(title: String, icon: ImageVector, checked: Boolean, summary: String? = null,
                    enabled: Boolean = true, onCheckedChange: (Boolean) -> Unit) {
     SettingsRow(title, icon, summary, enabled, Modifier.toggleable(value = checked, enabled = enabled, role = Role.Switch, onValueChange = onCheckedChange)) {
         Switch(checked, onCheckedChange = null, enabled = enabled)
@@ -77,12 +80,12 @@ fun SettingsSwitch(title: String, @DrawableRes icon: Int, checked: Boolean, summ
 }
 
 @Composable
-private fun SettingsRow(title: String, icon: Int, summary: String?, enabled: Boolean, modifier: Modifier,
+private fun SettingsRow(title: String, icon: ImageVector, summary: String?, enabled: Boolean, modifier: Modifier,
                         trailing: @Composable (() -> Unit)?) {
     val color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (enabled) 1f else .38f)
     Row(modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        Icon(painterResource(icon), null, Modifier.size(24.dp), tint = color)
+        Icon(icon, null, Modifier.size(24.dp), tint = color)
         Column(Modifier.weight(1f)) {
             Text(title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (enabled) 1f else .38f))
             summary?.takeIf { it.isNotEmpty() }?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = color) }

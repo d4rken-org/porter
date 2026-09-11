@@ -1,0 +1,16 @@
+<resources>
+    <string name="porter_service_update_available">Service update available</string>
+    <string name="porter_service_update_action">Update service</string>
+    <string name="porter_service_update_summary">Updating briefly disconnects connected apps. Existing permissions are kept.</string>
+    <string name="porter_service_update_primary">Open Porter in the primary Android user to update the service.</string>
+    <string name="porter_service_update_features">Update the service to enable these features.</string>
+    <string name="porter_service_auto_update">Update service automatically</string>
+    <string name="porter_service_auto_update_summary">After a Porter app update, replace an running service with a different build in the background. This briefly disconnects connected apps. A stopped service stays stopped.</string>
+    <string name="porter_service_update_interrupted">The previous service update did not finish. Retry if the service is still running, or start it again from the Service screen.</string>
+    <string name="porter_global_access_update">Global access control is unavailable in the running service.</string>
+    <string name="porter_discovery_update">The running service does not support the current app discovery and connection history features. Available apps are shown using its older interface.</string>
+    <string name="porter_service_updating">Updating Porter service…</string>
+    <string name="porter_service_update_failed">Could not update Porter service</string>
+    <string name="porter_service_update_failed_summary">The running service could not be replaced with the installed version. If it is still running, you can retry. Otherwise, start the service again from the Service screen.</string>
+    <string name="porter_service_update_retry">Retry update</string>
+</resources>

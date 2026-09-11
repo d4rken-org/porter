@@ -8,7 +8,8 @@ data class ServiceStatus(
         val patchVersion: Int = -1,
         val seContext: String? = null,
         val permission: Boolean = false,
-        val porterVersion: PorterServiceVersion? = null
+        val porterVersion: PorterServiceVersion? = null,
+        val pid: Int? = null
 ) {
     val isRunning: Boolean
         get() = uid != -1 && ShizukuStateMachine.isRunning()

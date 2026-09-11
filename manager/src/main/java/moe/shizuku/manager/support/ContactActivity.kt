@@ -5,6 +5,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.HelpOutline
+import androidx.compose.material.icons.twotone.Terminal
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -39,14 +42,14 @@ class ContactActivity : ComposeActivity() {
             PorterScaffold(stringResource(R.string.porter_contact), onBack = { finish() }) { padding ->
                 Column(Modifier.padding(padding).consumeWindowInsets(padding).imePadding().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(stringResource(R.string.porter_contact_summary))
-                    SettingsItem(stringResource(R.string.porter_contact_category), R.drawable.ic_help_outline_24dp, categories[category], enabled = !busy, onClick = { dialog = "category" })
+                    SettingsItem(stringResource(R.string.porter_contact_category), Icons.AutoMirrored.TwoTone.HelpOutline, categories[category], enabled = !busy, onClick = { dialog = "category" })
                     OutlinedTextField(description, { description = it.take(5000) }, Modifier.fillMaxWidth(), enabled = !busy,
                         label = { Text(stringResource(R.string.porter_contact_description)) }, minLines = 4, isError = badDescription,
                         supportingText = { if (badDescription) Text(stringResource(R.string.porter_contact_description_error)) })
                     if (category == 0) OutlinedTextField(expected, { expected = it.take(3000) }, Modifier.fillMaxWidth(), enabled = !busy,
                         label = { Text(stringResource(R.string.porter_contact_expected)) }, minLines = 2, isError = badExpected,
                         supportingText = { if (badExpected) Text(stringResource(R.string.porter_contact_expected_error)) })
-                    SettingsItem(stringResource(R.string.porter_contact_attachment), R.drawable.ic_terminal_24,
+                    SettingsItem(stringResource(R.string.porter_contact_attachment), Icons.TwoTone.Terminal,
                         attachmentLabels.getOrElse(attachmentIds.indexOf(attachment)) { stringResource(R.string.porter_contact_no_attachment) },
                         enabled = !busy && !recording.active, onClick = { dialog = "attachment" })
                     OutlinedButton(onClick = model::requestRecording, enabled = !busy, modifier = Modifier.fillMaxWidth()) {

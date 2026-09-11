@@ -56,6 +56,7 @@ class ArtworkAssetsTest(unittest.TestCase):
         "manager monochrome": MANAGER / "porter_monochrome.png",
         "manager mascot": MANAGER / "porter_mascot.png",
         "manager happy mascot": MANAGER / "porter_mascot_happy.png",
+        "manager unhappy mascot": MANAGER / "porter_mascot_unhappy.png",
         "compat launcher": COMPAT / "ic_porter.png",
         "compat background": COMPAT / "porter_background.png",
         "compat foreground": COMPAT / "porter_foreground.png",
@@ -79,8 +80,9 @@ class ArtworkAssetsTest(unittest.TestCase):
     def test_website_icon_is_porters_and_not_the_companions(self):
         self.assertEqual(digest(MANAGER / "ic_launcher.png"), digest(ASSETS / "porter-icon.png"))
 
-    def test_running_mascot_differs_from_the_neutral_one(self):
-        self.assertNotEqual(digest(MANAGER / "porter_mascot.png"), digest(MANAGER / "porter_mascot_happy.png"))
+    def test_mascot_expressions_are_distinct(self):
+        names = ("porter_mascot.png", "porter_mascot_happy.png", "porter_mascot_unhappy.png")
+        self.assertEqual(3, len({digest(MANAGER / name) for name in names}))
 
     def test_plates_keep_their_assigned_colours(self):
         self.assertEqual(MINT, first_pixel(MANAGER / "porter_background.png"))

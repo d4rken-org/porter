@@ -77,4 +77,24 @@ class ApplicationManagementListTest : ComposeTest() {
         row.assertIsOn().assertIsEnabled().performClick()
         assertEquals(1, toggles)
     }
+
+    @Test fun unavailableServiceHidesStaleAppsAndAllSwitches() {
+        val state = AppsViewModel.State(listOf(app), loading = false, accessEnabled = true)
+        var opens = 0
+        composeTestRule.setContent { PorterTheme {
+            ApplicationManagementList(state, {}, { _, _ -> }, serviceAvailable = false, onViewService = { opens++ })
+        } }
+        composeTestRule.onNodeWithText("Example app", substring = true).assertDoesNotExist()
+        composeTestRule.onNodeWithText("Pause access", substring = true).assertDoesNotExist()
+        composeTestRule.onNodeWithText("View service").assertDoesNotExist()
+        assertEquals(0, opens)
+    }
+    @Test fun unsupportedCapabilitiesHaveOneServiceLinkAndNoUpdateButton() {
+        val state = AppsViewModel.State(listOf(app), loading = false, accessEnabled = null, legacy = true)
+        composeTestRule.setContent { PorterTheme { ApplicationManagementList(state, {}, { _, _ -> }) } }
+        composeTestRule.onAllNodesWithText("View service").assertCountEquals(1)
+        composeTestRule.onNodeWithText("Update service").assertDoesNotExist()
+        composeTestRule.onNodeWithText("Pause access", substring = true).assertIsNotEnabled()
+        composeTestRule.onNodeWithText("Example app", substring = true).assertIsEnabled()
+    }
 }

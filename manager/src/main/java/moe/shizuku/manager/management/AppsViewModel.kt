@@ -45,7 +45,7 @@ class AppsViewModel(application: Application) : AndroidViewModel(application) {
     private var globalRevision = 0L
     private val appRevisions = mutableMapOf<Int, Long>()
 
-    fun load() = viewModelScope.launch { mutex.withLock { icons.clear(); refresh() } }
+    fun load() = viewModelScope.launch { mutex.withLock { mutableState.update { it.copy(loading = true) }; icons.clear(); refresh() } }
     private suspend fun refresh() = withContext(Dispatchers.IO) {
         try {
             val pm = context.packageManager

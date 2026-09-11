@@ -5,95 +5,86 @@ import android.text.TextDirectionHeuristics
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.KeyboardArrowRight
+import androidx.compose.material.icons.twotone.CheckCircle
+import androidx.compose.material.icons.twotone.Error
+import androidx.compose.material.icons.twotone.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.LayoutDirection
-import moe.shizuku.manager.BuildConfig
+import androidx.compose.ui.unit.dp
 import moe.shizuku.manager.R
-import moe.shizuku.manager.model.PorterServiceVersion
-import moe.shizuku.manager.model.ServiceStatus
 import moe.shizuku.manager.management.AppsViewModel
-import moe.shizuku.manager.ui.MessageDialog
 import moe.shizuku.manager.ui.plainText
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import rikka.shizuku.Shizuku
-import rikka.shizuku.ShizukuApiConstants
 
-/** Text the status card and its dialog show for one service state. */
 internal data class ServiceStatusUi(
     val running: Boolean,
     val restricted: Boolean,
-    val needsRestart: Boolean,
+    val updateAvailable: Boolean,
     val title: String,
     val subtitle: String?,
     val details: String,
-    val versionDetails: String,
+    val busy: Boolean = false,
 )
 
+internal val ServiceStatusUi.statusIcon: ImageVector
+    get() = when { restricted -> Icons.TwoTone.Warning; running -> Icons.TwoTone.CheckCircle; else -> Icons.TwoTone.Error }
+
 @Composable
-internal fun serviceStatusUi(
-    status: ServiceStatus,
-    serviceState: ShizukuStateMachine.State,
-    installed: PorterServiceVersion = PorterServiceVersion(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
-    latestApi: Int = Shizuku.getLatestServiceVersion(),
-    latestPatch: Int = ShizukuApiConstants.SERVER_PATCH_VERSION,
-): ServiceStatusUi {
-    val running = serviceState == ShizukuStateMachine.State.RUNNING && status.uid != -1
-    val restricted = running && !status.permission
-    val needsRestart = running && (
-        status.porterVersion?.matches(installed.name, installed.code) != true ||
-            status.apiVersion != latestApi ||
-            status.patchVersion != latestPatch
-        )
-    val title = plainText(stringResource(if (running) R.string.home_status_service_is_running else R.string.home_status_service_not_running, stringResource(R.string.app_name)))
-    val subtitle = if (running) stringResource(if (status.uid == 0) R.string.porter_status_running_root else R.string.porter_status_running_adb) else null
-    val details = if (running) listOfNotNull(
-        if (needsRestart) stringResource(R.string.porter_status_restart_service) else null,
-        if (restricted) stringResource(R.string.porter_status_restricted) else null,
-    ).joinToString("\n") else ""
-    val bidiFormatter = BidiFormatter.getInstance(LocalLayoutDirection.current == LayoutDirection.Rtl)
-    val versionDetails = stringResource(R.string.porter_status_versions,
-        bidiFormatter.unicodeWrap(installed.name, TextDirectionHeuristics.LTR),
-        status.porterVersion?.name?.let { bidiFormatter.unicodeWrap(it, TextDirectionHeuristics.LTR) }
-            ?: stringResource(R.string.porter_status_version_unknown),
-        status.apiVersion, status.patchVersion)
-    return ServiceStatusUi(running, restricted, needsRestart, title, subtitle, details, versionDetails)
+internal fun ServiceStatusUi.statusTint(): Color = when {
+    restricted -> colorResource(R.color.porter_status_warning)
+    running -> colorResource(R.color.porter_status_running)
+    else -> MaterialTheme.colorScheme.onSurfaceVariant
 }
 
-@DrawableRes internal fun homeTitleIcon(running: Boolean): Int =
-    if (running) R.drawable.porter_mascot_happy else R.drawable.porter_mascot
-
 @Composable
-internal fun ServiceStatusCard(ui: ServiceStatusUi, accessPaused: Boolean = false, onDetails: () -> Unit) {
-    HomeCard(ui.title, when { ui.restricted -> R.drawable.ic_warning_24; ui.running -> R.drawable.ic_server_ok_24dp; else -> R.drawable.ic_server_error_24dp },
-        if (ui.running) onDetails else null,
-        when { ui.restricted -> colorResource(R.color.porter_status_warning); ui.running -> colorResource(R.color.porter_status_running); else -> MaterialTheme.colorScheme.onSurfaceVariant },
-        subtitle = ui.subtitle, actionLabel = stringResource(R.string.porter_status_details_hint)) {
-        if (ui.running) {
-            if (ui.details.isNotEmpty()) Text(ui.details, style = MaterialTheme.typography.bodyMedium)
-            if (!ui.restricted && !ui.needsRestart) {
-                Text(stringResource(if (accessPaused) R.string.porter_status_access_paused else R.string.porter_status_ready), style = MaterialTheme.typography.bodyMedium)
-            }
-        }
+internal fun serviceStatusUi(snapshot: moe.shizuku.manager.service.ServiceSnapshot): ServiceStatusUi {
+    val title = when {
+        snapshot.updating -> stringResource(R.string.porter_service_updating)
+        snapshot.serviceState == ShizukuStateMachine.State.STARTING -> stringResource(R.string.porter_service_starting)
+        snapshot.serviceState == ShizukuStateMachine.State.STOPPING -> stringResource(R.string.porter_service_stopping)
+        snapshot.serviceState == ShizukuStateMachine.State.RUNNING && !snapshot.running -> stringResource(R.string.porter_service_checking)
+        else -> plainText(stringResource(if (snapshot.running) R.string.home_status_service_is_running else R.string.home_status_service_not_running, stringResource(R.string.app_name)))
     }
+    val subtitle = if (snapshot.running) stringResource(if (snapshot.status.uid == 0) R.string.porter_status_running_root else R.string.porter_status_running_adb) else null
+    val details = listOfNotNull(
+        when {
+            snapshot.failed && !snapshot.busy -> stringResource(R.string.porter_service_update_failed)
+            snapshot.updateAvailable && !snapshot.busy -> stringResource(R.string.porter_service_update_available)
+            else -> null
+        },
+        if (snapshot.restricted) stringResource(R.string.porter_status_restricted) else null,
+    ).joinToString("\n")
+    return ServiceStatusUi(snapshot.running, snapshot.restricted, snapshot.updateAvailable, title, subtitle, details, snapshot.busy)
+}
+
+@DrawableRes internal fun homeTitleIcon(running: Boolean, restricted: Boolean): Int = when {
+    !running -> R.drawable.porter_mascot
+    restricted -> R.drawable.porter_mascot_unhappy
+    else -> R.drawable.porter_mascot_happy
 }
 
 @Composable
-internal fun ServiceStatusDialog(ui: ServiceStatusUi, onDismiss: () -> Unit, secondaryUser: Boolean = false, onStop: () -> Unit) {
-    val details = listOfNotNull(ui.subtitle, ui.details.takeIf { it.isNotEmpty() }).joinToString("\n")
-    val stopMessage = stringResource(if (secondaryUser) R.string.porter_secondary_user_stop_message else R.string.porter_status_stop_message)
-    MessageDialog(ui.title, "$details\n\n${ui.versionDetails}\n\n$stopMessage", onDismiss,
-        stringResource(R.string.action_stop), confirmColor = MaterialTheme.colorScheme.error, onConfirm = onStop)
+internal fun ServiceStatusCard(ui: ServiceStatusUi, onDetails: () -> Unit) {
+    HomeCard(ui.title, ui.statusIcon, onDetails, ui.statusTint(),
+        subtitle = ui.subtitle, actionLabel = stringResource(R.string.porter_view_service)) {
+        if (ui.details.isNotEmpty()) Text(ui.details, style = MaterialTheme.typography.bodyMedium)
+        if (ui.busy) LinearProgressIndicator(Modifier.fillMaxWidth())
+    }
 }
 
 @Composable
@@ -103,7 +94,16 @@ internal fun HomeCardActions(content: @Composable FlowRowScope.() -> Unit) {
 }
 
 @Composable
-internal fun HomeCard(title: String, icon: Int, onClick: (() -> Unit)? = null,
+internal fun HomeCard(title: String, icon: ImageVector, onClick: (() -> Unit)? = null,
+                      tint: Color = MaterialTheme.colorScheme.primary, subtitle: String? = null,
+                      containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLow,
+                      actionLabel: String? = null,
+                      content: @Composable ColumnScope.() -> Unit) {
+    HomeCard(title, rememberVectorPainter(icon), onClick, tint, subtitle, containerColor, actionLabel, content)
+}
+
+@Composable
+internal fun HomeCard(title: String, icon: Painter, onClick: (() -> Unit)? = null,
                       tint: Color = MaterialTheme.colorScheme.primary, subtitle: String? = null,
                       containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLow,
                       actionLabel: String? = null,
@@ -112,14 +112,14 @@ internal fun HomeCard(title: String, icon: Int, onClick: (() -> Unit)? = null,
         colors = CardDefaults.cardColors(containerColor = containerColor)) {
         Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Icon(painterResource(icon), null, Modifier.size(24.dp), tint)
+                Icon(icon, null, Modifier.size(24.dp), tint)
                 Column(Modifier.weight(1f)) {
                     Text(title, style = MaterialTheme.typography.titleMedium)
                     subtitle?.let {
                         Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
-                if (onClick != null) Icon(painterResource(R.drawable.ic_touch_app_24), null,
+                if (onClick != null) Icon(Icons.AutoMirrored.TwoTone.KeyboardArrowRight, null,
                     Modifier.size(18.dp).align(Alignment.Top), MaterialTheme.colorScheme.onSurfaceVariant)
             }
             content()
@@ -128,11 +128,12 @@ internal fun HomeCard(title: String, icon: Int, onClick: (() -> Unit)? = null,
 }
 
 @Composable
-internal fun CompatibilityCard(description: String, onDownload: () -> Unit) {
-    HomeCard(stringResource(R.string.compat_setup_title), R.drawable.ic_shizuku,
-        onClick = if (BuildConfig.IS_FOSS) onDownload else null, tint = Color.Unspecified,
+internal fun CompatibilityCard(description: String, affectedApps: String? = null, onDownload: () -> Unit) {
+    HomeCard(stringResource(R.string.compat_setup_title), painterResource(R.drawable.ic_shizuku),
+        onClick = onDownload, tint = Color.Unspecified,
         containerColor = MaterialTheme.colorScheme.tertiaryContainer, actionLabel = stringResource(R.string.compat_setup_hint)) {
         Text(description, style = MaterialTheme.typography.bodyMedium)
+        affectedApps?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
     }
 }
 
@@ -145,7 +146,7 @@ internal fun compatibilityUsageText(running: Boolean, apps: AppsViewModel.State)
 
 @Composable
 internal fun InstalledCompatibilityCard(version: String, usage: String, notice: String? = null, onDetails: () -> Unit) {
-    HomeCard(stringResource(R.string.compat_setup_title), R.drawable.ic_shizuku, onDetails, tint = Color.Unspecified,
+    HomeCard(stringResource(R.string.compat_setup_title), painterResource(R.drawable.ic_shizuku), onDetails, tint = Color.Unspecified,
         subtitle = stringResource(R.string.compat_status_installed),
         containerColor = if (notice != null) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceContainerLow,
         actionLabel = stringResource(R.string.compat_details_hint)) {

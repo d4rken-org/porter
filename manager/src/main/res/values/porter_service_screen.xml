@@ -1,0 +1,24 @@
+<resources>
+    <string name="porter_service_title">Service</string>
+    <string name="porter_view_service">View service</string>
+    <string name="porter_service_starting">Starting Porter service…</string>
+    <string name="porter_service_stopping">Stopping Porter service…</string>
+    <string name="porter_service_checking">Reading service status…</string>
+    <string name="porter_apps_service_unavailable">Application access is unavailable while the service is stopped or changing.</string>
+    <string name="porter_apps_counts_unavailable">Application counts are unavailable.</string>
+    <string name="porter_background_operation">Background operation</string>
+    <string name="porter_service_failed_running">The previous update did not finish. The service is still running. You can retry the update.</string>
+    <string name="porter_service_failed_stopped">The previous update did not finish. The service is stopped. Go to the dashboard to start it again.</string>
+    <string name="porter_service_build_different_summary">The running service uses a different build from the installed app. Compatible features remain available.</string>
+    <string name="porter_service_build_unknown_summary">The running service cannot report its build identity. Update it to use the installed build. Compatible features remain available.</string>
+    <string name="porter_service_healthy">Everything is working normally.</string>
+    <string name="porter_service_progress_background">You can leave this screen. The operation continues in the background.</string>
+    <string name="porter_build_identity_unavailable">Build identity unavailable</string>
+    <string name="porter_installed_app">Installed app</string>
+    <string name="porter_running_service">Running service</string>
+    <string name="porter_service_api_value">Shizuku API: %1$d · Patch: %2$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Requires a rooted device. Porter requests root access when you press Start.</string>
+    <string name="porter_version_compact">%1$s (%2$d)</string>
+    <string name="porter_build_compact">%1$s (%2$s)</string>
+</resources>

@@ -3,6 +3,7 @@ package moe.shizuku.manager.support
 import android.os.IBinder
 import android.os.Parcel
 import android.os.ParcelFileDescriptor
+import eu.darken.porter.common.PorterBuildIdentity
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.model.PorterServiceVersion
 import moe.shizuku.server.IShizukuService
@@ -28,7 +29,8 @@ internal object ServerDiagnostics {
             val extra = if (reply.dataAvail() > 0) reply.readBundle() else null
             val name = extra?.getString(ServerConstants.DIAGNOSTICS_VERSION_NAME)
             val code = extra?.getInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, -1) ?: -1
-            val version = if (!name.isNullOrBlank() && code >= 0) PorterServiceVersion(name, code) else null
+            val buildId = extra?.getString(PorterBuildIdentity.DIAGNOSTICS_KEY)?.takeIf { it.isNotBlank() }
+            val version = if (!name.isNullOrBlank() && code >= 0) PorterServiceVersion(name, code, buildId) else null
             return Info(pid, version)
         } finally {
             request.recycle()
@@ -48,7 +50,7 @@ internal object ServerDiagnostics {
             details.appendText("UID: ${Shizuku.getUid()}\nAPI: ${Shizuku.getVersion()}\nSELinux: ${Shizuku.getSELinuxContext()}\n")
             val info = readInfo(binder) ?: error("Service diagnostics unsupported")
             val pid = info.pid
-            details.appendText("PID: $pid\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nAPI patch: ${Shizuku.getServerPatchVersion()}\n")
+            details.appendText("PID: $pid\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nInstalled build: ${PorterServiceVersion.installed.buildId}\nService build: ${info.version?.buildId ?: "unknown"}\nAPI patch: ${Shizuku.getServerPatchVersion()}\n")
             val remote = IShizukuService.Stub.asInterface(binder).newProcess(
                 arrayOf("logcat", "-d", "-v", "threadtime", "-t", "2000", "--pid=$pid"), null, null,
             )

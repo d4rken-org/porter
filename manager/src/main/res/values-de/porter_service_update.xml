@@ -1,0 +1,16 @@
+<resources>
+    <string name="porter_service_update_available">Dienstaktualisierung verfügbar</string>
+    <string name="porter_service_update_action">Dienst aktualisieren</string>
+    <string name="porter_service_update_summary">Die Aktualisierung trennt verbundene Apps kurzzeitig. Bestehende Berechtigungen bleiben erhalten.</string>
+    <string name="porter_service_update_primary">Öffne Porter im primären Android-Nutzer, um den Dienst zu aktualisieren.</string>
+    <string name="porter_service_update_features">Aktualisiere den Dienst, um diese Funktionen zu nutzen.</string>
+    <string name="porter_service_auto_update">Dienst automatisch aktualisieren</string>
+    <string name="porter_service_auto_update_summary">Nach einem Porter-App-Update wird ein veralteter laufender Dienst im Hintergrund ersetzt. Verbundene Apps werden kurzzeitig getrennt. Ein gestoppter Dienst bleibt gestoppt.</string>
+    <string name="porter_service_update_interrupted">Die vorherige Dienstaktualisierung wurde nicht abgeschlossen. Versuche es erneut, wenn der Dienst noch läuft, oder starte ihn über die Seite „Dienst“.</string>
+    <string name="porter_global_access_update">Die globale Zugriffskontrolle ist im laufenden Dienst nicht verfügbar.</string>
+    <string name="porter_discovery_update">Der laufende Dienst unterstützt die aktuelle App-Erkennung und den Verbindungsverlauf nicht. Verfügbare Apps werden über seine ältere Schnittstelle angezeigt.</string>
+    <string name="porter_service_updating">Porter-Dienst wird aktualisiert…</string>
+    <string name="porter_service_update_failed">Porter-Dienst konnte nicht aktualisiert werden</string>
+    <string name="porter_service_update_failed_summary">Der laufende Dienst konnte nicht durch die installierte Version ersetzt werden. Wenn er noch läuft, kannst du es erneut versuchen. Andernfalls starte den Dienst erneut über die Seite „Dienst“.</string>
+    <string name="porter_service_update_retry">Aktualisierung erneut versuchen</string>
+</resources>

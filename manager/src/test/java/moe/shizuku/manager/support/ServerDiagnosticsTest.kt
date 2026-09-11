@@ -36,6 +36,18 @@ class ServerDiagnosticsTest {
         assertEquals(ServerDiagnostics.Info(4321, PorterServiceVersion("1.2.0-beta3", 1200030)), info)
     }
 
+    @Test fun buildIdentifierSurvivesTheDiagnosticsHandshake() {
+        val info = ServerDiagnostics.readInfo(service {
+            writeNoException(); writeInt(4321)
+            writeBundle(Bundle().apply {
+                putString(ServerConstants.DIAGNOSTICS_VERSION_NAME, "1.2.0-beta3")
+                putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, 1200030)
+                putString(eu.darken.porter.common.PorterBuildIdentity.DIAGNOSTICS_KEY, "dirty-build:debug")
+            })
+        })
+        assertEquals("dirty-build:debug", info!!.version!!.buildId)
+    }
+
     @Test fun serviceWithoutVersionReportsOnlyPid() {
         val info = ServerDiagnostics.readInfo(service { writeNoException(); writeInt(77) })
         assertEquals(ServerDiagnostics.Info(77, null), info)

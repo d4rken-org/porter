@@ -82,8 +82,13 @@ object AuthorizationManager {
 
     fun getGlobalAccess(): Boolean? = globalAccess(Shizuku.getBinder() ?: error("Porter is not running"))
     fun setGlobalAccess(enabled: Boolean) {
-        check(globalAccess(Shizuku.getBinder() ?: error("Porter is not running"), enabled) == enabled) {
-            "Restart Porter to use global access control."
+        setGlobalAccess(Shizuku.getBinder() ?: error("Porter is not running"), enabled)
+    }
+
+    internal fun setGlobalAccess(binder: IBinder, enabled: Boolean) {
+        check(globalAccess(binder) != null) { "Update the Porter service to use global access control." }
+        check(globalAccess(binder, enabled) == enabled) {
+            "Update the Porter service to use global access control."
         }
     }
 

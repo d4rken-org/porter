@@ -27,6 +27,12 @@ class SettingsActivity : ComposeActivity() {
     private val model: SettingsViewModel by viewModels()
     private val battery = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { model.batteryResult() }
 
+    private var batteryRestricted by mutableStateOf(false)
+    override fun onResume() {
+        super.onResume()
+        batteryRestricted = !EnvironmentUtils.isTelevision() && !SettingsHelper.isIgnoringBatteryOptimizations(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         porterContent { SettingsScreen() }
@@ -59,6 +65,8 @@ class SettingsActivity : ComposeActivity() {
                 startOnBoot = ShizukuSettings.getStartOnBoot(this@SettingsActivity),
                 startOnBootEnabled = canBoot,
                 watchdog = values[ShizukuSettings.Keys.KEY_WATCHDOG] as? Boolean ?: false,
+                autoUpdateService = values[ShizukuSettings.Keys.KEY_AUTO_UPDATE_SERVICE] as? Boolean ?: false,
+                autoUpdateServiceEnabled = UserHandleCompat.myUserId() == 0,
                 showPairingMethod = !EnvironmentUtils.isTelevision() && Build.VERSION.SDK_INT >= 30,
                 pairingMethodLabel = pairings[if (values[ShizukuSettings.Keys.KEY_LEGACY_PAIRING] == true) 1 else 0],
                 showTcpPort = showTcpPort,
@@ -70,11 +78,13 @@ class SettingsActivity : ComposeActivity() {
                     else colors.getOrElse(colorValues.indexOf(color)) { colors.first() },
                 themeColorEnabled = style != "MATERIAL_YOU" || Build.VERSION.SDK_INT < 31,
                 versionName = BuildConfig.VERSION_NAME,
+                showBatteryAction = batteryRestricted && (ShizukuSettings.getStartOnBoot(this@SettingsActivity) || ShizukuSettings.getWatchdog()),
             ),
             SettingsActions(
                 onBack = { finish() },
                 onStartOnBootChange = { model.toggle(ShizukuSettings.Keys.KEY_START_ON_BOOT, it) },
                 onWatchdogChange = { model.toggle(ShizukuSettings.Keys.KEY_WATCHDOG, it) },
+                onAutoUpdateServiceChange = { model.setAutoUpdateService(it) },
                 onPairingMethod = { model.show("pairing") },
                 onTcpPort = { model.show("tcp") },
                 onThemeMode = { model.show("mode") },
@@ -87,6 +97,7 @@ class SettingsActivity : ComposeActivity() {
                 onSupport = { startActivity(Intent(this@SettingsActivity, moe.shizuku.manager.support.SupportActivity::class.java)) },
                 onAcknowledgements = { startActivity(Intent(this@SettingsActivity, AcknowledgementsActivity::class.java)) },
                 onVersion = { CustomTabsHelper.launchUrlOrCopy(this@SettingsActivity, Helps.DOWNLOAD.get()) },
+                onBatteryOptimization = { SettingsHelper.requestIgnoreBatteryOptimizations(this@SettingsActivity) },
             ),
         )
         val dismiss = { model.show(null) }

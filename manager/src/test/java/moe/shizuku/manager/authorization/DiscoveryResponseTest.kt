@@ -16,6 +16,20 @@ import rikka.parcelablelist.ParcelableListSlice
 @RunWith(RobolectricTestRunner::class)
 @Config(application = TestApplication::class, sdk = [34])
 class DiscoveryResponseTest {
+    @Test fun incompatibleGlobalAccessProtocolIsNeverUsedForWrites() {
+        var writes = 0
+        val future = object : Binder() {
+            override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+                data.enforceInterface("moe.shizuku.server.IShizukuService")
+                if (data.readInt() == GlobalAccess.WRITE) writes++
+                reply!!.writeNoException()
+                reply.writeInt(GlobalAccess.VERSION + 1)
+                return true
+            }
+        }
+        assertThrows(IllegalStateException::class.java) { AuthorizationManager.setGlobalAccess(future, false) }
+        assertEquals(0, writes)
+    }
     @Test fun oldServiceFallsBackWithoutReadingAnEmptyReply() {
         val old = object : Binder() {
             override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int) = false

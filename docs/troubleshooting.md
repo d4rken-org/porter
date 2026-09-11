@@ -86,7 +86,9 @@ Some OPPO/OnePlus systems have a **Permission monitoring** switch in Developer o
 
 ## The version shown while running is different
 
-The **Version** entry in **Settings** shows the Porter app version. Tap **Porter is running** to see the installed app version, running Porter service version and compatible Shizuku API version. The API version describes compatibility, not Porter's release number. If Porter asks you to restart the service after an update, stop and start it again.
+The **Version** entry in **Settings** shows the Porter app version. Tap the service card to open **Service**. It shows the installed app and running service with their version names, version codes and build IDs, plus the compatible Shizuku API version. To share diagnostic details, [record a debug log](#report-a-problem) under **Settings**, **Help & support**. The API version describes compatibility, not Porter's release number. A different build shows **Service update available**. Compatible features remain usable; opening Porter does not restart the service. Tap **Update service** on the Service screen in the primary Android user and confirm to apply the installed build using the running service’s privileges, without a computer or a new wireless debugging connection. Connected apps are briefly disconnected, and permissions are kept. If replacement fails, use **Retry update** while the old service is still running, or start it again using your usual startup method.
+
+In **Settings**, **Update service automatically** optionally checks for a running service with a different build after a Porter app update. It is off by default. Android may delay background work; the manual update button remains available. A stopped service stays stopped. Failed or interrupted updates are shown on the home screen, including when the watchdog is enabled.
 
 ## Report a problem
 

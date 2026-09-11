@@ -1,0 +1,24 @@
+<resources>
+    <string name="porter_service_title">Dienst</string>
+    <string name="porter_view_service">Dienst anzeigen</string>
+    <string name="porter_service_starting">Porter-Dienst wird gestartet…</string>
+    <string name="porter_service_stopping">Porter-Dienst wird gestoppt…</string>
+    <string name="porter_service_checking">Dienststatus wird gelesen…</string>
+    <string name="porter_apps_service_unavailable">App-Zugriff ist nicht verfügbar, während der Dienst gestoppt ist oder gewechselt wird.</string>
+    <string name="porter_apps_counts_unavailable">App-Anzahlen sind nicht verfügbar.</string>
+    <string name="porter_background_operation">Hintergrundbetrieb</string>
+    <string name="porter_service_failed_running">Die vorherige Aktualisierung wurde nicht abgeschlossen. Der Dienst läuft noch. Du kannst die Aktualisierung erneut versuchen.</string>
+    <string name="porter_service_failed_stopped">Die vorherige Aktualisierung wurde nicht abgeschlossen. Der Dienst ist gestoppt. Wechsle zur Startseite, um ihn erneut zu starten.</string>
+    <string name="porter_service_build_different_summary">Der laufende Dienst nutzt einen anderen Build als die installierte App. Kompatible Funktionen bleiben verfügbar.</string>
+    <string name="porter_service_build_unknown_summary">Der laufende Dienst kann seine Build-Identität nicht melden. Aktualisiere ihn auf den installierten Build. Kompatible Funktionen bleiben verfügbar.</string>
+    <string name="porter_service_healthy">Alles funktioniert wie erwartet.</string>
+    <string name="porter_service_progress_background">Du kannst diese Seite verlassen. Der Vorgang wird im Hintergrund fortgesetzt.</string>
+    <string name="porter_build_identity_unavailable">Build-Identität nicht verfügbar</string>
+    <string name="porter_installed_app">Installierte App</string>
+    <string name="porter_running_service">Laufender Dienst</string>
+    <string name="porter_service_api_value">Shizuku-API: %1$d · Patch: %2$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Erfordert ein Gerät mit Root-Zugriff. Porter fordert Root-Rechte an, wenn du auf Starten tippst.</string>
+    <string name="porter_version_compact">%1$s (%2$d)</string>
+    <string name="porter_build_compact">%1$s (%2$s)</string>
+</resources>

@@ -47,6 +47,8 @@ dependencyResolutionManagement {
 }
 
 include ":server", ":starter", ":shell", ":manager", ":common", ":compat", ":client", ":probe"
+include ":service-update-fixture"
+project(":service-update-fixture").projectDir = file("test-fixtures/service-update")
 
 def root = "api"
 

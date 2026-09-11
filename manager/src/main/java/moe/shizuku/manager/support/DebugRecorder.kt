@@ -21,6 +21,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.R
+import moe.shizuku.manager.model.PorterServiceVersion
 import java.io.File
 
 object DebugRecorder {
@@ -170,6 +171,7 @@ object DebugRecorder {
     }
     fun deviceDetails() = """
         Porter ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})
+        Installed build: ${PorterServiceVersion.installed.buildId}
         Device: ${Build.MANUFACTURER} ${Build.MODEL}
         Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
         Build: ${Build.DISPLAY}

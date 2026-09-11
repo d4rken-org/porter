@@ -142,6 +142,7 @@ def mascot(name):
 
 save(mascot('mascot'), ROOT / 'manager/src/main/res/drawable-xxxhdpi/porter_mascot.png')
 save(mascot('mascot-happy'), ROOT / 'manager/src/main/res/drawable-xxxhdpi/porter_mascot_happy.png')
+save(mascot('mascot-unhappy'), ROOT / 'manager/src/main/res/drawable-xxxhdpi/porter_mascot_unhappy.png')
 
 banner = Image.open(SOURCE / 'banner.png').convert('RGB')
 def padded_banner(size):
@@ -156,4 +157,4 @@ save(banner, assets / 'porter-banner.png')
 save(manager_legacy, assets / 'porter-icon.png')
 save(manager_legacy.resize((32, 32), RESAMPLE), assets / 'favicon.png')
 print('Updated launcher icons on the mint and companion plates, adaptive, monochrome, '
-      'notification, neutral and happy mascots, TV and website artwork.')
+      'notification, neutral, happy and unhappy mascots, TV and website artwork.')

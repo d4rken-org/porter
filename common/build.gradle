@@ -2,6 +2,50 @@ plugins {
     id "com.android.library"
 }
 
+abstract class GeneratePorterBuildIdentity extends DefaultTask {
+    @InputFiles @PathSensitive(PathSensitivity.RELATIVE)
+    abstract ConfigurableFileCollection getSourceInputs()
+    @OutputDirectory
+    abstract DirectoryProperty getOutputDirectory()
+
+    @TaskAction
+    void generate() {
+        def digest = java.security.MessageDigest.getInstance("SHA-256")
+        sourceInputs.files.sort { project.rootDir.toPath().relativize(it.toPath()).toString() }.each { source ->
+            digest.update(project.rootDir.toPath().relativize(source.toPath()).toString().getBytes("UTF-8"))
+            digest.update((byte) 0)
+            digest.update(source.bytes)
+            digest.update((byte) 0)
+        }
+        def id = digest.digest().encodeHex().toString()
+        def output = outputDirectory.file("eu/darken/porter/common/PorterBuildIdentity.java").get().asFile
+        output.parentFile.mkdirs()
+        output.text = """package eu.darken.porter.common;
+public final class PorterBuildIdentity {
+    public static final String ID = "${id}";
+    public static final String DIAGNOSTICS_KEY = "eu.darken.porter.build_id";
+}
+"""
+    }
+}
+
+def identity = tasks.register("generatePorterBuildIdentity", GeneratePorterBuildIdentity) {
+    sourceInputs.from(rootProject.fileTree(rootProject.rootDir) {
+        include "*.gradle", "gradle/**", "gradle.properties", "version.properties"
+    })
+    ["manager", "server", "common", "starter", "shell", "compat", "client", "aidl", "api", "provider", "shared", "server-shared", "rish"].each { name ->
+        sourceInputs.from(rootProject.fileTree(rootProject.project(":$name").projectDir) {
+            include "src/**", "*.gradle", "gradle.properties"
+            exclude "src/test*/**", "src/androidTest*/**", "src/screenshotTest*/**"
+        })
+    }
+    outputDirectory.set(layout.buildDirectory.dir("generated/porterIdentity"))
+}
+
+androidComponents.onVariants(androidComponents.selector().all()) { variant ->
+    variant.sources.java.addGeneratedSourceDirectory(identity) { it.outputDirectory }
+}
+
 android {
     namespace = "rikka.shizuku.common"
     buildFeatures {

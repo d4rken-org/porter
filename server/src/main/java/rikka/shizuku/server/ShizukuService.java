@@ -708,6 +708,8 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             Bundle version = new Bundle();
             version.putString(ServerConstants.DIAGNOSTICS_VERSION_NAME, moe.shizuku.server.BuildConfig.PORTER_VERSION_NAME);
             version.putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, moe.shizuku.server.BuildConfig.PORTER_VERSION_CODE);
+            version.putString(eu.darken.porter.common.PorterBuildIdentity.DIAGNOSTICS_KEY,
+                    eu.darken.porter.common.PorterBuildIdentity.ID + ":" + moe.shizuku.server.BuildConfig.BUILD_TYPE);
             reply.writeBundle(version);
             return true;
         }

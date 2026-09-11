@@ -1,0 +1,22 @@
+plugins { id "com.android.application" }
+
+android {
+    namespace = "eu.darken.porter.updatefixture"
+    defaultConfig {
+        applicationId = "eu.darken.porter.updatefixture"
+        versionCode = 1
+        versionName = "1"
+    }
+}
+androidComponents.beforeVariants(androidComponents.selector().withBuildType("release")) { it.enable = false }
+
+dependencies {
+    implementation project(":server")
+    implementation project(":server-shared")
+    implementation project(":shared")
+    implementation project(":aidl")
+    implementation project(":common")
+    implementation project(":rish")
+    implementation project(":provider")
+    compileOnly libs.hidden.stub
+}

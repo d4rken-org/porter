@@ -18,6 +18,8 @@ For apps that support Porter directly, Porter alone is enough. If an app only su
 
 ## Choose how to start
 
+Startup methods appear directly on the home screen while the service is stopped.
+
 | Your device | Startup method |
 | --- | --- |
 | Android 11 or newer with wireless debugging | [Wireless debugging](#wireless-debugging) |

@@ -27,6 +27,7 @@ import moe.shizuku.manager.management.ApplicationManagementList
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.model.PorterServiceVersion
 import moe.shizuku.manager.model.ServiceStatus
+import moe.shizuku.manager.service.ServiceSnapshot
 import moe.shizuku.manager.settings.SettingsActions
 import moe.shizuku.manager.settings.SettingsScreenContent
 import moe.shizuku.manager.settings.SettingsUiState
@@ -145,26 +146,17 @@ private fun pendingCompanionApps() = listOf(
 private fun appsState(apps: List<AppsViewModel.App>) =
     AppsViewModel.State(apps = apps, loading = false, accessEnabled = true)
 
-@Composable
-private fun runningStatusUi(): ServiceStatusUi {
-    val installed = PorterServiceVersion(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
-    return serviceStatusUi(
-        ServiceStatus(uid = 2000, apiVersion = SERVICE_API, patchVersion = SERVICE_PATCH,
-            permission = true, porterVersion = installed),
-        ShizukuStateMachine.State.RUNNING, installed, latestApi = SERVICE_API, latestPatch = SERVICE_PATCH,
-    )
-}
+private val screenshotVersion = PorterServiceVersion("0.1.1-beta1", 101010, "0123456789abcdef:release")
 
 @Composable
-private fun stoppedStatusUi(): ServiceStatusUi = serviceStatusUi(
-    ServiceStatus(), ShizukuStateMachine.State.STOPPED,
-    PorterServiceVersion(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
-    latestApi = SERVICE_API, latestPatch = SERVICE_PATCH,
-)
+private fun runningStatusUi(): ServiceStatusUi = serviceStatusUi(ServiceSnapshot(
+    ServiceStatus(uid = 2000, apiVersion = SERVICE_API, patchVersion = SERVICE_PATCH, permission = true, porterVersion = screenshotVersion),
+    ShizukuStateMachine.State.RUNNING, installed = screenshotVersion,
+))
 
-private val noHomeActions = HomeActions({}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+private val noHomeActions = HomeActions({}, {}, {}, {}, {}, {}, {}, {}, {})
 
-private val noSettingsActions = SettingsActions({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+private val noSettingsActions = SettingsActions({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 
 private fun homeState(
     statusUi: ServiceStatusUi,
@@ -173,16 +165,11 @@ private fun homeState(
     running: Boolean,
 ) = HomeUiState(
     statusUi = statusUi,
-    permitted = running,
     appsState = apps,
     compatState = compat,
     buildBadge = null,
     showBatteryCard = false,
-    isSecondaryUser = false,
-    isRooted = false,
-    wirelessAdbAvailable = !running,
-    tlsSupported = true,
-    serviceState = if (running) ShizukuStateMachine.State.RUNNING else ShizukuStateMachine.State.STOPPED,
+    canStart = !running, wirelessAdbAvailable = true, tlsSupported = true,
 )
 
 /** Row values come from the real arrays, so a localized render shows the localized choice. */
@@ -191,6 +178,8 @@ private fun settingsState() = SettingsUiState(
     startOnBoot = true,
     startOnBootEnabled = true,
     watchdog = true,
+    autoUpdateService = false,
+    autoUpdateServiceEnabled = true,
     showPairingMethod = true,
     pairingMethodLabel = stringArrayResource(R.array.porter_pairing_methods)[0],
     showTcpPort = false,
@@ -245,10 +234,8 @@ internal fun HomeCompatibilityContent() = PorterPreviewWrapper(dark = false) {
 
 @Composable
 internal fun HomeSetupContent() = PorterPreviewWrapper(dark = false) {
-    HomeScreenContent(
-        homeState(stoppedStatusUi(), appsState(emptyList()), CompatibilityRepository.State(), running = false),
-        noHomeActions,
-    )
+    HomeScreenContent(homeState(serviceStatusUi(ServiceSnapshot(installed = screenshotVersion)),
+        AppsViewModel.State(), CompatibilityRepository.State(), running = false), noHomeActions)
 }
 
 @Composable

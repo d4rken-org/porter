@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Code
+import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.material.icons.twotone.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,24 +38,24 @@ class AcknowledgementsActivity : ComposeActivity() {
             LazyColumn(Modifier.padding(padding).consumeWindowInsets(padding)) {
                 item { SettingsCategory(stringResource(R.string.porter_acknowledgements_thanks)) }
                 items(credits) { credit ->
-                    SettingsItem(credit.name, R.drawable.ic_favorite_outline_24, stringResource(credit.description),
+                    SettingsItem(credit.name, Icons.TwoTone.Favorite, stringResource(credit.description),
                         onClick = { CustomTabsHelper.launchUrlOrCopy(this@AcknowledgementsActivity, credit.url) })
                 }
                 item { SettingsCategory(stringResource(R.string.porter_licenses)) }
                 item {
-                    SettingsItem("Porter", R.drawable.ic_code_24dp, stringResource(R.string.porter_license_porter),
+                    SettingsItem("Porter", Icons.TwoTone.Code, stringResource(R.string.porter_license_porter),
                         onClick = { licenseFile = "porter.txt" })
                 }
                 item {
-                    SettingsItem("Shizuku API", R.drawable.ic_code_24dp, stringResource(R.string.porter_license_api),
+                    SettingsItem("Shizuku API", Icons.TwoTone.Code, stringResource(R.string.porter_license_api),
                         onClick = { licenseFile = "shizuku-api.txt" })
                 }
                 item {
-                    SettingsItem("Porter", R.drawable.ic_outline_info_24, stringResource(R.string.porter_license_notice),
+                    SettingsItem("Porter", Icons.TwoTone.Info, stringResource(R.string.porter_license_notice),
                         onClick = { licenseFile = "notice.txt" })
                 }
                 items(libraries) { library ->
-                    SettingsItem(library.name, R.drawable.ic_code_24dp, library.license,
+                    SettingsItem(library.name, Icons.TwoTone.Code, library.license,
                         onClick = { CustomTabsHelper.launchUrlOrCopy(this@AcknowledgementsActivity, library.url) })
                 }
             }

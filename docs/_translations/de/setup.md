@@ -20,6 +20,8 @@ Lade Porter von [GitHub Releases](https://github.com/d4rken-org/porter/releases)
 Für Apps, die Porter direkt unterstützen, reicht Porter allein. Unterstützt eine App nur Shizuku, öffne in der FOSS-Version **Shizuku-Kompatibilität**, um die enthaltene Begleit-App zu installieren und den Wechsel samt Import vor der Deinstallation zu prüfen. **Porter Compatibility** ist auch als separate APK derselben Veröffentlichung verfügbar. Deinstalliere bei manueller Installation vorher Shizuku: Die Kompatibilitäts-App kann nicht gleichzeitig mit Shizuku installiert sein. Lass sie installiert, solange du solche Apps mit Porter verwendest. Weitere Hinweise stehen im [Kompatibilitätsleitfaden](/compatibility).
 
 ## Startmethode auswählen
+
+Die Startmethoden erscheinen direkt auf der Startseite, solange der Dienst gestoppt ist.
 {: #choose-how-to-start }
 
 | Dein Gerät | Startmethode |

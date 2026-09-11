@@ -4,8 +4,10 @@ Icon, mascot and banner artwork by [Max Patchs](https://x.com/maxpatchs).
 
 `icon.svg` is the neutral mascot without arms or legs. `mascot.svg` is the
 neutral full-body mascot and `mascot-happy.svg` is the same body with a happy
-expression, shown while Porter is running. All three preserve the supplied
-vector artwork. `background.png` is the solid mint launcher background
+expression, shown while Porter is running without restricted permissions.
+`mascot-unhappy.svg` is the supplied `SVG Normal - Happy - Sad/sad full body.svg`, shown while Porter is
+running with restricted permissions. All four preserve the supplied vector
+artwork. `background.png` is the solid mint launcher background
 (`#dcffee`) used by Porter; `background-compat.png` is the near-black
 (`#060d20`) plate that gives the compatibility companion a distinguishable
 launcher icon. `banner.png` is the supplied 1026 × 500 banner.
@@ -38,6 +40,6 @@ between Cairo versions. Review generated images before committing them.
 
 Adaptive layers use a 108dp canvas with the artwork inside the central 66dp
 safe circle. The generator also produces legacy launcher icons, notification
-artwork, the 44dp home-screen mascot, and an Android TV banner. The GitHub
+artwork, the three 44dp home-screen mascots, and an Android TV banner. The GitHub
 README and website share `docs/assets/porter-banner.png` at its original size
 and aspect ratio.

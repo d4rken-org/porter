@@ -65,7 +65,7 @@ annotation rewrite and restore across more than one batch, region-coded resource
 Exactly 16:9. Play rejects a screenshot whose long side exceeds twice its short side, and only 9:16
 portrait / 16:9 landscape are eligible for the promotional surfaces.
 
-The dpi picks the density bucket as well as the dp size. `porter_mascot.png` exists **only** under
+The dpi picks the density bucket as well as the dp size. The three mascot PNGs exist **only** under
 `drawable-xxxhdpi`, which 560 dpi selects; a lower-dpi spec would leave the home top bar without its
 icon unless another density is added first.
 
@@ -106,14 +106,14 @@ The number is the fastlane filename prefix, which is the order Play shows them i
 | 1 | `HomeRunning`       | `1_home_running.png`     | light | Service running via ADB, applications card, installed compatibility card |
 | 2 | `Apps`              | `2_apps.png`             | light | Management list across five app states |
 | 3 | `HomeCompatibility` | `3_home_compatibility.png` | light | Home with the tertiary-coloured compatibility card |
-| 4 | `HomeSetup`         | `4_home_setup.png`       | light | Service stopped: wireless debugging and ADB command cards |
+| 4 | `HomeSetup`         | `4_home_setup.png`       | light | Home while stopped: wireless debugging and ADB command cards |
 | 5 | `Settings`          | `5_settings.png`         | dark  | Settings |
 | 6 | `AppsDark`          | `6_apps_dark.png`        | dark  | Management list in dark theme |
 
 Shot 3 reaches the compatibility story through the existing `CompatibilityCard` on Home rather than
-through `CompatibilityActivity`, which is still private and activity-coupled. On the **gplay**
-variant that card appears when `running && permitted && appsState.pendingCompanionCount > 0`, so the
-shot depicts what the Play build actually renders.
+through `CompatibilityActivity`, which is still private and activity-coupled. In both variants,
+that card appears when counts are available and apps need the companion
+(`companionRequiredCount > 0 || pendingCompanionCount > 0`). It opens the Compatibility screen.
 
 Shot 5 is a crop, deliberately. At 411×731 dp the settings screen shows roughly its first seven
 rows, so Startup and Appearance land in full and Tools begins. All four categories exist in the

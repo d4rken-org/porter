@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class WatchdogService : Service() {
 
     private val stateListener: (ShizukuStateMachine.State) -> Unit = {
-        if (it == ShizukuStateMachine.State.CRASHED) {
+        if (it == ShizukuStateMachine.State.CRASHED && !moe.shizuku.manager.starter.ServiceReplacement.state.value.running) {
             showCrashNotification()
             ShizukuReceiverStarter.start(applicationContext)
         }

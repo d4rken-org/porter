@@ -14,6 +14,12 @@ class SettingsViewModel(application: Application, private val savedState: SavedS
     val pendingSetting: StateFlow<String?> = savedState.getStateFlow("pendingSetting", null)
     fun show(value: String?) { savedState["dialog"] = value }
 
+    fun setAutoUpdateService(enabled: Boolean) {
+        if (moe.shizuku.manager.utils.UserHandleCompat.myUserId() != 0) return
+        ShizukuSettings.getPreferences().edit().putBoolean(ShizukuSettings.Keys.KEY_AUTO_UPDATE_SERVICE, enabled).apply()
+        if (!enabled) moe.shizuku.manager.worker.ServiceUpdateWorker.cancel(getApplication())
+    }
+
     fun toggle(key: String, enabled: Boolean) {
         savedState["pendingSetting"] = key
         if (enabled && key == ShizukuSettings.Keys.KEY_START_ON_BOOT && !EnvironmentUtils.isTelevision() && Build.VERSION.SDK_INT < 33) {

@@ -1,6 +1,9 @@
 package moe.shizuku.manager.settings
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.RestartAlt
+import androidx.compose.material.icons.twotone.Wifi
 import androidx.compose.ui.test.*
 import androidx.test.core.app.ApplicationProvider
 import moe.shizuku.manager.ComposeTest
@@ -21,6 +24,7 @@ class SettingsScreenContentTest : ComposeTest() {
         onBack = { clicks += "back" },
         onStartOnBootChange = { clicks += "startOnBoot=$it" },
         onWatchdogChange = { clicks += "watchdog=$it" },
+        onAutoUpdateServiceChange = { clicks += "autoUpdate=$it" },
         onPairingMethod = { clicks += "pairing" },
         onTcpPort = { clicks += "tcpPort" },
         onThemeMode = { clicks += "themeMode" },
@@ -39,6 +43,8 @@ class SettingsScreenContentTest : ComposeTest() {
         startOnBoot = false,
         startOnBootEnabled = true,
         watchdog = false,
+        autoUpdateService = false,
+        autoUpdateServiceEnabled = true,
         showPairingMethod = true,
         pairingMethodLabel = "Pairing code",
         showTcpPort = true,
@@ -53,6 +59,11 @@ class SettingsScreenContentTest : ComposeTest() {
 
     private fun render(state: SettingsUiState = state()) {
         composeTestRule.setContent { PorterTheme(dark = false) { SettingsScreenContent(state, actions) } }
+    }
+
+    @Test fun serviceAutoUpdateIsOffByDefaultAndRestrictedToPrimaryUser() {
+        render(state().copy(autoUpdateServiceEnabled = false))
+        composeTestRule.onNodeWithText(string(R.string.porter_service_auto_update)).assertIsOff().assertIsNotEnabled()
     }
 
     @Test fun allFourCategoriesAndTheirRowsRender() {
@@ -75,8 +86,8 @@ class SettingsScreenContentTest : ComposeTest() {
      * under Robolectric, so the branch is pinned where it is decided.
      */
     @Test fun aTcpPortChangeThatNeedsAServiceRestartSwitchesTheRowIcon() {
-        assertEquals(R.drawable.ic_wadb_24, tcpPortIcon(false))
-        assertEquals(R.drawable.ic_server_restart, tcpPortIcon(true))
+        assertEquals(Icons.TwoTone.Wifi, tcpPortIcon(false))
+        assertEquals(Icons.TwoTone.RestartAlt, tcpPortIcon(true))
         render(state().copy(tcpPortNeedsRestart = true))
         composeTestRule.onNodeWithText(string(R.string.settings_tcp_port)).assertIsDisplayed()
     }
@@ -97,6 +108,7 @@ class SettingsScreenContentTest : ComposeTest() {
         listOf(
             R.string.settings_start_on_boot to "startOnBoot=true",
             R.string.settings_watchdog to "watchdog=true",
+            R.string.porter_service_auto_update to "autoUpdate=true",
             R.string.porter_pairing_method to "pairing",
             R.string.settings_tcp_port to "tcpPort",
             R.string.porter_theme_mode to "themeMode",

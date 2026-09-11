@@ -11,6 +11,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.HelpOutline
+import androidx.compose.material.icons.twotone.Adb
+import androidx.compose.material.icons.twotone.Apps
+import androidx.compose.material.icons.twotone.Info
+import androidx.compose.material.icons.twotone.Link
+import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,9 +29,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -32,12 +40,11 @@ import kotlinx.coroutines.withContext
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
-import moe.shizuku.manager.MainActivity
-import moe.shizuku.manager.management.AppsViewModel
-import moe.shizuku.manager.home.HomeCardActions
 import moe.shizuku.manager.home.HomeCard
-import moe.shizuku.manager.home.compatibilityVersionText
+import moe.shizuku.manager.home.HomeCardActions
 import moe.shizuku.manager.home.compatibilityUsageText
+import moe.shizuku.manager.home.compatibilityVersionText
+import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.ui.ComposeActivity
 import moe.shizuku.manager.ui.PorterScaffold
 import moe.shizuku.manager.utils.CustomTabsHelper
@@ -122,7 +129,7 @@ class CompatibilityActivity : ComposeActivity() {
                     CompatibilityRepository.Status.UPDATE -> R.string.compat_status_update
                     CompatibilityRepository.Status.CONFLICT -> R.string.compat_status_conflict
                     CompatibilityRepository.Status.INVALID -> R.string.compat_status_invalid
-                }), if (state.status == CompatibilityRepository.Status.INSTALLED) R.drawable.ic_baseline_link_24 else R.drawable.ic_outline_info_24) {
+                }), if (state.status == CompatibilityRepository.Status.INSTALLED) Icons.TwoTone.Link else Icons.TwoTone.Info) {
                     if (state.isCompanion) {
                         OutlinedCard(
                             onClick = {
@@ -175,7 +182,7 @@ class CompatibilityActivity : ComposeActivity() {
                     manualError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                 }
                 if (!BuildConfig.IS_FOSS) {
-                    HomeCard(stringResource(R.string.compat_help), R.drawable.ic_help_outline_24dp) {
+                    HomeCard(stringResource(R.string.compat_help), Icons.AutoMirrored.TwoTone.HelpOutline) {
                         Text(stringResource(R.string.compat_other_build))
                         HomeCardActions {
                             TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@CompatibilityActivity, Helps.APPS.get()) }) {
@@ -184,12 +191,12 @@ class CompatibilityActivity : ComposeActivity() {
                         }
                     }
                 } else if (!repository.primaryUser) {
-                    HomeCard(stringResource(R.string.compat_setup_title), R.drawable.ic_outline_info_24) {
+                    HomeCard(stringResource(R.string.compat_setup_title), Icons.TwoTone.Info) {
                         Text(stringResource(R.string.compat_primary_user))
                     }
                 } else {
                     if (state.hasSnapshot) {
-                        HomeCard(stringResource(R.string.compat_import_saved), R.drawable.ic_apps_outline_24) {
+                        HomeCard(stringResource(R.string.compat_import_saved), Icons.TwoTone.Apps) {
                             Text(stringResource(R.string.compat_saved_import))
                             HomeCardActions {
                                 TextButton(enabled = !busy, onClick = repository::discardImport) { Text(stringResource(R.string.compat_discard_import)) }
@@ -200,13 +207,13 @@ class CompatibilityActivity : ComposeActivity() {
                         }
                     }
                     if (state.otherUsers) {
-                        HomeCard(stringResource(R.string.compat_setup_title), R.drawable.ic_outline_info_24) {
+                        HomeCard(stringResource(R.string.compat_setup_title), Icons.TwoTone.Info) {
                             Text(stringResource(R.string.compat_other_users))
                         }
                     } else if (state.status == CompatibilityRepository.Status.CONFLICT) {
-                        HomeCard(stringResource(R.string.compat_review_replacement), R.drawable.ic_warning_24) {
+                        HomeCard(stringResource(R.string.compat_review_replacement), Icons.TwoTone.Warning) {
                             Text(stringResource(R.string.compat_conflict_description))
-                            if (!state.running) StartPorterButton(busy)
+                            if (!state.running) Text(stringResource(R.string.compat_direct_stopped))
                             else if (!state.supported) Text(stringResource(R.string.compat_restart_porter))
                             else HomeCardActions {
                                 Button(enabled = !state.hasSnapshot && (!busy || state.phase == CompatibilityRepository.Phase.PREPARING),
@@ -222,17 +229,17 @@ class CompatibilityActivity : ComposeActivity() {
                             }
                         }
                     } else if (state.status == CompatibilityRepository.Status.MISSING) {
-                        HomeCard(stringResource(R.string.compat_direct_title), R.drawable.ic_adb_24dp) {
+                        HomeCard(stringResource(R.string.compat_direct_title), Icons.TwoTone.Adb) {
                             Text(stringResource(R.string.compat_direct_description))
                             InstallationActions(state, newer, R.string.compat_install)
                         }
                     }
                     if (state.isCompanion) {
-                        HomeCard(stringResource(R.string.compat_management_title), R.drawable.ic_action_settings_24dp) {
+                        HomeCard(stringResource(R.string.compat_management_title), Icons.TwoTone.Settings) {
                             if (state.status == CompatibilityRepository.Status.INSTALLED && !state.otherUsers) {
                                 Text(stringResource(R.string.compat_reinstall_description))
                                 if (newer) Text(stringResource(R.string.compat_newer_installed))
-                                if (!state.running) StartPorterButton(busy)
+                                if (!state.running) Text(stringResource(R.string.compat_direct_stopped))
                                 else if (!state.supported) Text(stringResource(R.string.compat_restart_porter))
                                 else HomeCardActions {
                                     OutlinedButton(enabled = !busy && !newer, onClick = repository::reinstall) {
@@ -306,22 +313,10 @@ class CompatibilityActivity : ComposeActivity() {
             TextButton(enabled = !busy && !newer, onClick = ::manualInstall) {
                 Text(stringResource(R.string.compat_manual))
             }
-            if (!state.running) {
-                Button(enabled = !busy, onClick = { startActivity(Intent(this@CompatibilityActivity, MainActivity::class.java)) }) {
-                    Text(stringResource(R.string.compat_start_porter))
-                }
-            } else {
+            if (state.running) {
                 Button(enabled = !busy && !newer && state.supported, onClick = repository::install) {
                     Text(stringResource(action))
                 }
-            }
-        }
-    }
-
-    @Composable private fun StartPorterButton(busy: Boolean) {
-        HomeCardActions {
-            Button(enabled = !busy, onClick = { startActivity(Intent(this@CompatibilityActivity, MainActivity::class.java)) }) {
-                Text(stringResource(R.string.compat_start_porter))
             }
         }
     }
@@ -329,7 +324,7 @@ class CompatibilityActivity : ComposeActivity() {
 
 @Composable
 internal fun CompatibilityExplanationCard() {
-    HomeCard(stringResource(R.string.compat_about_title), R.drawable.ic_outline_info_24) {
+    HomeCard(stringResource(R.string.compat_about_title), Icons.TwoTone.Info) {
         Text(stringResource(R.string.compat_setup_description), style = MaterialTheme.typography.bodyMedium)
         Text(stringResource(R.string.compat_about_direct), style = MaterialTheme.typography.bodyMedium)
     }

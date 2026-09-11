@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <sys/system_properties.h>
 #include <cerrno>
+#include <climits>
 #include <string>
 #include <termios.h>
 #include "android.h"
@@ -137,7 +138,7 @@ static void start_server(const char *path, const char *main_class, const char *p
                 dup2(fd, STDERR_FILENO);
                 if (fd > 2) close(fd);
             }
-            
+
             char ready = 1;
             write(fds[1], &ready, 1);
             close(fds[1]);
@@ -199,9 +200,19 @@ static int switch_cgroup() {
 
 int main(int argc, char *argv[]) {
     std::string apk_path;
+    pid_t replace_pid = 0;
     for (int i = 0; i < argc; ++i) {
         if (strncmp(argv[i], "--apk=", 6) == 0) {
             apk_path = argv[i] + 6;
+        } else if (strncmp(argv[i], "--replace=", 10) == 0) {
+            char *end = nullptr;
+            errno = 0;
+            long value = strtol(argv[i] + 10, &end, 10);
+            if (errno || !end || *end || value <= 1 || value > INT_MAX) {
+                perrorf("fatal: invalid replacement PID\n");
+                return EXIT_FATAL_KILL;
+            }
+            replace_pid = static_cast<pid_t>(value);
         }
     }
 
@@ -242,29 +253,6 @@ int main(int argc, char *argv[]) {
     printf("info: starter begin\n");
     fflush(stdout);
 
-    // kill old server
-    printf("info: killing old process...\n");
-    fflush(stdout);
-
-    foreach_proc([](pid_t pid) {
-        if (pid == getpid()) return;
-
-        char name[1024];
-        if (get_proc_name(pid, name, 1024) != 0) return;
-
-        if (strcmp(SERVER_NAME, name) != 0)
-            return;
-
-        if (kill(pid, SIGKILL) == 0)
-            printf("info: killed %d (%s)\n", pid, name);
-        else if (errno == EPERM) {
-            perrorf("fatal: can't kill %d, please try to stop existing Shizuku from app first.\n", pid);
-            exit(EXIT_FATAL_KILL);
-        } else {
-            printf("warn: failed to kill %d (%s)\n", pid, name);
-        }
-    });
-
     if (access(apk_path.c_str(), R_OK) == 0) {
         printf("info: use apk path from argv\n");
         fflush(stdout);
@@ -297,6 +285,53 @@ int main(int argc, char *argv[]) {
     if (access(apk_path.c_str(), R_OK) != 0) {
         perrorf("fatal: can't access manager %s\n", apk_path.c_str());
         exit(EXIT_FATAL_PM_PATH);
+    }
+
+    if (replace_pid != 0) {
+        char name[1024];
+        if (get_proc_name(replace_pid, name, sizeof(name)) != 0 || strcmp(SERVER_NAME, name) != 0) {
+            perrorf("fatal: replacement target is not a Porter service\n");
+            return EXIT_FATAL_KILL;
+        }
+        // The old service owns Runtime.exec's pipes and Binder reply. Detach before killing it.
+        pid_t child = fork();
+        if (child < 0) return EXIT_FATAL_FORK;
+        if (child > 0) return EXIT_SUCCESS;
+        if (setsid() < 0) _exit(EXIT_FATAL_FORK);
+        int null_fd = open("/dev/null", O_RDWR);
+        if (null_fd < 0) _exit(EXIT_FATAL_FORK);
+        for (int fd = 0; fd <= 2; ++fd) {
+            if (dup2(null_fd, fd) < 0) _exit(EXIT_FATAL_FORK);
+        }
+        if (null_fd > 2) close(null_fd);
+        if (get_proc_name(replace_pid, name, sizeof(name)) != 0 || strcmp(SERVER_NAME, name) != 0
+                || kill(replace_pid, SIGKILL) != 0) {
+            LOGE("Failed to replace Porter process %d", replace_pid);
+            _exit(EXIT_FATAL_KILL);
+        }
+    } else {
+        // kill old server
+        printf("info: killing old process...\n");
+        fflush(stdout);
+
+        foreach_proc([](pid_t pid) {
+            if (pid == getpid()) return;
+
+            char name[1024];
+            if (get_proc_name(pid, name, 1024) != 0) return;
+
+            if (strcmp(SERVER_NAME, name) != 0)
+                return;
+
+            if (kill(pid, SIGKILL) == 0)
+                printf("info: killed %d (%s)\n", pid, name);
+            else if (errno == EPERM) {
+                perrorf("fatal: can't kill %d, please try to stop existing Shizuku from app first.\n", pid);
+                exit(EXIT_FATAL_KILL);
+            } else {
+                printf("warn: failed to kill %d (%s)\n", pid, name);
+            }
+        });
     }
 
     printf("info: starting server...\n");

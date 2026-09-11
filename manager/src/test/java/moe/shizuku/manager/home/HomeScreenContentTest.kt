@@ -25,9 +25,9 @@ class HomeScreenContentTest : ComposeTest() {
         DiscoveredApplication.API_SHIZUKU, false, null)
 
     private fun statusUi(running: Boolean) = ServiceStatusUi(
-        running = running, restricted = false, needsRestart = false,
+        running = running, restricted = false, updateAvailable = false,
         title = if (running) "Porter is running" else "Porter is not running",
-        subtitle = null, details = "", versionDetails = "",
+        subtitle = null, details = "",
     )
 
     private fun state(
@@ -36,20 +36,15 @@ class HomeScreenContentTest : ComposeTest() {
         apps: List<AppsViewModel.App> = emptyList(),
     ) = HomeUiState(
         statusUi = statusUi(running),
-        permitted = permitted,
         appsState = AppsViewModel.State(apps, loading = false, accessEnabled = true),
         compatState = CompatibilityRepository.State(),
         buildBadge = null,
         showBatteryCard = false,
-        isSecondaryUser = false,
-        isRooted = false,
-        wirelessAdbAvailable = !running,
-        tlsSupported = true,
-        serviceState = if (running) ShizukuStateMachine.State.RUNNING else ShizukuStateMachine.State.STOPPED,
+        canStart = !running, wirelessAdbAvailable = true, tlsSupported = true,
     )
 
     private fun actions(onOpenSettings: () -> Unit = {}, onOpenApps: () -> Unit = {}) =
-        HomeActions(onOpenSettings, onOpenApps, {}, {}, {}, {}, {}, {}, {}, {})
+        HomeActions(onOpenSettings, onOpenApps, {}, {}, {}, {}, {}, {}, {})
 
     private fun render(state: HomeUiState, actions: HomeActions = actions()) {
         composeTestRule.setContent { PorterTheme(dark = false) { HomeScreenContent(state, actions) } }
@@ -63,20 +58,49 @@ class HomeScreenContentTest : ComposeTest() {
         composeTestRule.onNodeWithText(string(R.string.porter_applications)).assertIsDisplayed()
     }
 
-    @Test fun restrictedAdbHidesTheApplicationsCard() {
+    @Test fun restrictedAdbKeepsApplicationsNavigation() {
         render(state(running = true, permitted = false))
-        assertNotShown(string(R.string.porter_applications))
+        composeTestRule.onNodeWithText(string(R.string.porter_applications)).assertIsDisplayed()
     }
 
-    @Test fun stoppedServiceHidesTheApplicationsCard() {
+    @Test fun stoppedServiceKeepsApplicationsNavigation() {
         render(state(running = false))
-        assertNotShown(string(R.string.porter_applications))
+        composeTestRule.onNodeWithText(string(R.string.porter_applications)).assertIsDisplayed()
     }
 
-    @Test fun setupCardsAppearOnlyWhileTheServiceIsStopped() {
+    @Test fun stoppedHomeOffersStartupMethods() {
         render(state(running = false))
         composeTestRule.onNodeWithText(string(R.string.home_wireless_adb_title)).assertIsDisplayed()
         composeTestRule.onNodeWithText(string(R.string.home_adb_title)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(string(R.string.home_root_title)).assertIsDisplayed()
+    }
+
+    @Test fun startingServiceHidesStartupMethods() {
+        render(state(running = false).copy(canStart = false, busy = true))
+        assertNotShown(string(R.string.home_wireless_adb_title))
+        assertNotShown(string(R.string.home_root_title))
+    }
+
+    @Test fun stoppedSecondaryUserSeesGuidanceInsteadOfStartup() {
+        render(state(running = false).copy(canStart = false, primaryUser = false))
+        composeTestRule.onNodeWithText(string(R.string.porter_primary_user_title)).assertIsDisplayed()
+        assertNotShown(string(R.string.home_wireless_adb_title))
+        assertNotShown(string(R.string.home_adb_title))
+        assertNotShown(string(R.string.home_root_title))
+    }
+
+    @Test fun startupActionsCallTheDashboardHandlers() {
+        var pairs = 0
+        var starts = 0
+        var commands = 0
+        render(state(running = false), actions().copy(onPairWireless = { pairs++ },
+            onStartWireless = { starts++ }, onShowAdbCommand = { commands++ }))
+        composeTestRule.onNodeWithText(string(R.string.adb_pairing)).performClick()
+        composeTestRule.onAllNodesWithText(string(R.string.home_root_button_start))[0].performClick()
+        composeTestRule.onNodeWithText(string(R.string.home_adb_button_view_command)).performClick()
+        assertEquals(1, pairs)
+        assertEquals(1, starts)
+        assertEquals(1, commands)
     }
 
     @Test fun runningServiceHidesTheSetupCards() {
@@ -93,6 +117,12 @@ class HomeScreenContentTest : ComposeTest() {
     @Test fun noAppWaitingOnTheCompanionLeavesTheCompatibilityCardOff() {
         render(state(running = true, permitted = true))
         assertNotShown(string(R.string.compat_card_description))
+    }
+
+    @Test fun unavailableCountsNeverLookLikeZeroApps() {
+        render(state().copy(appsState = AppsViewModel.State(loading = true)))
+        composeTestRule.onNodeWithText(string(R.string.porter_apps_counts_unavailable), substring = true).assertIsDisplayed()
+        assertNotShown(string(R.string.porter_apps_counts, 0, 0))
     }
 
     @Test fun topBarActionOpensSettingsAndTheApplicationsCardOpensApps() {

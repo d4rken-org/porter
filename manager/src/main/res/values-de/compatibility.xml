@@ -19,7 +19,6 @@
     <string name="compat_progress_activating">Apps werden mit Porter verbunden…</string>
     <string name="compat_saved_import">Deine Shizuku-Zugriffsentscheidungen sind gespeichert und bereit zum Importieren.</string>
     <string name="compat_failed">Die Einrichtung wurde nicht abgeschlossen. Du kannst es erneut versuchen.</string>
-    <string name="compat_start_porter">Porter starten</string>
     <string name="compat_restart_porter">Starte den Porter-Dienst über die Startseite neu, um die integrierte Einrichtung zu verwenden.</string>
     <string name="compat_review_replacement">Vorhandene App ersetzen</string>
     <string name="compat_install">Automatisch installieren</string>
