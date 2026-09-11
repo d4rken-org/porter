@@ -17,11 +17,12 @@ object ShizukuStateMachine {
 
     private val lock = Any()
 
-    /** Guarded by [lock]. */
-    private var nextSequence = 0L
-
-    /** Guarded by [lock]. Appended in sequence order, so removing from the front drains in it. */
-    private val pending = ArrayDeque<Pair<Long, State>>()
+    /**
+     * Guarded by [lock]. Each entry is a transition and the listeners registered when it was
+     * enqueued. Appends happen under the same [lock] that stores the new state, and [drain] removes
+     * from the front, so the deque's FIFO order is the delivery order.
+     */
+    private val pending = ArrayDeque<Pair<State, List<(State) -> Unit>>>()
 
     /** Guarded by [lock]. True while some frame is running [drain]. */
     private var draining = false
@@ -43,10 +44,11 @@ object ShizukuStateMachine {
             val newState = transform(oldState)
             if (oldState == newState) return
             state.set(newState)
-            pending.addLast(nextSequence++ to newState)
+            pending.addLast(newState to listeners.toList())
             // A transition raised from inside a listener lands here while an outer frame is still
-            // delivering; that frame picks this entry up, so listeners registered after the one
-            // that reentered still see the older state first.
+            // delivering; that frame picks this entry up and hands it to the listeners registered
+            // at this point only, so a listener registered later sees the state it was given at
+            // registration and the transitions after it, never this one.
             if (draining) return
             draining = true
         }
@@ -56,10 +58,12 @@ object ShizukuStateMachine {
     /** Notifies outside [lock]: listener bodies reach a root shell and the main thread. */
     private fun drain() {
         while (true) {
-            val (_, newState) = synchronized(lock) {
+            val (newState, recipients) = synchronized(lock) {
                 pending.removeFirstOrNull().also { if (it == null) draining = false }
             } ?: return
-            listeners.forEach { it(newState) }
+            recipients.forEach { listener ->
+                if (listeners.contains(listener)) listener(newState)
+            }
             Log.d("ShizukuStateMachine", newState.toString())
         }
     }
