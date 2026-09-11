@@ -22,7 +22,7 @@ import dalvik.system.BaseDexClassLoader;
 import rikka.hidden.compat.PackageManagerApis;
 import stub.dalvik.system.VMRuntimeHidden;
 
-public class ShizukuShellLoader {
+public class PorterShellLoader {
 
     private static String[] args;
     private static String callingPackage;
@@ -128,7 +128,7 @@ public class ShizukuShellLoader {
     }
 
     public static void main(String[] args) {
-        ShizukuShellLoader.args = args;
+        PorterShellLoader.args = args;
 
         String packageName;
         var pkg = PackageManagerApis.getPackagesForUidNoThrow(Os.getuid());
@@ -142,7 +142,7 @@ public class ShizukuShellLoader {
             }
         }
 
-        ShizukuShellLoader.callingPackage = packageName;
+        PorterShellLoader.callingPackage = packageName;
 
         if (Looper.getMainLooper() == null) {
             Looper.prepareMainLooper();

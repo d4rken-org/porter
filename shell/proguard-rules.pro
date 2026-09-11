@@ -1,4 +1,4 @@
--keep class rikka.shizuku.shell.ShizukuShellLoader {
+-keep class rikka.shizuku.shell.PorterShellLoader {
     public static void main(java.lang.String[]);
 }
 
