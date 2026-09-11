@@ -22,6 +22,7 @@ import kotlinx.coroutines.sync.withLock
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.R
 import moe.shizuku.manager.model.PorterServiceVersion
+import moe.shizuku.manager.utils.ShizukuStateMachine
 import java.io.File
 
 object DebugRecorder {
@@ -33,6 +34,9 @@ object DebugRecorder {
     private var process: java.lang.Process? = null
     private var reader: Job? = null
     private var timer: Job? = null
+    private var serverStream: ServerDiagnostics.ServerStream? = null
+    private var serverReader: Job? = null
+    private var serverWatcher: Job? = null
     private fun store(context: Context) = DebugLogStore(File(context.noBackupFilesDir, "debug-logs"))
 
     fun initialize(context: Context) {
@@ -115,7 +119,8 @@ object DebugRecorder {
                 scope.launch { stop(context, child) }
             }
             timer = scope.launch { delay(remaining); scope.launch { stop(context, child) } }
-            ServerDiagnostics.capture(directory, "start")
+            ServerDiagnostics.captureMetadata(directory, "start")
+            attachServerStream(directory)
         } catch (e: Exception) {
             process = null
             child.destroy()
@@ -123,11 +128,46 @@ object DebugRecorder {
             reader?.join()
             reader = null
             timer?.cancel()
+            detachServerStream()
             store.finish()
             mutableState.value = State()
             context.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
             throw e
         }
+    }
+
+    /**
+     * Runs with [mutex] held. The coroutines it launches never take the lock and never touch these
+     * fields, because [stop] joins them while holding it.
+     */
+    private fun attachServerStream(directory: File) {
+        val events = File(directory, "events.txt")
+        serverWatcher = scope.launch {
+            ShizukuStateMachine.asFlow().collect {
+                runCatching { events.appendText("Service $it at ${System.currentTimeMillis()}\n") }
+            }
+        }
+        if (File(directory, "server.log").length() >= SERVER_MAX_LOG_BYTES) {
+            events.appendText("Server stream capped at ${System.currentTimeMillis()}\n")
+            return
+        }
+        val handle = ServerDiagnostics.openStream(directory)
+        if (handle == null) {
+            events.appendText("Server stream unavailable at ${System.currentTimeMillis()}\n")
+            return
+        }
+        events.appendText("Server stream attached pid=${handle.pid} at ${System.currentTimeMillis()}\n")
+        serverStream = handle
+        serverReader = scope.launch { readServerStream(handle, directory, SERVER_MAX_LOG_BYTES) }
+    }
+
+    private suspend fun detachServerStream() {
+        serverWatcher?.cancel()
+        serverWatcher = null
+        serverStream?.close()
+        serverStream = null
+        serverReader?.join()
+        serverReader = null
     }
 
     suspend fun stop(context: Context) = stop(context, null)
@@ -144,11 +184,12 @@ object DebugRecorder {
             runCatching { child?.inputStream?.close() }
             reader?.join()
             reader = null
+            detachServerStream()
             val directory = store.directory(id)
             store.finish()
             mutableState.value = State()
             context.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
-            ServerDiagnostics.capture(directory, "stop")
+            ServerDiagnostics.captureMetadata(directory, "stop")
             store.prune()
         }
     }
@@ -195,6 +236,7 @@ object DebugRecorder {
         }
     }
     private const val MAX_DURATION = 30 * 60 * 1000L
+    private const val SERVER_MAX_LOG_BYTES = 8L * 1024 * 1024
     private const val CHANNEL = "debug_recording"
     private const val NOTIFICATION_ID = 920
 }

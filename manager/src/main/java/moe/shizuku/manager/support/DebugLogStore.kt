@@ -71,5 +71,11 @@ internal class DebugLogStore(private val root: File) {
                 }
             }
         }
+        /** Bounded like [appendBounded], but keeps reading to EOF so the caller can join on it. */
+        fun drainBounded(input: InputStream, file: File, limit: Long = MAX_LOG_BYTES) {
+            appendBounded(input, file, limit)
+            val buffer = ByteArray(8192)
+            while (input.read(buffer) >= 0) Unit
+        }
     }
 }
