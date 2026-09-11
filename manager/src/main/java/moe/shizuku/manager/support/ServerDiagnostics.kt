@@ -74,7 +74,7 @@ internal object ServerDiagnostics {
     ) {
         private val closed = AtomicBoolean(false)
 
-        open suspend fun close() = withContext(NonCancellable) {
+        open suspend fun close(): Unit = withContext(NonCancellable) {
             if (!closed.compareAndSet(false, true)) return@withContext
             // Destroying first gives the drain its EOF, so a logcat that refused its options still
             // reports why before the drain is cut short.
