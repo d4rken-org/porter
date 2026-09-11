@@ -46,6 +46,35 @@ class ScrollToActionTest(unittest.TestCase):
         self.runner.shell.assert_not_called()
 
 
+class ContentDescriptionTapTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock()
+        # The settings icon carries a content description and no text of its own.
+        self.screen = ET.fromstring('''<hierarchy><node package="eu.darken.porter">
+            <node text="Settings" package="eu.darken.porter" enabled="true" bounds="[0,0][100,100]" />
+            <node content-desc="Settings" package="eu.darken.porter" enabled="true"
+            bounds="[953,126][1058,231]" /></node></hierarchy>''')
+
+    def test_taps_the_node_carrying_the_content_description(self):
+        self.runner.ui = Mock(return_value=self.screen)
+        self.runner.tap(desc="Settings")
+        self.runner.shell.assert_called_once_with("input", "tap", 1005, 178)
+
+    def test_text_matching_ignores_content_descriptions(self):
+        self.runner.ui = Mock(return_value=self.screen)
+        self.runner.tap("Settings")
+        self.runner.shell.assert_called_once_with("input", "tap", 50, 50)
+
+    @patch.object(smoke.time, "sleep")
+    @patch.object(smoke.time, "monotonic", side_effect=[0, 0, 31])
+    def test_an_absent_description_still_fails(self, monotonic, sleep):
+        self.runner.ui = Mock(return_value=self.screen)
+        with self.assertRaisesRegex(AssertionError, "content-desc 'Saved debug logs'"):
+            self.runner.tap(desc="Saved debug logs")
+        self.runner.shell.assert_not_called()
+
+
 class StopPorterConfirmationTest(unittest.TestCase):
     def setUp(self):
         self.runner = smoke.Smoke.__new__(smoke.Smoke)
