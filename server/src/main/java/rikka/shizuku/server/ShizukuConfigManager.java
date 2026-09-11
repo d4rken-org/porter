@@ -139,7 +139,7 @@ public class ShizukuConfigManager extends ConfigManager {
         }
 
         if (changed) {
-            persistLocked();
+            if (!persistLocked()) LOGGER.w("failed to save reconciled package config");
         }
     }
 
@@ -149,12 +149,22 @@ public class ShizukuConfigManager extends ConfigManager {
 
     public synchronized void setAccessPaused(boolean paused) {
         if (config.accessPaused == paused) return;
+        boolean previous = config.accessPaused;
         config.accessPaused = paused;
-        persistLocked();
+        if (!persistLocked()) {
+            // Realign memory with disk so the caller's same-value retry is not swallowed by the
+            // early return above.
+            config.accessPaused = previous;
+            throw new IllegalStateException("App access pause could not be saved");
+        }
     }
 
-    private void persistLocked() {
-        write(config);
+    boolean writeConfig() {
+        return write(config);
+    }
+
+    private boolean persistLocked() {
+        return writeConfig();
     }
 
     synchronized void persistImport() {
@@ -207,7 +217,7 @@ public class ShizukuConfigManager extends ConfigManager {
                 entry.packages.add(packageName);
             }
         }
-        persistLocked();
+        if (!persistLocked()) LOGGER.w("failed to save config for uid %d", uid);
     }
 
     public void update(int uid, List<String> packages, int mask, int values) {
@@ -222,7 +232,7 @@ public class ShizukuConfigManager extends ConfigManager {
             return;
         }
         config.packages.remove(entry);
-        persistLocked();
+        if (!persistLocked()) LOGGER.w("failed to save config after removing uid %d", uid);
     }
 
     public void remove(int uid) {
