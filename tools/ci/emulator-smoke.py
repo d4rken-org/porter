@@ -63,16 +63,19 @@ class Smoke:
         (self.output / "last-ui.xml").write_text(xml)
         return ET.fromstring(xml)
 
-    def tap(self, text, package=MANAGER, prefix=False, screenshot=None, scroll=False):
+    def tap(self, text, package=MANAGER, prefix=False, screenshot=None, scroll=False, occurrence=0):
         def locate():
             root = self.ui()
+            found = []
             for node in root.iter("node"):
                 label = node.get("text", "")
                 matches = label.startswith(text) if prefix else label == text
                 if node.get("package") == package and matches and node.get("enabled") == "true":
                     bounds = list(map(int, re.findall(r"\d+", node.get("bounds", ""))))
                     if len(bounds) == 4:
-                        return bounds
+                        found.append(bounds)
+                        if len(found) > occurrence:
+                            return found[occurrence]
             if scroll:
                 container = next((n for n in root.iter("node") if n.get("package") == package
                                   and n.get("scrollable") == "true"), None)
@@ -82,7 +85,8 @@ class Smoke:
                     inset = (bottom - top) // 5
                     self.shell("input", "swipe", x, bottom - inset, x, top + inset, 300)
             return None
-        left, top, right, bottom = self.until(f"button {text!r} in {package}", locate)
+        ordinal = f" #{occurrence}" if occurrence else ""
+        left, top, right, bottom = self.until(f"button {text!r}{ordinal} in {package}", locate)
         if screenshot:
             self.screenshot(screenshot)
         self.shell("input", "tap", (left + right) // 2, (top + bottom) // 2)
@@ -138,7 +142,10 @@ class Smoke:
     def stop_porter(self):
         self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
         self.tap("Porter is running", prefix=True)
-        self.tap("Stop Porter", screenshot="running-service-dialog")
+        self.tap("Stop Porter")
+        # The dialog repeats "Stop Porter" as its title, so the second match is the confirm button
+        # and waiting for it also waits for the dialog to replace the single-match screen.
+        self.tap("Stop Porter", occurrence=1, screenshot="running-service-dialog")
         self.until("Porter stopped", lambda: not self.pid("porter_server"))
 
     def case(self, name, action):
