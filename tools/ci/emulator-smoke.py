@@ -101,6 +101,13 @@ class Smoke:
     def pid(self, name):
         return self.shell("pidof", name, check=False)
 
+    def recording(self, command):
+        # run-as starts in the manager's data directory, where debug sessions live.
+        return self.shell("run-as", MANAGER, "sh", "-c", command, check=False)
+
+    def recording_size(self, path):
+        return int(self.recording(f"stat -c %s {path} 2>/dev/null || echo 0") or 0)
+
     def start_service(self, package=MANAGER):
         name = "porter_server" if package == MANAGER else "shizuku_server"
         previous = self.pid(name)
@@ -184,6 +191,58 @@ class Smoke:
     def run(self):
         self.case("setup", self.setup)
         self.case("standalone", lambda: self.grant_and_revoke(NATIVE, PERMISSION))
+
+        def debug_recording():
+            if int(self.shell("getprop", "ro.build.version.sdk")) >= 33:
+                # Otherwise the consent dialog's confirm opens the permission controller instead.
+                self.shell("pm", "grant", MANAGER, "android.permission.POST_NOTIFICATIONS")
+
+            def open_support():
+                # CLEAR_TOP destroys the support screen opened earlier, so it is navigated again.
+                self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
+                self.tap(desc="Settings")
+                self.tap("Help & support", scroll=True)
+            open_support()
+            self.tap("Record debug log")
+            self.tap("Record debug log", occurrence=1, screenshot="debug-recording-consent")
+            # The active marker is written before the stream is attached, so both are waited on.
+            session = self.until("recording session", lambda: self.recording("cat no_backup/debug-logs/active 2>/dev/null"))
+            path = "no_backup/debug-logs/" + session
+            self.until("attached server stream",
+                       lambda: "Server stream attached pid=" in self.recording(f"cat {path}/events.txt 2>/dev/null"))
+            baseline = self.recording_size(f"{path}/server.log")
+            self.launch_probe(NATIVE)
+            self.tap("Allow all the time")
+            self.authorized(NATIVE)
+            # -T 1 supplies a first line on attach, so only the bytes after the baseline count.
+            self.until("service log carries the probe attaching", lambda: f"attachApplication: {NATIVE}"
+                       in self.recording(f"tail -c +{baseline + 1} {path}/server.log 2>/dev/null"))
+            followed = self.recording_size(f"{path}/server.log")
+            assert followed > baseline, (baseline, followed)
+            self.launch_probe(NATIVE)
+            self.until("service log keeps following", lambda: self.recording_size(f"{path}/server.log") > followed)
+            streamed = self.recording_size(f"{path}/server.log")
+            # The probe is in the foreground and tap only sees the visible window.
+            open_support()
+            self.tap("Stop recording")
+            self.tap("Stop recording", occurrence=1)
+            self.until("stopped recording", lambda: any(node.get("text") == "Record debug log"
+                                                        for node in self.ui().iter("node")))
+            events = self.recording(f"cat {path}/events.txt 2>/dev/null")
+            attached = re.search(r"Server stream attached pid=(\d+)", events)
+            assert attached, events
+            assert attached.group(1) == self.pid("porter_server"), events
+            for name in ("server-start.txt", "server-stop.txt"):
+                assert self.recording_size(f"{path}/{name}"), name
+            (self.output / f"debug-recording-{session}.tar").write_bytes(
+                self.adb("exec-out", "run-as", MANAGER, "tar", "-c", "-C", "no_backup/debug-logs", session, binary=True))
+            self.shell("pm", "revoke", NATIVE, PERMISSION)
+            self.shell("am", "force-stop", NATIVE)
+            self.until("revocation terminates user service", lambda: not self.pid(NATIVE + ":porter-probe"))
+            # Never while a recording is active: without the marker a later stop() returns early.
+            self.recording("rm -rf no_backup/debug-logs")
+            return {"session": session, "baseline": baseline, "followed": followed, "streamed": streamed}
+        self.case("debug-recording", debug_recording)
 
         def companion():
             self.adb("install", str(self.args.compat.resolve()))
