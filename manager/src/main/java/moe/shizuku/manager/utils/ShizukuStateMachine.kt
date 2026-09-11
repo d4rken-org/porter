@@ -15,6 +15,17 @@ object ShizukuStateMachine {
     private var state = AtomicReference<State>(State.STOPPED)
     private val listeners = CopyOnWriteArrayList<(State) -> Unit>()
 
+    private val lock = Any()
+
+    /** Guarded by [lock]. */
+    private var nextSequence = 0L
+
+    /** Guarded by [lock]. Appended in sequence order, so removing from the front drains in it. */
+    private val pending = ArrayDeque<Pair<Long, State>>()
+
+    /** Guarded by [lock]. True while some frame is running [drain]. */
+    private var draining = false
+
     init {
         Shizuku.addBinderReceivedListenerSticky(
             Shizuku.OnBinderReceivedListener { set(State.RUNNING) }
@@ -27,9 +38,27 @@ object ShizukuStateMachine {
     fun get(): State = state.get()
 
     private fun transition(transform: (State) -> State) {
-        val oldState = state.getAndUpdate(transform)
-        val newState = transform(oldState)
-        if(oldState != newState) {
+        synchronized(lock) {
+            val oldState = state.get()
+            val newState = transform(oldState)
+            if (oldState == newState) return
+            state.set(newState)
+            pending.addLast(nextSequence++ to newState)
+            // A transition raised from inside a listener lands here while an outer frame is still
+            // delivering; that frame picks this entry up, so listeners registered after the one
+            // that reentered still see the older state first.
+            if (draining) return
+            draining = true
+        }
+        drain()
+    }
+
+    /** Notifies outside [lock]: listener bodies reach a root shell and the main thread. */
+    private fun drain() {
+        while (true) {
+            val (_, newState) = synchronized(lock) {
+                pending.removeFirstOrNull().also { if (it == null) draining = false }
+            } ?: return
             listeners.forEach { it(newState) }
             Log.d("ShizukuStateMachine", newState.toString())
         }
@@ -60,8 +89,11 @@ object ShizukuStateMachine {
     }
 
     fun addListener(listener: (State) -> Unit) {
-        listeners.add(listener)
-        listener(state.get())
+        val current = synchronized(lock) {
+            listeners.add(listener)
+            state.get()
+        }
+        listener(current)
     }
 
     fun removeListener(listener: (State) -> Unit) {
