@@ -1,5 +1,6 @@
 import importlib.util
 from pathlib import Path
+import tempfile
 import unittest
 from unittest.mock import Mock, call, patch
 import xml.etree.ElementTree as ET
@@ -8,6 +9,13 @@ import xml.etree.ElementTree as ET
 spec = importlib.util.spec_from_file_location("emulator_smoke", Path(__file__).with_name("emulator-smoke.py"))
 smoke = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(smoke)
+
+OFFLINE = b"adb: device offline\n"
+NOT_FOUND = b"adb: device 'emulator-5554' not found\n"
+
+
+def completed(returncode, stdout=b"", stderr=b""):
+    return smoke.subprocess.CompletedProcess(["adb"], returncode, stdout, stderr)
 
 
 class ScrollToActionTest(unittest.TestCase):
@@ -116,3 +124,64 @@ class StopPorterConfirmationTest(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "Timed out"):
             self.runner.tap("Stop Porter", occurrence=1)
         self.runner.shell.assert_not_called()
+
+
+class TransportRetryTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.args = Mock(serial="emulator-5554")
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner.output = Path(directory.name)
+
+    def logged(self, command):
+        return (self.runner.output / "commands.log").read_text().splitlines().count(command)
+
+    @patch.object(smoke.time, "sleep")
+    def test_a_dropped_transport_is_retried_and_every_attempt_is_logged(self, sleep):
+        with patch.object(smoke.subprocess, "run", side_effect=[
+                completed(1, stderr=OFFLINE), completed(0, stdout=b"5271\n")]) as run:
+            self.assertEqual(self.runner.adb("shell", "pidof porter_server"), "5271")
+        self.assertEqual(run.call_count, 2)
+        self.assertEqual(self.logged("adb -s emulator-5554 shell 'pidof porter_server'"), 2)
+
+    @patch.object(smoke.time, "sleep")
+    def test_an_exhausted_transport_failure_surfaces(self, sleep):
+        with patch.object(smoke.subprocess, "run", return_value=completed(1, stderr=NOT_FOUND)) as run:
+            with self.assertRaisesRegex(RuntimeError, "not found"):
+                self.runner.adb("shell", "true")
+        self.assertEqual(run.call_count, 3)
+        self.assertEqual(self.logged("adb -s emulator-5554 shell true"), 3)
+
+    @patch.object(smoke.time, "sleep")
+    def test_a_genuine_command_failure_is_not_retried(self, sleep):
+        stderr = b"cmd: Failure calling service package: Unknown permission\n"
+        with patch.object(smoke.subprocess, "run", return_value=completed(1, stderr=stderr)) as run:
+            with self.assertRaisesRegex(RuntimeError, "Failure calling service"):
+                self.runner.adb("shell", "pm revoke eu.darken.porter.probe.native nonsense")
+        run.assert_called_once()
+        sleep.assert_not_called()
+
+    @patch.object(smoke.time, "sleep")
+    def test_a_timeout_propagates_instead_of_running_the_command_again(self, sleep):
+        with patch.object(smoke.subprocess, "run",
+                          side_effect=smoke.subprocess.TimeoutExpired(["adb"], 45)) as run:
+            with self.assertRaises(smoke.subprocess.TimeoutExpired):
+                self.runner.adb("shell", "true")
+        run.assert_called_once()
+        sleep.assert_not_called()
+
+    @patch.object(smoke.time, "sleep")
+    def test_a_marker_on_a_successful_command_is_not_a_transport_failure(self, sleep):
+        with patch.object(smoke.subprocess, "run",
+                          return_value=completed(0, stdout=b"device offline\n", stderr=OFFLINE)) as run:
+            self.assertEqual(self.runner.adb("shell", "echo device offline"), "device offline")
+        run.assert_called_once()
+        sleep.assert_not_called()
+
+    @patch.object(smoke.time, "sleep")
+    def test_an_unchecked_caller_observes_the_retried_result(self, sleep):
+        with patch.object(smoke.subprocess, "run", side_effect=[
+                completed(1, stderr=OFFLINE), completed(0, stdout=b"5271\n")]) as run:
+            self.assertEqual(self.runner.shell("pidof", "porter_server", check=False), "5271")
+        self.assertEqual(run.call_count, 2)

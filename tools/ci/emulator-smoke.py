@@ -17,6 +17,14 @@ LEGACY = "eu.darken.porter.probe.legacy"
 PERMISSION = "eu.darken.porter.permission.API_V23"
 LEGACY_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 PAYLOAD = "porter-ci-shell-access"
+# adb reports these itself before dispatching anything to the device, so repeating is safe. Stream
+# failures ("closed", "protocol fault") are deliberately absent: they can surface after the device
+# already ran the command, and a repeated tap, install or service start is not idempotent. The
+# serial sits inside the not-found line, as in: adb: device 'emulator-5554' not found
+TRANSPORT_FAILURE = re.compile(r"^(adb: |error: ).*(device offline|device still connecting|not found)",
+                               re.MULTILINE)
+TRANSPORT_ATTEMPTS = 3
+TRANSPORT_BACKOFF = 2
 
 
 class Smoke:
@@ -29,13 +37,21 @@ class Smoke:
 
     def adb(self, *args, check=True, binary=False):
         command = ["adb", "-s", self.args.serial, *map(str, args)]
-        result = subprocess.run(command, capture_output=True, timeout=45)
-        with (self.output / "commands.log").open("a") as log:
-            log.write(shlex.join(command) + "\n")
-            if not binary:
-                log.write(result.stdout.decode(errors="replace") + result.stderr.decode(errors="replace"))
+        for attempt in range(TRANSPORT_ATTEMPTS):
+            result = subprocess.run(command, capture_output=True, timeout=45)
+            stderr = result.stderr.decode(errors="replace")
+            with (self.output / "commands.log").open("a") as log:
+                log.write(shlex.join(command) + "\n")
+                if not binary:
+                    log.write(result.stdout.decode(errors="replace") + stderr)
+            # Before check, so that check=False callers such as pid() cannot read a dropped
+            # transport as an observation of the device.
+            if not (result.returncode and TRANSPORT_FAILURE.search(stderr)):
+                break
+            if attempt < TRANSPORT_ATTEMPTS - 1:
+                time.sleep(TRANSPORT_BACKOFF)
         if check and result.returncode:
-            raise RuntimeError(f"{shlex.join(command)}: {result.stderr.decode(errors='replace')}")
+            raise RuntimeError(f"{shlex.join(command)}: {stderr}")
         return result.stdout if binary else result.stdout.decode(errors="replace").strip()
 
     def shell(self, *args, **kwargs):
