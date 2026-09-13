@@ -82,7 +82,23 @@ internal data class RequestingApp(
 
 @Composable
 internal fun PermissionDialogContent(stage: String, app: RequestingApp, onAllow: () -> Unit, onDeny: () -> Unit, onClose: () -> Unit) {
-    DialogSurface {
+    DialogSurface(actions = {
+        when (stage) {
+            "ready" ->
+                // IntrinsicSize.Max keeps both buttons the same height when only one label wraps.
+                Row(Modifier.padding(top = 16.dp).height(IntrinsicSize.Max), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    FilledTonalButton(onClick = onDeny, modifier = Modifier.weight(1f).fillMaxHeight()) {
+                        Text(stringResource(R.string.grant_dialog_button_deny), textAlign = TextAlign.Center)
+                    }
+                    FilledTonalButton(onClick = onAllow, modifier = Modifier.weight(1f).fillMaxHeight()) {
+                        Text(stringResource(R.string.grant_dialog_button_allow_always), textAlign = TextAlign.Center)
+                    }
+                }
+            "limited" -> Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
+                TextButton(onClick = onClose) { Text(stringResource(android.R.string.ok)) }
+            }
+        }
+    }) {
         when (stage) {
             "ready" -> {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -100,15 +116,6 @@ internal fun PermissionDialogContent(stage: String, app: RequestingApp, onAllow:
                 }
                 HtmlText(stringResource(R.string.permission_warning_template, TextUtils.htmlEncode(app.label), stringResource(R.string.permission_group_description)))
                 Text(stringResource(R.string.porter_permission_detail), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                // IntrinsicSize.Max keeps both buttons the same height when only one label wraps.
-                Row(Modifier.height(IntrinsicSize.Max), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    FilledTonalButton(onClick = onDeny, modifier = Modifier.weight(1f).fillMaxHeight()) {
-                        Text(stringResource(R.string.grant_dialog_button_deny), textAlign = TextAlign.Center)
-                    }
-                    FilledTonalButton(onClick = onAllow, modifier = Modifier.weight(1f).fillMaxHeight()) {
-                        Text(stringResource(R.string.grant_dialog_button_allow_always), textAlign = TextAlign.Center)
-                    }
-                }
             }
             "waiting" -> Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 3.dp)
@@ -117,9 +124,6 @@ internal fun PermissionDialogContent(stage: String, app: RequestingApp, onAllow:
             "limited" -> {
                 Text(stringResource(R.string.app_management_dialog_adb_is_limited_title), style = MaterialTheme.typography.titleLarge)
                 HtmlText(stringResource(R.string.app_management_dialog_adb_is_limited_message, Helps.ADB_PERMISSION.get()))
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = onClose) { Text(stringResource(android.R.string.ok)) }
-                }
             }
             // The user has already answered by the time this arm recomposes; it must not claim to be waiting.
             else -> CircularProgressIndicator()
