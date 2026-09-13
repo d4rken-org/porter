@@ -134,6 +134,7 @@ Translation:
           - ".github/workflows/**"
           - ".github/actions/**"
           - ".github/labeler.yml"
+          - ".github/dependabot.yml"
           - "VERSION"
           - "version.properties"
           - "build.gradle.compileSdk36"
