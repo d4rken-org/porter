@@ -100,12 +100,21 @@ object ShizukuStateMachine {
         return (get() == State.STOPPED || get() == State.CRASHED) 
     }
 
+    /**
+     * Registers [listener] and hands it the state current at registration as a queue entry
+     * addressed to it alone, delivered by the same [drain] as every transition. It can therefore
+     * never observe a state older than one it has already been given, and a listener that throws
+     * on this delivery cannot unwind into the registrar. When another frame is already draining,
+     * this returns before the listener has been called.
+     */
     fun addListener(listener: (State) -> Unit) {
-        val current = synchronized(lock) {
+        synchronized(lock) {
             listeners.add(listener)
-            state.get()
+            pending.addLast(state.get() to listOf(listener))
+            if (draining) return
+            draining = true
         }
-        listener(current)
+        drain()
     }
 
     fun removeListener(listener: (State) -> Unit) {
