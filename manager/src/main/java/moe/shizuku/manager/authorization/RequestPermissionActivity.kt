@@ -57,13 +57,22 @@ class RequestPermissionActivity : ComposeActivity() {
         porterContent {
             val stage by model.stage.collectAsStateWithLifecycle()
             val identity by produceState(RequestingApp(label, ai.packageName, null, null), ai, uid) {
-                value = withContext(Dispatchers.IO) {
-                    val icon = runCatching { ai.loadIcon(packageManager).toBitmap(96, 96).asImageBitmap() }.getOrNull()
-                    val userId = UserHandleCompat.getUserId(uid)
-                    val profile = if (userId == UserHandleCompat.myUserId()) null
-                        else runCatching { ShizukuSystemApis.getUserInfo(userId).let { "${it.name} ($userId)" } }.getOrNull()
-                    RequestingApp(label, ai.packageName, icon, profile)
-                }
+                val icon = withContext(Dispatchers.IO) { runCatching { ai.loadIcon(packageManager).toBitmap(96, 96).asImageBitmap() }.getOrNull() }
+                value = RequestingApp(label, ai.packageName, icon, null)
+                val userId = UserHandleCompat.getUserId(uid)
+                if (userId == UserHandleCompat.myUserId()) return@produceState
+                // The user name comes from the service, so the row waits for it. No answer within
+                // the bound leaves the row out, which is honest where a placeholder name is not.
+                val profile = try {
+                    withTimeout(PermissionViewModel.SERVICE_TIMEOUT) {
+                        ShizukuStateMachine.asFlow().first { it == ShizukuStateMachine.State.RUNNING }
+                        withContext(Dispatchers.IO) { runCatching { ShizukuSystemApis.getUserInfo(userId).let { "${it.name} ($userId)" } }.getOrNull() }
+                    }
+                } catch (e: TimeoutCancellationException) {
+                    LOGGER.e(e, "Binder not received in 5s, requesting user not named")
+                    null
+                } ?: return@produceState
+                value = RequestingApp(label, ai.packageName, icon, profile)
             }
             BackHandler(enabled = stage == "waiting" || stage == "ready") {}
             LaunchedEffect(stage) { if (stage == "finished") finish() }

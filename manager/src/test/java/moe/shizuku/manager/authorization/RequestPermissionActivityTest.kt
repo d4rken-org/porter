@@ -9,6 +9,8 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import moe.shizuku.manager.R
 import moe.shizuku.manager.TestApplication
+import moe.shizuku.manager.utils.ShizukuStateMachine
+import moe.shizuku.manager.utils.UserHandleCompat
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -35,9 +37,9 @@ class RequestPermissionActivityTest {
     @Before fun inject() { PermissionViewModel.gatewayOverride = gateway }
     @After fun cleanUp() { scenario?.close(); PermissionViewModel.gatewayOverride = null }
 
-    private fun launch(): ActivityScenario<RequestPermissionActivity> = ActivityScenario.launch<RequestPermissionActivity>(
+    private fun launch(uid: Int = 10123): ActivityScenario<RequestPermissionActivity> = ActivityScenario.launch<RequestPermissionActivity>(
         Intent(context, RequestPermissionActivity::class.java)
-            .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 7)
+            .putExtra("uid", uid).putExtra("pid", 4242).putExtra("requestCode", 7)
             .putExtra("applicationInfo", context.applicationInfo)
     ).also { scenario = it }
     private fun awaitText(text: String) = compose.waitUntil(5_000) { compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty() }
@@ -92,6 +94,19 @@ class RequestPermissionActivityTest {
         compose.onNodeWithText(ok).performClick()
         awaitDestroyed(scenario)
         assertEquals(1, gateway.replies.size)
+    }
+
+    @Test fun profileLineStaysAwayWhileTheServiceCannotNameTheUser() {
+        ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPED)
+        val otherUserId = UserHandleCompat.myUserId() + 1
+        launch(uid = otherUserId * UserHandleCompat.PER_USER_RANGE + 10123)
+        awaitText(allow)
+        // Without the binder a user lookup can only answer "Unknown"; the prompt must say nothing instead.
+        val placeholder = "Unknown ($otherUserId)"
+        val shown = runCatching {
+            compose.waitUntil(2_000) { compose.onAllNodesWithText(placeholder).fetchSemanticsNodes().isNotEmpty() }
+        }.isSuccess
+        assertFalse("the prompt rendered \"$placeholder\" as the requesting user", shown)
     }
 
     @Test fun requestWithoutCallerIdentityClosesWithoutReply() {
