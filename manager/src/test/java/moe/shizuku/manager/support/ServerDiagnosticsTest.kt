@@ -65,6 +65,50 @@ class ServerDiagnosticsTest {
         assertNull(ServerDiagnostics.readInfo(service { writeNoException(); writeInt(77); versionBundle("1.2.0-beta3", -5) })!!.version)
     }
 
+    /** A service whose debug-logging transaction grants [granted]; every other code is unsupported. */
+    private fun leasing(granted: Long) = object : Binder() {
+        override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+            if (code != ServerConstants.BINDER_TRANSACTION_setDebugLogging) return super.onTransact(code, data, reply, flags)
+            data.enforceInterface(descriptor)
+            assertNotNull(data.readStrongBinder())
+            requested = data.readLong()
+            reply!!.writeNoException()
+            reply.writeLong(granted)
+            return true
+        }
+    }
+    private var requested = -1L
+
+    @Test fun grantedDebugLoggingReportsWhatTheServiceAllowed() {
+        assertEquals(600_000L, ServerDiagnostics.requestDebugLogging(leasing(600_000L), Binder(), 1_800_000L))
+        assertEquals(1_800_000L, requested)
+    }
+
+    @Test fun serviceWithoutDebugLoggingTransactionIsUnsupportedRatherThanRefused() {
+        assertNull(ServerDiagnostics.requestDebugLogging(Binder(), Binder(), 1_800_000L))
+    }
+
+    @Test fun aServiceGrantingNothingIsDistinguishableFromAnUnsupportedOne() {
+        assertEquals(0L, ServerDiagnostics.requestDebugLogging(leasing(0L), Binder(), 1_800_000L))
+    }
+
+    @Test(expected = SecurityException::class)
+    fun refusedDebugLoggingSurfacesTheServiceException() {
+        val refusing = object : Binder() {
+            override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+                data.enforceInterface(descriptor)
+                reply!!.writeException(SecurityException("setDebugLogging requires the manager"))
+                return true
+            }
+        }
+        ServerDiagnostics.requestDebugLogging(refusing, Binder(), 1_800_000L)
+    }
+
+    @Test fun releasingPassesZeroSoTheServiceClosesItsGate() {
+        ServerDiagnostics.requestDebugLogging(leasing(0L), Binder(), 0L)
+        assertEquals(0L, requested)
+    }
+
     @Test fun serviceWithoutDiagnosticsTransactionYieldsNothing() {
         assertNull(ServerDiagnostics.readInfo(Binder()))
     }

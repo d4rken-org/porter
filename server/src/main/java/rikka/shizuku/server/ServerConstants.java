@@ -17,4 +17,5 @@ public class ServerConstants {
 
     public static final int BINDER_TRANSACTION_getDiagnostics = 10002;
     public static final int BINDER_TRANSACTION_getApplications = 10001;
+    public static final int BINDER_TRANSACTION_setDebugLogging = 10006;
 }

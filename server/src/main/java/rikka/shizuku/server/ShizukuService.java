@@ -60,6 +60,7 @@ import rikka.parcelablelist.ParcelableListSlice;
 import rikka.rish.RishConfig;
 import rikka.shizuku.ShizukuApiConstants;
 import rikka.shizuku.server.util.HandlerUtil;
+import rikka.shizuku.server.util.Logger;
 import rikka.shizuku.server.util.InstalledPackagesCompat;
 import rikka.shizuku.server.util.UserHandleCompat;
 
@@ -98,6 +99,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     private final ShizukuConfigManager configManager;
     private final int managerAppId;
     private final java.util.concurrent.Executor historyWriter = java.util.concurrent.Executors.newSingleThreadExecutor();
+    private final DebugLogLeases debugLogLeases = new DebugLogLeases();
     private final ConnectionHistory connectionHistory = new ConnectionHistory(
             new File("/data/user_de/0/com.android.shell/porter-connections.json"));
 
@@ -105,6 +107,10 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         super();
 
         HandlerUtil.setMainHandler(mainHandler);
+
+        // A debug build logs its debug detail unconditionally, the way it always has. The gate
+        // exists to keep that detail out of release builds except while a recording wants it.
+        Logger.setDebugAlways(moe.shizuku.server.BuildConfig.DEBUG);
 
         LOGGER.i("starting server...");
 
@@ -698,6 +704,15 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             ParcelableListSlice<PackageInfo> result = getApplications(userId);
             reply.writeNoException();
             result.writeToParcel(reply, android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
+            return true;
+        }
+        if (code == ServerConstants.BINDER_TRANSACTION_setDebugLogging) {
+            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
+            enforceManagerPermission("setDebugLogging");
+            IBinder token = data.readStrongBinder();
+            long granted = debugLogLeases.update(token, data.readLong());
+            reply.writeNoException();
+            reply.writeLong(granted);
             return true;
         }
         if (code == ServerConstants.BINDER_TRANSACTION_getDiagnostics) {
