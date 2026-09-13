@@ -50,6 +50,15 @@ class RequestPermissionActivityTest {
         }.getOrDefault(true)
     }
 
+    @Test fun readyPromptNamesTheRequestingPackageAndWhatAccessGrants() {
+        launch()
+        awaitText(allow)
+        compose.onNodeWithText(context.packageName).assertIsDisplayed()
+        compose.onNodeWithText(string(R.string.porter_permission_detail)).assertIsDisplayed()
+        compose.onNodeWithText(deny).assertIsDisplayed()
+        compose.onNodeWithText(allow).assertIsDisplayed()
+    }
+
     @Test fun promptSurvivesRecreationAndAllowRepliesOnceThenCloses() {
         val scenario = launch()
         awaitText(allow)
