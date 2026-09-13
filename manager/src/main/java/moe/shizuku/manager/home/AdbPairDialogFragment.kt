@@ -56,11 +56,13 @@ class AdbPairDialogFragment : ComposeDialogFragment() {
         }
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable override fun Actions() {
         val busy by model.busy.collectAsStateWithLifecycle()
         val code by model.code.collectAsStateWithLifecycle()
         val port by model.port.collectAsStateWithLifecycle()
-        Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
+        FlowRow(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+            verticalArrangement = Arrangement.spacedBy(8.dp)) {
             if (networkReady) {
                 TextButton(enabled = !busy, onClick = { SettingsHelper.launchOrHighlightWirelessDebugging(requireContext()) }) { Text(stringResource(R.string.development_settings)) }
                 Button(enabled = !busy && port.toIntOrNull()?.let { it in 1..65535 } == true && code.length == 6,
