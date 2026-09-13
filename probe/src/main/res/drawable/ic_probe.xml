@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A colour nothing else in the project produces, so a loaded icon is distinguishable
+     from the prompt's placeholder and from the framework's default activity icon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:fillColor="#FFFF00FF"
+        android:pathData="M8,2 L40,2 A6,6 0 0 1 46,8 L46,40 A6,6 0 0 1 40,46 L8,46 A6,6 0 0 1 2,40 L2,8 A6,6 0 0 1 8,2 Z" />
+</vector>
