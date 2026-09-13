@@ -86,12 +86,17 @@ class PairingViewModel(application: Application, savedStateHandle: SavedStateHan
     /** The mDNS callback, reachable from tests so a discovery can be delivered without a service. */
     internal fun onDiscovered(discovered: Pair<String, Int>) {
         if (endpoint.value == discovered) return
-        // A move away from an endpoint that was already resolved invalidates the code typed for it.
-        // The first resolve of a session, including the one after a restore, has nothing to invalidate.
+        // A move away from an endpoint that was already resolved invalidates both the code and the
+        // port that belonged to it. The first resolve of a session, including the one after a
+        // restore, has nothing to invalidate and only fills in what is still empty.
         val replacesAResolvedEndpoint = endpoint.value.second in 1..65535
         endpoint.value = discovered
-        if (replacesAResolvedEndpoint) code.value = ""
-        if (port.value.isBlank() && discovered.second in 1..65535) port.value = discovered.second.toString()
+        if (replacesAResolvedEndpoint) {
+            code.value = ""
+            port.value = if (discovered.second in 1..65535) discovered.second.toString() else ""
+        } else if (port.value.isBlank() && discovered.second in 1..65535) {
+            port.value = discovered.second.toString()
+        }
     }
     private var discovering = false
     fun startDiscovery() { if (!discovering) { discovering = true; mdns.start() } }

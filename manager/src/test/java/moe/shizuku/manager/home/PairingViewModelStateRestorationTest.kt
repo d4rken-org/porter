@@ -82,4 +82,16 @@ class PairingViewModelStateRestorationTest {
         assertEquals("314159", after.code.value)
         assertEquals("37419", after.port.value)
     }
+
+    /** Once an endpoint has been resolved, the next resolve is the live one and its port takes over. */
+    @Test fun aLaterDiscoveryReplacesThePortOfTheEndpointItSupersedes() {
+        val application = ApplicationProvider.getApplicationContext<Application>()
+
+        val model = Host(null).viewModel(application)
+        model.onDiscovered("192.168.1.5" to 41234)
+        assertEquals("41234", model.port.value)
+
+        model.onDiscovered("192.168.1.5" to 45678)
+        assertEquals("45678", model.port.value)
+    }
 }
