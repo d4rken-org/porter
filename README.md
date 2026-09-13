@@ -1,4 +1,4 @@
-![Porter](docs/assets/porter-banner.png)
+<img src="docs/assets/porter-banner.png" width="400" alt="Porter banner">
 
 # Porter
 
