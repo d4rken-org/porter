@@ -46,11 +46,6 @@
     public static *** d(...);
 }
 
-#noinspection ShrinkerUnresolvedReference
--assumenosideeffects class rikka.shizuku.server.util.Logger {
-    public *** d(...);
-}
-
 # com.reandroid.ARSCLIB implements android/xmlpull stubs which R8 tries to strip, causing crashes on release builds
 # https://github.com/REAndroid/ARSCLib/issues/95
 -keep public interface android.util.AttributeSet { *; }

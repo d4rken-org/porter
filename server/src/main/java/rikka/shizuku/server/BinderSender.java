@@ -150,7 +150,9 @@ public class BinderSender {
         if (packages.isEmpty())
             return;
 
-        LOGGER.d("sendBinder to uid %d: packages=%s", uid, TextUtils.join(", ", packages));
+        if (Logger.debugEnabled()) {
+            LOGGER.d("sendBinder to uid %d: packages=%s", uid, TextUtils.join(", ", packages));
+        }
 
         int userId = uid / 100000;
         for (String packageName : packages) {

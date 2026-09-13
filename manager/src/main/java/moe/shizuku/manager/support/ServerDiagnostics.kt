@@ -47,6 +47,32 @@ internal object ServerDiagnostics {
         }
     }
 
+    /**
+     * Asks the service to log DEBUG and VERBOSE for [durationMs] against [token], or to stop when
+     * that is zero. The service closes the gate on its own once the grant runs out, so a manager
+     * that dies without releasing cannot leave it open.
+     *
+     * @return the milliseconds actually granted, or null from a service too old to know the call.
+     */
+    fun requestDebugLogging(binder: IBinder, token: IBinder, durationMs: Long): Long? {
+        val request = Parcel.obtain()
+        val reply = Parcel.obtain()
+        try {
+            request.writeInterfaceToken("moe.shizuku.server.IShizukuService")
+            request.writeStrongBinder(token)
+            request.writeLong(durationMs)
+            // A service that does not know the code answers false. A service that refuses the call
+            // throws out of readException instead, which is a different thing and must not be
+            // reported as "unsupported".
+            if (!binder.transact(ServerConstants.BINDER_TRANSACTION_setDebugLogging, request, reply, 0)) return null
+            reply.readException()
+            return reply.readLong()
+        } finally {
+            request.recycle()
+            reply.recycle()
+        }
+    }
+
     fun captureMetadata(directory: File, phase: String) {
         val details = File(directory, "server-$phase.txt")
         try {
