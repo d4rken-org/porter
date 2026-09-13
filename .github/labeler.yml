@@ -1,0 +1,154 @@
+# Path-based PR labels, applied by .github/workflows/pr-labeler.yml
+#
+# Only labels that follow objectively from the changed paths belong here.
+# Type labels (bug/enhancement/Chore/documentation), Root, General UI/UX,
+# ROM and api-level labels are not derivable from a diff and stay manual.
+#
+# A component label means "this area is touched", including its tests and
+# module tooling. It does not assert that the area's runtime behavior changed.
+#
+# Under pull_request_target this file is read from the base branch, so edits
+# only take effect once they are merged into main.
+#
+# Globs avoid brace expansion on purpose: an unsupported brace fails silently
+# by never matching, which is the one failure mode worth designing against.
+
+"c: Setup":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "manager/src/**/moe/shizuku/manager/adb/**"
+          - "manager/src/**/moe/shizuku/manager/starter/**"
+          # Pairing and startup entry points that live in shared packages.
+          - "manager/src/**/moe/shizuku/manager/home/Adb*"
+          - "manager/src/**/moe/shizuku/manager/home/Wadb*"
+          - "manager/src/**/moe/shizuku/manager/home/WirelessStart*"
+          - "manager/src/**/moe/shizuku/manager/home/TvPairing*"
+          - "manager/src/**/moe/shizuku/manager/worker/AdbStartWorker*"
+          - "manager/src/**/moe/shizuku/manager/worker/ServiceUpdateWorker*"
+          - "manager/src/**/moe/shizuku/manager/receiver/BootCompleteReceiver*"
+          - "manager/src/**/moe/shizuku/manager/receiver/ManualStartReceiver*"
+          - "manager/src/**/moe/shizuku/manager/receiver/ShizukuReceiverStarter*"
+          - "manager/src/**/moe/shizuku/manager/receiver/NotifAttemptReceiver*"
+          - "manager/src/**/moe/shizuku/manager/receiver/NotifCancelReceiver*"
+          - "manager/src/**/moe/shizuku/manager/receiver/NotifRestoreReceiver*"
+          - "manager/src/**/moe/shizuku/manager/receiver/PackageReplacedReceiver*"
+          - "manager/src/main/jni/adb_pairing.*"
+          - "manager/src/main/jni/starter.cpp"
+          - "starter/**"
+          - "test-fixtures/service-update/**"
+
+"c: Apps":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "manager/src/**/moe/shizuku/manager/authorization/**"
+          - "manager/src/**/moe/shizuku/manager/management/**"
+          - "server/src/**/rikka/shizuku/server/ApplicationDiscovery*"
+          - "server/src/**/rikka/shizuku/server/PermissionObserver*"
+          - "server/src/**/rikka/shizuku/server/ServiceAuthorization*"
+          - "server/src/**/rikka/shizuku/server/ShizukuClientManager*"
+          - "server/src/**/rikka/shizuku/server/ShizukuConfig*"
+          - "common/src/**/eu/darken/porter/common/DiscoveredApplication*"
+
+"c: Compatibility":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "compat/**"
+          - "manager/src/**/moe/shizuku/manager/compatibility/**"
+          - "server/src/**/rikka/shizuku/server/Compatibility*"
+          - "server/src/**/rikka/shizuku/server/LegacyAccessImport*"
+          - "common/src/**/eu/darken/porter/common/CompatibilitySetup*"
+
+# Fires on every server change, including the files that also carry
+# "c: Apps" or "c: Compatibility". That overlap is intended: the server
+# module is the service, and both labels are true of such a change.
+"c: Service":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "server/**"
+          - "manager/src/**/moe/shizuku/manager/service/**"
+          - "manager/src/**/moe/shizuku/manager/receiver/**"
+
+"c: Shell":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "shell/**"
+          - "manager/src/**/moe/shizuku/manager/shell/**"
+          - "manager/src/**/moe/shizuku/manager/receiver/BinderRequestReceiver*"
+          - "manager/src/main/assets/rish"
+
+"c: Diagnostics":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "manager/src/**/moe/shizuku/manager/support/**"
+
+"Google Play":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "fastlane/**"
+          - "manager/src/screenshotTest/**"
+          - "manager/src/debug/**/screenshots/**"
+
+Translation:
+  - changed-files:
+      - any-glob-to-any-file:
+          # Every XML in a locale-qualified values dir, not just strings.xml:
+          # Porter splits its strings across compatibility.xml, porter_support.xml
+          # and others, all of which are translated.
+          #
+          # The two-letter class is what keeps configuration qualifiers out:
+          # values-night, values-sw600dp and values-v4 do not match it.
+          - "manager/src/*/res/values-[a-z][a-z]/*.xml"
+          - "manager/src/*/res/values-[a-z][a-z]-r[A-Z][A-Z]/*.xml"
+          - "manager/src/*/res/values-b+*/*.xml"
+          - "compat/src/*/res/values-[a-z][a-z]/*.xml"
+          - "compat/src/*/res/values-[a-z][a-z]-r[A-Z][A-Z]/*.xml"
+          - "compat/src/*/res/values-b+*/*.xml"
+          # Filipino is the one three-letter locale Porter ships. Do not
+          # generalize this to [a-z][a-z][a-z]: that would match values-car.
+          - "manager/src/*/res/values-fil/*.xml"
+          - "compat/src/*/res/values-fil/*.xml"
+          - "docs/_translations/**"
+          - "docs/_data/ui.yml"
+          - "crowdin.yml"
+          - "fastlane/screenshots/locales.txt"
+  # Store listing text, but only for a locale other than the en-US source.
+  # Both globs must match the same file, so regenerated screenshot PNGs
+  # under a locale directory do not count as a translation change.
+  - changed-files:
+      - all-globs-to-any-file:
+          - "fastlane/metadata/android/**/*.txt"
+          - "!fastlane/metadata/android/en-US/**"
+
+"Build process":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.gradle"
+          - "**/*.gradle.kts"
+          - "**/gradle.properties"
+          - "gradle/**"
+          - "gradlew"
+          - "gradlew.bat"
+          - "**/CMakeLists.txt"
+          - "**/*proguard*"
+          - "**/consumer-rules.pro"
+          - ".github/workflows/**"
+          - ".github/actions/**"
+          - ".github/labeler.yml"
+          - "VERSION"
+          - "version.properties"
+          - "build.gradle.compileSdk36"
+          - "tools/ci/**"
+          - "tools/release/**"
+          - "tools/verify-apks.py"
+          - "tools/update-artwork.py"
+          - "docs/Gemfile"
+          - "docs/Gemfile.lock"
+          - "fastlane/Appfile"
+          - "fastlane/Fastfile"
+          - "fastlane/Gemfile"
+          - "fastlane/Gemfile.lock"
+          - "fastlane/*.sh"
+          - "fastlane/screenshots/**"
+          # The API submodule is a single changed path, never nested files.
+          - "api"
+          - ".gitmodules"
