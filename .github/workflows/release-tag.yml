@@ -18,8 +18,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Deliberately carries no environment. release-github runs under
+  # foss-production, which requires a manual review, so validating in there
+  # would spend an approval before the tag is known to be releasable.
+  validate-tag:
+    name: Validate tag
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          persist-credentials: false
+      # The tag reaches the shell through the environment, never through
+      # expression interpolation: a tag name is attacker-controllable text and
+      # ${{ }} is substituted before bash parses the line, so quoting it there
+      # would not contain it.
+      - name: Validate tag against version files
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: bash tools/release/bump.sh --mode=check --expected-tag="$RELEASE_TAG"
+
   release-github:
     name: Build signed release
+    needs: validate-tag
+    # !cancelled() rather than always(): it still overrides the implicit
+    # success() that a skipped dependency would otherwise trip on a manual
+    # dispatch, without keeping a signing and publishing job eligible after
+    # the workflow has been cancelled.
+    if: ${{ !cancelled() && (needs.validate-tag.result == 'success' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     environment: foss-production
     permissions:
