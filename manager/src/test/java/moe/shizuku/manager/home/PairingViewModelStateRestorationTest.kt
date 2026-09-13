@@ -65,4 +65,21 @@ class PairingViewModelStateRestorationTest {
         assertEquals("37419", after.port.value)
         assertEquals("314159", after.code.value)
     }
+
+    /** The restored view model has no endpoint, so the first resolve must not read as a move to a new one. */
+    @Test fun theFirstDiscoveryAfterRestorationKeepsWhatWasTyped() {
+        val application = ApplicationProvider.getApplicationContext<Application>()
+
+        val before = Host(null)
+        before.viewModel(application).apply {
+            port.value = "37419"
+            code.value = "314159"
+        }
+        val saved = before.saveAndDie()
+
+        val after = Host(saved).viewModel(application)
+        after.onDiscovered("192.168.1.5" to 41234)
+        assertEquals("314159", after.code.value)
+        assertEquals("37419", after.port.value)
+    }
 }

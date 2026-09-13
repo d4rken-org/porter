@@ -82,13 +82,16 @@ class PairingViewModel(application: Application, savedStateHandle: SavedStateHan
     /** Handle-backed so what the user typed outlives process death; every write lands in saved state. */
     val code = savedStateHandle.getMutableStateFlow("pairing_code", "")
     val port = savedStateHandle.getMutableStateFlow("pairing_port", "")
-    private val mdns = AdbMdns(application, AdbMdns.TLS_PAIRING) { discovered ->
-        if (endpoint.value != discovered) {
-            endpoint.value = discovered
-            // A new endpoint invalidates whatever was typed for the old one.
-            code.value = ""
-            port.value = if (discovered.second in 1..65535) discovered.second.toString() else ""
-        }
+    private val mdns = AdbMdns(application, AdbMdns.TLS_PAIRING) { onDiscovered(it) }
+    /** The mDNS callback, reachable from tests so a discovery can be delivered without a service. */
+    internal fun onDiscovered(discovered: Pair<String, Int>) {
+        if (endpoint.value == discovered) return
+        // A move away from an endpoint that was already resolved invalidates the code typed for it.
+        // The first resolve of a session, including the one after a restore, has nothing to invalidate.
+        val replacesAResolvedEndpoint = endpoint.value.second in 1..65535
+        endpoint.value = discovered
+        if (replacesAResolvedEndpoint) code.value = ""
+        if (port.value.isBlank() && discovered.second in 1..65535) port.value = discovered.second.toString()
     }
     private var discovering = false
     fun startDiscovery() { if (!discovering) { discovering = true; mdns.start() } }
