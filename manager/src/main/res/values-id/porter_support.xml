@@ -33,7 +33,7 @@
     <string name="porter_debug_short">Rekaman ini sangat singkat. Apakah Anda sudah mereproduksi masalahnya? Anda dapat membatalkan untuk terus merekam.</string>
     <string name="porter_debug_stop_message">Simpan rekaman ini? Anda dapat membagikannya dari Log debug tersimpan atau melampirkannya saat menghubungi dukungan.</string>
     <string name="porter_debug_saved">Log debug tersimpan</string>
-    <string name="porter_debug_storage">Menyimpan lima rekaman terbaru. Setiap rekaman mencakup log aplikasi dan diagnostik layanan, serta berhenti otomatis saat mencapai batas waktu atau ukuran. Rekaman dikecualikan dari cadangan Android.</string>
+    <string name="porter_debug_storage">Menyimpan lima rekaman terbaru. Setiap rekaman mencakup log aplikasi dan diagnostik layanan, serta berhenti otomatis saat mencapai batas waktu. Rekaman dikecualikan dari cadangan Android.</string>
     <string name="porter_debug_count">Rekaman tersimpan: %1$d</string>
     <string name="porter_debug_empty">Tidak ada log debug tersimpan</string>
     <string name="porter_debug_share">Bagikan log debug</string>

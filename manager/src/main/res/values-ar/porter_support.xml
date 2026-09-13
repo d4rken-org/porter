@@ -33,7 +33,7 @@
     <string name="porter_debug_short">هذا التسجيل قصير جدًا. هل أعدت إنتاج المشكلة؟ يمكنك الإلغاء لمواصلة التسجيل.</string>
     <string name="porter_debug_stop_message">هل تريد حفظ هذا التسجيل؟ يمكنك مشاركته من سجلات تصحيح الأخطاء المحفوظة أو إرفاقه عند التواصل مع الدعم.</string>
     <string name="porter_debug_saved">سجلات تصحيح الأخطاء المحفوظة</string>
-    <string name="porter_debug_storage">يحتفظ بأحدث خمسة تسجيلات محفوظة. يتضمن كل تسجيل سجلات التطبيق وتشخيصات الخدمة، ويتوقف تلقائيًا عند بلوغ حد زمني أو حد للحجم. التسجيلات مستثناة من نسخ Android الاحتياطية.</string>
+    <string name="porter_debug_storage">يحتفظ بأحدث خمسة تسجيلات محفوظة. يتضمن كل تسجيل سجلات التطبيق وتشخيصات الخدمة، ويتوقف تلقائيًا عند بلوغ حد زمني. التسجيلات مستثناة من نسخ Android الاحتياطية.</string>
     <string name="porter_debug_count">التسجيلات المحفوظة: %1$d</string>
     <string name="porter_debug_empty">لا توجد سجلات تصحيح أخطاء محفوظة</string>
     <string name="porter_debug_share">مشاركة سجل تصحيح الأخطاء</string>

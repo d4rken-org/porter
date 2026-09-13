@@ -33,7 +33,7 @@
     <string name="porter_debug_short">Esta gravação é muito curta. Você reproduziu o problema? Você pode cancelar para continuar gravando.</string>
     <string name="porter_debug_stop_message">Salvar esta gravação? Você pode compartilhá-la em Logs de depuração salvos ou anexá-la ao falar com o suporte.</string>
     <string name="porter_debug_saved">Logs de depuração salvos</string>
-    <string name="porter_debug_storage">Mantém as cinco gravações salvas mais recentes. Cada gravação inclui logs do app e diagnósticos do serviço, e para automaticamente ao atingir um limite de tempo ou de tamanho. As gravações são excluídas dos backups do Android.</string>
+    <string name="porter_debug_storage">Mantém as cinco gravações salvas mais recentes. Cada gravação inclui logs do app e diagnósticos do serviço, e para automaticamente ao atingir um limite de tempo. As gravações são excluídas dos backups do Android.</string>
     <string name="porter_debug_count">Gravações salvas: %1$d</string>
     <string name="porter_debug_empty">Nenhum log de depuração salvo</string>
     <string name="porter_debug_share">Compartilhar log de depuração</string>
