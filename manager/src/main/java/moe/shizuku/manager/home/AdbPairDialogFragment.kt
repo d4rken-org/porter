@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
@@ -73,13 +74,14 @@ class AdbPairDialogFragment : ComposeDialogFragment() {
     }
 }
 
-class PairingViewModel(application: Application) : AndroidViewModel(application) {
+class PairingViewModel(application: Application, savedStateHandle: SavedStateHandle) : AndroidViewModel(application) {
     val endpoint = MutableStateFlow("127.0.0.1" to -1)
     val busy = MutableStateFlow(false)
     val success = MutableStateFlow(false)
     val error = MutableStateFlow<Throwable?>(null)
-    val code = MutableStateFlow("")
-    val port = MutableStateFlow("")
+    /** Handle-backed so what the user typed outlives process death; every write lands in saved state. */
+    val code = savedStateHandle.getMutableStateFlow("pairing_code", "")
+    val port = savedStateHandle.getMutableStateFlow("pairing_port", "")
     private val mdns = AdbMdns(application, AdbMdns.TLS_PAIRING) { discovered ->
         if (endpoint.value != discovered) {
             endpoint.value = discovered
