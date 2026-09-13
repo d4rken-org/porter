@@ -44,6 +44,7 @@ class SettingsActivity : ComposeActivity() {
         val preferences = ShizukuSettings.getPreferences()
         val values = remember(revision) { preferences.all }
         val dialog by model.dialog.collectAsStateWithLifecycle()
+        val canBoot by model.canBoot.collectAsStateWithLifecycle()
         val mode = (values[ShizukuSettings.Keys.KEY_NIGHT_MODE] as? Int ?: -1).toString()
         val style = values[ShizukuSettings.Keys.KEY_THEME_STYLE] as? String ?: "DEFAULT"
         val color = values[ShizukuSettings.Keys.KEY_THEME_COLOR] as? String ?: "BLUE"
@@ -58,12 +59,11 @@ class SettingsActivity : ComposeActivity() {
         val colorValues = resources.getStringArray(R.array.porter_theme_color_values).toList()
         val pairings = stringArrayResource(R.array.porter_pairing_methods).toList()
         var tcpText by rememberSaveable { mutableStateOf(preferences.getString(ShizukuSettings.Keys.KEY_TCP_PORT, "") ?: "") }
-        val canBoot = Build.VERSION.SDK_INT >= 30 || EnvironmentUtils.isTelevision() || EnvironmentUtils.isRooted()
         val showTcpPort = EnvironmentUtils.isTelevision() && !EnvironmentUtils.isTlsSupported()
         SettingsScreenContent(
             SettingsUiState(
                 startOnBoot = ShizukuSettings.getStartOnBoot(this@SettingsActivity),
-                startOnBootEnabled = canBoot,
+                startOnBootEnabled = canBoot == true,
                 watchdog = values[ShizukuSettings.Keys.KEY_WATCHDOG] as? Boolean ?: false,
                 autoUpdateService = values[ShizukuSettings.Keys.KEY_AUTO_UPDATE_SERVICE] as? Boolean ?: false,
                 autoUpdateServiceEnabled = UserHandleCompat.myUserId() == 0,

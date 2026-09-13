@@ -36,6 +36,13 @@ object PorterColorsGreen {
         inverseSurface = Color(0xFF2C322C),
         inverseOnSurface = Color(0xFFECF2EA),
         inversePrimary = Color(0xFF7CDA9A),
+        surfaceContainerLowest = Color(0xFFFFFFFF),
+        surfaceContainerLow = Color(0xFFEFF5ED),
+        surfaceContainer = Color(0xFFEAF0E8),
+        surfaceContainerHigh = Color(0xFFE4EAE2),
+        surfaceContainerHighest = Color(0xFFDEE4DC),
+        surfaceBright = Color(0xFFF5FBF3),
+        surfaceDim = Color(0xFFD6DCD4),
     )
 
     val DarkDefault = darkColorScheme(
@@ -67,6 +74,13 @@ object PorterColorsGreen {
         inverseSurface = Color(0xFFDEE4DC),
         inverseOnSurface = Color(0xFF2C322C),
         inversePrimary = Color(0xFF006D36),
+        surfaceContainerLowest = Color(0xFF081009),
+        surfaceContainerLow = Color(0xFF171D18),
+        surfaceContainer = Color(0xFF1C211D),
+        surfaceContainerHigh = Color(0xFF262B26),
+        surfaceContainerHighest = Color(0xFF313631),
+        surfaceBright = Color(0xFF353A36),
+        surfaceDim = Color(0xFF0F1510),
     )
 
     val LightMediumContrast = lightColorScheme(
@@ -98,6 +112,13 @@ object PorterColorsGreen {
         inverseSurface = Color(0xFF2C322C),
         inverseOnSurface = Color(0xFFECF2EA),
         inversePrimary = Color(0xFF7CDA9A),
+        surfaceContainerLowest = Color(0xFFFFFFFF),
+        surfaceContainerLow = Color(0xFFEFF5ED),
+        surfaceContainer = Color(0xFFEAF0E8),
+        surfaceContainerHigh = Color(0xFFE4EAE2),
+        surfaceContainerHighest = Color(0xFFDEE4DC),
+        surfaceBright = Color(0xFFF5FBF3),
+        surfaceDim = Color(0xFFD6DCD4),
     )
 
     val DarkMediumContrast = darkColorScheme(
@@ -129,6 +150,13 @@ object PorterColorsGreen {
         inverseSurface = Color(0xFFDEE4DC),
         inverseOnSurface = Color(0xFF262B26),
         inversePrimary = Color(0xFF005028),
+        surfaceContainerLowest = Color(0xFF081009),
+        surfaceContainerLow = Color(0xFF171D18),
+        surfaceContainer = Color(0xFF1C211D),
+        surfaceContainerHigh = Color(0xFF262B26),
+        surfaceContainerHighest = Color(0xFF313631),
+        surfaceBright = Color(0xFF353A36),
+        surfaceDim = Color(0xFF0F1510),
     )
 
     val LightHighContrast = lightColorScheme(
@@ -160,6 +188,13 @@ object PorterColorsGreen {
         inverseSurface = Color(0xFF2C322C),
         inverseOnSurface = Color(0xFFFFFFFF),
         inversePrimary = Color(0xFF7CDA9A),
+        surfaceContainerLowest = Color(0xFFFFFFFF),
+        surfaceContainerLow = Color(0xFFEFF5ED),
+        surfaceContainer = Color(0xFFEAF0E8),
+        surfaceContainerHigh = Color(0xFFE4EAE2),
+        surfaceContainerHighest = Color(0xFFDEE4DC),
+        surfaceBright = Color(0xFFF5FBF3),
+        surfaceDim = Color(0xFFD6DCD4),
     )
 
     val DarkHighContrast = darkColorScheme(
@@ -191,6 +226,13 @@ object PorterColorsGreen {
         inverseSurface = Color(0xFFDEE4DC),
         inverseOnSurface = Color(0xFF000000),
         inversePrimary = Color(0xFF005028),
+        surfaceContainerLowest = Color(0xFF081009),
+        surfaceContainerLow = Color(0xFF171D18),
+        surfaceContainer = Color(0xFF1C211D),
+        surfaceContainerHigh = Color(0xFF262B26),
+        surfaceContainerHighest = Color(0xFF313631),
+        surfaceBright = Color(0xFF353A36),
+        surfaceDim = Color(0xFF0F1510),
     )
 
 }

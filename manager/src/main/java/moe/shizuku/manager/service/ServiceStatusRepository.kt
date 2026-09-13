@@ -99,5 +99,12 @@ internal class ServiceStatusRepository private constructor(private val appContex
         fun get(context: Context): ServiceStatusRepository = instance ?: synchronized(this) {
             instance ?: ServiceStatusRepository(context.applicationContext).also { instance = it }
         }
+
+        // Deliberately not an instance method: get() would build the process-wide singleton and
+        // start its eager status polling against the server this call is about to kill.
+        fun stop() {
+            ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
+            runCatching { Shizuku.exit() }.onFailure { ShizukuStateMachine.update() }
+        }
     }
 }

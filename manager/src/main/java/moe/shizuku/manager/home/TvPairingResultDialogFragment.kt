@@ -6,12 +6,15 @@ import android.database.ContentObserver
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import moe.shizuku.manager.R
@@ -22,11 +25,22 @@ import moe.shizuku.manager.ui.ComposeDialogFragment
 import moe.shizuku.manager.utils.SettingsPage
 
 class TvPairingResultDialogFragment : ComposeDialogFragment() {
+    /** Written while [Content] composes and read by [Actions], which composes after it. */
+    private var serviceEnabled by mutableStateOf(false)
+
     @Composable override fun Content() {
         val context = requireContext()
-        val (serviceEnabled, cleanupDelayed) = rememberTvPairingCleanupState(context)
+        val (enabled, cleanupDelayed) = rememberTvPairingCleanupState(context)
+        serviceEnabled = enabled
+        TvPairingResultContent(requireArguments().getBoolean("success"), requireArguments().getString("message").orEmpty(),
+            serviceEnabled = enabled, cleanupDelayed = cleanupDelayed,
+            onAccessibilitySettings = { SettingsPage.Accessibility.launch(context) })
+    }
+
+    @Composable override fun Actions() {
+        val context = requireContext()
         val success = requireArguments().getBoolean("success")
-        TvPairingResultContent(success, requireArguments().getString("message").orEmpty(),
+        TvPairingResultActions(success, serviceEnabled,
             onAction = {
                 TvPairingResultStore(ShizukuSettings.getPreferences()).clear()
                 dismissAllowingStateLoss()
@@ -35,8 +49,7 @@ class TvPairingResultDialogFragment : ComposeDialogFragment() {
             }, onClose = {
                 if (!context.isAccessibilityEnabled()) TvPairingResultStore(ShizukuSettings.getPreferences()).clear()
                 dismissAllowingStateLoss()
-            }, serviceEnabled = serviceEnabled, cleanupDelayed = cleanupDelayed,
-            onAccessibilitySettings = { SettingsPage.Accessibility.launch(context) })
+            })
     }
 
     companion object {
@@ -80,8 +93,6 @@ internal fun rememberTvPairingCleanupState(context: Context): TvPairingCleanupSt
 internal fun TvPairingResultContent(
     success: Boolean,
     message: String,
-    onAction: () -> Unit,
-    onClose: () -> Unit,
     serviceEnabled: Boolean = false,
     cleanupDelayed: Boolean = false,
     onAccessibilitySettings: () -> Unit = {},
@@ -97,12 +108,23 @@ internal fun TvPairingResultContent(
     if (serviceEnabled && cleanupDelayed) {
         TextButton(onClick = onAccessibilitySettings) { Text(stringResource(R.string.porter_tv_pairing_open_accessibility)) }
     }
+}
+
+@Composable
+internal fun TvPairingResultActions(
+    success: Boolean,
+    serviceEnabled: Boolean,
+    onAction: () -> Unit,
+    onClose: () -> Unit,
+) {
     val actionFocus = remember { FocusRequester() }
     LaunchedEffect(serviceEnabled) {
         if (!serviceEnabled) actionFocus.requestFocus()
     }
-    Button(onClick = onAction, enabled = !serviceEnabled, modifier = Modifier.focusRequester(actionFocus)) {
-        Text(stringResource(if (success) R.string.home_root_button_start else R.string.notification_adb_pairing_retry))
+    Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
+        Button(onClick = onAction, enabled = !serviceEnabled, modifier = Modifier.focusRequester(actionFocus)) {
+            Text(stringResource(if (success) R.string.home_root_button_start else R.string.notification_adb_pairing_retry))
+        }
+        TextButton(onClick = onClose) { Text(stringResource(android.R.string.ok)) }
     }
-    TextButton(onClick = onClose) { Text(stringResource(android.R.string.ok)) }
 }

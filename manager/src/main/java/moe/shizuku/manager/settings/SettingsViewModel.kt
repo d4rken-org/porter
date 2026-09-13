@@ -4,14 +4,49 @@ import android.app.Application
 import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.SettingsHelper
 
-class SettingsViewModel(application: Application, private val savedState: SavedStateHandle) : AndroidViewModel(application) {
+class SettingsViewModel @JvmOverloads constructor(
+    application: Application,
+    private val savedState: SavedStateHandle,
+    private val rootProbe: suspend () -> Boolean = { withContext(Dispatchers.IO) { EnvironmentUtils.isRooted() } },
+) : AndroidViewModel(application) {
     val dialog: StateFlow<String?> = savedState.getStateFlow("dialog", null)
     val pendingSetting: StateFlow<String?> = savedState.getStateFlow("pendingSetting", null)
+
+    private val bootCapable = MutableStateFlow<Boolean?>(null)
+
+    /** `null` until the probe below resolves, which leaves the start-on-boot toggle disabled. */
+    val canBoot: StateFlow<Boolean?> = bootCapable.asStateFlow()
+
+    init {
+        // The root probe blocks on shell initialisation and can wait on a root prompt, so the
+        // cheap answers are taken first and the probe itself never runs on a UI thread.
+        if (Build.VERSION.SDK_INT >= 30 || EnvironmentUtils.isTelevision()) {
+            bootCapable.value = true
+        } else {
+            viewModelScope.launch {
+                bootCapable.value = try {
+                    rootProbe()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Throwable) {
+                    false
+                }
+            }
+        }
+    }
+
     fun show(value: String?) { savedState["dialog"] = value }
 
     fun setAutoUpdateService(enabled: Boolean) {

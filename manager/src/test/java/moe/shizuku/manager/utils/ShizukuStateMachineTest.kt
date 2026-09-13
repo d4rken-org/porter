@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.util.concurrent.CountDownLatch
 
 /** Binder death and reconnection transitions of the process-wide service state. */
 @RunWith(RobolectricTestRunner::class)
@@ -21,9 +22,13 @@ import org.robolectric.annotation.Config
 class ShizukuStateMachineTest {
     private val seen = mutableListOf<State>()
     private val listener: (State) -> Unit = { seen += it }
+    private val reentrant: (State) -> Unit = { if (it == State.CRASHED) ShizukuStateMachine.set(State.STARTING) }
 
     @Before fun reset() { ShizukuStateMachine.set(State.STOPPED) }
-    @After fun detach() { ShizukuStateMachine.removeListener(listener) }
+    @After fun detach() {
+        ShizukuStateMachine.removeListener(listener)
+        ShizukuStateMachine.removeListener(reentrant)
+    }
 
     @Test fun listenersReceiveTheCurrentStateImmediately() {
         ShizukuStateMachine.set(State.RUNNING)
@@ -74,6 +79,38 @@ class ShizukuStateMachineTest {
         ShizukuStateMachine.set(State.RUNNING)
         assertEquals(State.STOPPED, ShizukuStateMachine.update())
         assertFalse(ShizukuStateMachine.isRunning())
+    }
+
+    /** The watchdog listener starts the service from inside its own callback. */
+    @Test fun aTransitionRaisedInsideAListenerIsDeliveredAfterTheOneThatCausedIt() {
+        ShizukuStateMachine.set(State.RUNNING)
+        ShizukuStateMachine.addListener(reentrant)
+        ShizukuStateMachine.addListener(listener)
+        seen.clear()
+        ShizukuStateMachine.setDead()
+        assertEquals(listOf(State.CRASHED, State.STARTING), seen)
+        assertEquals(State.STARTING, ShizukuStateMachine.get())
+    }
+
+    @Test fun transitionsFromSeparateThreadsAreNotifiedInStoreOrder() {
+        ShizukuStateMachine.addListener(listener)
+        seen.clear()
+        val start = CountDownLatch(1)
+        val threads = listOf(State.RUNNING, State.STOPPING).map { target ->
+            Thread {
+                start.await()
+                repeat(200) { ShizukuStateMachine.set(target) }
+            }
+        }
+        threads.forEach { it.start() }
+        start.countDown()
+        threads.forEach { it.join() }
+        val observed = seen.toList()
+        // Every notification is a real change, so none can repeat its predecessor, and the last
+        // one has to agree with the stored state.
+        assertTrue(observed.isNotEmpty())
+        assertTrue(observed.zipWithNext().none { (previous, next) -> previous == next })
+        assertEquals(ShizukuStateMachine.get(), observed.last())
     }
 
     @Test fun flowReplaysCurrentStateAndFollowsTransitions() = runTest {

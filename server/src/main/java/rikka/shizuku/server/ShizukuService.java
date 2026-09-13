@@ -50,6 +50,7 @@ import moe.shizuku.api.BinderContainer;
 import moe.shizuku.common.util.BuildUtils;
 import moe.shizuku.common.util.OsUtils;
 import moe.shizuku.server.IShizukuApplication;
+import moe.shizuku.starter.util.IContentProviderCompat;
 import rikka.hidden.compat.ActivityManagerApis;
 import rikka.hidden.compat.DeviceIdleControllerApis;
 import rikka.hidden.compat.PackageManagerApis;
@@ -58,7 +59,6 @@ import rikka.hidden.compat.UserManagerApis;
 import rikka.parcelablelist.ParcelableListSlice;
 import rikka.rish.RishConfig;
 import rikka.shizuku.ShizukuApiConstants;
-import rikka.shizuku.server.api.IContentProviderUtils;
 import rikka.shizuku.server.util.HandlerUtil;
 import rikka.shizuku.server.util.InstalledPackagesCompat;
 import rikka.shizuku.server.util.UserHandleCompat;
@@ -822,7 +822,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             Bundle extra = new Bundle();
             extra.putParcelable("moe.shizuku.privileged.api.intent.extra.BINDER", new BinderContainer(binder));
 
-            Bundle reply = IContentProviderUtils.callCompat(provider, null, name, "sendBinder", null, extra);
+            Bundle reply = IContentProviderCompat.call(provider, null, null, name, "sendBinder", null, extra);
             if (reply != null) {
                 LOGGER.i("send binder to user app %s in user %d", packageName, userId);
                 return true;

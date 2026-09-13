@@ -22,7 +22,11 @@ class TvPairingResultContentTest : ComposeTest() {
     @Test fun failureShowsLastingReasonAndRetryAction() {
         var retries = 0
         composeTestRule.setContent {
-            PorterTheme { DialogSurface { TvPairingResultContent(false, "Pairing expired", { retries++ }, {}) } }
+            PorterTheme {
+                DialogSurface(actions = { TvPairingResultActions(false, serviceEnabled = false, onAction = { retries++ }, onClose = {}) }) {
+                    TvPairingResultContent(false, "Pairing expired")
+                }
+            }
         }
         composeTestRule.onNodeWithText("Pairing expired").assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.porter_tv_pairing_complete)).assertIsDisplayed()
@@ -32,9 +36,11 @@ class TvPairingResultContentTest : ComposeTest() {
 
     @Test fun cleanupPendingDoesNotClaimCompletionOrAllowRetry() {
         composeTestRule.setContent {
-            PorterTheme { DialogSurface {
-                TvPairingResultContent(false, "Pairing expired", {}, {}, serviceEnabled = true)
-            } }
+            PorterTheme {
+                DialogSurface(actions = { TvPairingResultActions(false, serviceEnabled = true, onAction = {}, onClose = {}) }) {
+                    TvPairingResultContent(false, "Pairing expired", serviceEnabled = true)
+                }
+            }
         }
         composeTestRule.onNodeWithText("Pairing expired").assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.porter_tv_pairing_disabling)).assertIsDisplayed()
@@ -45,10 +51,12 @@ class TvPairingResultContentTest : ComposeTest() {
     @Test fun delayedCleanupOffersSettingsWithoutChangingPairingOutcome() {
         var opened = 0
         composeTestRule.setContent {
-            PorterTheme { DialogSurface {
-                TvPairingResultContent(true, "Paired", {}, {}, serviceEnabled = true,
-                    cleanupDelayed = true, onAccessibilitySettings = { opened++ })
-            } }
+            PorterTheme {
+                DialogSurface(actions = { TvPairingResultActions(true, serviceEnabled = true, onAction = {}, onClose = {}) }) {
+                    TvPairingResultContent(true, "Paired", serviceEnabled = true,
+                        cleanupDelayed = true, onAccessibilitySettings = { opened++ })
+                }
+            }
         }
         composeTestRule.onNodeWithText("Paired").assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.porter_tv_pairing_cleanup_delayed)).assertIsDisplayed()
@@ -59,9 +67,11 @@ class TvPairingResultContentTest : ComposeTest() {
     @Test fun successExplainsStartingIsSeparateAndOffersStart() {
         var starts = 0
         composeTestRule.setContent {
-            PorterTheme { DialogSurface {
-                TvPairingResultContent(true, context.getString(R.string.notification_adb_pairing_succeed_text), { starts++ }, {})
-            } }
+            PorterTheme {
+                DialogSurface(actions = { TvPairingResultActions(true, serviceEnabled = false, onAction = { starts++ }, onClose = {}) }) {
+                    TvPairingResultContent(true, context.getString(R.string.notification_adb_pairing_succeed_text))
+                }
+            }
         }
         composeTestRule.onNodeWithText(context.getString(R.string.notification_adb_pairing_succeed_text)).assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.home_root_button_start)).performClick()
@@ -81,10 +91,14 @@ class TvPairingResultContentTest : ComposeTest() {
             SideEffect { inputMode.requestInputMode(InputMode.Keyboard) }
             if (visible.value) {
                 val state = rememberTvPairingCleanupState(context)
-                PorterTheme { DialogSurface {
-                    TvPairingResultContent(false, "Pairing expired", {}, {},
-                        serviceEnabled = state.serviceEnabled, cleanupDelayed = state.cleanupDelayed)
-                } }
+                PorterTheme {
+                    DialogSurface(actions = {
+                        TvPairingResultActions(false, serviceEnabled = state.serviceEnabled, onAction = {}, onClose = {})
+                    }) {
+                        TvPairingResultContent(false, "Pairing expired",
+                            serviceEnabled = state.serviceEnabled, cleanupDelayed = state.cleanupDelayed)
+                    }
+                }
             }
         }
         composeTestRule.mainClock.advanceTimeByFrame()

@@ -159,8 +159,11 @@ public class ShizukuSettings {
         } else {
             WatchdogService.stop(context);
         }
+        setWatchdogPreference(enable);
+    }
+
+    public static void setWatchdogPreference(boolean enable) {
         getPreferences().edit().putBoolean(Keys.KEY_WATCHDOG, enable).apply();
-        return;
     }
 
     public static int getTcpPort() {

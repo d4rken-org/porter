@@ -7,10 +7,13 @@ import android.os.Bundle
 import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import moe.shizuku.manager.R
 import moe.shizuku.manager.adb.AdbPairingAccessibilityService
@@ -34,26 +37,42 @@ fun Context.showAccessibilityDialog() {
 }
 
 class AccessibilityDialogFragment : ComposeDialogFragment() {
+    /** Shared by [Content] and [Actions], which compose as siblings and so cannot remember it between them. */
+    private var step by mutableStateOf("enable")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        step = savedInstanceState?.getString("step") ?: arguments?.getString("step") ?: "enable"
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("step", step)
+    }
+
     @Composable override fun Content() {
         val context = requireContext()
-        var step by rememberSaveable { mutableStateOf(arguments?.getString("step") ?: "enable") }
         Text(stringResource(R.string.dialog_adb_pairing_title), style = MaterialTheme.typography.headlineSmall)
         when (step) {
-            "permission" -> {
-                Text(TextUtils.expandTemplate(stringResource(R.string.dialog_adb_pairing_accessibility_permission),
-                    "ACCESS_RESTRICTED_SETTINGS", "adb shell cmd appops set ${context.packageName} ACCESS_RESTRICTED_SETTINGS allow").toString())
-                TextButton(onClick = { step = "enable" }) { Text(stringResource(android.R.string.ok)) }
-            }
-            "enable" -> {
-                Text(stringResource(R.string.dialog_adb_pairing_accessibility_enable))
-                TextButton(onClick = { SettingsPage.Accessibility.launch(context); dismissAllowingStateLoss() }) { Text(stringResource(R.string.enable)) }
-            }
-            "navigate" -> {
-                Text(stringResource(R.string.dialog_adb_pairing_accessibility_navigate))
-                TextButton(onClick = { SettingsPage.Developer.HighlightWirelessDebugging.launch(context); dismissAllowingStateLoss() }) { Text(stringResource(R.string.development_settings)) }
-            }
+            "permission" -> Text(TextUtils.expandTemplate(stringResource(R.string.dialog_adb_pairing_accessibility_permission),
+                "ACCESS_RESTRICTED_SETTINGS", "adb shell cmd appops set ${context.packageName} ACCESS_RESTRICTED_SETTINGS allow").toString())
+            "enable" -> Text(stringResource(R.string.dialog_adb_pairing_accessibility_enable))
+            "navigate" -> Text(stringResource(R.string.dialog_adb_pairing_accessibility_navigate))
         }
-        TextButton(onClick = { dismissAllowingStateLoss() }) { Text(stringResource(android.R.string.cancel)) }
+    }
+
+    @OptIn(ExperimentalLayoutApi::class)
+    @Composable override fun Actions() {
+        val context = requireContext()
+        FlowRow(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+            verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            when (step) {
+                "permission" -> TextButton(onClick = { step = "enable" }) { Text(stringResource(android.R.string.ok)) }
+                "enable" -> TextButton(onClick = { SettingsPage.Accessibility.launch(context); dismissAllowingStateLoss() }) { Text(stringResource(R.string.enable)) }
+                "navigate" -> TextButton(onClick = { SettingsPage.Developer.HighlightWirelessDebugging.launch(context); dismissAllowingStateLoss() }) { Text(stringResource(R.string.development_settings)) }
+            }
+            TextButton(onClick = { dismissAllowingStateLoss() }) { Text(stringResource(android.R.string.cancel)) }
+        }
     }
 }
 
