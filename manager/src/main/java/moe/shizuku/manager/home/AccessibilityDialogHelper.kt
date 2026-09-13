@@ -61,9 +61,11 @@ class AccessibilityDialogFragment : ComposeDialogFragment() {
         }
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable override fun Actions() {
         val context = requireContext()
-        Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
+        FlowRow(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+            verticalArrangement = Arrangement.spacedBy(8.dp)) {
             when (step) {
                 "permission" -> TextButton(onClick = { step = "enable" }) { Text(stringResource(android.R.string.ok)) }
                 "enable" -> TextButton(onClick = { SettingsPage.Accessibility.launch(context); dismissAllowingStateLoss() }) { Text(stringResource(R.string.enable)) }
