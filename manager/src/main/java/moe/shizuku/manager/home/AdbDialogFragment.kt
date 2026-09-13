@@ -44,8 +44,10 @@ class AdbDialogFragment : ComposeDialogFragment() {
         LinearProgressIndicator()
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable override fun Actions() {
-        Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
+        FlowRow(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+            verticalArrangement = Arrangement.spacedBy(8.dp)) {
             if (networkReady) TextButton(onClick = { SettingsPage.Developer.HighlightWirelessDebugging.launch(requireContext()) }) { Text(stringResource(R.string.development_settings)) }
             TextButton(onClick = { dismissAllowingStateLoss() }) { Text(stringResource(android.R.string.cancel)) }
         }

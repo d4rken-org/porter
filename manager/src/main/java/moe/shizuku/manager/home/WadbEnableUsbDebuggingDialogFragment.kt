@@ -16,8 +16,10 @@ class WadbEnableUsbDebuggingDialogFragment : ComposeDialogFragment() {
         Text(stringResource(R.string.dialog_usb_debugging_not_enabled))
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable override fun Actions() {
-        Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
+        FlowRow(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+            verticalArrangement = Arrangement.spacedBy(8.dp)) {
             TextButton(onClick = { SettingsPage.Developer.HighlightUsbDebugging.launch(requireContext()); dismissAllowingStateLoss() }) { Text(stringResource(R.string.development_settings)) }
             TextButton(onClick = { dismissAllowingStateLoss() }) { Text(stringResource(android.R.string.cancel)) }
         }
