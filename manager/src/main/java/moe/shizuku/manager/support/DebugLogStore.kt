@@ -71,6 +71,65 @@ internal class DebugLogStore(private val root: File) {
                 }
             }
         }
+        /**
+         * Appends [input] to [file] until EOF, keeping the newest bytes rather than the oldest: at
+         * half of [limit] the file is rotated onto "<name>.1" and a fresh one started, so the pair
+         * never exceeds [limit] and, past the first rotation, never holds less than half of it.
+         */
+        fun appendRotating(input: InputStream, file: File, limit: Long = MAX_LOG_BYTES) {
+            val segment = (limit / 2).coerceAtLeast(1)
+            val previous = File(file.parentFile, "${file.name}.1")
+            val buffer = ByteArray(8192)
+            var written = file.length()
+            if (written > segment) written = trimToTail(file, buffer, segment)
+            var out = java.io.FileOutputStream(file, true)
+            try {
+                while (true) {
+                    // A full segment still reads a segment's worth, because the rotation below is
+                    // what makes room for it. Rotating only once there are bytes to write keeps the
+                    // older segment through an idle stream and through EOF.
+                    val room = if (written >= segment) segment else segment - written
+                    val count = input.read(buffer, 0, minOf(buffer.size.toLong(), room).toInt())
+                    if (count < 0) break
+                    if (written >= segment) {
+                        out.close()
+                        previous.delete()
+                        file.renameTo(previous)
+                        // Not appending: a rename leaves no file behind, and a failed one must
+                        // still be cleared or the limit stops holding.
+                        out = java.io.FileOutputStream(file)
+                        written = 0
+                    }
+                    out.write(buffer, 0, count)
+                    written += count
+                }
+            } finally { runCatching { out.close() } }
+        }
+        /**
+         * Reduces [file] to its last [keep] bytes and returns the length it now has. A log left by
+         * a build that did not rotate can be a whole [MAX_LOG_BYTES] by itself, and rotating that
+         * wholesale would carry it into "<name>.1" and put the pair over the limit.
+         */
+        private fun trimToTail(file: File, buffer: ByteArray, keep: Long): Long {
+            val tail = File(file.parentFile, "${file.name}.tail")
+            val copied = runCatching {
+                java.io.RandomAccessFile(file, "r").use { source ->
+                    source.seek(source.length() - keep)
+                    java.io.FileOutputStream(tail).use { out ->
+                        while (true) {
+                            val count = source.read(buffer)
+                            if (count < 0) break
+                            out.write(buffer, 0, count)
+                        }
+                    }
+                }
+            }.isSuccess
+            // Appending to an untrimmed log beats dropping the recording, so a failure here only
+            // costs the limit until the next rotation.
+            if (copied && tail.renameTo(file)) return keep
+            tail.delete()
+            return file.length()
+        }
         /** Bounded like [appendBounded], but keeps reading to EOF so the caller can join on it. */
         fun drainBounded(input: InputStream, file: File, limit: Long = MAX_LOG_BYTES) {
             appendBounded(input, file, limit)

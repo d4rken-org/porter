@@ -11,7 +11,7 @@ import java.io.InputStream
  */
 internal suspend fun readServerStream(handle: ServerDiagnostics.ServerStream, directory: File, limit: Long) {
     try {
-        DebugLogStore.appendBounded(handle.input, File(directory, "server.log"), limit)
+        DebugLogStore.appendRotating(handle.input, File(directory, "server.log"), limit)
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {

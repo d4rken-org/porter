@@ -88,7 +88,7 @@ object DebugRecorder {
         val directory = store.directory(id)
         val started = id.substringBefore('-').toLong()
         val remaining = MAX_DURATION - (System.currentTimeMillis() - started).coerceAtLeast(0)
-        if (!directory.isDirectory || remaining <= 0 || File(directory, "manager.log").length() >= DebugLogStore.MAX_LOG_BYTES) {
+        if (!directory.isDirectory || remaining <= 0) {
             store.finish()
             return
         }
@@ -110,13 +110,13 @@ object DebugRecorder {
             showNotification(context)
             reader = scope.launch {
                 try {
-                    child.inputStream.use { DebugLogStore.appendBounded(it, File(directory, "manager.log")) }
+                    child.inputStream.use { DebugLogStore.appendRotating(it, File(directory, "manager.log")) }
                 } catch (e: Exception) {
                     Log.w("PorterRecorder", "Log stream ended", e)
                 } finally {
                     child.destroy()
                 }
-                // End-of-stream or size limit completes the session without leaving a stale recording state.
+                // End of stream completes the session without leaving a stale recording state.
                 scope.launch { stop(context, child) }
             }
             timer = scope.launch { delay(remaining); scope.launch { stop(context, child) } }
@@ -147,10 +147,6 @@ object DebugRecorder {
             ShizukuStateMachine.asFlow().collect {
                 runCatching { events.appendText("Service $it at ${System.currentTimeMillis()}\n") }
             }
-        }
-        if (File(directory, "server.log").length() >= SERVER_MAX_LOG_BYTES) {
-            events.appendText("Server stream capped at ${System.currentTimeMillis()}\n")
-            return
         }
         val handle = ServerDiagnostics.openStream(directory)
         if (handle == null) {

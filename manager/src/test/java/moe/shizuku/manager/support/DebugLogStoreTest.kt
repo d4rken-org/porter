@@ -27,6 +27,50 @@ class DebugLogStoreTest {
         DebugLogStore.appendBounded("third".byteInputStream(), file, 8)
         assertEquals("firstsec", file.readText())
     }
+    @Test fun rotationKeepsNewestBytesAndBoundsThePair() {
+        val file = temporary.newFile()
+        DebugLogStore.appendRotating("abcdefghij".byteInputStream(), file, 8)
+        assertEquals("ij", file.readText())
+        assertEquals("efgh", File(file.parentFile, "${file.name}.1").readText())
+    }
+    @Test fun rotationCountsBytesLeftByAnEarlierProcess() {
+        val file = temporary.newFile()
+        file.writeText("xyz")
+        DebugLogStore.appendRotating("ab".byteInputStream(), file, 8)
+        assertEquals("b", file.readText())
+        assertEquals("xyza", File(file.parentFile, "${file.name}.1").readText())
+    }
+    @Test fun rotationDropsTheOldestSegmentAndFillsTheLimit() {
+        val file = temporary.newFile()
+        DebugLogStore.appendRotating("abcdefghijkl".byteInputStream(), file, 8)
+        val rotated = File(file.parentFile, "${file.name}.1")
+        assertEquals("ijkl", file.readText())
+        assertEquals("efgh", rotated.readText())
+        assertEquals(8, file.length() + rotated.length())
+    }
+    @Test fun rotationTrimsALogLeftOversizedByABuildThatDidNotRotate() {
+        val file = temporary.newFile()
+        file.writeText("abcdefgh")
+        DebugLogStore.appendRotating("ij".byteInputStream(), file, 8)
+        val rotated = File(file.parentFile, "${file.name}.1")
+        assertEquals("ij", file.readText())
+        assertEquals("efgh", rotated.readText())
+        assertFalse(File(file.parentFile, "${file.name}.tail").exists())
+    }
+    @Test fun rotatedSegmentsSurviveAResumeAndReachTheArchive() {
+        val store = DebugLogStore(temporary.newFolder())
+        val id = store.create()
+        val file = File(store.directory(id), "manager.log")
+        DebugLogStore.appendRotating("abcdef".byteInputStream(), file, 8)
+        DebugLogStore.appendRotating("ghij".byteInputStream(), file, 8)
+        store.finish()
+        ZipFile(store.export(id, temporary.newFolder())).use { zip ->
+            assertEquals(2, zip.size())
+            // The resume rotated "efgh" into place, so the segment the first call left is gone.
+            assertEquals("efgh", zip.getInputStream(zip.getEntry("manager.log.1")).bufferedReader().readText())
+            assertEquals("ij", zip.getInputStream(zip.getEntry("manager.log")).bufferedReader().readText())
+        }
+    }
     @Test fun retentionKeepsFiveCompletedAndCurrentSession() {
         val store = DebugLogStore(temporary.newFolder())
         repeat(8) { store.create(100L + it); store.finish() }

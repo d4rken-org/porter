@@ -210,6 +210,8 @@ class Smoke:
             path = "no_backup/debug-logs/" + session
             self.until("attached server stream",
                        lambda: "Server stream attached pid=" in self.recording(f"cat {path}/events.txt 2>/dev/null"))
+            # Size growth is a valid liveness signal only below the rotation segment, which a run
+            # this short never reaches. Past it the pair shrinks too, so watch for new content.
             baseline = self.recording_size(f"{path}/server.log")
             self.launch_probe(NATIVE)
             self.tap("Allow all the time")
