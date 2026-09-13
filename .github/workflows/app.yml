@@ -9,8 +9,47 @@ permissions:
   contents: read
 
 jobs:
+  submodule:
+    name: Submodule pin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          persist-credentials: false
+      - name: Pin must be reachable from porter-api main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          pin="$(git ls-tree HEAD api | awk '{print $3}')"
+          if [ -z "$pin" ]; then
+            echo "::error::No gitlink at api/, but settings.gradle builds the Porter SDK from there."
+            exit 1
+          fi
+          echo "Pinned porter-api commit: $pin"
+          err="$(mktemp)"
+          if ! status="$(gh api "repos/d4rken-org/porter-api/compare/main...$pin" --jq .status 2>"$err")"; then
+            if grep -qi 'HTTP 404' "$err"; then
+              echo "::error::porter-api has no commit $pin. Push it to porter-api before pushing the gitlink that points at it."
+            else
+              echo "::error::Could not query porter-api, so $pin is unverified. This is not a verdict on the pin:"
+              cat "$err"
+            fi
+            exit 1
+          fi
+          case "$status" in
+            identical | behind)
+              echo "Reachable from porter-api main ($status)."
+              ;;
+            *)
+              echo "::error::$pin is not reachable from porter-api main (compare status: $status). Merge it into porter-api main first."
+              exit 1
+              ;;
+          esac
+
   build:
     name: Development build
+    needs: submodule
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
@@ -54,6 +93,7 @@ jobs:
 
   lint:
     name: Android lint
+    needs: submodule
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
