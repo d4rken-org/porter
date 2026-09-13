@@ -178,7 +178,7 @@ When Porter is selected, these calls use Porter and its approval prompt. Receivi
 
 Check the live connection with `Shizuku.pingBinder()` before relying on a permission result. Do not treat a previous approval or a cached SDK result as proof that a new connection is authorized.
 
-A successful ping is not enough on its own. A new Binder becomes visible before the SDK has finished attaching to it, so during a reconnection `pingBinder()` can already succeed while `checkSelfPermission()` still answers from the previous connection's grant. Drive your UI from the Binder-received and Binder-dead listeners, re-check access when a new connection arrives, and let the privileged call itself fail rather than treating either result as a guarantee.
+A successful ping is not enough on its own. The SDK drops a cached approval as soon as the connection changes, so it will not answer with the previous connection's grant. The other side of that is a gap: a new Binder becomes visible before the server has reported access for it, so during a reconnection `pingBinder()` can succeed while access still reads as not granted. Drive your UI from the Binder-received and Binder-dead listeners, re-check access when a new connection arrives, and let the privileged call itself fail rather than treating a ping or a cached result as a guarantee.
 
 If your app also initializes Sui directly, do not call `Sui.init()` while Porter is selected. The adapter disables the provider's automatic Sui initialization in that case, but cannot guard an explicit call in your own code.
 
