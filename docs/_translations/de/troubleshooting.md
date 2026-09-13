@@ -67,7 +67,7 @@ Wenn du die Begleit-App nutzt, müssen beide Porter-APKs aus derselben Veröffen
 ## Android installiert eine APK nicht
 {: #android-wont-install-an-apk }
 
-Falls du **Porter Compatibility** installierst, deinstalliere zuerst Shizuku. Die Begleit-App kann eine anders signierte Shizuku-Installation nicht aktualisieren, obwohl Android dieselbe App-Identität erkennt.
+Falls du die separate **Porter Compatibility**-APK von Hand installierst, deinstalliere zuerst Shizuku. Die Begleit-App kann eine anders signierte Shizuku-Installation nicht aktualisieren, obwohl Android dieselbe App-Identität erkennt. Porters integrierter Austausch deinstalliert Shizuku für dich.
 
 Bei Porter selbst kann ein älterer Entwicklungsbuild eine andere Signatur als eine öffentliche Veröffentlichung haben. Android installiert die eine Version nicht über die andere. Eine Deinstallation entfernt auch die App-Daten. Notiere daher vorher deine Einrichtung. Installiere Porter aus der gewünschten Quelle neu und erlaube deinen Apps erneut den Zugriff.
 

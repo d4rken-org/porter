@@ -13,7 +13,7 @@ Porter unterstützt die Shizuku-APIs, die kompatible Apps verwenden. Ob du die o
 | Was deine App unterstützt | Was du installieren solltest |
 | --- | --- |
 | Porter direkt | Porter |
-| Nur Shizuku | Porter und Porter Compatibility; vorher Shizuku deinstallieren |
+| Nur Shizuku | Porter und Porter Compatibility; Porter ersetzt ein installiertes Shizuku |
 | Beide, mit einer Dienstauswahl | Porter; danach Porter in der App auswählen |
 
 Die Begleit-App hilft bestehenden Shizuku-Apps, Porter zu finden. Porter selbst startet weiterhin den Dienst, zeigt Zugriffsanfragen an und verwaltet Freigaben. Lass die Begleit-App installiert, solange du Apps verwendest, die sie brauchen.

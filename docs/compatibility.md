@@ -11,7 +11,7 @@ Porter supports the Shizuku APIs used by compatible apps. Whether you need the o
 | What your app supports | What to install |
 | --- | --- |
 | Porter directly | Porter |
-| Shizuku only | Porter and Porter Compatibility; remove Shizuku first |
+| Shizuku only | Porter and Porter Compatibility; Porter replaces Shizuku if it is installed |
 | Both, with a service selector | Porter, then select Porter in the app |
 
 The companion helps existing Shizuku apps find Porter. Porter still starts the service, shows permission prompts and manages approvals. Keep the companion installed while using apps that need it.

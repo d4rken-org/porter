@@ -22,9 +22,13 @@ Porter requires Android 7.0 or newer. Starting without a computer requires Andro
 
 ## Using apps that support Shizuku
 
-Apps with built-in Porter support only need Porter. For apps that only support Shizuku, install the optional **Porter Compatibility** APK from the same release.
+Apps with built-in Porter support only need Porter.
 
-**Porter Compatibility replaces the installed Shizuku app.** Remove Shizuku before installing it. Porter itself can be installed alongside Shizuku, but the compatibility companion cannot.
+Apps that only support Shizuku need the **Porter Compatibility** companion, included in the Porter download from GitHub Releases. Start the Porter service, then open **Shizuku compatibility** from the home screen or **Settings** and pick **Install automatically**.
+
+If Shizuku is installed, that screen offers **Replace** instead, which can carry over eligible access choices. Don't uninstall Shizuku yourself first: Porter needs it installed to read those choices.
+
+Porter can run alongside Shizuku, but the compatibility companion replaces it.
 
 [Choose the right setup for your apps](https://porter.darken.eu/compatibility).
 
