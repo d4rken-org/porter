@@ -31,7 +31,6 @@ public class ConfigPersistenceTest {
 
         IllegalStateException failure =
                 assertThrows(IllegalStateException.class, () -> manager.setAccessPaused(true));
-        // The manager reads this message off the binder reply, so the wording is part of the contract.
         assertEquals("App access pause could not be saved", failure.getMessage());
         assertFalse(manager.isAccessPaused());
         assertEquals(writesBefore + 1, manager.writes);
