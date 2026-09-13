@@ -20,11 +20,16 @@ import androidx.fragment.app.FragmentManager
 
 abstract class ComposeDialogFragment : DialogFragment() {
     @Composable abstract fun Content()
+    @Composable open fun Actions() {}
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = ComponentDialog(requireContext()).apply {
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         setCanceledOnTouchOutside(false)
         setContentView(ComposeView(context).apply {
-            setContent { PorterTheme { DialogSurface { this@ComposeDialogFragment.Content() } } }
+            setContent {
+                PorterTheme {
+                    DialogSurface(actions = { this@ComposeDialogFragment.Actions() }) { this@ComposeDialogFragment.Content() }
+                }
+            }
         })
     }
     override fun onStart() {
@@ -37,8 +42,18 @@ abstract class ComposeDialogFragment : DialogFragment() {
 }
 
 @Composable
-fun DialogSurface(content: @Composable ColumnScope.() -> Unit) {
+fun DialogSurface(
+    actions: @Composable ColumnScope.() -> Unit = {},
+    content: @Composable ColumnScope.() -> Unit,
+) {
     Surface(shape = MaterialTheme.shapes.extraLarge, color = MaterialTheme.colorScheme.surfaceContainerHigh) {
-        Column(Modifier.verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp), content = content)
+        Column(Modifier.padding(24.dp)) {
+            Column(
+                Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                content = content,
+            )
+            actions()
+        }
     }
 }
