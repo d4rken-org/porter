@@ -57,7 +57,7 @@ class ApplicationManagementActivity : ComposeActivity() {
             }
         }
     }
-    override fun onResume() { super.onResume(); repository.refresh(); if (ShizukuStateMachine.isRunning()) model.load() }
+    override fun onResume() { super.onResume(); repository.refresh(); if (ShizukuStateMachine.instance.isRunning()) model.load() }
 }
 
 @OptIn(ExperimentalLayoutApi::class)

@@ -44,11 +44,11 @@ internal class ServiceStatusRepository private constructor(private val appContex
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val mutex = Mutex()
     private val status = MutableStateFlow(ServiceStatus())
-    val state = combine(status, ShizukuStateMachine.asFlow(), ServiceReplacement.state) { value, runtime, update ->
+    val state = combine(status, ShizukuStateMachine.instance.asFlow(), ServiceReplacement.state) { value, runtime, update ->
         ServiceSnapshot(value, runtime, update.running, update.failed, UserHandleCompat.myUserId() == 0)
-    }.stateIn(scope, SharingStarted.Eagerly, ServiceSnapshot(serviceState = ShizukuStateMachine.get(), primaryUser = UserHandleCompat.myUserId() == 0))
+    }.stateIn(scope, SharingStarted.Eagerly, ServiceSnapshot(serviceState = ShizukuStateMachine.instance.get(), primaryUser = UserHandleCompat.myUserId() == 0))
 
-    init { scope.launch { ShizukuStateMachine.asFlow().collect { refresh() } } }
+    init { scope.launch { ShizukuStateMachine.instance.asFlow().collect { refresh() } } }
 
     fun refresh() {
         scope.launch {
@@ -57,14 +57,14 @@ internal class ServiceStatusRepository private constructor(private val appContex
                 val loaded = try { load() }
                 catch (e: CancellationException) { throw e }
                 catch (e: Exception) { LOGGER.w(e, "Load service status"); ServiceStatus() }
-                status.value = if (binder == Shizuku.getBinder() && ShizukuStateMachine.isRunning()) loaded else ServiceStatus()
-                if (ShizukuStateMachine.isRunning()) ServiceReplacement.reconcile()
+                status.value = if (binder == Shizuku.getBinder() && ShizukuStateMachine.instance.isRunning()) loaded else ServiceStatus()
+                if (ShizukuStateMachine.instance.isRunning()) ServiceReplacement.reconcile()
             }
         }
     }
 
     private fun load(): ServiceStatus {
-        if (!ShizukuStateMachine.isRunning()) {
+        if (!ShizukuStateMachine.instance.isRunning()) {
             return ServiceStatus()
         }
 
@@ -103,8 +103,8 @@ internal class ServiceStatusRepository private constructor(private val appContex
         // Deliberately not an instance method: get() would build the process-wide singleton and
         // start its eager status polling against the server this call is about to kill.
         fun stop() {
-            ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
-            runCatching { Shizuku.exit() }.onFailure { ShizukuStateMachine.update() }
+            ShizukuStateMachine.instance.set(ShizukuStateMachine.State.STOPPING)
+            runCatching { Shizuku.exit() }.onFailure { ShizukuStateMachine.instance.update() }
         }
     }
 }

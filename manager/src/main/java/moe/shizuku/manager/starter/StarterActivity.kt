@@ -92,7 +92,7 @@ class StarterViewModel(application: Application) : AndroidViewModel(application)
     val output = _output.asStateFlow()
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
-        ShizukuStateMachine.update()
+        ShizukuStateMachine.instance.update()
         log(error = throwable)
     }
 
@@ -131,7 +131,7 @@ class StarterViewModel(application: Application) : AndroidViewModel(application)
                 }
             }
 
-            ShizukuStateMachine.set(ShizukuStateMachine.State.STARTING)
+            ShizukuStateMachine.instance.set(ShizukuStateMachine.State.STARTING)
             suspendCancellableCoroutine { cont ->
                 Shell.cmd(Starter.internalCommand)
                     .to(object : CallbackList<String?>() {

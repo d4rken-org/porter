@@ -65,7 +65,7 @@ class RequestPermissionActivity : ComposeActivity() {
                 // the bound leaves the row out, which is honest where a placeholder name is not.
                 val profile = try {
                     withTimeout(PermissionViewModel.SERVICE_TIMEOUT) {
-                        ShizukuStateMachine.asFlow().first { it == ShizukuStateMachine.State.RUNNING }
+                        ShizukuStateMachine.instance.asFlow().first { it == ShizukuStateMachine.State.RUNNING }
                         withContext(Dispatchers.IO) { runCatching { ShizukuSystemApis.getUserInfo(userId).let { "${it.name} ($userId)" } }.getOrNull() }
                     }
                 } catch (e: TimeoutCancellationException) {
@@ -148,7 +148,7 @@ internal interface PermissionGateway {
 }
 
 internal object ShizukuPermissionGateway : PermissionGateway {
-    override fun serviceStates() = ShizukuStateMachine.asFlow()
+    override fun serviceStates() = ShizukuStateMachine.instance.asFlow()
     override suspend fun canGrantPermissions() = withContext(Dispatchers.IO) {
         Shizuku.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
     }

@@ -12,5 +12,5 @@ data class ServiceStatus(
         val pid: Int? = null
 ) {
     val isRunning: Boolean
-        get() = uid != -1 && ShizukuStateMachine.isRunning()
+        get() = uid != -1 && ShizukuStateMachine.instance.isRunning()
 }

@@ -21,7 +21,7 @@ class WatchdogServiceTest {
     private val application = ApplicationProvider.getApplicationContext<Application>()
 
     @Before fun enableWatchdog() {
-        ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPED)
+        ShizukuStateMachine.instance.set(ShizukuStateMachine.State.STOPPED)
         ShizukuSettings.setWatchdogPreference(true)
     }
 

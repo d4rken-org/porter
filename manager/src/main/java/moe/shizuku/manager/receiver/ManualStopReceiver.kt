@@ -12,7 +12,7 @@ class ManualStopReceiver : AuthenticatedReceiver() {
     override fun onAuthenticated(context: Context, intent: Intent) {
         val applicationId = BuildConfig.APPLICATION_ID
         if (intent.action != "${applicationId}.STOP") return
-        if (!ShizukuStateMachine.isRunning()) return
+        if (!ShizukuStateMachine.instance.isRunning()) return
 
         ServiceStatusRepository.stop()
     }

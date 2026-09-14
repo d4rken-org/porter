@@ -20,7 +20,7 @@ object ShizukuSystemApis {
     private val users = arrayListOf<UserInfoCompat>()
 
     private fun getUsers(): List<UserInfoCompat> {
-        return if (!ShizukuStateMachine.isRunning()) {
+        return if (!ShizukuStateMachine.instance.isRunning()) {
             arrayListOf(UserInfoCompat(UserHandleCompat.myUserId(), "Owner"))
         } else try {
             val list = UserManagerApis.getUsers(true, true, true)
@@ -52,7 +52,7 @@ object ShizukuSystemApis {
     }
 
     fun getInstalledPackages(flags: Long, userId: Int): List<PackageInfo> {
-        return if (!ShizukuStateMachine.isRunning()) {
+        return if (!ShizukuStateMachine.instance.isRunning()) {
             ArrayList()
         } else try {
             InstalledPackagesCompat.getInstalledPackages(flags, userId)
@@ -64,7 +64,7 @@ object ShizukuSystemApis {
     }
 
     fun checkPermission(permName: String, pkgName: String, userId: Int): Int {
-        return if (!ShizukuStateMachine.isRunning()) {
+        return if (!ShizukuStateMachine.instance.isRunning()) {
             PackageManager.PERMISSION_DENIED
         } else try {
             PermissionManagerApis.checkPermission(permName, pkgName, userId)
@@ -74,7 +74,7 @@ object ShizukuSystemApis {
     }
 
     fun grantRuntimePermission(packageName: String, permissionName: String, userId: Int) {
-        if (!ShizukuStateMachine.isRunning()) {
+        if (!ShizukuStateMachine.instance.isRunning()) {
             return
         }
         try {
@@ -85,7 +85,7 @@ object ShizukuSystemApis {
     }
 
     fun revokeRuntimePermission(packageName: String, permissionName: String, userId: Int) {
-        if (!ShizukuStateMachine.isRunning()) {
+        if (!ShizukuStateMachine.instance.isRunning()) {
             return
         }
         try {
