@@ -44,7 +44,7 @@ internal class ServiceStatusRepository private constructor(private val appContex
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val mutex = Mutex()
     private val status = MutableStateFlow(ServiceStatus())
-    val state = combine(status, ShizukuStateMachine.instance.asFlow(), ServiceReplacement.state) { value, runtime, update ->
+    val state = combine(status, ShizukuStateMachine.instance.asFlow(), ServiceReplacement.get(appContext).state) { value, runtime, update ->
         ServiceSnapshot(value, runtime, update.running, update.failed, UserHandleCompat.myUserId() == 0)
     }.stateIn(scope, SharingStarted.Eagerly, ServiceSnapshot(serviceState = ShizukuStateMachine.instance.get(), primaryUser = UserHandleCompat.myUserId() == 0))
 
@@ -58,7 +58,7 @@ internal class ServiceStatusRepository private constructor(private val appContex
                 catch (e: CancellationException) { throw e }
                 catch (e: Exception) { LOGGER.w(e, "Load service status"); ServiceStatus() }
                 status.value = if (binder == Shizuku.getBinder() && ShizukuStateMachine.instance.isRunning()) loaded else ServiceStatus()
-                if (ShizukuStateMachine.instance.isRunning()) ServiceReplacement.reconcile()
+                if (ShizukuStateMachine.instance.isRunning()) ServiceReplacement.get(appContext).reconcile()
             }
         }
     }

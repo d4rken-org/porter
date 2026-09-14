@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class WatchdogService : Service() {
 
-    private val environment: WatchdogEnvironment get() = environmentOverride ?: DefaultWatchdogEnvironment
+    private val environment: WatchdogEnvironment get() = environmentOverride ?: DefaultWatchdogEnvironment(this)
 
     private var scope: CoroutineScope? = null
 
@@ -205,7 +205,7 @@ internal interface WatchdogEnvironment {
     fun restartService(context: Context)
 }
 
-internal object DefaultWatchdogEnvironment : WatchdogEnvironment {
-    override val replacementRunning get() = ServiceReplacement.state.value.running
+internal class DefaultWatchdogEnvironment(private val context: Context) : WatchdogEnvironment {
+    override val replacementRunning get() = ServiceReplacement.get(context).state.value.running
     override fun restartService(context: Context) = ShizukuReceiverStarter.start(context)
 }

@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
-import moe.shizuku.manager.ShizukuApplication
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.model.PorterServiceVersion
 import moe.shizuku.manager.support.ServerDiagnostics
@@ -80,23 +79,33 @@ internal class ServiceReplacer(
     }
 }
 
-internal object ServiceReplacement {
+private suspend fun launchReplacementStarter(binder: IBinder, previousPid: Int, apk: File, starter: File) {
+    val process = IShizukuService.Stub.asInterface(binder).newProcess(
+        arrayOf(starter.absolutePath, "--apk=${apk.absolutePath}", "--replace=$previousPid"), null, null)
+    awaitReplacementStarter(process)
+}
+
+internal class ServiceReplacement internal constructor(
+    private val appContext: Context,
+    private val currentBinder: () -> IBinder? = Shizuku::getBinder,
+    private val readInfo: (IBinder) -> ServerDiagnostics.Info? = ServerDiagnostics::readInfo,
+    private val readUid: (IBinder) -> Int = { IShizukuService.Stub.asInterface(it).uid },
+    private val launch: suspend (IBinder, Int, File, File) -> Unit = ::launchReplacementStarter,
+) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val controller by lazy {
-        val app = ShizukuApplication.application
-        val preferences = app.createDeviceProtectedStorageContext().getSharedPreferences("service-update", Context.MODE_PRIVATE)
+    private val controller = run {
+        val preferences = appContext.createDeviceProtectedStorageContext().getSharedPreferences("service-update", Context.MODE_PRIVATE)
         ServiceUpdateController(ServiceUpdateStore(preferences, PorterServiceVersion.installed.buildId!!),
             isPrimaryUser = { UserHandleCompat.myUserId() == 0 }, automaticEnabled = ShizukuSettings::getAutoUpdateService,
             replace = { beforeLaunch, onLaunched ->
                 withContext(Dispatchers.IO) {
-                    val apk = File(app.applicationInfo.sourceDir)
-                    val starter = File(app.applicationInfo.nativeLibraryDir, "libshizuku.so")
+                    val apk = File(appContext.applicationInfo.sourceDir)
+                    val starter = File(appContext.applicationInfo.nativeLibraryDir, "libshizuku.so")
                     check(apk.canRead() && starter.canExecute()) { "The installed Porter starter is unavailable" }
-                    ServiceReplacer(PorterServiceVersion.installed, Shizuku::getBinder,
+                    ServiceReplacer(PorterServiceVersion.installed, currentBinder,
+                        readInfo = readInfo, readUid = readUid,
                         isReady = ShizukuStateMachine.instance::isRunning, launch = { binder, pid ->
-                            val process = IShizukuService.Stub.asInterface(binder).newProcess(
-                                arrayOf(starter.absolutePath, "--apk=${apk.absolutePath}", "--replace=$pid"), null, null)
-                            awaitReplacementStarter(process)
+                            this@ServiceReplacement.launch(binder, pid, apk, starter)
                         }).replace(onLaunched) {
                             beforeLaunch()
                             ShizukuStateMachine.instance.set(ShizukuStateMachine.State.STARTING)
@@ -116,5 +125,14 @@ internal object ServiceReplacement {
                 }
             }
         }
+    }
+
+    companion object {
+        @Volatile private var instance: ServiceReplacement? = null
+        fun get(context: Context): ServiceReplacement = instance ?: synchronized(this) {
+            instance ?: ServiceReplacement(context.applicationContext).also { instance = it }
+        }
+
+        internal fun resetForTest() { instance = null }
     }
 }

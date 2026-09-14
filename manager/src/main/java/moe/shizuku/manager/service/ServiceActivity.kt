@@ -10,6 +10,7 @@ import moe.shizuku.manager.ui.ComposeActivity
 class ServiceActivity : ComposeActivity() {
     override val protectTouches = true
     private val repository by lazy { ServiceStatusRepository.get(this) }
+    private val replacement by lazy { ServiceReplacement.get(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         porterContent {
@@ -24,7 +25,7 @@ class ServiceActivity : ComposeActivity() {
             ))
             if (dialog == "update" && snapshot.canUpdate) UpdateServiceDialog(snapshot.failed, { dialog = null }) {
                 dialog = null
-                if (repository.state.value.canUpdate) ServiceReplacement.startManual()
+                if (repository.state.value.canUpdate) replacement.startManual()
             }
             if (dialog == "stop" && snapshot.canStop) StopServiceDialog(!snapshot.primaryUser, { dialog = null }) {
                 dialog = null
