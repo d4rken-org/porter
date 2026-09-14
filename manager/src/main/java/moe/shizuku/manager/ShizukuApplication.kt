@@ -39,9 +39,9 @@ class ShizukuApplication : Application() {
 
     private fun init(context: Context) {
         ShizukuSettings.initialize(context)
-        if (Build.VERSION.SDK_INT >= 33 && !ShizukuSettings.getPreferences().getBoolean("system_locale_migrated", false)) {
+        if (LocaleMigration.needsClear(ShizukuSettings.getPreferences())) {
             getSystemService(android.app.LocaleManager::class.java).applicationLocales = android.os.LocaleList.getEmptyLocaleList()
-            ShizukuSettings.getPreferences().edit().putBoolean("system_locale_migrated", true).apply()
+            LocaleMigration.markDone(ShizukuSettings.getPreferences())
         }
         moe.shizuku.manager.support.DebugRecorder.initialize(context)
         // After the observers it can drive: the sticky binder-received listener fires

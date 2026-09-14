@@ -40,6 +40,7 @@ public class ShizukuSettings {
         public static final String KEY_REPORT_BUG = "report_bug";
         public static final String KEY_LEGACY_PAIRING = "legacy_pairing";
         public static final String KEY_CATEGORY_ADVANCED = "category_advanced";
+        public static final String KEY_SYSTEM_LOCALE_MIGRATED = "system_locale_migrated";
     }
 
     private static SharedPreferences sPreferences;
@@ -76,7 +77,11 @@ public class ShizukuSettings {
         if (sPreferences == null) {
             sPreferences = getSettingsStorageContext(context)
                 .getSharedPreferences(NAME, Context.MODE_PRIVATE);
+            boolean freshInstall = sPreferences.getAll().isEmpty();
             SharedPreferences.Editor editor = sPreferences.edit().remove(Keys.KEY_LANGUAGE);
+            if (freshInstall) {
+                editor.putBoolean(Keys.KEY_SYSTEM_LOCALE_MIGRATED, true);
+            }
             if (!sPreferences.contains(Keys.KEY_THEME_STYLE)) {
                 editor.putString(Keys.KEY_THEME_STYLE,
                     Build.VERSION.SDK_INT >= 31 && !sPreferences.getAll().isEmpty() && sPreferences.getBoolean(Keys.KEY_USE_SYSTEM_COLOR, true)
