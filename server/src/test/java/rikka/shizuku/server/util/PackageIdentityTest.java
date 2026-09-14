@@ -145,8 +145,9 @@ public class PackageIdentityTest {
 
     @Test
     public void aWorkingLookupIsPresentWithTheCallersAppId() {
+        PackageInfo present = installed(new Signature[]{ORIGINAL}, new Signature[]{ORIGINAL});
         packages.when(() -> PackageManagerApis.getPackageInfo(anyString(), anyLong(), anyInt()))
-                .thenReturn(installed(new Signature[]{ORIGINAL}, new Signature[]{ORIGINAL}));
+                .thenReturn(present);
 
         PackageIdentity.Result result = PackageIdentity.of(PACKAGE, 10);
         assertEquals(PackageIdentity.State.PRESENT, result.state);
