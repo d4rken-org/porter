@@ -61,29 +61,58 @@ public class ApkReconcilerTest {
         return new PackageIdentity.Identity(packageName, appId, signers);
     }
 
-    /** Runs each lane's pending task on demand and advances the clock to its deadline. */
+    private static final class Pending {
+        final long deadline;
+        final Runnable task;
+
+        Pending(long deadline, Runnable task) {
+            this.deadline = deadline;
+            this.task = task;
+        }
+    }
+
+    /**
+     * Runs the lane's next due task on demand and advances the clock to it. Every submission is
+     * retained: the production scheduler hands work to a {@link java.util.concurrent.ScheduledExecutorService},
+     * which has no notion of a lane and cancels nothing when a nearer deadline is submitted.
+     */
     private static final class TestScheduler implements ApkReconciler.Scheduler {
         long now = 1_000L;
-        final Map<String, Long> deadlines = new HashMap<>();
-        final Map<String, Runnable> tasks = new HashMap<>();
+        final Map<String, List<Pending>> queues = new HashMap<>();
         boolean shutdown;
 
         @Override public synchronized void scheduleAt(String lane, long deadlineMillis, Runnable task) {
-            deadlines.put(lane, deadlineMillis);
-            tasks.put(lane, task);
+            queues.computeIfAbsent(lane, key -> new ArrayList<>()).add(new Pending(deadlineMillis, task));
         }
 
         @Override public synchronized long now() { return now; }
 
         @Override public synchronized void shutdown() { shutdown = true; }
 
-        long delay(String lane) { return deadlines.get(lane) - now; }
+        private synchronized Pending earliest(String lane) {
+            Pending earliest = null;
+            for (Pending pending : queues.getOrDefault(lane, List.of())) {
+                if (earliest == null || pending.deadline < earliest.deadline) earliest = pending;
+            }
+            return earliest;
+        }
+
+        /** How many tasks the lane's executor would still hold. */
+        int pending(String lane) { return queues.getOrDefault(lane, List.of()).size(); }
+
+        Runnable next(String lane) {
+            Pending pending = earliest(lane);
+            return pending != null ? pending.task : null;
+        }
+
+        long delay(String lane) { return earliest(lane).deadline - now; }
 
         void fire(String lane) {
-            Runnable task = tasks.remove(lane);
-            assertNotNull("nothing scheduled on " + lane, task);
-            now = Math.max(now, deadlines.remove(lane));
-            task.run();
+            Pending pending = earliest(lane);
+            assertNotNull("nothing scheduled on " + lane, pending);
+            queues.get(lane).remove(pending);
+            now = Math.max(now, pending.deadline);
+            pending.task.run();
         }
     }
 
@@ -210,6 +239,9 @@ public class ApkReconcilerTest {
     @Test
     public void aThrowingTickStillReschedulesBothLanes() {
         hosts(host(record(), identity(HOST, APP_ID, MINE)));
+        // Its own lane queues: the reconciler from setup() is still holding deadlines on the old
+        // scheduler, and the double retains them all.
+        scheduler = new TestScheduler();
         reconciler = new ApkReconciler(MANAGER, identity(MANAGER, APP_ID, MINE), userServices,
                 new ApkReconciler.PackageOracle() {
                     @Override public PackageIdentity.Result of(String packageName, int userId) {
@@ -224,8 +256,8 @@ public class ApkReconcilerTest {
 
         scheduler.fire(ApkReconciler.LANE_MANAGER);
         scheduler.fire(ApkReconciler.LANE_HOST);
-        assertNotNull(scheduler.tasks.get(ApkReconciler.LANE_MANAGER));
-        assertNotNull(scheduler.tasks.get(ApkReconciler.LANE_HOST));
+        assertNotNull(scheduler.next(ApkReconciler.LANE_MANAGER));
+        assertNotNull(scheduler.next(ApkReconciler.LANE_HOST));
         assertEquals(List.of(), exits);
     }
 
@@ -347,7 +379,7 @@ public class ApkReconcilerTest {
         scheduler.fire(ApkReconciler.LANE_HOST);
         scheduler.fire(ApkReconciler.LANE_HOST);
         verify(userServices, never()).removeIfPresent(any());
-        assertNotNull(scheduler.tasks.get(ApkReconciler.LANE_HOST));
+        assertNotNull(scheduler.next(ApkReconciler.LANE_HOST));
     }
 
     @Test
@@ -396,7 +428,7 @@ public class ApkReconcilerTest {
         scheduler.fire(ApkReconciler.LANE_HOST);
         scheduler.fire(ApkReconciler.LANE_HOST);
         verify(userServices, never()).removeIfPresent(any());
-        assertNotNull(scheduler.tasks.get(ApkReconciler.LANE_HOST));
+        assertNotNull(scheduler.next(ApkReconciler.LANE_HOST));
     }
 
     @Test
@@ -410,7 +442,32 @@ public class ApkReconcilerTest {
 
         // The map decides, not the snapshot: removeSelf never ran, and the lane carries on.
         verify(userServices).removeIfPresent(record);
-        assertNotNull(scheduler.tasks.get(ApkReconciler.LANE_HOST));
+        assertNotNull(scheduler.next(ApkReconciler.LANE_HOST));
+    }
+
+    @Test
+    public void bringingAScanForwardLeavesTheLaneOnOnePollingChain() {
+        UserServiceRecord record = record();
+        hosts(host(record, identity(HOST, APP_ID, MINE)));
+        oracle.answer(HOST, 0, present(0, APP_ID, MINE));
+
+        // Let the lane settle into a single chain that has backed off well past the floor.
+        scheduler.fire(ApkReconciler.LANE_HOST);
+        scheduler.fire(ApkReconciler.LANE_HOST);
+        assertEquals(60_000L, scheduler.delay(ApkReconciler.LANE_HOST));
+        assertEquals(1, scheduler.pending(ApkReconciler.LANE_HOST));
+
+        // A record creation brings the scan forward while the far one is still queued. The executor
+        // holds both until they run, so the far one has to retire itself when its turn comes.
+        reconciler.onHostRecordCreated();
+        assertEquals(15_000L, scheduler.delay(ApkReconciler.LANE_HOST));
+
+        // Run past the superseded deadline; a task that re-arms after being superseded leaves the
+        // lane polling on a second chain for the rest of the process's life.
+        for (int i = 0; i < 6; i++) scheduler.fire(ApkReconciler.LANE_HOST);
+
+        int chains = scheduler.pending(ApkReconciler.LANE_HOST);
+        assertEquals("the host lane is polling on " + chains + " independent chains", 1, chains);
     }
 
     @Test

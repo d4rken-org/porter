@@ -164,9 +164,6 @@ public final class ApkReconciler {
     // region host lane
 
     void hostTick() {
-        // Cleared before the work, not inside it: a scan that throws must still leave the lane
-        // able to arm its next deadline.
-        hostDeadline.set(NOT_SCHEDULED);
         boolean changed = false;
         try {
             changed = scanHosts();
@@ -309,7 +306,13 @@ public final class ApkReconciler {
             long current = hostDeadline.get();
             if (current != NOT_SCHEDULED && current <= deadline) return;
             if (hostDeadline.compareAndSet(current, deadline)) {
-                scheduler.scheduleAt(LANE_HOST, deadline, this::hostTick);
+                // Nothing cancels the task this supersedes, so each task retires itself: it ticks
+                // only while it is still the armed deadline, and otherwise returns without
+                // rescheduling. A task that re-armed unconditionally would leave the lane polling on
+                // one more chain for the rest of the process's life.
+                scheduler.scheduleAt(LANE_HOST, deadline, () -> {
+                    if (hostDeadline.compareAndSet(deadline, NOT_SCHEDULED)) hostTick();
+                });
                 return;
             }
         }
