@@ -31,10 +31,13 @@ import java.io.File
 
 class DebugRecorder internal constructor(
     private val appContext: Context,
-    private val store: DebugLogStore = DebugLogStore(File(appContext.noBackupFilesDir, "debug-logs")),
+    storeOverride: DebugLogStore? = null,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
 ) {
     data class State(val active: Boolean = false, val started: Long = 0, val error: String? = null)
+    private val store: DebugLogStore by lazy {
+        storeOverride ?: DebugLogStore(File(appContext.noBackupFilesDir, "debug-logs"))
+    }
     private val mutex = Mutex()
     private val mutableState = MutableStateFlow(State())
     val state = mutableState.asStateFlow()

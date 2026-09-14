@@ -59,7 +59,7 @@ class DebugRecorderAttachTest {
         DebugRecorder.resetForTest()
     }
 
-    private fun recorder(context: Context = application) = DebugRecorder(context, store, scope)
+    private fun recorder(context: Context = application) = DebugRecorder(context, storeOverride = store, scope = scope)
 
     private fun drain() = scope.testScheduler.advanceUntilIdle()
 
@@ -119,6 +119,30 @@ class DebugRecorderAttachTest {
 
         assertEquals(1, store.reads)
         assertEquals(1, store.prunes)
+    }
+
+    /**
+     * A direct-boot start constructs the recorder while the user is locked. Resolving the log
+     * directory there costs a mkdir attempt and a framework warning on credential-protected
+     * storage; the lookup belongs to attach, which already waits for the unlock.
+     */
+    @Test fun constructionStaysOutOfCredentialProtectedStorage() {
+        var lookups = 0
+        val counting = object : ContextWrapper(application) {
+            override fun getNoBackupFilesDir(): File {
+                lookups++
+                return super.getNoBackupFilesDir()
+            }
+        }
+
+        val recorder = DebugRecorder(counting, scope = scope)
+
+        assertEquals(0, lookups)
+
+        recorder.attach()
+        drain()
+
+        assertTrue(lookups > 0)
     }
 
     @Test fun aUserUnlockedWhileRegisteringInitializesOnce() {
