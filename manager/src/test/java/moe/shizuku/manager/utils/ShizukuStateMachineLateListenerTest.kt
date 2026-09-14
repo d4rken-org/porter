@@ -1,68 +1,57 @@
 package moe.shizuku.manager.utils
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import moe.shizuku.manager.utils.ShizukuStateMachine.State
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/** What a listener sees when it attaches while a delivery frame is still draining the queue. */
+/** What a subscriber sees when it attaches while a transition is still being handled. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class ShizukuStateMachineLateListenerTest {
 
+    private val machine = ShizukuStateMachine()
     private val lateArrival = mutableListOf<State>()
-    private val late: (State) -> Unit = { lateArrival += it }
-
     private var acted = false
 
-    /**
-     * Stands in for the watchdog: it reacts to RUNNING by driving the service somewhere else and
-     * starting a component that attaches its own listener.
-     */
-    private val registrar: (State) -> Unit = { delivered ->
-        if (delivered == State.RUNNING && !acted) {
-            acted = true
-            ShizukuStateMachine.set(State.STOPPING)
-            ShizukuStateMachine.set(State.STARTING)
-            ShizukuStateMachine.addListener(late)
+    @Test fun aListenerIsNotSentTransitionsEnqueuedBeforeItWasRegistered() = runTest {
+        val dispatcher = UnconfinedTestDispatcher(testScheduler)
+        // Stands in for the watchdog: it reacts to RUNNING by driving the service somewhere else
+        // and starting a component that subscribes on its own.
+        backgroundScope.launch(dispatcher) {
+            machine.asFlow().collect { delivered ->
+                if (delivered == State.RUNNING && !acted) {
+                    acted = true
+                    machine.set(State.STOPPING)
+                    machine.set(State.STARTING)
+                    backgroundScope.launch(dispatcher) { machine.asFlow().collect { lateArrival += it } }
+                }
+            }
         }
-    }
 
-    @Before fun reset() {
-        ShizukuStateMachine.set(State.STOPPED)
-    }
-
-    @After fun detach() {
-        ShizukuStateMachine.removeListener(registrar)
-        ShizukuStateMachine.removeListener(late)
-    }
-
-    @Test fun aListenerIsNotSentTransitionsEnqueuedBeforeItWasRegistered() {
-        ShizukuStateMachine.addListener(registrar)
-
-        ShizukuStateMachine.set(State.RUNNING)
+        machine.set(State.RUNNING)
 
         val observed = lateArrival.toList()
         assertEquals(
-            "registration hands over the state stored at that moment",
+            "subscribing hands over the state stored at that moment",
             State.STARTING,
             observed.first(),
         )
         assertFalse(
-            "notification delivery went backwards: the listener registered when the stored " +
-                "state was STARTING and was then delivered STOPPING, a transition that was " +
-                "enqueued before the listener existed and had already been superseded. " +
-                "It saw $observed.",
+            "notification delivery went backwards: the subscriber attached while the stored " +
+                "state was STARTING and was then delivered STOPPING, a transition raised before " +
+                "it subscribed and already superseded. It saw $observed.",
             observed.contains(State.STOPPING),
         )
         assertEquals(
-            "the listener was replayed queued transitions from before it existed instead of " +
-                "only seeing its registration state: saw $observed",
+            "the subscriber was replayed transitions from before it subscribed instead of only " +
+                "the state it attached on: saw $observed",
             listOf(State.STARTING),
             observed,
         )
