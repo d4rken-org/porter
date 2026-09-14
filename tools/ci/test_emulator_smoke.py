@@ -270,3 +270,118 @@ class CaseArgumentTest(unittest.TestCase):
         self.assertIn("porsch", message)
         for name in smoke.CASES:
             self.assertIn(name, message)
+class LaunchProbeModeTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock(return_value="")
+        self.runner.until = Mock(return_value="4711")
+        self.runner.expect_log = Mock()
+
+    def launched(self):
+        return [c for c in self.runner.shell.call_args_list if c.args[0] == "am" and c.args[1] == "start"]
+
+    def test_the_default_launch_asks_for_neither_mode(self):
+        self.runner.launch_probe(smoke.NATIVE)
+        self.assertEqual(self.launched(), [call(
+            "am", "start", "-W", "-n", smoke.NATIVE + "/eu.darken.porter.probe.ProbeActivity")])
+        self.runner.expect_log.assert_any_call(smoke.NATIVE, "MODE daemon=false peek=false")
+
+    def test_a_daemon_launch_passes_the_extra_and_asserts_the_mode_that_ran(self):
+        self.runner.launch_probe(smoke.NATIVE, daemon=True)
+        self.assertEqual(self.launched(), [call(
+            "am", "start", "-W", "-n", smoke.NATIVE + "/eu.darken.porter.probe.ProbeActivity",
+            "--ez", "daemon", "true")])
+        self.runner.expect_log.assert_any_call(smoke.NATIVE, "MODE daemon=true peek=false")
+
+    def test_a_peek_launch_exercises_the_no_create_path(self):
+        self.runner.launch_probe(smoke.NATIVE, peek=True)
+        self.assertEqual(self.launched(), [call(
+            "am", "start", "-W", "-n", smoke.NATIVE + "/eu.darken.porter.probe.ProbeActivity",
+            "--ez", "peek", "true")])
+        self.runner.expect_log.assert_any_call(smoke.NATIVE, "MODE daemon=false peek=true")
+
+
+class DeviceStateReadingTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock()
+
+    def test_only_secondary_users_count_as_extra(self):
+        self.runner.shell.return_value = (
+            "Users:\n\tUserInfo{0:Owner:c13} running\n\tUserInfo{10:porter-ci:410} running")
+        self.assertEqual(self.runner.extra_users(), ["10"])
+
+    def test_a_single_user_device_has_none(self):
+        self.runner.shell.return_value = "Users:\n\tUserInfo{0:Owner:c13} running"
+        self.assertEqual(self.runner.extra_users(), [])
+
+    def test_a_prefix_match_is_not_an_installed_package(self):
+        self.runner.shell.return_value = "package:eu.darken.porter.probe.native.extra"
+        self.assertFalse(self.runner.installed(smoke.NATIVE))
+
+    def test_an_exact_match_is_installed(self):
+        self.runner.shell.return_value = (
+            "package:eu.darken.porter.probe.native.extra\npackage:eu.darken.porter.probe.native")
+        self.assertTrue(self.runner.installed(smoke.NATIVE))
+
+    def test_service_pids_reads_every_process_under_the_nice_name(self):
+        self.runner.shell.return_value = "5271 5272"
+        self.assertEqual(self.runner.service_pids(smoke.NATIVE), {"5271", "5272"})
+
+    def test_no_service_process_is_an_empty_set(self):
+        self.runner.shell.return_value = ""
+        self.assertEqual(self.runner.service_pids(smoke.NATIVE), set())
+
+
+class ScenarioRestoreTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.results = []
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner.output = Path(directory.name)
+        self.runner.adb = Mock(return_value="")
+        self.runner.shell = Mock(return_value="")
+        self.runner.pid = Mock(return_value="5271")
+        self.runner.installed = Mock(return_value=False)
+        self.runner.extra_users = Mock(return_value=["10"])
+        self.runner.start_service = Mock()
+        # cases=None explicitly: a bare Mock would hand case() a truthy attribute to filter on.
+        self.runner.args = Mock(cases=None, manager=Path("/apks/manager.apk"),
+                                native=Path("/apks/native.apk"), legacy=Path("/apks/legacy.apk"))
+
+    def test_a_passing_scenario_restores_what_it_declared(self):
+        self.runner.case("probe-case", lambda: {"ok": True}, restore=("probes",))
+        self.assertEqual(self.runner.results[0]["passed"], True)
+        self.assertIn(call("uninstall", smoke.NATIVE, check=False), self.runner.adb.call_args_list)
+        self.assertIn(call("install", str(Path("/apks/native.apk").resolve())),
+                      self.runner.adb.call_args_list)
+
+    def test_a_failing_scenario_still_restores(self):
+        def boom():
+            raise AssertionError("Timed out: daemon removed after host uninstall")
+        with self.assertRaisesRegex(AssertionError, "Timed out"):
+            self.runner.case("probe-case", boom, restore=("users",))
+        self.assertEqual(self.runner.results[0]["passed"], False)
+        self.runner.shell.assert_any_call("pm", "remove-user", "10", check=False)
+
+    def test_a_scenario_declaring_nothing_restores_nothing(self):
+        self.runner.case("probe-case", lambda: None)
+        self.runner.adb.assert_called_once_with("logcat", "-d", "-v", "threadtime", check=False)
+
+    def test_a_restore_failure_is_recorded_without_masking_the_scenario(self):
+        self.runner.extra_users = Mock(side_effect=RuntimeError("device offline"))
+        self.runner.case("probe-case", lambda: {"ok": True}, restore=("users",))
+        self.assertEqual(self.runner.results[0]["passed"], True)
+        self.assertIn("device offline", self.runner.results[0]["restore_failure"])
+
+    def test_a_running_service_is_not_restarted(self):
+        self.runner.case("probe-case", lambda: None, restore=("service",))
+        self.runner.start_service.assert_not_called()
+
+    def test_a_stopped_service_is_restarted_after_the_manager_is_back(self):
+        self.runner.pid = Mock(return_value="")
+        self.runner.case("probe-case", lambda: None, restore=("manager", "service"))
+        self.assertIn(call("install", str(Path("/apks/manager.apk").resolve())),
+                      self.runner.adb.call_args_list)
+        self.runner.start_service.assert_called_once()
