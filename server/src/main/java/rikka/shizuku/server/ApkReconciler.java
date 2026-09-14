@@ -36,7 +36,7 @@ public final class ApkReconciler {
 
     /** Detection latency is the security-relevant property here, so this lane never backs off. */
     private static final long MANAGER_INTERVAL_MILLIS = 15_000L;
-    /** A second reading before acting on an absence, in either lane. */
+    /** A second reading before the host lane acts on an absence. */
     private static final long GRACE_MILLIS = 2_000L;
     private static final long[] HOST_BACKOFF_MILLIS = {15_000L, 30_000L, 60_000L, 120_000L, 240_000L, 300_000L};
     /** Every failure is logged up to here, then one in this many, so a stuck lane stays visible. */
@@ -121,8 +121,11 @@ public final class ApkReconciler {
         } catch (Throwable tr) {
             LOGGER.w(tr, "manager lane");
         } finally {
-            long delay = managerAbsenceCandidate ? GRACE_MILLIS : MANAGER_INTERVAL_MILLIS;
-            scheduler.scheduleAt(LANE_MANAGER, scheduler.now() + delay, this::managerTick);
+            // One speed, candidate or not: a replace makes the package read absent for several
+            // seconds, and a recheck armed shortly after the first ABSENT would confirm inside that
+            // same window and exit on an ordinary upgrade. A candidate has to survive a full
+            // interval before checkManager() can confirm it.
+            scheduler.scheduleAt(LANE_MANAGER, scheduler.now() + MANAGER_INTERVAL_MILLIS, this::managerTick);
         }
     }
 
