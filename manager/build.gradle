@@ -45,7 +45,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.compose"
     id "org.jetbrains.kotlin.plugin.serialization"
     id "dev.rikka.tools.refine"
-    id "dev.rikka.tools.autoresconfig"
     id "com.android.compose.screenshot"
 }
 
@@ -119,6 +118,17 @@ android {
     dependenciesInfo {
         includeInApk = false
     }
+    androidResources {
+        generateLocaleConfig = true
+        def translated = file("src/main/res").listFiles()
+                .findAll { it.isDirectory() && it.name ==~ /values-[a-z]{2,3}(-r[A-Z]{2})?/ }
+                .collect { it.name.substring("values-".length()).replace("-r", "-") }
+        def locales = ["en"] + translated
+        if (translated.isEmpty() || !locales.contains("en")) {
+            throw new GradleException("Derived locale filters look wrong: ${locales}")
+        }
+        localeFilters.addAll(locales)
+    }
 }
 
 androidComponents.onVariants(androidComponents.selector().all()) { variant ->
@@ -146,13 +156,6 @@ androidComponents.onVariants(androidComponents.selector().all()) { variant ->
         }
         variant.sources.assets.addGeneratedSourceDirectory(task) { it.outputDirectory }
     }
-}
-
-autoResConfig {
-    generatedClassFullName = "rikka.shizuku.manager.ShizukuLocales"
-    generateRes = false
-    generatedArrayFirstItem = "SYSTEM"
-    generateLocaleConfig = true
 }
 
 android.applicationVariants.configureEach { variant ->
