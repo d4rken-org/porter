@@ -514,22 +514,23 @@ class Smoke:
         self.authorized(NATIVE)
         return self.until("privileged user service", lambda: self.pid(NATIVE + ":porter-probe"))
 
-    def refused_at_bind(self, package):
-        """The oracle for why the original signer's daemon is gone.
+    def hand_over_reason(self, package):
+        """Which path ended the original signer's record, asserting only that one of them did.
 
-        Two code paths end in the same absence: the bind-time check refusing the record, and the
-        host scan removing it for the same mismatch before anything binds. Only the first is what
-        the scenarios calling this are about, so the refusal is asserted directly rather than
-        inferred from the daemon being gone.
+        Two are correct: the bind-time check refusing the record when the replacement asks for it,
+        and the host scan removing it on its own deadline. Which arrives first is a function of how
+        fast the scenario ran against a 15s scan, so demanding either one fails runs where the code
+        did its job by the other route. What must hold is that the daemon did not survive for a
+        reason nobody recorded.
 
-        A scan warning is deliberately not asserted against. The scan logs its mismatch before it
-        removes anything, and the removal is a no-op once the bind has taken the record, so a scan
-        that lost the race still leaves a warning behind. Reading that as "the scan got there
-        first" would fail a run in which the bind-time check did exactly its job.
+        The bind-time behaviour itself is pinned deterministically by UserServiceBindIdentityTest,
+        on both the reuse and the noCreate path, so nothing here has to force that race.
         """
         warnings = self.adb("logcat", "-d", "-s", "UserServiceManager:W", "ApkReconciler:W", "*:S")
-        assert f"does not belong to the current installation of {package}" in warnings, \
-            "the bind-time check never refused"
+        refused = f"does not belong to the current installation of {package}" in warnings
+        removed = f"host replaced {package}" in warnings
+        assert refused or removed, "nothing recorded why the original signer's daemon went away"
+        return "bind" if refused else "scan"
 
     def reconciliation(self):
         # The five pre-existing cases leave grants and probe installations behind, so this block
@@ -581,12 +582,10 @@ class Smoke:
             """A live daemon of the original signer, with the replacement installed over it."""
             original = self.authorized_daemon()
             self.adb("uninstall", NATIVE)
-            # Bounds the interval refused_at_bind() reads: the replacement only exists from here on,
-            # so every warning about it was logged after this point.
+            # Bounds the interval hand_over_reason() reads: the replacement only exists from here
+            # on, so every warning about it was logged after this point.
             self.adb("logcat", "-c")
             self.adb("install", str(self.foreign_probe()))
-            # The bind-time check, not a scan: a replacement is refused the moment it first asks. A
-            # scan that got there first would leave nothing to hand over and pass either way.
             assert original in self.service_pids(NATIVE), "the daemon was gone before the bind"
             return original
 
@@ -601,8 +600,8 @@ class Smoke:
             self.until("the noCreate path released the old daemon",
                        lambda: original not in self.service_pids(NATIVE))
             after = self.service_pids(NATIVE)
-            self.refused_at_bind(NATIVE)
-            return {"original": original, "after": sorted(after)}
+            return {"original": original, "after": sorted(after),
+                    "reason": self.hand_over_reason(NATIVE)}
         self.case("foreign-signer-peeks", foreign_signer_peeks, restore=("probes", "grants"))
 
         def foreign_signer_binds():
@@ -614,8 +613,8 @@ class Smoke:
             self.until("the replacement was refused the original signer's daemon",
                        lambda: original not in self.service_pids(NATIVE))
             after = self.service_pids(NATIVE)
-            self.refused_at_bind(NATIVE)
-            return {"original": original, "after": sorted(after)}
+            return {"original": original, "after": sorted(after),
+                    "reason": self.hand_over_reason(NATIVE)}
         self.case("foreign-signer-binds", foreign_signer_binds, restore=("probes", "grants"))
 
         def foreign_signer_never_binds():
