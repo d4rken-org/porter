@@ -31,7 +31,7 @@ internal class ContactViewModel(application: Application, savedState: SavedState
         val attachment = selectedId.value
         operation {
             val context = getApplication<Application>()
-            val uri = attachment?.let { FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", DebugRecorder.export(context, it)) }
+            val uri = attachment?.let { FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", DebugRecorder.get(context).export(it)) }
             events.send(contactIntent(context, category, description, expected, bug, uri))
         }
     }

@@ -29,9 +29,12 @@ import moe.shizuku.manager.utils.ShizukuStateMachine
 import rikka.shizuku.Shizuku
 import java.io.File
 
-object DebugRecorder {
+class DebugRecorder internal constructor(
+    private val appContext: Context,
+    private val store: DebugLogStore = DebugLogStore(File(appContext.noBackupFilesDir, "debug-logs")),
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
+) {
     data class State(val active: Boolean = false, val started: Long = 0, val error: String? = null)
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val mutex = Mutex()
     private val mutableState = MutableStateFlow(State())
     val state = mutableState.asStateFlow()
@@ -42,44 +45,41 @@ object DebugRecorder {
     private var serverReader: Job? = null
     private var serverWatcher: Job? = null
     private var debugLease: DebugLease? = null
-    private fun store(context: Context) = DebugLogStore(File(context.noBackupFilesDir, "debug-logs"))
 
-    fun initialize(context: Context) {
-        val userManager = context.getSystemService(UserManager::class.java)
+    fun attach() {
+        val userManager = appContext.getSystemService(UserManager::class.java)
         if (!userManager.isUserUnlocked) {
             val handled = java.util.concurrent.atomic.AtomicBoolean(false)
             val receiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
                     if (handled.compareAndSet(false, true)) {
                         context.unregisterReceiver(this)
-                        initialize(context)
+                        attach()
                     }
                 }
             }
-            ContextCompat.registerReceiver(context, receiver, IntentFilter(Intent.ACTION_USER_UNLOCKED), ContextCompat.RECEIVER_NOT_EXPORTED)
+            ContextCompat.registerReceiver(appContext, receiver, IntentFilter(Intent.ACTION_USER_UNLOCKED), ContextCompat.RECEIVER_NOT_EXPORTED)
             if (userManager.isUserUnlocked && handled.compareAndSet(false, true)) {
-                context.unregisterReceiver(receiver)
-                initialize(context)
+                appContext.unregisterReceiver(receiver)
+                attach()
             }
             return
         }
         scope.launch {
             try {
                 mutex.withLock {
-                    val store = store(context)
-                    if (process == null) store.activeId()?.let { resume(context, store, it) }
+                    if (process == null) store.activeId()?.let { resume(it) }
                     store.prune()
                 }
             } catch (e: Exception) { report(e) }
         }
     }
 
-    suspend fun start(context: Context) = withContext(Dispatchers.IO + NonCancellable) {
+    suspend fun start() = withContext(Dispatchers.IO + NonCancellable) {
         mutex.withLock {
             if (state.value.active) return@withLock
-            val store = store(context)
             val id = store.create()
-            try { resume(context, store, id) }
+            try { resume(id) }
             catch (e: Exception) {
                 store.finish()
                 report(e)
@@ -88,7 +88,7 @@ object DebugRecorder {
         }
     }
 
-    private suspend fun resume(context: Context, store: DebugLogStore, id: String) {
+    private suspend fun resume(id: String) {
         val directory = store.directory(id)
         val started = id.substringBefore('-').toLong()
         val remaining = MAX_DURATION - (System.currentTimeMillis() - started).coerceAtLeast(0)
@@ -99,7 +99,7 @@ object DebugRecorder {
         File(directory, "device.txt").writeText(deviceDetails())
         if (Build.VERSION.SDK_INT >= 30) {
             runCatching {
-                val exits = context.getSystemService(ActivityManager::class.java).getHistoricalProcessExitReasons(null, 0, 5)
+                val exits = appContext.getSystemService(ActivityManager::class.java).getHistoricalProcessExitReasons(null, 0, 5)
                 File(directory, "process-exits.txt").writeText(exits.joinToString("\n") {
                     "time=${it.timestamp} reason=${it.reason} status=${it.status} importance=${it.importance} description=${it.description}"
                 })
@@ -111,7 +111,7 @@ object DebugRecorder {
         try {
             process = child
             mutableState.value = State(true, started)
-            showNotification(context)
+            showNotification()
             reader = scope.launch {
                 try {
                     child.inputStream.use { DebugLogStore.appendRotating(it, File(directory, "manager.log")) }
@@ -121,9 +121,9 @@ object DebugRecorder {
                     child.destroy()
                 }
                 // End of stream completes the session without leaving a stale recording state.
-                scope.launch { stop(context, child) }
+                scope.launch { stop(child) }
             }
-            timer = scope.launch { delay(remaining); scope.launch { stop(context, child) } }
+            timer = scope.launch { delay(remaining); scope.launch { stop(child) } }
             ServerDiagnostics.captureMetadata(directory, "start")
             attachServerStream(directory, remaining)
         } catch (e: Exception) {
@@ -136,7 +136,7 @@ object DebugRecorder {
             detachServerStream()
             store.finish()
             mutableState.value = State()
-            context.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
+            appContext.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
             throw e
         }
     }
@@ -221,11 +221,10 @@ object DebugRecorder {
         serverReader = null
     }
 
-    suspend fun stop(context: Context) = stop(context, null)
-    private suspend fun stop(context: Context, expected: java.lang.Process?) = withContext(Dispatchers.IO + NonCancellable) {
+    suspend fun stop() = stop(null)
+    private suspend fun stop(expected: java.lang.Process?) = withContext(Dispatchers.IO + NonCancellable) {
         mutex.withLock {
             if (expected != null && process !== expected) return@withLock
-            val store = store(context)
             val id = store.activeId() ?: return@withLock
             val child = process
             process = null
@@ -239,55 +238,66 @@ object DebugRecorder {
             val directory = store.directory(id)
             store.finish()
             mutableState.value = State()
-            context.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
+            appContext.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
             ServerDiagnostics.captureMetadata(directory, "stop")
             store.prune()
         }
     }
 
-    internal suspend fun sessions(context: Context) = withContext(Dispatchers.IO) {
-        mutex.withLock { store(context).sessions() }
+    internal suspend fun sessions() = withContext(Dispatchers.IO) {
+        mutex.withLock { store.sessions() }
     }
-    internal suspend fun delete(context: Context, id: String) = withContext(Dispatchers.IO) {
+    internal suspend fun delete(id: String) = withContext(Dispatchers.IO) {
         mutex.withLock {
-            store(context).delete(id)
-            File(context.cacheDir, "debug-exports/porter-$id.zip").delete()
+            store.delete(id)
+            File(appContext.cacheDir, "debug-exports/porter-$id.zip").delete()
         }
     }
-    internal suspend fun export(context: Context, id: String) = withContext(Dispatchers.IO) {
-        mutex.withLock { store(context).export(id, File(context.cacheDir, "debug-exports")) }
+    internal suspend fun export(id: String) = withContext(Dispatchers.IO) {
+        mutex.withLock { store.export(id, File(appContext.cacheDir, "debug-exports")) }
     }
     private fun report(e: Exception) {
         Log.e("PorterRecorder", "Recording failed", e)
         mutableState.value = State(error = e.localizedMessage ?: e.javaClass.simpleName)
     }
-    fun deviceDetails() = """
-        Porter ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})
-        Installed build: ${PorterServiceVersion.installed.buildId}
-        Device: ${Build.MANUFACTURER} ${Build.MODEL}
-        Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
-        Build: ${Build.DISPLAY}
-        ABIs: ${Build.SUPPORTED_ABIS.joinToString()}
-    """.trimIndent()
 
-    private fun showNotification(context: Context) {
-        val manager = context.getSystemService(NotificationManager::class.java)
+    private fun showNotification() {
+        val manager = appContext.getSystemService(NotificationManager::class.java)
         if (Build.VERSION.SDK_INT >= 26) manager.createNotificationChannel(NotificationChannel(
-            CHANNEL, context.getString(R.string.porter_debug_title), NotificationManager.IMPORTANCE_LOW,
+            CHANNEL, appContext.getString(R.string.porter_debug_title), NotificationManager.IMPORTANCE_LOW,
         ))
-        val pending = PendingIntent.getActivity(context, NOTIFICATION_ID,
-            Intent(context, SupportActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        val stop = PendingIntent.getBroadcast(context, NOTIFICATION_ID,
-            Intent(context, StopRecordingReceiver::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val pending = PendingIntent.getActivity(appContext, NOTIFICATION_ID,
+            Intent(appContext, SupportActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val stop = PendingIntent.getBroadcast(appContext, NOTIFICATION_ID,
+            Intent(appContext, StopRecordingReceiver::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         runCatching {
-            manager.notify(NOTIFICATION_ID, NotificationCompat.Builder(context, CHANNEL)
-                .setSmallIcon(R.drawable.ic_outline_info_24).setContentTitle(context.getString(R.string.porter_debug_recording))
-                .setContentText(context.getString(R.string.porter_debug_notification)).setContentIntent(pending)
-                .setOngoing(true).addAction(0, context.getString(R.string.porter_debug_stop), stop).build())
+            manager.notify(NOTIFICATION_ID, NotificationCompat.Builder(appContext, CHANNEL)
+                .setSmallIcon(R.drawable.ic_outline_info_24).setContentTitle(appContext.getString(R.string.porter_debug_recording))
+                .setContentText(appContext.getString(R.string.porter_debug_notification)).setContentIntent(pending)
+                .setOngoing(true).addAction(0, appContext.getString(R.string.porter_debug_stop), stop).build())
         }
     }
-    private const val MAX_DURATION = 30 * 60 * 1000L
-    private const val SERVER_MAX_LOG_BYTES = 8L * 1024 * 1024
-    private const val CHANNEL = "debug_recording"
-    private const val NOTIFICATION_ID = 920
+
+    companion object {
+        private const val MAX_DURATION = 30 * 60 * 1000L
+        private const val SERVER_MAX_LOG_BYTES = 8L * 1024 * 1024
+        private const val CHANNEL = "debug_recording"
+        private const val NOTIFICATION_ID = 920
+
+        fun deviceDetails() = """
+            Porter ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})
+            Installed build: ${PorterServiceVersion.installed.buildId}
+            Device: ${Build.MANUFACTURER} ${Build.MODEL}
+            Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
+            Build: ${Build.DISPLAY}
+            ABIs: ${Build.SUPPORTED_ABIS.joinToString()}
+        """.trimIndent()
+
+        @Volatile private var instance: DebugRecorder? = null
+        fun get(context: Context): DebugRecorder = instance ?: synchronized(this) {
+            instance ?: DebugRecorder(context.applicationContext).also { instance = it }
+        }
+
+        internal fun resetForTest() { instance = null }
+    }
 }

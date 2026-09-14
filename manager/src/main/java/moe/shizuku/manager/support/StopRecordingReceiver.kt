@@ -9,7 +9,7 @@ class StopRecordingReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val result = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
-            try { DebugRecorder.stop(context.applicationContext) }
+            try { DebugRecorder.get(context.applicationContext).stop() }
             finally { result.finish() }
         }
     }
