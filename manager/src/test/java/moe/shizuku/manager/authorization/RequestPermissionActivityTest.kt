@@ -97,7 +97,7 @@ class RequestPermissionActivityTest {
     }
 
     @Test fun profileLineStaysAwayWhileTheServiceCannotNameTheUser() {
-        ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPED)
+        ShizukuStateMachine.instance.set(ShizukuStateMachine.State.STOPPED)
         val otherUserId = UserHandleCompat.myUserId() + 1
         launch(uid = otherUserId * UserHandleCompat.PER_USER_RANGE + 10123)
         awaitText(allow)

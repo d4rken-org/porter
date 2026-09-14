@@ -58,7 +58,7 @@ abstract class HomeActivity : ComposeActivity() {
         if (intent.getBooleanExtra(EXTRA_START_SERVICE_VIA_WADB, false)) {
             intent.removeExtra(EXTRA_START_SERVICE_VIA_WADB)
             getSystemService(NotificationManager::class.java).cancel(AdbPairingService.NOTIFICATION_ID)
-            if (UserHandleCompat.myUserId() == 0 && !ServiceReplacement.state.value.running && !ShizukuStateMachine.isRunning()) {
+            if (UserHandleCompat.myUserId() == 0 && !ServiceReplacement.state.value.running && !ShizukuStateMachine.instance.isRunning()) {
                 WirelessStart.start(this, lifecycleScope)
             }
         }
@@ -69,7 +69,7 @@ abstract class HomeActivity : ComposeActivity() {
         homeModel.reload()
         service.refresh()
         homeModel.checkBatteryOptimization()
-        if (ShizukuStateMachine.isRunning()) appsModel.load()
+        if (ShizukuStateMachine.instance.isRunning()) appsModel.load()
         compatibility.refresh()
     }
 

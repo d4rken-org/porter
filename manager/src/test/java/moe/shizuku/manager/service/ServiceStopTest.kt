@@ -28,17 +28,17 @@ class ServiceStopTest {
 
     @Before fun attachBinder() {
         Shizuku.onBinderReceived(RefusingBinder(), "moe.shizuku.manager")
-        ShizukuStateMachine.set(State.RUNNING)
+        ShizukuStateMachine.instance.set(State.RUNNING)
     }
 
     @After fun detachBinder() {
         Shizuku.onBinderReceived(null, "moe.shizuku.manager")
-        ShizukuStateMachine.set(State.STOPPED)
+        ShizukuStateMachine.instance.set(State.STOPPED)
     }
 
     @Test fun aFailedExitReconcilesTheStateInsteadOfStayingStopping() {
         ServiceStatusRepository.stop()
-        assertNotEquals(State.STOPPING, ShizukuStateMachine.get())
-        assertEquals(State.RUNNING, ShizukuStateMachine.get())
+        assertNotEquals(State.STOPPING, ShizukuStateMachine.instance.get())
+        assertEquals(State.RUNNING, ShizukuStateMachine.instance.get())
     }
 }

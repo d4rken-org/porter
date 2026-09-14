@@ -16,7 +16,7 @@ object AdbStarter {
             command(cmd) { log?.invoke(String(it)) }
         }
 
-        ShizukuStateMachine.set(ShizukuStateMachine.State.STARTING)
+        ShizukuStateMachine.instance.set(ShizukuStateMachine.State.STARTING)
         log?.invoke("Starting with wireless adb...\n")
 
         withContext(Dispatchers.IO) {

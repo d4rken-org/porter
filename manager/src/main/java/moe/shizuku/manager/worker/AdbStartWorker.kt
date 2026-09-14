@@ -150,7 +150,7 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
             )
             if (ignored.none { it.isInstance(e) }) showErrorNotification(applicationContext, e)
 
-            if (ShizukuStateMachine.update() == ShizukuStateMachine.State.RUNNING) {
+            if (ShizukuStateMachine.instance.update() == ShizukuStateMachine.State.RUNNING) {
                 return Result.success()
             } else {
                 updateNotification(

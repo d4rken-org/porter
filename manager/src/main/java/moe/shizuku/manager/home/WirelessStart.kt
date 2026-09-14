@@ -24,7 +24,7 @@ import rikka.core.content.asActivity
 
 object WirelessStart {
         fun start (context: Context, scope: CoroutineScope) {
-            if (ShizukuStateMachine.get() == ShizukuStateMachine.State.STARTING) {
+            if (ShizukuStateMachine.instance.get() == ShizukuStateMachine.State.STARTING) {
                 Toast.makeText(context, context.getString(R.string.toast_shizuku_already_starting), Toast.LENGTH_SHORT).show()
                 return
             }

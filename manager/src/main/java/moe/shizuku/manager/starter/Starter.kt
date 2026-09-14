@@ -25,7 +25,7 @@ object Starter {
         try {
             log?.invoke("\nWaiting for service. This may take up to 1 minute...")
             withTimeout(60_000) {
-                ShizukuStateMachine.asFlow()
+                ShizukuStateMachine.instance.asFlow()
                     .first { it == ShizukuStateMachine.State.RUNNING }
             }
             log?.invoke(serviceStartedMessage)

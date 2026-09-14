@@ -136,7 +136,7 @@ class SettingsActivity : ComposeActivity() {
                         supportingText = { if (!valid) Text(stringResource(R.string.snackbar_invalid_port)) })
                 }, confirmButton = { TextButton(enabled = valid, onClick = {
                     val newPort = tcpText.toIntOrNull() ?: 5555
-                    if (ShizukuStateMachine.isRunning() && EnvironmentUtils.getAdbTcpPort().let { it > 0 && it != newPort }) model.show("restart")
+                    if (ShizukuStateMachine.instance.isRunning() && EnvironmentUtils.getAdbTcpPort().let { it > 0 && it != newPort }) model.show("restart")
                     else { ShizukuSettings.setTcpPort(tcpText.toIntOrNull()); sendBroadcast(Intent(this@SettingsActivity, NotifCancelReceiver::class.java)); dismiss() }
                 }) { Text(stringResource(android.R.string.ok)) } }, dismissButton = { TextButton(onClick = dismiss) { Text(stringResource(android.R.string.cancel)) } })
             }

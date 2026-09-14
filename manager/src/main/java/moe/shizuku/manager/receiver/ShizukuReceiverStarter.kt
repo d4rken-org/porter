@@ -39,7 +39,7 @@ object ShizukuReceiverStarter {
     }
 
     fun start(context: Context, forceStart: Boolean = false) {
-        if ((UserHandleCompat.myUserId() > 0 || ShizukuStateMachine.isRunning()) && !forceStart) return
+        if ((UserHandleCompat.myUserId() > 0 || ShizukuStateMachine.instance.isRunning()) && !forceStart) return
 
         if (ShizukuSettings.getLastLaunchMode() == LaunchMethod.ROOT) {
             rootStart(context)
@@ -121,11 +121,11 @@ object ShizukuReceiverStarter {
         }
 
         try {
-            ShizukuStateMachine.set(ShizukuStateMachine.State.STARTING)
+            ShizukuStateMachine.instance.set(ShizukuStateMachine.State.STARTING)
             Shell.cmd(Starter.internalCommand).exec()
         } catch (e: Exception) {
             Log.e(AppConstants.TAG, "Failed to start Shizuku with root", e)
-            ShizukuStateMachine.update()
+            ShizukuStateMachine.instance.update()
         }
     }
 

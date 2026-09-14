@@ -93,16 +93,16 @@ internal object ServiceReplacement {
                     val starter = File(app.applicationInfo.nativeLibraryDir, "libshizuku.so")
                     check(apk.canRead() && starter.canExecute()) { "The installed Porter starter is unavailable" }
                     ServiceReplacer(PorterServiceVersion.installed, Shizuku::getBinder,
-                        isReady = ShizukuStateMachine::isRunning, launch = { binder, pid ->
+                        isReady = ShizukuStateMachine.instance::isRunning, launch = { binder, pid ->
                             val process = IShizukuService.Stub.asInterface(binder).newProcess(
                                 arrayOf(starter.absolutePath, "--apk=${apk.absolutePath}", "--replace=$pid"), null, null)
                             awaitReplacementStarter(process)
                         }).replace(onLaunched) {
                             beforeLaunch()
-                            ShizukuStateMachine.set(ShizukuStateMachine.State.STARTING)
+                            ShizukuStateMachine.instance.set(ShizukuStateMachine.State.STARTING)
                         }
                 }
-            }, onFinished = { ShizukuStateMachine.update() })
+            }, onFinished = { ShizukuStateMachine.instance.update() })
     }
     val state get() = controller.state
 

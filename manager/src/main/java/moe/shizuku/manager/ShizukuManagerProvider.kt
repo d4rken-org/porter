@@ -42,7 +42,7 @@ class ShizukuManagerProvider : ShizukuProvider() {
                 return runBlocking {
                     try {
                         withTimeout(5000) {
-                            ShizukuStateMachine.asFlow().first { it == ShizukuStateMachine.State.RUNNING }
+                            ShizukuStateMachine.instance.asFlow().first { it == ShizukuStateMachine.State.RUNNING }
                             withContext(workerHandler.asCoroutineDispatcher()) {
                                 try {
                                     val reply = Bundle()

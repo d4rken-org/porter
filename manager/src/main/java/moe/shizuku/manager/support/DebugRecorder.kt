@@ -148,7 +148,7 @@ object DebugRecorder {
     private fun attachServerStream(directory: File, remaining: Long) {
         val events = File(directory, "events.txt")
         serverWatcher = scope.launch {
-            ShizukuStateMachine.asFlow().collect {
+            ShizukuStateMachine.instance.asFlow().collect {
                 runCatching { events.appendText("Service $it at ${System.currentTimeMillis()}\n") }
             }
         }
