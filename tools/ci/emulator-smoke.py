@@ -2,9 +2,11 @@
 """Exercise real Binder grants on a fresh, disposable emulator using only ADB."""
 import argparse
 import json
+import os
 from pathlib import Path
 import re
 import shlex
+import shutil
 import subprocess
 import time
 import traceback
@@ -30,7 +32,34 @@ TRANSPORT_FAILURE = re.compile(r"^(adb: |error: ).*(device offline|device still 
 TRANSPORT_ATTEMPTS = 3
 TRANSPORT_BACKOFF = 2
 # The order run() declares, which --case narrows without ever reordering.
-CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence", "porsh")
+CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence", "porsh",
+         "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
+         "foreign-signer-binds", "foreign-signer-never-binds", "non-daemon-control",
+         "manager-stopped-then-uninstalled", "manager-upgraded-then-uninstalled")
+# The host lane backs off to 300s between scans, so a change it has to notice can take that long
+# plus the confirmation grace. The manager lane never backs off.
+HOST_SCAN_TIMEOUT = 360
+MANAGER_SCAN_TIMEOUT = 60
+# Enough to cover the first two host deadlines after a record was created, which is what a scenario
+# asserting "nothing was removed" has to outlive to mean anything.
+HOST_SETTLE = 45
+MANAGER_SETTLE = 20
+FOREIGN_PASSWORD = "porterci"
+USER_ID = re.compile(r"UserInfo\{(\d+):")
+
+
+def apksigner():
+    """The newest apksigner in the local SDK; the signer scenario cannot run without it."""
+    for variable in ("ANDROID_HOME", "ANDROID_SDK_ROOT"):
+        root = os.environ.get(variable)
+        if not root:
+            continue
+        found = sorted(Path(root, "build-tools").glob("*/apksigner"))
+        if found:
+            return found[-1]
+    located = shutil.which("apksigner")
+    assert located, "apksigner not found; set ANDROID_HOME to an SDK with build-tools"
+    return Path(located)
 
 
 class Smoke:
@@ -40,6 +69,7 @@ class Smoke:
         self.output.mkdir(parents=True, exist_ok=True)
         self.results = []
         self.probe_pid = None
+        self.foreign_apk = None
 
     def adb(self, *args, check=True, binary=False):
         command = ["adb", "-s", self.args.serial, *map(str, args)]
@@ -140,12 +170,69 @@ class Smoke:
         self.shell(str(Path(apk).parent / "lib" / library_dir / "libshizuku.so"))
         self.until(f"new {name} process", lambda: (pid := self.pid(name)) and pid != previous)
 
-    def launch_probe(self, package):
+    def launch_probe(self, package, daemon=False, peek=False):
         for probe in (NATIVE, LEGACY):
             self.shell("am", "force-stop", probe)
-        self.shell("am", "start", "-W", "-n", package + "/eu.darken.porter.probe.ProbeActivity")
+        command = ["am", "start", "-W", "-n", package + "/eu.darken.porter.probe.ProbeActivity"]
+        for name, value in (("daemon", daemon), ("peek", peek)):
+            if value:
+                command += ["--ez", name, "true"]
+        self.shell(*command)
         self.probe_pid = self.until("probe process", lambda: self.pid(package))
+        # Asserted rather than assumed: a scenario that needs a daemon must not silently get one.
+        self.expect_log(package, f"MODE daemon={str(daemon).lower()} peek={str(peek).lower()}")
         self.expect_log(package, "BINDER uid=2000 version=13")
+
+    def service_pids(self, package):
+        return set(self.pid(package + ":porter-probe").split())
+
+    def installed(self, package):
+        return "package:" + package in self.shell("pm", "list", "packages", package).splitlines()
+
+    def extra_users(self):
+        return [user for user in USER_ID.findall(self.shell("pm", "list", "users")) if user != "0"]
+
+    def foreign_probe(self):
+        """The native probe re-signed with a throwaway key, keeping its package name."""
+        if self.foreign_apk:
+            return self.foreign_apk
+        work = self.output / "foreign"
+        work.mkdir(parents=True, exist_ok=True)
+        keystore = work / "foreign.jks"
+        if not keystore.exists():
+            subprocess.run(["keytool", "-genkeypair", "-keystore", str(keystore),
+                            "-storepass", FOREIGN_PASSWORD, "-keypass", FOREIGN_PASSWORD,
+                            "-alias", "foreign", "-keyalg", "RSA", "-keysize", "2048",
+                            "-validity", "3650", "-dname", "CN=Porter CI Foreign"],
+                           check=True, capture_output=True)
+        apk = work / "probe-foreign.apk"
+        shutil.copyfile(self.args.native.resolve(), apk)
+        subprocess.run([str(apksigner()), "sign", "--ks", str(keystore),
+                        "--ks-pass", "pass:" + FOREIGN_PASSWORD, "--key-pass", "pass:" + FOREIGN_PASSWORD,
+                        "--ks-key-alias", "foreign", str(apk)], check=True, capture_output=True)
+        self.foreign_apk = apk
+        return apk
+
+    def restore(self, *aspects):
+        """Puts back what a destructive scenario declared it would break."""
+        if "users" in aspects:
+            for user in self.extra_users():
+                self.shell("pm", "remove-user", user, check=False)
+        if "manager" in aspects and not self.installed(MANAGER):
+            self.adb("install", str(self.args.manager.resolve()))
+        if "probes" in aspects:
+            # Always uninstall first: a scenario may have left a differently signed APK under the
+            # package name, which `install -r` refuses and `installed()` cannot tell apart.
+            for package, apk in ((NATIVE, self.args.native), (LEGACY, self.args.legacy)):
+                self.adb("uninstall", package, check=False)
+                self.adb("install", str(apk.resolve()))
+        if "grants" in aspects:
+            for package, permission in ((NATIVE, PERMISSION), (LEGACY, LEGACY_PERMISSION)):
+                self.shell("pm", "revoke", package, permission, check=False)
+                self.shell("am", "force-stop", package)
+        if "service" in aspects and not self.pid("porter_server"):
+            self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
+            self.start_service()
 
     def authorized(self, package, require_manager_guard=True):
         # The original Shizuku baseline does not enforce Porter's manager-only gate.
@@ -181,10 +268,12 @@ class Smoke:
         self.tap("Stop Porter", occurrence=1, screenshot="running-service-dialog")
         self.until("Porter stopped", lambda: not self.pid("porter_server"))
 
-    def case(self, name, action):
+    def case(self, name, action, restore=()):
+        """run() calls setup() once, so a destructive scenario must undo itself for the next one."""
         cases = getattr(self.args, "cases", None)
         if cases and name not in cases:
             # Left out of self.results entirely: a case the run never reached has no verdict.
+            # It restores nothing either, having broken nothing.
             print(f"SKIP {name}", flush=True)
             return
         started = time.monotonic()
@@ -201,6 +290,12 @@ class Smoke:
             result["seconds"] = time.monotonic() - started
             self.results.append(result)
             (self.output / f"{name}-logcat.txt").write_text(self.adb("logcat", "-d", "-v", "threadtime", check=False))
+            if restore:
+                try:
+                    self.restore(*restore)
+                except Exception:
+                    # Never masks the scenario's own failure, but the next one starts compromised.
+                    result["restore_failure"] = traceback.format_exc()
 
     def setup(self):
         assert self.args.serial.startswith("emulator-"), "A disposable emulator serial is required"
@@ -309,7 +404,6 @@ class Smoke:
             self.authorized(LEGACY, require_manager_guard=False)
             return {"porter_pid": porter_pid, "shizuku_pid": self.pid("shizuku_server")}
         self.case("coexistence", coexistence)
-
         def porsh():
             with zipfile.ZipFile(self.args.manager.resolve()) as archive:
                 for name in ("porsh", "porsh.dex"):
@@ -379,6 +473,127 @@ class Smoke:
             return {"exit_status": status("exit"), "bulk_bytes": len(bulk),
                     "stalled_status": status("stalled")}
         self.case("porsh", porsh)
+
+        self.reconciliation()
+
+    def authorized_daemon(self):
+        """A granted probe holding a daemon user service, and that daemon's pid."""
+        self.launch_probe(NATIVE, daemon=True)
+        self.tap("Allow all the time")
+        self.authorized(NATIVE)
+        return self.until("privileged user service", lambda: self.pid(NATIVE + ":porter-probe"))
+
+    def reconciliation(self):
+        def daemon_host_uninstalled():
+            service_pid = self.authorized_daemon()
+            self.shell("am", "force-stop", NATIVE)
+            # The daemon runs as shell, outside the app's process group, so force-stop leaves it
+            # alone. That is what makes host-process death useless as the removal signal.
+            time.sleep(2)
+            assert self.pid(NATIVE + ":porter-probe") == service_pid, "the daemon did not outlive its host"
+            self.adb("uninstall", NATIVE)
+            self.until("daemon removed after host uninstall",
+                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=HOST_SCAN_TIMEOUT)
+            return {"service_pid": service_pid}
+        self.case("daemon-host-uninstalled", daemon_host_uninstalled, restore=("probes", "grants"))
+
+        def daemon_host_upgraded():
+            service_pid = self.authorized_daemon()
+            self.adb("install", "-r", str(self.args.native.resolve()))
+            time.sleep(HOST_SETTLE)
+            assert self.pid(NATIVE + ":porter-probe") == service_pid, "an upgrade removed a live daemon"
+            self.adb("uninstall", NATIVE)
+            self.until("daemon removed after the upgrade",
+                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=HOST_SCAN_TIMEOUT)
+            return {"service_pid": service_pid}
+        self.case("daemon-host-upgraded", daemon_host_upgraded, restore=("probes", "grants"))
+
+        def host_removed_from_one_user():
+            service_pid = self.authorized_daemon()
+            created = self.shell("pm", "create-user", "porter-ci")
+            user = re.search(r"id (\d+)", created).group(1)
+            self.shell("pm", "install-existing", "--user", user, NATIVE)
+            self.shell("pm", "uninstall", "--user", "0", NATIVE)
+            # Cross-user sharing is a documented contract: any user holding a matching installation
+            # keeps the record alive.
+            time.sleep(HOST_SETTLE)
+            assert self.pid(NATIVE + ":porter-probe") == service_pid, "a record shared across users was removed"
+            self.shell("pm", "uninstall", "--user", user, NATIVE)
+            self.until("daemon removed once no user holds it",
+                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=HOST_SCAN_TIMEOUT)
+            return {"service_pid": service_pid, "user": user}
+        self.case("host-removed-from-one-user", host_removed_from_one_user,
+                  restore=("users", "probes", "grants"))
+
+        def foreign_signer_binds():
+            original = self.authorized_daemon()
+            self.adb("uninstall", NATIVE)
+            self.adb("install", str(self.foreign_probe()))
+            # The bind-time check, not a scan: a replacement is refused the moment it first asks,
+            # and peek is the noCreate path, which hands back an existing binder without creating.
+            self.launch_probe(NATIVE, peek=True)
+            self.tap("Allow all the time")
+            self.expect_log(NATIVE, "PEEK version=-1")
+            assert original not in self.service_pids(NATIVE), "the noCreate path kept the old daemon"
+            before = self.service_pids(NATIVE)
+            self.launch_probe(NATIVE, daemon=True)
+            self.authorized(NATIVE)
+            after = self.service_pids(NATIVE)
+            assert after - before, "the replacement was handed the original signer's daemon"
+            return {"original": original, "after": sorted(after)}
+        self.case("foreign-signer-binds", foreign_signer_binds, restore=("probes", "grants"))
+
+        def foreign_signer_never_binds():
+            service_pid = self.authorized_daemon()
+            self.adb("uninstall", NATIVE)
+            self.adb("install", str(self.foreign_probe()))
+            self.until("record removed for a replaced package",
+                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=HOST_SCAN_TIMEOUT)
+            return {"service_pid": service_pid}
+        self.case("foreign-signer-never-binds", foreign_signer_never_binds, restore=("probes", "grants"))
+
+        def non_daemon_control():
+            self.launch_probe(NATIVE)
+            self.tap("Allow all the time")
+            self.authorized(NATIVE)
+            service_pid = self.until("privileged user service", lambda: self.pid(NATIVE + ":porter-probe"))
+            self.shell("am", "force-stop", NATIVE)
+            # Unchanged behaviour: a non-daemon record is removed by connection death alone.
+            self.until("non-daemon service ends with its connection",
+                       lambda: not self.pid(NATIVE + ":porter-probe"))
+            return {"service_pid": service_pid}
+        self.case("non-daemon-control", non_daemon_control, restore=("grants",))
+
+        def manager_stopped_then_uninstalled():
+            server_pid = self.pid("porter_server")
+            service_pid = self.authorized_daemon()
+            self.shell("am", "force-stop", MANAGER)
+            time.sleep(2)
+            assert self.pid("porter_server") == server_pid, "stopping the manager app stopped the server"
+            self.adb("uninstall", MANAGER)
+            self.until("server exits once the manager is gone",
+                       lambda: not self.pid("porter_server"), timeout=MANAGER_SCAN_TIMEOUT)
+            self.until("user service follows the server",
+                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=MANAGER_SCAN_TIMEOUT)
+            return {"server_pid": server_pid, "service_pid": service_pid}
+        self.case("manager-stopped-then-uninstalled", manager_stopped_then_uninstalled,
+                  restore=("manager", "probes", "grants", "service"))
+
+        def manager_upgraded_then_uninstalled():
+            server_pid = self.pid("porter_server")
+            self.adb("install", "-r", str(self.args.manager.resolve()))
+            time.sleep(MANAGER_SETTLE)
+            assert self.pid("porter_server") == server_pid, "an ordinary manager upgrade killed the server"
+            service_pid = self.authorized_daemon()
+            self.adb("uninstall", MANAGER)
+            self.until("server exits once the manager is gone",
+                       lambda: not self.pid("porter_server"), timeout=MANAGER_SCAN_TIMEOUT)
+            self.until("user service follows the server",
+                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=MANAGER_SCAN_TIMEOUT)
+            return {"server_pid": server_pid, "service_pid": service_pid}
+        self.case("manager-upgraded-then-uninstalled", manager_upgraded_then_uninstalled,
+                  restore=("manager", "probes", "grants", "service"))
+
 
     def reports(self):
         (self.output / "results.json").write_text(json.dumps(self.results, indent=2))
