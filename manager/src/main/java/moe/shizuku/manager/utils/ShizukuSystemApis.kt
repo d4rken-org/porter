@@ -55,7 +55,8 @@ class ShizukuSystemApis internal constructor(
                 users.clear()
                 users.addAll(loadUsers())
             }
-            return users
+            // A copy: the cache is refilled under this lock, which a caller reading the result does not hold.
+            return users.toList()
         }
     }
 
