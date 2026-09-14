@@ -46,7 +46,7 @@ public class Shell extends Porsh {
         Shizuku.addBinderReceivedListenerSticky(() -> {
             int version = Shizuku.getVersion();
             if (version < 12) {
-                System.err.println("Rish requires server 12 (running " + version + ")");
+                System.err.println("porsh requires server 12 (running " + version + ")");
                 System.err.flush();
                 System.exit(1);
             }

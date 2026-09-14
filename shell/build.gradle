@@ -49,7 +49,7 @@ android.applicationVariants.all { variant ->
 }
 
 androidComponents.onVariants(androidComponents.selector().all()) { variant ->
-    configurations.create("rishDex${variant.name.capitalize()}") {
+    configurations.create("porshDex${variant.name.capitalize()}") {
         canBeConsumed = true
         canBeResolved = false
         outgoing.artifact(variant.artifacts.get(com.android.build.api.artifact.SingleArtifact.APK.INSTANCE))

@@ -16,7 +16,7 @@ abstract class EmbedCompatibilityApk extends DefaultTask {
     }
 }
 
-abstract class ExtractRishDex extends DefaultTask {
+abstract class ExtractPorshDex extends DefaultTask {
     @InputFiles @PathSensitive(PathSensitivity.RELATIVE)
     abstract ConfigurableFileCollection getApkDirectories()
     @OutputDirectory
@@ -27,7 +27,7 @@ abstract class ExtractRishDex extends DefaultTask {
         def apks = apkDirectories.asFileTree.matching { include "**/*.apk" }.files
         if (apks.size() != 1) throw new GradleException("Expected one shell APK, found ${apks.size()}")
         def apk = apks.first()
-        def target = outputDirectory.file("rish_shizuku.dex").get().asFile
+        def target = outputDirectory.file("porsh.dex").get().asFile
         target.parentFile.mkdirs()
         new java.util.zip.ZipFile(apk).withCloseable { archive ->
             def dexes = java.util.Collections.list(archive.entries()).findAll { it.name ==~ /classes\d*\.dex/ }
@@ -124,16 +124,16 @@ android {
 androidComponents.onVariants(androidComponents.selector().all()) { variant ->
     // Refine must leave Robolectric's signed JVM crypto provider byte-for-byte intact.
     variant.unitTest?.instrumentation?.excludes?.addAll(["org/conscrypt/**", "org/bouncycastle/**"])
-    def rishDex = configurations.create("${variant.name}RishDex") {
+    def porshDex = configurations.create("${variant.name}PorshDex") {
         canBeConsumed = false
         canBeResolved = true
     }
-    dependencies.add(rishDex.name, dependencies.project(path: ":shell", configuration: "rishDex${variant.buildType.capitalize()}"))
-    def rishTask = tasks.register("extract${variant.name.capitalize()}RishDex", ExtractRishDex) {
-        apkDirectories.from(rishDex)
-        outputDirectory.set(layout.buildDirectory.dir("generated/rishAssets/${variant.name}"))
+    dependencies.add(porshDex.name, dependencies.project(path: ":shell", configuration: "porshDex${variant.buildType.capitalize()}"))
+    def porshTask = tasks.register("extract${variant.name.capitalize()}PorshDex", ExtractPorshDex) {
+        apkDirectories.from(porshDex)
+        outputDirectory.set(layout.buildDirectory.dir("generated/porshAssets/${variant.name}"))
     }
-    variant.sources.assets.addGeneratedSourceDirectory(rishTask) { it.outputDirectory }
+    variant.sources.assets.addGeneratedSourceDirectory(porshTask) { it.outputDirectory }
     if (variant.productFlavors.any { it.second == "foss" }) {
         def embedded = configurations.create("${variant.name}CompatibilityApk") {
             canBeConsumed = false
@@ -157,7 +157,7 @@ autoResConfig {
 
 android.applicationVariants.configureEach { variant ->
     // Retained to trigger the shell's R8 mapping export, which runs in assemble's doLast. Task
-    // ordering for the dex itself comes from the rishDex configuration dependency.
+    // ordering for the dex itself comes from the porshDex configuration dependency.
     variant.preBuildProvider.configure {
         dependsOn(":shell:assemble${variant.buildType.name.capitalize()}")
     }
