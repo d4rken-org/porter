@@ -1,3 +1,4 @@
+import com.android.build.api.artifact.SingleArtifact
 import com.android.build.gradle.internal.tasks.CompileArtProfileTask
 
 abstract class EmbedCompatibilityApk extends DefaultTask {
@@ -35,6 +36,19 @@ abstract class ExtractPorshDex extends DefaultTask {
             archive.getInputStream(dexes.first()).withCloseable { input ->
                 java.nio.file.Files.copy(input, target.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
             }
+        }
+    }
+}
+
+abstract class VerifyLocaleConfig extends DefaultTask {
+    @InputFile @PathSensitive(PathSensitivity.RELATIVE)
+    abstract RegularFileProperty getMergedManifest()
+
+    @TaskAction
+    void verify() {
+        def text = mergedManifest.get().asFile.text
+        if (!text.contains("android:localeConfig=")) {
+            throw new GradleException("Merged manifest is missing android:localeConfig; Porter will not appear in the system per-app language picker")
         }
     }
 }
@@ -144,6 +158,12 @@ androidComponents.onVariants(androidComponents.selector().all()) { variant ->
         outputDirectory.set(layout.buildDirectory.dir("generated/porshAssets/${variant.name}"))
     }
     variant.sources.assets.addGeneratedSourceDirectory(porshTask) { it.outputDirectory }
+    def localeConfigTask = tasks.register("verify${variant.name.capitalize()}LocaleConfig", VerifyLocaleConfig) {
+        mergedManifest.set(variant.artifacts.get(SingleArtifact.MERGED_MANIFEST.INSTANCE))
+    }
+    tasks.matching { it.name == "assemble${variant.name.capitalize()}" }.configureEach {
+        dependsOn(localeConfigTask)
+    }
     if (variant.productFlavors.any { it.second == "foss" }) {
         def embedded = configurations.create("${variant.name}CompatibilityApk") {
             canBeConsumed = false
