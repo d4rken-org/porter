@@ -1,10 +1,14 @@
 package moe.shizuku.manager.utils
 
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import moe.shizuku.manager.utils.ShizukuStateMachine.State
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -15,92 +19,88 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * The state handed over at registration is delivered by the registering thread instead of by the
- * drainer, so it is neither ordered against queued transitions nor covered by the drainer's
- * per-listener try/catch.
+ * The state a subscriber is handed when it attaches is delivered by the same stream as every
+ * transition, so a transition raised on another thread while that first delivery is still running
+ * cannot overtake it.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class ShizukuStateMachineRegistrationDeliveryTest {
 
-    /** States the listener finished handling, in completion order. */
+    private val machine = ShizukuStateMachine()
+
+    /** States the subscriber finished handling, in completion order. */
     private val applied = Collections.synchronizedList(mutableListOf<State>())
 
-    private val registrationStarted = CountDownLatch(1)
-    private val finishRegistration = CountDownLatch(1)
-    private val transitionDelivered = CountDownLatch(1)
-    private val isFirstDelivery = AtomicBoolean(true)
+    @Test fun aListenerIsNeverGivenAStateOlderThanOneItHasAlreadyBeenGiven() {
+        val firstDeliveryStarted = CountDownLatch(1)
+        val finishFirstDelivery = CountDownLatch(1)
+        val transitionDelivered = CountDownLatch(1)
+        val isFirstDelivery = AtomicBoolean(true)
+        val scope = CoroutineScope(Dispatchers.IO)
+        // Parks inside its first delivery, standing in for any subscriber whose body does not
+        // return instantly (posting to a handler, touching a view, a blocking round trip).
+        scope.launch {
+            machine.asFlow().collect { delivered ->
+                if (isFirstDelivery.compareAndSet(true, false)) {
+                    firstDeliveryStarted.countDown()
+                    finishFirstDelivery.await(10, TimeUnit.SECONDS)
+                    applied += delivered
+                } else {
+                    applied += delivered
+                    transitionDelivered.countDown()
+                }
+            }
+        }
+        try {
+            // The subscriber is attached and is being handed STOPPED, but that delivery has not
+            // completed yet: exactly the window a transition on another thread falls into.
+            assertTrue(
+                "the state it attached on was never delivered",
+                firstDeliveryStarted.await(5, TimeUnit.SECONDS),
+            )
 
-    /**
-     * Parks inside its registration delivery, standing in for any listener whose body does not
-     * return instantly (posting to a handler, touching a view, `trySend` on a full channel).
-     */
-    private val probe: (State) -> Unit = { delivered ->
-        if (isFirstDelivery.compareAndSet(true, false)) {
-            registrationStarted.countDown()
-            finishRegistration.await(5, TimeUnit.SECONDS)
-            applied += delivered
-        } else {
-            applied += delivered
-            transitionDelivered.countDown()
+            machine.set(State.RUNNING)
+            finishFirstDelivery.countDown()
+
+            assertTrue(
+                "the transition was never delivered to the subscriber",
+                transitionDelivered.await(5, TimeUnit.SECONDS),
+            )
+
+            val observed = applied.toList()
+            assertEquals(
+                "notification delivery went backwards: the subscriber attached while the stored " +
+                    "state was STOPPED, was then handed RUNNING, and only afterwards was handed " +
+                    "the STOPPED it attached on. It saw $observed.",
+                listOf(State.STOPPED, State.RUNNING),
+                observed,
+            )
+            assertEquals(
+                "the last state the subscriber was given disagrees with the stored state, and " +
+                    "nothing will correct it until some later transition: saw $observed",
+                machine.get(),
+                observed.last(),
+            )
+        } finally {
+            finishFirstDelivery.countDown()
+            scope.cancel()
         }
     }
 
-    private val throwsOnFirstDelivery: (State) -> Unit = {
-        throw IllegalStateException("listener failure")
-    }
-
-    private var registrar: Thread? = null
-
-    @Before fun reset() {
-        ShizukuStateMachine.set(State.STOPPED)
-    }
-
-    @After fun detach() {
-        finishRegistration.countDown()
-        registrar?.join(5_000)
-        ShizukuStateMachine.removeListener(probe)
-        ShizukuStateMachine.removeListener(throwsOnFirstDelivery)
-    }
-
-    @Test fun aListenerIsNeverGivenAStateOlderThanOneItHasAlreadyBeenGiven() {
-        val thread = Thread { ShizukuStateMachine.addListener(probe) }
-        registrar = thread
-        thread.start()
-
-        // The listener is in the registry and is being handed STOPPED, but that delivery has not
-        // completed yet: exactly the window a transition on another thread falls into.
-        assertTrue(
-            "registration delivery never started",
-            registrationStarted.await(5, TimeUnit.SECONDS),
-        )
-
-        ShizukuStateMachine.set(State.RUNNING)
-        finishRegistration.countDown()
-
-        assertTrue(
-            "the transition was never delivered to the listener",
-            transitionDelivered.await(5, TimeUnit.SECONDS),
-        )
-        thread.join(5_000)
-
-        val observed = applied.toList()
-        assertEquals(
-            "notification delivery went backwards: the listener registered while the stored " +
-                "state was STOPPED, was then handed RUNNING by the drainer, and only afterwards " +
-                "was handed the STOPPED it had registered on. It saw $observed.",
-            listOf(State.STOPPED, State.RUNNING),
-            observed,
-        )
-        assertEquals(
-            "the last state the listener was given disagrees with the stored state, and nothing " +
-                "will correct it until some later transition: saw $observed",
-            ShizukuStateMachine.get(),
-            observed.last(),
-        )
-    }
-
     @Test fun aListenerThatThrowsOnItsRegistrationStateDoesNotUnwindIntoTheCaller() {
-        ShizukuStateMachine.addListener(throwsOnFirstDelivery)
+        val scope = CoroutineScope(
+            SupervisorJob() + Dispatchers.Unconfined + CoroutineExceptionHandler { _, _ -> }
+        )
+        // Unconfined, so the first throws inside the subscribe call and the second inside the store.
+        scope.launch { machine.asFlow().collect { throw IllegalStateException("subscriber failure") } }
+        scope.launch {
+            machine.asFlow().collect { if (it == State.RUNNING) throw IllegalStateException("subscriber failure") }
+        }
+
+        machine.set(State.RUNNING)
+
+        assertEquals(State.RUNNING, machine.get())
+        scope.cancel()
     }
 }
