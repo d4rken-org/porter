@@ -110,14 +110,16 @@ public class PorterShellLoader {
         }
 
         try {
-            System.out.println("Entering shell...");
+            if (args.length == 0) {
+                System.out.println("Entering shell...");
+            }
             var classLoader = new BaseDexClassLoader(sourceDir, null, librarySearchPath, ClassLoader.getSystemClassLoader());
             Class<?> cls = classLoader.loadClass("moe.shizuku.manager.shell.Shell");
             cls.getDeclaredMethod("main", String[].class, String.class, IBinder.class, Handler.class)
                     .invoke(null, args, callingPackage, binder, handler);
         } catch (ClassNotFoundException tr) {
             System.err.println("Class not found");
-            System.err.println("Make sure you have Shizuku v12.0.0 or above installed");
+            System.err.println("Make sure the Porter app is installed and up to date");
             System.err.flush();
             System.exit(1);
         } catch (Throwable tr) {
@@ -135,9 +137,9 @@ public class PorterShellLoader {
         if (pkg.size() == 1) {
             packageName = pkg.get(0);
         } else {
-            packageName = System.getenv("RISH_APPLICATION_ID");
+            packageName = System.getenv("PORSH_APPLICATION_ID");
             if (TextUtils.isEmpty(packageName) || "PKG".equals(packageName)) {
-                abort("RISH_APPLICATION_ID is not set, please set this environment variable in rish to the package name of the terminal app");
+                abort("PORSH_APPLICATION_ID is not set, please set this environment variable in porsh to the package name of the terminal app");
                 System.exit(1);
             }
         }

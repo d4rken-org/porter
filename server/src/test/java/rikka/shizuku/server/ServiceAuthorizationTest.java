@@ -43,7 +43,7 @@ public class ServiceAuthorizationTest {
     private MockedStatic<ActivityManagerApis> activities;
 
     @Before public void setup() throws Exception {
-        // Skip the constructor's native rish startup; permission methods below remain real.
+        // Skip the constructor's native porsh startup; permission methods below remain real.
         service = mock(ShizukuService.class, CALLS_REAL_METHODS);
         config = mock(ShizukuConfigManager.class);
         clients = mock(ShizukuClientManager.class);

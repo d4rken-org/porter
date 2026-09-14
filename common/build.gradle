@@ -33,7 +33,7 @@ def identity = tasks.register("generatePorterBuildIdentity", GeneratePorterBuild
     sourceInputs.from(rootProject.fileTree(rootProject.rootDir) {
         include "*.gradle", "gradle/**", "gradle.properties", "version.properties"
     })
-    ["manager", "server", "common", "starter", "shell", "compat", "client", "aidl", "api", "provider", "shared", "server-shared", "rish"].each { name ->
+    ["manager", "server", "common", "starter", "shell", "compat", "client", "aidl", "api", "provider", "shared", "server-shared", "porsh"].each { name ->
         sourceInputs.from(rootProject.fileTree(rootProject.project(":$name").projectDir) {
             include "src/**", "*.gradle", "gradle.properties"
             exclude "src/test*/**", "src/androidTest*/**", "src/screenshotTest*/**"
