@@ -14,6 +14,8 @@ public class ProbeActivity extends Activity {
     private TextView status;
     private Shizuku.UserServiceArgs args;
     private boolean bound;
+    /** Asks for an existing service without starting one, which is the noCreate hand-over path. */
+    private boolean peek;
     private final Shizuku.OnBinderReceivedListener received = () -> runOnUiThread(this::connect);
     private final Shizuku.OnBinderDeadListener died = () -> report("BINDER_DEAD");
     private final Shizuku.OnRequestPermissionResultListener permission = (code, result) -> {
@@ -35,9 +37,10 @@ public class ProbeActivity extends Activity {
         status.setTextSize(20);
         setContentView(status);
         boolean daemon = getIntent().getBooleanExtra("daemon", false);
+        peek = getIntent().getBooleanExtra("peek", false);
         args = new Shizuku.UserServiceArgs(new ComponentName(this, ProbeService.class))
                 .daemon(daemon).processNameSuffix("porter-probe").version(1);
-        report("MODE daemon=" + daemon);
+        report("MODE daemon=" + daemon + " peek=" + peek);
         Shizuku.addBinderReceivedListenerSticky(received);
         Shizuku.addBinderDeadListener(died);
         Shizuku.addRequestPermissionResultListener(permission);
@@ -55,6 +58,12 @@ public class ProbeActivity extends Activity {
             try { Shizuku.updateFlagsForUid(android.os.Process.myUid(), 6, 2); }
             catch (SecurityException expected) { managerDenied = true; }
             report("AUTHORIZED managerOperationDenied=" + managerDenied);
+            if (peek) {
+                int version = Shizuku.peekUserService(args, connection);
+                report("PEEK version=" + version);
+                bound = version >= 0;
+                return;
+            }
             Shizuku.bindUserService(args, connection);
             bound = true;
         } catch (Exception e) { report("FAILED " + e); }
