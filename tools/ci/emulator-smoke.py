@@ -115,34 +115,38 @@ class Smoke:
         (self.output / "last-ui.xml").write_text(xml)
         return ET.fromstring(xml)
 
+    def locate(self, text=None, package=MANAGER, prefix=False, scroll=False, occurrence=0, desc=None):
+        """One look at the current window: the button's bounds, or None while it is not there."""
+        root = self.ui()
+        found = []
+        for node in root.iter("node"):
+            if desc is not None:
+                matches = node.get("content-desc", "") == desc
+            else:
+                label = node.get("text", "")
+                matches = label.startswith(text) if prefix else label == text
+            if node.get("package") == package and matches and node.get("enabled") == "true":
+                bounds = list(map(int, re.findall(r"\d+", node.get("bounds", ""))))
+                if len(bounds) == 4:
+                    found.append(bounds)
+                    if len(found) > occurrence:
+                        return found[occurrence]
+        if scroll:
+            container = next((n for n in root.iter("node") if n.get("package") == package
+                              and n.get("scrollable") == "true"), None)
+            if container is not None:
+                left, top, right, bottom = map(int, re.findall(r"\d+", container.get("bounds", "")))
+                x = (left + right) // 2
+                inset = (bottom - top) // 5
+                self.shell("input", "swipe", x, bottom - inset, x, top + inset, 300)
+        return None
+
     def tap(self, text=None, package=MANAGER, prefix=False, screenshot=None, scroll=False, occurrence=0, desc=None):
-        def locate():
-            root = self.ui()
-            found = []
-            for node in root.iter("node"):
-                if desc is not None:
-                    matches = node.get("content-desc", "") == desc
-                else:
-                    label = node.get("text", "")
-                    matches = label.startswith(text) if prefix else label == text
-                if node.get("package") == package and matches and node.get("enabled") == "true":
-                    bounds = list(map(int, re.findall(r"\d+", node.get("bounds", ""))))
-                    if len(bounds) == 4:
-                        found.append(bounds)
-                        if len(found) > occurrence:
-                            return found[occurrence]
-            if scroll:
-                container = next((n for n in root.iter("node") if n.get("package") == package
-                                  and n.get("scrollable") == "true"), None)
-                if container is not None:
-                    left, top, right, bottom = map(int, re.findall(r"\d+", container.get("bounds", "")))
-                    x = (left + right) // 2
-                    inset = (bottom - top) // 5
-                    self.shell("input", "swipe", x, bottom - inset, x, top + inset, 300)
-            return None
         wanted = repr(text) if desc is None else f"content-desc {desc!r}"
         ordinal = f" #{occurrence}" if occurrence else ""
-        left, top, right, bottom = self.until(f"button {wanted}{ordinal} in {package}", locate)
+        left, top, right, bottom = self.until(
+            f"button {wanted}{ordinal} in {package}",
+            lambda: self.locate(text, package, prefix, scroll, occurrence, desc))
         if screenshot:
             self.screenshot(screenshot)
         self.shell("input", "tap", (left + right) // 2, (top + bottom) // 2)
@@ -476,14 +480,32 @@ class Smoke:
 
         self.reconciliation()
 
+    def allow_if_requested(self, package=NATIVE, prompt_package=MANAGER, screenshot=None):
+        """Grants the probe when it asked, and does nothing when it already holds the permission.
+
+        A probe that already holds the permission reports AUTHORIZED straight away and never asks,
+        so waiting for the dialog would wait for a window that cannot appear. Which of the two
+        happens is decided on the device, so both are watched for at once.
+        """
+        state = self.until(
+            f"{package} authorized or asking for permission",
+            lambda: ("granted" if package + " AUTHORIZED" in self.logs()
+                     else "asked" if self.locate("Allow all the time", prompt_package) else None))
+        if state == "asked":
+            self.tap("Allow all the time", prompt_package, screenshot=screenshot)
+
     def authorized_daemon(self):
         """A granted probe holding a daemon user service, and that daemon's pid."""
         self.launch_probe(NATIVE, daemon=True)
-        self.tap("Allow all the time")
+        self.allow_if_requested()
         self.authorized(NATIVE)
         return self.until("privileged user service", lambda: self.pid(NATIVE + ":porter-probe"))
 
     def reconciliation(self):
+        # The five pre-existing cases leave grants and probe installations behind, so this block
+        # establishes its own baseline instead of inheriting whichever one ran last.
+        self.restore("probes", "grants")
+
         def daemon_host_uninstalled():
             service_pid = self.authorized_daemon()
             self.shell("am", "force-stop", NATIVE)
@@ -532,7 +554,7 @@ class Smoke:
             # The bind-time check, not a scan: a replacement is refused the moment it first asks,
             # and peek is the noCreate path, which hands back an existing binder without creating.
             self.launch_probe(NATIVE, peek=True)
-            self.tap("Allow all the time")
+            self.allow_if_requested()
             self.expect_log(NATIVE, "PEEK version=-1")
             assert original not in self.service_pids(NATIVE), "the noCreate path kept the old daemon"
             before = self.service_pids(NATIVE)
@@ -554,7 +576,7 @@ class Smoke:
 
         def non_daemon_control():
             self.launch_probe(NATIVE)
-            self.tap("Allow all the time")
+            self.allow_if_requested()
             self.authorized(NATIVE)
             service_pid = self.until("privileged user service", lambda: self.pid(NATIVE + ":porter-probe"))
             self.shell("am", "force-stop", NATIVE)
