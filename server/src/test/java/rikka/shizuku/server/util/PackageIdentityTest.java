@@ -217,6 +217,18 @@ public class PackageIdentityTest {
     }
 
     @Test
+    public void anUnreadableSignatureDoesNotBecomeAnIdentityWithoutSigners() {
+        PackageInfo unreadable = installed(new Signature[]{ORIGINAL}, new Signature[]{ORIGINAL});
+        when(unreadable.signingInfo.getApkContentsSigners()).thenReturn(new Signature[0]);
+        // The identical reading, through the other entry point, is a failure rather than an answer.
+        assertEquals(PackageIdentity.State.LOOKUP_FAILED, PackageIdentity.classify(unreadable, 0).state);
+
+        PackageIdentity.Identity identity = PackageIdentity.identityOf(unreadable);
+        assertTrue("identityOf produced an identity with no signers: " + identity,
+                identity == null || !identity.signerDigests.isEmpty());
+    }
+
+    @Test
     public void twoUsersReportingDifferentSignersIsUnstableRatherThanAReplacement() {
         PackageIdentity.Observed first = observe(installed(new Signature[]{ORIGINAL}, new Signature[]{ORIGINAL}), 0);
         PackageIdentity.Observed second = observe(installed(new Signature[]{FOREIGN}, new Signature[]{FOREIGN}), 10);
