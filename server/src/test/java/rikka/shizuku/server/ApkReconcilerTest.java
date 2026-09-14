@@ -414,6 +414,27 @@ public class ApkReconcilerTest {
     }
 
     @Test
+    public void anExpiredCandidateWhoseConfirmationFailsDoesNotArmAPastDeadline() {
+        UserServiceRecord record = record();
+        hosts(host(record, identity(HOST, APP_ID, MINE)));
+
+        // Absent once: a candidate is armed one grace period out.
+        scheduler.fire(ApkReconciler.LANE_HOST);
+        assertEquals(2_000L, scheduler.delay(ApkReconciler.LANE_HOST));
+
+        // The lane does not get to run at that deadline, and when it finally does the lookup fails,
+        // so the candidate is neither confirmed nor cleared. It is now in the past.
+        oracle.answer(HOST, 0, PackageIdentity.Result.failed(new IllegalStateException("busy")));
+        scheduler.fire(ApkReconciler.LANE_MANAGER);
+        scheduler.fire(ApkReconciler.LANE_MANAGER);
+        scheduler.fire(ApkReconciler.LANE_HOST);
+
+        long delay = scheduler.delay(ApkReconciler.LANE_HOST);
+        assertTrue("host lane armed a deadline " + (-delay) + "ms in the past, which a real "
+                + "ScheduledExecutorService runs immediately", delay >= 0);
+    }
+
+    @Test
     public void aNewRecordInheritsNoPendingCandidate() {
         UserServiceRecord first = record();
         hosts(host(first, identity(HOST, APP_ID, MINE)));
