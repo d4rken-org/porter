@@ -222,11 +222,16 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     }
 
     @Override
-    public synchronized void attachUserService(IBinder binder, Bundle options) {
+    public void attachUserService(IBinder binder, Bundle options) {
         enforceManagerPermission("func");
 
         if (configManager.isAccessPaused()) throw new SecurityException("App access is paused");
-        super.attachUserService(binder, options);
+        // Above the monitor: reading the descriptor is a synchronous round trip to the service being
+        // attached, and Binder has no client-side timeout.
+        String interfaceDescriptor = UserServiceManager.getInterfaceDescriptor(binder);
+        synchronized (this) {
+            super.attachUserService(binder, options, interfaceDescriptor);
+        }
     }
 
     @Override
