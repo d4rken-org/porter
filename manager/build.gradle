@@ -136,7 +136,7 @@ android {
         generateLocaleConfig = true
         def translated = file("src/main/res").listFiles()
                 .findAll { it.isDirectory() && it.name ==~ /values-[a-z]{2,3}(-r[A-Z]{2})?/ }
-                .collect { it.name.substring("values-".length()).replace("-r", "-") }
+                .collect { it.name.substring("values-".length()) }
         def locales = ["en"] + translated
         if (translated.isEmpty() || !locales.contains("en")) {
             throw new GradleException("Derived locale filters look wrong: ${locales}")
