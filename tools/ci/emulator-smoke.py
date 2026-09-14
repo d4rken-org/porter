@@ -279,7 +279,8 @@ class Smoke:
         self.case("compatibility", companion)
 
         def coexistence():
-            self.adb("uninstall", COMPAT)
+            if f"package:{COMPAT}" in self.shell("pm", "list", "packages").splitlines():
+                self.adb("uninstall", COMPAT)
             self.adb("install", str(self.args.shizuku.resolve()))
             self.start_service(COMPAT)
             original_pid = self.pid("shizuku_server")
