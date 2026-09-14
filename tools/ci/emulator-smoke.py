@@ -8,6 +8,7 @@ import shlex
 import subprocess
 import time
 import traceback
+import zipfile
 import xml.etree.ElementTree as ET
 
 MANAGER = "eu.darken.porter"
@@ -17,6 +18,9 @@ LEGACY = "eu.darken.porter.probe.legacy"
 PERMISSION = "eu.darken.porter.permission.API_V23"
 LEGACY_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 PAYLOAD = "porter-ci-shell-access"
+PORSH_DIR = "/data/local/tmp"
+# Comfortably past a 64 KiB pipe buffer, so a reader that never drains blocks the writer.
+PORSH_BULK = 4096 * 64
 # adb reports these itself before dispatching anything to the device, so repeating is safe. Stream
 # failures ("closed", "protocol fault") are deliberately absent: they can surface after the device
 # already ran the command, and a repeated tap, install or service start is not idempotent. The
@@ -297,6 +301,74 @@ class Smoke:
             self.authorized(LEGACY, require_manager_guard=False)
             return {"porter_pid": porter_pid, "shizuku_pid": self.pid("shizuku_server")}
         self.case("coexistence", coexistence)
+
+        def porsh():
+            with zipfile.ZipFile(self.args.manager.resolve()) as archive:
+                for name in ("porsh", "porsh.dex"):
+                    extracted = self.output / name
+                    extracted.write_bytes(archive.read("assets/" + name))
+                    self.adb("push", str(extracted), f"{PORSH_DIR}/{name}")
+            # app_process refuses a writable dex on Android 14+. Doing it here also keeps the
+            # script's own chmod branch quiet, which would otherwise print to the stdout the
+            # byte-exact assertions below read.
+            self.shell("chmod", "400", f"{PORSH_DIR}/porsh.dex")
+            # adb shell is uid 2000, which owns more than one package, so the loader takes its
+            # environment branch. The server only requires the package to belong to the uid.
+            invoke = f"PORSH_APPLICATION_ID=com.android.shell sh {PORSH_DIR}/porsh"
+
+            def redirected(name, script):
+                # The redirections wrap the porsh invocation itself. Inside -c they would point
+                # the remote shell's own descriptors at the files and never exercise the pipes.
+                return (f"{invoke} -c {shlex.quote(script)}"
+                        f" > {PORSH_DIR}/{name}-stdout 2> {PORSH_DIR}/{name}-stderr;"
+                        f" echo $? > {PORSH_DIR}/{name}-status")
+
+            def evidence(name):
+                # Bytes, because adb()'s text mode strips the whitespace under test.
+                return self.adb("exec-out", "cat", f"{PORSH_DIR}/{name}", binary=True)
+
+            def status(name):
+                # adb() raises on a non-zero exit and discards the code, so the device records it.
+                return int(evidence(f"{name}-status").decode())
+
+            # The grant is a UI decision with no deadline: uid 2000 has no config entry yet and
+            # Shell clears the loader's own 5 s timeout, so this run blocks past adb()'s 45 s.
+            command = ["adb", "-s", self.args.serial, "shell",
+                       shlex.join(["sh", "-c", redirected("banner", "printf hello")])]
+            first = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            try:
+                self.tap("Allow all the time", screenshot="porsh-permission")
+                first.communicate(timeout=180)
+            finally:
+                if first.poll() is None:
+                    first.kill()
+                    first.communicate()
+            assert status("banner") == 0, evidence("banner-stderr")
+            # Byte-exact: an unconditional "Entering shell..." here breaks command substitution.
+            assert evidence("banner-stdout") == b"hello", evidence("banner-stdout")
+
+            # The grant persists through configManager.update, so the rest need no interaction.
+            self.shell("sh", "-c", redirected("exit", "exit 37"))
+            assert status("exit") == 37, status("exit")
+
+            self.shell("sh", "-c", redirected("streams", "printf out; printf err >&2"))
+            assert evidence("streams-stdout") == b"out", evidence("streams-stdout")
+            assert evidence("streams-stderr") == b"err", evidence("streams-stderr")
+
+            # >&2 duplicates the stderr pipe onto stdout before 2> silences dd's own summary.
+            self.shell("sh", "-c", redirected(
+                "bulk", f"dd if=/dev/zero bs=4096 count={PORSH_BULK // 4096} >&2 2>/dev/null"))
+            bulk = evidence("bulk-stderr")
+            assert status("bulk") == 0, status("bulk")
+            assert bulk == b"\0" * PORSH_BULK, len(bulk)
+
+            self.shell("sh", "-c", redirected("tail", "printf out; printf last >&2; exit 3"))
+            assert status("tail") == 3, status("tail")
+            assert evidence("tail-stdout") == b"out", evidence("tail-stdout")
+            # The last write before exit is the one truncated when stderr is not drained.
+            assert evidence("tail-stderr") == b"last", evidence("tail-stderr")
+            return {"exit_status": status("exit"), "bulk_bytes": len(bulk)}
+        self.case("porsh", porsh)
 
     def reports(self):
         (self.output / "results.json").write_text(json.dumps(self.results, indent=2))
