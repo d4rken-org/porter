@@ -14,28 +14,52 @@ import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
 import moe.shizuku.manager.MainActivity
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.receiver.ShizukuReceiverStarter
+import moe.shizuku.manager.starter.ServiceReplacement
 import moe.shizuku.manager.utils.SettingsPage
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import java.util.concurrent.atomic.AtomicBoolean
 
 class WatchdogService : Service() {
 
-    private val stateListener: (ShizukuStateMachine.State) -> Unit = {
-        if (it == ShizukuStateMachine.State.CRASHED && !moe.shizuku.manager.starter.ServiceReplacement.state.value.running) {
-            showCrashNotification()
-            ShizukuReceiverStarter.start(applicationContext)
-        }
-    }
+    private val environment: WatchdogEnvironment get() = environmentOverride ?: DefaultWatchdogEnvironment
+
+    private var scope: CoroutineScope? = null
 
     override fun onCreate() {
         super.onCreate()
         isRunning.set(true)
-        ShizukuStateMachine.addListener(stateListener)
+        // Not Main.immediate: this body must not run inline inside the emit that delivers the
+        // state, because restartService can block on a root shell. Pinned by
+        // WatchdogServiceTest.aCrashReactionIsPostedRatherThanRunInsideTheTransition.
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+        this.scope = scope
+        // UNDISPATCHED so the subscription exists before onCreate returns. Pinned by
+        // WatchdogServiceTest.aCrashSupersededBeforeTheFirstIdleIsStillHandled.
+        scope.launch(start = CoroutineStart.UNDISPATCHED) {
+            ShizukuStateMachine.instance.asFlow().collect { state ->
+                runCatching {
+                    if (state == ShizukuStateMachine.State.CRASHED && !environment.replacementRunning) {
+                        showCrashNotification()
+                        environment.restartService(applicationContext)
+                    }
+                }.onFailure {
+                    // Contained: an escaping throw would cancel this collector for the remaining
+                    // life of the service, and reach the process-wide uncaught handler.
+                    Log.w(TAG, "watchdog reaction failed", it)
+                }
+            }
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -62,7 +86,8 @@ class WatchdogService : Service() {
     }
 
     override fun onDestroy() {
-        ShizukuStateMachine.removeListener(stateListener)
+        scope?.cancel()
+        scope = null
         isRunning.set(false)
         super.onDestroy()
     }
@@ -152,6 +177,9 @@ class WatchdogService : Service() {
 
         private val isRunning = AtomicBoolean(false)
 
+        /** Test seam for [WatchdogEnvironment]; production leaves it null. */
+        internal var environmentOverride: WatchdogEnvironment? = null
+
         @JvmStatic
         fun start(context: Context) {
             try {
@@ -169,4 +197,15 @@ class WatchdogService : Service() {
         @JvmStatic
         fun isRunning(): Boolean = isRunning.get()
     }
+}
+
+/** What the watchdog's reaction reaches outside the service. */
+internal interface WatchdogEnvironment {
+    val replacementRunning: Boolean
+    fun restartService(context: Context)
+}
+
+internal object DefaultWatchdogEnvironment : WatchdogEnvironment {
+    override val replacementRunning get() = ServiceReplacement.state.value.running
+    override fun restartService(context: Context) = ShizukuReceiverStarter.start(context)
 }
