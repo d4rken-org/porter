@@ -502,6 +502,18 @@ class Smoke:
         self.authorized(NATIVE)
         return self.until("privileged user service", lambda: self.pid(NATIVE + ":porter-probe"))
 
+    def refused_at_bind(self, package):
+        """The oracle for why the original signer's daemon is gone.
+
+        Two code paths end in the same absence: the bind-time check refusing the record, and the
+        host scan removing it for the same mismatch before anything binds. Only the first is what
+        the scenarios calling this are about, so each is asserted separately.
+        """
+        warnings = self.adb("logcat", "-d", "-s", "UserServiceManager:W", "ApkReconciler:W", "*:S")
+        assert f"does not belong to the current installation of {package}" in warnings, \
+            "the bind-time check never refused"
+        assert f"host replaced {package}" not in warnings, "the host scan removed it first"
+
     def reconciliation(self):
         # The five pre-existing cases leave grants and probe installations behind, so this block
         # establishes its own baseline instead of inheriting whichever one ran last.
@@ -552,6 +564,9 @@ class Smoke:
             """A live daemon of the original signer, with the replacement installed over it."""
             original = self.authorized_daemon()
             self.adb("uninstall", NATIVE)
+            # Bounds the interval refused_at_bind() reads: the replacement only exists from here on,
+            # so every warning about it was logged after this point.
+            self.adb("logcat", "-c")
             self.adb("install", str(self.foreign_probe()))
             # The bind-time check, not a scan: a replacement is refused the moment it first asks. A
             # scan that got there first would leave nothing to hand over and pass either way.
@@ -566,6 +581,7 @@ class Smoke:
             self.expect_log(NATIVE, "PEEK version=-1")
             after = self.service_pids(NATIVE)
             assert original not in after, "the noCreate path kept the old daemon"
+            self.refused_at_bind(NATIVE)
             return {"original": original, "after": sorted(after)}
         self.case("foreign-signer-peeks", foreign_signer_peeks, restore=("probes", "grants"))
 
@@ -577,6 +593,7 @@ class Smoke:
             self.authorized(NATIVE)
             after = self.service_pids(NATIVE)
             assert original not in after, "the replacement was handed the original signer's daemon"
+            self.refused_at_bind(NATIVE)
             return {"original": original, "after": sorted(after)}
         self.case("foreign-signer-binds", foreign_signer_binds, restore=("probes", "grants"))
 
