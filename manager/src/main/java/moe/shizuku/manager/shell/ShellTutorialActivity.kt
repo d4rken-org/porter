@@ -35,19 +35,19 @@ class ShellTutorialActivity : ComposeActivity() {
             val error by model.error.collectAsStateWithLifecycle()
             PorterScaffold(stringResource(R.string.home_terminal_title), onBack = { finish() }) { padding ->
                 Column(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    HtmlText(stringResource(R.string.rish_description, "rish"))
+                    HtmlText(stringResource(R.string.rish_description, "porsh"))
                     if (DeviceCompatibility.isMiui()) {
                         HtmlText(stringResource(R.string.terminal_tutorial_miui))
                         HtmlText(stringResource(R.string.terminal_tutorial_miui_2))
                     }
                     Text(stringResource(R.string.terminal_tutorial_1), style = MaterialTheme.typography.titleMedium)
-                    HtmlText(stringResource(R.string.terminal_tutorial_1_description, "rish", "rish_shizuku.dex"))
+                    HtmlText(stringResource(R.string.terminal_tutorial_1_description, "porsh", "porsh.dex"))
                     Button(onClick = { openDocumentsTree.launch(null) }, enabled = !busy) { Text(stringResource(R.string.terminal_export_files)) }
-                    HtmlText(stringResource(R.string.terminal_tutorial_2, "rish"))
+                    HtmlText(stringResource(R.string.terminal_tutorial_2, "porsh"))
                     SelectionContainer { Text("cp /sdcard/chosen-folder/* /data/data/terminal.package.name/files", fontFamily = FontFamily.Monospace) }
-                    HtmlText(stringResource(R.string.terminal_tutorial_2_description, "rish", "rish", ".bashrc"))
+                    HtmlText(stringResource(R.string.terminal_tutorial_2_description, "porsh", "porsh", ".bashrc"))
                     Text(stringResource(R.string.terminal_tutorial_3), style = MaterialTheme.typography.titleMedium)
-                    SelectionContainer { Text("sh /path/to/rish", fontFamily = FontFamily.Monospace) }
+                    SelectionContainer { Text("sh /path/to/porsh", fontFamily = FontFamily.Monospace) }
                 }
             }
             error?.let { MessageDialog(stringResource(R.string.porter_support_error), it, { model.error.value = null }) }
@@ -69,7 +69,7 @@ class ShellTutorialViewModel(application: Application) : AndroidViewModel(applic
                     val docId = DocumentsContract.getTreeDocumentId(tree)
                     val doc = DocumentsContract.buildDocumentUriUsingTree(tree, docId)
                     val child = DocumentsContract.buildChildDocumentsUriUsingTree(tree, docId)
-                    val names = listOf("rish", "rish_shizuku.dex")
+                    val names = listOf("porsh", "porsh.dex")
                     cr.query(child, arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME), null, null, null)?.use {
                         while (it.moveToNext()) if (it.getString(1) in names) {
                             check(DocumentsContract.deleteDocument(cr, DocumentsContract.buildDocumentUriUsingTree(tree, it.getString(0))))
@@ -79,7 +79,7 @@ class ShellTutorialViewModel(application: Application) : AndroidViewModel(applic
                         val target = checkNotNull(DocumentsContract.createDocument(cr, doc, "application/octet-stream", name))
                         checkNotNull(cr.openOutputStream(target)).use { output ->
                             context.assets.open(name).use { input ->
-                                if (name == "rish") output.write(input.bufferedReader().readText().replace("MANAGER_PKG", context.packageName).toByteArray())
+                                if (name == "porsh") output.write(input.bufferedReader().readText().replace("MANAGER_PKG", context.packageName).toByteArray())
                                 else input.copyTo(output)
                             }
                         }
