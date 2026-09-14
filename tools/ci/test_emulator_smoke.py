@@ -369,10 +369,21 @@ class ScenarioRestoreTest(unittest.TestCase):
         self.runner.case("probe-case", lambda: None)
         self.runner.adb.assert_called_once_with("logcat", "-d", "-v", "threadtime", check=False)
 
-    def test_a_restore_failure_is_recorded_without_masking_the_scenario(self):
+    def test_a_restore_failure_fails_the_run(self):
         self.runner.extra_users = Mock(side_effect=RuntimeError("device offline"))
-        self.runner.case("probe-case", lambda: {"ok": True}, restore=("users",))
-        self.assertEqual(self.runner.results[0]["passed"], True)
+        with self.assertRaisesRegex(RuntimeError, "device offline"):
+            self.runner.case("probe-case", lambda: {"ok": True}, restore=("users",))
+        self.assertEqual(self.runner.results[0]["passed"], False)
+        self.assertIn("device offline", self.runner.results[0]["restore_failure"])
+
+    def test_a_restore_failure_does_not_mask_the_scenario(self):
+        self.runner.extra_users = Mock(side_effect=RuntimeError("device offline"))
+
+        def boom():
+            raise AssertionError("Timed out: daemon removed after host uninstall")
+        with self.assertRaisesRegex(AssertionError, "Timed out"):
+            self.runner.case("probe-case", boom, restore=("users",))
+        self.assertEqual(self.runner.results[0]["passed"], False)
         self.assertIn("device offline", self.runner.results[0]["restore_failure"])
 
     def test_a_running_service_is_not_restarted(self):
