@@ -745,6 +745,20 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             reply.writeBundle(version);
             return true;
         }
+        if (code == eu.darken.porter.common.UserServiceLaunch.TRANSACTION) {
+            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
+            // Not enforceManagerPermission: that passes only for this pid or the manager app id, and
+            // the starter is a separate process running as the server's own uid. What this proves is
+            // that the caller runs as that uid and already holds the token it is asking about; it
+            // does not single out one launch, and it is not the host application's uid.
+            if (Binder.getCallingUid() != OsUtils.getUid()) {
+                throw new SecurityException("Permission Denial: validateUserServiceToken from uid " + Binder.getCallingUid());
+            }
+            boolean live = getUserServiceManager().isUserServiceTokenLive(data.readString());
+            reply.writeNoException();
+            reply.writeInt(live ? 1 : 0);
+            return true;
+        }
         return super.onTransact(code, data, reply, flags);
     }
 
