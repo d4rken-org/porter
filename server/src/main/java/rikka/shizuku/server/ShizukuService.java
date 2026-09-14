@@ -57,7 +57,7 @@ import rikka.hidden.compat.PackageManagerApis;
 import rikka.shizuku.server.util.Android17Compat;
 import rikka.hidden.compat.UserManagerApis;
 import rikka.parcelablelist.ParcelableListSlice;
-import rikka.rish.RishConfig;
+import eu.darken.porter.porsh.PorshConfig;
 import rikka.shizuku.ShizukuApiConstants;
 import rikka.shizuku.server.util.HandlerUtil;
 import rikka.shizuku.server.util.Logger;
@@ -70,7 +70,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
 
     public static void main(String[] args) {
         DdmHandleAppName.setAppName("porter_server", 0);
-        RishConfig.setLibraryPath(System.getProperty("shizuku.library.path"));
+        PorshConfig.setLibraryPath(System.getProperty("shizuku.library.path"));
 
         Looper.prepareMainLooper();
         new ShizukuService();

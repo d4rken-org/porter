@@ -10,7 +10,7 @@ import eu.darken.porter.common.DiscoveredApplication;
 import eu.darken.porter.common.GlobalAccess;
 import eu.darken.porter.common.PorterBuildIdentity;
 import moe.shizuku.server.IRemoteProcess;
-import rikka.rish.RishConfig;
+import eu.darken.porter.porsh.PorshConfig;
 import rikka.shizuku.ShizukuApiConstants;
 import rikka.shizuku.server.ServerConstants;
 import rikka.shizuku.server.ShizukuService;
@@ -22,7 +22,7 @@ public final class FixtureService extends ShizukuService {
     public static void main(String[] args) {
         mode = args.length == 0 ? "outdated" : args[0];
         DdmHandleAppName.setAppName("porter_server", 0);
-        RishConfig.setLibraryPath(System.getProperty("shizuku.library.path"));
+        PorshConfig.setLibraryPath(System.getProperty("shizuku.library.path"));
         Looper.prepareMainLooper();
         new FixtureService();
         Looper.loop();

@@ -16,7 +16,7 @@ dependencies {
     implementation project(":shared")
     implementation project(":aidl")
     implementation project(":common")
-    implementation project(":rish")
+    implementation project(":porsh")
     implementation project(":provider")
     compileOnly libs.hidden.stub
 }
