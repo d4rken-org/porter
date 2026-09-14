@@ -34,8 +34,10 @@ public class ProbeActivity extends Activity {
         status = new TextView(this);
         status.setTextSize(20);
         setContentView(status);
+        boolean daemon = getIntent().getBooleanExtra("daemon", false);
         args = new Shizuku.UserServiceArgs(new ComponentName(this, ProbeService.class))
-                .daemon(false).processNameSuffix("porter-probe").version(1);
+                .daemon(daemon).processNameSuffix("porter-probe").version(1);
+        report("MODE daemon=" + daemon);
         Shizuku.addBinderReceivedListenerSticky(received);
         Shizuku.addBinderDeadListener(died);
         Shizuku.addRequestPermissionResultListener(permission);
