@@ -176,7 +176,10 @@ public final class ApkReconciler {
             hostBackoff = changed ? 0 : Math.min(hostBackoff + 1, HOST_BACKOFF_MILLIS.length - 1);
             long next = scheduler.now() + HOST_BACKOFF_MILLIS[hostBackoff];
             long candidate = earliestCandidate();
-            armHost(candidate != NOT_SCHEDULED ? Math.min(next, candidate) : next);
+            // Only a candidate still ahead of us: one whose grace has passed while confirmation kept
+            // failing stays in the map, and arming it would ask the executor for a past deadline,
+            // which it runs immediately - the lane would busy-loop against the package manager.
+            armHost(candidate > scheduler.now() ? Math.min(next, candidate) : next);
         }
     }
 
