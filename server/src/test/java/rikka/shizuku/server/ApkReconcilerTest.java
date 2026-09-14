@@ -435,6 +435,23 @@ public class ApkReconcilerTest {
     }
 
     @Test
+    public void hostLookupFailuresAreCounted() {
+        UserServiceRecord record = record();
+        hosts(host(record, identity(HOST, APP_ID, MINE)));
+        // User enumeration answers; every per-user package lookup fails.
+        oracle.answer(HOST, 0, PackageIdentity.Result.failed(new IllegalStateException("busy")));
+
+        scheduler.fire(ApkReconciler.LANE_HOST);
+        scheduler.fire(ApkReconciler.LANE_HOST);
+        scheduler.fire(ApkReconciler.LANE_HOST);
+
+        Bundle out = new Bundle();
+        reconciler.writeDiagnostics(out);
+        int failures = out.getInt(ServerConstants.DIAGNOSTICS_RECONCILER_HOST_FAILURES);
+        assertTrue("three scans of failed lookups reported " + failures + " host failures", failures > 0);
+    }
+
+    @Test
     public void aNewRecordInheritsNoPendingCandidate() {
         UserServiceRecord first = record();
         hosts(host(first, identity(HOST, APP_ID, MINE)));

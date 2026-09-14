@@ -198,7 +198,6 @@ public final class ApkReconciler {
             countFailure(LANE_HOST, ++hostFailures, tr);
             return false;
         }
-        hostFailures = 0;
 
         // One lookup per distinct (package, user) for this scan; the verdict is still computed per
         // record, because one package can carry several records with different recorded identities.
@@ -207,7 +206,21 @@ public final class ApkReconciler {
         for (ShizukuUserServiceManager.HostSnapshot host : hosts) {
             if (reduce(host, users, lookups)) changed = true;
         }
+
+        // A package lookup that never answers stalls cleanup just as completely as a failed
+        // enumeration, and each record only ever sees its own as a local verdict. Counting the scan
+        // once here is what keeps that visible in diagnostics instead of reporting zero forever.
+        PackageIdentity.Result failed = firstFailure(lookups);
+        if (failed == null) hostFailures = 0;
+        else countFailure(LANE_HOST, ++hostFailures, failed.cause);
         return changed;
+    }
+
+    private static PackageIdentity.Result firstFailure(Map<String, PackageIdentity.Result> lookups) {
+        for (PackageIdentity.Result result : lookups.values()) {
+            if (result.state == PackageIdentity.State.LOOKUP_FAILED) return result;
+        }
+        return null;
     }
 
     /** @return whether this record's state changed, which brings the next scan back to the floor. */
