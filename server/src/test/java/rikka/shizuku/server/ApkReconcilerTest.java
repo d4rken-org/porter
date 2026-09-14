@@ -44,6 +44,8 @@ public class ApkReconcilerTest {
 
     private static final String MANAGER = "eu.darken.porter";
     private static final String HOST = "eu.darken.porter.probe";
+    private static final String HOST_A = "eu.darken.porter.probe.a";
+    private static final String HOST_B = "eu.darken.porter.probe.b";
     private static final int APP_ID = 10123;
     private static final Set<String> MINE = digests("mine");
     private static final Set<String> THEIRS = digests("theirs");
@@ -489,6 +491,33 @@ public class ApkReconcilerTest {
         long delay = scheduler.delay(ApkReconciler.LANE_HOST);
         assertTrue("host lane armed a deadline " + (-delay) + "ms in the past, which a real "
                 + "ScheduledExecutorService runs immediately", delay >= 0);
+    }
+
+    @Test
+    public void anExpiredCandidateDoesNotSwallowAnotherHostsLiveGrace() {
+        UserServiceRecord failing = record();
+        UserServiceRecord healthy = record();
+        hosts(host(failing, identity(HOST_A, APP_ID, MINE)), host(healthy, identity(HOST_B, APP_ID, MINE)));
+        oracle.answer(HOST_B, 0, present(0, APP_ID, MINE));
+
+        // A is absent once and earns a candidate one grace period out; B is healthy.
+        scheduler.fire(ApkReconciler.LANE_HOST);
+        assertEquals(2_000L, scheduler.delay(ApkReconciler.LANE_HOST));
+
+        // A's confirmation starts failing and the lane only runs again well past A's grace, so A
+        // holds a candidate that is now in the past and can be neither confirmed nor cleared.
+        oracle.answer(HOST_A, 0, PackageIdentity.Result.failed(new IllegalStateException("busy")));
+        scheduler.fire(ApkReconciler.LANE_MANAGER);
+        scheduler.fire(ApkReconciler.LANE_MANAGER);
+        scheduler.fire(ApkReconciler.LANE_HOST);
+
+        // B goes absent in a later scan and earns its own candidate, one grace period from that scan.
+        oracle.answers.remove(HOST_B + "@0");
+        scheduler.fire(ApkReconciler.LANE_HOST);
+
+        long delay = scheduler.delay(ApkReconciler.LANE_HOST);
+        assertEquals("B's absence is rechecked " + delay + "ms out instead of after its 2000ms grace:"
+                + " A's expired candidate won the minimum and the guard then discarded it", 2_000L, delay);
     }
 
     @Test
