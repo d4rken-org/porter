@@ -45,32 +45,60 @@ public class Android17Compat {
         return sPermissionManager;
     }
 
-    public static PackageInfo getPackageInfo(String packageName, long flags, int userId) {
+    /**
+     * The package-manager lookup plus the reflection fallback, keeping the difference between a
+     * package that is not there and a question that was not answered: {@code null} means the package
+     * manager said no such package, a throw means the call failed. Reconciliation must not read the
+     * second as the first.
+     *
+     * <p>The direct call is the throwing one. The {@code NoThrow} helpers swallow {@link Throwable},
+     * so a {@link NoSuchMethodError} never reached the catch below and the fallback was dead code.
+     */
+    public static PackageInfo getPackageInfoOrThrow(String packageName, long flags, int userId) throws RemoteException {
         try {
-            return PackageManagerApis.getPackageInfoNoThrow(packageName, flags, userId);
+            return PackageManagerApis.getPackageInfo(packageName, flags, userId);
         } catch (NoSuchMethodError e) {
-            try {
-                Object pm = getPackageManager();
-                if (sGetPackageInfoMethod == null) {
-                    synchronized (Android17Compat.class) {
-                        if (sGetPackageInfoMethod == null) {
-                            sGetPackageInfoMethod = findMethod(pm, "getPackageInfo", String.class, long.class);
-                        }
+            return getPackageInfoByReflection(packageName, flags, userId, e);
+        }
+    }
+
+    private static PackageInfo getPackageInfoByReflection(String packageName, long flags, int userId, NoSuchMethodError cause) {
+        try {
+            Object pm = getPackageManager();
+            if (sGetPackageInfoMethod == null) {
+                synchronized (Android17Compat.class) {
+                    if (sGetPackageInfoMethod == null) {
+                        sGetPackageInfoMethod = findMethod(pm, "getPackageInfo", String.class, long.class);
                     }
                 }
-                if (sGetPackageInfoMethod != null) {
-                    return (PackageInfo) invokeMethod(pm, sGetPackageInfoMethod, packageName, flags, userId);
-                }
-            } catch (Throwable ex) {
-                Log.e(TAG, "Android 17 fallback for getPackageInfo failed", ex);
             }
+            Method method = sGetPackageInfoMethod;
+            if (method == null) {
+                throw new NoSuchMethodException("getPackageInfo(String, long, ...)");
+            }
+            return (PackageInfo) invokeMethod(pm, method, packageName, flags, userId);
+        } catch (Throwable ex) {
+            IllegalStateException failure = new IllegalStateException("Android 17 fallback for getPackageInfo failed", ex);
+            failure.addSuppressed(cause);
+            throw failure;
+        }
+    }
+
+    public static PackageInfo getPackageInfo(String packageName, long flags, int userId) {
+        try {
+            return getPackageInfoOrThrow(packageName, flags, userId);
+        } catch (RemoteException | RuntimeException e) {
+            // PMS parcels SecurityException, IllegalArgumentException and IllegalStateException back,
+            // and Parcel.readException rethrows them. Callers here run in the server constructor and
+            // in a process-observer callback, neither of which catches.
+            Log.e(TAG, "getPackageInfo failed", e);
             return null;
         }
     }
 
     public static ApplicationInfo getApplicationInfo(String packageName, long flags, int userId) {
         try {
-            return PackageManagerApis.getApplicationInfoNoThrow(packageName, flags, userId);
+            return PackageManagerApis.getApplicationInfo(packageName, flags, userId);
         } catch (NoSuchMethodError e) {
             try {
                 Object pm = getPackageManager();
@@ -87,6 +115,9 @@ public class Android17Compat {
             } catch (Throwable ex) {
                 Log.e(TAG, "Android 17 fallback for getApplicationInfo failed", ex);
             }
+            return null;
+        } catch (RemoteException | RuntimeException e) {
+            Log.e(TAG, "getApplicationInfo failed", e);
             return null;
         }
     }
