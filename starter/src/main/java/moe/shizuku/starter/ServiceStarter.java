@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Parcel;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.util.Log;
 import android.util.Pair;
 
@@ -27,6 +28,10 @@ public class ServiceStarter {
     private static final String TAG = "ShizukuServiceStarter";
 
     private static final String EXTRA_BINDER = "moe.shizuku.privileged.api.intent.extra.BINDER";
+
+    /** What the attach in {@link #sendBinder} waits for the manager's state machine, to the ms. */
+    private static final long LAUNCH_TOKEN_BINDER_TIMEOUT = 5000;
+    private static final long LAUNCH_TOKEN_BINDER_RETRY = 250;
 
     public static final String DEBUG_ARGS;
 
@@ -115,44 +120,112 @@ public class ServiceStarter {
     }
 
     /**
-     * Asks the server whether {@code token} still belongs to a live record, through the manager's
-     * provider. Fails closed: a null binder means the manager has not received one yet, and the
-     * attach that follows would fail on that too.
+     * Where the launch-token check reads the manager's server binder from. A read yields the live
+     * binder, or null while the manager has none to hand over.
      */
+    interface BinderSource {
+        IBinder read() throws Throwable;
+    }
+
+    /** The waiting, injectable: measured in real time a never-warming manager costs the full 5s. */
+    interface Pacer {
+        long now();
+
+        void pause(long millis) throws InterruptedException;
+    }
+
+    private static final Pacer SYSTEM_PACER = new Pacer() {
+        @Override
+        public long now() {
+            return SystemClock.uptimeMillis();
+        }
+
+        @Override
+        public void pause(long millis) throws InterruptedException {
+            Thread.sleep(millis);
+        }
+    };
+
     private static boolean isLaunchTokenLive(String token) {
+        ManagerBinderSource source = new ManagerBinderSource(managerPackageName + ".porter", 0);
+        try {
+            return isLaunchTokenLive(token, source, SYSTEM_PACER);
+        } finally {
+            source.close();
+        }
+    }
+
+    /**
+     * Asks the server whether {@code token} still belongs to a live record, through the manager's
+     * provider. Fails closed, but not on the first null: the manager this launch runs against may be
+     * one the platform just killed and this very call is restarting, and the attach that follows
+     * waits the same 5s for its state machine. Only availability is retried - a binder that answers
+     * "not live" has answered.
+     */
+    static boolean isLaunchTokenLive(String token, BinderSource source, Pacer pacer) {
         if (token == null) {
             Log.e(TAG, "no --token= to validate");
             return false;
         }
-        String name = managerPackageName + ".porter";
-        int userId = 0;
-        IContentProvider provider = null;
         try {
-            provider = ActivityManagerApis.getContentProviderExternal(name, userId, null, name);
-            if (provider == null) {
-                Log.e(TAG, String.format("provider is null %s %d", name, userId));
+            long started = pacer.now();
+            IBinder binder = source.read();
+            while (binder == null && pacer.now() - started < LAUNCH_TOKEN_BINDER_TIMEOUT) {
+                pacer.pause(LAUNCH_TOKEN_BINDER_RETRY);
+                binder = source.read();
+            }
+            if (binder == null) {
+                Log.e(TAG, String.format(Locale.ENGLISH,
+                        "no server binder to validate against after %dms", LAUNCH_TOKEN_BINDER_TIMEOUT));
                 return false;
             }
-            // getBinder hands back the server binder without attaching, and unlike sendUserService it
-            // does not wait for the manager's state machine. Both layers reject null extras.
+            return queryTokenLive(binder, token);
+        } catch (Throwable tr) {
+            Log.e(TAG, "failed to validate user service token", tr);
+            return false;
+        }
+    }
+
+    /** Holds one external provider reference per {@link #read()} until {@link #close()}. */
+    private static final class ManagerBinderSource implements BinderSource {
+
+        private final String name;
+        private final int userId;
+        private int references;
+
+        ManagerBinderSource(String name, int userId) {
+            this.name = name;
+            this.userId = userId;
+        }
+
+        @Override
+        public IBinder read() throws Throwable {
+            // On every attempt, because this call is what starts the manager's process: retrying
+            // against a reference taken while it was dead would wait for a process nobody asked to
+            // come up. Each one taken is given back in close().
+            IContentProvider provider = ActivityManagerApis.getContentProviderExternal(name, userId, null, name);
+            if (provider == null) {
+                Log.e(TAG, String.format("provider is null %s %d", name, userId));
+                return null;
+            }
+            references++;
+            // getBinder hands back the server binder without attaching. Both layers reject null extras.
             Bundle reply = IContentProviderCompat.call(provider, null, null, name,
                     ShizukuProvider.METHOD_GET_BINDER, null, new Bundle());
             if (reply == null) {
-                Log.e(TAG, "no server binder to validate against");
-                return false;
+                return null;
             }
             reply.setClassLoader(BinderContainer.class.getClassLoader());
             BinderContainer container = reply.getParcelable(EXTRA_BINDER);
             if (container == null || container.binder == null || !container.binder.pingBinder()) {
-                Log.e(TAG, "no server binder to validate against");
-                return false;
+                return null;
             }
-            return queryTokenLive(container.binder, token);
-        } catch (Throwable tr) {
-            Log.e(TAG, "failed to validate user service token", tr);
-            return false;
-        } finally {
-            if (provider != null) {
+            return container.binder;
+        }
+
+        void close() {
+            while (references > 0) {
+                references--;
                 try {
                     ActivityManagerApis.removeContentProviderExternal(name, null);
                 } catch (Throwable tr) {
