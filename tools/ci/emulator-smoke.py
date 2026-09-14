@@ -368,8 +368,8 @@ class Smoke:
             # A stalled service must end the shell with a message instead of hanging forever.
             # SIGSTOP reproduces deterministically what a binder-buffer exhaustion does by chance.
             server = self.pid("porter_server")
-            self.shell("kill", "-STOP", server)
             try:
+                self.shell("kill", "-STOP", server)
                 self.shell("sh", "-c", redirected("stalled", "printf hello"))
             finally:
                 self.shell("kill", "-CONT", server)
