@@ -196,7 +196,7 @@ public class ApkReconcilerTest {
         oracle.answer(MANAGER, 0, PackageIdentity.Result.absent());
         scheduler.fire(ApkReconciler.LANE_MANAGER);
         assertEquals(List.of(), exits);
-        assertEquals(2_000L, scheduler.delay(ApkReconciler.LANE_MANAGER));
+        assertEquals(15_000L, scheduler.delay(ApkReconciler.LANE_MANAGER));
 
         scheduler.fire(ApkReconciler.LANE_MANAGER);
         assertEquals(List.of(ServerConstants.MANAGER_APP_NOT_FOUND), exits);
@@ -212,6 +212,42 @@ public class ApkReconcilerTest {
         scheduler.fire(ApkReconciler.LANE_MANAGER);
 
         assertEquals(List.of(), exits);
+    }
+
+    /**
+     * An `adb install -r` of the manager: the package reads absent for the length of the replace,
+     * then present again under the same identity.
+     */
+    @Test
+    public void aManagerUpgradeDoesNotExitTheServer() {
+        long replaceMillis = 5_000L;
+        scheduler = new TestScheduler();
+        reconciler = new ApkReconciler(MANAGER, identity(MANAGER, APP_ID, MINE), userServices,
+                new ApkReconciler.PackageOracle() {
+                    /** Opens at the first lookup, so the lane's first poll lands inside the replace. */
+                    long replaceEnds = Long.MIN_VALUE;
+
+                    @Override public PackageIdentity.Result of(String packageName, int userId) {
+                        long now = scheduler.now();
+                        if (replaceEnds == Long.MIN_VALUE) replaceEnds = now + replaceMillis;
+                        return now < replaceEnds
+                                ? PackageIdentity.Result.absent()
+                                : present(0, APP_ID, MINE);
+                    }
+
+                    @Override public List<Integer> userIds() { return List.of(0); }
+                }, scheduler, code -> exits.add(code));
+        reconciler.start();
+
+        // The window is longer than the 2000ms grace and shorter than the 15000ms interval, so only
+        // a recheck at the interval sees the manager come back.
+        scheduler.fire(ApkReconciler.LANE_MANAGER);
+        scheduler.fire(ApkReconciler.LANE_MANAGER);
+        scheduler.fire(ApkReconciler.LANE_MANAGER);
+
+        assertEquals("the server exited while the manager was being upgraded: the absence was"
+                + " confirmed inside the " + replaceMillis + "ms replace window, before the manager"
+                + " came back", List.of(), exits);
     }
 
     @Test
