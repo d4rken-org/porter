@@ -6,11 +6,11 @@ import android.os.Build
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.topjohnwu.superuser.Shell
+import moe.shizuku.common.util.BuildUtils
 import moe.shizuku.manager.ktx.logd
 import moe.shizuku.manager.service.WatchdogService
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import org.lsposed.hiddenapibypass.HiddenApiBypass
-import rikka.core.util.BuildUtils.atLeast30
 import rikka.shizuku.Shizuku
 
 class ShizukuApplication : Application() {
@@ -24,7 +24,7 @@ class ShizukuApplication : Application() {
             if (Build.VERSION.SDK_INT >= 28) {
                 HiddenApiBypass.setHiddenApiExemptions("")
             }
-            if (atLeast30) {
+            if (BuildUtils.atLeast30()) {
                 System.loadLibrary("adb")
             }
         }
