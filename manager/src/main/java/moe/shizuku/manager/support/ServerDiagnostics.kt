@@ -1,5 +1,6 @@
 package moe.shizuku.manager.support
 
+import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcel
 import android.os.ParcelFileDescriptor
@@ -24,7 +25,20 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 internal object ServerDiagnostics {
     private val drains = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    data class Info(val pid: Int, val version: PorterServiceVersion?)
+    data class Info(val pid: Int, val version: PorterServiceVersion?, val reconciler: Reconciler? = null)
+
+    /**
+     * Reconciler state as the service reports it. The timestamps come from the service's own
+     * monotonic clock, so they only mean anything next to each other.
+     */
+    data class Reconciler(
+        val managerCheckedAt: Long,
+        val hostScannedAt: Long,
+        val hostDeadlineAt: Long,
+        val managerFailures: Int,
+        val hostFailures: Int,
+        val lastTrigger: String?,
+    )
 
     fun readInfo(binder: IBinder): Info? {
         val request = Parcel.obtain()
@@ -40,11 +54,24 @@ internal object ServerDiagnostics {
             val code = extra?.getInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, -1) ?: -1
             val buildId = extra?.getString(PorterBuildIdentity.DIAGNOSTICS_KEY)?.takeIf { it.isNotBlank() }
             val version = if (!name.isNullOrBlank() && code >= 0) PorterServiceVersion(name, code, buildId) else null
-            return Info(pid, version)
+            return Info(pid, version, extra?.readReconciler())
         } finally {
             request.recycle()
             reply.recycle()
         }
+    }
+
+    /** Null from a service that predates the reconciler, which reports none of these keys. */
+    private fun Bundle.readReconciler(): Reconciler? {
+        if (!containsKey(ServerConstants.DIAGNOSTICS_RECONCILER_MANAGER_CHECKED)) return null
+        return Reconciler(
+            managerCheckedAt = getLong(ServerConstants.DIAGNOSTICS_RECONCILER_MANAGER_CHECKED, 0),
+            hostScannedAt = getLong(ServerConstants.DIAGNOSTICS_RECONCILER_HOST_SCANNED, 0),
+            hostDeadlineAt = getLong(ServerConstants.DIAGNOSTICS_RECONCILER_HOST_DEADLINE, -1),
+            managerFailures = getInt(ServerConstants.DIAGNOSTICS_RECONCILER_MANAGER_FAILURES, 0),
+            hostFailures = getInt(ServerConstants.DIAGNOSTICS_RECONCILER_HOST_FAILURES, 0),
+            lastTrigger = getString(ServerConstants.DIAGNOSTICS_RECONCILER_LAST_TRIGGER)?.takeIf { it.isNotBlank() },
+        )
     }
 
     /**
@@ -85,6 +112,14 @@ internal object ServerDiagnostics {
             details.appendText("UID: ${Shizuku.getUid()}\nAPI: ${Shizuku.getVersion()}\nSELinux: ${Shizuku.getSELinuxContext()}\n")
             val info = readInfo(binder) ?: error("Service diagnostics unsupported")
             details.appendText("PID: ${info.pid}\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nInstalled build: ${PorterServiceVersion.installed.buildId}\nService build: ${info.version?.buildId ?: "unknown"}\nAPI patch: ${Shizuku.getServerPatchVersion()}\n")
+            info.reconciler?.let {
+                details.appendText(
+                    "Reconciler manager check: ${it.managerCheckedAt}\nReconciler host scan: ${it.hostScannedAt}\n" +
+                        "Reconciler host deadline: ${it.hostDeadlineAt}\n" +
+                        "Reconciler failures: manager=${it.managerFailures} host=${it.hostFailures}\n" +
+                        "Reconciler last trigger: ${it.lastTrigger ?: "none"}\n"
+                )
+            }
         } catch (e: Exception) {
             runCatching { details.appendText("Server diagnostics unavailable: ${e.javaClass.simpleName}: ${e.message}\n") }
         }

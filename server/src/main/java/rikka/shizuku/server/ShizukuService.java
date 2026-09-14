@@ -62,6 +62,7 @@ import rikka.shizuku.ShizukuApiConstants;
 import rikka.shizuku.server.util.HandlerUtil;
 import rikka.shizuku.server.util.Logger;
 import rikka.shizuku.server.util.InstalledPackagesCompat;
+import rikka.shizuku.server.util.PackageIdentity;
 import rikka.shizuku.server.util.UserHandleCompat;
 
 public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuClientManager, ShizukuConfigManager> {
@@ -98,6 +99,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     private final ShizukuClientManager clientManager;
     private final ShizukuConfigManager configManager;
     private final int managerAppId;
+    private final ApkReconciler reconciler;
     private final java.util.concurrent.Executor historyWriter = java.util.concurrent.Executors.newSingleThreadExecutor();
     private final DebugLogLeases debugLogLeases = new DebugLogLeases();
     private final ConnectionHistory connectionHistory = new ConnectionHistory(
@@ -119,24 +121,31 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         waitSystemService(Context.USER_SERVICE);
         waitSystemService(Context.APP_OPS_SERVICE);
 
-        ApplicationInfo ai = getManagerApplicationInfo();
-        if (ai == null) {
+        // One signed observation, so the app id that authorises manager calls and the identity the
+        // reconciler compares against can never describe two different installations. A failed
+        // lookup exits too: publishing access while holding no verified baseline is worse than a
+        // restart, and the manager restarts the server anyway.
+        PackageIdentity.Result manager = PackageIdentity.of(MANAGER_APPLICATION_ID, 0);
+        if (manager.state != PackageIdentity.State.PRESENT) {
+            LOGGER.w("manager app is %s in user 0, exiting...", manager.state);
             System.exit(ServerConstants.MANAGER_APP_NOT_FOUND);
         }
 
-        assert ai != null;
-        managerAppId = ai.uid;
+        assert manager.observed != null;
+        managerAppId = manager.observed.appId;
 
         configManager = getConfigManager();
         clientManager = getClientManager();
         getUserServiceManager().setAccessPaused(configManager.isAccessPaused());
 
-        ApkChangedObservers.start(ai.sourceDir, () -> {
-            if (getManagerApplicationInfo() == null) {
-                LOGGER.w("manager app is uninstalled in user 0, exiting...");
-                System.exit(ServerConstants.MANAGER_APP_NOT_FOUND);
-            }
-        });
+        reconciler = new ApkReconciler(
+                MANAGER_APPLICATION_ID,
+                new PackageIdentity.Identity(MANAGER_APPLICATION_ID, manager.observed.appId, manager.observed.signerDigests),
+                getUserServiceManager(),
+                new ApkReconciler.SystemPackageOracle(),
+                new ApkReconciler.ExecutorScheduler(),
+                System::exit);
+        getUserServiceManager().setReconciler(reconciler);
 
         BinderSender.register(this);
         try {
@@ -152,6 +161,8 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             sendBinderToManager();
             sendBinderToClient();
         });
+
+        reconciler.start();
     }
 
     @Override
@@ -730,6 +741,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
             version.putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, moe.shizuku.server.BuildConfig.PORTER_VERSION_CODE);
             version.putString(eu.darken.porter.common.PorterBuildIdentity.DIAGNOSTICS_KEY,
                     eu.darken.porter.common.PorterBuildIdentity.ID + ":" + moe.shizuku.server.BuildConfig.BUILD_TYPE);
+            reconciler.writeDiagnostics(version);
             reply.writeBundle(version);
             return true;
         }
