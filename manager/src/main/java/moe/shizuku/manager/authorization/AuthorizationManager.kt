@@ -110,9 +110,9 @@ object AuthorizationManager {
         val packages: MutableList<PackageInfo> = ArrayList()
         if (Shizuku.isPreV11() || (Shizuku.getVersion() == 11 && Shizuku.getServerPatchVersion() < 3)) {
             val allPackages: MutableList<PackageInfo> = ArrayList()
-            for (user in ShizukuSystemApis.getUsers(useCache = false)) {
+            for (user in ShizukuSystemApis.instance.getUsers(useCache = false)) {
                 try {
-                    allPackages.addAll(ShizukuSystemApis.getInstalledPackages((PackageManager.GET_META_DATA or PackageManager.GET_PERMISSIONS).toLong(), user.id))
+                    allPackages.addAll(ShizukuSystemApis.instance.getInstalledPackages((PackageManager.GET_META_DATA or PackageManager.GET_PERMISSIONS).toLong(), user.id))
                 } catch (e: Throwable) {
                     LOGGER.w(e, "getInstalledPackages")
                 }
@@ -132,7 +132,7 @@ object AuthorizationManager {
 
     fun granted(packageName: String, uid: Int): Boolean {
         return if (Shizuku.isPreV11()) {
-            ShizukuSystemApis.checkPermission(Manifest.permission.API_V23, packageName, uid / 100000) == PackageManager.PERMISSION_GRANTED
+            ShizukuSystemApis.instance.checkPermission(Manifest.permission.API_V23, packageName, uid / 100000) == PackageManager.PERMISSION_GRANTED
         } else {
             (Shizuku.getFlagsForUid(uid, MASK_PERMISSION) and FLAG_ALLOWED) == FLAG_ALLOWED
         }
@@ -140,7 +140,7 @@ object AuthorizationManager {
 
     fun grant(packageName: String, uid: Int) {
         if (Shizuku.isPreV11()) {
-            ShizukuSystemApis.grantRuntimePermission(packageName, Manifest.permission.API_V23, uid / 100000)
+            ShizukuSystemApis.instance.grantRuntimePermission(packageName, Manifest.permission.API_V23, uid / 100000)
         } else {
             Shizuku.updateFlagsForUid(uid, MASK_PERMISSION, FLAG_ALLOWED)
         }
@@ -148,7 +148,7 @@ object AuthorizationManager {
 
     fun revoke(packageName: String, uid: Int) {
         if (Shizuku.isPreV11()) {
-            ShizukuSystemApis.revokeRuntimePermission(packageName, Manifest.permission.API_V23, uid / 100000)
+            ShizukuSystemApis.instance.revokeRuntimePermission(packageName, Manifest.permission.API_V23, uid / 100000)
         } else {
             Shizuku.updateFlagsForUid(uid, MASK_PERMISSION, 0)
         }

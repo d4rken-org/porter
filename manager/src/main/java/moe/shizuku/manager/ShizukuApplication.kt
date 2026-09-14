@@ -9,6 +9,7 @@ import com.topjohnwu.superuser.Shell
 import moe.shizuku.manager.ktx.logd
 import moe.shizuku.manager.service.WatchdogService
 import moe.shizuku.manager.utils.ShizukuStateMachine
+import moe.shizuku.manager.utils.ShizukuSystemApis
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import rikka.core.util.BuildUtils.atLeast30
 import rikka.shizuku.Shizuku
@@ -43,6 +44,7 @@ class ShizukuApplication : Application() {
             getSystemService(android.app.LocaleManager::class.java).applicationLocales = android.os.LocaleList.getEmptyLocaleList()
             ShizukuSettings.getPreferences().edit().putBoolean("system_locale_migrated", true).apply()
         }
+        ShizukuSystemApis.instance.attachToSystemServices()
         moe.shizuku.manager.support.DebugRecorder.initialize(context)
         // After the observers it can drive: the sticky binder-received listener fires
         // synchronously here when the binder is already up.
