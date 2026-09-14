@@ -34,7 +34,8 @@ TRANSPORT_BACKOFF = 2
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence", "porsh",
          "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
-         "foreign-signer-binds", "foreign-signer-never-binds", "non-daemon-control",
+         "foreign-signer-peeks", "foreign-signer-binds", "foreign-signer-never-binds",
+         "non-daemon-control",
          "manager-stopped-then-uninstalled", "manager-upgraded-then-uninstalled")
 # The host lane backs off to 300s between scans, so a change it has to notice can take that long
 # plus the confirmation grace. The manager lane never backs off.
@@ -547,21 +548,34 @@ class Smoke:
         self.case("host-removed-from-one-user", host_removed_from_one_user,
                   restore=("users", "probes", "grants"))
 
-        def foreign_signer_binds():
+        def replaced_by_a_foreign_signer():
+            """A live daemon of the original signer, with the replacement installed over it."""
             original = self.authorized_daemon()
             self.adb("uninstall", NATIVE)
             self.adb("install", str(self.foreign_probe()))
-            # The bind-time check, not a scan: a replacement is refused the moment it first asks,
-            # and peek is the noCreate path, which hands back an existing binder without creating.
+            # The bind-time check, not a scan: a replacement is refused the moment it first asks. A
+            # scan that got there first would leave nothing to hand over and pass either way.
+            assert original in self.service_pids(NATIVE), "the daemon was gone before the bind"
+            return original
+
+        def foreign_signer_peeks():
+            # peek is the noCreate path, which hands back an existing binder without creating.
+            original = replaced_by_a_foreign_signer()
             self.launch_probe(NATIVE, peek=True)
             self.allow_if_requested()
             self.expect_log(NATIVE, "PEEK version=-1")
-            assert original not in self.service_pids(NATIVE), "the noCreate path kept the old daemon"
-            before = self.service_pids(NATIVE)
+            after = self.service_pids(NATIVE)
+            assert original not in after, "the noCreate path kept the old daemon"
+            return {"original": original, "after": sorted(after)}
+        self.case("foreign-signer-peeks", foreign_signer_peeks, restore=("probes", "grants"))
+
+        def foreign_signer_binds():
+            # No peek first: the reuse path has to refuse the record on its own.
+            original = replaced_by_a_foreign_signer()
             self.launch_probe(NATIVE, daemon=True)
             self.authorized(NATIVE)
             after = self.service_pids(NATIVE)
-            assert after - before, "the replacement was handed the original signer's daemon"
+            assert original not in after, "the replacement was handed the original signer's daemon"
             return {"original": original, "after": sorted(after)}
         self.case("foreign-signer-binds", foreign_signer_binds, restore=("probes", "grants"))
 
