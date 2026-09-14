@@ -66,7 +66,7 @@ class RequestPermissionActivity : ComposeActivity() {
                 val profile = try {
                     withTimeout(PermissionViewModel.SERVICE_TIMEOUT) {
                         ShizukuStateMachine.instance.asFlow().first { it == ShizukuStateMachine.State.RUNNING }
-                        withContext(Dispatchers.IO) { runCatching { ShizukuSystemApis.getUserInfo(userId).let { "${it.name} ($userId)" } }.getOrNull() }
+                        withContext(Dispatchers.IO) { runCatching { ShizukuSystemApis.instance.getUserInfo(userId).let { "${it.name} ($userId)" } }.getOrNull() }
                     }
                 } catch (e: TimeoutCancellationException) {
                     LOGGER.e(e, "Binder not received in 5s, requesting user not named")

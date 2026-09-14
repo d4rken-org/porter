@@ -55,7 +55,7 @@ class AppsViewModel(application: Application) : AndroidViewModel(application) {
                 val userId = entry.userId
                 val baseLabel = runCatching { ai.loadLabel(pm).toString() }.getOrDefault(ai.packageName)
                 val label = if (userId == UserHandleCompat.myUserId()) baseLabel
-                    else "$baseLabel - ${ShizukuSystemApis.getUserInfo(userId).name} ($userId)"
+                    else "$baseLabel - ${ShizukuSystemApis.instance.getUserInfo(userId).name} ($userId)"
                 val iconKey = "${ai.uid}:${ai.packageName}:${ai.sourceDir}"
                 val icon = if (icons.containsKey(iconKey)) icons[iconKey] else {
                     runCatching { ai.loadIcon(pm).toBitmap(96, 96) }.getOrNull().also { icons[iconKey] = it }

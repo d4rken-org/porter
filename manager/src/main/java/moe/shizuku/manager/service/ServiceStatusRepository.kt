@@ -84,7 +84,7 @@ internal class ServiceStatusRepository private constructor(private val appContex
 
         // Before a526d6bb, server will not exit on uninstall, manager installed later will get not permission
         // Run a random remote transaction here, report no permission as not running
-        ShizukuSystemApis.checkPermission(Manifest.permission.API_V23, appContext.packageName, 0)
+        ShizukuSystemApis.instance.checkPermission(Manifest.permission.API_V23, appContext.packageName, 0)
         val info = try {
             Shizuku.getBinder()?.let { ServerDiagnostics.readInfo(it) }
         } catch (e: Exception) {
