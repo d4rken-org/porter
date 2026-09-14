@@ -173,7 +173,16 @@ class Smoke:
         abi = self.shell("getprop", "ro.product.cpu.abi")
         library_dir = {"x86": "x86", "x86_64": "x86_64", "arm64-v8a": "arm64", "armeabi-v7a": "arm"}[abi]
         self.shell(str(Path(apk).parent / "lib" / library_dir / "libshizuku.so"))
-        self.until(f"new {name} process", lambda: (pid := self.pid(name)) and pid != previous)
+        started = self.until(f"new {name} process",
+                             lambda: (pid := self.pid(name)) and pid != previous and pid)
+        # A pid exists a fraction of a second after exec, while Service's constructor is still
+        # dlopen'ing librish.so out of the manager's code path. A caller that installs over the
+        # manager in that window deletes the path from under the load and the server dies with
+        # UnsatisfiedLinkError. "starting server..." is logged once that constructor is past the
+        # load, so it is the barrier worth waiting on rather than process existence.
+        self.until(f"{name} finished loading its natives",
+                   lambda: "starting server..." in self.adb(
+                       "logcat", "-d", "--pid=" + started, "-s", "Service:I", "*:S"))
 
     def launch_probe(self, package, daemon=False, peek=False):
         for probe in (NATIVE, LEGACY):
