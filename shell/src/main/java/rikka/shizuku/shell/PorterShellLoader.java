@@ -135,9 +135,9 @@ public class PorterShellLoader {
         if (pkg.size() == 1) {
             packageName = pkg.get(0);
         } else {
-            packageName = System.getenv("RISH_APPLICATION_ID");
+            packageName = System.getenv("PORSH_APPLICATION_ID");
             if (TextUtils.isEmpty(packageName) || "PKG".equals(packageName)) {
-                abort("RISH_APPLICATION_ID is not set, please set this environment variable in rish to the package name of the terminal app");
+                abort("PORSH_APPLICATION_ID is not set, please set this environment variable in porsh to the package name of the terminal app");
                 System.exit(1);
             }
         }
