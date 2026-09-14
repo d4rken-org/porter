@@ -364,7 +364,19 @@ class Smoke:
             assert evidence("tail-stdout") == b"out", evidence("tail-stdout")
             # The last write before exit is the one truncated when stderr is not drained.
             assert evidence("tail-stderr") == b"last", evidence("tail-stderr")
-            return {"exit_status": status("exit"), "bulk_bytes": len(bulk)}
+
+            # A stalled service must end the shell with a message instead of hanging forever.
+            # SIGSTOP reproduces deterministically what a binder-buffer exhaustion does by chance.
+            server = self.pid("porter_server")
+            self.shell("kill", "-STOP", server)
+            try:
+                self.shell("sh", "-c", redirected("stalled", "printf hello"))
+            finally:
+                self.shell("kill", "-CONT", server)
+            assert status("stalled") != 0, status("stalled")
+            assert b"timed out" in evidence("stalled-stderr"), evidence("stalled-stderr")
+            return {"exit_status": status("exit"), "bulk_bytes": len(bulk),
+                    "stalled_status": status("stalled")}
         self.case("porsh", porsh)
 
     def reports(self):
