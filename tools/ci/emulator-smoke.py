@@ -573,6 +573,7 @@ class Smoke:
             # No peek first: the reuse path has to refuse the record on its own.
             original = replaced_by_a_foreign_signer()
             self.launch_probe(NATIVE, daemon=True)
+            self.allow_if_requested()
             self.authorized(NATIVE)
             after = self.service_pids(NATIVE)
             assert original not in after, "the replacement was handed the original signer's daemon"
