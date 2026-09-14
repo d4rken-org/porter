@@ -4,12 +4,12 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.IBinder;
 
-import rikka.rish.Rish;
-import rikka.rish.RishConfig;
+import eu.darken.porter.porsh.Porsh;
+import eu.darken.porter.porsh.PorshConfig;
 import rikka.shizuku.Shizuku;
 import rikka.shizuku.ShizukuApiConstants;
 
-public class Shell extends Rish {
+public class Shell extends Porsh {
 
     @Override
     public void requestPermission(Runnable onGrantedRunnable) {
@@ -41,7 +41,7 @@ public class Shell extends Rish {
     public static void main(String[] args, String packageName, IBinder binder, Handler handler) {
         // The loader timeout only covers binder delivery, not the user's permission decision.
         handler.removeCallbacksAndMessages(null);
-        RishConfig.init(binder, ShizukuApiConstants.BINDER_DESCRIPTOR, 30000);
+        PorshConfig.init(binder, ShizukuApiConstants.BINDER_DESCRIPTOR, 30000);
         Shizuku.onBinderReceived(binder, packageName);
         Shizuku.addBinderReceivedListenerSticky(() -> {
             int version = Shizuku.getVersion();
