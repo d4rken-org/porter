@@ -80,6 +80,15 @@ class ShizukuSystemApisTest {
         assertEquals(0, loads)
     }
 
+    @Test fun aReadInProgressSurvivesTheCacheBeingRefilled() {
+        val apis = newApis().apply { attachToSystemServices() }
+
+        val iterator = apis.getUsers().iterator()
+        apis.getUsers(useCache = false)
+
+        assertEquals(listOf(0, 10), iterator.asSequence().map { it.id }.toList())
+    }
+
     @Test fun onlyAnUncachedReadReachesTheLoaderAgain() {
         val apis = newApis().apply { attachToSystemServices() }
 
