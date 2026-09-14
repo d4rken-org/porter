@@ -110,14 +110,16 @@ public class PorterShellLoader {
         }
 
         try {
-            System.out.println("Entering shell...");
+            if (args.length == 0) {
+                System.out.println("Entering shell...");
+            }
             var classLoader = new BaseDexClassLoader(sourceDir, null, librarySearchPath, ClassLoader.getSystemClassLoader());
             Class<?> cls = classLoader.loadClass("moe.shizuku.manager.shell.Shell");
             cls.getDeclaredMethod("main", String[].class, String.class, IBinder.class, Handler.class)
                     .invoke(null, args, callingPackage, binder, handler);
         } catch (ClassNotFoundException tr) {
             System.err.println("Class not found");
-            System.err.println("Make sure you have Shizuku v12.0.0 or above installed");
+            System.err.println("Make sure the Porter app is installed and up to date");
             System.err.flush();
             System.exit(1);
         } catch (Throwable tr) {
