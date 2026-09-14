@@ -168,37 +168,52 @@ public final class PackageIdentity {
         return Result.present(observed);
     }
 
-    /** Reads an identity out of a {@link PackageInfo} already fetched with {@link #lookupFlags()}. */
+    /**
+     * The signers of a {@link PackageInfo} already fetched with {@link #lookupFlags()}, or null when
+     * the answer carries none. Both readers share it, so neither has to supply a user id to learn
+     * who signed an APK.
+     */
     @SuppressWarnings("deprecation")
-    public static Observed observe(PackageInfo packageInfo, int userId) {
-        if (packageInfo == null || packageInfo.applicationInfo == null) return null;
-        int appId = UserHandleCompat.getAppId(packageInfo.applicationInfo.uid);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            SigningInfo signingInfo = packageInfo.signingInfo;
-            if (signingInfo != null) {
-                // History is null for a multi-signer package, where rotation is not possible, so
-                // there the whole signer set is the identity.
-                boolean multiple = signingInfo.hasMultipleSigners();
-                Set<String> digests = digestsOf(signingInfo.getApkContentsSigners());
-                if (digests.isEmpty()) return null;
-                return new Observed(userId, appId, digests, multiple,
-                        multiple ? null : signingInfo.getSigningCertificateHistory());
-            }
-        }
-
-        Set<String> digests = digestsOf(packageInfo.signatures);
-        if (digests.isEmpty()) return null;
-        return new Observed(userId, appId, digests, digests.size() > 1, null);
+    private static Set<String> signerDigestsOf(PackageInfo packageInfo) {
+        SigningInfo signingInfo = signingInfoOf(packageInfo);
+        Set<String> digests = signingInfo != null
+                ? digestsOf(signingInfo.getApkContentsSigners())
+                : digestsOf(packageInfo.signatures);
+        return digests.isEmpty() ? null : digests;
     }
 
-    /** The identity a record remembers, taken from the same lookup that authorised the bind. */
+    /** Null below API 28, where the lineage this carries does not exist. */
+    private static SigningInfo signingInfoOf(PackageInfo packageInfo) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? packageInfo.signingInfo : null;
+    }
+
+    /** Reads an identity out of a {@link PackageInfo} already fetched with {@link #lookupFlags()}. */
+    public static Observed observe(PackageInfo packageInfo, int userId) {
+        if (packageInfo == null || packageInfo.applicationInfo == null) return null;
+        Set<String> digests = signerDigestsOf(packageInfo);
+        if (digests == null) return null;
+        int appId = UserHandleCompat.getAppId(packageInfo.applicationInfo.uid);
+
+        SigningInfo signingInfo = signingInfoOf(packageInfo);
+        if (signingInfo == null) return new Observed(userId, appId, digests, digests.size() > 1, null);
+        // History is null for a multi-signer package, where rotation is not possible, so there the
+        // whole signer set is the identity.
+        boolean multiple = signingInfo.hasMultipleSigners();
+        return new Observed(userId, appId, digests, multiple,
+                multiple ? null : signingInfo.getSigningCertificateHistory());
+    }
+
+    /**
+     * The identity a record remembers, taken from the same lookup that authorised the bind. Null
+     * when no signer could be read: {@link #classify} calls that same reading a failure, and an
+     * identity carrying no signer could never match anything again.
+     */
     public static Identity identityOf(PackageInfo packageInfo) {
-        Observed observed = observe(packageInfo, 0);
-        Set<String> digests = observed != null ? observed.signerDigests : Collections.<String>emptySet();
-        int appId = packageInfo.applicationInfo != null
-                ? UserHandleCompat.getAppId(packageInfo.applicationInfo.uid) : -1;
-        return new Identity(packageInfo.packageName, appId, digests);
+        if (packageInfo == null || packageInfo.applicationInfo == null) return null;
+        Set<String> digests = signerDigestsOf(packageInfo);
+        if (digests == null) return null;
+        return new Identity(packageInfo.packageName,
+                UserHandleCompat.getAppId(packageInfo.applicationInfo.uid), digests);
     }
 
     private static Set<String> digestsOf(Signature[] signatures) {

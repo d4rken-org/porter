@@ -10,6 +10,7 @@ import java.util.Map;
 
 import moe.shizuku.starter.ServiceStarter;
 import rikka.shizuku.server.util.PackageIdentity;
+import rikka.shizuku.server.util.UserHandleCompat;
 
 public class ShizukuUserServiceManager extends UserServiceManager {
 
@@ -81,7 +82,10 @@ public class ShizukuUserServiceManager extends UserServiceManager {
         // An unidentified record and an unreadable identity are both "cannot prove a match", which is
         // not the same as a match.
         if (recorded == null) return false;
-        return recorded.matches(PackageIdentity.observe(packageInfo, 0));
+        // The caller's user, from the lookup that was made for it: the components compared here are
+        // package-global, but an observation labelled with the wrong user reads as one.
+        int userId = UserHandleCompat.getUserId(packageInfo.applicationInfo.uid);
+        return recorded.matches(PackageIdentity.observe(packageInfo, userId));
     }
 
     @Override
@@ -93,9 +97,15 @@ public class ShizukuUserServiceManager extends UserServiceManager {
         super.onUserServiceRecordCreated(record, packageInfo);
 
         // From the PackageInfo that authorised this bind: a second lookup here would run under the
-        // monitor on a binder thread with the record half registered, and an unidentified record has
-        // no good disposition.
-        hostIdentities.put(record, PackageIdentity.identityOf(packageInfo));
+        // monitor on a binder thread with the record half registered.
+        PackageIdentity.Identity identity = PackageIdentity.identityOf(packageInfo);
+        if (identity == null) {
+            // Every record in the map has an identity every later bind and every scan is judged
+            // against, so a bind that cannot be identified is a bind that cannot be authorised.
+            record.removeSelf();
+            throw new SecurityException("Cannot identify " + packageInfo.packageName);
+        }
+        hostIdentities.put(record, identity);
         reconciler.onHostRecordCreated();
     }
 
