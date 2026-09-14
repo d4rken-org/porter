@@ -1,0 +1,53 @@
+package moe.shizuku.manager
+
+import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.test.core.app.ApplicationProvider
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import org.robolectric.util.ReflectionHelpers
+
+/**
+ * The one-shot clear of the system locale selection. A user can pick Porter's language in system
+ * settings before ever launching it, so only an install that carries settings from the in-app
+ * language picker may be cleared.
+ */
+@RunWith(RobolectricTestRunner::class)
+@Config(application = TestApplication::class, sdk = [34])
+class LocaleMigrationTest {
+    private val application = ApplicationProvider.getApplicationContext<Application>()
+
+    private fun store(): SharedPreferences = application.createDeviceProtectedStorageContext()
+        .getSharedPreferences(ShizukuSettings.NAME, Context.MODE_PRIVATE)
+
+    @Before fun resetSettings() {
+        store().edit().clear().commit()
+        ReflectionHelpers.setStaticField(ShizukuSettings::class.java, "sPreferences", null)
+    }
+
+    @Test fun aFreshInstallKeepsTheSystemLocale() {
+        ShizukuSettings.initialize(application)
+        assertFalse(LocaleMigration.needsClear(ShizukuSettings.getPreferences()))
+    }
+
+    @Test fun anUpgradeClearsTheLocaleOnce() {
+        store().edit().putBoolean(ShizukuSettings.Keys.KEY_WATCHDOG, true).commit()
+        ShizukuSettings.initialize(application)
+        val prefs = ShizukuSettings.getPreferences()
+        assertTrue(LocaleMigration.needsClear(prefs))
+        LocaleMigration.markDone(prefs)
+        assertFalse(LocaleMigration.needsClear(prefs))
+    }
+
+    @Test fun anAlreadyMigratedInstallKeepsTheSystemLocale() {
+        store().edit().putBoolean(ShizukuSettings.Keys.KEY_SYSTEM_LOCALE_MIGRATED, true).commit()
+        ShizukuSettings.initialize(application)
+        assertFalse(LocaleMigration.needsClear(ShizukuSettings.getPreferences()))
+    }
+}
