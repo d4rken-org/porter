@@ -23,7 +23,7 @@ class ServiceUpdateWorker(context: Context, parameters: WorkerParameters) : Coro
         val connected = withTimeoutOrNull(15_000) {
             ShizukuStateMachine.instance.asFlow().first { it == ShizukuStateMachine.State.RUNNING && Shizuku.pingBinder() }
         }
-        if (connected != null) ServiceReplacement.updateInBackground()
+        if (connected != null) ServiceReplacement.get(applicationContext).updateInBackground()
         else moe.shizuku.manager.utils.Logger.LOGGER.i("Service update skipped: no running service connected within 15 seconds")
         return Result.success()
     }
