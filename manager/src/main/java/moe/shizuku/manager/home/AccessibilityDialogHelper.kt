@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import moe.shizuku.manager.R
 import moe.shizuku.manager.adb.AdbPairingAccessibilityService
+import moe.shizuku.manager.ktx.asActivity
 import moe.shizuku.manager.ui.ComposeDialogFragment
 import moe.shizuku.manager.utils.SettingsPage
-import rikka.core.content.asActivity
 
 fun Context.showAccessibilityDialog() {
     val installer = packageManager.getInstallerPackageName(packageName)

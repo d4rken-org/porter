@@ -15,12 +15,12 @@ import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.R
 import moe.shizuku.manager.adb.AdbPairingTutorialActivity
 import moe.shizuku.manager.home.showAccessibilityDialog
+import moe.shizuku.manager.ktx.asActivity
 import moe.shizuku.manager.receiver.NotifCancelReceiver
 import moe.shizuku.manager.starter.StarterActivity
 import moe.shizuku.manager.utils.CustomTabsHelper
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import rikka.core.content.asActivity
 
 object WirelessStart {
         fun start (context: Context, scope: CoroutineScope) {
