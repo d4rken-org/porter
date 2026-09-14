@@ -23,7 +23,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ui.*
-import rikka.compatibility.DeviceCompatibility
+import moe.shizuku.manager.utils.DeviceCompatibility
 
 class ShellTutorialActivity : ComposeActivity() {
     private val model: ShellTutorialViewModel by viewModels()

@@ -18,9 +18,9 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import moe.shizuku.manager.AppConstants
 
+import moe.shizuku.manager.utils.DeviceCompatibility
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.SettingsPage
-import rikka.compatibility.DeviceCompatibility
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
