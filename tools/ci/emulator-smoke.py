@@ -331,23 +331,13 @@ class Smoke:
                 # adb() raises on a non-zero exit and discards the code, so the device records it.
                 return int(evidence(f"{name}-status").decode())
 
-            # The grant is a UI decision with no deadline: uid 2000 has no config entry yet and
-            # Shell clears the loader's own 5 s timeout, so this run blocks past adb()'s 45 s.
-            command = ["adb", "-s", self.args.serial, "shell",
-                       shlex.join(["sh", "-c", redirected("banner", "printf hello")])]
-            first = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            try:
-                self.tap("Allow all the time", screenshot="porsh-permission")
-                first.communicate(timeout=180)
-            finally:
-                if first.poll() is None:
-                    first.kill()
-                    first.communicate()
+            # No grant interaction: the server runs as uid 2000, and Service.checkSelfPermission
+            # returns true for a caller whose uid is the server's, so adb shell needs no entry.
+            self.shell("sh", "-c", redirected("banner", "printf hello"))
             assert status("banner") == 0, evidence("banner-stderr")
             # Byte-exact: an unconditional "Entering shell..." here breaks command substitution.
             assert evidence("banner-stdout") == b"hello", evidence("banner-stdout")
 
-            # The grant persists through configManager.update, so the rest need no interaction.
             self.shell("sh", "-c", redirected("exit", "exit 37"))
             assert status("exit") == 37, status("exit")
 
