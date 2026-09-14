@@ -93,6 +93,15 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         return Android17Compat.getApplicationInfo(MANAGER_APPLICATION_ID, 0, 0);
     }
 
+    /**
+     * The startup verdict on the manager lookup; {@code 0} means carry on. A failed lookup exits for
+     * the same reason an absent manager does: the alternative is publishing access while holding no
+     * verified baseline, and the manager restarts the server anyway.
+     */
+    static int managerStartupExitCode(PackageIdentity.Result result) {
+        return result.state == PackageIdentity.State.PRESENT ? 0 : ServerConstants.MANAGER_APP_NOT_FOUND;
+    }
+
     @SuppressWarnings({"FieldCanBeLocal"})
     private final Handler mainHandler = new Handler(Looper.myLooper());
     //private final Context systemContext = HiddenApiBridge.getSystemContext();
@@ -126,9 +135,9 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         // lookup exits too: publishing access while holding no verified baseline is worse than a
         // restart, and the manager restarts the server anyway.
         PackageIdentity.Result manager = PackageIdentity.of(MANAGER_APPLICATION_ID, 0);
-        if (manager.state != PackageIdentity.State.PRESENT) {
+        if (managerStartupExitCode(manager) != 0) {
             LOGGER.w("manager app is %s in user 0, exiting...", manager.state);
-            System.exit(ServerConstants.MANAGER_APP_NOT_FOUND);
+            System.exit(managerStartupExitCode(manager));
         }
 
         assert manager.observed != null;

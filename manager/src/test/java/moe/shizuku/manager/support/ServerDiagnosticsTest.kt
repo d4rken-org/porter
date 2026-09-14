@@ -48,6 +48,38 @@ class ServerDiagnosticsTest {
         assertEquals("dirty-build:debug", info!!.version!!.buildId)
     }
 
+    private fun Parcel.reconcilerBundle(trigger: String?) = writeBundle(Bundle().apply {
+        putString(ServerConstants.DIAGNOSTICS_VERSION_NAME, "1.2.0-beta3")
+        putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, 1200030)
+        putLong(ServerConstants.DIAGNOSTICS_RECONCILER_MANAGER_CHECKED, 91_000)
+        putLong(ServerConstants.DIAGNOSTICS_RECONCILER_HOST_SCANNED, 88_000)
+        putLong(ServerConstants.DIAGNOSTICS_RECONCILER_HOST_DEADLINE, 118_000)
+        putInt(ServerConstants.DIAGNOSTICS_RECONCILER_MANAGER_FAILURES, 0)
+        putInt(ServerConstants.DIAGNOSTICS_RECONCILER_HOST_FAILURES, 3)
+        trigger?.let { putString(ServerConstants.DIAGNOSTICS_RECONCILER_LAST_TRIGGER, it) }
+    })
+
+    @Test fun reconcilerStateSurvivesTheDiagnosticsHandshake() {
+        val info = ServerDiagnostics.readInfo(service {
+            writeNoException(); writeInt(4321); reconcilerBundle("host replaced eu.darken.porter.probe")
+        })
+        assertEquals(
+            ServerDiagnostics.Reconciler(91_000, 88_000, 118_000, 0, 3, "host replaced eu.darken.porter.probe"),
+            info!!.reconciler,
+        )
+    }
+
+    @Test fun anEmptyTriggerReadsAsNoTriggerRatherThanABlankOne() {
+        val info = ServerDiagnostics.readInfo(service { writeNoException(); writeInt(4321); reconcilerBundle("") })
+        assertNull(info!!.reconciler!!.lastTrigger)
+    }
+
+    @Test fun aServiceOmittingTheReconcilerKeysStillParses() {
+        val info = ServerDiagnostics.readInfo(service { writeNoException(); writeInt(4321); versionBundle("1.2.0-beta3", 1200030) })
+        assertNull(info!!.reconciler)
+        assertEquals(1200030, info.version!!.code)
+    }
+
     @Test fun serviceWithoutVersionReportsOnlyPid() {
         val info = ServerDiagnostics.readInfo(service { writeNoException(); writeInt(77) })
         assertEquals(ServerDiagnostics.Info(77, null), info)

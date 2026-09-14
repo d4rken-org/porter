@@ -37,7 +37,7 @@ public final class PackageIdentity {
         /** Null below API 28 and for multi-signer packages, where rotation is not possible. */
         public final Signature[] signingHistory;
 
-        Observed(int userId, int appId, Set<String> signerDigests, boolean multipleSigners, Signature[] signingHistory) {
+        public Observed(int userId, int appId, Set<String> signerDigests, boolean multipleSigners, Signature[] signingHistory) {
             this.userId = userId;
             this.appId = appId;
             this.signerDigests = signerDigests;
@@ -145,7 +145,8 @@ public final class PackageIdentity {
         return classify(packageInfo, userId);
     }
 
-    static Result classify(PackageInfo packageInfo, int userId) {
+    /** Turns an already-fetched {@link PackageInfo} into a verdict for one user. */
+    public static Result classify(PackageInfo packageInfo, int userId) {
         // null for a missing package is the hidden IPackageManager contract; NameNotFoundException
         // is higher-level PackageManager behaviour and does not reach here.
         if (packageInfo == null) return Result.absent();
