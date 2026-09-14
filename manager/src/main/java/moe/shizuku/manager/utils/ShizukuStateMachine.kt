@@ -1,33 +1,46 @@
 package moe.shizuku.manager.utils
 
 import android.util.Log
-import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.atomic.AtomicReference
-import kotlinx.coroutines.channels.awaitClose
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import rikka.shizuku.Shizuku
 
-object ShizukuStateMachine {
+class ShizukuStateMachine {
 
     enum class State { STARTING, RUNNING, STOPPING, STOPPED, CRASHED }
 
-    private var state = AtomicReference<State>(State.STOPPED)
-    private val listeners = CopyOnWriteArrayList<(State) -> Unit>()
-
     private val lock = Any()
 
+    /** The authoritative store. Written only under [lock], read without it by [get]. */
+    @Volatile
+    private var current: State = State.STOPPED
+
     /**
-     * Guarded by [lock]. Each entry is a transition and the listeners registered when it was
-     * enqueued. Appends happen under the same [lock] that stores the new state, and [drain] removes
-     * from the front, so the deque's FIFO order is the delivery order.
+     * Seeded at declaration so a subscriber that arrives before any transition still gets the
+     * current state. `DROP_OLDEST` keeps [current] and the replay slot in agreement: an emit that
+     * could fail would strand the flow on a stale state, and the no-op dedup in [transition] means
+     * no later `set` of that same state would ever repair it. The cost is that a subscriber more
+     * than `1 + extraBufferCapacity` transitions behind loses its own oldest unconsumed values;
+     * the newest transition is never the one dropped.
      */
-    private val pending = ArrayDeque<Pair<State, List<(State) -> Unit>>>()
+    private val transitions = MutableSharedFlow<State>(
+        replay = 1,
+        extraBufferCapacity = 256,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    ).also { it.tryEmit(State.STOPPED) }
 
-    /** Guarded by [lock]. True while some frame is running [drain]. */
-    private var draining = false
+    private val attached = AtomicBoolean(false)
 
-    init {
+    /**
+     * Registers the Shizuku binder callbacks. Explicit, and separate from construction: a second
+     * registration would double every transition, and merely holding an instance must not wire
+     * anything up.
+     */
+    fun attachToShizuku() {
+        if (!attached.compareAndSet(false, true)) return
         Shizuku.addBinderReceivedListenerSticky(
             Shizuku.OnBinderReceivedListener { set(State.RUNNING) }
         )
@@ -36,44 +49,19 @@ object ShizukuStateMachine {
         )
     }
 
-    fun get(): State = state.get()
+    fun get(): State = current
 
     private fun transition(transform: (State) -> State) {
-        synchronized(lock) {
-            val oldState = state.get()
+        val newState = synchronized(lock) {
+            val oldState = current
             val newState = transform(oldState)
             if (oldState == newState) return
-            state.set(newState)
-            pending.addLast(newState to listeners.toList())
-            // A transition raised from inside a listener lands here while an outer frame is still
-            // delivering; that frame picks this entry up and hands it to the listeners registered
-            // at this point only, so a listener registered later sees the state it was given at
-            // registration and the transitions after it, never this one.
-            if (draining) return
-            draining = true
+            current = newState
+            // Under [lock], so buffer order is store order.
+            transitions.tryEmit(newState)
+            newState
         }
-        drain()
-    }
-
-    /** Notifies outside [lock]: listener bodies reach a root shell and the main thread. */
-    private fun drain() {
-        while (true) {
-            val (newState, recipients) = synchronized(lock) {
-                pending.removeFirstOrNull().also { if (it == null) draining = false }
-            } ?: return
-            recipients.forEach { listener ->
-                if (!listeners.contains(listener)) return@forEach
-                try {
-                    listener(newState)
-                } catch (e: Throwable) {
-                    // Per listener, so the others still get this transition, and so the frame keeps
-                    // draining: unwinding here would leave draining set and silence every later
-                    // transition for the life of the process.
-                    Log.w("ShizukuStateMachine", "listener failed on $newState", e)
-                }
-            }
-            Log.d("ShizukuStateMachine", newState.toString())
-        }
+        Log.d("ShizukuStateMachine", newState.toString())
     }
 
     fun set(newState: State) = transition { newState }
@@ -97,34 +85,13 @@ object ShizukuStateMachine {
     }
 
     fun isDead(): Boolean {
-        return (get() == State.STOPPED || get() == State.CRASHED) 
+        return (get() == State.STOPPED || get() == State.CRASHED)
     }
 
-    /**
-     * Registers [listener] and hands it the state current at registration as a queue entry
-     * addressed to it alone, delivered by the same [drain] as every transition. It can therefore
-     * never observe a state older than one it has already been given, and a listener that throws
-     * on this delivery cannot unwind into the registrar. When another frame is already draining,
-     * this returns before the listener has been called.
-     */
-    fun addListener(listener: (State) -> Unit) {
-        synchronized(lock) {
-            listeners.add(listener)
-            pending.addLast(state.get() to listOf(listener))
-            if (draining) return
-            draining = true
-        }
-        drain()
-    }
+    fun asFlow(): Flow<State> = transitions.asSharedFlow()
 
-    fun removeListener(listener: (State) -> Unit) {
-        listeners.remove(listener)
-    }
-
-    fun asFlow(): Flow<State> = callbackFlow {
-        val listener: (State) -> Unit = { trySend(it).isSuccess }
-        addListener(listener)
-        awaitClose { removeListener(listener) }
+    companion object {
+        val instance: ShizukuStateMachine by lazy { ShizukuStateMachine() }
     }
 
 }
