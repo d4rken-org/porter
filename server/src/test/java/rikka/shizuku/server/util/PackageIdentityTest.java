@@ -198,6 +198,17 @@ public class PackageIdentityTest {
     }
 
     @Test
+    public void oneCoSignerOfATwoSignerIdentityIsNotThatIdentity() {
+        // Recorded as signed by ORIGINAL and SECOND together. A package signed by ORIGINAL alone,
+        // carrying ORIGINAL in its lineage, dropped a signing authority; that is a different
+        // installation, not a rotation of the pair.
+        PackageIdentity.Identity recorded = identityOf(ORIGINAL, SECOND);
+        PackageInfo dropped = installed(new Signature[]{ORIGINAL}, new Signature[]{ORIGINAL});
+        assertFalse("a single co-signer matched a two-signer identity",
+                recorded.matches(observe(dropped, 0)));
+    }
+
+    @Test
     public void aDifferentAppIdDoesNotMatchEvenWithTheSameSigner() {
         PackageIdentity.Identity recorded = identityOf(ORIGINAL);
         PackageInfo moved = installed(new Signature[]{ORIGINAL}, new Signature[]{ORIGINAL});
