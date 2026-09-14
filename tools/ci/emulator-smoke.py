@@ -175,11 +175,9 @@ class Smoke:
         self.shell(str(Path(apk).parent / "lib" / library_dir / "libshizuku.so"))
         started = self.until(f"new {name} process",
                              lambda: (pid := self.pid(name)) and pid != previous and pid)
-        # A pid exists a fraction of a second after exec, while Service's constructor is still
-        # dlopen'ing librish.so out of the manager's code path. A caller that installs over the
-        # manager in that window deletes the path from under the load and the server dies with
-        # UnsatisfiedLinkError. "starting server..." is logged once that constructor is past the
-        # load, so it is the barrier worth waiting on rather than process existence.
+        # Returning on the pid alone is too early: the server is still loading native code out of
+        # the manager's code path, so a caller that replaces the manager next pulls that path out
+        # from under the load. This line marks the load complete.
         self.until(f"{name} finished loading its natives",
                    lambda: "starting server..." in self.adb(
                        "logcat", "-d", "--pid=" + started, "-s", "Service:I", "*:S"))
@@ -308,8 +306,13 @@ class Smoke:
                 try:
                     self.restore(*restore)
                 except Exception:
-                    # Never masks the scenario's own failure, but the next one starts compromised.
                     result["restore_failure"] = traceback.format_exc()
+                    # Everything after this runs against a compromised fixture, so the run stops
+                    # here. Only when the scenario itself passed: re-raising while its own failure
+                    # is propagating would replace the diagnosis with this one.
+                    if "failure" not in result:
+                        result["passed"] = False
+                        raise
 
     def setup(self):
         assert self.args.serial.startswith("emulator-"), "A disposable emulator serial is required"
@@ -516,12 +519,17 @@ class Smoke:
 
         Two code paths end in the same absence: the bind-time check refusing the record, and the
         host scan removing it for the same mismatch before anything binds. Only the first is what
-        the scenarios calling this are about, so each is asserted separately.
+        the scenarios calling this are about, so the refusal is asserted directly rather than
+        inferred from the daemon being gone.
+
+        A scan warning is deliberately not asserted against. The scan logs its mismatch before it
+        removes anything, and the removal is a no-op once the bind has taken the record, so a scan
+        that lost the race still leaves a warning behind. Reading that as "the scan got there
+        first" would fail a run in which the bind-time check did exactly its job.
         """
         warnings = self.adb("logcat", "-d", "-s", "UserServiceManager:W", "ApkReconciler:W", "*:S")
         assert f"does not belong to the current installation of {package}" in warnings, \
             "the bind-time check never refused"
-        assert f"host replaced {package}" not in warnings, "the host scan removed it first"
 
     def reconciliation(self):
         # The five pre-existing cases leave grants and probe installations behind, so this block
@@ -588,8 +596,11 @@ class Smoke:
             self.launch_probe(NATIVE, peek=True)
             self.allow_if_requested()
             self.expect_log(NATIVE, "PEEK version=-1")
+            # Record destruction is dispatched one-way, so the process outlives the refusal by an
+            # unbounded moment. Polling asserts the same property without racing the teardown.
+            self.until("the noCreate path released the old daemon",
+                       lambda: original not in self.service_pids(NATIVE))
             after = self.service_pids(NATIVE)
-            assert original not in after, "the noCreate path kept the old daemon"
             self.refused_at_bind(NATIVE)
             return {"original": original, "after": sorted(after)}
         self.case("foreign-signer-peeks", foreign_signer_peeks, restore=("probes", "grants"))
@@ -600,8 +611,9 @@ class Smoke:
             self.launch_probe(NATIVE, daemon=True)
             self.allow_if_requested()
             self.authorized(NATIVE)
+            self.until("the replacement was refused the original signer's daemon",
+                       lambda: original not in self.service_pids(NATIVE))
             after = self.service_pids(NATIVE)
-            assert original not in after, "the replacement was handed the original signer's daemon"
             self.refused_at_bind(NATIVE)
             return {"original": original, "after": sorted(after)}
         self.case("foreign-signer-binds", foreign_signer_binds, restore=("probes", "grants"))
@@ -609,9 +621,16 @@ class Smoke:
         def foreign_signer_never_binds():
             service_pid = self.authorized_daemon()
             self.adb("uninstall", NATIVE)
+            # The uninstall kills the daemon itself, so its absence proves nothing about the scan.
+            # What this case is about is the scan removing the record of a package that came back
+            # under a different signer, and the scan says so itself. Clearing here bounds the
+            # interval to the replacement.
+            self.adb("logcat", "-c")
             self.adb("install", str(self.foreign_probe()))
-            self.until("record removed for a replaced package",
-                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=HOST_SCAN_TIMEOUT)
+            self.until("the host scan removed the replaced package's record",
+                       lambda: f"host replaced {NATIVE}" in self.adb(
+                           "logcat", "-d", "-s", "ApkReconciler:W", "*:S"),
+                       timeout=HOST_SCAN_TIMEOUT)
             return {"service_pid": service_pid}
         self.case("foreign-signer-never-binds", foreign_signer_never_binds, restore=("probes", "grants"))
 
