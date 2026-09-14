@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 internal open class SupportViewModel(application: Application, protected val savedState: SavedStateHandle) : AndroidViewModel(application) {
-    val recording = DebugRecorder.state
+    private val recorder = DebugRecorder.get(getApplication())
+    val recording = recorder.state
     private val mutableSessions = MutableStateFlow<List<DebugLogStore.Session>>(emptyList())
     val sessions = mutableSessions.asStateFlow()
     val busy = MutableStateFlow(false)
@@ -25,7 +26,7 @@ internal open class SupportViewModel(application: Application, protected val sav
         catch (e: Exception) { report(e) }
     }
     private suspend fun updateSessions() {
-        val loaded = DebugRecorder.sessions(getApplication())
+        val loaded = recorder.sessions()
         mutableSessions.value = loaded
         onSessions(loaded)
     }
@@ -33,16 +34,16 @@ internal open class SupportViewModel(application: Application, protected val sav
     fun requestRecording() { if (!busy.value) savedState["recordingConsent"] = recording.value.active }
     fun dismissRecording() { if (!busy.value) savedState["recordingConsent"] = null }
     fun performRecording(stop: Boolean) = operation {
-        if (stop) DebugRecorder.stop(getApplication()) else DebugRecorder.start(getApplication())
+        if (stop) recorder.stop() else recorder.start()
         savedState["recordingConsent"] = null
         updateSessions()
     }
     fun delete(id: String) = operation {
-        DebugRecorder.delete(getApplication(), id)
+        recorder.delete(id)
         updateSessions()
     }
     fun share(id: String) = operation {
-        events.send(logShareIntent(getApplication(), DebugRecorder.export(getApplication(), id)))
+        events.send(logShareIntent(getApplication(), recorder.export(id)))
     }
     protected fun operation(block: suspend () -> Unit) {
         if (busy.value) return

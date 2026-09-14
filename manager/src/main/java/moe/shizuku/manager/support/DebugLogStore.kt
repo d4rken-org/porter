@@ -7,10 +7,10 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 /** Access is serialized by DebugRecorder. */
-internal class DebugLogStore(private val root: File) {
+internal open class DebugLogStore(private val root: File) {
     data class Session(val id: String, val started: Long, val size: Long, val active: Boolean)
     private val marker get() = File(root, "active")
-    fun activeId(): String? = marker.takeIf { it.isFile }?.readText()?.takeIf { validId(it) }
+    open fun activeId(): String? = marker.takeIf { it.isFile }?.readText()?.takeIf { validId(it) }
     fun directory(id: String): File {
         require(validId(id))
         return File(root, id)
@@ -30,7 +30,7 @@ internal class DebugLogStore(private val root: File) {
             .map { Session(it.name, it.name.substringBefore('-').toLong(), it.walkTopDown().filter(File::isFile).sumOf(File::length), it.name == active) }
             .sortedByDescending { it.started }
     }
-    fun prune() { sessions().filterNot { it.active }.drop(5).forEach { delete(it.id) } }
+    open fun prune() { sessions().filterNot { it.active }.drop(5).forEach { delete(it.id) } }
     fun delete(id: String) {
         check(id != activeId())
         check(directory(id).deleteRecursively())

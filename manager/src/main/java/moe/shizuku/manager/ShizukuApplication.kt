@@ -45,7 +45,7 @@ class ShizukuApplication : Application() {
             ShizukuSettings.getPreferences().edit().putBoolean("system_locale_migrated", true).apply()
         }
         ShizukuSystemApis.instance.attachToSystemServices()
-        moe.shizuku.manager.support.DebugRecorder.initialize(context)
+        moe.shizuku.manager.support.DebugRecorder.get(context).attach()
         // After the observers it can drive: the sticky binder-received listener fires
         // synchronously here when the binder is already up.
         ShizukuStateMachine.instance.attachToShizuku()
