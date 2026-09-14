@@ -257,9 +257,6 @@ dependencies {
     implementation "org.bouncycastle:bcpkix-jdk18on:1.80"
     implementation "com.github.topjohnwu.libsu:core:6.0.0"
 
-    implementation "dev.rikka.rikkax.compatibility:compatibility:2.0.0"
-    implementation "dev.rikka.rikkax.core:core-ktx:1.4.1"
-
     implementation "io.github.vvb2060.ndk:boringssl:20250114"
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0"
