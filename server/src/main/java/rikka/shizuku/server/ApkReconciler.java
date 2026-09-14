@@ -171,12 +171,10 @@ public final class ApkReconciler {
             LOGGER.w(tr, "host lane");
         } finally {
             hostBackoff = changed ? 0 : Math.min(hostBackoff + 1, HOST_BACKOFF_MILLIS.length - 1);
-            long next = scheduler.now() + HOST_BACKOFF_MILLIS[hostBackoff];
-            long candidate = earliestCandidate();
-            // Only a candidate still ahead of us: one whose grace has passed while confirmation kept
-            // failing stays in the map, and arming it would ask the executor for a past deadline,
-            // which it runs immediately - the lane would busy-loop against the package manager.
-            armHost(candidate > scheduler.now() ? Math.min(next, candidate) : next);
+            long now = scheduler.now();
+            long next = now + HOST_BACKOFF_MILLIS[hostBackoff];
+            long candidate = earliestCandidateAfter(now);
+            armHost(candidate == NOT_SCHEDULED ? next : Math.min(next, candidate));
         }
     }
 
@@ -290,10 +288,16 @@ public final class ApkReconciler {
         }
     }
 
-    private long earliestCandidate() {
+    /**
+     * Earliest absence deadline still ahead of {@code now}. An expired one stays in the map, because
+     * confirmation still needs it, but it is not a deadline to arm: the executor runs a past deadline
+     * immediately, and letting it win this minimum would drop another host's live grace with it.
+     */
+    private long earliestCandidateAfter(long now) {
         long earliest = NOT_SCHEDULED;
         synchronized (absenceCandidates) {
             for (long deadline : absenceCandidates.values()) {
+                if (deadline <= now) continue;
                 if (earliest == NOT_SCHEDULED || deadline < earliest) earliest = deadline;
             }
         }
