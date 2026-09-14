@@ -99,9 +99,12 @@ public final class PackageIdentity {
         public boolean matches(Observed observed) {
             if (observed == null || observed.appId != appId) return false;
             if (signerDigests.equals(observed.signerDigests)) return true;
-            // Proof of rotation is an API 28 feature and only exists for a single signer. Below that,
-            // and for multi-signer packages, the platform rejects an update whose key differs, so a
-            // changed signature can only have come from an uninstall and a foreign reinstall.
+            // Proof of rotation is an API 28 feature and only exists for a single signer, on either
+            // side: a recorded pair that lost one of its signing authorities is a different
+            // installation, not a rotation. Below API 28, and for multi-signer packages, the platform
+            // rejects an update whose key differs, so a changed signature can only have come from an
+            // uninstall and a foreign reinstall.
+            if (signerDigests.size() != 1) return false;
             if (observed.multipleSigners || observed.signingHistory == null) return false;
             for (Signature past : observed.signingHistory) {
                 if (signerDigests.contains(digestOf(past))) return true;
