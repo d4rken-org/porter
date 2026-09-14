@@ -182,7 +182,8 @@ class Smoke:
         self.until("Porter stopped", lambda: not self.pid("porter_server"))
 
     def case(self, name, action):
-        if self.args.cases and name not in self.args.cases:
+        cases = getattr(self.args, "cases", None)
+        if cases and name not in cases:
             # Left out of self.results entirely: a case the run never reached has no verdict.
             print(f"SKIP {name}", flush=True)
             return

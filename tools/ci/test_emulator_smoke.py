@@ -1,3 +1,4 @@
+import argparse
 import contextlib
 import importlib.util
 import io
@@ -232,6 +233,13 @@ class CaseSelectionTest(unittest.TestCase):
         suite = ET.parse(self.runner.output / "junit.xml").getroot()
         self.assertEqual([case.get("name") for case in suite], ["setup", "porsh"])
         self.assertEqual((suite.get("tests"), suite.get("failures")), ("2", "0"))
+
+    def test_a_namespace_without_case_support_still_runs_every_case(self):
+        # compat-install-smoke.py builds its own parser, which has no --case flag at all.
+        self.runner.args = argparse.Namespace()
+        self.runner.case("setup", lambda: self.ran.append("setup"))
+        self.assertEqual(self.ran, ["setup"])
+        self.assertEqual(self.recorded(), ["setup"])
 
 
 class CaseArgumentTest(unittest.TestCase):
