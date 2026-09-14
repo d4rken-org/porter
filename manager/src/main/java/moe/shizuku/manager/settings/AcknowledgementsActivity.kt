@@ -88,8 +88,6 @@ class AcknowledgementsActivity : ComposeActivity() {
             Library("Hidden API Refine", "MIT License", "https://github.com/RikkaApps/HiddenApiRefinePlugin/blob/main/LICENSE"),
             Library("Hidden API Bypass", "Apache License 2.0", "https://github.com/LSPosed/AndroidHiddenApiBypass/blob/main/LICENSE"),
             Library("libsu", "Apache License 2.0", "https://github.com/topjohnwu/libsu/blob/master/LICENSE"),
-            Library("OkHttp", "Apache License 2.0", "https://github.com/square/okhttp/blob/master/LICENSE.txt"),
-            Library("Okio", "Apache License 2.0", "https://github.com/square/okio/blob/master/LICENSE.txt"),
             Library("Gson", "Apache License 2.0", "https://github.com/google/gson/blob/main/LICENSE"),
             Library("Bouncy Castle", "Bouncy Castle License (MIT)", "https://www.bouncycastle.org/about/license/"),
             Library("BoringSSL", "ISC / OpenSSL", "https://boringssl.googlesource.com/boringssl/+/refs/heads/main/LICENSE"),
