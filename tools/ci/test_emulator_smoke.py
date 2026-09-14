@@ -1,4 +1,7 @@
+import contextlib
 import importlib.util
+import io
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -185,3 +188,77 @@ class TransportRetryTest(unittest.TestCase):
                 completed(1, stderr=OFFLINE), completed(0, stdout=b"5271\n")]) as run:
             self.assertEqual(self.runner.shell("pidof", "porter_server", check=False), "5271")
         self.assertEqual(run.call_count, 2)
+
+class CaseSelectionTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner.output = Path(directory.name)
+        self.runner.results = []
+        self.runner.adb = Mock(return_value="")
+        self.ran = []
+
+    def declare(self, *cases):
+        """Offer every case to the choke point in the order run() declares them."""
+        self.runner.args = Mock(cases=list(cases) or None)
+        for name in smoke.CASES:
+            self.runner.case(name, lambda name=name: self.ran.append(name))
+
+    def recorded(self):
+        return [result["name"] for result in self.runner.results]
+
+    def test_the_valid_names_are_the_order_run_declares(self):
+        self.runner.args = Mock(cases=None)
+        self.runner.case = Mock()
+        self.runner.run()
+        self.assertEqual([c.args[0] for c in self.runner.case.call_args_list], list(smoke.CASES))
+
+    def test_without_a_selection_every_case_runs(self):
+        self.declare()
+        self.assertEqual(self.ran, list(smoke.CASES))
+        self.assertEqual(self.recorded(), list(smoke.CASES))
+
+    def test_a_selection_runs_only_its_cases_in_declared_order(self):
+        self.declare("porsh", "setup")
+        self.assertEqual(self.ran, ["setup", "porsh"])
+        self.assertEqual(self.recorded(), ["setup", "porsh"])
+
+    def test_a_skipped_case_is_absent_from_both_reports(self):
+        self.declare("setup", "porsh")
+        self.runner.reports()
+        results = json.loads((self.runner.output / "results.json").read_text())
+        self.assertEqual([result["name"] for result in results], ["setup", "porsh"])
+        suite = ET.parse(self.runner.output / "junit.xml").getroot()
+        self.assertEqual([case.get("name") for case in suite], ["setup", "porsh"])
+        self.assertEqual((suite.get("tests"), suite.get("failures")), ("2", "0"))
+
+
+class CaseArgumentTest(unittest.TestCase):
+    REQUIRED = ["--serial", "emulator-5554", "--output", "build/emulator-results",
+                "--manager", "manager.apk", "--compat", "compat.apk", "--native", "native.apk",
+                "--legacy", "legacy.apk", "--shizuku", "shizuku.apk"]
+
+    def parse(self, *extra):
+        return smoke.parse_args(self.REQUIRED + list(extra))
+
+    def rejected(self, *extra):
+        stderr = io.StringIO()
+        with self.assertRaises(SystemExit), contextlib.redirect_stderr(stderr):
+            self.parse(*extra)
+        return stderr.getvalue()
+
+    def test_an_omitted_flag_leaves_the_suite_unfiltered(self):
+        self.assertIsNone(self.parse().cases)
+
+    def test_the_flag_repeats_into_one_selection(self):
+        self.assertEqual(self.parse("--case", "setup", "--case", "porsh").cases, ["setup", "porsh"])
+
+    def test_a_selection_without_setup_is_rejected(self):
+        self.assertIn("--case setup is required", self.rejected("--case", "porsh"))
+
+    def test_an_unknown_case_is_rejected_and_names_the_valid_ones(self):
+        message = self.rejected("--case", "setup", "--case", "porsch")
+        self.assertIn("porsch", message)
+        for name in smoke.CASES:
+            self.assertIn(name, message)

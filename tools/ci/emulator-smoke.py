@@ -29,6 +29,8 @@ TRANSPORT_FAILURE = re.compile(r"^(adb: |error: ).*(device offline|device still 
                                re.MULTILINE)
 TRANSPORT_ATTEMPTS = 3
 TRANSPORT_BACKOFF = 2
+# The order run() declares, which --case narrows without ever reordering.
+CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence", "porsh")
 
 
 class Smoke:
@@ -180,6 +182,10 @@ class Smoke:
         self.until("Porter stopped", lambda: not self.pid("porter_server"))
 
     def case(self, name, action):
+        if self.args.cases and name not in self.args.cases:
+            # Left out of self.results entirely: a case the run never reached has no verdict.
+            print(f"SKIP {name}", flush=True)
+            return
         started = time.monotonic()
         result = {"name": name}
         try:
@@ -371,13 +377,24 @@ class Smoke:
         ET.ElementTree(suite).write(self.output / "junit.xml", encoding="utf-8", xml_declaration=True)
 
 
-if __name__ == "__main__":
+def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--serial", required=True)
     for name in ("manager", "compat", "native", "legacy", "shizuku"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    smoke = Smoke(parser.parse_args())
+    parser.add_argument("--case", action="append", dest="cases", choices=CASES, metavar="NAME",
+                        help="run only the named case, repeatable, in declared order; "
+                             "omit to run all of: " + ", ".join(CASES))
+    args = parser.parse_args(argv)
+    if args.cases and "setup" not in args.cases:
+        parser.error("--case setup is required: every other case needs the installs and the "
+                     "service start it performs")
+    return args
+
+
+if __name__ == "__main__":
+    smoke = Smoke(parse_args())
     try:
         smoke.run()
     finally:
