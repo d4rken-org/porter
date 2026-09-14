@@ -74,7 +74,7 @@
           - "shell/**"
           - "manager/src/**/moe/shizuku/manager/shell/**"
           - "manager/src/**/moe/shizuku/manager/receiver/BinderRequestReceiver*"
-          - "manager/src/main/assets/rish"
+          - "manager/src/main/assets/porsh"
 
 "c: Diagnostics":
   - changed-files:

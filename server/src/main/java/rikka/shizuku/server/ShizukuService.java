@@ -256,7 +256,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         isManager = MANAGER_APPLICATION_ID.equals(requestPackageName);
         if (!isManager) {
             // Declaring a client permission only decides who gets the binder pushed (see providerSuffix).
-            // Terminal clients (rish) fetch it themselves and declare nothing; they are admitted here on
+            // Terminal clients (porsh) fetch it themselves and declare nothing; they are admitted here on
             // the uid/package check above and gated by the user's explicit decision like any client.
             reconcileRuntimePermission(callingUid);
         }
@@ -591,7 +591,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
                     flags = entry.flags & ConfigManager.MASK_PERMISSION;
                 }
 
-                // Anything the user decided on is manageable here, declared permission or not (rish
+                // Anything the user decided on is manageable here, declared permission or not (porsh
                 // terminals). Undecided packages are only suggested when Porter would push to them.
                 if (flags != 0) {
                     list.add(pi);
