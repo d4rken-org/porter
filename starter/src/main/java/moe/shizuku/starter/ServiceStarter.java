@@ -6,15 +6,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Parcel;
+import android.os.RemoteException;
 import android.util.Log;
 import android.util.Pair;
 
 import java.util.Locale;
 
+import eu.darken.porter.common.UserServiceLaunch;
 import moe.shizuku.api.BinderContainer;
 import moe.shizuku.starter.util.IContentProviderCompat;
 import rikka.hidden.compat.ActivityManagerApis;
 import rikka.shizuku.ShizukuApiConstants;
+import rikka.shizuku.ShizukuProvider;
 import rikka.shizuku.starter.BuildConfig;
 import rikka.shizuku.server.UserService;
 
@@ -66,10 +70,24 @@ public class ServiceStarter {
             Looper.prepareMainLooper();
         }
 
+        String launchToken = null;
         for (String arg : args) {
             if (arg.startsWith("--manager=")) {
                 managerPackageName = arg.substring("--manager=".length());
+            } else if (arg.startsWith("--token=")) {
+                launchToken = arg.substring("--token=".length());
             }
+        }
+
+        // Before UserService.create, because that is where the client's code is loaded into this
+        // privileged process. It is the revocation case this exists for: setAccessPaused and a
+        // permission revocation both drop records, and without this a launch already in flight runs
+        // the app's code once regardless. It is not a time bound - the framework bootstrap inside
+        // create() can stretch - and it is not what catches a signer substitution.
+        if (!isLaunchTokenLive(launchToken)) {
+            Log.w(TAG, "user service token is not live, exiting");
+            System.exit(1);
+            return;
         }
 
         IBinder service;
@@ -94,6 +112,69 @@ public class ServiceStarter {
         System.exit(0);
 
         Log.i(TAG, "service exited");
+    }
+
+    /**
+     * Asks the server whether {@code token} still belongs to a live record, through the manager's
+     * provider. Fails closed: a null binder means the manager has not received one yet, and the
+     * attach that follows would fail on that too.
+     */
+    private static boolean isLaunchTokenLive(String token) {
+        if (token == null) {
+            Log.e(TAG, "no --token= to validate");
+            return false;
+        }
+        String name = managerPackageName + ".porter";
+        int userId = 0;
+        IContentProvider provider = null;
+        try {
+            provider = ActivityManagerApis.getContentProviderExternal(name, userId, null, name);
+            if (provider == null) {
+                Log.e(TAG, String.format("provider is null %s %d", name, userId));
+                return false;
+            }
+            // getBinder hands back the server binder without attaching, and unlike sendUserService it
+            // does not wait for the manager's state machine. Both layers reject null extras.
+            Bundle reply = IContentProviderCompat.call(provider, null, null, name,
+                    ShizukuProvider.METHOD_GET_BINDER, null, new Bundle());
+            if (reply == null) {
+                Log.e(TAG, "no server binder to validate against");
+                return false;
+            }
+            reply.setClassLoader(BinderContainer.class.getClassLoader());
+            BinderContainer container = reply.getParcelable(EXTRA_BINDER);
+            if (container == null || container.binder == null || !container.binder.pingBinder()) {
+                Log.e(TAG, "no server binder to validate against");
+                return false;
+            }
+            return queryTokenLive(container.binder, token);
+        } catch (Throwable tr) {
+            Log.e(TAG, "failed to validate user service token", tr);
+            return false;
+        } finally {
+            if (provider != null) {
+                try {
+                    ActivityManagerApis.removeContentProviderExternal(name, null);
+                } catch (Throwable tr) {
+                    Log.w(TAG, "removeContentProviderExternal", tr);
+                }
+            }
+        }
+    }
+
+    private static boolean queryTokenLive(IBinder binder, String token) throws RemoteException {
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        try {
+            data.writeInterfaceToken(ShizukuApiConstants.BINDER_DESCRIPTOR);
+            data.writeString(token);
+            if (!binder.transact(UserServiceLaunch.TRANSACTION, data, reply, 0)) return false;
+            reply.readException();
+            return reply.readInt() != 0;
+        } finally {
+            data.recycle();
+            reply.recycle();
+        }
     }
 
     private static boolean sendBinder(IBinder binder, String token) {
