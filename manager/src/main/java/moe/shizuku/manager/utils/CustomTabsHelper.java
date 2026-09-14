@@ -11,7 +11,6 @@ import androidx.browser.customtabs.CustomTabsIntent;
 import android.widget.Toast;
 
 import moe.shizuku.manager.R;
-import rikka.core.util.ClipboardUtils;
 
 
 /**
