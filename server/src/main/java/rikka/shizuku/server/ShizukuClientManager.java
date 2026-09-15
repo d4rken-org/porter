@@ -2,7 +2,9 @@ package rikka.shizuku.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import moe.shizuku.server.IShizukuApplication;
+
+import eu.darken.porter.core.CallerIdentity;
+import eu.darken.porter.core.ClientCallback;
 
 public class ShizukuClientManager extends ClientManager<ShizukuConfigManager> {
     private final List<ClientRecord> attached = new ArrayList<>();
@@ -12,8 +14,8 @@ public class ShizukuClientManager extends ClientManager<ShizukuConfigManager> {
     }
 
     @Override
-    public synchronized ClientRecord addClient(int uid, int pid, IShizukuApplication client, String packageName, int apiVersion) {
-        ClientRecord record = super.addClient(uid, pid, client, packageName, apiVersion);
+    public synchronized ClientRecord attach(CallerIdentity identity, ClientCallback callback, String packageName, int apiVersion) {
+        ClientRecord record = super.attach(identity, callback, packageName, apiVersion);
         if (record != null) {
             if (getConfigManager().isAccessPaused()) record.allowed = false;
             attached.removeIf(old -> findClient(old.uid, old.pid) != old);
