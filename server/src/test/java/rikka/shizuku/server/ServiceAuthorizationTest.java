@@ -2,6 +2,7 @@ package rikka.shizuku.server;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Parcel;
 import org.junit.After;
@@ -15,10 +16,12 @@ import org.robolectric.shadows.ShadowBinder;
 import rikka.hidden.compat.PackageManagerApis;
 import rikka.hidden.compat.ActivityManagerApis;
 import rikka.shizuku.ShizukuApiConstants;
+import rikka.shizuku.server.legacy.LegacyClientCallback;
 import rikka.shizuku.server.util.Android17Compat;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import eu.darken.porter.core.CallerIdentity;
+import eu.darken.porter.core.ClientCallback;
 import moe.shizuku.server.IShizukuApplication;
 
 import static org.junit.Assert.*;
@@ -35,6 +38,7 @@ public class ServiceAuthorizationTest {
     private ShizukuConfigManager config;
     private ShizukuClientManager clients;
     private ShizukuUserServiceManager userServices;
+    private ConnectionHistory history;
     private ClientRecord client;
     private PackageInfo installed;
     private MockedStatic<PackageManagerApis> packages;
@@ -43,16 +47,12 @@ public class ServiceAuthorizationTest {
     private MockedStatic<ActivityManagerApis> activities;
 
     @Before public void setup() throws Exception {
-        // Skip the constructor's native porsh startup; permission methods below remain real.
-        service = mock(ShizukuService.class, CALLS_REAL_METHODS);
         config = mock(ShizukuConfigManager.class);
         clients = mock(ShizukuClientManager.class);
         userServices = mock(ShizukuUserServiceManager.class);
-        field(ShizukuService.class, "managerAppId", MANAGER_UID);
-        field(ShizukuService.class, "configManager", config);
-        field(ShizukuService.class, "clientManager", clients);
-        field(Service.class, "clientManager", clients);
-        field(Service.class, "userServiceManager", userServices);
+        history = mock(ConnectionHistory.class);
+        service = new ShizukuService(userServices, clients, config, MANAGER_UID, history,
+                Runnable::run, ShizukuServiceEndpoint::new);
         client = new ClientRecord(CLIENT_UID, CLIENT_PID, mock(IShizukuApplication.class), "test.client", 13);
         client.allowed = true;
         when(clients.findClients(CLIENT_UID)).thenReturn(List.of(client));
@@ -72,12 +72,6 @@ public class ServiceAuthorizationTest {
         ShadowBinder.setCallingPid(CLIENT_PID);
     }
 
-    private void field(Class<?> owner, String name, Object value) throws Exception {
-        Field field = owner.getDeclaredField(name);
-        field.setAccessible(true);
-        field.set(service, value);
-    }
-
     @After public void close() {
         activities.close();
         companion.close();
@@ -86,18 +80,12 @@ public class ServiceAuthorizationTest {
         ShadowBinder.reset();
     }
 
-    private void reconcile() throws Exception {
-        Method method = ShizukuService.class.getDeclaredMethod("reconcileRuntimePermission", int.class);
-        method.setAccessible(true);
-        method.invoke(service, CLIENT_UID);
-    }
-
     @Test public void grantedClientStillCannotInvokeManagerOperations() {
-        assertThrows(SecurityException.class, () -> service.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION));
-        assertThrows(SecurityException.class, () -> service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED));
-        assertThrows(SecurityException.class, () -> service.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 1, new Bundle()));
-        assertThrows(SecurityException.class, () -> service.attachUserService(null, new Bundle()));
-        assertThrows(SecurityException.class, service::exit);
+        assertThrows(SecurityException.class, () -> service.getEndpoint().getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION));
+        assertThrows(SecurityException.class, () -> service.getEndpoint().updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED));
+        assertThrows(SecurityException.class, () -> service.getEndpoint().dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 1, new Bundle()));
+        assertThrows(SecurityException.class, () -> service.getEndpoint().attachUserService(null, new Bundle()));
+        assertThrows(SecurityException.class, service.getEndpoint()::exit);
         verifyNoInteractions(config, userServices);
     }
 
@@ -108,40 +96,40 @@ public class ServiceAuthorizationTest {
             try {
                 request.writeInterfaceToken(ShizukuApiConstants.BINDER_DESCRIPTOR);
                 request.setDataPosition(0);
-                assertThrows(SecurityException.class, () -> service.onTransact(code, request, reply, 0));
+                assertThrows(SecurityException.class, () -> service.getEndpoint().onTransact(code, request, reply, 0));
             } finally { request.recycle(); reply.recycle(); }
         }
     }
 
     @Test public void managerUidCanReadFlagsButOtherAppsCannot() {
         ShadowBinder.setCallingUid(MANAGER_UID);
-        assertEquals(ConfigManager.FLAG_ALLOWED, service.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION));
+        assertEquals(ConfigManager.FLAG_ALLOWED, service.getEndpoint().getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION));
         ShadowBinder.setCallingUid(CLIENT_UID);
-        assertThrows(SecurityException.class, () -> service.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION));
+        assertThrows(SecurityException.class, () -> service.getEndpoint().getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION));
     }
 
     @Test public void permissionRevocationDropsGrantAndTerminatesUserServices() throws Exception {
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_DENIED);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         assertFalse(client.allowed);
         verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION, 0);
         verify(userServices).removeUserServicesForPackage(client.packageName);
-        assertThrows(SecurityException.class, () -> service.enforceCallingPermission("client operation"));
+        assertThrows(SecurityException.class, () -> service.getCore().enforceCallingPermission("client operation", new CallerIdentity(CLIENT_UID, CLIENT_PID)));
     }
 
     @Test public void existingGrantSurvivesWhilePrimaryRuntimePermissionIsGranted() throws Exception {
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         assertTrue(client.allowed);
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
         verifyNoInteractions(userServices);
-        service.enforceCallingPermission("client operation");
+        service.getCore().enforceCallingPermission("client operation", new CallerIdentity(CLIENT_UID, CLIENT_PID));
     }
 
     @Test public void legacyGrantRequiresCompanionEvenWhenAndroidPermissionRemainsGranted() throws Exception {
         installed.requestedPermissions = new String[]{ServerConstants.LEGACY_PERMISSION};
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         assertFalse(client.allowed);
         verify(userServices).removeUserServicesForPackage(client.packageName);
     }
@@ -150,7 +138,7 @@ public class ServiceAuthorizationTest {
         installed.requestedPermissions = new String[]{ServerConstants.LEGACY_PERMISSION};
         companion.when(Compatibility::isAvailable).thenReturn(true);
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         assertTrue(client.allowed);
         verifyNoInteractions(userServices);
     }
@@ -160,14 +148,14 @@ public class ServiceAuthorizationTest {
         companion.when(Compatibility::isAvailable).thenReturn(true);
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_DENIED);
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         assertFalse(client.allowed);
         verify(userServices).removeUserServicesForPackage(client.packageName);
     }
 
     @Test public void terminalClientWithoutRuntimePermissionKeepsExplicitConsent() throws Exception {
         installed.requestedPermissions = null;
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         assertTrue(client.allowed);
         verifyNoInteractions(userServices);
     }
@@ -206,40 +194,68 @@ public class ServiceAuthorizationTest {
         assertNull(ShizukuService.providerSuffix(installed));
     }
     @Test public void acceptedNewConnectionIsRecordedWithoutGrantingAccess() throws Exception {
-        var history = mock(ConnectionHistory.class);
-        field(ShizukuService.class, "connectionHistory", history);
-        field(ShizukuService.class, "historyWriter", (java.util.concurrent.Executor) Runnable::run);
         when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null);
-        when(clients.addClient(eq(CLIENT_UID), eq(CLIENT_PID), any(), eq(client.packageName), anyInt())).thenReturn(client);
+        when(clients.attach(any(CallerIdentity.class), any(ClientCallback.class), eq(client.packageName), anyInt())).thenReturn(client);
         installed.applicationInfo = new android.content.pm.ApplicationInfo();
         installed.applicationInfo.uid = CLIENT_UID;
         installed.firstInstallTime = 100;
         Bundle args = new Bundle();
         args.putString(ShizukuApiConstants.ATTACH_APPLICATION_PACKAGE_NAME, client.packageName);
         var callback = mock(IShizukuApplication.class);
-        service.attachApplication(callback, args);
+        service.getEndpoint().attachApplication(callback, args);
         verify(callback).bindApplication(any());
         verify(history).connected(eq(installed), anyLong());
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
     }
 
     @Test public void failedConnectionReplyDoesNotCreateHistory() throws Exception {
-        var history = mock(ConnectionHistory.class);
-        field(ShizukuService.class, "connectionHistory", history);
-        field(ShizukuService.class, "historyWriter", (java.util.concurrent.Executor) Runnable::run);
         when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null);
-        when(clients.addClient(eq(CLIENT_UID), eq(CLIENT_PID), any(), eq(client.packageName), anyInt())).thenReturn(client);
+        when(clients.attach(any(CallerIdentity.class), any(ClientCallback.class), eq(client.packageName), anyInt())).thenReturn(client);
         Bundle args = new Bundle();
         args.putString(ShizukuApiConstants.ATTACH_APPLICATION_PACKAGE_NAME, client.packageName);
         var callback = mock(IShizukuApplication.class);
         doThrow(new android.os.RemoteException()).when(callback).bindApplication(any());
-        service.attachApplication(callback, args);
+        service.getEndpoint().attachApplication(callback, args);
         verifyNoInteractions(history);
     }
 
+    /**
+     * Without the client-manager monitor the endpoint holds across an attach transaction, a pause
+     * landing between the record's creation and its reply overtakes that reply: the client is told
+     * it is denied and then told it is granted, and believes the later answer.
+     */
+    @Test public void aGlobalPauseCannotOvertakeAnAttachReply() throws Exception {
+        when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null);
+        when(clients.attach(any(CallerIdentity.class), any(ClientCallback.class), eq(client.packageName), anyInt())).thenReturn(client);
+        Thread[] pause = new Thread[1];
+        AtomicBoolean pauseStillBlocked = new AtomicBoolean();
+        var callback = new IShizukuApplication.Stub() {
+            public void bindApplication(Bundle data) {
+                pause[0] = new Thread(() -> service.setGlobalAccess(false));
+                pause[0].start();
+                try { pause[0].join(500); } catch (InterruptedException ignored) {}
+                pauseStillBlocked.set(pause[0].isAlive());
+            }
+            public void dispatchRequestPermissionResult(int code, Bundle data) {}
+            public void showPermissionConfirmation(int uid, int pid, String name, int code) {}
+        };
+        Bundle args = new Bundle();
+        args.putString(ShizukuApiConstants.ATTACH_APPLICATION_PACKAGE_NAME, client.packageName);
+        Parcel request = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        try {
+            request.writeInterfaceToken(ShizukuApiConstants.BINDER_DESCRIPTOR);
+            request.writeStrongBinder(callback.asBinder());
+            request.writeInt(1);
+            args.writeToParcel(request, 0);
+            request.setDataPosition(0);
+            assertTrue(service.getEndpoint().onTransact(Binder.FIRST_CALL_TRANSACTION + 17, request, reply, 0));
+        } finally { request.recycle(); reply.recycle(); }
+        assertTrue(pauseStillBlocked.get());
+        pause[0].join(500);
+    }
+
     @Test public void discoveryKeepsOtherAppsAfterOversizedEntryAndPreservesFailedProfileHistory() throws Exception {
-        var history = mock(ConnectionHistory.class);
-        field(ShizukuService.class, "connectionHistory", history);
         ShadowBinder.setCallingUid(MANAGER_UID);
         var nativeApp = ApplicationDiscoveryTest.app("native", CLIENT_UID, ServerConstants.PERMISSION);
         var oversized = ApplicationDiscoveryTest.app("x".repeat(30000), CLIENT_UID + 1, ServerConstants.PERMISSION);
@@ -256,7 +272,7 @@ public class ServiceAuthorizationTest {
                 request.writeInterfaceToken(ShizukuApiConstants.BINDER_DESCRIPTOR);
                 request.writeInt(-1);
                 request.setDataPosition(0);
-                assertTrue(service.onTransact(eu.darken.porter.common.DiscoveredApplication.TRANSACTION, request, reply, 0));
+                assertTrue(service.getEndpoint().onTransact(eu.darken.porter.common.DiscoveredApplication.TRANSACTION, request, reply, 0));
                 reply.setDataPosition(0);
                 reply.readException();
                 assertEquals(eu.darken.porter.common.DiscoveredApplication.WIRE_VERSION, reply.readInt());
@@ -292,18 +308,18 @@ public class ServiceAuthorizationTest {
         permissions.verify(() -> Android17Compat.grantRuntimePermission(anyString(), anyString(), anyInt()), never());
         assertFalse(client.allowed);
         ShadowBinder.setCallingUid(CLIENT_UID);
-        assertThrows(SecurityException.class, () -> service.enforceCallingPermission("client operation"));
+        assertThrows(SecurityException.class, () -> service.getCore().enforceCallingPermission("client operation", new CallerIdentity(CLIENT_UID, CLIENT_PID)));
     }
 
     @Test public void pendingAccessActivatesOnlyAfterTrustedCompanionAndVerifiedRuntimeGrant() throws Exception {
         var entry = pendingLegacy();
         assertFalse(entry.isAllowed());
         assertFalse(entry.isDenied());
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         assertFalse(client.allowed);
         companion.when(Compatibility::isAvailable).thenReturn(true);
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         permissions.verify(() -> Android17Compat.grantRuntimePermission(client.packageName, ServerConstants.LEGACY_PERMISSION, 0));
         verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION, ConfigManager.FLAG_ALLOWED);
         assertTrue(client.allowed);
@@ -313,14 +329,14 @@ public class ServiceAuthorizationTest {
         pendingLegacy();
         companion.when(Compatibility::isAvailable).thenReturn(true);
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_DENIED);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         assertFalse(client.allowed);
         verify(config, never()).update(anyInt(), any(), anyInt(), eq(ConfigManager.FLAG_ALLOWED));
     }
 
     @Test public void removingCompanionSuspendsAccessButKeepsIntent() throws Exception {
         installed.requestedPermissions = new String[]{ServerConstants.LEGACY_PERMISSION};
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         verify(config).update(CLIENT_UID, List.of(client.packageName),
                 ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION, ShizukuConfig.FLAG_PENDING_COMPANION);
         verify(userServices).removeUserServicesForPackage(client.packageName);
@@ -331,7 +347,7 @@ public class ServiceAuthorizationTest {
         installed.requestedPermissions = new String[]{ServerConstants.LEGACY_PERMISSION};
         companion.when(Compatibility::isAvailable).thenReturn(true);
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_DENIED);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION, 0);
         assertFalse(client.allowed);
     }
@@ -354,7 +370,7 @@ public class ServiceAuthorizationTest {
     @Test public void temporaryPackageLookupFailurePreservesPendingIntent() throws Exception {
         pendingLegacy();
         permissions.when(() -> Android17Compat.getPackageInfo(eq(client.packageName), anyLong(), eq(0))).thenReturn(null);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
         assertFalse(client.allowed);
     }
@@ -371,26 +387,20 @@ public class ServiceAuthorizationTest {
         when(clients.findClients(CLIENT_UID)).thenReturn(List.of(record));
         var result = new Bundle();
         result.putBoolean(ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED, true);
-        service.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, result);
+        service.getEndpoint().dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, result);
         verify(record).dispatchRequestPermissionResult(42, false);
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
         assertFalse(record.allowed);
     }
 
-    private void globalAccess(boolean enabled) throws Exception {
-        Method method = ShizukuService.class.getDeclaredMethod("setGlobalAccess", boolean.class);
-        method.setAccessible(true);
-        method.invoke(service, enabled);
-    }
-
     @Test public void globalPauseBlocksEvenStaleAllowedRecordsAndRuntimePermissionFallback() {
         when(config.isAccessPaused()).thenReturn(true);
-        assertThrows(SecurityException.class, () -> service.enforceCallingPermission("transactRemote"));
+        assertThrows(SecurityException.class, () -> service.getCore().enforceCallingPermission("transactRemote", new CallerIdentity(CLIENT_UID, CLIENT_PID)));
         when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null);
         activities.when(() -> ActivityManagerApis.checkPermission(ServerConstants.PERMISSION, CLIENT_PID, CLIENT_UID)).thenReturn(PackageManager.PERMISSION_GRANTED);
-        assertThrows(SecurityException.class, () -> service.enforceCallingPermission("newProcess"));
+        assertThrows(SecurityException.class, () -> service.getCore().enforceCallingPermission("newProcess", new CallerIdentity(CLIENT_UID, CLIENT_PID)));
         ShadowBinder.setCallingUid(MANAGER_UID);
-        service.enforceCallingPermission("manager operation");
+        service.getCore().enforceCallingPermission("manager operation", new CallerIdentity(MANAGER_UID, CLIENT_PID));
     }
 
     @Test public void pauseAndResumeKeepSavedDecisionsAndUpdateClients() throws Exception {
@@ -400,12 +410,12 @@ public class ServiceAuthorizationTest {
         when(clients.attachedClients()).thenReturn(List.of(client));
         var entry = config.find(CLIENT_UID);
         int before = entry.flags;
-        globalAccess(false);
+        service.setGlobalAccess(false);
         assertFalse(client.allowed);
         verify(userServices).setAccessPaused(true);
         assertEquals(before, entry.flags);
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
-        globalAccess(true);
+        service.setGlobalAccess(true);
         assertTrue(client.allowed);
         assertEquals(before, entry.flags);
         verify(userServices).setAccessPaused(false);
@@ -415,7 +425,7 @@ public class ServiceAuthorizationTest {
     @Test public void permissionRequestWhilePausedReturnsDenialWithoutChangingConfig() {
         when(config.isAccessPaused()).thenReturn(true);
         var record = spy(client);
-        service.showPermissionConfirmation(17, record, CLIENT_UID, CLIENT_PID, 0);
+        service.showPermissionConfirmation(17, record, new CallerIdentity(CLIENT_UID, CLIENT_PID), 0);
         verify(record).dispatchRequestPermissionResult(17, false);
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt());
     }
@@ -434,7 +444,7 @@ public class ServiceAuthorizationTest {
         when(config.isAccessPaused()).thenReturn(true);
         companion.when(Compatibility::isAvailable).thenReturn(true);
         permissions.when(() -> Android17Compat.checkPermission(ServerConstants.LEGACY_PERMISSION, client.packageName, 0)).thenReturn(PackageManager.PERMISSION_GRANTED);
-        reconcile();
+        service.reconcileRuntimePermission(CLIENT_UID);
         assertFalse(client.allowed);
         verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION, ConfigManager.FLAG_ALLOWED);
     }
@@ -457,7 +467,7 @@ public class ServiceAuthorizationTest {
             public void dispatchRequestPermissionResult(int code, Bundle data) {}
             public void showPermissionConfirmation(int uid, int pid, String name, int code) {}
         };
-        var record = realClients.addClient(CLIENT_UID, CLIENT_PID, callback, client.packageName, 13);
+        var record = realClients.attach(new CallerIdentity(CLIENT_UID, CLIENT_PID), new LegacyClientCallback(callback), client.packageName, 13);
         assertNotNull(record);
         assertFalse(record.allowed);
         assertEquals(List.of(record), realClients.attachedClients());
