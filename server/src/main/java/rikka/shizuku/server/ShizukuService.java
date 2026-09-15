@@ -1,20 +1,15 @@
 package rikka.shizuku.server;
 
 import static android.Manifest.permission.WRITE_SECURE_SETTINGS;
-import static rikka.shizuku.ShizukuApiConstants.ATTACH_APPLICATION_API_VERSION;
-import static rikka.shizuku.ShizukuApiConstants.ATTACH_APPLICATION_PACKAGE_NAME;
 import static rikka.shizuku.ShizukuApiConstants.BIND_APPLICATION_PERMISSION_GRANTED;
 import static rikka.shizuku.ShizukuApiConstants.BIND_APPLICATION_SERVER_PATCH_VERSION;
 import static rikka.shizuku.ShizukuApiConstants.BIND_APPLICATION_SERVER_SECONTEXT;
 import static rikka.shizuku.ShizukuApiConstants.BIND_APPLICATION_SERVER_UID;
 import static rikka.shizuku.ShizukuApiConstants.BIND_APPLICATION_SERVER_VERSION;
 import static rikka.shizuku.ShizukuApiConstants.BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE;
-import static rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED;
-import static rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_IS_ONETIME;
 import static rikka.shizuku.server.ServerConstants.PERMISSION;
 
 import eu.darken.porter.common.DiscoveredApplication;
-import eu.darken.porter.common.GlobalAccess;
 
 import android.content.Context;
 import android.content.IContentProvider;
@@ -43,13 +38,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import kotlin.collections.ArraysKt;
 import moe.shizuku.api.BinderContainer;
 import moe.shizuku.common.util.BuildUtils;
 import moe.shizuku.common.util.OsUtils;
-import moe.shizuku.server.IShizukuApplication;
 import moe.shizuku.starter.util.IContentProviderCompat;
 import rikka.hidden.compat.ActivityManagerApis;
 import rikka.hidden.compat.DeviceIdleControllerApis;
@@ -57,6 +53,10 @@ import rikka.hidden.compat.PackageManagerApis;
 import rikka.shizuku.server.util.Android17Compat;
 import rikka.hidden.compat.UserManagerApis;
 import rikka.parcelablelist.ParcelableListSlice;
+import eu.darken.porter.core.CallerIdentity;
+import eu.darken.porter.core.ManagerOperations;
+import eu.darken.porter.core.PorterCore;
+import eu.darken.porter.core.ServerPolicy;
 import eu.darken.porter.porsh.PorshConfig;
 import rikka.shizuku.ShizukuApiConstants;
 import rikka.shizuku.server.util.HandlerUtil;
@@ -65,16 +65,19 @@ import rikka.shizuku.server.util.InstalledPackagesCompat;
 import rikka.shizuku.server.util.PackageIdentity;
 import rikka.shizuku.server.util.UserHandleCompat;
 
-public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuClientManager, ShizukuConfigManager> {
+public class ShizukuService implements ServerPolicy, ManagerOperations {
 
     public static final String MANAGER_APPLICATION_ID = moe.shizuku.server.BuildConfig.MANAGER_APPLICATION_ID;
+
+    private static final Logger LOGGER = new Logger("Service");
 
     public static void main(String[] args) {
         DdmHandleAppName.setAppName("porter_server", 0);
         PorshConfig.setLibraryPath(System.getProperty("shizuku.library.path"));
+        PorshConfig.init(ShizukuApiConstants.BINDER_DESCRIPTOR, 30000);
 
         Looper.prepareMainLooper();
-        new ShizukuService();
+        bootstrap(ShizukuServiceEndpoint::new);
         Looper.loop();
     }
 
@@ -102,27 +105,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         return result.state == PackageIdentity.State.PRESENT ? 0 : ServerConstants.MANAGER_APP_NOT_FOUND;
     }
 
-    @SuppressWarnings({"FieldCanBeLocal"})
-    private final Handler mainHandler = new Handler(Looper.myLooper());
-    //private final Context systemContext = HiddenApiBridge.getSystemContext();
-    private final ShizukuClientManager clientManager;
-    private final ShizukuConfigManager configManager;
-    private final int managerAppId;
-    private final ApkReconciler reconciler;
-    private final java.util.concurrent.Executor historyWriter = java.util.concurrent.Executors.newSingleThreadExecutor();
-    private final DebugLogLeases debugLogLeases = new DebugLogLeases();
-    private final ConnectionHistory connectionHistory = new ConnectionHistory(
-            new File("/data/user_de/0/com.android.shell/porter-connections.json"));
-
-    public ShizukuService() {
-        super();
-
-        HandlerUtil.setMainHandler(mainHandler);
-
-        // A debug build logs its debug detail unconditionally, the way it always has. The gate
-        // exists to keep that detail out of release builds except while a recording wants it.
-        Logger.setDebugAlways(moe.shizuku.server.BuildConfig.DEBUG);
-
+    public static ShizukuService bootstrap(Function<ShizukuService, ShizukuServiceEndpoint> endpointFactory) {
         LOGGER.i("starting server...");
 
         waitSystemService("package");
@@ -141,68 +124,122 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         }
 
         assert manager.observed != null;
-        managerAppId = manager.observed.appId;
 
-        configManager = getConfigManager();
-        clientManager = getClientManager();
-        getUserServiceManager().setAccessPaused(configManager.isAccessPaused());
+        ShizukuConfigManager configManager = new ShizukuConfigManager();
+        ShizukuClientManager clientManager = new ShizukuClientManager(configManager);
+        ShizukuUserServiceManager userServiceManager = new ShizukuUserServiceManager();
 
-        reconciler = new ApkReconciler(
+        ShizukuService service = new ShizukuService(
+                userServiceManager,
+                clientManager,
+                configManager,
+                manager.observed.appId,
+                new ConnectionHistory(new File("/data/user_de/0/com.android.shell/porter-connections.json")),
+                Executors.newSingleThreadExecutor(),
+                endpointFactory);
+
+        HandlerUtil.setMainHandler(service.mainHandler);
+
+        // A debug build logs its debug detail unconditionally, the way it always has. The gate
+        // exists to keep that detail out of release builds except while a recording wants it.
+        Logger.setDebugAlways(moe.shizuku.server.BuildConfig.DEBUG);
+
+        userServiceManager.setAccessPaused(configManager.isAccessPaused());
+
+        ApkReconciler reconciler = new ApkReconciler(
                 MANAGER_APPLICATION_ID,
                 new PackageIdentity.Identity(MANAGER_APPLICATION_ID, manager.observed.appId, manager.observed.signerDigests),
-                getUserServiceManager(),
+                userServiceManager,
                 new ApkReconciler.SystemPackageOracle(),
                 new ApkReconciler.ExecutorScheduler(),
                 System::exit);
-        getUserServiceManager().setReconciler(reconciler);
+        service.reconciler = reconciler;
+        userServiceManager.setReconciler(reconciler);
 
-        BinderSender.register(this);
+        BinderSender.register(service.endpoint);
         try {
-            PermissionObserver.register(uid -> mainHandler.post(() -> reconcileRuntimePermission(uid)));
+            PermissionObserver.register(uid -> service.mainHandler.post(() -> service.reconcileRuntimePermission(uid)));
         } catch (ReflectiveOperationException | RuntimeException e) {
             LOGGER.w(e, "Permission observer unavailable; reconciling at startup and client attach");
         }
 
-        mainHandler.post(() -> {
+        service.mainHandler.post(() -> {
             for (int uid : configManager.allowedUids()) {
-                reconcileRuntimePermission(uid);
+                service.reconcileRuntimePermission(uid);
             }
-            sendBinderToManager();
-            sendBinderToClient();
+            service.sendBinderToManager();
+            service.sendBinderToClient();
         });
 
         reconciler.start();
+
+        return service;
+    }
+
+    @SuppressWarnings({"FieldCanBeLocal"})
+    private final Handler mainHandler;
+    //private final Context systemContext = HiddenApiBridge.getSystemContext();
+    private final ShizukuUserServiceManager userServiceManager;
+    private final ShizukuClientManager clientManager;
+    private final ShizukuConfigManager configManager;
+    private final PorterCore<ShizukuUserServiceManager, ShizukuClientManager, ShizukuConfigManager> core;
+    private final ShizukuServiceEndpoint endpoint;
+    private final int managerAppId;
+    ApkReconciler reconciler;
+    private final java.util.concurrent.Executor historyWriter;
+    final DebugLogLeases debugLogLeases = new DebugLogLeases();
+    private final ConnectionHistory connectionHistory;
+
+    public ShizukuService(ShizukuUserServiceManager userServiceManager,
+                          ShizukuClientManager clientManager,
+                          ShizukuConfigManager configManager,
+                          int managerAppId,
+                          ConnectionHistory connectionHistory,
+                          java.util.concurrent.Executor historyWriter,
+                          Function<ShizukuService, ShizukuServiceEndpoint> endpointFactory) {
+        this.userServiceManager = userServiceManager;
+        this.clientManager = clientManager;
+        this.configManager = configManager;
+        this.managerAppId = managerAppId;
+        this.connectionHistory = connectionHistory;
+        this.historyWriter = historyWriter;
+        this.core = new PorterCore<>(userServiceManager, clientManager, configManager, this);
+        this.endpoint = endpointFactory.apply(this);
+        this.mainHandler = new Handler(Looper.myLooper());
+    }
+
+    public PorterCore<ShizukuUserServiceManager, ShizukuClientManager, ShizukuConfigManager> getCore() {
+        return core;
+    }
+
+    public ShizukuServiceEndpoint getEndpoint() {
+        return endpoint;
+    }
+
+    public ShizukuUserServiceManager getUserServiceManager() {
+        return userServiceManager;
+    }
+
+    public ShizukuClientManager getClientManager() {
+        return clientManager;
+    }
+
+    public ShizukuConfigManager getConfigManager() {
+        return configManager;
     }
 
     @Override
-    public ShizukuUserServiceManager onCreateUserServiceManager() {
-        return new ShizukuUserServiceManager();
+    public boolean checkCallerManagerPermission(@NonNull String func, @NonNull CallerIdentity caller) {
+        return caller.appId() == managerAppId;
     }
 
-    @Override
-    public ShizukuClientManager onCreateClientManager() {
-        return new ShizukuClientManager(getConfigManager());
-    }
-
-    @Override
-    public ShizukuConfigManager onCreateConfigManager() {
-        return new ShizukuConfigManager();
-    }
-
-    @Override
-    public boolean checkCallerManagerPermission(String func, int callingUid, int callingPid) {
-        return UserHandleCompat.getAppId(callingUid) == managerAppId;
-    }
-
-    private int checkCallingPermission() {
+    private int checkCallingPermission(CallerIdentity caller) {
         try {
-            int pid = Binder.getCallingPid();
-            int uid = Binder.getCallingUid();
-            if (ActivityManagerApis.checkPermission(PERMISSION, pid, uid) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityManagerApis.checkPermission(PERMISSION, caller.pid, caller.uid) == PackageManager.PERMISSION_GRANTED) {
                 return PackageManager.PERMISSION_GRANTED;
             }
             if (Compatibility.isAvailable()) {
-                return ActivityManagerApis.checkPermission(ServerConstants.LEGACY_PERMISSION, pid, uid);
+                return ActivityManagerApis.checkPermission(ServerConstants.LEGACY_PERMISSION, caller.pid, caller.uid);
             }
         } catch (Throwable tr) {
             LOGGER.w(tr, "checkCallingPermission");
@@ -223,12 +260,12 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     }
 
     @Override
-    public boolean checkCallerPermission(String func, int callingUid, int callingPid, @Nullable ClientRecord clientRecord) {
-        if (UserHandleCompat.getAppId(callingUid) == managerAppId) {
+    public boolean checkCallerPermission(@NonNull String func, @NonNull CallerIdentity caller, @Nullable ClientRecord clientRecord) {
+        if (caller.appId() == managerAppId) {
             return true;
         }
         if (configManager.isAccessPaused()) throw new SecurityException("App access is paused");
-        if (clientRecord == null && checkCallingPermission() == PackageManager.PERMISSION_GRANTED) {
+        if (clientRecord == null && checkCallingPermission(caller) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
         return false;
@@ -236,122 +273,75 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
 
     @Override
     public void exit() {
-        enforceManagerPermission("exit");
         LOGGER.i("exit");
         System.exit(0);
     }
 
     @Override
-    public void attachUserService(IBinder binder, Bundle options) {
-        enforceManagerPermission("func");
-
+    public void attachUserService(IBinder binder, String token) {
         if (configManager.isAccessPaused()) throw new SecurityException("App access is paused");
         // Above the monitor: reading the descriptor is a synchronous round trip to the service being
         // attached, and Binder has no client-side timeout.
         String interfaceDescriptor = UserServiceManager.getInterfaceDescriptor(binder);
-        synchronized (this) {
-            super.attachUserService(binder, options, interfaceDescriptor);
+        synchronized (clientManager) {
+            core.attachUserService(binder, token, interfaceDescriptor);
         }
     }
 
     @Override
-    public synchronized void attachApplication(IShizukuApplication application, Bundle args) {
-        if (application == null || args == null) {
-            return;
-        }
-
-        String requestPackageName = args.getString(ATTACH_APPLICATION_PACKAGE_NAME);
-        if (requestPackageName == null) {
-            return;
-        }
-        int apiVersion = args.getInt(ATTACH_APPLICATION_API_VERSION, -1);
-
-        int callingPid = Binder.getCallingPid();
-        int callingUid = Binder.getCallingUid();
-        boolean isManager;
-        ClientRecord clientRecord = null;
-        boolean newClient = false;
-
-        List<String> packages = PackageManagerApis.getPackagesForUidNoThrow(callingUid);
-        if (!packages.contains(requestPackageName)) {
-            LOGGER.w("Request package " + requestPackageName + "does not belong to uid " + callingUid);
-            throw new SecurityException("Request package " + requestPackageName + "does not belong to uid " + callingUid);
-        }
-
-        isManager = MANAGER_APPLICATION_ID.equals(requestPackageName);
-        if (!isManager) {
+    public void onAttaching(@NonNull CallerIdentity caller, @NonNull String packageName) {
+        if (!MANAGER_APPLICATION_ID.equals(packageName)) {
             // Declaring a client permission only decides who gets the binder pushed (see providerSuffix).
             // Terminal clients (porsh) fetch it themselves and declare nothing; they are admitted here on
             // the uid/package check above and gated by the user's explicit decision like any client.
-            reconcileRuntimePermission(callingUid);
-        }
-
-        clientRecord = clientManager.findClient(callingUid, callingPid);
-        if (clientRecord == null) {
-            synchronized (this) {
-                clientRecord = clientManager.addClient(callingUid, callingPid, application, requestPackageName, apiVersion);
-                newClient = clientRecord != null;
-            }
-            if (clientRecord == null) {
-                LOGGER.w("Add client failed");
-                return;
-            }
-        }
-
-        LOGGER.d("attachApplication: %s %d %d", requestPackageName, callingUid, callingPid);
-
-        int replyServerVersion = ShizukuApiConstants.SERVER_VERSION;
-        if (apiVersion == -1) {
-            // ShizukuBinderWrapper has adapted API v13 in dev.rikka.shizuku:api 12.2.0, however
-            // attachApplication in 12.2.0 is still old, so that server treat the client as pre 13.
-            // This finally cause transactRemote fails.
-            // So we can pass 12 here to pretend we are v12 server.
-            replyServerVersion = 12;
-        }
-
-        Bundle reply = new Bundle();
-        reply.putInt(BIND_APPLICATION_SERVER_UID, OsUtils.getUid());
-        reply.putInt(BIND_APPLICATION_SERVER_VERSION, replyServerVersion);
-        reply.putString(BIND_APPLICATION_SERVER_SECONTEXT, OsUtils.getSELinuxContext());
-        reply.putInt(BIND_APPLICATION_SERVER_PATCH_VERSION, ShizukuApiConstants.SERVER_PATCH_VERSION);
-        if (!isManager) {
-            reply.putBoolean(BIND_APPLICATION_PERMISSION_GRANTED, Objects.requireNonNull(clientRecord).allowed);
-            reply.putBoolean(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, false);
-        } else {
-            try {
-                Android17Compat.grantRuntimePermission(MANAGER_APPLICATION_ID,
-                        WRITE_SECURE_SETTINGS, UserHandleCompat.getUserId(callingUid));
-            } catch (RemoteException e) {
-                LOGGER.w(e, "grant WRITE_SECURE_SETTINGS");
-            }
-        }
-        try {
-            application.bindApplication(reply);
-            if (!isManager && newClient) {
-                long connectedAt = System.currentTimeMillis();
-                historyWriter.execute(() -> {
-                    try {
-                        PackageInfo info = Android17Compat.getPackageInfo(requestPackageName, 0, callingUid / 100000);
-                        if (info != null && info.applicationInfo != null && info.applicationInfo.uid == callingUid) {
-                            connectionHistory.connected(info, connectedAt);
-                        }
-                    } catch (RuntimeException e) {
-                        LOGGER.w(e, "Cannot record client connection");
-                    }
-                });
-            }
-        } catch (Throwable e) {
-            LOGGER.w(e, "attachApplication");
+            reconcileRuntimePermission(caller.uid);
         }
     }
 
     @Override
-    public void showPermissionConfirmation(int requestCode, @NonNull ClientRecord clientRecord, int callingUid, int callingPid, int userId) {
+    public void onAttached(@NonNull ClientRecord clientRecord, boolean created, @NonNull Bundle reply) {
+        LOGGER.d("attachApplication: %s %d %d", clientRecord.packageName, clientRecord.uid, clientRecord.pid);
+
+        if (!MANAGER_APPLICATION_ID.equals(clientRecord.packageName)) {
+            return;
+        }
+        reply.remove(BIND_APPLICATION_PERMISSION_GRANTED);
+        reply.remove(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE);
+        try {
+            Android17Compat.grantRuntimePermission(MANAGER_APPLICATION_ID,
+                    WRITE_SECURE_SETTINGS, UserHandleCompat.getUserId(clientRecord.uid));
+        } catch (RemoteException e) {
+            LOGGER.w(e, "grant WRITE_SECURE_SETTINGS");
+        }
+    }
+
+    @Override
+    public void onBound(@NonNull ClientRecord clientRecord, boolean created) {
+        if (MANAGER_APPLICATION_ID.equals(clientRecord.packageName) || !created) {
+            return;
+        }
+        int callingUid = clientRecord.uid;
+        String requestPackageName = clientRecord.packageName;
+        long connectedAt = System.currentTimeMillis();
+        historyWriter.execute(() -> {
+            try {
+                PackageInfo info = Android17Compat.getPackageInfo(requestPackageName, 0, callingUid / 100000);
+                if (info != null && info.applicationInfo != null && info.applicationInfo.uid == callingUid) {
+                    connectionHistory.connected(info, connectedAt);
+                }
+            } catch (RuntimeException e) {
+                LOGGER.w(e, "Cannot record client connection");
+            }
+        });
+    }
+
+    @Override
+    public void showPermissionConfirmation(int requestCode, @NonNull ClientRecord clientRecord, @NonNull CallerIdentity caller, int userId) {
         if (configManager.isAccessPaused()) {
             clientRecord.dispatchRequestPermissionResult(requestCode, false);
             return;
         }
-        Boolean legacyOnly = uidUsesLegacyOnly(callingUid);
+        Boolean legacyOnly = uidUsesLegacyOnly(caller.uid);
         if (legacyOnly == null || (legacyOnly && !Compatibility.isAvailable())) {
             clientRecord.dispatchRequestPermissionResult(requestCode, false);
             return;
@@ -375,54 +365,48 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         Intent intent = new Intent(ServerConstants.REQUEST_PERMISSION_ACTION)
                 .setPackage(MANAGER_APPLICATION_ID)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
-                .putExtra("uid", callingUid)
-                .putExtra("pid", callingPid)
+                .putExtra("uid", caller.uid)
+                .putExtra("pid", caller.pid)
                 .putExtra("requestCode", requestCode)
                 .putExtra("applicationInfo", ai);
         ActivityManagerApis.startActivityNoThrow(intent, null, isWorkProfileUser ? 0 : userId);
     }
 
     @Override
-    public synchronized void dispatchPermissionConfirmationResult(int requestUid, int requestPid, int requestCode, Bundle data) throws RemoteException {
-        enforceManagerPermission("dispatchPermissionConfirmationResult");
+    public void dispatchPermissionConfirmationResult(int requestUid, int requestPid, int requestCode, boolean allowed, boolean onetime) {
+        synchronized (clientManager) {
+            Boolean legacyOnly = uidUsesLegacyOnly(requestUid);
+            if (allowed && legacyOnly == null) {
+                allowed = false;
+                onetime = true;
+            }
+            boolean pending = allowed && Boolean.TRUE.equals(legacyOnly) && !Compatibility.isAvailable();
+            if (pending) allowed = false;
 
-        if (data == null) {
-            return;
-        }
+            LOGGER.i("dispatchPermissionConfirmationResult: uid=%d, pid=%d, requestCode=%d, allowed=%s, onetime=%s",
+                    requestUid, requestPid, requestCode, Boolean.toString(allowed), Boolean.toString(onetime));
 
-        boolean allowed = data.getBoolean(REQUEST_PERMISSION_REPLY_ALLOWED);
-        boolean onetime = data.getBoolean(REQUEST_PERMISSION_REPLY_IS_ONETIME);
-        Boolean legacyOnly = uidUsesLegacyOnly(requestUid);
-        if (allowed && legacyOnly == null) {
-            allowed = false;
-            onetime = true;
-        }
-        boolean pending = allowed && Boolean.TRUE.equals(legacyOnly) && !Compatibility.isAvailable();
-        if (pending) allowed = false;
-
-        LOGGER.i("dispatchPermissionConfirmationResult: uid=%d, pid=%d, requestCode=%d, allowed=%s, onetime=%s",
-                requestUid, requestPid, requestCode, Boolean.toString(allowed), Boolean.toString(onetime));
-
-        List<ClientRecord> records = clientManager.findClients(requestUid);
-        if (records.isEmpty()) {
-            LOGGER.w("dispatchPermissionConfirmationResult: no client for uid %d was found", requestUid);
-        } else {
-            for (ClientRecord record : records) {
-                record.allowed = allowed && !configManager.isAccessPaused();
-                if (record.pid == requestPid) {
-                    record.dispatchRequestPermissionResult(requestCode, record.allowed);
+            List<ClientRecord> records = clientManager.findClients(requestUid);
+            if (records.isEmpty()) {
+                LOGGER.w("dispatchPermissionConfirmationResult: no client for uid %d was found", requestUid);
+            } else {
+                for (ClientRecord record : records) {
+                    record.allowed = allowed && !configManager.isAccessPaused();
+                    if (record.pid == requestPid) {
+                        record.dispatchRequestPermissionResult(requestCode, record.allowed);
+                    }
                 }
             }
-        }
 
-        if (!onetime) {
-            configManager.update(requestUid, PackageManagerApis.getPackagesForUidNoThrow(requestUid),
-                    ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION,
-                    pending ? ShizukuConfig.FLAG_PENDING_COMPANION : allowed ? ConfigManager.FLAG_ALLOWED : ConfigManager.FLAG_DENIED);
-        }
+            if (!onetime) {
+                configManager.update(requestUid, PackageManagerApis.getPackagesForUidNoThrow(requestUid),
+                        ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION,
+                        pending ? ShizukuConfig.FLAG_PENDING_COMPANION : allowed ? ConfigManager.FLAG_ALLOWED : ConfigManager.FLAG_DENIED);
+            }
 
-        if (!onetime && !pending) {
-            setRuntimePermissionsForUid(requestUid, allowed);
+            if (!onetime && !pending) {
+                setRuntimePermissionsForUid(requestUid, allowed);
+            }
         }
     }
 
@@ -465,71 +449,75 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         for (String name : PackageManagerApis.getPackagesForUidNoThrow(uid)) onPermissionRevoked(name);
     }
 
-    private synchronized void reconcileRuntimePermission(int uid) {
-        ShizukuConfig.PackageEntry entry = configManager.find(uid);
-        if (entry == null || (!entry.isAllowed() && !entry.isPendingCompanion())) return;
-        int userId = UserHandleCompat.getUserId(uid);
-        Boolean legacyOnly = uidUsesLegacyOnly(uid);
-        if (legacyOnly == null) return;
-        boolean legacy = Compatibility.isAvailable();
-        int mask = ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION;
-        if (legacyOnly && !legacy) {
-            configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, ShizukuConfig.FLAG_PENDING_COMPANION);
-            suspendUid(uid);
-            return;
-        }
-        boolean pending = entry.isPendingCompanion();
-        if (pending) {
-            if (!legacyOnly) {
-                configManager.update(uid, null, mask, 0);
+    void reconcileRuntimePermission(int uid) {
+        synchronized (clientManager) {
+            ShizukuConfig.PackageEntry entry = configManager.find(uid);
+            if (entry == null || (!entry.isAllowed() && !entry.isPendingCompanion())) return;
+            int userId = UserHandleCompat.getUserId(uid);
+            Boolean legacyOnly = uidUsesLegacyOnly(uid);
+            if (legacyOnly == null) return;
+            boolean legacy = Compatibility.isAvailable();
+            int mask = ConfigManager.MASK_PERMISSION | ShizukuConfig.FLAG_PENDING_COMPANION;
+            if (legacyOnly && !legacy) {
+                configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, ShizukuConfig.FLAG_PENDING_COMPANION);
                 suspendUid(uid);
                 return;
             }
-            setRuntimePermissionsForUid(uid, true);
-        }
-        for (String name : PackageManagerApis.getPackagesForUidNoThrow(uid)) {
-            PackageInfo pi = Android17Compat.getPackageInfo(name, PackageManager.GET_PERMISSIONS, userId);
-            if (pi == null) {
-                if (pending) { suspendUid(uid); return; }
-                continue;
+            boolean pending = entry.isPendingCompanion();
+            if (pending) {
+                if (!legacyOnly) {
+                    configManager.update(uid, null, mask, 0);
+                    suspendUid(uid);
+                    return;
+                }
+                setRuntimePermissionsForUid(uid, true);
             }
-            String permission;
-            if (ClientRouting.requests(pi.requestedPermissions, PERMISSION)) permission = PERMISSION;
-            else if (legacyOnly && ClientRouting.requests(pi.requestedPermissions, ServerConstants.LEGACY_PERMISSION)) permission = ServerConstants.LEGACY_PERMISSION;
-            else continue;
-            if (Android17Compat.checkPermission(permission, name, userId) == PackageManager.PERMISSION_GRANTED) continue;
-            // A pending grant may still be blocked by Android policy. Active grants respect revocation.
-            if (!pending) configManager.update(uid, null, mask, 0);
-            suspendUid(uid);
-            return;
-        }
-        if (pending) {
-            configManager.update(uid, null, mask, ConfigManager.FLAG_ALLOWED);
-            for (ClientRecord record : clientManager.findClients(uid)) record.allowed = !configManager.isAccessPaused();
+            for (String name : PackageManagerApis.getPackagesForUidNoThrow(uid)) {
+                PackageInfo pi = Android17Compat.getPackageInfo(name, PackageManager.GET_PERMISSIONS, userId);
+                if (pi == null) {
+                    if (pending) { suspendUid(uid); return; }
+                    continue;
+                }
+                String permission;
+                if (ClientRouting.requests(pi.requestedPermissions, PERMISSION)) permission = PERMISSION;
+                else if (legacyOnly && ClientRouting.requests(pi.requestedPermissions, ServerConstants.LEGACY_PERMISSION)) permission = ServerConstants.LEGACY_PERMISSION;
+                else continue;
+                if (Android17Compat.checkPermission(permission, name, userId) == PackageManager.PERMISSION_GRANTED) continue;
+                // A pending grant may still be blocked by Android policy. Active grants respect revocation.
+                if (!pending) configManager.update(uid, null, mask, 0);
+                suspendUid(uid);
+                return;
+            }
+            if (pending) {
+                configManager.update(uid, null, mask, ConfigManager.FLAG_ALLOWED);
+                for (ClientRecord record : clientManager.findClients(uid)) record.allowed = !configManager.isAccessPaused();
+            }
         }
     }
 
-    private synchronized void setGlobalAccess(boolean enabled) {
-        boolean paused = !enabled;
-        if (configManager.isAccessPaused() == paused) return;
-        configManager.setAccessPaused(paused);
-        getUserServiceManager().setAccessPaused(paused);
-        if (!paused) {
-            for (int uid : configManager.allowedUids()) reconcileRuntimePermission(uid);
-        }
-        for (ClientRecord record : clientManager.attachedClients()) {
-            if (UserHandleCompat.getAppId(record.uid) == managerAppId) continue;
-            ShizukuConfig.PackageEntry entry = configManager.find(record.uid);
-            record.allowed = !paused && entry != null && entry.isAllowed();
-            Bundle reply = new Bundle();
-            reply.putInt(BIND_APPLICATION_SERVER_UID, OsUtils.getUid());
-            reply.putInt(BIND_APPLICATION_SERVER_VERSION, record.apiVersion == -1 ? 12 : ShizukuApiConstants.SERVER_VERSION);
-            reply.putInt(BIND_APPLICATION_SERVER_PATCH_VERSION, ShizukuApiConstants.SERVER_PATCH_VERSION);
-            reply.putString(BIND_APPLICATION_SERVER_SECONTEXT, OsUtils.getSELinuxContext());
-            reply.putBoolean(BIND_APPLICATION_PERMISSION_GRANTED, record.allowed);
-            reply.putBoolean(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, entry != null && entry.isDenied());
-            try { record.client.bindApplication(reply); }
-            catch (Throwable e) { LOGGER.w(e, "Cannot notify client of global access change"); }
+    void setGlobalAccess(boolean enabled) {
+        synchronized (clientManager) {
+            boolean paused = !enabled;
+            if (configManager.isAccessPaused() == paused) return;
+            configManager.setAccessPaused(paused);
+            userServiceManager.setAccessPaused(paused);
+            if (!paused) {
+                for (int uid : configManager.allowedUids()) reconcileRuntimePermission(uid);
+            }
+            for (ClientRecord record : clientManager.attachedClients()) {
+                if (UserHandleCompat.getAppId(record.uid) == managerAppId) continue;
+                ShizukuConfig.PackageEntry entry = configManager.find(record.uid);
+                record.allowed = !paused && entry != null && entry.isAllowed();
+                Bundle reply = new Bundle();
+                reply.putInt(BIND_APPLICATION_SERVER_UID, OsUtils.getUid());
+                reply.putInt(BIND_APPLICATION_SERVER_VERSION, record.apiVersion == -1 ? 12 : ShizukuApiConstants.SERVER_VERSION);
+                reply.putInt(BIND_APPLICATION_SERVER_PATCH_VERSION, ShizukuApiConstants.SERVER_PATCH_VERSION);
+                reply.putString(BIND_APPLICATION_SERVER_SECONTEXT, OsUtils.getSELinuxContext());
+                reply.putBoolean(BIND_APPLICATION_PERMISSION_GRANTED, record.allowed);
+                reply.putBoolean(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, entry != null && entry.isDenied());
+                try { record.client.bindApplication(reply); }
+                catch (Throwable e) { LOGGER.w(e, "Cannot notify client of global access change"); }
+            }
         }
     }
 
@@ -540,59 +528,58 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
 
     @Override
     public int getFlagsForUid(int uid, int mask) {
-        enforceManagerPermission("getFlagsForUid");
         return getFlagsForUidInternal(uid, mask);
     }
 
     @Override
-    public synchronized void updateFlagsForUid(int uid, int mask, int value) throws RemoteException {
-        enforceManagerPermission("updateFlagsForUid");
+    public void updateFlagsForUid(int uid, int mask, int value) {
+        synchronized (clientManager) {
+            int userId = UserHandleCompat.getUserId(uid);
 
-        int userId = UserHandleCompat.getUserId(uid);
-
-        if ((mask & ConfigManager.MASK_PERMISSION) != 0) {
-            mask |= ShizukuConfig.FLAG_PENDING_COMPANION;
-            value &= ~ShizukuConfig.FLAG_PENDING_COMPANION;
-            Boolean legacyOnly = uidUsesLegacyOnly(uid);
-            if ((value & ConfigManager.FLAG_ALLOWED) != 0 && legacyOnly == null) {
-                throw new IllegalStateException("Cannot read application permissions. Try again.");
-            }
-            if ((value & ConfigManager.FLAG_ALLOWED) != 0 && Boolean.TRUE.equals(legacyOnly) && !Compatibility.isAvailable()) {
-                value = (value & ~ConfigManager.MASK_PERMISSION) | ShizukuConfig.FLAG_PENDING_COMPANION;
-                configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, value);
-                suspendUid(uid);
-                return;
-            }
-            boolean allowed = (value & ConfigManager.FLAG_ALLOWED) != 0;
-            boolean denied = (value & ConfigManager.FLAG_DENIED) != 0;
-
-            List<ClientRecord> records = clientManager.findClients(uid);
-            for (ClientRecord record : records) {
-                if (allowed) {
-                    record.allowed = !configManager.isAccessPaused();
-                } else {
-                    record.allowed = false;
-                    ActivityManagerApis.forceStopPackageNoThrow(record.packageName, UserHandleCompat.getUserId(record.uid));
+            if ((mask & ConfigManager.MASK_PERMISSION) != 0) {
+                mask |= ShizukuConfig.FLAG_PENDING_COMPANION;
+                value &= ~ShizukuConfig.FLAG_PENDING_COMPANION;
+                Boolean legacyOnly = uidUsesLegacyOnly(uid);
+                if ((value & ConfigManager.FLAG_ALLOWED) != 0 && legacyOnly == null) {
+                    throw new IllegalStateException("Cannot read application permissions. Try again.");
                 }
-            }
-            if (!allowed) {
-                // Daemon user services outlive the client process, so tear down by package, not by attached record.
-                for (String packageName : PackageManagerApis.getPackagesForUidNoThrow(uid)) {
-                    onPermissionRevoked(packageName);
+                if ((value & ConfigManager.FLAG_ALLOWED) != 0 && Boolean.TRUE.equals(legacyOnly) && !Compatibility.isAvailable()) {
+                    value = (value & ~ConfigManager.MASK_PERMISSION) | ShizukuConfig.FLAG_PENDING_COMPANION;
+                    configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, value);
+                    suspendUid(uid);
+                    return;
                 }
+                boolean allowed = (value & ConfigManager.FLAG_ALLOWED) != 0;
+                boolean denied = (value & ConfigManager.FLAG_DENIED) != 0;
+
+                List<ClientRecord> records = clientManager.findClients(uid);
+                for (ClientRecord record : records) {
+                    if (allowed) {
+                        record.allowed = !configManager.isAccessPaused();
+                    } else {
+                        record.allowed = false;
+                        ActivityManagerApis.forceStopPackageNoThrow(record.packageName, UserHandleCompat.getUserId(record.uid));
+                    }
+                }
+                if (!allowed) {
+                    // Daemon user services outlive the client process, so tear down by package, not by attached record.
+                    for (String packageName : PackageManagerApis.getPackagesForUidNoThrow(uid)) {
+                        onPermissionRevoked(packageName);
+                    }
+                }
+
+                setRuntimePermissionsForUid(uid, allowed);
             }
 
-            setRuntimePermissionsForUid(uid, allowed);
+            configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, value);
         }
-
-        configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, value);
     }
 
     private void onPermissionRevoked(String packageName) {
-        getUserServiceManager().removeUserServicesForPackage(packageName);
+        userServiceManager.removeUserServicesForPackage(packageName);
     }
 
-    private ParcelableListSlice<PackageInfo> getApplications(int userId) {
+    ParcelableListSlice<PackageInfo> getApplications(int userId) {
         List<PackageInfo> list = new ArrayList<>();
         List<Integer> users = new ArrayList<>();
         if (userId == -1) {
@@ -632,7 +619,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         return new ParcelableListSlice<>(list);
     }
 
-    private void writeDiscovery(int userId, Parcel reply) {
+    void writeDiscovery(int userId, Parcel reply) {
         java.util.Collection<Integer> users = userId == -1 ? UserManagerApis.getUserIdsNoThrow() : java.util.Collections.singletonList(userId);
         if (users.isEmpty()) throw new IllegalStateException("Cannot enumerate Android users");
         List<DiscoveredApplication> apps = new ArrayList<>();
@@ -675,105 +662,23 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         new ParcelableListSlice<>(apps).writeToParcel(reply, 0);
     }
 
-    @Override
-    public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-        if (code == eu.darken.porter.common.CompatibilitySetup.TRANSACTION) {
-            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
-            enforceManagerPermission("compatibilitySetup");
-            if (Binder.getCallingUid() / 100000 != 0)
-                throw new SecurityException("Compatibility setup requires the primary Android user");
-            int operation = data.readInt();
-            String snapshot = data.readString();
-            try {
-                Bundle result;
-                synchronized (this) {
-                    result = new CompatibilitySetupHandler(configManager,
-                        (uid, value) -> updateFlagsForUid(uid, ConfigManager.MASK_PERMISSION, value),
-                        () -> {
-                            for (int uid : configManager.allowedUids()) reconcileRuntimePermission(uid);
-                            mainHandler.post(() -> {
-                                BinderSender.resetDelivery();
-                                sendBinderToClient();
-                            });
-                        }).execute(operation, snapshot);
-                }
-                reply.writeNoException();
-                reply.writeBundle(result);
-            } catch (Exception e) {
-                reply.writeException(e instanceof RuntimeException ? (RuntimeException) e : new IllegalStateException(e.getMessage(), e));
-            }
-            return true;
+    Bundle compatibilitySetup(int operation, String snapshot) throws Exception {
+        synchronized (clientManager) {
+            return new CompatibilitySetupHandler(configManager,
+                (uid, value) -> updateFlagsForUid(uid, ConfigManager.MASK_PERMISSION, value),
+                () -> {
+                    for (int uid : configManager.allowedUids()) reconcileRuntimePermission(uid);
+                    mainHandler.post(() -> {
+                        BinderSender.resetDelivery();
+                        sendBinderToClient();
+                    });
+                }).execute(operation, snapshot);
         }
-        //LOGGER.d("transact: code=%d, calling uid=%d", code, Binder.getCallingUid());
-        if (code == GlobalAccess.TRANSACTION) {
-            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
-            enforceManagerPermission("globalAccess");
-            int operation = data.readInt();
-            if (operation == GlobalAccess.WRITE) setGlobalAccess(data.readInt() != 0);
-            else if (operation != GlobalAccess.READ) throw new IllegalArgumentException("Unknown global access operation");
-            reply.writeNoException();
-            reply.writeInt(GlobalAccess.VERSION);
-            reply.writeInt(configManager.isAccessPaused() ? 0 : 1);
-            return true;
-        }
-        if (code == DiscoveredApplication.TRANSACTION) {
-            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
-            enforceManagerPermission("discoverApplications");
-            writeDiscovery(data.readInt(), reply);
-            return true;
-        }
-        if (code == ServerConstants.BINDER_TRANSACTION_getApplications) {
-            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
-            enforceManagerPermission("getApplications");
-            int userId = data.readInt();
-            ParcelableListSlice<PackageInfo> result = getApplications(userId);
-            reply.writeNoException();
-            result.writeToParcel(reply, android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
-            return true;
-        }
-        if (code == ServerConstants.BINDER_TRANSACTION_setDebugLogging) {
-            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
-            enforceManagerPermission("setDebugLogging");
-            IBinder token = data.readStrongBinder();
-            long granted = debugLogLeases.update(token, data.readLong());
-            reply.writeNoException();
-            reply.writeLong(granted);
-            return true;
-        }
-        if (code == ServerConstants.BINDER_TRANSACTION_getDiagnostics) {
-            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
-            enforceManagerPermission("getDiagnostics");
-            reply.writeNoException();
-            reply.writeInt(android.os.Process.myPid());
-            Bundle version = new Bundle();
-            version.putString(ServerConstants.DIAGNOSTICS_VERSION_NAME, moe.shizuku.server.BuildConfig.PORTER_VERSION_NAME);
-            version.putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, moe.shizuku.server.BuildConfig.PORTER_VERSION_CODE);
-            version.putString(eu.darken.porter.common.PorterBuildIdentity.DIAGNOSTICS_KEY,
-                    eu.darken.porter.common.PorterBuildIdentity.ID + ":" + moe.shizuku.server.BuildConfig.BUILD_TYPE);
-            reconciler.writeDiagnostics(version);
-            reply.writeBundle(version);
-            return true;
-        }
-        if (code == eu.darken.porter.common.UserServiceLaunch.TRANSACTION) {
-            data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR);
-            // Not enforceManagerPermission: that passes only for this pid or the manager app id, and
-            // the starter is a separate process running as the server's own uid. What this proves is
-            // that the caller runs as that uid and already holds the token it is asking about; it
-            // does not single out one launch, and it is not the host application's uid.
-            if (Binder.getCallingUid() != OsUtils.getUid()) {
-                throw new SecurityException("Permission Denial: validateUserServiceToken from uid " + Binder.getCallingUid());
-            }
-            boolean live = getUserServiceManager().isUserServiceTokenLive(data.readString());
-            reply.writeNoException();
-            reply.writeInt(live ? 1 : 0);
-            return true;
-        }
-        return super.onTransact(code, data, reply, flags);
     }
 
     void sendBinderToClient() {
         for (int userId : UserManagerApis.getUserIdsNoThrow()) {
-            sendBinderToClient(this, userId);
+            sendBinderToClient(endpoint, userId);
         }
     }
 
@@ -800,7 +705,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
     }
 
     void sendBinderToManager() {
-        sendBinderToManager(this);
+        sendBinderToManager(endpoint);
     }
 
     private static void sendBinderToManager(Binder binder) {
@@ -897,17 +802,5 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
                 }
             }
         }
-    }
-
-    // ------ Sui only ------
-
-    @Override
-    public void dispatchPackageChanged(Intent intent) throws RemoteException {
-
-    }
-
-    @Override
-    public boolean isHidden(int uid) throws RemoteException {
-        return false;
     }
 }
