@@ -85,3 +85,12 @@ if (!new File(clientDir, "build.gradle").isFile()) {
     throw new GradleException("Porter SDK client module is missing. Initialize the pinned API submodule or update api.dir in local.properties.")
 }
 project(":client").projectDir = clientDir
+
+// Present only in newer SDK checkouts; skipped when the pinned commit predates them.
+["protocol", "sdk"].each { name ->
+    def dir = file("$root${File.separator}$name")
+    if (new File(dir, "build.gradle").isFile()) {
+        include ":$name"
+        project(":$name").projectDir = dir
+    }
+}
