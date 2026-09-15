@@ -8,6 +8,7 @@ import static android.app.ActivityManagerHidden.UID_OBSERVER_IDLE;
 import android.app.ActivityManagerHidden;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.RemoteException;
 import android.text.TextUtils;
@@ -32,7 +33,7 @@ public class BinderSender {
     private static final String PERMISSION_MANAGER = "eu.darken.porter.permission.MANAGER";
     private static final String PERMISSION = "eu.darken.porter.permission.API_V23";
 
-    private static ShizukuService sShizukuService;
+    private static Binder sBinder;
 
     static void resetDelivery() {
         synchronized (ProcessObserver.PID_LIST) { ProcessObserver.PID_LIST.clear(); }
@@ -168,18 +169,18 @@ public class BinderSender {
                     granted = ActivityManagerApis.checkPermission(PERMISSION_MANAGER, pid, uid) == PackageManager.PERMISSION_GRANTED;
 
                 if (granted) {
-                    ShizukuService.sendBinderToManager(sShizukuService, userId);
+                    ShizukuService.sendBinderToManager(sBinder, userId);
                     return;
                 }
             } else if (ShizukuService.providerSuffix(pi) != null) {
-                ShizukuService.sendBinderToUserApp(sShizukuService, packageName, userId);
+                ShizukuService.sendBinderToUserApp(sBinder, packageName, userId);
                 return;
             }
         }
     }
 
-    public static void register(ShizukuService shizukuService) {
-        sShizukuService = shizukuService;
+    public static void register(Binder binder) {
+        sBinder = binder;
 
         try {
             ActivityManagerApis.registerProcessObserver(new ProcessObserver());
