@@ -520,7 +520,7 @@ public class ServiceAuthorizationTest {
 
             Parcel diagnostics = porterTransact(ServerConstants.BINDER_TRANSACTION_getDiagnostics, data -> {});
             assertEquals(android.os.Process.myPid(), diagnostics.readInt());
-            assertEquals(moe.shizuku.server.BuildConfig.PORTER_VERSION_NAME,
+            assertEquals(eu.darken.porter.privileged.BuildConfig.PORTER_VERSION_NAME,
                     diagnostics.readBundle().getString(ServerConstants.DIAGNOSTICS_VERSION_NAME));
             diagnostics.recycle();
 

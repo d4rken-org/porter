@@ -72,10 +72,10 @@ final class ManagerTransactions {
         reply.writeNoException();
         reply.writeInt(android.os.Process.myPid());
         Bundle version = new Bundle();
-        version.putString(ServerConstants.DIAGNOSTICS_VERSION_NAME, moe.shizuku.server.BuildConfig.PORTER_VERSION_NAME);
-        version.putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, moe.shizuku.server.BuildConfig.PORTER_VERSION_CODE);
+        version.putString(ServerConstants.DIAGNOSTICS_VERSION_NAME, eu.darken.porter.privileged.BuildConfig.PORTER_VERSION_NAME);
+        version.putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, eu.darken.porter.privileged.BuildConfig.PORTER_VERSION_CODE);
         version.putString(eu.darken.porter.common.PorterBuildIdentity.DIAGNOSTICS_KEY,
-                eu.darken.porter.common.PorterBuildIdentity.ID + ":" + moe.shizuku.server.BuildConfig.BUILD_TYPE);
+                eu.darken.porter.common.PorterBuildIdentity.ID + ":" + eu.darken.porter.privileged.BuildConfig.BUILD_TYPE);
         service.reconciler.writeDiagnostics(version);
         reply.writeBundle(version);
     }

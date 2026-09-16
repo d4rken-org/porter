@@ -39,8 +39,8 @@ public final class FixtureService {
         reply.writeInt(android.os.Process.myPid());
         if (!mode.equals("legacy")) {
             Bundle version = new Bundle();
-            version.putString(ServerConstants.DIAGNOSTICS_VERSION_NAME, moe.shizuku.server.BuildConfig.PORTER_VERSION_NAME);
-            version.putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, moe.shizuku.server.BuildConfig.PORTER_VERSION_CODE);
+            version.putString(ServerConstants.DIAGNOSTICS_VERSION_NAME, eu.darken.porter.privileged.BuildConfig.PORTER_VERSION_NAME);
+            version.putInt(ServerConstants.DIAGNOSTICS_VERSION_CODE, eu.darken.porter.privileged.BuildConfig.PORTER_VERSION_CODE);
             version.putString(PorterBuildIdentity.DIAGNOSTICS_KEY, "review-fixture:debug");
             reply.writeBundle(version);
         }
