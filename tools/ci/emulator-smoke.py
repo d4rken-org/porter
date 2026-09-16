@@ -111,10 +111,20 @@ class Smoke:
         return self.until(f"{package}: {message}", lambda: package + " " + message in self.logs())
 
     def ui(self):
-        self.shell("uiautomator", "dump", "/data/local/tmp/porter-ci-ui.xml")
-        xml = self.shell("cat", "/data/local/tmp/porter-ci-ui.xml")
-        (self.output / "last-ui.xml").write_text(xml)
-        return ET.fromstring(xml)
+        path = "/data/local/tmp/porter-ci-ui.xml"
+        for attempt in range(3):
+            self.shell("rm", "-f", path)
+            result = self.shell("uiautomator", "dump", path)
+            # A null accessibility root is reported on stderr with exit status zero.
+            if f"UI hierchary dumped to: {path}" in result:
+                xml = self.shell("cat", path)
+                root = ET.fromstring(xml)
+                (self.output / "last-ui.xml").write_text(xml)
+                return root
+            if attempt < 2:
+                time.sleep(0.4)
+        raise RuntimeError(f"uiautomator produced no UI dump after 3 attempts; "
+                           f"see {self.output / 'commands.log'}")
 
     def locate(self, text=None, package=MANAGER, prefix=False, scroll=False, occurrence=0, desc=None):
         """One look at the current window: the button's bounds, or None while it is not there."""
