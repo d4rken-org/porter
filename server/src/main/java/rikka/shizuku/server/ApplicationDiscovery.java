@@ -17,13 +17,15 @@ final class ApplicationDiscovery {
         int apis = (ClientRouting.requests(info.requestedPermissions, ServerConstants.PERMISSION) ? API_PORTER : 0)
                 | (ClientRouting.requests(info.requestedPermissions, ServerConstants.LEGACY_PERMISSION) ? API_SHIZUKU : 0);
         if (apis == 0 && flags == 0 && lastConnected == 0) return null;
-        boolean metadata = info.applicationInfo.metaData != null
+        // The Porter permission is Porter's own support signal. V3_SUPPORT survives only as the
+        // Shizuku-client marker, which is upstream's to define.
+        boolean shizukuReady = (apis & API_SHIZUKU) != 0 && info.applicationInfo.metaData != null
                 && info.applicationInfo.metaData.getBoolean("moe.shizuku.client.V3_SUPPORT", false);
         int status;
         if (apis == 0) status = MANAGED_ONLY;
-        else if (!metadata) status = UNSUPPORTED;
         else if ((apis & API_PORTER) != 0) status = DIRECT;
-        else status = companion ? COMPANION : NEEDS_COMPANION;
+        else if (shizukuReady) status = companion ? COMPANION : NEEDS_COMPANION;
+        else status = UNSUPPORTED;
         int authorization = (flags & ShizukuConfig.FLAG_PENDING_COMPANION) != 0 ? PENDING_COMPANION : (flags & ConfigManager.FLAG_ALLOWED) != 0 ? ALLOWED
                 : (flags & ConfigManager.FLAG_DENIED) != 0 ? DENIED : DEFAULT;
         boolean root = info.applicationInfo.metaData != null
