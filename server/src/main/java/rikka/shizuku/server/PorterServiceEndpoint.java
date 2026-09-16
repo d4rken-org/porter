@@ -8,6 +8,7 @@ import eu.darken.porter.common.CompatibilitySetup;
 import eu.darken.porter.common.DiscoveredApplication;
 import eu.darken.porter.common.GlobalAccess;
 import eu.darken.porter.common.UserServiceLaunch;
+import eu.darken.porter.core.CallerIdentity;
 import eu.darken.porter.endpoint.PorterEndpoint;
 import eu.darken.porter.protocol.PorterProtocol;
 import eu.darken.porter.server.IPorterApplication;
@@ -20,6 +21,10 @@ public class PorterServiceEndpoint extends PorterEndpoint {
     public PorterServiceEndpoint(ShizukuService service) {
         super(service.getCore(), service);
         this.service = service;
+    }
+
+    protected final void enforceManagerPermission(String func) {
+        service.getCore().enforceManagerPermission(func, CallerIdentity.fromBinder());
     }
 
     @Override
