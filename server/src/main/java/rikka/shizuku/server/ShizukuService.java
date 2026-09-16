@@ -625,10 +625,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
                 // terminals). Undecided packages are only suggested when Porter would push to them.
                 if (flags != 0) {
                     list.add(pi);
-                } else if (pi.applicationInfo.metaData != null
-                        && pi.applicationInfo.metaData.getBoolean("moe.shizuku.client.V3_SUPPORT", false)
-                        && pi.requestedPermissions != null
-                        && route(pi) != null) {
+                } else if (route(pi) != null) {
                     list.add(pi);
                 }
             }

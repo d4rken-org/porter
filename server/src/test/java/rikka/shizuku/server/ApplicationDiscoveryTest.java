@@ -47,12 +47,19 @@ public class ApplicationDiscoveryTest {
         assertEquals(NEEDS_COMPANION, ApplicationDiscovery.describe(info, 0, false, 0).connectionStatus);
         assertEquals(COMPANION, ApplicationDiscovery.describe(info, 0, true, 0).connectionStatus);
     }
-    @Test public void permissionDeclarationAloneDoesNotPromiseIntegration() {
+    @Test public void thePorterPermissionIsItsOwnSupportSignal() {
         var info = app("declaration", 10123, ServerConstants.PERMISSION);
         info.applicationInfo.metaData = null;
         var entry = ApplicationDiscovery.describe(info, 0, true, 0);
-        assertEquals(UNSUPPORTED, entry.connectionStatus);
+        assertEquals(DIRECT, entry.connectionStatus);
         assertFalse(entry.requiresRoot);
+    }
+    @Test public void aShizukuClientStillHasToCarryTheShizukuMarker() {
+        var info = app("legacy", 10123, ServerConstants.LEGACY_PERMISSION);
+        info.applicationInfo.metaData.putBoolean("moe.shizuku.client.V3_SUPPORT", false);
+        assertEquals(UNSUPPORTED, ApplicationDiscovery.describe(info, 0, true, 0).connectionStatus);
+        info.applicationInfo.metaData.putBoolean("moe.shizuku.client.V3_SUPPORT", true);
+        assertEquals(COMPANION, ApplicationDiscovery.describe(info, 0, true, 0).connectionStatus);
     }
     @Test public void terminalsWithHistoryOrDecisionsRemainVisibleWithoutDeclarations() {
         var info = app("terminal", 10123);
