@@ -24,4 +24,4 @@ fi
 
 # Replace PKG below with your terminal app's application id. Porter's own id is filled in when the app exports this file.
 [ -z "$PORSH_APPLICATION_ID" ] && export PORSH_APPLICATION_ID="PKG" && export MANAGER_APPLICATION_ID="MANAGER_PKG"
-/system/bin/app_process -Djava.class.path="$DEX" /system/bin --nice-name=porsh rikka.shizuku.shell.PorterShellLoader "$@"
+/system/bin/app_process -Djava.class.path="$DEX" /system/bin --nice-name=porsh eu.darken.porter.shell.PorterShellLoader "$@"

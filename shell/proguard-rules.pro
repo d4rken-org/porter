@@ -1,4 +1,4 @@
--keep class rikka.shizuku.shell.PorterShellLoader {
+-keep class eu.darken.porter.shell.PorterShellLoader {
     public static void main(java.lang.String[]);
 }
 

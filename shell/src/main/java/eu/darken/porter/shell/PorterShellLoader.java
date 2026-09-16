@@ -1,4 +1,4 @@
-package rikka.shizuku.shell;
+package eu.darken.porter.shell;
 
 import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
