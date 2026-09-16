@@ -44,8 +44,8 @@ import java.util.stream.Stream;
 
 import kotlin.collections.ArraysKt;
 import moe.shizuku.api.BinderContainer;
-import moe.shizuku.common.util.BuildUtils;
-import moe.shizuku.common.util.OsUtils;
+import eu.darken.porter.common.util.BuildUtils;
+import eu.darken.porter.common.util.OsUtils;
 import moe.shizuku.starter.util.IContentProviderCompat;
 import rikka.hidden.compat.ActivityManagerApis;
 import rikka.hidden.compat.DeviceIdleControllerApis;

@@ -8,7 +8,7 @@ import android.os.Parcel;
 
 import eu.darken.porter.common.GlobalAccess;
 import eu.darken.porter.core.CallerIdentity;
-import moe.shizuku.common.util.OsUtils;
+import eu.darken.porter.common.util.OsUtils;
 import rikka.parcelablelist.ParcelableListSlice;
 
 /**
