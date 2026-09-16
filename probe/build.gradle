@@ -14,6 +14,12 @@ android {
         legacy { applicationIdSuffix = ".legacy" }
         terminal { applicationIdSuffix = ".terminal" }
     }
+    // Two activities of the same name, one per SDK. Both flavours that speak the Shizuku API share
+    // the one under src/shizuku; the porter flavour has its own under src/porter.
+    sourceSets {
+        legacy { java.srcDirs += "src/shizuku/java" }
+        terminal { java.srcDirs += "src/shizuku/java" }
+    }
 }
 
 dependencies {
@@ -21,5 +27,5 @@ dependencies {
     legacyImplementation "dev.rikka.shizuku:provider:13.1.5"
     terminalImplementation "dev.rikka.shizuku:api:13.1.5"
     terminalImplementation "dev.rikka.shizuku:provider:13.1.5"
-    porterImplementation project(":client")
+    porterImplementation project(":sdk")
 }
