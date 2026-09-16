@@ -51,7 +51,7 @@ class ServiceReplacementTest {
     /** The starter the replace path insists on, which Robolectric leaves out of the ApplicationInfo. */
     private fun installStarter() {
         val libraries = temporary.newFolder()
-        File(libraries, "libshizuku.so").apply { writeText("starter"); setExecutable(true) }
+        File(libraries, "libporter.so").apply { writeText("starter"); setExecutable(true) }
         application.applicationInfo.sourceDir = temporary.newFile("base.apk").absolutePath
         application.applicationInfo.nativeLibraryDir = libraries.absolutePath
     }

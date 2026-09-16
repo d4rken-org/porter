@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.31)
 
-project("shizuku")
+project("porter")
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -20,14 +20,14 @@ endif ()
 find_package(boringssl REQUIRED CONFIG)
 find_package(cxx REQUIRED CONFIG)
 
-add_executable(libshizuku.so
+add_executable(libporter.so
         starter.cpp misc.cpp selinux.cpp cgroup.cpp)
 
-target_link_libraries(libshizuku.so log cxx::cxx)
+target_link_libraries(libporter.so log cxx::cxx)
 
 if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_custom_command(TARGET libshizuku.so POST_BUILD
-            COMMAND ${CMAKE_STRIP} --remove-section=.comment "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libshizuku.so")
+    add_custom_command(TARGET libporter.so POST_BUILD
+            COMMAND ${CMAKE_STRIP} --remove-section=.comment "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libporter.so")
 endif ()
 
 add_library(adb SHARED

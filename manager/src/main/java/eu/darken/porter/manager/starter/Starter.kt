@@ -13,7 +13,7 @@ private val app = PorterApplication.application
 
 object Starter {
 
-    private val starterFile = File(app.applicationInfo.nativeLibraryDir, "libshizuku.so")
+    private val starterFile = File(app.applicationInfo.nativeLibraryDir, "libporter.so")
 
     val userCommand: String = starterFile.absolutePath
     val adbCommand = "adb shell $userCommand"

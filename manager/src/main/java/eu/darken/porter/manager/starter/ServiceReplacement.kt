@@ -100,7 +100,7 @@ internal class ServiceReplacement internal constructor(
             replace = { beforeLaunch, onLaunched ->
                 withContext(Dispatchers.IO) {
                     val apk = File(appContext.applicationInfo.sourceDir)
-                    val starter = File(appContext.applicationInfo.nativeLibraryDir, "libshizuku.so")
+                    val starter = File(appContext.applicationInfo.nativeLibraryDir, "libporter.so")
                     check(apk.canRead() && starter.canExecute()) { "The installed Porter starter is unavailable" }
                     ServiceReplacer(PorterServiceVersion.installed, currentBinder,
                         readInfo = readInfo, readUid = readUid,
