@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import moe.shizuku.starter.ServiceStarter;
+import eu.darken.porter.starter.ServiceStarter;
 import eu.darken.porter.privileged.util.PackageIdentity;
 import rikka.shizuku.server.util.UserHandleCompat;
 import rikka.shizuku.server.UserServiceManager;

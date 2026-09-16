@@ -1,4 +1,4 @@
-package moe.shizuku.starter;
+package eu.darken.porter.starter;
 
 import android.content.IContentProvider;
 import android.os.Binder;
@@ -16,14 +16,14 @@ import java.util.Locale;
 
 import eu.darken.porter.common.UserServiceLaunch;
 import eu.darken.porter.protocol.PorterProtocol;
-import moe.shizuku.starter.util.IContentProviderCompat;
+import eu.darken.porter.starter.BuildConfig;
+import eu.darken.porter.starter.util.IContentProviderCompat;
 import rikka.hidden.compat.ActivityManagerApis;
-import rikka.shizuku.starter.BuildConfig;
 import rikka.shizuku.server.UserService;
 
 public class ServiceStarter {
 
-    private static final String TAG = "ShizukuServiceStarter";
+    private static final String TAG = "PorterServiceStarter";
 
     /** What the attach in {@link #sendBinder} waits for the manager's state machine, to the ms. */
     private static final long LAUNCH_TOKEN_BINDER_TIMEOUT = 5000;
@@ -48,7 +48,7 @@ public class ServiceStarter {
     }
 
     private static final String USER_SERVICE_CMD_FORMAT = "(CLASSPATH='%s' %s%s /system/bin " +
-            "--nice-name='%s' moe.shizuku.starter.ServiceStarter " +
+            "--nice-name='%s' eu.darken.porter.starter.ServiceStarter " +
             "--manager='%s' --token='%s' --package='%s' --class='%s' --uid=%d%s)&";
 
     // DeathRecipient will automatically be unlinked when all references to the
