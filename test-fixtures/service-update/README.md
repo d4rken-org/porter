@@ -15,7 +15,7 @@ actual previous Porter APK. These modes exercise failure and compatibility bound
 | `slow` | Delays the real replacement command three seconds for cancellation and concurrent requests |
 
 Build `:service-update-fixture:assembleDebug`, install alongside Porter, and launch through ADB as
-UID 2000 or root. Set `CLASSPATH` to the fixture APK and `-Dshizuku.library.path` to the installed
+UID 2000 or root. Set `CLASSPATH` to the fixture APK and `-Dporter.library.path` to the installed
 Porter native library directory. Use `app_process /system/bin --nice-name=porter_server
 eu.darken.porter.updatefixture.FixtureService MODE` after those VM properties. Keep stdout and stdin
 detached. The process deliberately has the same name as Porter so the real starter can replace it.

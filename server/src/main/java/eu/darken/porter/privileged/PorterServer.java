@@ -77,7 +77,7 @@ public class PorterServer implements ServerPolicy, ManagerOperations {
 
     public static void main(String[] args) {
         DdmHandleAppName.setAppName("porter_server", 0);
-        PorshConfig.setLibraryPath(System.getProperty("shizuku.library.path"));
+        PorshConfig.setLibraryPath(System.getProperty("porter.library.path"));
         PorshConfig.init(ShizukuApiConstants.BINDER_DESCRIPTOR, 30000);
 
         Looper.prepareMainLooper();
