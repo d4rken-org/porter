@@ -9,10 +9,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import rikka.shizuku.Shizuku
+import eu.darken.porter.sdk.Porter
 
 /**
- * Registering the Shizuku callbacks is a step of its own, taken once. Shizuku keeps its listeners
+ * Registering the Porter callbacks is a step of its own, taken once. The SDK keeps its listeners
  * in process-wide lists and exposes no count, so these read them back by reflection and restore
  * what they found.
  */
@@ -25,12 +25,12 @@ class ShizukuStateMachineAttachmentTest {
     private val binderReadyBefore = binderReady()
 
     @After fun detach() {
-        (binderReceivedListeners() - receivedBefore.toSet()).forEach { Shizuku.removeBinderReceivedListener(it) }
-        (binderDeadListeners() - deadBefore.toSet()).forEach { Shizuku.removeBinderDeadListener(it) }
+        (binderReceivedListeners() - receivedBefore.toSet()).forEach { Porter.removeBinderReceivedListener(it) }
+        (binderDeadListeners() - deadBefore.toSet()).forEach { Porter.removeBinderDeadListener(it) }
         setBinderReady(binderReadyBefore)
     }
 
-    @Test fun constructingRegistersNothingWithShizuku() {
+    @Test fun constructingRegistersNothingWithPorter() {
         val machine = ShizukuStateMachine()
 
         assertEquals(receivedBefore, binderReceivedListeners())
@@ -59,7 +59,7 @@ class ShizukuStateMachineAttachmentTest {
     }
 
     @Test fun aStickyBinderReceivedDuringAttachIsObservable() = runTest {
-        // Shizuku calls a sticky listener inline while registering it, when the binder is already
+        // The SDK calls a sticky listener inline while registering it, when the binder is already
         // up and the caller is on the main looper. Robolectric is on the main looper here.
         setBinderReady(true)
 
@@ -70,13 +70,13 @@ class ShizukuStateMachineAttachmentTest {
         assertEquals(State.RUNNING, machine.asFlow().first())
     }
 
-    private fun binderReceivedListeners(): List<Shizuku.OnBinderReceivedListener> = listeners("RECEIVED_LISTENERS")
+    private fun binderReceivedListeners(): List<Porter.OnBinderReceivedListener> = listeners("RECEIVED_LISTENERS")
 
-    private fun binderDeadListeners(): List<Shizuku.OnBinderDeadListener> = listeners("DEAD_LISTENERS")
+    private fun binderDeadListeners(): List<Porter.OnBinderDeadListener> = listeners("DEAD_LISTENERS")
 
     @Suppress("UNCHECKED_CAST")
     private fun <T> listeners(name: String): List<T> {
-        val holders = Shizuku::class.java.getDeclaredField(name)
+        val holders = Porter::class.java.getDeclaredField(name)
             .apply { isAccessible = true }
             .get(null) as List<Any>
         return synchronized(holders) { holders.toList() }.map { holder ->
@@ -88,5 +88,5 @@ class ShizukuStateMachineAttachmentTest {
 
     private fun setBinderReady(value: Boolean) = readyField().setBoolean(null, value)
 
-    private fun readyField() = Shizuku::class.java.getDeclaredField("binderReady").apply { isAccessible = true }
+    private fun readyField() = Porter::class.java.getDeclaredField("binderReady").apply { isAccessible = true }
 }

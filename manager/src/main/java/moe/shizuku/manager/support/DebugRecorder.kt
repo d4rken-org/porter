@@ -26,7 +26,7 @@ import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.R
 import moe.shizuku.manager.model.PorterServiceVersion
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import rikka.shizuku.Shizuku
+import eu.darken.porter.sdk.Porter
 import java.io.File
 
 class DebugRecorder internal constructor(
@@ -176,7 +176,7 @@ class DebugRecorder internal constructor(
      */
     private fun acquireDebugLease(events: File, remaining: Long) {
         fun note(what: String) = runCatching { events.appendText("$what at ${System.currentTimeMillis()}\n") }
-        val binder = Shizuku.getBinder()?.takeIf { it.pingBinder() }
+        val binder = Porter.getBinder()?.takeIf { it.pingBinder() }
         if (binder == null) {
             note("Debug logging unavailable")
             return

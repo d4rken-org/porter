@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import moe.shizuku.server.IRemoteProcess
+import eu.darken.porter.server.IPorterRemoteProcess
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +28,7 @@ class ServerStreamTest {
     @get:Rule val temporary = TemporaryFolder()
 
     private var destroyed = false
-    private fun remote() = object : IRemoteProcess.Stub() {
+    private fun remote() = object : IPorterRemoteProcess.Stub() {
         override fun getOutputStream(): ParcelFileDescriptor? = null
         override fun getInputStream(): ParcelFileDescriptor? = null
         override fun getErrorStream(): ParcelFileDescriptor? = null

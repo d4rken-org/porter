@@ -15,7 +15,7 @@ import moe.shizuku.manager.utils.Logger.LOGGER
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import moe.shizuku.manager.utils.ShizukuSystemApis
 import moe.shizuku.manager.utils.UserHandleCompat
-import rikka.shizuku.Shizuku
+import eu.darken.porter.sdk.Porter
 
 internal data class ServiceSnapshot(
     val status: ServiceStatus = ServiceStatus(),
@@ -53,11 +53,11 @@ internal class ServiceStatusRepository private constructor(private val appContex
     fun refresh() {
         scope.launch {
             mutex.withLock {
-                val binder = Shizuku.getBinder()
+                val binder = Porter.getBinder()
                 val loaded = try { load() }
                 catch (e: CancellationException) { throw e }
                 catch (e: Exception) { LOGGER.w(e, "Load service status"); ServiceStatus() }
-                status.value = if (binder == Shizuku.getBinder() && ShizukuStateMachine.instance.isRunning()) loaded else ServiceStatus()
+                status.value = if (binder == Porter.getBinder() && ShizukuStateMachine.instance.isRunning()) loaded else ServiceStatus()
                 if (ShizukuStateMachine.instance.isRunning()) ServiceReplacement.get(appContext).reconcile()
             }
         }
@@ -68,30 +68,27 @@ internal class ServiceStatusRepository private constructor(private val appContex
             return ServiceStatus()
         }
 
-        val uid = Shizuku.getUid()
-        val apiVersion = Shizuku.getVersion()
-        val patchVersion = Shizuku.getServerPatchVersion().let { if (it < 0) 0 else it }
-        val seContext = if (apiVersion >= 6) {
-            try {
-                Shizuku.getSELinuxContext()
-            } catch (tr: Throwable) {
-                LOGGER.w(tr, "getSELinuxContext")
-                null
-            }
-        } else null
+        val uid = Porter.getUid()
+        val protocolVersion = Porter.getServerProtocolVersion()
+        val seContext = try {
+            Porter.getSELinuxContext()
+        } catch (tr: Throwable) {
+            LOGGER.w(tr, "getSELinuxContext")
+            null
+        }
         val permissionTest =
-            Shizuku.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
+            Porter.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
 
         // Before a526d6bb, server will not exit on uninstall, manager installed later will get not permission
         // Run a random remote transaction here, report no permission as not running
         ShizukuSystemApis.instance.checkPermission(Manifest.permission.API_V23, appContext.packageName, 0)
         val info = try {
-            Shizuku.getBinder()?.let { ServerDiagnostics.readInfo(it) }
+            Porter.getBinder()?.let { ServerDiagnostics.readInfo(it) }
         } catch (e: Exception) {
             LOGGER.w(e, "Read Porter service version")
             null
         }
-        return ServiceStatus(uid, apiVersion, patchVersion, seContext, permissionTest, info?.version, info?.pid)
+        return ServiceStatus(uid, protocolVersion, seContext, permissionTest, info?.version, info?.pid)
     }
 
     companion object {
@@ -104,7 +101,7 @@ internal class ServiceStatusRepository private constructor(private val appContex
         // start its eager status polling against the server this call is about to kill.
         fun stop() {
             ShizukuStateMachine.instance.set(ShizukuStateMachine.State.STOPPING)
-            runCatching { Shizuku.exit() }.onFailure { ShizukuStateMachine.instance.update() }
+            runCatching { Porter.exit() }.onFailure { ShizukuStateMachine.instance.update() }
         }
     }
 }

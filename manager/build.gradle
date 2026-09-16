@@ -242,7 +242,9 @@ dependencies {
     implementation project(":server")
     implementation project(":porsh")
     implementation project(":starter")
-    implementation project(":api")
+    implementation project(":sdk")
+    // Not for the manager's own calls: the server and the starter declare it compileOnly and load
+    // moe.shizuku.api.BinderContainer out of this APK at runtime for Shizuku-wire delivery.
     implementation project(":provider")
 
     implementation libs.hidden.compat

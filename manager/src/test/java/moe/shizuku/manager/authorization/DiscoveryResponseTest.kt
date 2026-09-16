@@ -11,6 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import eu.darken.porter.protocol.PorterProtocol
 import rikka.parcelablelist.ParcelableListSlice
 
 @RunWith(RobolectricTestRunner::class)
@@ -20,7 +21,7 @@ class DiscoveryResponseTest {
         var writes = 0
         val future = object : Binder() {
             override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
-                data.enforceInterface("moe.shizuku.server.IShizukuService")
+                data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 if (data.readInt() == GlobalAccess.WRITE) writes++
                 reply!!.writeNoException()
                 reply.writeInt(GlobalAccess.VERSION + 1)
@@ -53,7 +54,7 @@ class DiscoveryResponseTest {
         val service = object : Binder() {
             override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
                 assertEquals(DiscoveredApplication.TRANSACTION, code)
-                data.enforceInterface("moe.shizuku.server.IShizukuService")
+                data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 assertEquals(-1, data.readInt())
                 reply!!.writeNoException()
                 reply.writeInt(DiscoveredApplication.WIRE_VERSION)
@@ -81,7 +82,7 @@ class DiscoveryResponseTest {
         val service = object : Binder() {
             override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
                 assertEquals(GlobalAccess.TRANSACTION, code)
-                data.enforceInterface("moe.shizuku.server.IShizukuService")
+                data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 if (data.readInt() == GlobalAccess.WRITE) enabled = data.readInt() != 0
                 reply!!.writeNoException()
                 reply.writeInt(GlobalAccess.VERSION)

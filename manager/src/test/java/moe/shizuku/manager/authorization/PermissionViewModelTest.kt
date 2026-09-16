@@ -16,8 +16,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED
-import rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_IS_ONETIME
+import eu.darken.porter.protocol.PorterProtocol.PERMISSION_CONFIRMATION_ALLOWED
+import eu.darken.porter.protocol.PorterProtocol.PERMISSION_CONFIRMATION_ONETIME
 
 internal class FakePermissionGateway(
     val service: MutableStateFlow<State> = MutableStateFlow(State.RUNNING),
@@ -38,7 +38,7 @@ internal class FakePermissionGateway(
         return canGrant
     }
     override fun dispatch(uid: Int, pid: Int, code: Int, data: Bundle) {
-        replies += Reply(uid, pid, code, data.getBoolean(REQUEST_PERMISSION_REPLY_ALLOWED), data.getBoolean(REQUEST_PERMISSION_REPLY_IS_ONETIME))
+        replies += Reply(uid, pid, code, data.getBoolean(PERMISSION_CONFIRMATION_ALLOWED), data.getBoolean(PERMISSION_CONFIRMATION_ONETIME))
         dispatchFailure?.let { throw it }
     }
 }

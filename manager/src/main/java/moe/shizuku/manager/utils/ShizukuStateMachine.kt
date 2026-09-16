@@ -6,7 +6,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import rikka.shizuku.Shizuku
+import eu.darken.porter.sdk.Porter
 
 class ShizukuStateMachine {
 
@@ -35,17 +35,17 @@ class ShizukuStateMachine {
     private val attached = AtomicBoolean(false)
 
     /**
-     * Registers the Shizuku binder callbacks. Explicit, and separate from construction: a second
+     * Registers the Porter binder callbacks. Explicit, and separate from construction: a second
      * registration would double every transition, and merely holding an instance must not wire
      * anything up.
      */
     fun attachToShizuku() {
         if (!attached.compareAndSet(false, true)) return
-        Shizuku.addBinderReceivedListenerSticky(
-            Shizuku.OnBinderReceivedListener { set(State.RUNNING) }
+        Porter.addBinderReceivedListenerSticky(
+            Porter.OnBinderReceivedListener { set(State.RUNNING) }
         )
-        Shizuku.addBinderDeadListener(
-            Shizuku.OnBinderDeadListener { setDead() }
+        Porter.addBinderDeadListener(
+            Porter.OnBinderDeadListener { setDead() }
         )
     }
 
@@ -75,7 +75,7 @@ class ShizukuStateMachine {
     }
 
     fun update(): State {
-        val state = if (Shizuku.pingBinder()) State.RUNNING else State.STOPPED
+        val state = if (Porter.pingBinder()) State.RUNNING else State.STOPPED
         set(state)
         return state
     }

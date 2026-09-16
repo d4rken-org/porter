@@ -53,8 +53,7 @@ internal fun PorterPreviewWrapper(dark: Boolean, content: @Composable () -> Unit
 
 // --- Mock data ---------------------------------------------------------------------------------
 
-private const val SERVICE_API = 13
-private const val SERVICE_PATCH = 6
+private const val SERVICE_PROTOCOL = eu.darken.porter.protocol.PorterProtocol.VERSION
 
 /**
  * A stand-in launcher icon: a rounded tile with the app's initial, hue derived from the package.
@@ -150,7 +149,7 @@ private val screenshotVersion = PorterServiceVersion("0.1.1-beta1", 101010, "012
 
 @Composable
 private fun runningStatusUi(): ServiceStatusUi = serviceStatusUi(ServiceSnapshot(
-    ServiceStatus(uid = 2000, apiVersion = SERVICE_API, patchVersion = SERVICE_PATCH, permission = true, porterVersion = screenshotVersion),
+    ServiceStatus(uid = 2000, protocolVersion = SERVICE_PROTOCOL, permission = true, porterVersion = screenshotVersion),
     ShizukuStateMachine.State.RUNNING, installed = screenshotVersion,
 ))
 

@@ -15,9 +15,10 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.model.PorterServiceVersion
-import moe.shizuku.server.IRemoteProcess
-import moe.shizuku.server.IShizukuService
-import rikka.shizuku.Shizuku
+import eu.darken.porter.protocol.PorterProtocol
+import eu.darken.porter.sdk.Porter
+import eu.darken.porter.server.IPorterRemoteProcess
+import eu.darken.porter.server.IPorterService
 import rikka.shizuku.server.ServerConstants
 import java.io.File
 import java.io.InputStream
@@ -44,7 +45,7 @@ internal object ServerDiagnostics {
         val request = Parcel.obtain()
         val reply = Parcel.obtain()
         try {
-            request.writeInterfaceToken("moe.shizuku.server.IShizukuService")
+            request.writeInterfaceToken(PorterProtocol.DESCRIPTOR)
             if (!binder.transact(ServerConstants.BINDER_TRANSACTION_getDiagnostics, request, reply, 0)) return null
             reply.readException()
             val pid = reply.readInt().also { check(it > 0) }
@@ -85,7 +86,7 @@ internal object ServerDiagnostics {
         val request = Parcel.obtain()
         val reply = Parcel.obtain()
         try {
-            request.writeInterfaceToken("moe.shizuku.server.IShizukuService")
+            request.writeInterfaceToken(PorterProtocol.DESCRIPTOR)
             request.writeStrongBinder(token)
             request.writeLong(durationMs)
             // A service that does not know the code answers false. A service that refuses the call
@@ -104,14 +105,14 @@ internal object ServerDiagnostics {
         val details = File(directory, "server-$phase.txt")
         try {
             details.writeText("Time: ${System.currentTimeMillis()}\nBoot start: ${ShizukuSettings.getPreferences().getBoolean("start_on_boot", false)}\nWatchdog: ${ShizukuSettings.getWatchdog()}\n")
-            val binder = Shizuku.getBinder()
+            val binder = Porter.getBinder()
             if (binder == null || !binder.pingBinder()) {
                 details.appendText("Porter service unavailable\n")
                 return
             }
-            details.appendText("UID: ${Shizuku.getUid()}\nAPI: ${Shizuku.getVersion()}\nSELinux: ${Shizuku.getSELinuxContext()}\n")
+            details.appendText("UID: ${Porter.getUid()}\nProtocol: ${Porter.getServerProtocolVersion()}\nSELinux: ${Porter.getSELinuxContext()}\n")
             val info = readInfo(binder) ?: error("Service diagnostics unsupported")
-            details.appendText("PID: ${info.pid}\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nInstalled build: ${PorterServiceVersion.installed.buildId}\nService build: ${info.version?.buildId ?: "unknown"}\nAPI patch: ${Shizuku.getServerPatchVersion()}\n")
+            details.appendText("PID: ${info.pid}\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nInstalled build: ${PorterServiceVersion.installed.buildId}\nService build: ${info.version?.buildId ?: "unknown"}\n")
             info.reconciler?.let {
                 details.appendText(
                     "Reconciler manager check: ${it.managerCheckedAt}\nReconciler host scan: ${it.hostScannedAt}\n" +
@@ -131,7 +132,7 @@ internal object ServerDiagnostics {
         val input: InputStream,
         private val error: InputStream,
         private val errorDrain: Job,
-        private val remote: IRemoteProcess,
+        private val remote: IPorterRemoteProcess,
     ) {
         private val closed = AtomicBoolean(false)
 
@@ -153,12 +154,12 @@ internal object ServerDiagnostics {
 
     fun openStream(directory: File): ServerStream? {
         val notes = File(directory, "server-stream.txt")
-        var remote: IRemoteProcess? = null
+        var remote: IPorterRemoteProcess? = null
         var input: InputStream? = null
         var error: InputStream? = null
         var drain: Job? = null
         try {
-            val binder = Shizuku.getBinder()?.takeIf { it.pingBinder() }
+            val binder = Porter.getBinder()?.takeIf { it.pingBinder() }
             if (binder == null) {
                 runCatching { notes.appendText("Porter service unavailable\n") }
                 return null
@@ -168,7 +169,7 @@ internal object ServerDiagnostics {
                 runCatching { notes.appendText("Service diagnostics unsupported\n") }
                 return null
             }
-            val process = IShizukuService.Stub.asInterface(binder)
+            val process = IPorterService.Stub.asInterface(binder)
                 .newProcess(arrayOf("sh", "-c", supervisor(pid)), null, null).also { remote = it }
             val output = ParcelFileDescriptor.AutoCloseInputStream(process.inputStream).also { input = it }
             val errors = ParcelFileDescriptor.AutoCloseInputStream(process.errorStream).also { error = it }

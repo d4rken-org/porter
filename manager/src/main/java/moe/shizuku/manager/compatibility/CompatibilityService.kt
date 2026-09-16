@@ -8,8 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import moe.shizuku.server.IShizukuService
-import rikka.shizuku.Shizuku
+import eu.darken.porter.protocol.PorterProtocol
+import eu.darken.porter.sdk.Porter
+import eu.darken.porter.server.IPorterService
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
@@ -20,11 +21,11 @@ internal object CompatibilityService {
     private val timer = Executors.newSingleThreadScheduledExecutor { r -> Thread(r, "porter-compat-timeout").apply { isDaemon = true } }
 
     fun request(operation: Int, snapshot: String? = null): Bundle {
-        val binder = Shizuku.getBinder() ?: error("Porter is not running")
+        val binder = Porter.getBinder() ?: error("Porter is not running")
         val data = Parcel.obtain()
         val reply = Parcel.obtain()
         try {
-            data.writeInterfaceToken("moe.shizuku.server.IShizukuService")
+            data.writeInterfaceToken(PorterProtocol.DESCRIPTOR)
             data.writeInt(operation)
             data.writeString(snapshot)
             check(binder.transact(CompatibilitySetup.TRANSACTION, data, reply, 0)) { "Restart Porter to use compatibility setup" }
@@ -39,8 +40,8 @@ internal object CompatibilityService {
     }
 
     suspend fun command(arguments: Array<String>, apk: File? = null): String = withContext(Dispatchers.IO) {
-        val binder = Shizuku.getBinder() ?: error("Porter is not running")
-        val process = IShizukuService.Stub.asInterface(binder).newProcess(arguments, null, null)
+        val binder = Porter.getBinder() ?: error("Porter is not running")
+        val process = IPorterService.Stub.asInterface(binder).newProcess(arguments, null, null)
         val stdout = ParcelFileDescriptor.AutoCloseInputStream(process.inputStream)
         val stderr = ParcelFileDescriptor.AutoCloseInputStream(process.errorStream)
         val stdin = ParcelFileDescriptor.AutoCloseOutputStream(process.outputStream)

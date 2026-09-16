@@ -6,7 +6,7 @@ import android.os.RemoteException
 import rikka.hidden.compat.PermissionManagerApis
 import rikka.hidden.compat.UserManagerApis
 import rikka.hidden.compat.util.SystemServiceBinder
-import rikka.shizuku.ShizukuBinderWrapper
+import eu.darken.porter.sdk.PorterBinderWrapper
 import rikka.shizuku.server.util.InstalledPackagesCompat
 
 private fun loadUsersFromService(): List<UserInfoCompat> {
@@ -37,14 +37,14 @@ class ShizukuSystemApis internal constructor(
     private val users = arrayListOf<UserInfoCompat>()
 
     /**
-     * Routes every system service binder through Shizuku. Separate from construction, and taken
+     * Routes every system service binder through Porter. Separate from construction, and taken
      * once: the registration is a process-wide single slot, so a second one would only overwrite
      * what the first installed.
      */
     @Synchronized
     fun attachToSystemServices() {
         if (ready) return
-        installBinderListener { ShizukuBinderWrapper(it) }
+        installBinderListener { PorterBinderWrapper(it) }
         ready = true
     }
 
@@ -86,30 +86,6 @@ class ShizukuSystemApis internal constructor(
             PackageManager.PERMISSION_DENIED
         } else try {
             PermissionManagerApis.checkPermission(permName, pkgName, userId)
-        } catch (tr: RemoteException) {
-            throw RuntimeException(tr.message, tr)
-        }
-    }
-
-    fun grantRuntimePermission(packageName: String, permissionName: String, userId: Int) {
-        checkReady()
-        if (!ShizukuStateMachine.instance.isRunning()) {
-            return
-        }
-        try {
-            PermissionManagerApis.grantRuntimePermission(packageName, permissionName, userId)
-        } catch (tr: RemoteException) {
-            throw RuntimeException(tr.message, tr)
-        }
-    }
-
-    fun revokeRuntimePermission(packageName: String, permissionName: String, userId: Int) {
-        checkReady()
-        if (!ShizukuStateMachine.instance.isRunning()) {
-            return
-        }
-        try {
-            PermissionManagerApis.revokeRuntimePermission(packageName, permissionName, userId)
         } catch (tr: RemoteException) {
             throw RuntimeException(tr.message, tr)
         }
