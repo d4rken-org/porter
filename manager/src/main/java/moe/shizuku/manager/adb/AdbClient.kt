@@ -1,7 +1,7 @@
 package moe.shizuku.manager.adb
 
 import android.util.Log
-import moe.shizuku.common.util.BuildUtils
+import eu.darken.porter.common.util.BuildUtils
 import moe.shizuku.manager.adb.AdbProtocol.ADB_AUTH_RSAPUBLICKEY
 import moe.shizuku.manager.adb.AdbProtocol.ADB_AUTH_SIGNATURE
 import moe.shizuku.manager.adb.AdbProtocol.ADB_AUTH_TOKEN

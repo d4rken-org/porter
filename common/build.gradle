@@ -49,7 +49,7 @@ androidComponents.onVariants(androidComponents.selector().all()) { variant ->
 }
 
 android {
-    namespace = "rikka.shizuku.common"
+    namespace = "eu.darken.porter.common"
     buildFeatures {
         buildConfig = false
     }

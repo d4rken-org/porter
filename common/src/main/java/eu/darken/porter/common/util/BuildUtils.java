@@ -1,4 +1,4 @@
-package moe.shizuku.common.util;
+package eu.darken.porter.common.util;
 
 import android.os.Build;
 

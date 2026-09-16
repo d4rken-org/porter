@@ -508,11 +508,11 @@ public class ServiceAuthorizationTest {
         var installedApp = ApplicationDiscoveryTest.app(client.packageName, CLIENT_UID, ServerConstants.PERMISSION);
         try (var users = mockStatic(rikka.hidden.compat.UserManagerApis.class);
              var installedApps = mockStatic(eu.darken.porter.privileged.util.InstalledPackagesCompat.class);
-             var os = mockStatic(moe.shizuku.common.util.OsUtils.class)) {
+             var os = mockStatic(eu.darken.porter.common.util.OsUtils.class)) {
             users.when(rikka.hidden.compat.UserManagerApis::getUserIdsNoThrow).thenReturn(List.of(0));
             installedApps.when(() -> eu.darken.porter.privileged.util.InstalledPackagesCompat.getInstalledPackages(anyLong(), eq(0))).thenReturn(List.of(installedApp));
             installedApps.when(() -> eu.darken.porter.privileged.util.InstalledPackagesCompat.getInstalledPackagesNoThrow(anyLong(), eq(0))).thenReturn(List.of(installedApp));
-            os.when(moe.shizuku.common.util.OsUtils::getUid).thenReturn(MANAGER_UID);
+            os.when(eu.darken.porter.common.util.OsUtils::getUid).thenReturn(MANAGER_UID);
 
             Parcel applications = porterTransact(ServerConstants.BINDER_TRANSACTION_getApplications, data -> data.writeInt(0));
             assertNotNull(rikka.parcelablelist.ParcelableListSlice.CREATOR.createFromParcel(applications));
