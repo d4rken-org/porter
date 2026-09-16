@@ -42,11 +42,11 @@
       - any-glob-to-any-file:
           - "manager/src/**/moe/shizuku/manager/authorization/**"
           - "manager/src/**/moe/shizuku/manager/management/**"
-          - "server/src/**/rikka/shizuku/server/ApplicationDiscovery*"
-          - "server/src/**/rikka/shizuku/server/PermissionObserver*"
-          - "server/src/**/rikka/shizuku/server/ServiceAuthorization*"
-          - "server/src/**/rikka/shizuku/server/ShizukuClientManager*"
-          - "server/src/**/rikka/shizuku/server/ShizukuConfig*"
+          - "server/src/**/eu/darken/porter/privileged/ApplicationDiscovery*"
+          - "server/src/**/eu/darken/porter/privileged/PermissionObserver*"
+          - "server/src/**/eu/darken/porter/privileged/ServiceAuthorization*"
+          - "server/src/**/eu/darken/porter/privileged/ShizukuClientManager*"
+          - "server/src/**/eu/darken/porter/privileged/ShizukuConfig*"
           - "common/src/**/eu/darken/porter/common/DiscoveredApplication*"
 
 "c: Compatibility":
@@ -54,8 +54,8 @@
       - any-glob-to-any-file:
           - "compat/**"
           - "manager/src/**/moe/shizuku/manager/compatibility/**"
-          - "server/src/**/rikka/shizuku/server/Compatibility*"
-          - "server/src/**/rikka/shizuku/server/LegacyAccessImport*"
+          - "server/src/**/eu/darken/porter/privileged/Compatibility*"
+          - "server/src/**/eu/darken/porter/privileged/LegacyAccessImport*"
           - "common/src/**/eu/darken/porter/common/CompatibilitySetup*"
 
 # Fires on every server change, including the files that also carry

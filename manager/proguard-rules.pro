@@ -28,7 +28,7 @@
 }
 
 # Entrance of Shizuku service
--keep class rikka.shizuku.server.ShizukuService {
+-keep class eu.darken.porter.privileged.PorterServer {
     public static void main(java.lang.String[]);
 }
 

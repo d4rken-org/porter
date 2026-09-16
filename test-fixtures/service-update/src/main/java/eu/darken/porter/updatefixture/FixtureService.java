@@ -14,10 +14,10 @@ import eu.darken.porter.server.IPorterRemoteProcess;
 import moe.shizuku.server.IRemoteProcess;
 import eu.darken.porter.porsh.PorshConfig;
 import rikka.shizuku.ShizukuApiConstants;
-import rikka.shizuku.server.PorterServiceEndpoint;
-import rikka.shizuku.server.ServerConstants;
-import rikka.shizuku.server.ShizukuService;
-import rikka.shizuku.server.ShizukuServiceEndpoint;
+import eu.darken.porter.privileged.PorterServiceEndpoint;
+import eu.darken.porter.privileged.ServerConstants;
+import eu.darken.porter.privileged.PorterServer;
+import eu.darken.porter.privileged.ShizukuServiceEndpoint;
 
 /** Separately installed synthetic service for reproducible update failures, never packaged in Porter. */
 public final class FixtureService {
@@ -29,7 +29,7 @@ public final class FixtureService {
         PorshConfig.setLibraryPath(System.getProperty("shizuku.library.path"));
         PorshConfig.init(ShizukuApiConstants.BINDER_DESCRIPTOR, 30000);
         Looper.prepareMainLooper();
-        ShizukuService.bootstrap(FixtureEndpoint::new, FixturePorterEndpoint::new);
+        PorterServer.bootstrap(FixtureEndpoint::new, FixturePorterEndpoint::new);
         Looper.loop();
     }
 
@@ -95,7 +95,7 @@ public final class FixtureService {
 
     public static final class FixtureEndpoint extends ShizukuServiceEndpoint {
 
-        public FixtureEndpoint(ShizukuService service) {
+        public FixtureEndpoint(PorterServer service) {
             super(service);
         }
 
@@ -149,7 +149,7 @@ public final class FixtureService {
     /** The same modes on the Porter wire, which is the one the manager and the starter use. */
     public static final class FixturePorterEndpoint extends PorterServiceEndpoint {
 
-        public FixturePorterEndpoint(ShizukuService service) {
+        public FixturePorterEndpoint(PorterServer service) {
             super(service);
         }
 

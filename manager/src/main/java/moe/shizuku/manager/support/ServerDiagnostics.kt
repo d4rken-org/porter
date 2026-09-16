@@ -19,7 +19,7 @@ import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.sdk.Porter
 import eu.darken.porter.server.IPorterRemoteProcess
 import eu.darken.porter.server.IPorterService
-import rikka.shizuku.server.ServerConstants
+import eu.darken.porter.privileged.ServerConstants
 import java.io.File
 import java.io.InputStream
 import java.util.concurrent.atomic.AtomicBoolean

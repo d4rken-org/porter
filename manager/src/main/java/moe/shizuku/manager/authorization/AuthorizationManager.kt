@@ -8,7 +8,7 @@ import eu.darken.porter.common.GlobalAccess
 import android.os.Parcel
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Manifest
-import rikka.shizuku.server.ServerConstants
+import eu.darken.porter.privileged.ServerConstants
 import rikka.parcelablelist.ParcelableListSlice
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.sdk.Porter
