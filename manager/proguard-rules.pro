@@ -33,7 +33,7 @@
 }
 
 # Entrance of user service starter
--keep class moe.shizuku.starter.ServiceStarter {
+-keep class eu.darken.porter.starter.ServiceStarter {
     public static void main(java.lang.String[]);
 }
 
