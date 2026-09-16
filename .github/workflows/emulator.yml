@@ -14,6 +14,8 @@ jobs:
     name: ${{ matrix.suite }} (Android ${{ matrix.api }})
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      SHIZUKU_SHA256: 6e273ab0e991c4e79bc8b1bbb9b9dd739ccac1a8712a541a214078886b7b790f
     strategy:
       fail-fast: false
       matrix:
@@ -34,12 +36,26 @@ jobs:
       - uses: ./.github/actions/android-setup
       - name: Build test APKs
         run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug
+      - name: Restore pinned Shizuku cache
+        id: shizuku-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 #v6.1.0
+        with:
+          path: ${{ runner.temp }}/shizuku.apk
+          key: shizuku-apk-${{ env.SHIZUKU_SHA256 }}
       - name: Download pinned Shizuku for coexistence testing
+        if: steps.shizuku-cache.outputs.cache-hit != 'true'
         run: |
           curl --fail --location --retry 5 --retry-delay 10 --retry-max-time 180 \
             --connect-timeout 15 --max-time 120 -o "$RUNNER_TEMP/shizuku.apk" \
             https://github.com/RikkaApps/Shizuku/releases/download/v13.6.0/shizuku-v13.6.0.r1086.2650830c-release.apk
-          echo "6e273ab0e991c4e79bc8b1bbb9b9dd739ccac1a8712a541a214078886b7b790f  $RUNNER_TEMP/shizuku.apk" | sha256sum --check
+      - name: Verify pinned Shizuku checksum
+        run: echo "$SHIZUKU_SHA256  $RUNNER_TEMP/shizuku.apk" | sha256sum --check
+      - name: Save verified Shizuku cache
+        if: steps.shizuku-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 #v6.1.0
+        with:
+          path: ${{ runner.temp }}/shizuku.apk
+          key: shizuku-apk-${{ env.SHIZUKU_SHA256 }}
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
