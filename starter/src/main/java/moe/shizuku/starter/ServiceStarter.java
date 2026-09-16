@@ -15,19 +15,15 @@ import android.util.Pair;
 import java.util.Locale;
 
 import eu.darken.porter.common.UserServiceLaunch;
-import moe.shizuku.api.BinderContainer;
+import eu.darken.porter.protocol.PorterProtocol;
 import moe.shizuku.starter.util.IContentProviderCompat;
 import rikka.hidden.compat.ActivityManagerApis;
-import rikka.shizuku.ShizukuApiConstants;
-import rikka.shizuku.ShizukuProvider;
 import rikka.shizuku.starter.BuildConfig;
 import rikka.shizuku.server.UserService;
 
 public class ServiceStarter {
 
     private static final String TAG = "ShizukuServiceStarter";
-
-    private static final String EXTRA_BINDER = "moe.shizuku.privileged.api.intent.extra.BINDER";
 
     /** What the attach in {@link #sendBinder} waits for the manager's state machine, to the ms. */
     private static final long LAUNCH_TOKEN_BINDER_TIMEOUT = 5000;
@@ -147,7 +143,8 @@ public class ServiceStarter {
     };
 
     private static boolean isLaunchTokenLive(String token) {
-        ManagerBinderSource source = new ManagerBinderSource(managerPackageName + ".porter", 0);
+        ManagerBinderSource source = new ManagerBinderSource(
+                managerPackageName + PorterProtocol.PROVIDER_AUTHORITY_SUFFIX, 0);
         try {
             return isLaunchTokenLive(token, source, SYSTEM_PACER);
         } finally {
@@ -211,16 +208,15 @@ public class ServiceStarter {
             references++;
             // getBinder hands back the server binder without attaching. Both layers reject null extras.
             Bundle reply = IContentProviderCompat.call(provider, null, null, name,
-                    ShizukuProvider.METHOD_GET_BINDER, null, new Bundle());
+                    PorterProtocol.DELIVERY_METHOD_GET_BINDER, null, new Bundle());
             if (reply == null) {
                 return null;
             }
-            reply.setClassLoader(BinderContainer.class.getClassLoader());
-            BinderContainer container = reply.getParcelable(EXTRA_BINDER);
-            if (container == null || container.binder == null || !container.binder.pingBinder()) {
+            IBinder serverBinder = reply.getBinder(PorterProtocol.DELIVERY_EXTRA_BINDER);
+            if (serverBinder == null || !serverBinder.pingBinder()) {
                 return null;
             }
-            return container.binder;
+            return serverBinder;
         }
 
         void close() {
@@ -239,7 +235,7 @@ public class ServiceStarter {
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
         try {
-            data.writeInterfaceToken(ShizukuApiConstants.BINDER_DESCRIPTOR);
+            data.writeInterfaceToken(PorterProtocol.DESCRIPTOR);
             data.writeString(token);
             if (!binder.transact(UserServiceLaunch.TRANSACTION, data, reply, 0)) return false;
             reply.readException();
@@ -255,7 +251,7 @@ public class ServiceStarter {
     }
 
     private static boolean sendBinder(IBinder binder, String token, boolean retry) {
-        String name = managerPackageName + ".porter";
+        String name = managerPackageName + PorterProtocol.PROVIDER_AUTHORITY_SUFFIX;
         int userId = 0;
         IContentProvider provider = null;
 
@@ -284,19 +280,18 @@ public class ServiceStarter {
             }
 
             Bundle extra = new Bundle();
-            extra.putParcelable(EXTRA_BINDER, new BinderContainer(binder));
-            extra.putString(ShizukuApiConstants.USER_SERVICE_ARG_TOKEN, token);
+            extra.putBinder(PorterProtocol.DELIVERY_EXTRA_BINDER, binder);
+            extra.putString(PorterProtocol.USER_SERVICE_TOKEN, token);
 
-            Bundle reply = IContentProviderCompat.call(provider, null, null, name, "sendUserService", null, extra);
+            Bundle reply = IContentProviderCompat.call(provider, null, null, name,
+                    PorterProtocol.DELIVERY_METHOD_SEND_USER_SERVICE, null, extra);
 
             if (reply != null) {
-                reply.setClassLoader(BinderContainer.class.getClassLoader());
-
                 Log.i(TAG, String.format("send binder to %s in user %d", managerPackageName, userId));
-                BinderContainer container = reply.getParcelable(EXTRA_BINDER);
+                IBinder serverBinder = reply.getBinder(PorterProtocol.DELIVERY_EXTRA_BINDER);
 
-                if (container != null && container.binder != null && container.binder.pingBinder()) {
-                    shizukuBinder = container.binder;
+                if (serverBinder != null && serverBinder.pingBinder()) {
+                    shizukuBinder = serverBinder;
                     shizukuBinder.linkToDeath(() -> {
                         Log.i(TAG, "exiting...");
                         System.exit(0);

@@ -16,7 +16,7 @@ import java.io.FileDescriptor;
 import java.util.concurrent.atomic.AtomicLong;
 
 import eu.darken.porter.common.UserServiceLaunch;
-import rikka.shizuku.ShizukuApiConstants;
+import eu.darken.porter.protocol.PorterProtocol;
 
 /**
  * A manager the platform just killed is being restarted by the launch itself, so its provider has no
@@ -80,13 +80,16 @@ public class ColdManagerLaunchTokenTest {
         @Override
         public boolean transact(int code, Parcel data, Parcel reply, int flags) {
             if (code != UserServiceLaunch.TRANSACTION) return false;
+            data.setDataPosition(0);
+            // Refuses the query the way the endpoint does when the token names another wire.
+            data.enforceInterface(PorterProtocol.DESCRIPTOR);
             reply.writeNoException();
             reply.writeInt(1);
             reply.setDataPosition(0);
             return true;
         }
 
-        @Override public String getInterfaceDescriptor() { return ShizukuApiConstants.BINDER_DESCRIPTOR; }
+        @Override public String getInterfaceDescriptor() { return PorterProtocol.DESCRIPTOR; }
         @Override public boolean pingBinder() { return true; }
         @Override public boolean isBinderAlive() { return true; }
         @Override public android.os.IInterface queryLocalInterface(String descriptor) { return null; }
