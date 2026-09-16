@@ -36,7 +36,8 @@ jobs:
         run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug
       - name: Download pinned Shizuku for coexistence testing
         run: |
-          curl --fail --location --retry 2 -o "$RUNNER_TEMP/shizuku.apk" \
+          curl --fail --location --retry 5 --retry-delay 10 --retry-max-time 180 \
+            --connect-timeout 15 --max-time 120 -o "$RUNNER_TEMP/shizuku.apk" \
             https://github.com/RikkaApps/Shizuku/releases/download/v13.6.0/shizuku-v13.6.0.r1086.2650830c-release.apk
           echo "6e273ab0e991c4e79bc8b1bbb9b9dd739ccac1a8712a541a214078886b7b790f  $RUNNER_TEMP/shizuku.apk" | sha256sum --check
       - name: Enable KVM
