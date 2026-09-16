@@ -16,22 +16,22 @@
 "c: Setup":
   - changed-files:
       - any-glob-to-any-file:
-          - "manager/src/**/moe/shizuku/manager/adb/**"
-          - "manager/src/**/moe/shizuku/manager/starter/**"
+          - "manager/src/**/eu/darken/porter/manager/adb/**"
+          - "manager/src/**/eu/darken/porter/manager/starter/**"
           # Pairing and startup entry points that live in shared packages.
-          - "manager/src/**/moe/shizuku/manager/home/Adb*"
-          - "manager/src/**/moe/shizuku/manager/home/Wadb*"
-          - "manager/src/**/moe/shizuku/manager/home/WirelessStart*"
-          - "manager/src/**/moe/shizuku/manager/home/TvPairing*"
-          - "manager/src/**/moe/shizuku/manager/worker/AdbStartWorker*"
-          - "manager/src/**/moe/shizuku/manager/worker/ServiceUpdateWorker*"
-          - "manager/src/**/moe/shizuku/manager/receiver/BootCompleteReceiver*"
-          - "manager/src/**/moe/shizuku/manager/receiver/ManualStartReceiver*"
-          - "manager/src/**/moe/shizuku/manager/receiver/ShizukuReceiverStarter*"
-          - "manager/src/**/moe/shizuku/manager/receiver/NotifAttemptReceiver*"
-          - "manager/src/**/moe/shizuku/manager/receiver/NotifCancelReceiver*"
-          - "manager/src/**/moe/shizuku/manager/receiver/NotifRestoreReceiver*"
-          - "manager/src/**/moe/shizuku/manager/receiver/PackageReplacedReceiver*"
+          - "manager/src/**/eu/darken/porter/manager/home/Adb*"
+          - "manager/src/**/eu/darken/porter/manager/home/Wadb*"
+          - "manager/src/**/eu/darken/porter/manager/home/WirelessStart*"
+          - "manager/src/**/eu/darken/porter/manager/home/TvPairing*"
+          - "manager/src/**/eu/darken/porter/manager/worker/AdbStartWorker*"
+          - "manager/src/**/eu/darken/porter/manager/worker/ServiceUpdateWorker*"
+          - "manager/src/**/eu/darken/porter/manager/receiver/BootCompleteReceiver*"
+          - "manager/src/**/eu/darken/porter/manager/receiver/ManualStartReceiver*"
+          - "manager/src/**/eu/darken/porter/manager/receiver/PorterReceiverStarter*"
+          - "manager/src/**/eu/darken/porter/manager/receiver/NotifAttemptReceiver*"
+          - "manager/src/**/eu/darken/porter/manager/receiver/NotifCancelReceiver*"
+          - "manager/src/**/eu/darken/porter/manager/receiver/NotifRestoreReceiver*"
+          - "manager/src/**/eu/darken/porter/manager/receiver/PackageReplacedReceiver*"
           - "manager/src/main/jni/adb_pairing.*"
           - "manager/src/main/jni/starter.cpp"
           - "starter/**"
@@ -40,8 +40,8 @@
 "c: Apps":
   - changed-files:
       - any-glob-to-any-file:
-          - "manager/src/**/moe/shizuku/manager/authorization/**"
-          - "manager/src/**/moe/shizuku/manager/management/**"
+          - "manager/src/**/eu/darken/porter/manager/authorization/**"
+          - "manager/src/**/eu/darken/porter/manager/management/**"
           - "server/src/**/eu/darken/porter/privileged/ApplicationDiscovery*"
           - "server/src/**/eu/darken/porter/privileged/PermissionObserver*"
           - "server/src/**/eu/darken/porter/privileged/ServiceAuthorization*"
@@ -53,7 +53,7 @@
   - changed-files:
       - any-glob-to-any-file:
           - "compat/**"
-          - "manager/src/**/moe/shizuku/manager/compatibility/**"
+          - "manager/src/**/eu/darken/porter/manager/compatibility/**"
           - "server/src/**/eu/darken/porter/privileged/Compatibility*"
           - "server/src/**/eu/darken/porter/privileged/LegacyAccessImport*"
           - "common/src/**/eu/darken/porter/common/CompatibilitySetup*"
@@ -65,21 +65,21 @@
   - changed-files:
       - any-glob-to-any-file:
           - "server/**"
-          - "manager/src/**/moe/shizuku/manager/service/**"
-          - "manager/src/**/moe/shizuku/manager/receiver/**"
+          - "manager/src/**/eu/darken/porter/manager/service/**"
+          - "manager/src/**/eu/darken/porter/manager/receiver/**"
 
 "c: Shell":
   - changed-files:
       - any-glob-to-any-file:
           - "shell/**"
-          - "manager/src/**/moe/shizuku/manager/shell/**"
-          - "manager/src/**/moe/shizuku/manager/receiver/BinderRequestReceiver*"
+          - "manager/src/**/eu/darken/porter/manager/shell/**"
+          - "manager/src/**/eu/darken/porter/manager/receiver/BinderRequestReceiver*"
           - "manager/src/main/assets/porsh"
 
 "c: Diagnostics":
   - changed-files:
       - any-glob-to-any-file:
-          - "manager/src/**/moe/shizuku/manager/support/**"
+          - "manager/src/**/eu/darken/porter/manager/support/**"
 
 "Google Play":
   - changed-files:

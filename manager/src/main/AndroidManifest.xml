@@ -73,7 +73,7 @@
     </queries>
 
     <application
-        android:name=".ShizukuApplication"
+        android:name=".PorterApplication"
         android:allowBackup="true"
         android:autoRevokePermissions="allowed"
         android:banner="@drawable/porter_banner"

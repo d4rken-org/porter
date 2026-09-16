@@ -15,7 +15,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REF_ROOT="$PROJECT_DIR/manager/src/screenshotTestGplayDebug/reference"
-REF_DIR="$REF_ROOT/moe/shizuku/manager/screenshots/PlayStoreScreenshotsKt"
+REF_DIR="$REF_ROOT/eu/darken/porter/manager/screenshots/PlayStoreScreenshotsKt"
 MANIFEST_FILE="$REF_ROOT/screenshot-run.manifest"
 FASTLANE_ROOT="$PROJECT_DIR/fastlane"
 FASTLANE_DIR="$FASTLANE_ROOT/metadata/android"

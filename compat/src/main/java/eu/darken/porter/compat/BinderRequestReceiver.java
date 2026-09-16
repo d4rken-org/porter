@@ -10,7 +10,7 @@ public class BinderRequestReceiver extends BroadcastReceiver {
         if (!"rikka.shizuku.intent.action.REQUEST_BINDER".equals(intent.getAction())
                 || !PorterIdentity.isInstalled(context)) return;
         Intent forward = new Intent("eu.darken.porter.intent.action.REQUEST_BINDER")
-                .setClassName(PorterIdentity.PACKAGE, "moe.shizuku.manager.receiver.BinderRequestReceiver");
+                .setClassName(PorterIdentity.PACKAGE, "eu.darken.porter.manager.receiver.BinderRequestReceiver");
         if (intent.hasExtra("data")) forward.putExtra("data", intent.getBundleExtra("data"));
         context.sendBroadcast(forward);
     }

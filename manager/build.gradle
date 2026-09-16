@@ -63,7 +63,7 @@ plugins {
 }
 
 android {
-    namespace = "moe.shizuku.manager"
+    namespace = "eu.darken.porter.manager"
     defaultConfig {
         applicationId = "eu.darken.porter"
         versionCode = rootProject.ext.versionCode

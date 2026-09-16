@@ -38,7 +38,7 @@
 }
 
 # Entrance of shell
--keep class moe.shizuku.manager.shell.Shell {
+-keep class eu.darken.porter.manager.shell.Shell {
     public static void main(java.lang.String[], java.lang.String, android.os.IBinder, android.os.Handler);
 }
 
@@ -53,7 +53,7 @@
 -keep public interface org.xmlpull.v1.** { *; }
 
 -allowaccessmodification
--repackageclasses rikka.shizuku
+-repackageclasses eu.darken.porter
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 
