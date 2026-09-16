@@ -6,7 +6,7 @@ plugins {
 
 android {
     testOptions { unitTests.includeAndroidResources = true }
-    namespace = "moe.shizuku.server"
+    namespace = "eu.darken.porter.privileged"
     buildFeatures {
         buildConfig = true
     }

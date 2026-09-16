@@ -1,7 +1,5 @@
 package eu.darken.porter.privileged;
 
-import moe.shizuku.server.BuildConfig;
-
 public class ServerConstants {
 
     public static final int MANAGER_APP_NOT_FOUND = 50;

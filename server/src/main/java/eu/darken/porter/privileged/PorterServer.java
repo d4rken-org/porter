@@ -71,7 +71,7 @@ import rikka.shizuku.server.UserServiceManager;
 
 public class PorterServer implements ServerPolicy, ManagerOperations {
 
-    public static final String MANAGER_APPLICATION_ID = moe.shizuku.server.BuildConfig.MANAGER_APPLICATION_ID;
+    public static final String MANAGER_APPLICATION_ID = eu.darken.porter.privileged.BuildConfig.MANAGER_APPLICATION_ID;
 
     private static final Logger LOGGER = new Logger("Service");
 
@@ -148,7 +148,7 @@ public class PorterServer implements ServerPolicy, ManagerOperations {
 
         // A debug build logs its debug detail unconditionally, the way it always has. The gate
         // exists to keep that detail out of release builds except while a recording wants it.
-        Logger.setDebugAlways(moe.shizuku.server.BuildConfig.DEBUG);
+        Logger.setDebugAlways(eu.darken.porter.privileged.BuildConfig.DEBUG);
 
         userServiceManager.setAccessPaused(configManager.isAccessPaused());
 
