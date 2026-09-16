@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import eu.darken.porter.core.CallerIdentity;
 import eu.darken.porter.core.ClientCallback;
+import eu.darken.porter.endpoint.PorterClientCallback;
+import eu.darken.porter.protocol.PorterProtocol;
+import eu.darken.porter.server.IPorterApplication;
 import moe.shizuku.server.IShizukuApplication;
 
 import static org.junit.Assert.*;
@@ -52,7 +55,7 @@ public class ServiceAuthorizationTest {
         userServices = mock(ShizukuUserServiceManager.class);
         history = mock(ConnectionHistory.class);
         service = new ShizukuService(userServices, clients, config, MANAGER_UID, history,
-                Runnable::run, ShizukuServiceEndpoint::new);
+                Runnable::run, ShizukuServiceEndpoint::new, PorterServiceEndpoint::new);
         client = new ClientRecord(CLIENT_UID, CLIENT_PID, mock(IShizukuApplication.class), "test.client", 13);
         client.allowed = true;
         when(clients.findClients(CLIENT_UID)).thenReturn(List.of(client));
@@ -471,5 +474,148 @@ public class ServiceAuthorizationTest {
         assertNotNull(record);
         assertFalse(record.allowed);
         assertEquals(List.of(record), realClients.attachedClients());
+    }
+
+    private ClientRecord porterClient(IPorterApplication application) {
+        var record = new ClientRecord(new CallerIdentity(CLIENT_UID, CLIENT_PID),
+                new PorterClientCallback(application), "test.client", 13);
+        record.allowed = true;
+        when(clients.findClients(CLIENT_UID)).thenReturn(List.of(record));
+        when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(record);
+        when(clients.attachedClients()).thenReturn(List.of(record));
+        return record;
+    }
+
+    private Parcel porterTransact(int code, java.util.function.Consumer<Parcel> arguments) throws Exception {
+        Parcel request = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        try {
+            request.writeInterfaceToken(PorterProtocol.DESCRIPTOR);
+            arguments.accept(request);
+            request.setDataPosition(0);
+            assertTrue(service.getPorterEndpoint().onTransact(code, request, reply, 0));
+        } finally { request.recycle(); }
+        reply.setDataPosition(0);
+        reply.readException();
+        return reply;
+    }
+
+    @Test public void everyAppTransactionIsAnsweredOnThePorterDescriptor() throws Exception {
+        ShadowBinder.setCallingUid(MANAGER_UID);
+        service.reconciler = mock(ApkReconciler.class);
+        var installedApp = ApplicationDiscoveryTest.app(client.packageName, CLIENT_UID, ServerConstants.PERMISSION);
+        try (var users = mockStatic(rikka.hidden.compat.UserManagerApis.class);
+             var installedApps = mockStatic(rikka.shizuku.server.util.InstalledPackagesCompat.class);
+             var os = mockStatic(moe.shizuku.common.util.OsUtils.class)) {
+            users.when(rikka.hidden.compat.UserManagerApis::getUserIdsNoThrow).thenReturn(List.of(0));
+            installedApps.when(() -> rikka.shizuku.server.util.InstalledPackagesCompat.getInstalledPackages(anyLong(), eq(0))).thenReturn(List.of(installedApp));
+            installedApps.when(() -> rikka.shizuku.server.util.InstalledPackagesCompat.getInstalledPackagesNoThrow(anyLong(), eq(0))).thenReturn(List.of(installedApp));
+            os.when(moe.shizuku.common.util.OsUtils::getUid).thenReturn(MANAGER_UID);
+
+            Parcel applications = porterTransact(ServerConstants.BINDER_TRANSACTION_getApplications, data -> data.writeInt(0));
+            assertNotNull(rikka.parcelablelist.ParcelableListSlice.CREATOR.createFromParcel(applications));
+            applications.recycle();
+
+            Parcel diagnostics = porterTransact(ServerConstants.BINDER_TRANSACTION_getDiagnostics, data -> {});
+            assertEquals(android.os.Process.myPid(), diagnostics.readInt());
+            assertEquals(moe.shizuku.server.BuildConfig.PORTER_VERSION_NAME,
+                    diagnostics.readBundle().getString(ServerConstants.DIAGNOSTICS_VERSION_NAME));
+            diagnostics.recycle();
+
+            Parcel discovery = porterTransact(eu.darken.porter.common.DiscoveredApplication.TRANSACTION, data -> data.writeInt(0));
+            assertEquals(eu.darken.porter.common.DiscoveredApplication.WIRE_VERSION, discovery.readInt());
+            assertArrayEquals(new int[0], discovery.createIntArray());
+            discovery.recycle();
+
+            Parcel access = porterTransact(eu.darken.porter.common.GlobalAccess.TRANSACTION,
+                    data -> data.writeInt(eu.darken.porter.common.GlobalAccess.READ));
+            assertEquals(eu.darken.porter.common.GlobalAccess.VERSION, access.readInt());
+            assertEquals(1, access.readInt());
+            access.recycle();
+
+            Parcel setup = porterTransact(eu.darken.porter.common.CompatibilitySetup.TRANSACTION, data -> {
+                data.writeInt(eu.darken.porter.common.CompatibilitySetup.INSPECT);
+                data.writeString(null);
+            });
+            assertEquals(eu.darken.porter.common.CompatibilitySetup.VERSION, setup.readBundle().getInt("version"));
+            setup.recycle();
+
+            Parcel logging = porterTransact(ServerConstants.BINDER_TRANSACTION_setDebugLogging, data -> {
+                data.writeStrongBinder(null);
+                data.writeLong(1000);
+            });
+            assertEquals(0L, logging.readLong());
+            logging.recycle();
+
+            when(userServices.isUserServiceTokenLive("token")).thenReturn(true);
+            Parcel launch = porterTransact(eu.darken.porter.common.UserServiceLaunch.TRANSACTION,
+                    data -> data.writeString("token"));
+            assertEquals(1, launch.readInt());
+            launch.recycle();
+        }
+    }
+
+    @Test public void appTransactionsOnThePorterWireStillRequireTheirCaller() {
+        for (int code : new int[]{ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications,
+                ServerConstants.BINDER_TRANSACTION_setDebugLogging, eu.darken.porter.common.DiscoveredApplication.TRANSACTION,
+                eu.darken.porter.common.GlobalAccess.TRANSACTION, eu.darken.porter.common.CompatibilitySetup.TRANSACTION,
+                eu.darken.porter.common.UserServiceLaunch.TRANSACTION}) {
+            Parcel request = Parcel.obtain();
+            Parcel reply = Parcel.obtain();
+            try {
+                request.writeInterfaceToken(PorterProtocol.DESCRIPTOR);
+                request.setDataPosition(0);
+                assertThrows(SecurityException.class, () -> service.getPorterEndpoint().onTransact(code, request, reply, 0));
+            } finally { request.recycle(); reply.recycle(); }
+        }
+    }
+
+    /**
+     * The Porter counterpart of {@link #aGlobalPauseCannotOvertakeAnAttachReply}: the reply is the
+     * delivery here, so the endpoint must hold the monitor until it has been built and handed back.
+     */
+    @Test public void aGlobalPauseCannotOvertakeAPorterAttachReply() throws Exception {
+        var record = porterClient(mock(IPorterApplication.class));
+        when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null);
+        when(clients.attach(any(CallerIdentity.class), any(ClientCallback.class), eq(record.packageName), anyInt())).thenReturn(record);
+        when(clients.attachedClients()).thenReturn(List.of());
+        installed.applicationInfo = new android.content.pm.ApplicationInfo();
+        installed.applicationInfo.uid = CLIENT_UID;
+        Thread[] pause = new Thread[1];
+        AtomicBoolean pauseStillBlocked = new AtomicBoolean();
+        doAnswer(invocation -> {
+            pause[0] = new Thread(() -> service.setGlobalAccess(false));
+            pause[0].start();
+            pause[0].join(500);
+            pauseStillBlocked.set(pause[0].isAlive());
+            return null;
+        }).when(history).connected(any(), anyLong());
+        Bundle args = new Bundle();
+        args.putString(PorterProtocol.ATTACH_PACKAGE_NAME, record.packageName);
+        service.getPorterEndpoint().attach(mock(IPorterApplication.class), args);
+        assertTrue(pauseStillBlocked.get());
+        pause[0].join(500);
+    }
+
+    @Test public void aPausedPorterClientIsToldAndRefusedUntilAccessResumes() throws Exception {
+        var application = mock(IPorterApplication.class);
+        when(application.asBinder()).thenReturn(new Binder());
+        var record = porterClient(application);
+        var paused = new AtomicBoolean(false);
+        when(config.isAccessPaused()).thenAnswer(invocation -> paused.get());
+        doAnswer(invocation -> { paused.set(invocation.getArgument(0)); return null; }).when(config).setAccessPaused(anyBoolean());
+
+        service.setGlobalAccess(false);
+        assertFalse(record.allowed);
+        var state = org.mockito.ArgumentCaptor.forClass(Bundle.class);
+        verify(application).dispatchPermissionStateChanged(state.capture());
+        assertFalse(state.getValue().getBoolean(PorterProtocol.REPLY_PERMISSION_GRANTED));
+        assertThrows(SecurityException.class, () -> service.getCore().enforceCallingPermission("transactRemote", new CallerIdentity(CLIENT_UID, CLIENT_PID)));
+
+        service.setGlobalAccess(true);
+        assertTrue(record.allowed);
+        verify(application, times(2)).dispatchPermissionStateChanged(state.capture());
+        assertTrue(state.getValue().getBoolean(PorterProtocol.REPLY_PERMISSION_GRANTED));
+        service.getCore().enforceCallingPermission("transactRemote", new CallerIdentity(CLIENT_UID, CLIENT_PID));
     }
 }

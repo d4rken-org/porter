@@ -58,6 +58,7 @@ import eu.darken.porter.core.ManagerOperations;
 import eu.darken.porter.core.PorterCore;
 import eu.darken.porter.core.ServerPolicy;
 import eu.darken.porter.porsh.PorshConfig;
+import eu.darken.porter.protocol.PorterProtocol;
 import rikka.shizuku.ShizukuApiConstants;
 import rikka.shizuku.server.util.HandlerUtil;
 import rikka.shizuku.server.util.Logger;
@@ -77,7 +78,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
         PorshConfig.init(ShizukuApiConstants.BINDER_DESCRIPTOR, 30000);
 
         Looper.prepareMainLooper();
-        bootstrap(ShizukuServiceEndpoint::new);
+        bootstrap(ShizukuServiceEndpoint::new, PorterServiceEndpoint::new);
         Looper.loop();
     }
 
@@ -105,7 +106,8 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
         return result.state == PackageIdentity.State.PRESENT ? 0 : ServerConstants.MANAGER_APP_NOT_FOUND;
     }
 
-    public static ShizukuService bootstrap(Function<ShizukuService, ShizukuServiceEndpoint> endpointFactory) {
+    public static ShizukuService bootstrap(Function<ShizukuService, ShizukuServiceEndpoint> endpointFactory,
+                                           Function<ShizukuService, PorterServiceEndpoint> porterEndpointFactory) {
         LOGGER.i("starting server...");
 
         waitSystemService("package");
@@ -136,7 +138,8 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
                 manager.observed.appId,
                 new ConnectionHistory(new File("/data/user_de/0/com.android.shell/porter-connections.json")),
                 Executors.newSingleThreadExecutor(),
-                endpointFactory);
+                endpointFactory,
+                porterEndpointFactory);
 
         HandlerUtil.setMainHandler(service.mainHandler);
 
@@ -184,6 +187,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
     private final ShizukuConfigManager configManager;
     private final PorterCore<ShizukuUserServiceManager, ShizukuClientManager, ShizukuConfigManager> core;
     private final ShizukuServiceEndpoint endpoint;
+    private final PorterServiceEndpoint porterEndpoint;
     private final int managerAppId;
     ApkReconciler reconciler;
     private final java.util.concurrent.Executor historyWriter;
@@ -196,7 +200,8 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
                           int managerAppId,
                           ConnectionHistory connectionHistory,
                           java.util.concurrent.Executor historyWriter,
-                          Function<ShizukuService, ShizukuServiceEndpoint> endpointFactory) {
+                          Function<ShizukuService, ShizukuServiceEndpoint> endpointFactory,
+                          Function<ShizukuService, PorterServiceEndpoint> porterEndpointFactory) {
         this.userServiceManager = userServiceManager;
         this.clientManager = clientManager;
         this.configManager = configManager;
@@ -205,6 +210,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
         this.historyWriter = historyWriter;
         this.core = new PorterCore<>(userServiceManager, clientManager, configManager, this);
         this.endpoint = endpointFactory.apply(this);
+        this.porterEndpoint = porterEndpointFactory.apply(this);
         this.mainHandler = new Handler(Looper.myLooper());
     }
 
@@ -214,6 +220,10 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
 
     public ShizukuServiceEndpoint getEndpoint() {
         return endpoint;
+    }
+
+    public PorterServiceEndpoint getPorterEndpoint() {
+        return porterEndpoint;
     }
 
     public ShizukuUserServiceManager getUserServiceManager() {
@@ -305,8 +315,11 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
         if (!MANAGER_APPLICATION_ID.equals(clientRecord.packageName)) {
             return;
         }
+        // Both wires reach this hook; the manager is not a permission-gated client on either.
         reply.remove(BIND_APPLICATION_PERMISSION_GRANTED);
         reply.remove(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE);
+        reply.remove(PorterProtocol.REPLY_PERMISSION_GRANTED);
+        reply.remove(PorterProtocol.REPLY_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE);
         try {
             Android17Compat.grantRuntimePermission(MANAGER_APPLICATION_ID,
                     WRITE_SECURE_SETTINGS, UserHandleCompat.getUserId(clientRecord.uid));
@@ -515,8 +528,13 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
                 reply.putString(BIND_APPLICATION_SERVER_SECONTEXT, OsUtils.getSELinuxContext());
                 reply.putBoolean(BIND_APPLICATION_PERMISSION_GRANTED, record.allowed);
                 reply.putBoolean(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, entry != null && entry.isDenied());
-                try { record.client.bindApplication(reply); }
-                catch (Throwable e) { LOGGER.w(e, "Cannot notify client of global access change"); }
+                try {
+                    if (record.client != null) {
+                        record.client.bindApplication(reply);
+                    } else {
+                        record.callback.onPermissionStateChanged(record.allowed, entry != null && entry.isDenied());
+                    }
+                } catch (Throwable e) { LOGGER.w(e, "Cannot notify client of global access change"); }
             }
         }
     }
