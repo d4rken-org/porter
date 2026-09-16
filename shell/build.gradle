@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "rikka.shizuku.shell"
+    namespace = "eu.darken.porter.shell"
     defaultConfig {
         versionCode = rootProject.ext.versionCode
         versionName = rootProject.ext.versionName
