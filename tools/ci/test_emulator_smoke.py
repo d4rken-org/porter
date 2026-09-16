@@ -176,7 +176,7 @@ class StopPorterConfirmationTest(unittest.TestCase):
         self.runner.stop_porter()
         self.assertEqual(self.runner.shell.call_args_list, [
             call("am", "start", "-W", "-f", "0x04000000",
-                 "-n", "eu.darken.porter/moe.shizuku.manager.MainActivity"),
+                 "-n", "eu.darken.porter/eu.darken.porter.manager.MainActivity"),
             call("input", "tap", 362, 357),
             call("input", "tap", 252, 621),
             call("input", "tap", 770, 1102),

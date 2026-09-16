@@ -258,7 +258,7 @@ class Smoke:
                 self.shell("pm", "revoke", package, permission, check=False)
                 self.shell("am", "force-stop", package)
         if "service" in aspects and not self.pid("porter_server"):
-            self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
+            self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
             self.start_service()
 
     def authorized(self, package, require_manager_guard=True):
@@ -287,7 +287,7 @@ class Smoke:
         return {"revoked_user_service_pid": service_pid}
 
     def stop_porter(self):
-        self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
+        self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
         self.tap("Porter is running", prefix=True)
         self.tap("Stop Porter")
         # The dialog repeats "Stop Porter" as its title, so the second match is the confirm button
@@ -339,7 +339,7 @@ class Smoke:
             self.adb("install", str(apk.resolve()))
         # The app sandbox cannot read this file; the user service must run as the ADB shell.
         self.shell("sh", "-c", f"printf %s {shlex.quote(PAYLOAD)} > /data/local/tmp/porter-probe.txt; chmod 600 /data/local/tmp/porter-probe.txt")
-        self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
+        self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
         self.start_service()
 
     def run(self):
@@ -353,7 +353,7 @@ class Smoke:
 
             def open_support():
                 # CLEAR_TOP destroys the support screen opened earlier, so it is navigated again.
-                self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/moe.shizuku.manager.MainActivity")
+                self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
                 self.tap(desc="Settings")
                 self.tap("Help & support", scroll=True)
             open_support()

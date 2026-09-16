@@ -86,14 +86,14 @@ lookups still resolve against the render **configuration**: `ServiceStatusCard` 
 icon through `colorResource(R.color.porter_status_running)`, which is `#146C2E` in
 `values/porter_status.xml` and `#8DDAA2` in `values-night/porter_status.xml`. Without
 `UI_MODE_NIGHT_YES` a dark shot paints the light-surface green on a dark card, a combination the app
-never produces, because `ShizukuApplication` flips the resource configuration and the theme together
+never produces, because `PorterApplication` flips the resource configuration and the theme together
 through `AppCompatDelegate.setDefaultNightMode`.
 
 The light annotation states `UI_MODE_NIGHT_NO` explicitly so the two are symmetric and neither
 depends on a renderer default.
 
 `PorterTheme` also has a second reason to exist in overload form: the preference-reading overload
-calls `ShizukuSettings.getPreferences()`, a static field that is null until `ShizukuApplication`
+calls `PorterSettings.getPreferences()`, a static field that is null until `PorterApplication`
 initializes it, and layoutlib instantiates no Application. Renders call
 `PorterTheme(dark, style, color)` through `PorterPreviewWrapper`, exactly once per shot.
 
@@ -215,7 +215,7 @@ indistinguishable from a complete 6-locale one and the copy would quietly publis
 ## Output Locations
 
 - **Gradle reference images**:
-  `manager/src/screenshotTestGplayDebug/reference/moe/shizuku/manager/screenshots/PlayStoreScreenshotsKt/*.png`
+  `manager/src/screenshotTestGplayDebug/reference/eu/darken/porter/manager/screenshots/PlayStoreScreenshotsKt/*.png`
 - **Fastlane metadata**: `fastlane/metadata/android/{locale}/images/phoneScreenshots/`
 
 ## Modifying Screenshots

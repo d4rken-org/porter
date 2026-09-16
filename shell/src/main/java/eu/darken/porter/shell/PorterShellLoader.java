@@ -114,7 +114,7 @@ public class PorterShellLoader {
                 System.out.println("Entering shell...");
             }
             var classLoader = new BaseDexClassLoader(sourceDir, null, librarySearchPath, ClassLoader.getSystemClassLoader());
-            Class<?> cls = classLoader.loadClass("moe.shizuku.manager.shell.Shell");
+            Class<?> cls = classLoader.loadClass("eu.darken.porter.manager.shell.Shell");
             cls.getDeclaredMethod("main", String[].class, String.class, IBinder.class, Handler.class)
                     .invoke(null, args, callingPackage, binder, handler);
         } catch (ClassNotFoundException tr) {

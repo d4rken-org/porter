@@ -16,7 +16,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 LOCALES_LIST="$SCRIPT_DIR/screenshots/locales.txt"
-LOCALES_FILE="$PROJECT_DIR/manager/src/screenshotTest/kotlin/moe/shizuku/manager/screenshots/PlayStoreLocales.kt"
+LOCALES_FILE="$PROJECT_DIR/manager/src/screenshotTest/kotlin/eu/darken/porter/manager/screenshots/PlayStoreLocales.kt"
 REF_DIR="$PROJECT_DIR/manager/src/screenshotTestGplayDebug/reference"
 # Inside the reference directory so the gitignore rule that covers the rendered PNGs covers the
 # manifest too; a file beside the directory would sit untracked in the source tree.
@@ -258,7 +258,7 @@ generate_locales_file() {
 
     {
         cat << 'HEADER'
-package moe.shizuku.manager.screenshots
+package eu.darken.porter.manager.screenshots
 
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview

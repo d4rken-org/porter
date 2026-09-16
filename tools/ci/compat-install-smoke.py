@@ -53,7 +53,7 @@ def main():
         raise AssertionError("Could not focus " + label)
 
     def setup_screen():
-        smoke.shell("am", "start", "-W", "-f", "0x04000000", "-n", base.MANAGER + "/moe.shizuku.manager.MainActivity")
+        smoke.shell("am", "start", "-W", "-f", "0x04000000", "-n", base.MANAGER + "/eu.darken.porter.manager.MainActivity")
         if any(n.get("text") == "Shizuku compatibility" for n in smoke.ui().iter("node")):
             activate("Shizuku compatibility")
         else:
