@@ -159,7 +159,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
         service.reconciler = reconciler;
         userServiceManager.setReconciler(reconciler);
 
-        BinderSender.register(service.endpoint);
+        BinderSender.register(service.endpoint, service.porterEndpoint);
         try {
             PermissionObserver.register(uid -> service.mainHandler.post(() -> service.reconcileRuntimePermission(uid)));
         } catch (ReflectiveOperationException | RuntimeException e) {
@@ -257,16 +257,16 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
         return PackageManager.PERMISSION_DENIED;
     }
 
-    static String providerSuffix(PackageInfo client) {
+    static ClientRouting.Wire route(PackageInfo client) {
         if (client == null || client.requestedPermissions == null) return null;
         if (client.permissions != null) {
             for (android.content.pm.PermissionInfo permission : client.permissions) {
                 if (permission.name != null && permission.name.endsWith(".permission.MANAGER")) return null;
             }
         }
-        if (ClientRouting.requests(client.requestedPermissions, PERMISSION)) return ".porter";
-        if (!ClientRouting.requests(client.requestedPermissions, ServerConstants.LEGACY_PERMISSION)) return null;
-        return ClientRouting.providerSuffix(client.requestedPermissions, Compatibility.isAvailable());
+        if (!ClientRouting.requests(client.requestedPermissions, PERMISSION)
+                && !ClientRouting.requests(client.requestedPermissions, ServerConstants.LEGACY_PERMISSION)) return null;
+        return ClientRouting.route(client.requestedPermissions, Compatibility.isAvailable());
     }
 
     @Override
@@ -628,7 +628,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
                 } else if (pi.applicationInfo.metaData != null
                         && pi.applicationInfo.metaData.getBoolean("moe.shizuku.client.V3_SUPPORT", false)
                         && pi.requestedPermissions != null
-                        && providerSuffix(pi) != null) {
+                        && route(pi) != null) {
                     list.add(pi);
                 }
             }
@@ -696,11 +696,11 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
 
     void sendBinderToClient() {
         for (int userId : UserManagerApis.getUserIdsNoThrow()) {
-            sendBinderToClient(endpoint, userId);
+            sendBinderToClient(endpoint, porterEndpoint, userId);
         }
     }
 
-    private static void sendBinderToClient(Binder binder, int userId) {
+    private static void sendBinderToClient(Binder shizukuBinder, Binder porterBinder, int userId) {
         try {
             Stream<PackageInfo> packages =
                 InstalledPackagesCompat.getInstalledPackagesNoThrow(
@@ -708,13 +708,15 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
                 )
                 .stream()
                 .filter(pi -> pi != null && pi.requestedPermissions != null)
-                .filter(pi -> providerSuffix(pi) != null);
+                .filter(pi -> route(pi) != null);
 
             LOGGER.i("sending binders");
             packages
                 .parallel()
                 .forEach(pi -> {
-                    sendBinderToUserApp(binder, pi.packageName, userId);
+                    ClientRouting.Wire wire = route(pi);
+                    sendBinderToUserApp(wire, wire == ClientRouting.Wire.PORTER ? porterBinder : shizukuBinder,
+                            pi.packageName, userId);
                 });
             LOGGER.i("sent binders");
         } catch (Throwable tr) {
@@ -723,7 +725,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
     }
 
     void sendBinderToManager() {
-        sendBinderToManager(endpoint);
+        sendBinderToManager(porterEndpoint);
     }
 
     private static void sendBinderToManager(Binder binder) {
@@ -733,7 +735,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
     }
 
     static void sendBinderToManager(Binder binder, int userId) {
-        boolean success = sendBinderToUserApp(binder, MANAGER_APPLICATION_ID, userId);
+        boolean success = sendBinderToUserApp(ClientRouting.Wire.PORTER, binder, MANAGER_APPLICATION_ID, userId);
         if (!success) {
             // For unknown reason, sometimes this could happens
             // Kill Shizuku app and try again could work
@@ -743,7 +745,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ignored) {}
-                success = sendBinderToUserApp(binder, MANAGER_APPLICATION_ID, userId);
+                success = sendBinderToUserApp(ClientRouting.Wire.PORTER, binder, MANAGER_APPLICATION_ID, userId);
                 if (success) {
                     LOGGER.e("retry succeeded");
                 } else {
@@ -755,7 +757,7 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
         }
     }
 
-    static boolean sendBinderToUserApp(Binder binder, String packageName, int userId) {
+    static boolean sendBinderToUserApp(ClientRouting.Wire wire, Binder binder, String packageName, int userId) {
         try {
             DeviceIdleControllerApis.addPowerSaveTempWhitelistApp(packageName, 30 * 1000, userId,
                     316/* PowerExemptionManager#REASON_SHELL */, "shell");
@@ -763,15 +765,8 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
             LOGGER.e(tr, "Failed to add %d:%s to power save temp whitelist", userId, packageName);
         }
 
-        String suffix;
-        if (MANAGER_APPLICATION_ID.equals(packageName)) {
-            suffix = ".porter";
-        } else {
-            PackageInfo client = Android17Compat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS, userId);
-            suffix = client == null ? null : providerSuffix(client);
-        }
-        if (suffix == null) return false;
-        String name = packageName + suffix;
+        if (wire == null) return false;
+        String name = packageName + ClientRouting.providerSuffix(wire);
         IContentProvider provider = null;
 
         /*
@@ -798,9 +793,16 @@ public class ShizukuService implements ServerPolicy, ManagerOperations {
             }
 
             Bundle extra = new Bundle();
-            extra.putParcelable("moe.shizuku.privileged.api.intent.extra.BINDER", new BinderContainer(binder));
+            String method;
+            if (wire == ClientRouting.Wire.PORTER) {
+                extra.putBinder(PorterProtocol.DELIVERY_EXTRA_BINDER, binder);
+                method = PorterProtocol.DELIVERY_METHOD_SEND_BINDER;
+            } else {
+                extra.putParcelable("moe.shizuku.privileged.api.intent.extra.BINDER", new BinderContainer(binder));
+                method = "sendBinder";
+            }
 
-            Bundle reply = IContentProviderCompat.call(provider, null, null, name, "sendBinder", null, extra);
+            Bundle reply = IContentProviderCompat.call(provider, null, null, name, method, null, extra);
             if (reply != null) {
                 LOGGER.i("send binder to user app %s in user %d", packageName, userId);
                 return true;
