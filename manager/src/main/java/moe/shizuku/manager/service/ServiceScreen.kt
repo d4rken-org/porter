@@ -58,7 +58,7 @@ internal fun ServiceScreenContent(
     val ui = serviceStatusUi(snapshot)
     val installedDetails = serviceVersionText(snapshot.installed)
     val runningDetails = serviceVersionText(snapshot.status.porterVersion)
-    val apiDetails = stringResource(R.string.porter_service_api_value, snapshot.status.apiVersion, snapshot.status.patchVersion)
+    val apiDetails = stringResource(R.string.porter_service_api_value, snapshot.status.protocolVersion)
     val processDetails = stringResource(R.string.porter_service_process_value, snapshot.status.uid,
         snapshot.status.pid?.toString() ?: stringResource(R.string.porter_status_version_unknown))
     PorterScaffold(stringResource(R.string.porter_service_title), onBack = actions.onBack) { padding ->

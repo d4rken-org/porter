@@ -14,14 +14,14 @@ import moe.shizuku.manager.model.PorterServiceVersion
 import moe.shizuku.manager.starter.ServiceReplacement
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import moe.shizuku.manager.utils.UserHandleCompat
-import rikka.shizuku.Shizuku
+import eu.darken.porter.sdk.Porter
 
 class ServiceUpdateWorker(context: Context, parameters: WorkerParameters) : CoroutineWorker(context, parameters) {
     override suspend fun doWork(): Result {
         if (!eligible(inputData.getString(TARGET), PorterServiceVersion.installed.buildId,
                 ShizukuSettings.getAutoUpdateService(), UserHandleCompat.myUserId())) return Result.success()
         val connected = withTimeoutOrNull(15_000) {
-            ShizukuStateMachine.instance.asFlow().first { it == ShizukuStateMachine.State.RUNNING && Shizuku.pingBinder() }
+            ShizukuStateMachine.instance.asFlow().first { it == ShizukuStateMachine.State.RUNNING && Porter.pingBinder() }
         }
         if (connected != null) ServiceReplacement.get(applicationContext).updateInBackground()
         else moe.shizuku.manager.utils.Logger.LOGGER.i("Service update skipped: no running service connected within 15 seconds")

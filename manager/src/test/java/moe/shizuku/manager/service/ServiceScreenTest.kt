@@ -13,7 +13,7 @@ import org.robolectric.annotation.Config
 @Config(qualifiers = "w411dp-h2400dp")
 class ServiceScreenTest : ComposeTest() {
     private val installed = PorterServiceVersion("1.2.0", 120000, "aaaaaaaaaaaabbbbbbbb:debug")
-    private val running = ServiceSnapshot(ServiceStatus(2000, 13, 6, permission = true,
+    private val running = ServiceSnapshot(ServiceStatus(2000, eu.darken.porter.protocol.PorterProtocol.VERSION, permission = true,
         porterVersion = installed.copy(buildId = "ccccccccccccdddddddd:debug"), pid = 123), State.RUNNING, installed = installed)
     private var updates = 0
     private val actions get() = ServiceActions({}, { updates++ }, {})

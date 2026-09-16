@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.os.Parcel
 import moe.shizuku.manager.utils.Logger.LOGGER
-import rikka.shizuku.Shizuku
+import eu.darken.porter.sdk.Porter
 
 object ShellBinderRequestHandler {
 
@@ -15,14 +15,14 @@ object ShellBinderRequestHandler {
         }
 
         val binder = intent.getBundleExtra("data")?.getBinder("binder") ?: return false
-        val shizukuBinder = Shizuku.getBinder()
-        if (shizukuBinder == null) {
-            LOGGER.w("Binder not received or Shizuku service not running")
+        val serverBinder = Porter.getBinder()
+        if (serverBinder == null) {
+            LOGGER.w("Binder not received or Porter service not running")
         }
 
         val data = Parcel.obtain()
         return try {
-            data.writeStrongBinder(shizukuBinder)
+            data.writeStrongBinder(serverBinder)
             data.writeString(context.applicationInfo.sourceDir)
             binder.transact(1, data, null, IBinder.FLAG_ONEWAY)
             true

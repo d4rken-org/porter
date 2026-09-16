@@ -19,14 +19,14 @@ import moe.shizuku.manager.model.PorterServiceVersion
 import moe.shizuku.manager.support.ServerDiagnostics
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import moe.shizuku.manager.utils.UserHandleCompat
-import moe.shizuku.server.IShizukuService
-import moe.shizuku.server.IRemoteProcess
-import rikka.shizuku.Shizuku
+import eu.darken.porter.sdk.Porter
+import eu.darken.porter.server.IPorterRemoteProcess
+import eu.darken.porter.server.IPorterService
 import java.io.File
 
 internal class ReplacementLaunchUncertain : IllegalStateException("Service update launcher did not finish in time; its outcome is unknown")
 
-internal suspend fun awaitReplacementStarter(process: IRemoteProcess) {
+internal suspend fun awaitReplacementStarter(process: IPorterRemoteProcess) {
     val code = withTimeoutOrNull(10_000) {
         while (process.alive()) delay(25)
         process.exitValue()
@@ -38,7 +38,7 @@ internal class ServiceReplacer(
     private val installed: PorterServiceVersion,
     private val currentBinder: () -> IBinder?,
     private val readInfo: (IBinder) -> ServerDiagnostics.Info? = ServerDiagnostics::readInfo,
-    private val readUid: (IBinder) -> Int = { IShizukuService.Stub.asInterface(it).uid },
+    private val readUid: (IBinder) -> Int = { IPorterService.Stub.asInterface(it).uid },
     private val isReady: () -> Boolean = { true },
     private val launch: suspend (IBinder, Int) -> Unit,
 ) {
@@ -80,16 +80,16 @@ internal class ServiceReplacer(
 }
 
 private suspend fun launchReplacementStarter(binder: IBinder, previousPid: Int, apk: File, starter: File) {
-    val process = IShizukuService.Stub.asInterface(binder).newProcess(
+    val process = IPorterService.Stub.asInterface(binder).newProcess(
         arrayOf(starter.absolutePath, "--apk=${apk.absolutePath}", "--replace=$previousPid"), null, null)
     awaitReplacementStarter(process)
 }
 
 internal class ServiceReplacement internal constructor(
     private val appContext: Context,
-    private val currentBinder: () -> IBinder? = Shizuku::getBinder,
+    private val currentBinder: () -> IBinder? = Porter::getBinder,
     private val readInfo: (IBinder) -> ServerDiagnostics.Info? = ServerDiagnostics::readInfo,
-    private val readUid: (IBinder) -> Int = { IShizukuService.Stub.asInterface(it).uid },
+    private val readUid: (IBinder) -> Int = { IPorterService.Stub.asInterface(it).uid },
     private val launch: suspend (IBinder, Int, File, File) -> Unit = ::launchReplacementStarter,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -121,7 +121,7 @@ internal class ServiceReplacement internal constructor(
         scope.launch {
             controller.reconcile {
                 withContext(Dispatchers.IO) {
-                    runCatching { Shizuku.getBinder()?.let { ServerDiagnostics.readInfo(it)?.version?.matches(PorterServiceVersion.installed) } == true }.getOrDefault(false)
+                    runCatching { Porter.getBinder()?.let { ServerDiagnostics.readInfo(it)?.version?.matches(PorterServiceVersion.installed) } == true }.getOrDefault(false)
                 }
             }
         }

@@ -9,13 +9,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import eu.darken.porter.protocol.PorterProtocol
 import rikka.shizuku.server.ServerConstants
 
 /** Parses the manager-only diagnostics reply from current, older and misbehaving services. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class ServerDiagnosticsTest {
-    private val descriptor = "moe.shizuku.server.IShizukuService"
+    private val descriptor = PorterProtocol.DESCRIPTOR
 
     /** A service whose diagnostics transaction writes [reply]; every other code is unsupported. */
     private fun service(write: Parcel.() -> Unit) = object : Binder() {

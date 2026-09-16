@@ -2,7 +2,7 @@ package moe.shizuku.manager.starter
 
 import android.os.DeadObjectException
 import kotlinx.coroutines.test.runTest
-import moe.shizuku.server.IRemoteProcess
+import eu.darken.porter.server.IPorterRemoteProcess
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,7 +12,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class ReplacementStarterTest {
-    private fun process(alive: () -> Boolean, code: Int = 0) = object : IRemoteProcess.Stub() {
+    private fun process(alive: () -> Boolean, code: Int = 0) = object : IPorterRemoteProcess.Stub() {
         override fun alive() = alive.invoke()
         override fun exitValue() = code
         override fun getInputStream() = error("unused")

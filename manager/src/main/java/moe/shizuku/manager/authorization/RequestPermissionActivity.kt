@@ -35,9 +35,9 @@ import moe.shizuku.manager.utils.Logger.LOGGER
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import moe.shizuku.manager.utils.ShizukuSystemApis
 import moe.shizuku.manager.utils.UserHandleCompat
-import rikka.shizuku.Shizuku
-import rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED
-import rikka.shizuku.ShizukuApiConstants.REQUEST_PERMISSION_REPLY_IS_ONETIME
+import eu.darken.porter.protocol.PorterProtocol.PERMISSION_CONFIRMATION_ALLOWED
+import eu.darken.porter.protocol.PorterProtocol.PERMISSION_CONFIRMATION_ONETIME
+import eu.darken.porter.sdk.Porter
 
 class RequestPermissionActivity : ComposeActivity() {
     override val protectTouches = true
@@ -147,16 +147,22 @@ internal interface PermissionGateway {
     fun dispatch(uid: Int, pid: Int, code: Int, data: Bundle)
 }
 
-internal object ShizukuPermissionGateway : PermissionGateway {
+internal object PorterPermissionGateway : PermissionGateway {
     override fun serviceStates() = ShizukuStateMachine.instance.asFlow()
     override suspend fun canGrantPermissions() = withContext(Dispatchers.IO) {
-        Shizuku.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
+        Porter.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
     }
-    override fun dispatch(uid: Int, pid: Int, code: Int, data: Bundle) = Shizuku.dispatchPermissionConfirmationResult(uid, pid, code, data)
+    // The decision travels as a Bundle so the view model stays free of the wire; Porter takes the
+    // two flags directly.
+    override fun dispatch(uid: Int, pid: Int, code: Int, data: Bundle) = Porter.dispatchPermissionConfirmationResult(
+        uid, pid, code,
+        data.getBoolean(PERMISSION_CONFIRMATION_ALLOWED, false),
+        data.getBoolean(PERMISSION_CONFIRMATION_ONETIME, false),
+    )
 }
 
 class PermissionViewModel internal constructor(private val savedState: SavedStateHandle, private val gateway: PermissionGateway) : ViewModel() {
-    constructor(savedState: SavedStateHandle) : this(savedState, gatewayOverride ?: ShizukuPermissionGateway)
+    constructor(savedState: SavedStateHandle) : this(savedState, gatewayOverride ?: PorterPermissionGateway)
     val stage = savedState.getStateFlow("stage", "waiting")
     private val gate = PermissionReplyGate(savedState["replied"] ?: false)
     private var initialized = false
@@ -187,8 +193,8 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
             savedState["replied"] = true
             savedState["stage"] = if (limited) "limited" else "finished"
             val data = Bundle().apply {
-                putBoolean(REQUEST_PERMISSION_REPLY_ALLOWED, allowed)
-                putBoolean(REQUEST_PERMISSION_REPLY_IS_ONETIME, !allowed)
+                putBoolean(PERMISSION_CONFIRMATION_ALLOWED, allowed)
+                putBoolean(PERMISSION_CONFIRMATION_ONETIME, !allowed)
             }
             try { gateway.dispatch(uid, pid, code, data) }
             catch (e: Exception) { LOGGER.e(e, "dispatchPermissionConfirmationResult") }

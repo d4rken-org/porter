@@ -19,7 +19,7 @@ import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.authorization.AuthorizationManager
 import org.json.JSONArray
 import org.json.JSONObject
-import rikka.shizuku.Shizuku
+import eu.darken.porter.sdk.Porter
 import java.io.File
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicBoolean
@@ -94,7 +94,7 @@ internal class CompatibilityRepository private constructor(private val context: 
             BuildConfig.IS_FOSS && version(installed) < BuildConfig.VERSION_CODE -> Status.UPDATE
             else -> Status.INSTALLED
         }
-        val running = runCatching { Shizuku.pingBinder() }.getOrDefault(false)
+        val running = runCatching { Porter.pingBinder() }.getOrDefault(false)
         var supported = false
         var otherUsers = false
         var inspectionError: String? = null

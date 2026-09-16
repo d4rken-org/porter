@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import moe.shizuku.manager.MainActivity
+import moe.shizuku.manager.Manifest
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ui.*
 
@@ -21,9 +22,16 @@ class LegacyIsNotSupportedActivity : ComposeActivity() {
         super.onCreate(savedInstanceState)
         setFinishOnTouchOutside(false)
         val callingComponent = callingActivity ?: run { setResult(RESULT_CANCELED); finish(); return }
-        val ai = runCatching { packageManager.getApplicationInfo(callingComponent.packageName, PackageManager.GET_META_DATA) }.getOrElse { finish(); return }
+        val info = runCatching {
+            packageManager.getPackageInfo(callingComponent.packageName,
+                PackageManager.GET_META_DATA or PackageManager.GET_PERMISSIONS)
+        }.getOrElse { finish(); return }
+        val ai = info.applicationInfo ?: run { finish(); return }
         val label = runCatching { ai.loadLabel(packageManager).toString() }.getOrDefault(ai.packageName)
-        val v3 = ai.metaData?.getBoolean("moe.shizuku.client.V3_SUPPORT") == true
+        // The Shizuku marker for a Shizuku client, the Porter permission for a Porter one: either
+        // way the app is integrated and the screen offers to open Porter rather than refuse it.
+        val v3 = ai.metaData?.getBoolean("moe.shizuku.client.V3_SUPPORT") == true ||
+            info.requestedPermissions?.contains(Manifest.permission.API_V23) == true
         val done = { setResult(1); finish() }
         porterContent {
             BackHandler {}

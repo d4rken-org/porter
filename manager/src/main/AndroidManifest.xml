@@ -262,9 +262,14 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <!-- The merger keys providers by android:name, so the SDK's own declaration survives at
+             the same authority unless it is removed here. -->
         <provider
-            android:name=".ShizukuManagerProvider"
-            android:authorities="${applicationId}.porter"
+            android:name="eu.darken.porter.sdk.PorterApiProvider"
+            tools:node="remove" />
+        <provider
+            android:name=".PorterManagerProvider"
+            android:authorities="${applicationId}.porter.api"
             android:directBootAware="true"
             android:enabled="true"
             android:exported="true"

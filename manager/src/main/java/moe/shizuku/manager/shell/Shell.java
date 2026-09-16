@@ -6,8 +6,8 @@ import android.os.IBinder;
 
 import eu.darken.porter.porsh.Porsh;
 import eu.darken.porter.porsh.PorshConfig;
-import rikka.shizuku.Shizuku;
-import rikka.shizuku.ShizukuApiConstants;
+import eu.darken.porter.protocol.PorterProtocol;
+import eu.darken.porter.sdk.Porter;
 
 public class Shell extends Porsh {
 
@@ -16,18 +16,18 @@ public class Shell extends Porsh {
 
     @Override
     public void requestPermission(Runnable onGrantedRunnable) {
-        if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
+        if (Porter.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
             cancelStartupTimeout();
             onGrantedRunnable.run();
-        } else if (Shizuku.shouldShowRequestPermissionRationale()) {
+        } else if (Porter.shouldShowRequestPermissionRationale()) {
             System.err.println("Permission denied");
             System.err.flush();
             System.exit(1);
         } else {
-            Shizuku.addRequestPermissionResultListener(new Shizuku.OnRequestPermissionResultListener() {
+            Porter.addRequestPermissionResultListener(new Porter.OnRequestPermissionResultListener() {
                 @Override
                 public void onRequestPermissionResult(int requestCode, int grantResult) {
-                    Shizuku.removeRequestPermissionResultListener(this);
+                    Porter.removeRequestPermissionResultListener(this);
 
                     if (grantResult == PackageManager.PERMISSION_GRANTED) {
                         onGrantedRunnable.run();
@@ -38,7 +38,7 @@ public class Shell extends Porsh {
                     }
                 }
             });
-            Shizuku.requestPermission(0);
+            Porter.requestPermission(0);
             cancelStartupTimeout();
         }
     }
@@ -49,17 +49,9 @@ public class Shell extends Porsh {
         // a human decision.
         handler.removeCallbacksAndMessages(null);
         armStartupTimeout();
-        PorshConfig.init(binder, ShizukuApiConstants.BINDER_DESCRIPTOR, 30000);
-        Shizuku.onBinderReceived(binder, packageName);
-        Shizuku.addBinderReceivedListenerSticky(() -> {
-            int version = Shizuku.getVersion();
-            if (version < 12) {
-                System.err.println("porsh requires server 12 (running " + version + ")");
-                System.err.flush();
-                System.exit(1);
-            }
-            new Shell().start(args);
-        });
+        PorshConfig.init(binder, PorterProtocol.DESCRIPTOR, PorterProtocol.TRANSACTION_PORSH_BASE);
+        Porter.onBinderReceived(binder, packageName);
+        Porter.addBinderReceivedListenerSticky(() -> new Shell().start(args));
     }
 
     // A thread, not handler.postDelayed: main runs on the main looper, so a blocked binder call

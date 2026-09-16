@@ -19,7 +19,7 @@ import org.junit.Test
 class ServiceStatusCardTest : ComposeTest() {
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val installed = PorterServiceVersion("1.2.0-beta3", 1200030, "installed-build:debug")
-    private val current = ServiceStatus(uid = 2000, apiVersion = 13, patchVersion = 6, permission = true, porterVersion = installed)
+    private val current = ServiceStatus(uid = 2000, protocolVersion = eu.darken.porter.protocol.PorterProtocol.VERSION, permission = true, porterVersion = installed)
     private fun string(id: Int, vararg args: Any) = context.getString(id, *args)
     private val runningTitle get() = plainText(string(R.string.home_status_service_is_running, string(R.string.app_name)))
     private val stoppedTitle get() = plainText(string(R.string.home_status_service_not_running, string(R.string.app_name)))
