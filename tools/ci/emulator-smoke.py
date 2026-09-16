@@ -186,7 +186,10 @@ class Smoke:
         assert apk.startswith("/data/app/") and apk.endswith("/base.apk"), apk
         abi = self.shell("getprop", "ro.product.cpu.abi")
         library_dir = {"x86": "x86", "x86_64": "x86_64", "arm64-v8a": "arm64", "armeabi-v7a": "arm"}[abi]
-        self.shell(str(Path(apk).parent / "lib" / library_dir / "libporter.so"))
+        # Coexistence starts the original Shizuku from its own APK, which ships the upstream
+        # starter name; only Porter's own package carries libporter.so.
+        binary = "libporter.so" if package == MANAGER else "libshizuku.so"
+        self.shell(str(Path(apk).parent / "lib" / library_dir / binary))
         started = self.until(f"new {name} process",
                              lambda: (pid := self.pid(name)) and pid != previous and pid)
         # Returning on the pid alone is too early: the server is still loading native code out of

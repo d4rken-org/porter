@@ -458,3 +458,27 @@ class ScenarioRestoreTest(unittest.TestCase):
         self.assertIn(call("install", str(Path("/apks/manager.apk").resolve())),
                       self.runner.adb.call_args_list)
         self.runner.start_service.assert_called_once()
+
+
+class StartServiceBinaryTest(unittest.TestCase):
+    """The starter binary is named per package: only Porter's APK ships libporter.so."""
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.pid = Mock(return_value="")
+        self.runner.until = Mock(return_value="4242")
+        self.runner.adb = Mock(return_value="starting server...")
+
+    def started_binary(self, package, *args):
+        apk = f"/data/app/~~abc==/{package}-def==/base.apk"
+        self.runner.shell = Mock(side_effect=[f"package:{apk}", "x86_64", ""])
+        self.runner.start_service(*args)
+        return self.runner.shell.call_args_list[-1].args[0]
+
+    def test_the_manager_is_started_from_libporter(self):
+        self.assertEqual(self.started_binary(smoke.MANAGER),
+                         "/data/app/~~abc==/eu.darken.porter-def==/lib/x86_64/libporter.so")
+
+    def test_the_original_shizuku_is_started_from_its_own_binary(self):
+        self.assertEqual(self.started_binary(smoke.COMPAT, smoke.COMPAT),
+                         "/data/app/~~abc==/moe.shizuku.privileged.api-def==/lib/x86_64/libshizuku.so")
