@@ -33,7 +33,7 @@
 #define EXIT_FATAL_BINDER_BLOCKED_BY_SELINUX 10
 
 #define SERVER_NAME "porter_server"
-#define SERVER_CLASS_PATH "rikka.shizuku.server.ShizukuService"
+#define SERVER_CLASS_PATH "eu.darken.porter.privileged.PorterServer"
 
 #if defined(__arm__)
 #define ABI "arm"

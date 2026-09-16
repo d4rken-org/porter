@@ -12,7 +12,7 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.TimeoutCancellationException
 import moe.shizuku.manager.utils.Logger.LOGGER
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import rikka.shizuku.server.ktx.workerHandler
+import eu.darken.porter.privileged.ktx.workerHandler
 
 class PorterManagerProvider : PorterApiProvider() {
 

@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import eu.darken.porter.protocol.PorterProtocol
-import rikka.shizuku.server.ServerConstants
+import eu.darken.porter.privileged.ServerConstants
 
 /** Parses the manager-only diagnostics reply from current, older and misbehaving services. */
 @RunWith(RobolectricTestRunner::class)

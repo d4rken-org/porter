@@ -7,7 +7,7 @@ import rikka.hidden.compat.PermissionManagerApis
 import rikka.hidden.compat.UserManagerApis
 import rikka.hidden.compat.util.SystemServiceBinder
 import eu.darken.porter.sdk.PorterBinderWrapper
-import rikka.shizuku.server.util.InstalledPackagesCompat
+import eu.darken.porter.privileged.util.InstalledPackagesCompat
 
 private fun loadUsersFromService(): List<UserInfoCompat> {
     return if (!ShizukuStateMachine.instance.isRunning()) {
