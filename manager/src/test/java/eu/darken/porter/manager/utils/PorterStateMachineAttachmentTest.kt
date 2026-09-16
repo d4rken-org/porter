@@ -1,5 +1,9 @@
 package eu.darken.porter.manager.utils
 
+import android.os.Binder
+import android.os.Bundle
+import android.os.IBinder
+import android.os.Parcel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import eu.darken.porter.manager.utils.PorterStateMachine.State
@@ -9,12 +13,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.sdk.Porter
 
 /**
  * Registering the Porter callbacks is a step of its own, taken once. The SDK keeps its listeners
- * in process-wide lists and exposes no count, so these read them back by reflection and restore
- * what they found.
+ * in process-wide lists and exposes no count, so these read them back by reflection;
+ * [Porter.resetForTest] drops the connection and every listener after each test.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
@@ -22,12 +27,23 @@ class PorterStateMachineAttachmentTest {
 
     private val receivedBefore = binderReceivedListeners()
     private val deadBefore = binderDeadListeners()
-    private val binderReadyBefore = binderReady()
 
-    @After fun detach() {
-        (binderReceivedListeners() - receivedBefore.toSet()).forEach { Porter.removeBinderReceivedListener(it) }
-        (binderDeadListeners() - deadBefore.toSet()).forEach { Porter.removeBinderDeadListener(it) }
-        setBinderReady(binderReadyBefore)
+    @After fun detach() = Porter.resetForTest()
+
+    /** Answers the attach, so the SDK keeps the connection; nothing else is called on this path. */
+    private class AttachingServer : Binder() {
+        override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+            if (code != IBinder.FIRST_CALL_TRANSACTION + ATTACH) return false
+            data.enforceInterface(PorterProtocol.DESCRIPTOR)
+            reply!!.writeNoException()
+            reply.writeTypedObject(Bundle(), 0)
+            return true
+        }
+
+        companion object {
+            /** IPorterService.attach, whose explicit AIDL id is 1. */
+            private const val ATTACH = 1
+        }
     }
 
     @Test fun constructingRegistersNothingWithPorter() {
@@ -61,7 +77,7 @@ class PorterStateMachineAttachmentTest {
     @Test fun aStickyBinderReceivedDuringAttachIsObservable() = runTest {
         // The SDK calls a sticky listener inline while registering it, when the binder is already
         // up and the caller is on the main looper. Robolectric is on the main looper here.
-        setBinderReady(true)
+        Porter.onBinderReceived(AttachingServer(), "eu.darken.porter.manager")
 
         val machine = PorterStateMachine()
         machine.attachToShizuku()
@@ -83,10 +99,4 @@ class PorterStateMachineAttachmentTest {
             holder.javaClass.getDeclaredField("listener").apply { isAccessible = true }.get(holder) as T
         }
     }
-
-    private fun binderReady(): Boolean = readyField().getBoolean(null)
-
-    private fun setBinderReady(value: Boolean) = readyField().setBoolean(null, value)
-
-    private fun readyField() = Porter::class.java.getDeclaredField("binderReady").apply { isAccessible = true }
 }
