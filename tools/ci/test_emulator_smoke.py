@@ -22,6 +22,68 @@ def completed(returncode, stdout=b"", stderr=b""):
     return smoke.subprocess.CompletedProcess(["adb"], returncode, stdout, stderr)
 
 
+class UiDumpTest(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.Smoke(argparse.Namespace(
+            serial="emulator-5554", output=Path(directory.name)))
+        self.path = "/data/local/tmp/porter-ci-ui.xml"
+        self.xml = '<hierarchy><node text="Settings" /></hierarchy>'
+        self.success = completed(0, stdout=f"UI hierchary dumped to: {self.path}\n".encode())
+        self.null_root = completed(0, stderr=b"ERROR: null root node returned by UiTestAutomationBridge.\n")
+
+    @patch.object(smoke.time, "sleep")
+    def test_null_root_with_zero_exit_status_is_retried(self, sleep):
+        with patch.object(smoke.subprocess, "run", side_effect=[
+                completed(0), self.null_root,
+                completed(0), self.success, completed(0, stdout=self.xml.encode())]) as run:
+            self.assertEqual(self.runner.ui().find("node").get("text"), "Settings")
+        self.assertEqual([c.args[0][-1] for c in run.call_args_list], [
+            f"rm -f {self.path}", f"uiautomator dump {self.path}",
+            f"rm -f {self.path}", f"uiautomator dump {self.path}", f"cat {self.path}",
+        ])
+        self.assertEqual((self.runner.output / "last-ui.xml").read_text(), self.xml)
+        self.assertIn("null root node", (self.runner.output / "commands.log").read_text())
+        sleep.assert_called_once_with(0.4)
+
+    @patch.object(smoke.time, "sleep")
+    def test_failed_dump_cannot_reuse_a_previous_hierarchy(self, sleep):
+        remote = {self.path: '<hierarchy><node text="Stale" /></hierarchy>'}
+
+        def shell(*args):
+            if args == ("rm", "-f", self.path):
+                remote.pop(self.path, None)
+                return ""
+            if args == ("uiautomator", "dump", self.path):
+                return ""
+            self.fail(f"Unexpected command: {args}")
+
+        self.runner.shell = Mock(side_effect=shell)
+        with self.assertRaisesRegex(RuntimeError, "after 3 attempts.*commands.log"):
+            self.runner.ui()
+        self.assertNotIn(self.path, remote)
+        self.assertFalse((self.runner.output / "last-ui.xml").exists())
+        self.assertEqual(sleep.call_count, 2)
+        self.assertEqual(self.runner.shell.call_count, 6)
+
+    @patch.object(smoke.time, "sleep")
+    def test_successful_dump_needs_no_retry(self, sleep):
+        with patch.object(smoke.subprocess, "run", side_effect=[
+                completed(0), self.success, completed(0, stdout=self.xml.encode())]):
+            self.assertEqual(self.runner.ui().tag, "hierarchy")
+        sleep.assert_not_called()
+
+    @patch.object(smoke.time, "sleep")
+    def test_command_failure_is_not_hidden_by_ui_retries(self, sleep):
+        with patch.object(smoke.subprocess, "run", side_effect=[
+                completed(0), completed(1, stderr=b"uiautomator: inaccessible\n")]) as run:
+            with self.assertRaisesRegex(RuntimeError, "uiautomator: inaccessible"):
+                self.runner.ui()
+        self.assertEqual(run.call_count, 2)
+        sleep.assert_not_called()
+
+
 class ScrollToActionTest(unittest.TestCase):
     def setUp(self):
         self.runner = smoke.Smoke.__new__(smoke.Smoke)
