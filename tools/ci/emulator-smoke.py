@@ -19,6 +19,10 @@ NATIVE = "eu.darken.porter.probe.native"
 LEGACY = "eu.darken.porter.probe.legacy"
 PERMISSION = "eu.darken.porter.permission.API_V23"
 LEGACY_PERMISSION = "moe.shizuku.manager.permission.API_V23"
+# What each probe reports on its BINDER line: the Porter protocol version from the porter
+# flavour, the Shizuku API level from the legacy one. Different numbers, different meanings.
+PORTER_PROTOCOL_VERSION = 3
+SHIZUKU_API_VERSION = 13
 PAYLOAD = "porter-ci-shell-access"
 PORSH_DIR = "/data/local/tmp"
 # Comfortably past a 64 KiB pipe buffer, so a reader that never drains blocks the writer.
@@ -193,7 +197,8 @@ class Smoke:
         self.probe_pid = self.until("probe process", lambda: self.pid(package))
         # Asserted rather than assumed: a scenario that needs a daemon must not silently get one.
         self.expect_log(package, f"MODE daemon={str(daemon).lower()} peek={str(peek).lower()}")
-        self.expect_log(package, "BINDER uid=2000 version=13")
+        version = PORTER_PROTOCOL_VERSION if package == NATIVE else SHIZUKU_API_VERSION
+        self.expect_log(package, f"BINDER uid=2000 version={version}")
 
     def service_pids(self, package):
         return set(self.pid(package + ":porter-probe").split())
