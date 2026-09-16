@@ -33,7 +33,8 @@ public class BinderSender {
     private static final String PERMISSION_MANAGER = "eu.darken.porter.permission.MANAGER";
     private static final String PERMISSION = "eu.darken.porter.permission.API_V23";
 
-    private static Binder sBinder;
+    private static Binder sShizukuBinder;
+    private static Binder sPorterBinder;
 
     static void resetDelivery() {
         synchronized (ProcessObserver.PID_LIST) { ProcessObserver.PID_LIST.clear(); }
@@ -169,18 +170,23 @@ public class BinderSender {
                     granted = ActivityManagerApis.checkPermission(PERMISSION_MANAGER, pid, uid) == PackageManager.PERMISSION_GRANTED;
 
                 if (granted) {
-                    ShizukuService.sendBinderToManager(sBinder, userId);
+                    ShizukuService.sendBinderToManager(sPorterBinder, userId);
                     return;
                 }
-            } else if (ShizukuService.providerSuffix(pi) != null) {
-                ShizukuService.sendBinderToUserApp(sBinder, packageName, userId);
-                return;
+            } else {
+                ClientRouting.Wire wire = ShizukuService.route(pi);
+                if (wire != null) {
+                    ShizukuService.sendBinderToUserApp(wire,
+                            wire == ClientRouting.Wire.PORTER ? sPorterBinder : sShizukuBinder, packageName, userId);
+                    return;
+                }
             }
         }
     }
 
-    public static void register(Binder binder) {
-        sBinder = binder;
+    public static void register(Binder shizukuBinder, Binder porterBinder) {
+        sShizukuBinder = shizukuBinder;
+        sPorterBinder = porterBinder;
 
         try {
             ActivityManagerApis.registerProcessObserver(new ProcessObserver());

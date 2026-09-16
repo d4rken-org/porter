@@ -194,7 +194,7 @@ public class ServiceAuthorizationTest {
         android.content.pm.PermissionInfo managerPermission = new android.content.pm.PermissionInfo();
         managerPermission.name = "foreign.fork.permission.MANAGER";
         installed.permissions = new android.content.pm.PermissionInfo[]{managerPermission};
-        assertNull(ShizukuService.providerSuffix(installed));
+        assertNull(ShizukuService.route(installed));
     }
     @Test public void acceptedNewConnectionIsRecordedWithoutGrantingAccess() throws Exception {
         when(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null);
