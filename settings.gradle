@@ -81,7 +81,7 @@ include ":server-shared"
 project(":server-shared").projectDir = file("$root${File.separator}server-shared")
 
 // Present only in newer SDK checkouts; skipped when the pinned commit predates them.
-["protocol", "sdk"].each { name ->
+["protocol", "sdk", "shizuku-compat"].each { name ->
     def dir = file("$root${File.separator}$name")
     if (new File(dir, "build.gradle").isFile()) {
         include ":$name"
