@@ -43,7 +43,7 @@ dependencyResolutionManagement {
     }
 }
 
-include ":server", ":starter", ":shell", ":manager", ":common", ":compat", ":client", ":probe"
+include ":server", ":starter", ":shell", ":manager", ":common", ":compat", ":probe"
 include ":service-update-fixture"
 project(":service-update-fixture").projectDir = file("test-fixtures/service-update")
 
@@ -79,12 +79,6 @@ project(":provider").projectDir = file("$root${File.separator}provider")
 
 include ":server-shared"
 project(":server-shared").projectDir = file("$root${File.separator}server-shared")
-
-def clientDir = file("$root${File.separator}client")
-if (!new File(clientDir, "build.gradle").isFile()) {
-    throw new GradleException("Porter SDK client module is missing. Initialize the pinned API submodule or update api.dir in local.properties.")
-}
-project(":client").projectDir = clientDir
 
 // Present only in newer SDK checkouts; skipped when the pinned commit predates them.
 ["protocol", "sdk"].each { name ->

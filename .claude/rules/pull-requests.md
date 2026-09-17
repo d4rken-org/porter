@@ -50,8 +50,9 @@ wholesale from a linked issue, and do not remove a label a human added.
 
 ## API submodule updates
 
-The `:client` module comes from the `api` submodule, so there is no app-owned `client/**` source tree
-here. A submodule bump appears in the diff as the single path `api`, and CI labels it `Build process`.
-Inspect the referenced commits to choose the type: a routine pointer update is `Chore`, while a
-deliberate integrated fix or feature is `bug` or `enhancement`. Do not invent `api/**` paths from files
-inside the submodule, and do not use porter-api's own labels such as `c: Protocol` or `c: SDK` here.
+The Gradle modules under the `api` submodule are checked out, not vendored, so this repository holds
+no source tree for them. A submodule bump appears in the diff as the single path `api`, and CI labels it
+`Build process`. Inspect the referenced commits to choose the type: a routine pointer update is `Chore`,
+while a deliberate integrated fix or feature is `bug` or `enhancement`. Do not invent `api/**` paths
+from files inside the submodule, and do not use porter-api's own labels such as `c: Protocol` or
+`c: SDK` here.

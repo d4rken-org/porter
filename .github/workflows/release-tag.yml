@@ -103,7 +103,7 @@ jobs:
         uses: ./.github/actions/android-setup
       - name: Unit tests
         if: steps.existing.outputs.published != 'true'
-        run: ./gradlew :manager:testFossDebugUnitTest :manager:testGplayDebugUnitTest :server:testDebugUnitTest :client:testDebugUnitTest
+        run: ./gradlew :manager:testFossDebugUnitTest :manager:testGplayDebugUnitTest :server:testDebugUnitTest
       - name: Upload unit test reports
         if: always() && steps.existing.outputs.published != 'true'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
