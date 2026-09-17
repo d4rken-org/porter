@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise real Binder grants on a fresh, disposable emulator using only ADB."""
 import argparse
+from collections import Counter
 import json
 import os
 from pathlib import Path
@@ -49,8 +50,62 @@ MANAGER_SCAN_TIMEOUT = 60
 # asserting "nothing was removed" has to outlive to mean anything.
 HOST_SETTLE = 45
 MANAGER_SETTLE = 20
+ADB_TIMEOUT = 45
+# How the pinned Shizuku server brackets one binder push. It whitelists the package, then calls
+# that package's provider, which starts the app's process; the binder line or the null-provider
+# line closes it. Porter's own server says "sent binders" instead and never logs the first of
+# these, which is why start_service reads the two servers differently.
+PUSH_START = re.compile(r"Add 0:(\S+) to power save temp whitelist")
+PUSH_END = re.compile(r"send binder to user app (\S+) in user|provider is null (\S+)\.shizuku")
+# Identical consecutive reads that stand in for the sweep having begun at all; a push in flight is
+# read from the brackets above rather than from silence, which a blocking provider call also makes.
+SERVER_QUIET_POLLS = 4
+SERVER_QUIET_TIMEOUT = 60
+# am start -W answers in well under a second when it is the only start outstanding for the package.
+LAUNCH_TIMEOUT = 20
+LAUNCH_ATTEMPTS = 3
 FOREIGN_PASSWORD = "porterci"
 USER_ID = re.compile(r"UserInfo\{(\d+):")
+
+
+class PushTracker:
+    """The server's binder pushes that have been opened and not yet closed.
+
+    Accumulated across reads rather than re-derived from each one. A push that blocks long enough
+    for its opening line to rotate out of the log buffer would otherwise read as finished, and the
+    pid filter selects what is printed, not what the buffer keeps.
+    """
+
+    def __init__(self):
+        self.seen = []
+        self.open = Counter()
+
+    def feed(self, log):
+        lines = log.splitlines()
+        for line in self.added(lines):
+            opened = PUSH_START.search(line)
+            if opened:
+                self.open[opened.group(1)] += 1
+                continue
+            closed = PUSH_END.search(line)
+            if closed:
+                package = closed.group(1) or closed.group(2)
+                # Never below zero: a close whose open predates this tracker is not a credit
+                # against the next push to the same package.
+                if self.open[package]:
+                    self.open[package] -= 1
+                    if not self.open[package]:
+                        del self.open[package]
+        self.seen = lines
+        return self.open
+
+    def added(self, lines):
+        """What this read holds that the last one did not; the buffer drops from the front."""
+        for cut in range(len(self.seen) + 1):
+            kept = self.seen[cut:]
+            if lines[:len(kept)] == kept:
+                return lines[len(kept):]
+        return lines
 
 
 def apksigner():
@@ -76,10 +131,10 @@ class Smoke:
         self.probe_pid = None
         self.foreign_apk = None
 
-    def adb(self, *args, check=True, binary=False):
+    def adb(self, *args, check=True, binary=False, timeout=ADB_TIMEOUT):
         command = ["adb", "-s", self.args.serial, *map(str, args)]
         for attempt in range(TRANSPORT_ATTEMPTS):
-            result = subprocess.run(command, capture_output=True, timeout=45)
+            result = subprocess.run(command, capture_output=True, timeout=timeout)
             stderr = result.stderr.decode(errors="replace")
             with (self.output / "commands.log").open("a") as log:
                 log.write(shlex.join(command) + "\n")
@@ -196,20 +251,60 @@ class Smoke:
         # the manager's code path, so a caller that replaces the manager next pulls that path out
         # from under the load. This line marks the load complete.
         self.until(f"{name} finished loading its natives",
-                   lambda: "starting server..." in self.adb(
-                       "logcat", "-d", "--pid=" + started, "-s", "Service:I", "*:S"))
+                   lambda: "starting server..." in self.server_log(started))
+        # Still too early. The server then pushes its binder into every package that requests the
+        # permission, reaching each one by calling that package's provider, which starts that
+        # app's process. A force-stop landing on such a package while its start is in flight loses
+        # the launch that follows it, so wait until no push is still open.
+        if package == MANAGER:
+            self.until(f"{name} sent its binders",
+                       lambda: "sent binders" in self.server_log(started))
+            return
+        # The pinned server brackets each push instead of the sweep, so an unmatched open bracket
+        # is the thing to wait out. Repeated reads only cover the gap before the first one appears.
+        tracker = PushTracker()
+        recent = []
+        def settled():
+            log = self.server_log(started)
+            open_pushes = tracker.feed(log)
+            recent.append(log)
+            del recent[:-SERVER_QUIET_POLLS]
+            return (not open_pushes
+                    and len(recent) == SERVER_QUIET_POLLS and len(set(recent)) == 1)
+        self.until(f"{name} finished starting client processes", settled,
+                   timeout=SERVER_QUIET_TIMEOUT)
+
+    def server_log(self, pid):
+        return self.adb("logcat", "-d", "--pid=" + pid, "-s", "Service:V", "*:S")
 
     def launch_probe(self, package, daemon=False, peek=False):
-        for probe in (NATIVE, LEGACY):
-            self.shell("am", "force-stop", probe)
         command = ["am", "start", "-W", "-n", package + "/eu.darken.porter.probe.ProbeActivity"]
         for name, value in (("daemon", daemon), ("peek", peek)):
             if value:
                 command += ["--ez", name, "true"]
-        self.shell(*command)
-        self.probe_pid = self.until("probe process", lambda: self.pid(package))
-        # Asserted rather than assumed: a scenario that needs a daemon must not silently get one.
-        self.expect_log(package, f"MODE daemon={str(daemon).lower()} peek={str(peek).lower()}")
+        mode = f"MODE daemon={str(daemon).lower()} peek={str(peek).lower()}"
+        for attempt in range(LAUNCH_ATTEMPTS):
+            for probe in (NATIVE, LEGACY):
+                self.shell("am", "force-stop", probe)
+            try:
+                self.shell(*command, timeout=LAUNCH_TIMEOUT)
+                # One pid, because two mean a start this did not ask for is still resolving and
+                # the process it settles on may not be the one that runs the activity.
+                self.probe_pid = self.until(
+                    "one probe process",
+                    lambda: (pids := self.pid(package).split()) and len(pids) == 1 and pids[0],
+                    timeout=LAUNCH_TIMEOUT)
+                # Asserted rather than assumed: a scenario that needs a daemon must not silently
+                # get one.
+                self.expect_log(package, mode)
+                break
+            except (subprocess.TimeoutExpired, AssertionError):
+                # A launch that never lands is one that raced a process start already in flight
+                # for this package. The force-stop above makes the retry the only one outstanding.
+                if attempt == LAUNCH_ATTEMPTS - 1:
+                    raise
+        # Outside the retry on purpose: the activity ran, so a binder that never arrives is the
+        # server or the client failing to hand it over, and relaunching would only hide that.
         version = PORTER_PROTOCOL_VERSION if package == NATIVE else SHIZUKU_API_VERSION
         self.expect_log(package, f"BINDER uid=2000 version={version}")
 
