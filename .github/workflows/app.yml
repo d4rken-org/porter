@@ -66,7 +66,7 @@ jobs:
           shellcheck tools/release/bump.sh
           bats tools/release/bump.bats
       - name: Unit tests
-        run: ./gradlew :manager:testFossDebugUnitTest :manager:testGplayDebugUnitTest :server:testDebugUnitTest :client:testDebugUnitTest
+        run: ./gradlew :manager:testFossDebugUnitTest :manager:testGplayDebugUnitTest :server:testDebugUnitTest
       - name: Upload unit test reports
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
@@ -76,8 +76,8 @@ jobs:
             **/build/test-results/**/*.xml
             **/build/reports/tests/**
           if-no-files-found: warn
-      - name: Build development APKs and adapter
-        run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assembleDebug :client:assembleRelease
+      - name: Build development APKs
+        run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assembleDebug
       - name: Verify APK identities
         run: |
           python3 tools/verify-apks.py manager/build/outputs/apk/foss/debug/*.apk compat/build/outputs/apk/debug/*.apk --embedded required
@@ -88,7 +88,6 @@ jobs:
           path: |
             manager/build/outputs/apk/*/debug/*.apk
             compat/build/outputs/apk/debug/*.apk
-            api/client/build/outputs/aar/*.aar
             probe/build/outputs/apk/**/*.apk
           if-no-files-found: error
 
