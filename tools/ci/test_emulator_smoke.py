@@ -2,6 +2,7 @@ import argparse
 import contextlib
 import importlib.util
 import io
+import itertools
 import json
 from pathlib import Path
 import tempfile
@@ -345,21 +346,22 @@ class LaunchProbeModeTest(unittest.TestCase):
     def test_the_default_launch_asks_for_neither_mode(self):
         self.runner.launch_probe(smoke.NATIVE)
         self.assertEqual(self.launched(), [call(
-            "am", "start", "-W", "-n", smoke.NATIVE + "/eu.darken.porter.probe.ProbeActivity")])
+            "am", "start", "-W", "-n", smoke.NATIVE + "/eu.darken.porter.probe.ProbeActivity",
+            timeout=smoke.LAUNCH_TIMEOUT)])
         self.runner.expect_log.assert_any_call(smoke.NATIVE, "MODE daemon=false peek=false")
 
     def test_a_daemon_launch_passes_the_extra_and_asserts_the_mode_that_ran(self):
         self.runner.launch_probe(smoke.NATIVE, daemon=True)
         self.assertEqual(self.launched(), [call(
             "am", "start", "-W", "-n", smoke.NATIVE + "/eu.darken.porter.probe.ProbeActivity",
-            "--ez", "daemon", "true")])
+            "--ez", "daemon", "true", timeout=smoke.LAUNCH_TIMEOUT)])
         self.runner.expect_log.assert_any_call(smoke.NATIVE, "MODE daemon=true peek=false")
 
     def test_a_peek_launch_exercises_the_no_create_path(self):
         self.runner.launch_probe(smoke.NATIVE, peek=True)
         self.assertEqual(self.launched(), [call(
             "am", "start", "-W", "-n", smoke.NATIVE + "/eu.darken.porter.probe.ProbeActivity",
-            "--ez", "peek", "true")])
+            "--ez", "peek", "true", timeout=smoke.LAUNCH_TIMEOUT)])
         self.runner.expect_log.assert_any_call(smoke.NATIVE, "MODE daemon=false peek=true")
 
 
@@ -482,3 +484,132 @@ class StartServiceBinaryTest(unittest.TestCase):
     def test_the_original_shizuku_is_started_from_its_own_binary(self):
         self.assertEqual(self.started_binary(smoke.COMPAT, smoke.COMPAT),
                          "/data/app/~~abc==/moe.shizuku.privileged.api-def==/lib/x86_64/libshizuku.so")
+
+
+class StartServicePushTest(unittest.TestCase):
+    """The natives line is not the end of startup: the binder push that follows starts client
+    processes, and a caller that force-stops one of those mid-start loses its own launch."""
+
+    APK = "/data/app/~~abc==/eu.darken.porter-def==/base.apk"
+    OPEN = "Add 0:eu.darken.porter.probe.legacy to power save temp whitelist for 30s"
+    SENT = "send binder to user app eu.darken.porter.probe.legacy in user 0"
+    NULL = "provider is null eu.darken.porter.probe.legacy.shizuku 0"
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.pid = Mock(side_effect=["", "4242"])
+        self.runner.shell = Mock(side_effect=[f"package:{self.APK}", "x86_64", ""])
+
+    def test_an_open_push_is_named_and_a_closed_one_is_not(self):
+        self.assertEqual(list(smoke.PushTracker().feed(self.OPEN)),
+                         ["eu.darken.porter.probe.legacy"])
+        self.assertFalse(smoke.PushTracker().feed(f"{self.OPEN}\n{self.SENT}"))
+        # A provider that never answered closes the push just as delivery does.
+        self.assertFalse(smoke.PushTracker().feed(f"{self.OPEN}\n{self.NULL}"))
+        # Two pushes, one answer: still in flight.
+        self.assertEqual(list(smoke.PushTracker().feed(f"{self.OPEN}\n{self.NULL}\n{self.OPEN}")),
+                         ["eu.darken.porter.probe.legacy"])
+        # A lone close leaves nothing open rather than a negative count.
+        self.assertFalse(smoke.PushTracker().feed(self.SENT))
+        # A package whose name merely prefixes another is not closed by it.
+        sibling = self.SENT.replace("probe.legacy", "probe.legacy.extra")
+        self.assertEqual(list(smoke.PushTracker().feed(f"{self.OPEN}\n{sibling}")),
+                         ["eu.darken.porter.probe.legacy"])
+
+    def test_an_open_push_survives_its_line_rotating_out_of_the_buffer(self):
+        tracker = smoke.PushTracker()
+        tracker.feed(f"starting server...\n{self.OPEN}")
+        # The blocked push logs nothing while other processes push its opening line out.
+        for _ in range(smoke.SERVER_QUIET_POLLS + 2):
+            self.assertEqual(list(tracker.feed("")), ["eu.darken.porter.probe.legacy"])
+        # Only an observed close ends it, however late it arrives.
+        self.assertFalse(tracker.feed(self.SENT))
+
+    def test_lines_carried_over_between_reads_are_not_counted_twice(self):
+        tracker = smoke.PushTracker()
+        tracker.feed(f"starting server...\n{self.OPEN}")
+        # The same open is still in the buffer; re-reading it must not open a second push.
+        tracker.feed(f"starting server...\n{self.OPEN}")
+        self.assertEqual(dict(tracker.feed(f"starting server...\n{self.OPEN}\n{self.SENT}")), {})
+
+    def test_a_read_that_lost_its_oldest_lines_still_tracks_the_newest(self):
+        tracker = smoke.PushTracker()
+        tracker.feed(f"starting server...\n{self.OPEN}\n{self.SENT}")
+        # The buffer has dropped everything before the newest open.
+        self.assertEqual(list(tracker.feed(f"{self.SENT}\n{self.OPEN}")),
+                         ["eu.darken.porter.probe.legacy"])
+
+    @patch.object(smoke.time, "sleep")
+    def test_the_manager_waits_for_its_server_to_say_it_sent_them(self, sleep):
+        self.runner.adb = Mock(side_effect=["starting server...", "starting server...\nsending binders",
+                                            "starting server...\nsending binders\nsent binders"])
+        self.runner.start_service()
+        self.assertEqual(self.runner.adb.call_count, 3)
+
+    @patch.object(smoke.time, "sleep")
+    def test_a_silent_gap_inside_an_open_push_is_not_read_as_finished(self, sleep):
+        # The provider call blocks without logging, so the log repeats while the push is still on.
+        blocked = f"starting server...\n{self.OPEN}"
+        done = f"{blocked}\n{self.SENT}"
+        self.runner.adb = Mock(side_effect=(
+            ["starting server..."] + [blocked] * (smoke.SERVER_QUIET_POLLS + 3)
+            + [done] * smoke.SERVER_QUIET_POLLS))
+        self.runner.start_service(smoke.COMPAT)
+        self.assertEqual(self.runner.adb.call_count,
+                         1 + smoke.SERVER_QUIET_POLLS + 3 + smoke.SERVER_QUIET_POLLS)
+
+    @patch.object(smoke.time, "sleep")
+    @patch.object(smoke.time, "monotonic", side_effect=itertools.count(0, 5))
+    def test_a_push_that_never_closes_fails_the_run(self, monotonic, sleep):
+        self.runner.adb = Mock(return_value=f"starting server...\n{self.OPEN}")
+        with self.assertRaisesRegex(AssertionError, "finished starting client processes"):
+            self.runner.start_service(smoke.COMPAT)
+        self.assertGreater(self.runner.adb.call_count, smoke.SERVER_QUIET_POLLS + 1)
+
+
+class LaunchProbeRetryTest(unittest.TestCase):
+    """A launch that does not land raced a process start already in flight for the package."""
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock(return_value="")
+        self.runner.pid = Mock(return_value="4711")
+        self.runner.expect_log = Mock()
+
+    def starts(self):
+        return [c for c in self.runner.shell.call_args_list if c.args[0] == "am" and c.args[1] == "start"]
+
+    def stops(self):
+        return [c for c in self.runner.shell.call_args_list if c.args[:2] == ("am", "force-stop")]
+
+    def test_a_landed_launch_is_not_retried(self):
+        self.runner.launch_probe(smoke.NATIVE)
+        self.assertEqual(len(self.starts()), 1)
+        self.assertEqual(self.runner.expect_log.call_count, 2)
+
+    def test_a_hung_launch_is_force_stopped_again_before_the_retry(self):
+        hung = smoke.subprocess.TimeoutExpired("am start", smoke.LAUNCH_TIMEOUT)
+        self.runner.shell = Mock(side_effect=[""] * 2 + [hung] + [""] * 3)
+        self.runner.launch_probe(smoke.NATIVE)
+        self.assertEqual(len(self.starts()), 2)
+        # Both probes are stopped before each attempt, so the retry is the only start outstanding.
+        self.assertEqual(len(self.stops()), 4)
+
+    def test_a_launch_that_never_logs_its_mode_is_retried_then_surfaces(self):
+        self.runner.expect_log = Mock(side_effect=AssertionError("Timed out: MODE"))
+        with self.assertRaisesRegex(AssertionError, "MODE"):
+            self.runner.launch_probe(smoke.NATIVE)
+        self.assertEqual(len(self.starts()), smoke.LAUNCH_ATTEMPTS)
+
+    def test_a_second_probe_process_is_waited_out_rather_than_followed(self):
+        self.runner.pid = Mock(side_effect=["4711 4712", "4711 4712", "4713"])
+        with patch.object(smoke.time, "sleep"):
+            self.runner.launch_probe(smoke.NATIVE)
+        self.assertEqual(self.runner.probe_pid, "4713")
+
+    def test_a_missing_binder_is_not_retried_away(self):
+        # The activity ran, so relaunching would only hide a real hand-over failure.
+        self.runner.expect_log = Mock(side_effect=[None, AssertionError("Timed out: BINDER")])
+        with self.assertRaisesRegex(AssertionError, "BINDER"):
+            self.runner.launch_probe(smoke.NATIVE)
+        self.assertEqual(len(self.starts()), 1)
