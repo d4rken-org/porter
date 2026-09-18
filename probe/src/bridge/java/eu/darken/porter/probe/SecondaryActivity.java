@@ -28,9 +28,13 @@ public class SecondaryActivity extends Activity {
     }
 
     private void describe() {
-        PorterServerInfo info = Porter.getServerInfo();
-        report("SECONDARY BINDER uid=" + Porter.getUid()
-                + " backend=" + (info == null ? "none" : info.backend));
+        try {
+            PorterServerInfo info = Porter.getServerInfo();
+            report("SECONDARY BINDER uid=" + Porter.getUid()
+                    + " backend=" + (info == null ? "none" : info.backend));
+        } catch (RuntimeException e) {
+            report("SECONDARY FAILED " + e);
+        }
     }
 
     private void report(String message) {

@@ -235,6 +235,7 @@ class Dualwire(base.Smoke):
                        BRIDGE + " SECONDARY BINDER uid=2000 backend=SHIZUKU")
             assert self.pid(BRIDGE) == main_pid, "the main process was replaced on reconnection"
             assert self.pid(BRIDGE + ":secondary") == secondary_pid, "the secondary process was replaced on reconnection"
+            assert BRIDGE + " SECONDARY FAILED" not in self.logs_for(secondary_pid)
             return {"main_pid": main_pid, "secondary_pid": secondary_pid,
                     "killed_server_pid": server_pid, "server_pid": self.pid("shizuku_server")}
         self.case("multiprocess-delivery-and-recovery", multiprocess_delivery_and_recovery)
