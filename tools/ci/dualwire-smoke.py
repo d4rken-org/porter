@@ -186,8 +186,7 @@ class Dualwire(base.Smoke):
             self.launch_bridge(expect_binder=False)
             self.expect_log(BRIDGE, "AVAILABILITY INSTALLED_NOT_CONNECTED")
             self.adb("uninstall", base.MANAGER)
-            self.until("server exits once the manager is gone",
-                       lambda: not self.pid("porter_server"), timeout=base.MANAGER_SCAN_TIMEOUT)
+            assert not self.installed(base.MANAGER), "the Porter manager survived its uninstall"
             # Not restarted: removing Porter does not stop Shizuku, and a restart here would hide
             # it if that stopped being true.
             shizuku_pid = self.pid("shizuku_server")
