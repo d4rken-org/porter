@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <permission-group android:name="moe.shizuku.manager.permission-group.API"
+        android:label="Unlisted manager fixture" />
+    <permission android:name="moe.shizuku.manager.permission.API_V23"
+        android:protectionLevel="dangerous"
+        android:permissionGroup="moe.shizuku.manager.permission-group.API"
+        android:label="Unlisted manager fixture API" />
+    <application android:allowBackup="false" />
+</manifest>
