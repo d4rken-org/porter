@@ -53,6 +53,25 @@ class ArgumentTest(unittest.TestCase):
         message = self.rejected("--case", "setup", "--case", "selection-prefers-porter")
         self.assertIn("shizuku-permission-lifecycle", message)
 
+    def test_a_selection_leaving_porter_installed_for_a_later_case_is_rejected(self):
+        # selection-prefers-porter leaves the manager installed and its server up, and only
+        # selection-porter-stopped removes them, so without it the recovery case waits out its
+        # timeout on BACKEND SHIZUKU against a device that answers with Porter.
+        message = self.rejected("--case", "setup", "--case", "shizuku-permission-lifecycle",
+                                "--case", "selection-prefers-porter",
+                                "--case", "multiprocess-delivery-and-recovery")
+        self.assertIn("selection-porter-stopped", message)
+
+    def test_a_selection_that_never_installs_porter_keeps_the_recovery_case(self):
+        selection = ["setup", "shizuku-permission-lifecycle", "multiprocess-delivery-and-recovery"]
+        self.assertEqual(self.parse(*[arg for name in selection for arg in ("--case", name)]).cases,
+                         selection)
+
+    def test_a_selection_ending_at_the_case_that_installs_porter_is_accepted(self):
+        selection = ["setup", "shizuku-permission-lifecycle", "selection-prefers-porter"]
+        self.assertEqual(self.parse(*[arg for name in selection for arg in ("--case", name)]).cases,
+                         selection)
+
     def test_a_selection_naming_the_whole_chain_is_accepted(self):
         chain = ["setup", "shizuku-permission-lifecycle", "selection-prefers-porter",
                  "selection-porter-stopped"]
