@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.TextView;
 import eu.darken.porter.sdk.Porter;
+import eu.darken.porter.sdk.PorterServerInfo;
 
 public class ProbeActivity extends Activity {
     private TextView status;
@@ -41,6 +42,9 @@ public class ProbeActivity extends Activity {
         args = new Porter.UserServiceArgs(new ComponentName(this, ProbeService.class))
                 .daemon(daemon).processNameSuffix("porter-probe").version(1);
         report("MODE daemon=" + daemon + " peek=" + peek);
+        // Before any listener, so this reports the state selection resolved rather than one a
+        // delivery has already changed.
+        report("AVAILABILITY " + Porter.getAvailability(this));
         Porter.addBinderReceivedListenerSticky(received);
         Porter.addBinderDeadListener(died);
         Porter.addRequestPermissionResultListener(permission);
@@ -50,6 +54,8 @@ public class ProbeActivity extends Activity {
     private void connect() {
         try {
             report("BINDER uid=" + Porter.getUid() + " version=" + Porter.getServerProtocolVersion());
+            PorterServerInfo info = Porter.getServerInfo();
+            report("BACKEND " + (info == null ? "none" : info.backend));
             if (Porter.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
                 Porter.requestPermission(1);
                 return;
