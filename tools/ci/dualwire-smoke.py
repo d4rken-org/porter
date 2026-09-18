@@ -204,6 +204,7 @@ class Dualwire(base.Smoke):
             and RedDeathDispatchOrderingHandlerTest do and a device cannot without a hook in
             production code.
             """
+            assert not self.installed(base.MANAGER), "Porter is installed, so this process would select it rather than Shizuku"
             self.launch_bridge()
             self.expect_log(BRIDGE, "BACKEND SHIZUKU")
             main_pid = self.probe_pid
@@ -265,6 +266,21 @@ def parse_args(argv=None):
         if missing:
             parser.error("--case " + " --case ".join(missing) + " is required: the selected cases "
                          "assert against installs and servers those build")
+    # The inverse of REQUIRES: a case whose side effects a later one cannot tolerate until a third
+    # undoes them. The test below keys on position, "any case declared after
+    # selection-porter-stopped", while the actual hazard is "cannot tolerate Porter being
+    # installed". Those coincide only because the recovery case is the one case declared later: a
+    # Porter-agnostic case appended after it would be rejected with no cause, and a
+    # Porter-intolerant case inserted before selection-porter-stopped would not be caught at all.
+    # Generalising waits until a second such case exists to generalise from.
+    if args.cases:
+        later = CASES[CASES.index("selection-porter-stopped") + 1:]
+        if ("selection-prefers-porter" in args.cases
+                and any(name in args.cases for name in later)
+                and "selection-porter-stopped" not in args.cases):
+            parser.error("--case selection-porter-stopped is required: selection-prefers-porter "
+                         "leaves the Porter manager installed and its server running, and only "
+                         "selection-porter-stopped removes them")
     return args
 
 
