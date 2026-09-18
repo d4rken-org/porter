@@ -20,8 +20,13 @@ jobs:
       fail-fast: false
       matrix:
         api: [30, 36]
-        suite: [emulator, compat-install]
+        suite: [emulator, compat-install, dualwire]
         include:
+          # Keyed on the suite alone, so this augments the two dualwire combinations rather than
+          # creating new ones. A top-level extra: list would multiply every combination and hand
+          # these arguments to the other suites, whose parsers reject what they do not know.
+          - suite: dualwire
+            extra: --bridge probe/build/outputs/apk/bridge/debug/*.apk --unlisted test-fixtures/unlisted-manager/build/outputs/apk/debug/*.apk
           - api: 34
             suite: compat-install
             target: android-tv
@@ -35,7 +40,7 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/android-setup
       - name: Build test APKs
-        run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug
+        run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug :probe:assembleBridgeDebug :unlisted-manager-fixture:assembleDebug
       - name: Restore pinned Shizuku cache
         id: shizuku-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 #v6.1.0
@@ -85,7 +90,7 @@ jobs:
             --native probe/build/outputs/apk/porter/debug/*.apk
             --legacy probe/build/outputs/apk/legacy/debug/*.apk
             --shizuku "$RUNNER_TEMP/shizuku.apk"
-            --output build/emulator-results
+            --output build/emulator-results ${{ matrix.extra }}
       - name: Upload device test evidence
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
