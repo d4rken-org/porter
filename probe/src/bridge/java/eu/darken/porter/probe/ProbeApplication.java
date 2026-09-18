@@ -9,17 +9,20 @@ import java.io.IOException;
 
 public class ProbeApplication extends Application {
 
+    // Content providers are installed before Application.onCreate, and the provider only announces
+    // a delivery once this is set. A class initializer is the earliest point this process has.
+    static {
+        PorterApiProvider.enableMultiProcessSupport(!processName().endsWith(":secondary"));
+    }
+
     @Override public void onCreate() {
         super.onCreate();
         String name = processName();
         boolean provider = !name.endsWith(":secondary");
-        // Both flags are process-static, so this has to run before anything touches the SDK: the
-        // provider process enables the broadcast, the secondary marks itself as non-provider.
-        PorterApiProvider.enableMultiProcessSupport(provider);
         Log.i("PorterProbe", getPackageName() + " APPLICATION process=" + name + " provider=" + provider);
     }
 
-    private String processName() {
+    private static String processName() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) return Application.getProcessName();
         try (FileInputStream cmdline = new FileInputStream("/proc/self/cmdline")) {
             StringBuilder name = new StringBuilder();
