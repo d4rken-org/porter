@@ -20,6 +20,13 @@ NO_BINDER_SETTLE = base.LAUNCH_TIMEOUT
 CASES = ("setup", "visibility-listed-manager", "visibility-unlisted-manager",
          "shizuku-permission-lifecycle", "selection-prefers-porter", "selection-porter-stopped",
          "multiprocess-delivery-and-recovery")
+# Each of these inherits installs and a running server from the case before it, so a narrowing
+# that drops one leaves the next asserting against a fixture that was never built.
+REQUIRES = {
+    "selection-prefers-porter": ("shizuku-permission-lifecycle",),
+    "selection-porter-stopped": ("selection-prefers-porter",),
+    "multiprocess-delivery-and-recovery": ("shizuku-permission-lifecycle",),
+}
 
 
 def added(before, after):
@@ -156,6 +163,10 @@ class Dualwire(base.Smoke):
 
         def selection_prefers_porter():
             """A Shizuku binder is pushed at this process too, and Porter's is the one it takes."""
+            # Without a second server there is no choice to observe, whether a narrowing dropped
+            # the case that starts it or that server died earlier in a full run.
+            shizuku_pid = self.pid("shizuku_server")
+            assert shizuku_pid, "no Shizuku server for Porter to be preferred over"
             self.adb("install", str(self.args.manager.resolve()))
             self.shell("am", "start", "-W", "-f", "0x04000000", "-n",
                        base.MANAGER + "/eu.darken.porter.manager.MainActivity")
@@ -163,7 +174,7 @@ class Dualwire(base.Smoke):
             self.launch_bridge()
             self.expect_log(BRIDGE, "BACKEND PORTER")
             self.expect_log(BRIDGE, f"BINDER uid=2000 version={base.PORTER_PROTOCOL_VERSION}")
-            return {"porter_pid": self.pid("porter_server"), "shizuku_pid": self.pid("shizuku_server")}
+            return {"porter_pid": self.pid("porter_server"), "shizuku_pid": shizuku_pid}
         # The Porter manager and its server stay up for the next case, which needs both: an
         # uninstall here would leave a server outliving its package for a scan period.
         self.case("selection-prefers-porter", selection_prefers_porter)
@@ -242,6 +253,17 @@ def parse_args(argv=None):
     if args.cases and "setup" not in args.cases:
         parser.error("--case setup is required: every other case needs the install and the "
                      "payload file it performs")
+    if args.cases:
+        needed = set(args.cases)
+        while True:
+            grown = needed.union(*(REQUIRES.get(name, ()) for name in needed))
+            if grown == needed:
+                break
+            needed = grown
+        missing = [name for name in CASES if name in needed and name not in args.cases]
+        if missing:
+            parser.error("--case " + " --case ".join(missing) + " is required: the selected cases "
+                         "assert against installs and servers those build")
     return args
 
 

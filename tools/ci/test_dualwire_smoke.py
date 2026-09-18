@@ -41,11 +41,23 @@ class ArgumentTest(unittest.TestCase):
         self.assertIn("--unlisted", stderr.getvalue())
 
     def test_the_flag_repeats_into_one_selection(self):
-        self.assertEqual(self.parse("--case", "setup", "--case", "selection-prefers-porter").cases,
-                         ["setup", "selection-prefers-porter"])
+        self.assertEqual(self.parse("--case", "setup", "--case", "visibility-listed-manager").cases,
+                         ["setup", "visibility-listed-manager"])
 
     def test_a_selection_without_setup_is_rejected(self):
         self.assertIn("--case setup is required", self.rejected("--case", "selection-prefers-porter"))
+
+    def test_a_selection_dropping_a_case_a_later_one_needs_is_rejected(self):
+        # Only shizuku-permission-lifecycle installs Shizuku and starts its server, so without it
+        # selection-prefers-porter asserts a preference on a device holding one backend.
+        message = self.rejected("--case", "setup", "--case", "selection-prefers-porter")
+        self.assertIn("shizuku-permission-lifecycle", message)
+
+    def test_a_selection_naming_the_whole_chain_is_accepted(self):
+        chain = ["setup", "shizuku-permission-lifecycle", "selection-prefers-porter",
+                 "selection-porter-stopped"]
+        self.assertEqual(self.parse(*[arg for name in chain for arg in ("--case", name)]).cases,
+                         chain)
 
     def test_an_unknown_case_is_rejected_and_names_the_valid_ones(self):
         message = self.rejected("--case", "setup", "--case", "dualwire")
