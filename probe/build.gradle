@@ -11,12 +11,15 @@ android {
     flavorDimensions += "backend"
     productFlavors {
         porter { applicationIdSuffix = ".native" }
+        bridge { applicationIdSuffix = ".bridge" }
         legacy { applicationIdSuffix = ".legacy" }
         terminal { applicationIdSuffix = ".terminal" }
     }
-    // Two activities of the same name, one per SDK. Both flavours that speak the Shizuku API share
-    // the one under src/shizuku; the porter flavour has its own under src/porter.
+    // Two activities of the same name, one per SDK. The two flavours that speak the Shizuku API
+    // share the one under src/shizuku; the two that use the Porter SDK share the one under src/sdk.
     sourceSets {
+        porter { java.srcDirs += "src/sdk/java" }
+        bridge { java.srcDirs += "src/sdk/java" }
         legacy { java.srcDirs += "src/shizuku/java" }
         terminal { java.srcDirs += "src/shizuku/java" }
     }
@@ -28,4 +31,8 @@ dependencies {
     terminalImplementation "dev.rikka.shizuku:api:13.1.5"
     terminalImplementation "dev.rikka.shizuku:provider:13.1.5"
     porterImplementation project(":sdk")
+    // dev.rikka.shizuku:provider is deliberately absent: it ships the same
+    // moe.shizuku.api.BinderContainer class as :shizuku-compat and the two do not dex together.
+    bridgeImplementation project(":sdk")
+    bridgeImplementation project(":shizuku-compat")
 }
