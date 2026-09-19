@@ -7,6 +7,15 @@ android {
         versionCode = 1
         versionName = "1"
     }
+    buildTypes {
+        release {
+            minifyEnabled = true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            // The probe applies no signing script, so a release variant is unsigned and uninstallable
+            // without this. The debug key is what every other probe flavour is already signed with.
+            signingConfig = signingConfigs.debug
+        }
+    }
     buildFeatures { aidl = true }
     flavorDimensions += "backend"
     productFlavors {
@@ -22,6 +31,20 @@ android {
         bridge { java.srcDirs += "src/sdk/java" }
         legacy { java.srcDirs += "src/shizuku/java" }
         terminal { java.srcDirs += "src/shizuku/java" }
+    }
+    lint {
+        // A non-shipping fixture, like :shell. Lint-vital runs on release variants of application
+        // modules and would gate the emulator matrix on the probe's style.
+        checkReleaseBuilds = false
+    }
+}
+
+androidComponents {
+    // Build types multiply across flavours. Only the bridge pairs the SDK with shizuku-compat, and
+    // only its keep rules have been considered; a legacyRelease would shrink
+    // dev.rikka.shizuku:provider, which ships no consumer rules, into a variant nothing builds.
+    beforeVariants(selector().withBuildType("release")) { variant ->
+        variant.enable = variant.productFlavors.any { it.second == "bridge" }
     }
 }
 
