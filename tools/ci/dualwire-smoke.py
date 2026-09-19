@@ -125,10 +125,8 @@ class Dualwire(base.Smoke):
             # Not NOT_INSTALLED: the lookup behind this is a bare getPermissionInfo(permission, 0)
             # in PorterSession.permissionOwner, and on API 30 the platform answers it with an
             # instant-app caller check and a permission-registry lookup, with no visibility
-            # filtering. The SDK's javadoc and README claim the opposite; that documentation defect
-            # is a follow-up against the api submodule and is deliberately not fixed here. The API
-            # 36 implementation could not be read, so this level is inferred from API 30's and from
-            # the client API stating no filtering; if API 36 disagrees, this case is where it shows.
+            # filtering. The API 36 implementation is not in the published sources, so this case
+            # passing at both levels is what establishes it there.
             self.expect_log(BRIDGE, "AVAILABILITY INSTALLED_UNRECOGNIZED")
         self.case("visibility-unlisted-manager", visibility_unlisted_manager,
                   restore=("unlisted-manager",))
