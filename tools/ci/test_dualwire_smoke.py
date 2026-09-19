@@ -297,7 +297,7 @@ class MockedDevice:
         runner = dualwire.Dualwire.__new__(dualwire.Dualwire)
         runner.args = Mock()
         runner.adb = Mock(return_value="")
-        runner.shell = Mock(return_value="")
+        runner.shell = Mock(side_effect=self.shell)
         runner.tap = Mock()
         runner.pid = Mock(side_effect=lambda name: self.processes.get(name, ""))
         runner.logs = Mock(side_effect=lambda: "\n".join(self.buffer))
@@ -307,6 +307,14 @@ class MockedDevice:
         runner.case = lambda name, action, restore=(): self.bodies.__setitem__(name, action)
         self.runner = runner
         runner.run()
+
+    def shell(self, *args, **kwargs):
+        # Revoking the permission kills the client uid, and the non-daemon user service goes with
+        # it when its last client does.
+        if args[:2] == ("pm", "revoke"):
+            self.processes.pop(dualwire.BRIDGE, None)
+            self.processes.pop(dualwire.BRIDGE + ":porter-probe", None)
+        return ""
 
     def until(self, description, condition, timeout=None):
         # This device changes only when a case body calls something, so a condition that is false
@@ -380,6 +388,38 @@ class CaseBodyTest(unittest.TestCase):
             self.selection_device(
                 on_launch=lambda processes: processes.pop("shizuku_server", None)
             ).run_case("selection-prefers-porter")
+
+    def lifecycle_device(self, post_revoke):
+        device = MockedDevice(
+            launches=[
+                self.lines("DENIED"),
+                self.lines(self.SHIZUKU_BINDER, "BACKEND SHIZUKU",
+                           "AUTHORIZED managerOperationDenied=", self.USER_SERVICE),
+                self.lines(*post_revoke),
+            ])
+        device.processes[dualwire.BRIDGE + ":porter-probe"] = "500"
+        return device
+
+    def test_a_post_revoke_relaunch_that_binds_no_user_service_fails_the_lifecycle_case(self):
+        # ProbeActivity logs AUTHORIZED before it binds the user service, so AUTHORIZED alone says
+        # only that the probe was told it may bind. The fact the revoke is meant to pin is that the
+        # bind still succeeds, which only the USER_SERVICE line shows.
+        # What this cannot reach: that ProbeActivity reports AUTHORIZED before bindUserService
+        # returns lives in the probe's Java, so if that ordering changed this would keep passing
+        # while the case stopped meaning what its name says.
+        healthy = self.lifecycle_device(
+            (self.SHIZUKU_BINDER, "AUTHORIZED managerOperationDenied=", self.USER_SERVICE))
+        self.assertEqual(healthy.run_case("shizuku-permission-lifecycle"),
+                         {"shizuku_pid": MockedDevice.SHIZUKU_SERVER})
+
+        unbound = self.lifecycle_device(
+            (self.SHIZUKU_BINDER, "AUTHORIZED managerOperationDenied="))
+        with self.assertRaisesRegex(
+                AssertionError, "USER_SERVICE",
+                msg="shizuku-permission-lifecycle passed on a device whose post-revoke relaunch "
+                    "logged AUTHORIZED and then bound no user service, so its tail checks that "
+                    "the probe was permitted to bind rather than that the bind worked"):
+            unbound.run_case("shizuku-permission-lifecycle")
 
 
 if __name__ == "__main__":

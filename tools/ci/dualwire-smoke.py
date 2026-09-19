@@ -170,7 +170,7 @@ class Dualwire(base.Smoke):
             # is why the base suite's grant_and_revoke asserts the opposite on the Porter wire. This
             # pins the difference rather than the behaviour we would prefer.
             self.launch_bridge()
-            self.expect_log(BRIDGE, "AUTHORIZED managerOperationDenied=")
+            self.authorized(BRIDGE, require_manager_guard=False)
             return {"shizuku_pid": self.pid("shizuku_server")}
         self.case("shizuku-permission-lifecycle", shizuku_permission_lifecycle)
 
