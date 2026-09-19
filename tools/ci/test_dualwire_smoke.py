@@ -129,6 +129,22 @@ class LaunchBridgeTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             self.runner.launch_bridge(expect_binder=False)
 
+    @patch.object(dualwire.time, "sleep")
+    def test_a_launch_that_expected_no_binder_stops_the_package_it_leaves_behind(self, sleep):
+        # A probe left running keeps its sticky binder listeners registered, so a server a later
+        # case starts pushes a binder into it and that process answers a permission dialog this
+        # suite is no longer watching. Stopping it before the next launch is too late: the push
+        # happens in between.
+        order = Mock()
+        order.attach_mock(self.runner.shell, "shell")
+        order.attach_mock(self.runner.logs, "logs")
+        self.runner.launch_bridge(expect_binder=False)
+        self.assertEqual(order.mock_calls[-2:],
+                         [call.logs(), call.shell("am", "force-stop", dualwire.BRIDGE)],
+                         "the no-binder branch must force-stop the bridge after asserting that no "
+                         "binder arrived, not only before the launch")
+        self.assertEqual(self.stops(), [call("am", "force-stop", dualwire.BRIDGE)] * 2)
+
     def test_the_activity_names_the_component_that_starts(self):
         self.runner.launch_bridge(activity=".SecondaryActivity")
         self.assertEqual(self.starts(), [call(
