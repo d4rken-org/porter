@@ -275,5 +275,112 @@ class ShizukuPermissionLifecycleTest(unittest.TestCase):
             self.assertTrue(condition(), f"wait {index} never ends once its process is gone")
 
 
+class MockedDevice:
+    """One emulator's worth of state, enough to run a whole case body against.
+
+    A case body is a closure run() declares, so it has to close over this runner: run() is called
+    with case() replaced by a collector, which records every body without executing any of them.
+    The body then drives the same mocked primitives LaunchBridgeTest attaches, over a process table
+    and one probe log buffer instead of a device.
+    """
+
+    PORTER_SERVER = "400"
+    SHIZUKU_SERVER = "300"
+
+    def __init__(self, processes=(), launches=(), on_start_service=None, on_launch=None):
+        self.processes = dict(processes)
+        self.launches = list(launches)
+        self.buffer = []
+        self.bodies = {}
+        self.on_start_service = on_start_service
+        self.on_launch = on_launch
+        runner = dualwire.Dualwire.__new__(dualwire.Dualwire)
+        runner.args = Mock()
+        runner.adb = Mock(return_value="")
+        runner.shell = Mock(return_value="")
+        runner.tap = Mock()
+        runner.pid = Mock(side_effect=lambda name: self.processes.get(name, ""))
+        runner.logs = Mock(side_effect=lambda: "\n".join(self.buffer))
+        runner.until = Mock(side_effect=self.until)
+        runner.start_service = Mock(side_effect=self.start_service)
+        runner.launch_bridge = Mock(side_effect=self.launch_bridge)
+        runner.case = lambda name, action, restore=(): self.bodies.__setitem__(name, action)
+        self.runner = runner
+        runner.run()
+
+    def until(self, description, condition, timeout=None):
+        # This device changes only when a case body calls something, so a condition that is false
+        # now stays false however long it is polled.
+        value = condition()
+        if value:
+            return value
+        raise AssertionError("Timed out: " + description)
+
+    def start_service(self, package=dualwire.base.MANAGER):
+        porter = package == dualwire.base.MANAGER
+        self.processes["porter_server" if porter else "shizuku_server"] = (
+            self.PORTER_SERVER if porter else self.SHIZUKU_SERVER)
+        if self.on_start_service:
+            self.on_start_service(self.processes, package)
+
+    def launch_bridge(self, activity=".ProbeActivity", expect_binder=True):
+        """A fresh probe process, whose buffer holds that launch's lines and nothing older."""
+        self.runner.probe_pid = "4711"
+        self.buffer = [dualwire.BRIDGE + " MODE daemon=false peek=false", *self.launches.pop(0)]
+        if self.on_launch:
+            self.on_launch(self.processes)
+
+    def run_case(self, name):
+        return self.bodies[name]()
+
+
+class CaseBodyTest(unittest.TestCase):
+    """Each case body, run against a device that satisfies the property it claims and against one
+    that breaks it. A body that passes both is not asserting the property."""
+
+    PORTER_BINDER = f"BINDER uid=2000 version={dualwire.base.PORTER_PROTOCOL_VERSION}"
+    SHIZUKU_BINDER = f"BINDER uid=2000 version={dualwire.base.SHIZUKU_API_VERSION}"
+    USER_SERVICE = "USER_SERVICE uid=2000 file=" + dualwire.base.PAYLOAD
+
+    def lines(self, *messages):
+        return [dualwire.BRIDGE + " " + message for message in messages]
+
+    def selection_device(self, on_start_service=None, on_launch=None):
+        return MockedDevice(
+            processes={"shizuku_server": MockedDevice.SHIZUKU_SERVER},
+            launches=[self.lines("BACKEND PORTER", self.PORTER_BINDER)],
+            on_start_service=on_start_service, on_launch=on_launch)
+
+    def test_a_porter_startup_that_removes_shizuku_fails_the_selection_case(self):
+        # The case exists to observe a process that is offered both binders taking Porter's. On a
+        # device holding one backend there is no choice to observe, so the case has to notice that
+        # the Shizuku server it recorded at entry is gone by the time the probe chose.
+        self.assertEqual(self.selection_device().run_case("selection-prefers-porter"),
+                         {"porter_pid": MockedDevice.PORTER_SERVER,
+                          "shizuku_pid": MockedDevice.SHIZUKU_SERVER})
+
+        def porter_replaces_shizuku(processes, package):
+            if package == dualwire.base.MANAGER:
+                processes.pop("shizuku_server", None)
+
+        with self.assertRaisesRegex(
+                AssertionError, "Shizuku",
+                msg="selection-prefers-porter passed on a device where starting Porter removed "
+                    "the Shizuku server, so it reported a preference over a backend that was no "
+                    "longer running and returned the pid it read before the removal"):
+            self.selection_device(porter_replaces_shizuku).run_case("selection-prefers-porter")
+
+        # Surviving the startup is not enough: the pid has to still be there once the probe has
+        # logged its choice, which is a second reading rather than a second use of the first.
+        with self.assertRaisesRegex(
+                AssertionError, "Shizuku",
+                msg="selection-prefers-porter passed on a device whose Shizuku server survived "
+                    "Porter's startup and then exited while the probe was choosing, so nothing "
+                    "was offering the binder the probe is said to have turned down"):
+            self.selection_device(
+                on_launch=lambda processes: processes.pop("shizuku_server", None)
+            ).run_case("selection-prefers-porter")
+
+
 if __name__ == "__main__":
     unittest.main()

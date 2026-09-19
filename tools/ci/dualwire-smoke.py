@@ -184,9 +184,11 @@ class Dualwire(base.Smoke):
             self.shell("am", "start", "-W", "-f", "0x04000000", "-n",
                        base.MANAGER + "/eu.darken.porter.manager.MainActivity")
             self.start_service()
+            assert self.pid("shizuku_server") == shizuku_pid, "starting Porter replaced Shizuku"
             self.launch_bridge()
             self.expect_log(BRIDGE, "BACKEND PORTER")
             self.expect_log(BRIDGE, f"BINDER uid=2000 version={base.PORTER_PROTOCOL_VERSION}")
+            assert self.pid("shizuku_server") == shizuku_pid, "Shizuku died before the probe chose"
             return {"porter_pid": self.pid("porter_server"), "shizuku_pid": shizuku_pid}
         # The Porter manager and its server stay up for the next case, which needs both: an
         # uninstall here would leave a server outliving its package for a scan period.
