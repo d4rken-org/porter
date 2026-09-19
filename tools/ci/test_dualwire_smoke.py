@@ -205,5 +205,75 @@ class ProcessLogTest(unittest.TestCase):
         self.assertEqual(dualwire.added([], ["0"]), ["0"])
 
 
+class ShizukuPermissionLifecycleTest(unittest.TestCase):
+    """The permission case's call order, harvested by running run() with case() stubbed.
+
+    Coupled to case bodies staying inside run(): if they ever move into methods, this needs
+    rewriting rather than adjusting.
+    """
+
+    REVOKE = call.shell("pm", "revoke", dualwire.BRIDGE, dualwire.SHIZUKU_PERMISSION)
+
+    def setUp(self):
+        self.runner = dualwire.Dualwire.__new__(dualwire.Dualwire)
+        self.runner.args = Mock()
+        bodies = {}
+        self.runner.case = lambda name, action, restore=(): bodies.setdefault(name, action)
+        self.order = Mock()
+        for name, mock in (
+                ("shell", Mock(return_value="")),
+                ("adb", Mock(return_value="")),
+                ("pid", Mock(return_value="4711")),
+                ("logs", Mock(return_value="")),
+                # The real until() calls its condition, so running it here records on the parent
+                # which process each wait polls.
+                ("until", Mock(side_effect=lambda description, condition, **kwargs:
+                               condition() or "4711")),
+                ("start_service", Mock()),
+                ("launch_bridge", Mock()),
+                ("tap", Mock()),
+                ("expect_log", Mock()),
+                ("authorized", Mock())):
+            setattr(self.runner, name, mock)
+            self.order.attach_mock(mock, name)
+        self.runner.run()
+        bodies["shizuku-permission-lifecycle"]()
+
+    def between_the_revoke_and_the_relaunch(self):
+        calls = self.order.mock_calls
+        revoked = calls.index(self.REVOKE)
+        relaunched = next(index for index, entry in enumerate(calls[revoked:], revoked)
+                          if entry[0] == "launch_bridge")
+        return calls[revoked + 1:relaunched]
+
+    def test_the_revoked_client_and_its_user_service_are_waited_out_before_the_relaunch(self):
+        # pm revoke returns before Android has killed the revoked uid. Relaunching inside that
+        # window lets the queued kill land on the replacement process instead, and the assertion
+        # that follows sits outside launch_bridge's retry loop, so the case times out rather than
+        # retrying.
+        # A wait's own arguments are not the subject here, the process its condition polls is.
+        polled = [(name, args[0] if name == "pid" else None)
+                  for name, args, _ in self.between_the_revoke_and_the_relaunch()]
+        self.assertEqual(polled, [
+            ("until", None), ("pid", dualwire.BRIDGE),
+            ("until", None), ("pid", dualwire.BRIDGE + ":porter-probe"),
+        ], "between the revoke and the relaunch the case must wait for the client process and then "
+           "for its user service to go away, so that the revoke's queued uid kill cannot land on "
+           "the process the relaunch starts")
+
+    def test_each_of_those_waits_holds_while_its_process_is_still_there(self):
+        # Which process a wait polls says nothing about which answer it waits for, and a wait for
+        # the process to appear is satisfied by the very process the kill is still queued against.
+        conditions = [c.args[1] for c in self.between_the_revoke_and_the_relaunch()
+                      if c[0] == "until"]
+        self.assertEqual(len(conditions), 2,
+                         "the revoke is not followed by two waits before the relaunch")
+        for index, condition in enumerate(conditions):
+            self.runner.pid = Mock(return_value="4711")
+            self.assertFalse(condition(), f"wait {index} is over while its process is still alive")
+            self.runner.pid = Mock(return_value="")
+            self.assertTrue(condition(), f"wait {index} never ends once its process is gone")
+
+
 if __name__ == "__main__":
     unittest.main()
