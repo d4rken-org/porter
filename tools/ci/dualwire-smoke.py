@@ -156,6 +156,14 @@ class Dualwire(base.Smoke):
             self.until("privileged user service",
                        lambda: self.pid(BRIDGE + ":porter-probe"))
             self.shell("pm", "revoke", BRIDGE, SHIZUKU_PERMISSION)
+            # Revoking kills the client uid, and Android queues that kill rather than doing it
+            # before pm returns. Wait it out before relaunching, or the kill lands on the
+            # replacement process. The user service goes with it: losing the client drops the
+            # service connection, and a non-daemon record is removed when its last one goes.
+            self.until("revocation kills the client",
+                       lambda: not self.pid(BRIDGE))
+            self.until("the non-daemon user service follows its client",
+                       lambda: not self.pid(BRIDGE + ":porter-probe"))
             # Upstream Shizuku records its own per-uid authorization, granted here with
             # onetime=false, and does not watch Android's permission state, so revoking the Android
             # permission leaves the app authorized. Porter's own server does honour a revoke, which
