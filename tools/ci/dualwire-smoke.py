@@ -163,7 +163,7 @@ class Dualwire(base.Smoke):
             # pins the difference rather than the behaviour we would prefer.
             self.launch_bridge()
             self.expect_log(BRIDGE, "AUTHORIZED managerOperationDenied=")
-            return {"granted_uid": 10167}
+            return {"shizuku_pid": self.pid("shizuku_server")}
         self.case("shizuku-permission-lifecycle", shizuku_permission_lifecycle)
 
         def selection_prefers_porter():
