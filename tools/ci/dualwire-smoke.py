@@ -76,6 +76,10 @@ class Dualwire(base.Smoke):
             return
         time.sleep(NO_BINDER_SETTLE)
         assert BRIDGE + " BINDER uid=" not in self.logs()
+        # A probe still waiting for a binder is a probe that will take one later: the next case to
+        # start a server would push into it, and its permission dialog would answer for a process
+        # this suite is no longer watching.
+        self.shell("am", "force-stop", BRIDGE)
 
     # Only one package at a time may own the Shizuku permission, so an owner goes away before the
     # next case installs its own. The base's aspects put things back instead of removing them.
