@@ -18,14 +18,19 @@ SHIZUKU_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 NO_BINDER_SETTLE = base.LAUNCH_TIMEOUT
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "visibility-listed-manager", "visibility-unlisted-manager",
-         "shizuku-permission-lifecycle", "secondary-before-delivery", "selection-prefers-porter",
-         "duplicate-delivery", "selection-porter-stopped", "multiprocess-delivery-and-recovery")
+         "shizuku-permission-lifecycle", "forwarding-over-shizuku", "secondary-before-delivery",
+         "selection-prefers-porter", "duplicate-delivery", "forwarding-over-porter",
+         "selection-porter-stopped", "multiprocess-delivery-and-recovery")
 # Each of these inherits installs and a running server from the case before it, so a narrowing
 # that drops one leaves the next asserting against a fixture that was never built.
 REQUIRES = {
+    "forwarding-over-shizuku": ("shizuku-permission-lifecycle",),
     "secondary-before-delivery": ("shizuku-permission-lifecycle",),
     "selection-prefers-porter": ("shizuku-permission-lifecycle",),
     "duplicate-delivery": ("selection-prefers-porter",),
+    # duplicate-delivery, not selection-prefers-porter: that one returns with the Porter permission
+    # dialog still open, and this case needs the grant its answer makes.
+    "forwarding-over-porter": ("duplicate-delivery",),
     "selection-porter-stopped": ("selection-prefers-porter",),
     "multiprocess-delivery-and-recovery": ("shizuku-permission-lifecycle",),
 }
@@ -41,6 +46,28 @@ def added(before, after):
 
 
 class Dualwire(base.Smoke):
+    def forwarded(self, backend):
+        """One wrapped system service call and one unwrapped, and what each of them saw.
+
+        The probe declares no queries, so its own PackageManager answers a visibility-filtered
+        list while the service answers the whole one. Equal counts would mean the wrapped binder
+        was not forwarded and the call ran as the app.
+        """
+        self.launch_bridge(extras=("--ez", "forward", "true"))
+        self.expect_log(BRIDGE, "BACKEND " + backend)
+        self.authorized(BRIDGE, require_manager_guard=(backend == "PORTER"))
+        line = self.until(
+            "the forwarded call answered",
+            lambda: base.re.search(r"FORWARDED forwarded=(\d+) direct=(\d+)",
+                                   self.logs_for(self.probe_pid)))
+        forwarded, direct = int(line.group(1)), int(line.group(2))
+        assert forwarded > direct, (forwarded, direct)
+        # An app sees at least itself. A zero here is an unwrapped call that answered nothing
+        # rather than a narrow view, and anything at all would then beat it.
+        assert direct >= 1, "the app saw not even itself, so the comparison means nothing"
+        self.shell("am", "force-stop", BRIDGE)
+        return {"backend": backend, "forwarded": forwarded, "direct": direct}
+
     def logs_for(self, pid):
         """One process's probe lines; logs() answers only for the last launched activity."""
         return self.adb("logcat", "-d", "--pid=" + pid, "-s", "PorterProbe:I", "*:S")
@@ -195,6 +222,18 @@ class Dualwire(base.Smoke):
                     "unbound_user_service_pid": service_pid}
         self.case("shizuku-permission-lifecycle", shizuku_permission_lifecycle)
 
+        def forwarding_over_shizuku():
+            """A system service call the app cannot make, forwarded over the Shizuku wire.
+
+            transactRemote is the one forwarding path the SDK exposes that neither suite reached
+            before, and the wire carries it for both backends, so both are asserted.
+            """
+            assert self.pid("shizuku_server"), "no Shizuku server to forward through"
+            assert not self.installed(base.MANAGER), \
+                "Porter is installed, so this process would select it rather than Shizuku"
+            return self.forwarded("SHIZUKU")
+        self.case("forwarding-over-shizuku", forwarding_over_shizuku)
+
         def secondary_before_delivery():
             """A secondary process started before the server, with no prior session and an
             initially empty provider fetch, receives a binder through a broadcast-triggered
@@ -290,6 +329,18 @@ class Dualwire(base.Smoke):
             self.shell("am", "force-stop", BRIDGE)
             return {"binder_lines": binders}
         self.case("duplicate-delivery", duplicate_delivery)
+
+        def forwarding_over_porter():
+            """The same forwarded call as forwarding-over-shizuku, over Porter's own wire."""
+            porter_pid = self.pid("porter_server")
+            assert porter_pid, "no Porter server to forward through"
+            assert self.installed(base.MANAGER), "Porter is not installed, so this would pick Shizuku"
+            result = self.forwarded("PORTER")
+            # The forwarded call runs inside the service, so a service that died answering it
+            # would leave a count this case already read as a pass.
+            assert self.pid("porter_server") == porter_pid, "the service did not outlive the call"
+            return result
+        self.case("forwarding-over-porter", forwarding_over_porter)
 
         def selection_porter_stopped():
             """An installed Porter is selected even with its service stopped, so the Shizuku binder

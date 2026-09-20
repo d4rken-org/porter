@@ -594,5 +594,82 @@ class CaseBodyTest(unittest.TestCase):
                 on_push=replaces_the_secondary).run_case("secondary-before-delivery")
 
 
+class ForwardedCallTest(unittest.TestCase):
+    """What the two counts the probe reports are allowed to be."""
+
+    def setUp(self):
+        self.runner = dualwire.Dualwire.__new__(dualwire.Dualwire)
+        self.runner.launch_bridge = Mock()
+        self.runner.expect_log = Mock()
+        self.runner.authorized = Mock()
+        self.runner.shell = Mock(return_value="")
+        self.runner.probe_pid = "4711"
+        self.runner.until = self.immediately
+
+    @staticmethod
+    def immediately(description, condition, timeout=30):
+        value = condition()
+        if not value:
+            raise AssertionError("Timed out: " + description)
+        return value
+
+    def counted(self, forwarded, direct):
+        self.runner.logs_for = Mock(return_value=(
+            f"{dualwire.BRIDGE} FORWARDED forwarded={forwarded} direct={direct}\n"))
+
+    def test_seeing_more_through_the_wire_than_as_the_app_is_the_pass(self):
+        self.counted(184, 3)
+        self.assertEqual(self.runner.forwarded("SHIZUKU"),
+                         {"backend": "SHIZUKU", "forwarded": 184, "direct": 3})
+
+    def test_the_same_count_both_ways_means_the_call_was_not_forwarded(self):
+        self.counted(3, 3)
+        with self.assertRaises(AssertionError):
+            self.runner.forwarded("SHIZUKU")
+
+    def test_an_app_that_saw_nothing_leaves_nothing_to_compare(self):
+        # An unwrapped call answering nothing is not a narrow view, and any count beats it.
+        self.counted(184, 0)
+        with self.assertRaisesRegex(AssertionError, "not even itself"):
+            self.runner.forwarded("SHIZUKU")
+
+    def test_the_manager_guard_is_expected_on_porters_wire_only(self):
+        self.counted(184, 3)
+        self.runner.forwarded("PORTER")
+        self.runner.authorized.assert_called_once_with(dualwire.BRIDGE, require_manager_guard=True)
+        self.runner.authorized.reset_mock()
+        self.runner.forwarded("SHIZUKU")
+        self.runner.authorized.assert_called_once_with(dualwire.BRIDGE, require_manager_guard=False)
+
+    def test_the_probe_does_not_outlive_the_case(self):
+        self.counted(184, 3)
+        self.runner.forwarded("SHIZUKU")
+        self.assertIn(call("am", "force-stop", dualwire.BRIDGE), self.runner.shell.call_args_list)
+
+    def test_a_probe_that_never_reported_is_a_timeout_rather_than_a_pass(self):
+        self.runner.logs_for = Mock(return_value=dualwire.BRIDGE + " AUTHORIZED\n")
+        with self.assertRaisesRegex(AssertionError, "forwarded call"):
+            self.runner.forwarded("SHIZUKU")
+
+
+class ForwardingCaseSelectionTest(unittest.TestCase):
+    def parse(self, *extra):
+        return dualwire.parse_args(["--serial", "emulator-5554", "--output", "out",
+                                    *[arg for name in ("manager", "compat", "native", "legacy",
+                                                       "shizuku", "bridge", "unlisted")
+                                      for arg in ("--" + name, name + ".apk")], *extra])
+
+    def test_each_wire_has_its_own_case_and_they_run_in_declared_order(self):
+        self.assertLess(dualwire.CASES.index("forwarding-over-shizuku"),
+                        dualwire.CASES.index("forwarding-over-porter"))
+        self.assertLess(dualwire.CASES.index("forwarding-over-shizuku"),
+                        dualwire.CASES.index("selection-prefers-porter"))
+
+    def test_the_porter_wire_case_needs_the_case_that_answers_the_grant_dialog(self):
+        with self.assertRaises(SystemExit):
+            self.parse("--case", "setup", "--case", "shizuku-permission-lifecycle",
+                       "--case", "selection-prefers-porter", "--case", "forwarding-over-porter")
+
+
 if __name__ == "__main__":
     unittest.main()

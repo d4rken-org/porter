@@ -58,4 +58,9 @@ dependencies {
     // moe.shizuku.api.BinderContainer class as :shizuku-compat and the two do not dex together.
     bridgeImplementation project(":sdk")
     bridgeImplementation project(":shizuku-compat")
+    // Only the two flavours built on src/sdk forward a system service call, and only they can:
+    // the wrapper that does it is the Porter SDK's.
+    porterImplementation libs.hidden.compat
+    bridgeImplementation libs.hidden.compat
+    compileOnly libs.hidden.stub
 }
