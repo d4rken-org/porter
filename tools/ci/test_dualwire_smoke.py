@@ -53,6 +53,18 @@ class ArgumentTest(unittest.TestCase):
         message = self.rejected("--case", "setup", "--case", "selection-prefers-porter")
         self.assertIn("shizuku-permission-lifecycle", message)
 
+    def test_a_selection_dropping_the_server_the_cold_start_case_kills_is_rejected(self):
+        # secondary-before-delivery kills a Shizuku server and starts it again, and only
+        # shizuku-permission-lifecycle installs Shizuku and brings one up in the first place.
+        message = self.rejected("--case", "setup", "--case", "secondary-before-delivery")
+        self.assertIn("shizuku-permission-lifecycle", message)
+
+    def test_a_selection_dropping_the_porter_connection_the_duplicate_case_needs_is_rejected(self):
+        # Against a live Shizuku connection the backend guard refuses the probe's redelivery on its
+        # own, so duplicate-delivery asserts nothing unless selection-prefers-porter ran first.
+        message = self.rejected("--case", "setup", "--case", "duplicate-delivery")
+        self.assertIn("selection-prefers-porter", message)
+
     def test_a_selection_leaving_porter_installed_for_a_later_case_is_rejected(self):
         # selection-prefers-porter leaves the manager installed and its server up, and only
         # selection-porter-stopped removes them, so without it the recovery case waits out its
@@ -145,6 +157,12 @@ class LaunchBridgeTest(unittest.TestCase):
                          "binder arrived, not only before the launch")
         self.assertEqual(self.stops(), [call("am", "force-stop", dualwire.BRIDGE)] * 2)
 
+    def test_an_extra_rides_behind_the_component_it_is_passed_to(self):
+        self.runner.launch_bridge(extras=("--ez", "redeliver", "true"))
+        self.assertEqual(self.starts(), [call(
+            "am", "start", "-W", "-n", dualwire.BRIDGE + "/eu.darken.porter.probe.ProbeActivity",
+            "--ez", "redeliver", "true", timeout=dualwire.base.LAUNCH_TIMEOUT)])
+
     def test_the_activity_names_the_component_that_starts(self):
         self.runner.launch_bridge(activity=".SecondaryActivity")
         self.assertEqual(self.starts(), [call(
@@ -217,6 +235,8 @@ class ShizukuPermissionLifecycleTest(unittest.TestCase):
     def setUp(self):
         self.runner = dualwire.Dualwire.__new__(dualwire.Dualwire)
         self.runner.args = Mock()
+        # launch_bridge is mocked away here, so the pid it would have recorded is set directly.
+        self.runner.probe_pid = "4711"
         bodies = {}
         self.runner.case = lambda name, action, restore=(): bodies.setdefault(name, action)
         self.order = Mock()
@@ -286,14 +306,18 @@ class MockedDevice:
 
     PORTER_SERVER = "400"
     SHIZUKU_SERVER = "300"
+    SECONDARY = "4712"
 
-    def __init__(self, processes=(), launches=(), on_start_service=None, on_launch=None):
+    def __init__(self, processes=(), launches=(), on_start_service=None, on_launch=None,
+                 on_keyevent=None, buffers=()):
         self.processes = dict(processes)
         self.launches = list(launches)
         self.buffer = []
+        self.buffers = {pid: list(lines) for pid, lines in dict(buffers).items()}
         self.bodies = {}
         self.on_start_service = on_start_service
         self.on_launch = on_launch
+        self.on_keyevent = on_keyevent
         runner = dualwire.Dualwire.__new__(dualwire.Dualwire)
         runner.args = Mock()
         runner.adb = Mock(return_value="")
@@ -301,6 +325,7 @@ class MockedDevice:
         runner.tap = Mock()
         runner.pid = Mock(side_effect=lambda name: self.processes.get(name, ""))
         runner.logs = Mock(side_effect=lambda: "\n".join(self.buffer))
+        runner.logs_for = Mock(side_effect=self.logs_for)
         runner.until = Mock(side_effect=self.until)
         runner.start_service = Mock(side_effect=self.start_service)
         runner.launch_bridge = Mock(side_effect=self.launch_bridge)
@@ -308,12 +333,33 @@ class MockedDevice:
         self.runner = runner
         runner.run()
 
+    def logs_for(self, pid):
+        """A pid given no buffer of its own reads the launched probe's, which is the one process
+        this device models unless a case needs a second."""
+        return "\n".join(self.buffers.get(pid, self.buffer))
+
     def shell(self, *args, **kwargs):
         # Revoking the permission kills the client uid, and the non-daemon user service goes with
         # it when its last client does.
         if args[:2] == ("pm", "revoke"):
             self.processes.pop(dualwire.BRIDGE, None)
             self.processes.pop(dualwire.BRIDGE + ":porter-probe", None)
+        # Backing out destroys the activity, and its teardown unbinds the user service. The client
+        # process stays, because nothing stopped it.
+        if args[:2] == ("input", "keyevent"):
+            if self.on_keyevent:
+                self.on_keyevent(self.processes)
+            else:
+                self.processes.pop(dualwire.BRIDGE + ":porter-probe", None)
+        if args[:2] == ("am", "force-stop"):
+            for name in [n for n in self.processes
+                         if n == args[2] or n.startswith(args[2] + ":")]:
+                self.processes.pop(name)
+        if args[:2] == ("kill", "-9"):
+            for name in [n for n, pid in self.processes.items() if pid == args[2]]:
+                self.processes.pop(name)
+        if args[:2] == ("am", "start") and str(args[-1]).endswith(".SecondaryActivity"):
+            self.processes[dualwire.BRIDGE + ":secondary"] = self.SECONDARY
         return ""
 
     def until(self, description, condition, timeout=None):
@@ -331,7 +377,7 @@ class MockedDevice:
         if self.on_start_service:
             self.on_start_service(self.processes, package)
 
-    def launch_bridge(self, activity=".ProbeActivity", expect_binder=True):
+    def launch_bridge(self, activity=".ProbeActivity", expect_binder=True, extras=()):
         """A fresh probe process, whose buffer holds that launch's lines and nothing older."""
         self.runner.probe_pid = "4711"
         self.buffer = [dualwire.BRIDGE + " MODE daemon=false peek=false", *self.launches.pop(0)]
@@ -389,14 +435,20 @@ class CaseBodyTest(unittest.TestCase):
                 on_launch=lambda processes: processes.pop("shizuku_server", None)
             ).run_case("selection-prefers-porter")
 
-    def lifecycle_device(self, post_revoke):
+    def lifecycle_device(self, post_revoke, on_keyevent=None):
+        def launched(processes):
+            # A launch brings the client process back, and its bind brings the user service with it.
+            processes[dualwire.BRIDGE] = "4711"
+            processes[dualwire.BRIDGE + ":porter-probe"] = "500"
+
         device = MockedDevice(
             launches=[
                 self.lines("DENIED"),
                 self.lines(self.SHIZUKU_BINDER, "BACKEND SHIZUKU",
                            "AUTHORIZED managerOperationDenied=", self.USER_SERVICE),
                 self.lines(*post_revoke),
-            ])
+            ],
+            on_launch=launched, on_keyevent=on_keyevent)
         device.processes[dualwire.BRIDGE + ":porter-probe"] = "500"
         return device
 
@@ -410,7 +462,8 @@ class CaseBodyTest(unittest.TestCase):
         healthy = self.lifecycle_device(
             (self.SHIZUKU_BINDER, "AUTHORIZED managerOperationDenied=", self.USER_SERVICE))
         self.assertEqual(healthy.run_case("shizuku-permission-lifecycle"),
-                         {"shizuku_pid": MockedDevice.SHIZUKU_SERVER})
+                         {"shizuku_pid": MockedDevice.SHIZUKU_SERVER,
+                          "unbound_user_service_pid": "500"})
 
         unbound = self.lifecycle_device(
             (self.SHIZUKU_BINDER, "AUTHORIZED managerOperationDenied="))
@@ -420,6 +473,94 @@ class CaseBodyTest(unittest.TestCase):
                     "logged AUTHORIZED and then bound no user service, so its tail checks that "
                     "the probe was permitted to bind rather than that the bind worked"):
             unbound.run_case("shizuku-permission-lifecycle")
+
+    def test_a_probe_that_died_with_its_user_service_fails_the_unbind_tail(self):
+        # Every other path stops the probe with am force-stop, which kills the process before
+        # onDestroy runs, so the service goes away because its client died: the mechanism the
+        # revoke earlier in the same case already covers. The tail is evidence of unbinding only
+        # while the client process is still there once the service is gone.
+        def stops_the_package(processes):
+            processes.pop(dualwire.BRIDGE, None)
+            processes.pop(dualwire.BRIDGE + ":porter-probe", None)
+
+        died = self.lifecycle_device(
+            (self.SHIZUKU_BINDER, "AUTHORIZED managerOperationDenied=", self.USER_SERVICE),
+            on_keyevent=stops_the_package)
+        with self.assertRaisesRegex(
+                AssertionError, "force-stop",
+                msg="shizuku-permission-lifecycle passed on a device where finishing the activity "
+                    "took the whole package with it, so its tail read a dead client as an unbind"):
+            died.run_case("shizuku-permission-lifecycle")
+
+    def duplicate_device(self, *lines):
+        return MockedDevice(processes={"porter_server": MockedDevice.PORTER_SERVER},
+                            launches=[self.lines(*lines)])
+
+    @patch.object(dualwire.time, "sleep")
+    def test_a_redelivery_that_opened_a_second_connection_fails_the_duplicate_case(self, sleep):
+        once = self.duplicate_device(self.PORTER_BINDER, "BACKEND PORTER",
+                                     "AUTHORIZED managerOperationDenied=true", "REDELIVERED",
+                                     self.USER_SERVICE)
+        self.assertEqual(once.run_case("duplicate-delivery"),
+                         {"binder_lines": [dualwire.BRIDGE + " " + self.PORTER_BINDER]})
+
+        # connect() logs a BINDER line every time it runs, so a redelivery that was attached to
+        # rather than refused shows up as a second one.
+        twice = self.duplicate_device(self.PORTER_BINDER, "BACKEND PORTER",
+                                      "AUTHORIZED managerOperationDenied=true", "REDELIVERED",
+                                      self.PORTER_BINDER, self.USER_SERVICE)
+        with self.assertRaisesRegex(
+                AssertionError, "second time",
+                msg="duplicate-delivery passed on a device whose probe announced a second "
+                    "connection over the binder it already held"):
+            twice.run_case("duplicate-delivery")
+
+    @staticmethod
+    def reaches_the_secondary(device):
+        device.buffers[MockedDevice.SECONDARY].append(
+            dualwire.BRIDGE + " SECONDARY BINDER uid=2000 backend=SHIZUKU")
+
+    def secondary_device(self, *, already_delivered=(), on_push=None):
+        device = MockedDevice(
+            processes={"shizuku_server": MockedDevice.SHIZUKU_SERVER, dualwire.BRIDGE: "4711"},
+            buffers={MockedDevice.SECONDARY: self.lines(
+                "SECONDARY STARTED", "SECONDARY AVAILABILITY INSTALLED_NOT_CONNECTED",
+                *already_delivered)})
+        push = on_push or self.reaches_the_secondary
+        device.on_start_service = lambda processes, package: push(device)
+        return device
+
+    @patch.object(dualwire.time, "sleep")
+    def test_the_cold_start_case_pins_both_halves_of_the_secondary_delivery(self, sleep):
+        self.assertEqual(self.secondary_device().run_case("secondary-before-delivery"),
+                         {"secondary_pid": MockedDevice.SECONDARY,
+                          "killed_server_pid": MockedDevice.SHIZUKU_SERVER})
+
+        early = self.secondary_device(
+            already_delivered=("SECONDARY BINDER uid=2000 backend=SHIZUKU",))
+        with self.assertRaisesRegex(
+                AssertionError, "no server running",
+                msg="secondary-before-delivery passed on a device whose secondary already held a "
+                    "binder before any server was started, so the empty first fetch it claims to "
+                    "observe never happened"):
+            early.run_case("secondary-before-delivery")
+
+        with self.assertRaisesRegex(
+                AssertionError, "Timed out",
+                msg="secondary-before-delivery passed on a device where starting the server never "
+                    "reached the secondary process"):
+            self.secondary_device(on_push=lambda device: None).run_case("secondary-before-delivery")
+
+        def replaces_the_secondary(device):
+            self.reaches_the_secondary(device)
+            device.processes[dualwire.BRIDGE + ":secondary"] = "9999"
+
+        with self.assertRaisesRegex(
+                AssertionError, "replaced",
+                msg="secondary-before-delivery passed on a device that restarted the secondary "
+                    "process to deliver into it, which is a fresh fetch rather than a push"):
+            self.secondary_device(
+                on_push=replaces_the_secondary).run_case("secondary-before-delivery")
 
 
 if __name__ == "__main__":
