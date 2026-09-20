@@ -196,14 +196,18 @@ class Dualwire(base.Smoke):
         self.case("shizuku-permission-lifecycle", shizuku_permission_lifecycle)
 
         def secondary_before_delivery():
-            """A secondary process that comes up before any server is running, and is reached once
-            one starts.
+            """A secondary process started before the server, with no prior session and an
+            initially empty provider fetch, receives a binder through a broadcast-triggered
+            refetch without restarting.
 
-            The recovery case already covers a secondary taking a binder by broadcast after a
-            server restart. What is new here is the first fetch answering empty in a process that
-            holds no session and has resolved no selection, and the server's push cold-starting the
-            provider process, which has to run ProbeApplication's static initializer and enable
-            multi-process support before the broadcast goes out.
+            Its availability query has already resolved backend selection, and its initial fetch
+            has already started the provider process.
+
+            What that leaves uncovered is a server delivery into a genuinely cold provider process
+            while an existing secondary awaits notification, which is where a regression deferring
+            multi-process initialization to Application.onCreate would show.
+            multiprocess-delivery-and-recovery misses it too, deliberately: it keeps the provider
+            process alive across the server restart and asserts that it does.
             """
             self.shell("am", "force-stop", BRIDGE)
             server_pid = self.pid("shizuku_server")
