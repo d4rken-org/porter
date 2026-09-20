@@ -18,12 +18,14 @@ SHIZUKU_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 NO_BINDER_SETTLE = base.LAUNCH_TIMEOUT
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "visibility-listed-manager", "visibility-unlisted-manager",
-         "shizuku-permission-lifecycle", "selection-prefers-porter", "selection-porter-stopped",
-         "multiprocess-delivery-and-recovery")
+         "shizuku-permission-lifecycle", "secondary-before-delivery", "selection-prefers-porter",
+         "duplicate-delivery", "selection-porter-stopped", "multiprocess-delivery-and-recovery")
 # Each of these inherits installs and a running server from the case before it, so a narrowing
 # that drops one leaves the next asserting against a fixture that was never built.
 REQUIRES = {
+    "secondary-before-delivery": ("shizuku-permission-lifecycle",),
     "selection-prefers-porter": ("shizuku-permission-lifecycle",),
+    "duplicate-delivery": ("selection-prefers-porter",),
     "selection-porter-stopped": ("selection-prefers-porter",),
     "multiprocess-delivery-and-recovery": ("shizuku-permission-lifecycle",),
 }
@@ -53,9 +55,12 @@ class Dualwire(base.Smoke):
                           lambda: any(message in line
                                       for line in added(boundary, self.logs_for(pid).splitlines())))
 
-    def launch_bridge(self, activity=".ProbeActivity", expect_binder=True):
-        """A fresh bridge probe, which unlike the base's probes may be expected to get no binder."""
-        command = ["am", "start", "-W", "-n", BRIDGE + "/eu.darken.porter.probe" + activity]
+    def launch_bridge(self, activity=".ProbeActivity", expect_binder=True, extras=()):
+        """A fresh bridge probe, which unlike the base's probes may be expected to get no binder.
+
+        `extras` is handed to am verbatim, after the component, as in ("--ez", "name", "true").
+        """
+        command = ["am", "start", "-W", "-n", BRIDGE + "/eu.darken.porter.probe" + activity, *extras]
         for attempt in range(base.LAUNCH_ATTEMPTS):
             self.shell("am", "force-stop", BRIDGE)
             try:
@@ -138,6 +143,11 @@ class Dualwire(base.Smoke):
             cached state: nothing here distinguishes that from the SDK querying and being told the
             same answer. ShizukuProtocolWirePermissionStateTest and RedF4RevokedPermissionTest
             cover it.
+
+            The tail ends the probe by backing out of it rather than stopping it, which is what
+            establishes that unbinding on destroy removes the service. It does not establish that
+            the user service's own destroy() ran: the server kills that process after a removing
+            unbind either way, so a gone process cannot tell the two apart.
             """
             self.adb("install", str(self.args.shizuku.resolve()))
             self.start_service(base.COMPAT)
@@ -169,8 +179,60 @@ class Dualwire(base.Smoke):
             # pins the difference rather than the behaviour we would prefer.
             self.launch_bridge()
             self.authorized(BRIDGE, require_manager_guard=False)
-            return {"shizuku_pid": self.pid("shizuku_server")}
+            # Every other path here stops the probe with am force-stop, which kills the process
+            # without running onDestroy, so what that would observe is the client's death dropping
+            # its connection: the mechanism the post-revoke wait above already asserts. Backing out
+            # finishes the activity instead, leaving the process alive to be told apart from it.
+            probe_pid = self.probe_pid
+            service_pid = self.until("privileged user service",
+                                     lambda: self.pid(BRIDGE + ":porter-probe"))
+            self.shell("input", "keyevent", "KEYCODE_BACK")
+            self.until("the destroyed activity's user service goes away",
+                       lambda: not self.pid(BRIDGE + ":porter-probe"))
+            assert self.pid(BRIDGE) == probe_pid, ("the client process went away with its user"
+                                                   " service, which a force-stop does too")
+            return {"shizuku_pid": self.pid("shizuku_server"),
+                    "unbound_user_service_pid": service_pid}
         self.case("shizuku-permission-lifecycle", shizuku_permission_lifecycle)
+
+        def secondary_before_delivery():
+            """A secondary process that comes up before any server is running, and is reached once
+            one starts.
+
+            The recovery case already covers a secondary taking a binder by broadcast after a
+            server restart. What is new here is the first fetch answering empty in a process that
+            holds no session and has resolved no selection, and the server's push cold-starting the
+            provider process, which has to run ProbeApplication's static initializer and enable
+            multi-process support before the broadcast goes out.
+            """
+            self.shell("am", "force-stop", BRIDGE)
+            server_pid = self.pid("shizuku_server")
+            self.shell("kill", "-9", server_pid)
+            self.until("server exited", lambda: not self.pid("shizuku_server"))
+            assert not self.pid(BRIDGE), "a bridge process survived the force-stop"
+            assert not self.pid(BRIDGE + ":secondary"), "a secondary process survived the force-stop"
+
+            self.shell("am", "start", "-W", "-n",
+                       BRIDGE + "/eu.darken.porter.probe.SecondaryActivity")
+            secondary_pid = self.until("secondary probe process",
+                                       lambda: self.pid(BRIDGE + ":secondary"))
+            self.until("secondary started",
+                       lambda: BRIDGE + " SECONDARY STARTED" in self.logs_for(secondary_pid))
+            self.until("secondary sees an installed manager and no connection",
+                       lambda: BRIDGE + " SECONDARY AVAILABILITY INSTALLED_NOT_CONNECTED"
+                       in self.logs_for(secondary_pid))
+            time.sleep(NO_BINDER_SETTLE)
+            assert BRIDGE + " SECONDARY BINDER" not in self.logs_for(secondary_pid), \
+                "the secondary was handed a binder with no server running"
+
+            boundary = self.since(secondary_pid)
+            self.start_service(base.COMPAT)
+            self.fresh(secondary_pid, boundary, BRIDGE + " SECONDARY BINDER uid=2000 backend=SHIZUKU")
+            assert self.pid(BRIDGE + ":secondary") == secondary_pid, \
+                "the secondary process was replaced rather than reached where it already was"
+            self.shell("am", "force-stop", BRIDGE)
+            return {"secondary_pid": secondary_pid, "killed_server_pid": server_pid}
+        self.case("secondary-before-delivery", secondary_before_delivery)
 
         def selection_prefers_porter():
             """A Shizuku binder is pushed at this process too, and Porter's is the one it takes."""
@@ -191,6 +253,32 @@ class Dualwire(base.Smoke):
         # The Porter manager and its server stay up for the next case, which needs both: an
         # uninstall here would leave a server outliving its package for a scan period.
         self.case("selection-prefers-porter", selection_prefers_porter)
+
+        def duplicate_delivery():
+            """The binder a process already holds, announced to it a second time, is one connection.
+
+            Declared here on purpose. PorterSession refuses a redelivery through the two binder
+            identity checks, then the backend check, then the selection check, and the two-argument
+            Porter.onBinderReceived the probe calls names PorterBackend.PORTER. Against a live
+            Shizuku connection the backend check would refuse the delivery on its own and this case
+            would pass with both identity checks deleted. After selection-prefers-porter the live
+            connection is Porter's, so the identity checks are the only thing left to refuse it.
+            """
+            self.launch_bridge(extras=("--ez", "redeliver", "true"))
+            self.expect_log(BRIDGE, "REDELIVERED")
+            # connect() binds after it redelivers, so this waits the redelivery out as well.
+            self.expect_log(BRIDGE, "USER_SERVICE uid=")
+            time.sleep(NO_BINDER_SETTLE)
+            # A second attach publishes a session and announces it, and the probe logs another
+            # BINDER line from connect(). The absence of a FAILED line would show nothing: an
+            # attach that threw is swallowed inside the SDK and never reaches the probe.
+            binders = [line for line in self.logs_for(self.probe_pid).splitlines()
+                       if BRIDGE + " BINDER uid=" in line]
+            assert len(binders) == 1, ("the redelivered binder was attached to a second time: "
+                                       + repr(binders))
+            self.shell("am", "force-stop", BRIDGE)
+            return {"binder_lines": binders}
+        self.case("duplicate-delivery", duplicate_delivery)
 
         def selection_porter_stopped():
             """An installed Porter is selected even with its service stopped, so the Shizuku binder

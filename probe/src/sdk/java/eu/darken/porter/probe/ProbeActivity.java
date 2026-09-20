@@ -17,6 +17,8 @@ public class ProbeActivity extends Activity {
     private boolean bound;
     /** Asks for an existing service without starting one, which is the noCreate hand-over path. */
     private boolean peek;
+    /** Announces the binder this process already holds once more, on the next connect() only. */
+    private boolean redeliver;
     private final Porter.OnBinderReceivedListener received = () -> runOnUiThread(this::connect);
     private final Porter.OnBinderDeadListener died = () -> report("BINDER_DEAD");
     private final Porter.OnRequestPermissionResultListener permission = (code, result) -> {
@@ -39,6 +41,7 @@ public class ProbeActivity extends Activity {
         setContentView(status);
         boolean daemon = getIntent().getBooleanExtra("daemon", false);
         peek = getIntent().getBooleanExtra("peek", false);
+        redeliver = getIntent().getBooleanExtra("redeliver", false);
         args = new Porter.UserServiceArgs(new ComponentName(this, ProbeService.class))
                 .daemon(daemon).processNameSuffix("porter-probe").version(1);
         report("MODE daemon=" + daemon + " peek=" + peek);
@@ -64,6 +67,13 @@ public class ProbeActivity extends Activity {
             try { Porter.updateFlagsForUid(android.os.Process.myUid(), 6, 2); }
             catch (SecurityException expected) { managerDenied = true; }
             report("AUTHORIZED managerOperationDenied=" + managerDenied);
+            if (redeliver) {
+                // Cleared first: a delivery that is not refused publishes a session and schedules
+                // connect() again, and this would then redeliver without bound.
+                redeliver = false;
+                Porter.onBinderReceived(Porter.getBinder(), getPackageName());
+                report("REDELIVERED");
+            }
             if (peek) {
                 int version = Porter.peekUserService(args, connection);
                 report("PEEK version=" + version);
