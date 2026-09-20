@@ -613,3 +613,57 @@ class LaunchProbeRetryTest(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "BINDER"):
             self.runner.launch_probe(smoke.NATIVE)
         self.assertEqual(len(self.starts()), 1)
+
+
+class SpawnedProcessReadingTest(unittest.TestCase):
+    """What the service spawned for a debug recording, as the case finds it and loses it."""
+    SERVER = "3120"
+    LISTING = "\n".join((
+        "PID PPID NAME",
+        "3120 1 porter_server",
+        # The supervisor and the logcat it started.
+        "4180 3120 sh",
+        "4181 4180 logcat",
+        # A user service is a child of the service too, and is not what newProcess spawned.
+        "4190 3120 native:porter-probe",
+        # A user service being started: a shell of the service's own, with nothing under it.
+        "4195 3120 sh",
+        # Someone else's shell, under a parent this case knows nothing about.
+        "4200 2900 sh",
+    ))
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock(return_value=self.LISTING)
+
+    def test_the_supervisor_is_the_shell_with_the_logcat_under_it(self):
+        self.assertEqual(self.runner.spawned(self.SERVER), {"4180": ["logcat"], "4195": []})
+
+    def test_a_destroyed_supervisor_takes_its_children_out_of_the_answer(self):
+        self.runner.shell.return_value = "PID PPID NAME\n3120 1 porter_server\n4181 1 logcat"
+        self.assertEqual(self.runner.spawned(self.SERVER), {})
+
+    def test_a_header_or_a_wrapped_argument_line_is_not_a_process(self):
+        self.runner.shell.return_value = "PID PPID NAME\nwhile kill -0 $c\n4180 3120 sh"
+        self.assertEqual(self.runner.spawned(self.SERVER), {"4180": []})
+
+    def test_the_remote_logcat_is_found_by_what_it_follows(self):
+        self.runner.shell.return_value = "\n".join((
+            "PID ARGS",
+            "4181 logcat -v threadtime --pid=3120 -T 1",
+            # The supervisor names the same pid and is not a logcat. Its script reaches ps as
+            # several lines, one of which starts with the command it backgrounds.
+            "4180 sh -c pending=0",
+            "logcat -v threadtime --pid=3120 -T 1 &",
+            # Another logcat, following something else.
+            "4300 logcat -v threadtime --pid=9999 -T 1",
+        ))
+        self.assertEqual(self.runner.remote_logcat(self.SERVER), ["4181"])
+
+    def test_a_reaped_logcat_leaves_nothing_to_find(self):
+        self.runner.shell.return_value = "PID ARGS\n4300 logcat -v threadtime --pid=9999 -T 1"
+        self.assertEqual(self.runner.remote_logcat(self.SERVER), [])
+
+    def test_a_longer_pid_starting_with_this_one_is_a_different_service(self):
+        self.runner.shell.return_value = "PID ARGS\n4181 logcat -v threadtime --pid=31200 -T 1"
+        self.assertEqual(self.runner.remote_logcat("3120"), [])
