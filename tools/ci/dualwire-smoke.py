@@ -264,6 +264,13 @@ class Dualwire(base.Smoke):
             would pass with both identity checks deleted. After selection-prefers-porter the live
             connection is Porter's, so the identity checks are the only thing left to refuse it.
             """
+            # selection-prefers-porter leaves the Porter permission dialog open: its probe returns
+            # at requestPermission, before the redelivery the extra below asks for. Answering it
+            # has to finish before the counted launch starts, because a permission result arriving
+            # afterwards would run connect() again and log the second BINDER line this case reads
+            # as a redelivery that was attached to.
+            self.tap("Allow all the time", base.MANAGER)
+            self.authorized(BRIDGE)
             self.launch_bridge(extras=("--ez", "redeliver", "true"))
             self.expect_log(BRIDGE, "REDELIVERED")
             # connect() binds after it redelivers, so this waits the redelivery out as well.

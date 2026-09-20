@@ -309,20 +309,21 @@ class MockedDevice:
     SECONDARY = "4712"
 
     def __init__(self, processes=(), launches=(), on_start_service=None, on_launch=None,
-                 on_keyevent=None, buffers=()):
+                 on_keyevent=None, on_tap=None, buffer=(), buffers=()):
         self.processes = dict(processes)
         self.launches = list(launches)
-        self.buffer = []
+        self.buffer = list(buffer)
         self.buffers = {pid: list(lines) for pid, lines in dict(buffers).items()}
         self.bodies = {}
         self.on_start_service = on_start_service
         self.on_launch = on_launch
         self.on_keyevent = on_keyevent
+        self.on_tap = on_tap
         runner = dualwire.Dualwire.__new__(dualwire.Dualwire)
         runner.args = Mock()
         runner.adb = Mock(return_value="")
         runner.shell = Mock(side_effect=self.shell)
-        runner.tap = Mock()
+        runner.tap = Mock(side_effect=self.tap)
         runner.pid = Mock(side_effect=lambda name: self.processes.get(name, ""))
         runner.logs = Mock(side_effect=lambda: "\n".join(self.buffer))
         runner.logs_for = Mock(side_effect=self.logs_for)
@@ -337,6 +338,11 @@ class MockedDevice:
         """A pid given no buffer of its own reads the launched probe's, which is the one process
         this device models unless a case needs a second."""
         return "\n".join(self.buffers.get(pid, self.buffer))
+
+    def tap(self, *args, **kwargs):
+        """A dialog no case answers has no effect here; one a case answers gets its hook."""
+        if self.on_tap:
+            self.on_tap(self)
 
     def shell(self, *args, **kwargs):
         # Revoking the permission kills the client uid, and the non-daemon user service goes with
@@ -492,9 +498,34 @@ class CaseBodyTest(unittest.TestCase):
                     "took the whole package with it, so its tail read a dead client as an unbind"):
             died.run_case("shizuku-permission-lifecycle")
 
-    def duplicate_device(self, *lines):
+    def grants_the_porter_permission(self, device):
+        """Answering the dialog runs connect() again in the process that is already up, which logs
+        its own BINDER line ahead of the two lines authorized() waits for."""
+        device.buffer.extend(self.lines(self.PORTER_BINDER,
+                                        "AUTHORIZED managerOperationDenied=true",
+                                        self.USER_SERVICE))
+
+    def duplicate_device(self, *lines, on_tap=None):
+        # The case enters on selection-prefers-porter's probe, which reported its connection and
+        # then stopped at the permission dialog, so that is the buffer the grant lands in.
         return MockedDevice(processes={"porter_server": MockedDevice.PORTER_SERVER},
-                            launches=[self.lines(*lines)])
+                            launches=[self.lines(*lines)],
+                            buffer=self.lines(self.PORTER_BINDER, "BACKEND PORTER"),
+                            on_tap=on_tap or self.grants_the_porter_permission)
+
+    def test_a_dialog_answer_that_never_grants_fails_the_duplicate_case(self):
+        # tap returns once the tap is dispatched, not once the server has recorded the grant. A
+        # case that launched on that alone would force-stop the probe the grant has to reach and
+        # count a launch whose probe stops at the prompt, never redelivering anything.
+        with self.assertRaisesRegex(
+                AssertionError, "AUTHORIZED",
+                msg="duplicate-delivery passed on a device where answering the Porter permission "
+                    "dialog never authorized the probe, so it counted a launch made before the "
+                    "grant it needs had landed"):
+            self.duplicate_device(self.PORTER_BINDER, "BACKEND PORTER",
+                                  "AUTHORIZED managerOperationDenied=true", "REDELIVERED",
+                                  self.USER_SERVICE,
+                                  on_tap=lambda device: None).run_case("duplicate-delivery")
 
     @patch.object(dualwire.time, "sleep")
     def test_a_redelivery_that_opened_a_second_connection_fails_the_duplicate_case(self, sleep):
