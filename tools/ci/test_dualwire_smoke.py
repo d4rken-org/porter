@@ -53,7 +53,7 @@ class ArgumentTest(unittest.TestCase):
         message = self.rejected("--case", "setup", "--case", "selection-prefers-porter")
         self.assertIn("shizuku-permission-lifecycle", message)
 
-    def test_a_selection_dropping_the_server_the_cold_start_case_kills_is_rejected(self):
+    def test_a_selection_dropping_the_server_secondary_before_delivery_kills_is_rejected(self):
         # secondary-before-delivery kills a Shizuku server and starts it again, and only
         # shizuku-permission-lifecycle installs Shizuku and brings one up in the first place.
         message = self.rejected("--case", "setup", "--case", "secondary-before-delivery")
@@ -562,7 +562,7 @@ class CaseBodyTest(unittest.TestCase):
         return device
 
     @patch.object(dualwire.time, "sleep")
-    def test_the_cold_start_case_pins_both_halves_of_the_secondary_delivery(self, sleep):
+    def test_secondary_before_delivery_pins_both_halves_of_the_delivery(self, sleep):
         self.assertEqual(self.secondary_device().run_case("secondary-before-delivery"),
                          {"secondary_pid": MockedDevice.SECONDARY,
                           "killed_server_pid": MockedDevice.SHIZUKU_SERVER})
