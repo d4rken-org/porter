@@ -35,3 +35,5 @@ manager/src/screenshotTest*/reference/
 # Python bytecode caches
 __pycache__/
 *.pyc
+/.pi/*
+!/.pi/settings.json
