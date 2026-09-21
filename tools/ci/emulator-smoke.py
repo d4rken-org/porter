@@ -30,6 +30,9 @@ DECISION_ALLOWED = 1 << 1
 DECISION_DENIED = 1 << 2
 SHIZUKU_API_VERSION = 13
 PAYLOAD = "porter-ci-shell-access"
+# NotificationChannels.ADB_START. Channel ids persist in the user's notification settings, so the
+# app cannot change this one either.
+NOTIFICATION_CHANNEL_ADB_START = "porter.adb_start"
 PORSH_DIR = "/data/local/tmp"
 # Comfortably past a 64 KiB pipe buffer, so a reader that never drains blocks the writer.
 PORSH_BULK = 4096 * 64

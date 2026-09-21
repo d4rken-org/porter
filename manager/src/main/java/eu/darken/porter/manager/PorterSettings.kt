@@ -123,12 +123,22 @@ object PorterSettings {
         return state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
     }
 
+    /**
+     * Blocking: SYNCHRONOUS makes the platform write package-restrictions.xml before returning,
+     * which is the point of passing it. Call it off the main thread.
+     *
+     * Without that flag the write is scheduled, and a reboot soon after the user made the choice
+     * comes back with the receiver at its manifest default of disabled. The flag arrived in API
+     * 30, so below that the window is still open and nothing here can close it.
+     */
     fun setStartOnBoot(context: Context, enable: Boolean) {
         val bootCompleteReceiver = ComponentName(context.packageName, BootCompleteReceiver::class.java.name)
+        var flags = PackageManager.DONT_KILL_APP
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) flags = flags or PackageManager.SYNCHRONOUS
         context.packageManager.setComponentEnabledSetting(
             bootCompleteReceiver,
             if (enable) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-            PackageManager.DONT_KILL_APP,
+            flags,
         )
         preferences.edit().putBoolean(Keys.KEY_START_ON_BOOT, enable).apply()
     }

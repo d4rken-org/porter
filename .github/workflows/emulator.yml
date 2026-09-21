@@ -101,3 +101,54 @@ jobs:
             build/emulator-results/
             probe/build/outputs/mapping/bridgeRelease/mapping.txt
           if-no-files-found: warn
+
+  boot:
+    name: boot (Android ${{ matrix.api }})
+    runs-on: ubuntu-latest
+    # Three reboots, each of which has to come all the way back up before the case can judge it.
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [30, 36]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: ./.github/actions/sdk-branch
+      - uses: ./.github/actions/android-setup
+      - name: Build test APKs
+        run: ./gradlew :manager:assembleFossDebug :probe:assemblePorterDebug
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Install emulator packages
+        env:
+          EMULATOR_API: ${{ matrix.api }}
+        run: python3 tools/ci/install-sdk.py platform-tools "platforms;android-$EMULATOR_API" emulator "system-images;android-$EMULATOR_API;google_apis;x86_64"
+      - name: Start Porter from the app and reboot
+        uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d #v2.38.0
+        with:
+          api-level: ${{ matrix.api }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          avd-name: porter-ci
+          emulator-port: 5554
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: >-
+            python3 tools/ci/boot-smoke.py --serial emulator-5554
+            --manager manager/build/outputs/apk/foss/debug/*.apk
+            --native probe/build/outputs/apk/porter/debug/*.apk
+            --output build/emulator-results
+      - name: Upload device test evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+        with:
+          name: porter-boot-api-${{ matrix.api }}
+          path: build/emulator-results/
+          if-no-files-found: warn
