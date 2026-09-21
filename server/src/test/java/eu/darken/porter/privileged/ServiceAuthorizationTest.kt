@@ -19,6 +19,7 @@ import eu.darken.porter.common.DiscoveredApplication
 import eu.darken.porter.common.GlobalAccess
 import eu.darken.porter.common.UserServiceLaunch
 import eu.darken.porter.common.util.OsUtils
+import eu.darken.porter.core.CallerExemption
 import eu.darken.porter.core.CallerIdentity
 import eu.darken.porter.core.ClientCallback
 import eu.darken.porter.endpoint.PorterClientCallback
@@ -254,7 +255,7 @@ class ServiceAuthorizationTest {
         assertTrue(service.isManager(CallerIdentity(MANAGER_UID, CLIENT_PID)))
         ShadowBinder.setCallingUid(elsewhere.uid)
         assertThrows(SecurityException::class.java) { service.managerEndpoint.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION) }
-        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("getUid", elsewhere) }
+        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("getUid", elsewhere, CallerExemption.None) }
     }
 
     /** Holding the Android permission is what gets a binder delivered; it admits nothing by itself. */
@@ -262,7 +263,7 @@ class ServiceAuthorizationTest {
     fun anUnattachedCallerHoldingThePermissionIsRefused() {
         `when`(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null)
         activityMocks.`when`<Int> { ActivityManagerApis.checkPermission(ServerConstants.PERMISSION, CLIENT_PID, CLIENT_UID) }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("transactRemote", CallerIdentity(CLIENT_UID, CLIENT_PID)) }
+        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("transactRemote", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None) }
     }
 
     @Test
@@ -272,7 +273,7 @@ class ServiceAuthorizationTest {
         assertFalse(client.allowed)
         verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION or ShizukuConfig.FLAG_PENDING_COMPANION, 0)
         verify(userServices).removeUserServicesForPackage(client.packageName)
-        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("client operation", CallerIdentity(CLIENT_UID, CLIENT_PID)) }
+        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("client operation", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None) }
     }
 
     @Test
@@ -282,7 +283,7 @@ class ServiceAuthorizationTest {
         assertTrue(client.allowed)
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt())
         verifyNoInteractions(userServices)
-        service.core.enforceCallingPermission("client operation", CallerIdentity(CLIENT_UID, CLIENT_PID))
+        service.core.enforceCallingPermission("client operation", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None)
     }
 
     @Test
@@ -494,7 +495,7 @@ class ServiceAuthorizationTest {
         permissionMocks.verify({ PermissionManagerApis.grantRuntimePermission(anyString(), anyString(), anyInt()) }, never())
         assertFalse(client.allowed)
         ShadowBinder.setCallingUid(CLIENT_UID)
-        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("client operation", CallerIdentity(CLIENT_UID, CLIENT_PID)) }
+        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("client operation", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None) }
     }
 
     @Test
@@ -596,12 +597,12 @@ class ServiceAuthorizationTest {
     @Test
     fun globalPauseBlocksEvenStaleAllowedRecordsAndRuntimePermissionFallback() {
         `when`(config.isAccessPaused).thenReturn(true)
-        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("transactRemote", CallerIdentity(CLIENT_UID, CLIENT_PID)) }
+        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("transactRemote", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None) }
         `when`(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null)
         activityMocks.`when`<Int> { ActivityManagerApis.checkPermission(ServerConstants.PERMISSION, CLIENT_PID, CLIENT_UID) }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("newProcess", CallerIdentity(CLIENT_UID, CLIENT_PID)) }
+        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("newProcess", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None) }
         ShadowBinder.setCallingUid(MANAGER_UID)
-        service.core.enforceCallingPermission("manager operation", CallerIdentity(MANAGER_UID, CLIENT_PID))
+        service.core.enforceCallingPermission("manager operation", CallerIdentity(MANAGER_UID, CLIENT_PID), CallerExemption.None)
     }
 
     @Test
@@ -832,13 +833,13 @@ class ServiceAuthorizationTest {
         val state = ArgumentCaptor.forClass(Bundle::class.java)
         verify(application).dispatchPermissionStateChanged(state.capture())
         assertFalse(state.value.getBoolean(PorterProtocol.REPLY_PERMISSION_GRANTED))
-        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("transactRemote", CallerIdentity(CLIENT_UID, CLIENT_PID)) }
+        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("transactRemote", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None) }
 
         service.setGlobalAccess(true)
         assertTrue(record.allowed)
         verify(application, times(2)).dispatchPermissionStateChanged(state.capture())
         assertTrue(state.value.getBoolean(PorterProtocol.REPLY_PERMISSION_GRANTED))
-        service.core.enforceCallingPermission("transactRemote", CallerIdentity(CLIENT_UID, CLIENT_PID))
+        service.core.enforceCallingPermission("transactRemote", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None)
     }
 
     private companion object {
