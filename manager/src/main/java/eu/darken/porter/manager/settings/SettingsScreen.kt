@@ -16,6 +16,7 @@ import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.IntegrationInstructions
 import androidx.compose.material.icons.twotone.Link
+import androidx.compose.material.icons.twotone.NotificationsOff
 import androidx.compose.material.icons.twotone.Palette
 import androidx.compose.material.icons.twotone.PlayArrow
 import androidx.compose.material.icons.twotone.RestartAlt
@@ -50,6 +51,7 @@ internal data class SettingsUiState(
     val themeColorEnabled: Boolean,
     val versionName: String,
     val showBatteryAction: Boolean = false,
+    val showAlertsAction: Boolean = false,
 )
 
 internal data class SettingsActions(
@@ -70,6 +72,7 @@ internal data class SettingsActions(
     val onAcknowledgements: () -> Unit,
     val onVersion: () -> Unit,
     val onBatteryOptimization: () -> Unit = {},
+    val onNotificationSettings: () -> Unit = {},
 )
 
 internal fun tcpPortIcon(needsRestart: Boolean): ImageVector =
@@ -93,6 +96,8 @@ internal fun SettingsScreenContent(state: SettingsUiState, actions: SettingsActi
                 onCheckedChange = actions.onAutoUpdateServiceChange)
             if (state.showBatteryAction) SettingsItem(stringResource(R.string.porter_background_operation), Icons.TwoTone.Info,
                 stringResource(R.string.snackbar_battery_optimization_home), onClick = actions.onBatteryOptimization)
+            if (state.showAlertsAction) SettingsItem(stringResource(R.string.settings_alerts_blocked_title), Icons.TwoTone.NotificationsOff,
+                stringResource(R.string.settings_alerts_blocked_summary), onClick = actions.onNotificationSettings)
             if (state.showPairingMethod) {
                 SettingsItem(stringResource(R.string.porter_pairing_method), Icons.TwoTone.Link,
                     state.pairingMethodLabel, onClick = actions.onPairingMethod)

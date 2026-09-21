@@ -120,6 +120,10 @@
     <string name="snackbar_battery_optimization_home">Battery optimization must be disabled for start on boot/watchdog to work properly.</string>
     <string name="snackbar_battery_optimization_settings">Please disable battery optimization to use this feature.</string>
     <string name="snackbar_action_fix">Fix</string>
+    <string name="settings_alerts_blocked_title">Background alerts</string>
+    <string name="settings_alerts_blocked_summary">Notifications from Porter are blocked, so start on boot and the watchdog cannot tell you when they need attention.</string>
+    <string name="settings_alerts_blocked_message">This feature reports what it is doing, and what went wrong, through a notification. Notifications from Porter are currently blocked, so it would run without telling you anything.</string>
+    <string name="settings_alerts_blocked_continue">Turn on anyway</string>
 
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter is already starting in the background</string>

@@ -20,6 +20,7 @@ import eu.darken.porter.manager.AppConstants
 import eu.darken.porter.manager.NotificationChannels
 
 import eu.darken.porter.manager.utils.DeviceCompatibility
+import eu.darken.porter.manager.utils.NotificationAlerts
 import eu.darken.porter.manager.utils.SettingsHelper
 import eu.darken.porter.manager.utils.SettingsPage
 
@@ -70,11 +71,8 @@ class AdbPairingTutorialActivity : ComposeActivity() {
             }
         }
     }
-    private fun isNotificationEnabled(): Boolean {
-        val nm = getSystemService(NotificationManager::class.java)
-        val channel = nm.getNotificationChannel(NotificationChannels.ADB_PAIRING)
-        return nm.areNotificationsEnabled() && (channel == null || channel.importance != NotificationManager.IMPORTANCE_NONE)
-    }
+    private fun isNotificationEnabled(): Boolean =
+        NotificationAlerts.canAlert(this, NotificationChannels.ADB_PAIRING)
     override fun onResume() {
         super.onResume()
         val enabled = isNotificationEnabled()
