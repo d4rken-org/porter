@@ -176,7 +176,7 @@ class DebugRecorder internal constructor(
      */
     private fun acquireDebugLease(events: File, remaining: Long) {
         fun note(what: String) = runCatching { events.appendText("$what at ${System.currentTimeMillis()}\n") }
-        val binder = Porter.getBinder()?.takeIf { it.pingBinder() }
+        val binder = Porter.connection.value?.takeIf { it.isAlive }?.binder
         if (binder == null) {
             note("Debug logging unavailable")
             return

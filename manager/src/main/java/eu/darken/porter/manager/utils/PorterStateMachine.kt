@@ -2,10 +2,14 @@ package eu.darken.porter.manager.utils
 
 import android.util.Log
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import eu.darken.porter.sdk.Porter
 
 class PorterStateMachine {
@@ -35,18 +39,23 @@ class PorterStateMachine {
     private val attached = AtomicBoolean(false)
 
     /**
-     * Registers the Porter binder callbacks. Explicit, and separate from construction: a second
-     * registration would double every transition, and merely holding an instance must not wire
+     * Main, and never immediate: the SDK publishes under its own lock, and a collector that ran
+     * inline would carry [transition] and every subscriber of [asFlow] into that lock.
+     */
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    /**
+     * Starts following the Porter connection. Explicit, and separate from construction: a second
+     * collector would double every transition, and merely holding an instance must not wire
      * anything up.
      */
     fun attachToShizuku() {
         if (!attached.compareAndSet(false, true)) return
-        Porter.addBinderReceivedListenerSticky(
-            Porter.OnBinderReceivedListener { set(State.RUNNING) }
-        )
-        Porter.addBinderDeadListener(
-            Porter.OnBinderDeadListener { setDead() }
-        )
+        scope.launch {
+            Porter.connection.collect { connection ->
+                if (connection != null) set(State.RUNNING) else setDead()
+            }
+        }
     }
 
     fun get(): State = current
@@ -75,7 +84,7 @@ class PorterStateMachine {
     }
 
     fun update(): State {
-        val state = if (Porter.pingBinder()) State.RUNNING else State.STOPPED
+        val state = if (Porter.connection.value?.isAlive == true) State.RUNNING else State.STOPPED
         set(state)
         return state
     }

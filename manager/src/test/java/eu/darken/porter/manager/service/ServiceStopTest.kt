@@ -47,7 +47,7 @@ class ServiceStopTest {
     }
 
     @After fun detachBinder() {
-        Porter.resetForTest()
+        Porter.onBinderReceived(null, "eu.darken.porter.manager")
         PorterStateMachine.instance.set(State.STOPPED)
     }
 

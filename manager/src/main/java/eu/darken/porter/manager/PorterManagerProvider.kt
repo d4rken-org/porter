@@ -31,8 +31,9 @@ class PorterManagerProvider : PorterApiProvider() {
                             withContext(workerHandler.asCoroutineDispatcher()) {
                                 try {
                                     val reply = Bundle()
-                                    Porter.attachUserService(binder, token)
-                                    reply.putBinder(PorterProtocol.DELIVERY_EXTRA_BINDER, Porter.getBinder())
+                                    val connection = Porter.connection.value ?: error("Porter is not running")
+                                    connection.attachUserService(binder, token)
+                                    reply.putBinder(PorterProtocol.DELIVERY_EXTRA_BINDER, connection.binder)
                                     reply
                                 } catch (e: Throwable) {
                                     LOGGER.e(e, "attachUserService $token")

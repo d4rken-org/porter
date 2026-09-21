@@ -1,7 +1,6 @@
 package eu.darken.porter.manager.service
 
 import android.content.Context
-import android.content.pm.PackageManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
@@ -16,6 +15,7 @@ import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.PorterSystemApis
 import eu.darken.porter.manager.utils.UserHandleCompat
 import eu.darken.porter.sdk.Porter
+import eu.darken.porter.sdk.PorterConnection
 
 internal data class ServiceSnapshot(
     val status: ServiceStatus = ServiceStatus(),
@@ -53,37 +53,36 @@ internal class ServiceStatusRepository private constructor(private val appContex
     fun refresh() {
         scope.launch {
             mutex.withLock {
-                val binder = Porter.getBinder()
-                val loaded = try { load() }
+                val connection = Porter.connection.value
+                val loaded = try { load(connection) }
                 catch (e: CancellationException) { throw e }
                 catch (e: Exception) { LOGGER.w(e, "Load service status"); ServiceStatus() }
-                status.value = if (binder == Porter.getBinder() && PorterStateMachine.instance.isRunning()) loaded else ServiceStatus()
+                status.value = if (connection === Porter.connection.value && PorterStateMachine.instance.isRunning()) loaded else ServiceStatus()
                 if (PorterStateMachine.instance.isRunning()) ServiceReplacement.get(appContext).reconcile()
             }
         }
     }
 
-    private fun load(): ServiceStatus {
-        if (!PorterStateMachine.instance.isRunning()) {
+    private fun load(connection: PorterConnection?): ServiceStatus {
+        if (!PorterStateMachine.instance.isRunning() || connection == null) {
             return ServiceStatus()
         }
 
-        val uid = Porter.getUid()
-        val protocolVersion = Porter.getServerProtocolVersion()
+        val uid = connection.uid
+        val protocolVersion = connection.serverInfo.version
         val seContext = try {
-            Porter.getSELinuxContext()
+            connection.seLinuxContext
         } catch (tr: Throwable) {
             LOGGER.w(tr, "getSELinuxContext")
             null
         }
-        val permissionTest =
-            Porter.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
+        val permissionTest = connection.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS")
 
         // Before a526d6bb, server will not exit on uninstall, manager installed later will get not permission
         // Run a random remote transaction here, report no permission as not running
         PorterSystemApis.instance.checkPermission(Manifest.permission.API_V23, appContext.packageName, 0)
         val info = try {
-            Porter.getBinder()?.let { ServerDiagnostics.readInfo(it) }
+            ServerDiagnostics.readInfo(connection.binder)
         } catch (e: Exception) {
             LOGGER.w(e, "Read Porter service version")
             null
@@ -101,7 +100,7 @@ internal class ServiceStatusRepository private constructor(private val appContex
         // start its eager status polling against the server this call is about to kill.
         fun stop() {
             PorterStateMachine.instance.set(PorterStateMachine.State.STOPPING)
-            runCatching { Porter.exit() }.onFailure { PorterStateMachine.instance.update() }
+            runCatching { Porter.connection.value?.exit() ?: error("Porter is not running") }.onFailure { PorterStateMachine.instance.update() }
         }
     }
 }

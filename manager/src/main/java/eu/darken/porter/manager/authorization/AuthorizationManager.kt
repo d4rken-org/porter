@@ -27,7 +27,7 @@ object AuthorizationManager {
             data.writeInterfaceToken(PorterProtocol.DESCRIPTOR)
             data.writeInt(userId)
             try {
-                Porter.getBinder()!!.transact(ServerConstants.BINDER_TRANSACTION_getApplications, data, reply, 0)
+                (Porter.connection.value?.binder ?: error("Porter is not running")).transact(ServerConstants.BINDER_TRANSACTION_getApplications, data, reply, 0)
             } catch (e: Throwable) {
                 throw RuntimeException(e)
             }
@@ -78,9 +78,9 @@ object AuthorizationManager {
         }
     }
 
-    fun getGlobalAccess(): Boolean? = globalAccess(Porter.getBinder() ?: error("Porter is not running"))
+    fun getGlobalAccess(): Boolean? = globalAccess(Porter.connection.value?.binder ?: error("Porter is not running"))
     fun setGlobalAccess(enabled: Boolean) {
-        setGlobalAccess(Porter.getBinder() ?: error("Porter is not running"), enabled)
+        setGlobalAccess(Porter.connection.value?.binder ?: error("Porter is not running"), enabled)
     }
 
     internal fun setGlobalAccess(binder: IBinder, enabled: Boolean) {
@@ -91,7 +91,7 @@ object AuthorizationManager {
     }
 
     fun discover(): Discovery {
-        val binder = Porter.getBinder() ?: throw IllegalStateException("Porter is not running")
+        val binder = Porter.connection.value?.binder ?: throw IllegalStateException("Porter is not running")
         readDiscovery(binder)?.let { return it }
         val apps = getPackages().mapNotNull { info ->
             val ai = info.applicationInfo ?: return@mapNotNull null
@@ -106,15 +106,17 @@ object AuthorizationManager {
 
     fun getPackages(): List<PackageInfo> = getApplications(-1)
 
+    private fun requireConnection() = Porter.connection.value ?: error("Porter is not running")
+
     fun granted(packageName: String, uid: Int): Boolean {
-        return (Porter.getFlagsForUid(uid, MASK_PERMISSION) and FLAG_ALLOWED) == FLAG_ALLOWED
+        return (requireConnection().getFlagsForUid(uid, MASK_PERMISSION) and FLAG_ALLOWED) == FLAG_ALLOWED
     }
 
     fun grant(packageName: String, uid: Int) {
-        Porter.updateFlagsForUid(uid, MASK_PERMISSION, FLAG_ALLOWED)
+        requireConnection().updateFlagsForUid(uid, MASK_PERMISSION, FLAG_ALLOWED)
     }
 
     fun revoke(packageName: String, uid: Int) {
-        Porter.updateFlagsForUid(uid, MASK_PERMISSION, 0)
+        requireConnection().updateFlagsForUid(uid, MASK_PERMISSION, 0)
     }
 }

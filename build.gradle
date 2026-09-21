@@ -24,6 +24,15 @@ subprojects { subproject ->
             }
         }
     }
+    // The SDK modules included from the api checkout pin their own Java target, so Kotlin follows
+    // whatever javac ends up with in each module rather than one number for the whole build.
+    plugins.withId("org.jetbrains.kotlin.android") {
+        afterEvaluate {
+            kotlin.compilerOptions.jvmTarget.set(
+                org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(android.compileOptions.targetCompatibility.majorVersion)
+            )
+        }
+    }
 }
 
 def versioning = new Properties()

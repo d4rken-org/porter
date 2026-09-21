@@ -21,7 +21,7 @@ internal object CompatibilityService {
     private val timer = Executors.newSingleThreadScheduledExecutor { r -> Thread(r, "porter-compat-timeout").apply { isDaemon = true } }
 
     fun request(operation: Int, snapshot: String? = null): Bundle {
-        val binder = Porter.getBinder() ?: error("Porter is not running")
+        val binder = Porter.connection.value?.binder ?: error("Porter is not running")
         val data = Parcel.obtain()
         val reply = Parcel.obtain()
         try {
@@ -40,7 +40,7 @@ internal object CompatibilityService {
     }
 
     suspend fun command(arguments: Array<String>, apk: File? = null): String = withContext(Dispatchers.IO) {
-        val binder = Porter.getBinder() ?: error("Porter is not running")
+        val binder = Porter.connection.value?.binder ?: error("Porter is not running")
         val process = IPorterService.Stub.asInterface(binder).newProcess(arguments, null, null)
         val stdout = ParcelFileDescriptor.AutoCloseInputStream(process.inputStream)
         val stderr = ParcelFileDescriptor.AutoCloseInputStream(process.errorStream)

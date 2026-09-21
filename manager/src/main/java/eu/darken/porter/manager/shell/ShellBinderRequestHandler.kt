@@ -15,7 +15,7 @@ object ShellBinderRequestHandler {
         }
 
         val binder = intent.getBundleExtra("data")?.getBinder("binder") ?: return false
-        val serverBinder = Porter.getBinder()
+        val serverBinder = Porter.connection.value?.binder
         if (serverBinder == null) {
             LOGGER.w("Binder not received or Porter service not running")
         }
