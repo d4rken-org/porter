@@ -444,11 +444,14 @@ class Smoke:
                 self.shell("am", "switch-user", "0", check=False)
                 self.until("user 0 is back on screen",
                            lambda: self.shell("am", "get-current-user", check=False) == "0", timeout=60)
-            for user in self.extra_users():
-                self.shell("pm", "remove-user", user, check=False)
-            # The framework tears a user down in the background, and the package removals that go
-            # with it land on the same packages the next case installs and launches.
-            self.until("the extra users are gone", lambda: not self.extra_users(), timeout=USER_REMOVAL_TIMEOUT)
+            # Asked again on every poll rather than once: a removal issued while the framework is
+            # still putting that user down is refused, and a refusal is not worth telling apart
+            # from a removal that has not landed yet.
+            def gone():
+                for user in self.extra_users():
+                    self.shell("pm", "remove-user", user, check=False)
+                return not self.extra_users()
+            self.until("the extra users are gone", gone, timeout=USER_REMOVAL_TIMEOUT)
         if "manager" in aspects and not self.installed(MANAGER):
             self.adb("install", str(self.args.manager.resolve()))
         if "probes" in aspects:
