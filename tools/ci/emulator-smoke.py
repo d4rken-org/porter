@@ -43,6 +43,7 @@ TRANSPORT_ATTEMPTS = 3
 TRANSPORT_BACKOFF = 2
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence", "porsh",
+         "server-crash-recovery", "root-server", "decisions-across-start-modes",
          "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
          "foreign-signer-peeks", "foreign-signer-binds", "foreign-signer-never-binds",
          "non-daemon-control",
@@ -299,9 +300,7 @@ class Smoke:
     def recording_size(self, path):
         return int(self.recording(f"stat -c %s {path} 2>/dev/null || echo 0") or 0)
 
-    def start_service(self, package=MANAGER):
-        name = "porter_server" if package == MANAGER else "shizuku_server"
-        previous = self.pid(name)
+    def starter_binary(self, package):
         apk = self.shell("pm", "path", package).removeprefix("package:").splitlines()[0]
         assert apk.startswith("/data/app/") and apk.endswith("/base.apk"), apk
         abi = self.shell("getprop", "ro.product.cpu.abi")
@@ -309,7 +308,17 @@ class Smoke:
         # Coexistence starts the original Shizuku from its own APK, which ships the upstream
         # starter name; only Porter's own package carries libporter.so.
         binary = "libporter.so" if package == MANAGER else "libshizuku.so"
-        self.shell(str(Path(apk).parent / "lib" / library_dir / binary))
+        return str(Path(apk).parent / "lib" / library_dir / binary)
+
+    def root_available(self):
+        """Whether this image's su lets the ADB shell become root, which the root cases need."""
+        return self.shell("su", "0", "id", "-u", check=False) == "0"
+
+    def start_service(self, package=MANAGER, root=False):
+        name = "porter_server" if package == MANAGER else "shizuku_server"
+        previous = self.pid(name)
+        starter = self.starter_binary(package)
+        self.shell(*(("su", "0", starter) if root else (starter,)))
         started = self.until(f"new {name} process",
                              lambda: (pid := self.pid(name)) and pid != previous and pid)
         # Returning on the pid alone is too early: the server is still loading native code out of
@@ -342,7 +351,7 @@ class Smoke:
     def server_log(self, pid):
         return self.adb("logcat", "-d", "--pid=" + pid, "-s", "Service:V", "*:S")
 
-    def launch_probe(self, package, daemon=False, peek=False):
+    def launch_probe(self, package, daemon=False, peek=False, server_uid="2000"):
         command = ["am", "start", "-W", "-n", package + "/eu.darken.porter.probe.ProbeActivity"]
         for name, value in (("daemon", daemon), ("peek", peek)):
             if value:
@@ -371,7 +380,7 @@ class Smoke:
         # Outside the retry on purpose: the activity ran, so a binder that never arrives is the
         # server or the client failing to hand it over, and relaunching would only hide that.
         version = PORTER_PROTOCOL_VERSION if package == NATIVE else SHIZUKU_API_VERSION
-        self.expect_log(package, f"BINDER uid=2000 version={version}")
+        self.expect_log(package, f"BINDER uid={server_uid} version={version}")
 
     def service_pids(self, package):
         return set(self.pid(package + ":porter-probe").split())
@@ -467,12 +476,19 @@ class Smoke:
         if "service" in aspects and not self.pid("porter_server"):
             self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
             self.start_service()
+        if "shell-service" in aspects:
+            # A root server left running would become the fixture for every case after this one,
+            # so this replaces whatever is there rather than only filling a gap.
+            self.shell("su", "0", "pkill", "-9", "-f", "porter_server", check=False)
+            self.until("the server is gone", lambda: not self.pid("porter_server"))
+            self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
+            self.start_service()
 
-    def authorized(self, package, require_manager_guard=True):
+    def authorized(self, package, require_manager_guard=True, server_uid="2000"):
         # The original Shizuku baseline does not enforce Porter's manager-only gate.
         result = "AUTHORIZED managerOperationDenied=" + ("true" if require_manager_guard else "")
         self.expect_log(package, result)
-        self.expect_log(package, "USER_SERVICE uid=2000 file=" + PAYLOAD)
+        self.expect_log(package, f"USER_SERVICE uid={server_uid} file=" + PAYLOAD)
         assert package + " FAILED" not in self.logs()
 
     def grant_and_revoke(self, package, permission, prompt_package=MANAGER):
@@ -816,6 +832,87 @@ class Smoke:
         # The five pre-existing cases leave grants and probe installations behind, so this block
         # establishes its own baseline instead of inheriting whichever one ran last.
         self.restore("probes", "grants")
+
+        def server_crash_recovery():
+            """A server killed outright, and the clients that outlive it."""
+            service_pid = self.authorized_daemon()
+            client_pid = self.probe_pid
+            server_pid = self.pid("porter_server")
+            manager_pid = self.pid(MANAGER)
+            boundary = len(self.logs())
+            self.shell("su", "0", "kill", "-9", server_pid)
+            self.until("the server is gone", lambda: not self.pid("porter_server"))
+
+            # The client process stays: what it loses is the connection, not its own life, so it
+            # has to be told rather than simply disappear with the server.
+            self.until("the client is told the connection died",
+                       lambda: NATIVE + " BINDER_DEAD" in self.logs()[boundary:])
+            assert self.pid(NATIVE) == client_pid, "the client died with the server"
+            self.until("the user service follows the server that hosted it",
+                       lambda: not self.pid(NATIVE + ":porter-probe"))
+            self.until("the manager calls it a crash",
+                       lambda: "PorterStateMachine: CRASHED" in
+                               self.adb("logcat", "-d", "--pid=" + manager_pid, "-s", "PorterStateMachine:D", "*:S"))
+
+            self.start_service()
+            # The same process, reconnected: a privileged call working again is the assertion, not
+            # a binder arriving. The grant is not asked for a second time because it was saved.
+            for message in (f"BINDER uid=2000 version={PORTER_PROTOCOL_VERSION}",
+                            "AUTHORIZED managerOperationDenied=true",
+                            "USER_SERVICE uid=2000 file=" + PAYLOAD):
+                self.until(f"after the restart: {message}",
+                           lambda m=message: NATIVE + " " + m in self.logs()[boundary:], timeout=60)
+            assert self.pid(NATIVE) == client_pid, "the client was replaced rather than reconnected"
+            assert self.pid("porter_server") != server_pid
+            return {"client_pid": client_pid, "server_pid": server_pid, "service_pid": service_pid}
+        self.case("server-crash-recovery", server_crash_recovery, restore=("probes", "grants", "service"))
+
+        def root_server():
+            """Everything the ADB-started server is asked for, asked of a uid 0 one."""
+            assert self.root_available(), "this image's su does not give the ADB shell root"
+            self.shell("su", "0", "pkill", "-9", "-f", "porter_server")
+            self.until("the shell server is gone", lambda: not self.pid("porter_server"))
+            self.start_service(root=True)
+            server_pid = self.pid("porter_server")
+            assert self.shell("su", "0", "stat", "-c", "%u", "/proc/" + server_pid) == "0"
+
+            self.launch_probe(NATIVE, daemon=True, server_uid="0")
+            self.allow_if_requested(screenshot="root-permission")
+            self.authorized(NATIVE, server_uid="0")
+            service_pid = self.until("privileged user service", lambda: self.pid(NATIVE + ":porter-probe"))
+            # The user service inherits the server's identity, so under root it reads the payload
+            # as root rather than as the shell.
+            assert self.shell("su", "0", "stat", "-c", "%u", "/proc/" + service_pid) == "0"
+            return {"server_pid": server_pid, "service_pid": service_pid}
+        self.case("root-server", root_server, restore=("probes", "grants", "shell-service"))
+
+        def decisions_across_start_modes():
+            """One decision database, written by a uid 0 server and read by a uid 2000 one."""
+            assert self.root_available(), "this image's su does not give the ADB shell root"
+            self.shell("su", "0", "pkill", "-9", "-f", "porter_server")
+            self.until("the shell server is gone", lambda: not self.pid("porter_server"))
+            self.start_service(root=True)
+
+            self.launch_probe(NATIVE, server_uid="0")
+            self.tap("Allow all the time", MANAGER)
+            self.authorized(NATIVE, server_uid="0")
+            uid = self.app_uid(NATIVE)
+            assert self.decision_flags(uid) & DECISION_ALLOWED, "the root server saved nothing"
+            # Root writes into the ADB shell's directory, so it hands the file back rather than
+            # leaving one the shell cannot open the next time Porter is started that way.
+            owner = self.shell("su", "0", "stat", "-c", "%U:%G", DECISIONS)
+            assert owner == "shell:shell", f"the root server left the database owned by {owner}"
+
+            self.shell("su", "0", "pkill", "-9", "-f", "porter_server")
+            self.until("the root server is gone", lambda: not self.pid("porter_server"))
+            self.start_service()
+            self.launch_probe(NATIVE)
+            # No prompt: an answer given under one start mode is still the answer under the other.
+            self.authorized(NATIVE)
+            assert self.decision_flags(uid) & DECISION_ALLOWED
+            return {"uid": uid, "owner": owner}
+        self.case("decisions-across-start-modes", decisions_across_start_modes,
+                  restore=("probes", "grants", "shell-service"))
 
         def daemon_host_uninstalled():
             service_pid = self.authorized_daemon()
