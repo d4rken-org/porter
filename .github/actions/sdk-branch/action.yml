@@ -1,17 +1,19 @@
 name: Paired SDK branch
-description: On a pull request, build against the porter-api branch of the same name when one exists
+description: Build against the porter-api branch named like the pull request or pushed branch when one exists
 runs:
   using: composite
   steps:
     # An app change that needs an SDK change is developed on a porter-api branch of the same name.
     # Building against that branch is what lets the device matrix exercise the pair before the SDK
-    # merges. A PR stacked on such a change pairs with its base branch's SDK branch; every other
-    # pull request, and every push, builds the pinned commit. The Submodule pin job still validates
-    # the committed pointer either way.
+    # merges. A push to that app branch pairs the same way, so the push and pull_request runs of one
+    # commit agree. A PR stacked on such a change pairs with its base branch's SDK branch; every
+    # other pull request, and every push to main, builds the pinned commit. The Submodule pin job
+    # still validates the committed pointer either way.
     - name: Pick the SDK commit to build against
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
+        PUSHED_REF: ${{ github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name || '' }}
         HEAD_REF: ${{ github.head_ref }}
         BASE_REF: ${{ github.base_ref }}
       run: |
@@ -34,7 +36,10 @@ runs:
         pin="$(git -C api rev-parse HEAD)"
         ref=
         reason=
-        if [ -n "$HEAD_REF" ] && sdk_branch_exists "$HEAD_REF"; then
+        if [ -n "$PUSHED_REF" ] && [ "$PUSHED_REF" != main ] && sdk_branch_exists "$PUSHED_REF"; then
+          ref="$PUSHED_REF"
+          reason="matches the pushed branch"
+        elif [ -n "$HEAD_REF" ] && sdk_branch_exists "$HEAD_REF"; then
           ref="$HEAD_REF"
           reason="matches this PR's head branch"
         elif [ -n "$BASE_REF" ] && [ "$BASE_REF" != main ] && sdk_branch_exists "$BASE_REF"; then
