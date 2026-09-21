@@ -245,7 +245,7 @@ dependencies {
     implementation project(":sdk")
     // Not for the manager's own calls: the server and the starter declare it compileOnly and load
     // moe.shizuku.api.BinderContainer out of this APK at runtime for Shizuku-wire delivery.
-    implementation project(":provider")
+    implementation project(":shizuku-compat")
 
     implementation libs.hidden.compat
     compileOnly libs.hidden.stub

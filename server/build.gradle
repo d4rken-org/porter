@@ -28,7 +28,7 @@ dependencies {
     implementation project(":aidl")
     implementation project(":common")
     implementation project(":shared")
-    compileOnly project(":provider")
+    compileOnly project(":shizuku-compat")
     implementation project(":starter")
     implementation project(":porsh")
     implementation project(":server-shared")
