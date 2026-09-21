@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,12 +25,19 @@ class SettingsViewModel @JvmOverloads constructor(
     private val savedState: SavedStateHandle,
     private val alertProbe: (Context, String) -> Boolean = { context, channel -> NotificationAlerts.canAlert(context, channel) },
     private val isTelevision: () -> Boolean = { EnvironmentUtils.isTelevision() },
+    /** Where the blocking part of a toggle runs; a test replaces it to make the write observable. */
+    private val io: CoroutineContext = Dispatchers.IO,
     private val rootProbe: suspend () -> Boolean = { withContext(Dispatchers.IO) { EnvironmentUtils.isRooted() } },
 ) : AndroidViewModel(application) {
     val dialog: StateFlow<String?> = savedState.getStateFlow("dialog", null)
     val pendingSetting: StateFlow<String?> = savedState.getStateFlow("pendingSetting", null)
 
     private val bootCapable = MutableStateFlow<Boolean?>(null)
+
+    private val saving = MutableStateFlow(false)
+
+    /** True while a toggle's write is on its way to disk, which the switches are disabled for. */
+    val busy: StateFlow<Boolean> = saving.asStateFlow()
 
     /** `null` until the probe below resolves, which leaves the start-on-boot toggle disabled. */
     val canBoot: StateFlow<Boolean?> = bootCapable.asStateFlow()
@@ -61,6 +69,9 @@ class SettingsViewModel @JvmOverloads constructor(
     }
 
     fun toggle(key: String, enabled: Boolean) {
+        // A toggle is in flight and its disk write has not returned; taking a second one now
+        // would overwrite the key that write is about to clear.
+        if (saving.value) return
         savedState["pendingSetting"] = key
         if (enabled && key == PorterSettings.Keys.KEY_START_ON_BOOT && !isTelevision() && Build.VERSION.SDK_INT < 33) {
             show("boot_warning")
@@ -111,11 +122,27 @@ class SettingsViewModel @JvmOverloads constructor(
     }
 
     fun cancelToggle() { savedState["pendingSetting"] = null; show(null) }
+
+    /**
+     * Off the main thread, because [PorterSettings.setStartOnBoot] writes to disk before it
+     * returns. The key is read once, here, so a toggle arriving while this one is on its way
+     * cannot redirect it; [toggle] refuses that toggle anyway.
+     */
     private fun applyToggle(enabled: Boolean) {
-        when (pendingSetting.value) {
-            PorterSettings.Keys.KEY_START_ON_BOOT -> PorterSettings.setStartOnBoot(getApplication(), enabled)
-            PorterSettings.Keys.KEY_WATCHDOG -> PorterSettings.setWatchdog(getApplication(), enabled)
+        val key = pendingSetting.value ?: return cancelToggle()
+        saving.value = true
+        viewModelScope.launch {
+            try {
+                withContext(io) {
+                    when (key) {
+                        PorterSettings.Keys.KEY_START_ON_BOOT -> PorterSettings.setStartOnBoot(getApplication(), enabled)
+                        PorterSettings.Keys.KEY_WATCHDOG -> PorterSettings.setWatchdog(getApplication(), enabled)
+                    }
+                }
+            } finally {
+                saving.value = false
+                cancelToggle()
+            }
         }
-        cancelToggle()
     }
 }

@@ -58,6 +58,7 @@ class SettingsActivity : ComposeActivity() {
         val values = remember(revision) { preferences.all }
         val dialog by model.dialog.collectAsStateWithLifecycle()
         val canBoot by model.canBoot.collectAsStateWithLifecycle()
+        val togglesBusy by model.busy.collectAsStateWithLifecycle()
         val mode = (values[PorterSettings.Keys.KEY_NIGHT_MODE] as? Int ?: -1).toString()
         val style = values[PorterSettings.Keys.KEY_THEME_STYLE] as? String ?: "DEFAULT"
         val color = values[PorterSettings.Keys.KEY_THEME_COLOR] as? String ?: "BLUE"
@@ -77,6 +78,7 @@ class SettingsActivity : ComposeActivity() {
             SettingsUiState(
                 startOnBoot = PorterSettings.isStartOnBoot(this@SettingsActivity),
                 startOnBootEnabled = canBoot == true,
+                togglesBusy = togglesBusy,
                 watchdog = values[PorterSettings.Keys.KEY_WATCHDOG] as? Boolean ?: false,
                 autoUpdateService = values[PorterSettings.Keys.KEY_AUTO_UPDATE_SERVICE] as? Boolean ?: false,
                 autoUpdateServiceEnabled = UserHandleCompat.myUserId() == 0,

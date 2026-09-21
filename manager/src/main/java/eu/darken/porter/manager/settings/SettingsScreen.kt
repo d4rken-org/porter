@@ -37,6 +37,7 @@ import eu.darken.porter.manager.ui.SettingsSwitch
 internal data class SettingsUiState(
     val startOnBoot: Boolean,
     val startOnBootEnabled: Boolean,
+    val togglesBusy: Boolean = false,
     val watchdog: Boolean,
     val autoUpdateService: Boolean,
     val autoUpdateServiceEnabled: Boolean,
@@ -84,12 +85,12 @@ internal fun SettingsScreenContent(state: SettingsUiState, actions: SettingsActi
         Column(modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState())) {
             SettingsCategory(stringResource(R.string.porter_startup))
             SettingsSwitch(stringResource(R.string.settings_start_on_boot), Icons.TwoTone.PlayArrow,
-                state.startOnBoot, enabled = state.startOnBootEnabled,
+                state.startOnBoot, enabled = state.startOnBootEnabled && !state.togglesBusy,
                 summary = if (state.startOnBootEnabled) null else stringResource(R.string.settings_start_on_boot_summary),
                 onCheckedChange = actions.onStartOnBootChange)
             SettingsSwitch(stringResource(R.string.settings_watchdog), Icons.TwoTone.Autorenew,
                 state.watchdog, stringResource(R.string.settings_watchdog_summary),
-                onCheckedChange = actions.onWatchdogChange)
+                enabled = !state.togglesBusy, onCheckedChange = actions.onWatchdogChange)
             SettingsSwitch(stringResource(R.string.porter_service_auto_update), Icons.TwoTone.SystemUpdate,
                 state.autoUpdateService, enabled = state.autoUpdateServiceEnabled,
                 summary = stringResource(if (state.autoUpdateServiceEnabled) R.string.porter_service_auto_update_summary else R.string.porter_service_update_primary),
