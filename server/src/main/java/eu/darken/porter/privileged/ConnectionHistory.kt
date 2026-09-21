@@ -11,6 +11,7 @@ import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
 import org.json.JSONArray
 import org.json.JSONObject
+import org.json.JSONTokener
 
 internal class ConnectionHistory(path: File) {
 
@@ -27,7 +28,19 @@ internal class ConnectionHistory(path: File) {
 
     init {
         try {
-            val items = JSONArray(String(file.readFully(), StandardCharsets.UTF_8))
+            val items = when (val stored = JSONTokener(String(file.readFully(), StandardCharsets.UTF_8)).nextValue()) {
+                // The first format was the bare array.
+                is JSONArray -> stored
+                // get, not getInt: getInt would read 1.5 or a wrapped long as 1.
+                is JSONObject -> when (val version = stored.get("version")) {
+                    VERSION -> stored.getJSONArray("connections")
+                    else -> {
+                        Log.w(TAG, "Connection history version $version is not the supported $VERSION; starting empty")
+                        JSONArray()
+                    }
+                }
+                else -> throw IllegalArgumentException("Unexpected connection history: $stored")
+            }
             for (i in 0 until items.length()) {
                 val item = items.getJSONObject(i)
                 records[item.getString("key")] = Record(item.getInt("uid"), item.getLong("installed"), item.getLong("connected"))
@@ -80,8 +93,9 @@ internal class ConnectionHistory(path: File) {
                         .put("installed", record.installedAt).put("connected", record.connectedAt),
                 )
             }
+            val envelope = JSONObject().put("version", VERSION).put("connections", items)
             stream = file.startWrite()
-            stream.write(items.toString().toByteArray(StandardCharsets.UTF_8))
+            stream.write(envelope.toString().toByteArray(StandardCharsets.UTF_8))
             if (Process.myUid() == 0) Os.fchown(stream.fd, 2000, 2000)
             Os.fchmod(stream.fd, 0x180 /* 0600 */)
             file.finishWrite(stream)
@@ -93,6 +107,7 @@ internal class ConnectionHistory(path: File) {
 
     private companion object {
         const val TAG = "PorterConnections"
+        const val VERSION = 1
 
         fun key(info: PackageInfo): String = (info.applicationInfo!!.uid / 100000).toString() + ":" + info.packageName
     }

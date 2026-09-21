@@ -2,6 +2,7 @@ package eu.darken.porter.privileged
 
 import android.system.Os
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -88,6 +89,36 @@ class ConnectionHistoryTest {
         assertEquals(0, history.get(app))
         history.connected(app, 1234)
         assertEquals(1234, ConnectionHistory(file).get(app))
+    }
+
+    @Test
+    fun theFirstBareArrayFormatStillLoads() {
+        ShadowProcess.setUid(2000)
+        val file = temporary.newFile("connections.json")
+        Files.writeString(file.toPath(), """[{"key":"0:example","uid":10123,"installed":500,"connected":1234}]""")
+        val app = installedApp("example", 10123)
+        app.firstInstallTime = 500
+        val history = ConnectionHistory(file)
+        assertEquals(1234, history.get(app))
+        history.connected(app, 2000)
+        assertTrue(Files.readString(file.toPath()).startsWith("{\"version\":1,"))
+        assertEquals(2000, ConnectionHistory(file).get(app))
+    }
+
+    @Test
+    fun anUnsupportedVersionStartsEmptyWithoutBreakingNewConnections() {
+        ShadowProcess.setUid(2000)
+        val record = """[{"key":"0:example","uid":10123,"installed":500,"connected":1234}]"""
+        for (version in listOf("2", "1.5", "4294967297", "\"1\"", "null")) {
+            val file = File(temporary.root, "connections-$version.json")
+            Files.writeString(file.toPath(), """{"version":$version,"connections":$record}""")
+            val app = installedApp("example", 10123)
+            app.firstInstallTime = 500
+            val history = ConnectionHistory(file)
+            assertEquals(version, 0, history.get(app))
+            history.connected(app, 2000)
+            assertEquals(version, 2000, ConnectionHistory(file).get(app))
+        }
     }
 
     @Test
