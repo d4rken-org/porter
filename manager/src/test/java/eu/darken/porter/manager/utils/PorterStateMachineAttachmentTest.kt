@@ -34,13 +34,19 @@ class PorterStateMachineAttachmentTest {
             if (code != IBinder.FIRST_CALL_TRANSACTION + ATTACH) return false
             data.enforceInterface(PorterProtocol.DESCRIPTOR)
             reply!!.writeNoException()
-            reply.writeTypedObject(Bundle(), 0)
+            reply.writeTypedObject(versionedReply(), 0)
             return true
         }
 
         companion object {
             /** IPorterService.attach, whose explicit AIDL id is 1. */
             private const val ATTACH = 1
+
+            /** The least a reply has to say for the SDK to keep the connection. */
+            fun versionedReply(): Bundle = Bundle().apply {
+                putInt(PorterProtocol.REPLY_PROTOCOL_VERSION, PorterProtocol.VERSION)
+                putInt(PorterProtocol.REPLY_MIN_PROTOCOL_VERSION, PorterProtocol.MIN_VERSION)
+            }
         }
     }
 

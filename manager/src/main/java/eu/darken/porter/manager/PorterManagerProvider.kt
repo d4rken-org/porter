@@ -2,7 +2,6 @@ package eu.darken.porter.manager
 
 import android.os.Bundle
 import eu.darken.porter.protocol.PorterProtocol
-import eu.darken.porter.sdk.Porter
 import eu.darken.porter.sdk.PorterApiProvider
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.flow.first
@@ -19,6 +18,12 @@ class PorterManagerProvider : PorterApiProvider() {
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
         if (extras == null) return null
 
+        // Held before the SDK decides whether it can speak to the server: the manager's own
+        // operations must reach a server the SDK refuses as well.
+        if (method == PorterProtocol.DELIVERY_METHOD_SEND_BINDER) {
+            extras.getBinder(PorterProtocol.DELIVERY_EXTRA_BINDER)?.let { ServerBinder.deliver(it) }
+        }
+
         return if (method == PorterProtocol.DELIVERY_METHOD_SEND_USER_SERVICE) {
             try {
                 val token = extras.getString(PorterProtocol.USER_SERVICE_TOKEN) ?: return null
@@ -31,9 +36,8 @@ class PorterManagerProvider : PorterApiProvider() {
                             withContext(workerHandler.asCoroutineDispatcher()) {
                                 try {
                                     val reply = Bundle()
-                                    val connection = Porter.connection.value ?: error("Porter is not running")
-                                    connection.attachUserService(binder, token)
-                                    reply.putBinder(PorterProtocol.DELIVERY_EXTRA_BINDER, connection.binder)
+                                    ServerBinder.manager().attachUserService(binder, token)
+                                    reply.putBinder(PorterProtocol.DELIVERY_EXTRA_BINDER, ServerBinder.require())
                                     reply
                                 } catch (e: Throwable) {
                                     LOGGER.e(e, "attachUserService $token")

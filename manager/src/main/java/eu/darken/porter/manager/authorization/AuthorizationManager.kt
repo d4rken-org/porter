@@ -1,24 +1,20 @@
 package eu.darken.porter.manager.authorization
 
-import android.content.Context
 import android.content.pm.PackageInfo
 import android.os.IBinder
+import android.os.Parcel
+import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.common.DiscoveredApplication
 import eu.darken.porter.common.GlobalAccess
-import android.os.Parcel
-import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.Manifest
+import eu.darken.porter.manager.ServerBinder
+import eu.darken.porter.manager.protocol.PorterManagerProtocol.FLAG_ALLOWED
+import eu.darken.porter.manager.protocol.PorterManagerProtocol.MASK_PERMISSION
 import eu.darken.porter.privileged.ServerConstants
-import rikka.parcelablelist.ParcelableListSlice
 import eu.darken.porter.protocol.PorterProtocol
-import eu.darken.porter.sdk.Porter
-import java.util.*
+import rikka.parcelablelist.ParcelableListSlice
 
 object AuthorizationManager {
-
-    private const val FLAG_ALLOWED = 1 shl 1
-    private const val FLAG_DENIED = 1 shl 2
-    private const val MASK_PERMISSION = FLAG_ALLOWED or FLAG_DENIED
 
     private fun getApplications(userId: Int): List<PackageInfo> {
         val data = Parcel.obtain()
@@ -27,7 +23,7 @@ object AuthorizationManager {
             data.writeInterfaceToken(PorterProtocol.DESCRIPTOR)
             data.writeInt(userId)
             try {
-                (Porter.connection.value?.binder ?: error("Porter is not running")).transact(ServerConstants.BINDER_TRANSACTION_getApplications, data, reply, 0)
+                ServerBinder.require().transact(AppTransactions.GET_APPLICATIONS, data, reply, 0)
             } catch (e: Throwable) {
                 throw RuntimeException(e)
             }
@@ -78,9 +74,9 @@ object AuthorizationManager {
         }
     }
 
-    fun getGlobalAccess(): Boolean? = globalAccess(Porter.connection.value?.binder ?: error("Porter is not running"))
+    fun getGlobalAccess(): Boolean? = globalAccess(ServerBinder.require())
     fun setGlobalAccess(enabled: Boolean) {
-        setGlobalAccess(Porter.connection.value?.binder ?: error("Porter is not running"), enabled)
+        setGlobalAccess(ServerBinder.require(), enabled)
     }
 
     internal fun setGlobalAccess(binder: IBinder, enabled: Boolean) {
@@ -91,11 +87,10 @@ object AuthorizationManager {
     }
 
     fun discover(): Discovery {
-        val binder = Porter.connection.value?.binder ?: throw IllegalStateException("Porter is not running")
-        readDiscovery(binder)?.let { return it }
+        readDiscovery(ServerBinder.require())?.let { return it }
         val apps = getPackages().mapNotNull { info ->
             val ai = info.applicationInfo ?: return@mapNotNull null
-            val declaredApis = (if (info.requestedPermissions?.contains(Manifest.permission.API_V23) == true) DiscoveredApplication.API_PORTER else 0) or
+            val declaredApis = (if (info.requestedPermissions?.contains(Manifest.permission.API) == true) DiscoveredApplication.API_PORTER else 0) or
                 (if (info.requestedPermissions?.contains(ServerConstants.LEGACY_PERMISSION) == true) DiscoveredApplication.API_SHIZUKU else 0)
             DiscoveredApplication(ai, ai.uid / 100000, declaredApis,
                 if (granted(info.packageName, ai.uid)) DiscoveredApplication.ALLOWED else DiscoveredApplication.DEFAULT,
@@ -106,17 +101,15 @@ object AuthorizationManager {
 
     fun getPackages(): List<PackageInfo> = getApplications(-1)
 
-    private fun requireConnection() = Porter.connection.value ?: error("Porter is not running")
-
     fun granted(packageName: String, uid: Int): Boolean {
-        return (requireConnection().getFlagsForUid(uid, MASK_PERMISSION) and FLAG_ALLOWED) == FLAG_ALLOWED
+        return (ServerBinder.manager().getFlagsForUid(uid, MASK_PERMISSION) and FLAG_ALLOWED) == FLAG_ALLOWED
     }
 
     fun grant(packageName: String, uid: Int) {
-        requireConnection().updateFlagsForUid(uid, MASK_PERMISSION, FLAG_ALLOWED)
+        ServerBinder.manager().updateFlagsForUid(uid, MASK_PERMISSION, FLAG_ALLOWED)
     }
 
     fun revoke(packageName: String, uid: Int) {
-        requireConnection().updateFlagsForUid(uid, MASK_PERMISSION, 0)
+        ServerBinder.manager().updateFlagsForUid(uid, MASK_PERMISSION, 0)
     }
 }

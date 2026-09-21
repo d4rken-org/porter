@@ -1,6 +1,5 @@
 package eu.darken.porter.manager.authorization
 
-import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +15,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import eu.darken.porter.protocol.PorterProtocol.PERMISSION_CONFIRMATION_ALLOWED
-import eu.darken.porter.protocol.PorterProtocol.PERMISSION_CONFIRMATION_ONETIME
 
 internal class FakePermissionGateway(
     val service: MutableStateFlow<State> = MutableStateFlow(State.RUNNING),
@@ -37,8 +34,8 @@ internal class FakePermissionGateway(
         failCheck?.let { throw it }
         return canGrant
     }
-    override fun dispatch(uid: Int, pid: Int, code: Int, data: Bundle) {
-        replies += Reply(uid, pid, code, data.getBoolean(PERMISSION_CONFIRMATION_ALLOWED), data.getBoolean(PERMISSION_CONFIRMATION_ONETIME))
+    override fun dispatch(uid: Int, pid: Int, code: Int, allowed: Boolean, onetime: Boolean) {
+        replies += Reply(uid, pid, code, allowed, onetime)
         dispatchFailure?.let { throw it }
     }
 }

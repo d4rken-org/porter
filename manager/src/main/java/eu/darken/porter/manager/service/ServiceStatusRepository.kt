@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import eu.darken.porter.manager.Manifest
+import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.model.PorterServiceVersion
 import eu.darken.porter.manager.model.ServiceStatus
 import eu.darken.porter.manager.starter.ServiceReplacement
@@ -80,7 +81,7 @@ internal class ServiceStatusRepository private constructor(private val appContex
 
         // Before a526d6bb, server will not exit on uninstall, manager installed later will get not permission
         // Run a random remote transaction here, report no permission as not running
-        PorterSystemApis.instance.checkPermission(Manifest.permission.API_V23, appContext.packageName, 0)
+        PorterSystemApis.instance.checkPermission(Manifest.permission.API, appContext.packageName, 0)
         val info = try {
             ServerDiagnostics.readInfo(connection.binder)
         } catch (e: Exception) {
@@ -100,7 +101,7 @@ internal class ServiceStatusRepository private constructor(private val appContex
         // start its eager status polling against the server this call is about to kill.
         fun stop() {
             PorterStateMachine.instance.set(PorterStateMachine.State.STOPPING)
-            runCatching { Porter.connection.value?.exit() ?: error("Porter is not running") }.onFailure { PorterStateMachine.instance.update() }
+            runCatching { ServerBinder.manager().exit() }.onFailure { PorterStateMachine.instance.update() }
         }
     }
 }

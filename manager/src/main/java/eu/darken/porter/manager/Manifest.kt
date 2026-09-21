@@ -7,6 +7,6 @@ object Manifest {
     }
 
     object permission {
-        const val API_V23 = "eu.darken.porter.permission.API_V23"
+        const val API = "eu.darken.porter.permission.API"
     }
 }

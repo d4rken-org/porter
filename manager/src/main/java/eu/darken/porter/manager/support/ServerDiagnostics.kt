@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcel
 import android.os.ParcelFileDescriptor
+import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.common.PorterBuildIdentity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,11 +15,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import eu.darken.porter.manager.PorterSettings
+import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.model.PorterServiceVersion
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.sdk.Porter
 import eu.darken.porter.server.IPorterRemoteProcess
-import eu.darken.porter.server.IPorterService
 import eu.darken.porter.privileged.ServerConstants
 import java.io.File
 import java.io.InputStream
@@ -46,7 +47,7 @@ internal object ServerDiagnostics {
         val reply = Parcel.obtain()
         try {
             request.writeInterfaceToken(PorterProtocol.DESCRIPTOR)
-            if (!binder.transact(ServerConstants.BINDER_TRANSACTION_getDiagnostics, request, reply, 0)) return null
+            if (!binder.transact(AppTransactions.GET_DIAGNOSTICS, request, reply, 0)) return null
             reply.readException()
             val pid = reply.readInt().also { check(it > 0) }
             // Older Porter services return only the PID.
@@ -92,7 +93,7 @@ internal object ServerDiagnostics {
             // A service that does not know the code answers false. A service that refuses the call
             // throws out of readException instead, which is a different thing and must not be
             // reported as "unsupported".
-            if (!binder.transact(ServerConstants.BINDER_TRANSACTION_setDebugLogging, request, reply, 0)) return null
+            if (!binder.transact(AppTransactions.SET_DEBUG_LOGGING, request, reply, 0)) return null
             reply.readException()
             return reply.readLong()
         } finally {
@@ -105,13 +106,17 @@ internal object ServerDiagnostics {
         val details = File(directory, "server-$phase.txt")
         try {
             details.writeText("Time: ${System.currentTimeMillis()}\nBoot start: ${PorterSettings.preferences.getBoolean("start_on_boot", false)}\nWatchdog: ${PorterSettings.watchdog}\n")
-            val connection = Porter.connection.value
-            if (connection == null || !connection.isAlive) {
+            val binder = ServerBinder.binder.value?.takeIf { it.pingBinder() }
+            if (binder == null) {
                 details.appendText("Porter service unavailable\n")
                 return
             }
-            val binder = connection.binder
-            details.appendText("UID: ${connection.uid}\nProtocol: ${connection.serverInfo.version}\nSELinux: ${connection.seLinuxContext}\n")
+            val connection = Porter.connection.value?.takeIf { it.binder === binder }
+            if (connection != null) {
+                details.appendText("UID: ${connection.uid}\nProtocol: ${connection.serverInfo.version}\nSELinux: ${connection.seLinuxContext}\n")
+            } else {
+                details.appendText("SDK connection: none (${Porter.incompatibility ?: "not attached"})\n")
+            }
             val info = readInfo(binder) ?: error("Service diagnostics unsupported")
             details.appendText("PID: ${info.pid}\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nInstalled build: ${PorterServiceVersion.installed.buildId}\nService build: ${info.version?.buildId ?: "unknown"}\n")
             info.reconciler?.let {
@@ -160,7 +165,7 @@ internal object ServerDiagnostics {
         var error: InputStream? = null
         var drain: Job? = null
         try {
-            val binder = Porter.connection.value?.takeIf { it.isAlive }?.binder
+            val binder = ServerBinder.binder.value?.takeIf { it.pingBinder() }
             if (binder == null) {
                 runCatching { notes.appendText("Porter service unavailable\n") }
                 return null
@@ -170,7 +175,7 @@ internal object ServerDiagnostics {
                 runCatching { notes.appendText("Service diagnostics unsupported\n") }
                 return null
             }
-            val process = IPorterService.Stub.asInterface(binder)
+            val process = ServerBinder.managerOf(binder)
                 .newProcess(arrayOf("sh", "-c", supervisor(pid)), null, null).also { remote = it }
             val output = ParcelFileDescriptor.AutoCloseInputStream(process.inputStream).also { input = it }
             val errors = ParcelFileDescriptor.AutoCloseInputStream(process.errorStream).also { error = it }

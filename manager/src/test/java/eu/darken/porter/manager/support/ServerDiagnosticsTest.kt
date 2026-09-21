@@ -10,6 +10,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import eu.darken.porter.protocol.PorterProtocol
+import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.privileged.ServerConstants
 
 /** Parses the manager-only diagnostics reply from current, older and misbehaving services. */
@@ -21,7 +22,7 @@ class ServerDiagnosticsTest {
     /** A service whose diagnostics transaction writes [reply]; every other code is unsupported. */
     private fun service(write: Parcel.() -> Unit) = object : Binder() {
         override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
-            if (code != ServerConstants.BINDER_TRANSACTION_getDiagnostics) return super.onTransact(code, data, reply, flags)
+            if (code != AppTransactions.GET_DIAGNOSTICS) return super.onTransact(code, data, reply, flags)
             data.enforceInterface(descriptor)
             reply!!.write()
             return true
@@ -101,7 +102,7 @@ class ServerDiagnosticsTest {
     /** A service whose debug-logging transaction grants [granted]; every other code is unsupported. */
     private fun leasing(granted: Long) = object : Binder() {
         override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
-            if (code != ServerConstants.BINDER_TRANSACTION_setDebugLogging) return super.onTransact(code, data, reply, flags)
+            if (code != AppTransactions.SET_DEBUG_LOGGING) return super.onTransact(code, data, reply, flags)
             data.enforceInterface(descriptor)
             assertNotNull(data.readStrongBinder())
             requested = data.readLong()

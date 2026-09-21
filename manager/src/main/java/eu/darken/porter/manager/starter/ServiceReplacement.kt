@@ -15,11 +15,11 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import eu.darken.porter.manager.PorterSettings
+import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.model.PorterServiceVersion
 import eu.darken.porter.manager.support.ServerDiagnostics
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.UserHandleCompat
-import eu.darken.porter.sdk.Porter
 import eu.darken.porter.server.IPorterRemoteProcess
 import eu.darken.porter.server.IPorterService
 import java.io.File
@@ -80,14 +80,14 @@ internal class ServiceReplacer(
 }
 
 private suspend fun launchReplacementStarter(binder: IBinder, previousPid: Int, apk: File, starter: File) {
-    val process = IPorterService.Stub.asInterface(binder).newProcess(
+    val process = ServerBinder.managerOf(binder).newProcess(
         arrayOf(starter.absolutePath, "--apk=${apk.absolutePath}", "--replace=$previousPid"), null, null)
     awaitReplacementStarter(process)
 }
 
 internal class ServiceReplacement internal constructor(
     private val appContext: Context,
-    private val currentBinder: () -> IBinder? = { Porter.connection.value?.binder },
+    private val currentBinder: () -> IBinder? = { ServerBinder.binder.value },
     private val readInfo: (IBinder) -> ServerDiagnostics.Info? = ServerDiagnostics::readInfo,
     private val readUid: (IBinder) -> Int = { IPorterService.Stub.asInterface(it).uid },
     private val launch: suspend (IBinder, Int, File, File) -> Unit = ::launchReplacementStarter,
@@ -121,7 +121,7 @@ internal class ServiceReplacement internal constructor(
         scope.launch {
             controller.reconcile {
                 withContext(Dispatchers.IO) {
-                    runCatching { Porter.connection.value?.binder?.let { ServerDiagnostics.readInfo(it)?.version?.matches(PorterServiceVersion.installed) } == true }.getOrDefault(false)
+                    runCatching { ServerBinder.binder.value?.let { ServerDiagnostics.readInfo(it)?.version?.matches(PorterServiceVersion.installed) } == true }.getOrDefault(false)
                 }
             }
         }

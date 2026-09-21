@@ -46,7 +46,7 @@
     <uses-permission android:name="eu.darken.porter.permission.MANAGER" />
 
     <permission
-        android:name="eu.darken.porter.permission.API_V23"
+        android:name="eu.darken.porter.permission.API"
         android:description="@string/permission_description"
         android:icon="@drawable/ic_system_icon"
         android:label="@string/permission_label"
