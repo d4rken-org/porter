@@ -27,6 +27,7 @@ import eu.darken.porter.endpoint.PorterManagerEndpoint
 import eu.darken.porter.porsh.PorshConfig
 import eu.darken.porter.privileged.ServerConstants.PERMISSION
 import eu.darken.porter.privileged.util.Android17Compat
+import eu.darken.porter.privileged.util.ForegroundUser
 import eu.darken.porter.privileged.util.InstalledPackagesCompat
 import eu.darken.porter.privileged.util.PackageIdentity
 import eu.darken.porter.protocol.PorterProtocol
@@ -65,6 +66,8 @@ class PorterServer internal constructor(
     endpointFactory: (PorterServer) -> ShizukuServiceEndpoint,
     porterEndpointFactory: (PorterServer) -> PorterServiceEndpoint,
     managerEndpointFactory: (PorterServer) -> PorterManagerEndpoint = { PorterManagerEndpoint(it.core, it) },
+    /** The user on screen, or null when it cannot be read. Injected so a test can decide it. */
+    private val foregroundUser: () -> Int? = ForegroundUser::id,
 ) : ServerPolicy, ManagerOperations {
 
     val core: PorterCore<ShizukuUserServiceManager, ShizukuClientManager, ShizukuConfigManager> =
@@ -173,12 +176,29 @@ class PorterServer internal constructor(
             record.dispatchRequestPermissionResult(requestCode, false)
             return
         }
-        val ai = Android17Compat.getApplicationInfo(record.packageName, 0L, userId) ?: return
+        val ai = Android17Compat.getApplicationInfo(record.packageName, 0L, userId)
+        if (ai == null) {
+            LOGGER.w("No application info for %s in user %d. Cannot ask", record.packageName, userId)
+            record.dispatchRequestPermissionResult(requestCode, false)
+            return
+        }
 
         // The prompt is the manager's, and the manager lives in user 0 whichever user asks; the
         // requester's ApplicationInfo travels with the intent, so the prompt can still name it.
         if (Android17Compat.getPackageInfo(MANAGER_APPLICATION_ID, 0L, MANAGER_USER_ID) == null) {
             LOGGER.w("Manager not found in user %d. Revoke permission", MANAGER_USER_ID)
+            record.dispatchRequestPermissionResult(requestCode, false)
+            return
+        }
+
+        // An activity started in user 0 is invisible while another user is on screen, so there is
+        // nobody to answer and the client would wait forever. Answering is not a remembered
+        // refusal: nothing is written to the decision database, and asking again later works.
+        // A profile of user 0, a work profile included, keeps user 0 in the foreground and is
+        // unaffected. An unreadable current user carries on rather than refusing on a guess.
+        val foreground = foregroundUser()
+        if (foreground != null && foreground != MANAGER_USER_ID) {
+            LOGGER.w("User %d is on screen, so the prompt in user %d cannot be seen. Refusing", foreground, MANAGER_USER_ID)
             record.dispatchRequestPermissionResult(requestCode, false)
             return
         }

@@ -23,6 +23,7 @@ import eu.darken.porter.core.CallerExemption
 import eu.darken.porter.core.CallerIdentity
 import eu.darken.porter.core.ClientCallback
 import eu.darken.porter.endpoint.PorterClientCallback
+import eu.darken.porter.endpoint.PorterManagerEndpoint
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.server.IPorterApplication
 import moe.shizuku.server.IShizukuApplication
@@ -623,6 +624,58 @@ class ServiceAuthorizationTest {
         assertEquals(before, entry.flags)
         verify(userServices).setAccessPaused(false)
         verify(client.client!!, times(2)).bindApplication(any(Bundle::class.java))
+    }
+
+    /** A server whose only difference from [service] is which user it believes is on screen. */
+    private fun serverSeeing(foreground: Int?) = PorterServer(
+        userServices, clients, config, MANAGER_UID, history,
+        Executor { it.run() }, ::ShizukuServiceEndpoint, ::PorterServiceEndpoint,
+        { PorterManagerEndpoint(it.core, it) }, { foreground },
+    )
+
+    /** Both packages resolvable, so the prompt path is not stopped by a lookup. */
+    private fun promptableInstall() {
+        packages!!.`when`<ApplicationInfo?> { PackageManagerApis.getApplicationInfo(anyString(), anyLong(), anyInt()) }
+            .thenReturn(ApplicationInfo())
+        packageInfos[PorterServer.MANAGER_APPLICATION_ID] = PackageInfo()
+    }
+
+    @Test
+    fun aPromptNoOneCouldSeeIsAnsweredRatherThanLeftOpen() {
+        promptableInstall()
+        val record = spy(client)
+        serverSeeing(10).showPermissionConfirmation(17, record, CallerIdentity(CLIENT_UID, CLIENT_PID), 10)
+        verify(record).dispatchRequestPermissionResult(17, false)
+        // Nothing is remembered, so the same app asking again once user 0 is back still prompts.
+        verify(config, never()).update(anyInt(), any(), anyInt(), anyInt())
+        activityMocks.verify({ ActivityManagerApis.startActivityNoThrow(any(), any(), anyInt()) }, never())
+    }
+
+    @Test
+    fun aClientInAnotherUserStillPromptsWhileUserZeroIsOnScreen() {
+        promptableInstall()
+        val record = spy(client)
+        serverSeeing(0).showPermissionConfirmation(17, record, CallerIdentity(CLIENT_UID, CLIENT_PID), 10)
+        verify(record, never()).dispatchRequestPermissionResult(anyInt(), anyBoolean())
+        activityMocks.verify { ActivityManagerApis.startActivityNoThrow(any(), any(), eq(0)) }
+    }
+
+    @Test
+    fun anUnreadableCurrentUserPromptsRatherThanRefusingOnAGuess() {
+        promptableInstall()
+        val record = spy(client)
+        serverSeeing(null).showPermissionConfirmation(17, record, CallerIdentity(CLIENT_UID, CLIENT_PID), 0)
+        verify(record, never()).dispatchRequestPermissionResult(anyInt(), anyBoolean())
+        activityMocks.verify { ActivityManagerApis.startActivityNoThrow(any(), any(), eq(0)) }
+    }
+
+    @Test
+    fun aRequesterWithNoApplicationInfoIsAnsweredRatherThanLeftOpen() {
+        packageInfos[PorterServer.MANAGER_APPLICATION_ID] = PackageInfo()
+        val record = spy(client)
+        serverSeeing(0).showPermissionConfirmation(17, record, CallerIdentity(CLIENT_UID, CLIENT_PID), 0)
+        verify(record).dispatchRequestPermissionResult(17, false)
+        verify(config, never()).update(anyInt(), any(), anyInt(), anyInt())
     }
 
     @Test

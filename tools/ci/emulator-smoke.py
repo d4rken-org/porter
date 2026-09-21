@@ -23,6 +23,11 @@ LEGACY_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 # What each probe reports on its BINDER line: the Porter protocol version from the porter
 # flavour, the Shizuku API level from the legacy one. Different numbers, different meanings.
 PORTER_PROTOCOL_VERSION = 4
+# ConfigManager.FLAG_ALLOWED and FLAG_DENIED, as porter.json stores them. Pinned by
+# secondary-user-prompt, which is about which of the two a refused prompt writes: neither.
+DECISIONS = "/data/user_de/0/com.android.shell/porter.json"
+DECISION_ALLOWED = 1 << 1
+DECISION_DENIED = 1 << 2
 SHIZUKU_API_VERSION = 13
 PAYLOAD = "porter-ci-shell-access"
 PORSH_DIR = "/data/local/tmp"
@@ -40,7 +45,7 @@ TRANSPORT_BACKOFF = 2
 CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence", "porsh",
          "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
          "foreign-signer-peeks", "foreign-signer-binds", "foreign-signer-never-binds",
-         "non-daemon-control",
+         "non-daemon-control", "secondary-user-prompt",
          "manager-stopped-then-uninstalled", "manager-upgraded-then-uninstalled")
 # The host lane backs off to 300s between scans, so a change it has to notice can take that long
 # plus the confirmation grace. The manager lane never backs off.
@@ -371,6 +376,34 @@ class Smoke:
 
     def extra_users(self):
         return [user for user in USER_ID.findall(self.shell("pm", "list", "users")) if user != "0"]
+
+    def app_uid(self, package, user="0"):
+        listing = self.shell("pm", "list", "packages", "--user", user, "-U", package)
+        return int(re.search(r"uid:(\d+)", listing).group(1))
+
+    def decision_flags(self, uid):
+        """The saved flags for a uid, or 0 when nothing is recorded about it."""
+        # The file only appears once something is saved, so a device that has answered no prompt
+        # has no database at all rather than an empty one.
+        raw = self.shell("cat", DECISIONS, check=False)
+        if not raw.startswith("{"):
+            return 0
+        for entry in json.loads(raw).get("packages") or ():
+            if entry.get("uid") == uid:
+                return entry.get("flags", 0)
+        return 0
+
+    def launch_probe_as(self, package, user):
+        """Starts the probe in another user and adopts its process for [logs]."""
+        self.shell("am", "force-stop", "--user", user, package)
+        # No -W: it waits for the activity to be drawn, which never happens for a user that is
+        # not on screen, and the wait outlives the adb timeout.
+        self.shell("am", "start", "--user", user, "-n", package + "/eu.darken.porter.probe.ProbeActivity")
+        self.probe_pid = self.until(
+            f"probe process in user {user}",
+            lambda: (pids := self.pid(package).split()) and len(pids) == 1 and pids[0],
+            timeout=LAUNCH_TIMEOUT)
+        return self.probe_pid
 
     def foreign_probe(self):
         """The native probe re-signed with a throwaway key, keeping its package name."""
@@ -870,6 +903,41 @@ class Smoke:
                        lambda: not self.pid(NATIVE + ":porter-probe"))
             return {"service_pid": service_pid}
         self.case("non-daemon-control", non_daemon_control, restore=("grants",))
+
+        def secondary_user_prompt():
+            """The manager's prompt lives in user 0, so another user on screen cannot answer it."""
+            created = self.shell("pm", "create-user", "porter-ci-client")
+            user = re.search(r"id (\d+)", created).group(1)
+            self.shell("am", "start-user", user)
+            self.shell("pm", "install-existing", "--user", user, NATIVE)
+            uid = self.app_uid(NATIVE, user)
+            assert uid != self.app_uid(NATIVE), "the two installations share a uid"
+
+            self.shell("am", "switch-user", user)
+            self.until("the new user is on screen", lambda: self.shell("am", "get-current-user") == user)
+            self.adb("logcat", "-c")
+            self.launch_probe_as(NATIVE, user)
+            # The point of the case: a request nobody could answer is answered rather than left
+            # open. Before the server checked, this waited here until the case timed out.
+            self.expect_log(NATIVE, "DENIED")
+            assert not self.decision_flags(uid) & (DECISION_ALLOWED | DECISION_DENIED), \
+                "a prompt that was never shown was written down as the user's answer"
+
+            self.shell("am", "switch-user", "0")
+            self.until("user 0 is back on screen", lambda: self.shell("am", "get-current-user") == "0")
+            self.shell("am", "force-stop", "--user", user, NATIVE)
+            assert not self.locate("Allow all the time", MANAGER), "a prompt refused in another user surfaced later"
+
+            # The refusal is not remembered, so the ordinary path still prompts and still keeps
+            # its answer to the uid that asked.
+            self.launch_probe(NATIVE)
+            self.tap("Allow all the time", MANAGER, screenshot="after-secondary-user")
+            self.authorized(NATIVE)
+            assert self.decision_flags(self.app_uid(NATIVE)) & DECISION_ALLOWED, "the answered grant was not saved"
+            assert not self.decision_flags(uid) & DECISION_ALLOWED, "the owner user's grant reached the other user's copy"
+            return {"user": user, "uid": uid}
+        self.case("secondary-user-prompt", secondary_user_prompt,
+                  restore=("users", "probes", "grants"))
 
         def manager_stopped_then_uninstalled():
             server_pid = self.pid("porter_server")

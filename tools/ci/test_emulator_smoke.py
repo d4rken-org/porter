@@ -705,3 +705,58 @@ class SpawnedProcessReadingTest(unittest.TestCase):
     def test_a_longer_pid_starting_with_this_one_is_a_different_service(self):
         self.runner.shell.return_value = "PID ARGS\n4181 logcat -v threadtime --pid=31200 -T 1"
         self.assertEqual(self.runner.remote_logcat("3120"), [])
+
+
+class DecisionDatabaseTest(unittest.TestCase):
+    """What secondary-user-prompt reads to tell "no answer was recorded" from "denied"."""
+
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.Smoke(argparse.Namespace(
+            serial="emulator-5554", output=Path(directory.name)))
+
+    def flags(self, raw, uid=1010217):
+        with patch.object(self.runner, "shell", return_value=raw) as shell:
+            result = self.runner.decision_flags(uid)
+        shell.assert_called_once_with("cat", smoke.DECISIONS, check=False)
+        return result
+
+    def test_a_device_that_answered_nothing_has_no_database(self):
+        # adb prints the error on stdout for a missing file, so this is what the helper sees.
+        self.assertEqual(self.flags("cat: " + smoke.DECISIONS + ": No such file or directory"), 0)
+
+    def test_a_uid_the_database_never_heard_of_reads_as_nothing_recorded(self):
+        saved = json.dumps({"version": 2, "packages": [{"uid": 10217, "flags": 2}]})
+        self.assertEqual(self.flags(saved), 0)
+
+    def test_an_allowed_uid_reads_back_its_flag(self):
+        saved = json.dumps({"version": 2, "packages": [{"uid": 1010217, "flags": smoke.DECISION_ALLOWED}]})
+        self.assertEqual(self.flags(saved) & smoke.DECISION_ALLOWED, smoke.DECISION_ALLOWED)
+
+    def test_a_denied_uid_is_not_mistaken_for_an_unanswered_one(self):
+        saved = json.dumps({"version": 2, "packages": [{"uid": 1010217, "flags": smoke.DECISION_DENIED}]})
+        self.assertTrue(self.flags(saved) & (smoke.DECISION_ALLOWED | smoke.DECISION_DENIED))
+
+    def test_a_database_with_a_null_package_list_reads_as_nothing_recorded(self):
+        self.assertEqual(self.flags(json.dumps({"version": 2, "packages": None})), 0)
+
+
+class AppUidTest(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.Smoke(argparse.Namespace(
+            serial="emulator-5554", output=Path(directory.name)))
+
+    def test_the_uid_is_read_for_the_user_that_was_asked_about(self):
+        listing = "package:eu.darken.porter.probe.native uid:1010217"
+        with patch.object(self.runner, "shell", return_value=listing) as shell:
+            self.assertEqual(self.runner.app_uid("eu.darken.porter.probe.native", "10"), 1010217)
+        shell.assert_called_once_with(
+            "pm", "list", "packages", "--user", "10", "-U", "eu.darken.porter.probe.native")
+
+    def test_the_owner_user_is_the_default(self):
+        with patch.object(self.runner, "shell", return_value="package:p uid:10217") as shell:
+            self.assertEqual(self.runner.app_uid("p"), 10217)
+        self.assertEqual(shell.call_args.args[4], "0")
