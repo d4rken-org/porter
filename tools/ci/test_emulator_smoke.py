@@ -253,6 +253,44 @@ class TransportRetryTest(unittest.TestCase):
             self.assertEqual(self.runner.shell("pidof", "porter_server", check=False), "5271")
         self.assertEqual(run.call_count, 2)
 
+class DetachedCommandTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.args = Mock(serial="emulator-5554")
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner.output = Path(directory.name)
+
+    def pending(self, returncode, stdout=b"", stderr=b""):
+        process = Mock(args=["adb", "-s", "emulator-5554", "shell", "sh -c porsh"], returncode=returncode)
+        process.communicate.return_value = (stdout, stderr)
+        return process
+
+    def test_the_command_is_started_like_a_foreground_shell_and_left_running(self):
+        with patch.object(smoke.subprocess, "Popen") as popen:
+            self.assertIs(self.runner.detached("sh", "-c", "printf hello"), popen.return_value)
+        self.assertEqual(popen.call_args.args[0],
+                         ["adb", "-s", "emulator-5554", "shell", "sh -c 'printf hello'"])
+        self.assertEqual(popen.call_args.kwargs["stdin"], smoke.subprocess.DEVNULL)
+
+    def test_settling_logs_the_command_with_its_output(self):
+        self.runner.settle(self.pending(0, stdout=b"done\n", stderr=b"warned\n"))
+        self.assertEqual((self.runner.output / "commands.log").read_text(),
+                         "adb -s emulator-5554 shell 'sh -c porsh'\ndone\nwarned\n")
+
+    def test_a_failed_command_surfaces_its_stderr(self):
+        with self.assertRaisesRegex(RuntimeError, "sh -c porsh.*device offline"):
+            self.runner.settle(self.pending(1, stderr=OFFLINE))
+
+    def test_a_command_that_never_ends_is_killed_before_the_timeout_propagates(self):
+        process = self.pending(None)
+        process.communicate.side_effect = [smoke.subprocess.TimeoutExpired(process.args, 45), (b"", b"")]
+        with self.assertRaises(smoke.subprocess.TimeoutExpired):
+            self.runner.settle(process, timeout=45)
+        process.kill.assert_called_once()
+        self.assertEqual(process.communicate.call_count, 2)
+
+
 class CaseSelectionTest(unittest.TestCase):
     def setUp(self):
         self.runner = smoke.Smoke.__new__(smoke.Smoke)

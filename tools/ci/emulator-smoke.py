@@ -153,6 +153,29 @@ class Smoke:
     def shell(self, *args, **kwargs):
         return self.adb("shell", shlex.join(map(str, args)), **kwargs)
 
+    def detached(self, *args):
+        """An adb shell left running, for a command that waits on a window this side has to tap.
+
+        The device-side program's own output is what its caller redirected; what is captured here
+        is adb's, for the log and for a transport failure. settle() closes it out.
+        """
+        command = ["adb", "-s", self.args.serial, "shell", shlex.join(map(str, args))]
+        return subprocess.Popen(command, stdin=subprocess.DEVNULL,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    def settle(self, pending, timeout=ADB_TIMEOUT):
+        try:
+            stdout, stderr = pending.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            pending.kill()
+            pending.communicate()
+            raise
+        stderr = stderr.decode(errors="replace")
+        with (self.output / "commands.log").open("a") as log:
+            log.write(shlex.join(pending.args) + "\n" + stdout.decode(errors="replace") + stderr)
+        if pending.returncode:
+            raise RuntimeError(f"{shlex.join(pending.args)}: {stderr}")
+
     def until(self, description, condition, timeout=30):
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
@@ -636,9 +659,26 @@ class Smoke:
                 # adb() raises on a non-zero exit and discards the code, so the device records it.
                 return int(evidence(f"{name}-status").decode())
 
-            # No grant interaction: the server runs as uid 2000, and Service.checkSelfPermission
-            # returns true for a caller whose uid is the server's, so adb shell needs no entry.
-            self.shell("sh", "-c", redirected("banner", "printf hello"))
+            def prompted(name, script, answer):
+                # adb shell is a client like any other: porsh attaches as com.android.shell, and
+                # the server admits uid 2000 on the user's decision alone, which it asks for on
+                # the manager's prompt. porsh waits on that prompt, so it cannot be the foreground
+                # adb call; it runs detached while the answer is tapped from here.
+                pending = self.detached("sh", "-c", redirected(name, script))
+                try:
+                    self.tap(answer, screenshot=f"porsh-{name}")
+                    self.settle(pending)
+                finally:
+                    if pending.poll() is None:
+                        pending.kill()
+
+            # A refusal is one-time, so the same prompt comes back for the grant that follows.
+            prompted("denied", "printf hello", "Deny")
+            assert status("denied") == 1, status("denied")
+            assert evidence("denied-stdout") == b"", evidence("denied-stdout")
+            assert evidence("denied-stderr") == b"Permission denied\n", evidence("denied-stderr")
+
+            prompted("banner", "printf hello", "Allow all the time")
             assert status("banner") == 0, evidence("banner-stderr")
             # Byte-exact: an unconditional "Entering shell..." here breaks command substitution.
             assert evidence("banner-stdout") == b"hello", evidence("banner-stdout")
