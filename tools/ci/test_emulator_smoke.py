@@ -741,6 +741,39 @@ class SpawnedProcessReadingTest(unittest.TestCase):
         self.assertEqual(self.runner.remote_logcat("3120"), [])
 
 
+class LaunchProbeAsTest(unittest.TestCase):
+    """Which process the secondary-user case reads its log from."""
+
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.Smoke(argparse.Namespace(
+            serial="emulator-5554", output=Path(directory.name)))
+
+    def test_a_copy_running_in_another_user_is_stopped_before_the_launch(self):
+        pids = ["4001 4002", ""]
+        stopped = []
+
+        def shell(*args, **kwargs):
+            if args[:2] == ("am", "force-stop"):
+                stopped.append(args)
+                return ""
+            return ""
+        with patch.object(self.runner, "shell", side_effect=shell), \
+             patch.object(self.runner, "pid", side_effect=lambda p: pids.pop(0) if pids else "4100"), \
+             patch.object(smoke.time, "sleep"):
+            self.assertEqual(self.runner.launch_probe_as(smoke.NATIVE, "11"), "4100")
+        self.assertIn(("am", "force-stop", "--user", "all", smoke.NATIVE), stopped)
+
+    def test_two_surviving_processes_are_waited_out_rather_than_picked_between(self):
+        with patch.object(self.runner, "shell"), \
+             patch.object(self.runner, "pid", return_value="4001 4002"), \
+             patch.object(smoke.time, "sleep"), \
+             patch.object(smoke, "LAUNCH_TIMEOUT", 0.2):
+            with self.assertRaisesRegex(AssertionError, "no probe process anywhere"):
+                self.runner.launch_probe_as(smoke.NATIVE, "11")
+
+
 class DecisionDatabaseTest(unittest.TestCase):
     """What secondary-user-prompt reads to tell "no answer was recorded" from "denied"."""
 

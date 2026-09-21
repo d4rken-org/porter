@@ -400,7 +400,11 @@ class Smoke:
 
     def launch_probe_as(self, package, user):
         """Starts the probe in another user and adopts its process for [logs]."""
-        self.shell("am", "force-stop", "--user", user, package)
+        # Every user, not just the target one: pidof does not say which user a process belongs to,
+        # so a copy left running in user 0 by an earlier case would be the one adopted below, and
+        # the log this returns would be the wrong process's.
+        self.shell("am", "force-stop", "--user", "all", package)
+        self.until("no probe process anywhere", lambda: not self.pid(package), timeout=LAUNCH_TIMEOUT)
         # No -W: it waits for the activity to be drawn, which never happens for a user that is
         # not on screen, and the wait outlives the adb timeout.
         self.shell("am", "start", "--user", user, "-n", package + "/eu.darken.porter.probe.ProbeActivity")
