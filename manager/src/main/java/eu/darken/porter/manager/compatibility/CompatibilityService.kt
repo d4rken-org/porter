@@ -8,9 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.protocol.PorterProtocol
-import eu.darken.porter.sdk.Porter
-import eu.darken.porter.server.IPorterService
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
@@ -21,7 +20,7 @@ internal object CompatibilityService {
     private val timer = Executors.newSingleThreadScheduledExecutor { r -> Thread(r, "porter-compat-timeout").apply { isDaemon = true } }
 
     fun request(operation: Int, snapshot: String? = null): Bundle {
-        val binder = Porter.connection.value?.binder ?: error("Porter is not running")
+        val binder = ServerBinder.require()
         val data = Parcel.obtain()
         val reply = Parcel.obtain()
         try {
@@ -40,8 +39,7 @@ internal object CompatibilityService {
     }
 
     suspend fun command(arguments: Array<String>, apk: File? = null): String = withContext(Dispatchers.IO) {
-        val binder = Porter.connection.value?.binder ?: error("Porter is not running")
-        val process = IPorterService.Stub.asInterface(binder).newProcess(arguments, null, null)
+        val process = ServerBinder.manager().newProcess(arguments, null, null)
         val stdout = ParcelFileDescriptor.AutoCloseInputStream(process.inputStream)
         val stderr = ParcelFileDescriptor.AutoCloseInputStream(process.errorStream)
         val stdin = ParcelFileDescriptor.AutoCloseOutputStream(process.outputStream)

@@ -31,7 +31,7 @@ class LegacyIsNotSupportedActivity : ComposeActivity() {
         // The Shizuku marker for a Shizuku client, the Porter permission for a Porter one: either
         // way the app is integrated and the screen offers to open Porter rather than refuse it.
         val v3 = ai.metaData?.getBoolean("moe.shizuku.client.V3_SUPPORT") == true ||
-            info.requestedPermissions?.contains(Manifest.permission.API_V23) == true
+            info.requestedPermissions?.contains(Manifest.permission.API) == true
         val done = { setResult(1); finish() }
         porterContent {
             BackHandler {}

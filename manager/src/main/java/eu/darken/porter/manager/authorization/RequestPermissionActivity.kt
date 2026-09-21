@@ -29,13 +29,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import eu.darken.porter.manager.Helps
 import eu.darken.porter.manager.R
+import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.ui.*
 import eu.darken.porter.manager.utils.LOGGER
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.PorterSystemApis
 import eu.darken.porter.manager.utils.UserHandleCompat
-import eu.darken.porter.protocol.PorterProtocol.PERMISSION_CONFIRMATION_ALLOWED
-import eu.darken.porter.protocol.PorterProtocol.PERMISSION_CONFIRMATION_ONETIME
 import eu.darken.porter.sdk.Porter
 
 class RequestPermissionActivity : ComposeActivity() {
@@ -143,7 +142,7 @@ internal fun PermissionDialogContent(stage: String, app: RequestingApp, onAllow:
 internal interface PermissionGateway {
     fun serviceStates(): Flow<PorterStateMachine.State>
     suspend fun canGrantPermissions(): Boolean
-    fun dispatch(uid: Int, pid: Int, code: Int, data: Bundle)
+    fun dispatch(uid: Int, pid: Int, code: Int, allowed: Boolean, onetime: Boolean)
 }
 
 internal object PorterPermissionGateway : PermissionGateway {
@@ -151,13 +150,8 @@ internal object PorterPermissionGateway : PermissionGateway {
     override suspend fun canGrantPermissions() = withContext(Dispatchers.IO) {
         Porter.connection.value?.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == true
     }
-    // The decision travels as a Bundle so the view model stays free of the wire; Porter takes the
-    // two flags directly.
-    override fun dispatch(uid: Int, pid: Int, code: Int, data: Bundle) = (Porter.connection.value ?: error("Porter is not running")).dispatchPermissionConfirmationResult(
-        uid, pid, code,
-        data.getBoolean(PERMISSION_CONFIRMATION_ALLOWED, false),
-        data.getBoolean(PERMISSION_CONFIRMATION_ONETIME, false),
-    )
+    override fun dispatch(uid: Int, pid: Int, code: Int, allowed: Boolean, onetime: Boolean) =
+        ServerBinder.manager().dispatchPermissionConfirmationResult(uid, pid, code, allowed, onetime)
 }
 
 class PermissionViewModel internal constructor(private val savedState: SavedStateHandle, private val gateway: PermissionGateway) : ViewModel() {
@@ -191,11 +185,9 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
         gate.reply {
             savedState["replied"] = true
             savedState["stage"] = if (limited) "limited" else "finished"
-            val data = Bundle().apply {
-                putBoolean(PERMISSION_CONFIRMATION_ALLOWED, allowed)
-                putBoolean(PERMISSION_CONFIRMATION_ONETIME, !allowed)
-            }
-            try { gateway.dispatch(uid, pid, code, data) }
+            // A denial is one-time: the user is asked again next time, "don't ask again" is
+            // Porter's own screen.
+            try { gateway.dispatch(uid, pid, code, allowed = allowed, onetime = !allowed) }
             catch (e: Exception) { LOGGER.e(e, "dispatchPermissionConfirmationResult") }
         }
     }

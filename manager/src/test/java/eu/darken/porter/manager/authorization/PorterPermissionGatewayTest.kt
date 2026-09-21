@@ -1,11 +1,13 @@
 package eu.darken.porter.manager.authorization
 
 import android.os.Binder
-import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcel
+import eu.darken.porter.common.AppTransactions
+import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.protocol.PorterProtocol
-import eu.darken.porter.sdk.Porter
+import eu.darken.porter.server.IPorterManager
+import eu.darken.porter.server.IPorterRemoteProcess
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -15,8 +17,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 /**
- * The gateway is where the decision stops being a Bundle: Porter takes the two flags as arguments,
- * so the keys the view model wrote and the arguments the server receives have to stay in step.
+ * The gateway is where the decision reaches the wire: the manager binder is fetched from the
+ * server over the app's own code, and the two flags arrive on it as the manager sent them.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
@@ -25,39 +27,41 @@ class PorterPermissionGatewayTest {
     data class Confirmation(val uid: Int, val pid: Int, val code: Int, val allowed: Boolean, val onetime: Boolean)
 
     private val received = mutableListOf<Confirmation>()
+    private var managerRequests = 0
 
-    /** Answers the attach and records the confirmation; both are raw, so nothing is re-encoded. */
+    /** Records what the manager confirms; nothing else is reachable through it. */
+    private inner class RecordingManager : IPorterManager.Stub() {
+        override fun newProcess(cmd: Array<String>?, env: Array<String>?, dir: String?): IPorterRemoteProcess? = null
+        override fun exit() {}
+        override fun attachUserService(binder: IBinder?, token: String?) {}
+        override fun dispatchPermissionConfirmationResult(uid: Int, pid: Int, requestCode: Int, allowed: Boolean, onetime: Boolean) {
+            received += Confirmation(uid, pid, requestCode, allowed, onetime)
+        }
+        override fun getFlagsForUid(uid: Int, mask: Int): Int = 0
+        override fun updateFlagsForUid(uid: Int, mask: Int, value: Int) {}
+    }
+
+    private val manager = RecordingManager()
+
+    /** Hands out the manager binder on the app's code and answers nothing else. */
     private inner class RecordingServer : Binder() {
         override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+            if (code != AppTransactions.GET_MANAGER) return false
             data.enforceInterface(PorterProtocol.DESCRIPTOR)
-            when (code) {
-                IBinder.FIRST_CALL_TRANSACTION + ATTACH -> {
-                    reply!!.writeNoException()
-                    reply.writeTypedObject(Bundle(), 0)
-                }
-                IBinder.FIRST_CALL_TRANSACTION + DISPATCH_CONFIRMATION -> {
-                    val uid = data.readInt()
-                    val pid = data.readInt()
-                    val requestCode = data.readInt()
-                    val confirmation = data.readTypedObject(Bundle.CREATOR)!!
-                    received += Confirmation(uid, pid, requestCode,
-                        confirmation.getBoolean(PorterProtocol.PERMISSION_CONFIRMATION_ALLOWED),
-                        confirmation.getBoolean(PorterProtocol.PERMISSION_CONFIRMATION_ONETIME))
-                }
-                else -> return false
-            }
+            managerRequests++
+            reply!!.writeNoException()
+            reply.writeStrongBinder(manager)
             return true
         }
     }
 
-    @Before fun attach() = Porter.onBinderReceived(RecordingServer(), "eu.darken.porter.manager")
+    private val server = RecordingServer()
 
-    @After fun detach() = Porter.onBinderReceived(null, "eu.darken.porter.manager")
+    @Before fun deliver() = ServerBinder.deliver(server)
 
-    private fun reply(allowed: Boolean) = PorterPermissionGateway.dispatch(10123, 4242, 7, Bundle().apply {
-        putBoolean(PorterProtocol.PERMISSION_CONFIRMATION_ALLOWED, allowed)
-        putBoolean(PorterProtocol.PERMISSION_CONFIRMATION_ONETIME, !allowed)
-    })
+    @After fun drop() = ServerBinder.drop(server)
+
+    private fun reply(allowed: Boolean) = PorterPermissionGateway.dispatch(10123, 4242, 7, allowed = allowed, onetime = !allowed)
 
     @Test fun aPersistentGrantReachesTheServerAsAllowedAndNotOneTime() {
         reply(true)
@@ -69,9 +73,11 @@ class PorterPermissionGatewayTest {
         assertEquals(listOf(Confirmation(10123, 4242, 7, allowed = false, onetime = true)), received)
     }
 
-    companion object {
-        /** The explicit AIDL ids on IPorterService. */
-        private const val ATTACH = 1
-        private const val DISPATCH_CONFIRMATION = 15
+    /** One raw transaction serves every call on the same server binder. */
+    @Test fun theManagerBinderIsFetchedOnce() {
+        reply(true)
+        reply(false)
+        assertEquals(1, managerRequests)
+        assertEquals(2, received.size)
     }
 }

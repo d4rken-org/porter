@@ -7,6 +7,7 @@ import android.os.Parcel
 import android.os.RemoteException
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.sdk.Porter
+import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.PorterStateMachine.State
 import org.junit.After
@@ -29,7 +30,10 @@ class ServiceStopTest {
             if (code == IBinder.FIRST_CALL_TRANSACTION + ATTACH) {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 reply!!.writeNoException()
-                reply.writeTypedObject(Bundle(), 0)
+                reply.writeTypedObject(Bundle().apply {
+                    putInt(PorterProtocol.REPLY_PROTOCOL_VERSION, PorterProtocol.VERSION)
+                    putInt(PorterProtocol.REPLY_MIN_PROTOCOL_VERSION, PorterProtocol.MIN_VERSION)
+                }, 0)
                 return true
             }
             throw RemoteException("transaction refused")
@@ -41,13 +45,17 @@ class ServiceStopTest {
         }
     }
 
+    private val server = RefusingBinder()
+
     @Before fun attachBinder() {
-        Porter.onBinderReceived(RefusingBinder(), "eu.darken.porter.manager")
+        ServerBinder.deliver(server)
+        Porter.onBinderReceived(server, "eu.darken.porter.manager")
         PorterStateMachine.instance.set(State.RUNNING)
     }
 
     @After fun detachBinder() {
         Porter.onBinderReceived(null, "eu.darken.porter.manager")
+        ServerBinder.drop(server)
         PorterStateMachine.instance.set(State.STOPPED)
     }
 
