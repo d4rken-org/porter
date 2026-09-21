@@ -16,14 +16,19 @@ TCP_PORT = "5555"
 # A reboot has to bring back the framework, the manager's boot receiver, its worker, and the
 # connection that worker makes, so "nothing came back" needs a generous window to mean anything.
 BOOT_TIMEOUT = 300
-# How long the device is given to actually go away after the reboot command.
-DOWN_TIMEOUT = 120
+# Told apart from an empty reply, which a failed adb call also produces.
+NO_PROCESS = "porter-ci-no-server"
+# R.string.wadb_notification_retry, which the starter shows only once an attempt has failed.
+RETRY_TEXT = "Waiting to retry"
 # How long the no-port case waits before calling the absence of a server a result. The worker
 # retries with backoff, so this only has to outlive the first attempt.
 NO_START_SETTLE = 60
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "app-adb-start", "start-on-boot", "start-on-boot-off", "boot-without-adb")
 # Each of these inherits what the case before it established on the device.
+# Each of these inherits what the case before it established on the device. boot-without-adb does
+# not name start-on-boot-off: it sets the toggle it needs rather than assuming a previous case
+# left it either way.
 REQUIRES = {
     "start-on-boot": ("app-adb-start",),
     "start-on-boot-off": ("app-adb-start", "start-on-boot"),
@@ -68,20 +73,43 @@ class Boot(base.Smoke):
                    lambda: self.shell("getprop", "service.adb.tcp.port", check=False) == TCP_PORT,
                    timeout=60)
 
+    def boot_id(self):
+        """The kernel's id for this boot, which is a different string after every restart."""
+        return self.shell("cat", "/proc/sys/kernel/random/boot_id", check=False)
+
     def reboot(self):
+        before = self.boot_id()
+        assert before, "no boot id to compare against"
         self.adb("reboot")
-        # Down before up: for a moment after the command the device still answers as its old self,
-        # and a boot check that lands there passes without a reboot having happened at all.
-        self.until("the device went down",
-                   lambda: self.shell("getprop", "sys.boot_completed", check=False) != "1",
-                   timeout=DOWN_TIMEOUT)
+        # Compared rather than watched for a gap: a dropped transport also answers nothing, so
+        # "it stopped replying and then said it had booted" is satisfied by the boot that was
+        # already running. A new id is only ever a new boot.
+        self.until("the device came back on a new boot",
+                   lambda: (now := self.boot_id()) and now != before,
+                   timeout=BOOT_TIMEOUT)
         self.until("the device finished booting",
                    lambda: self.shell("getprop", "sys.boot_completed", check=False) == "1",
                    timeout=BOOT_TIMEOUT)
 
-    def manager_notification_channels(self):
+    def manager_notifications(self):
+        """The manager's own notification records, as dumpsys prints them."""
         dump = self.shell("sh", "-c", "dumpsys notification --noredact")
-        return [line for line in dump.splitlines() if base.MANAGER in line]
+        records, keeping = [], False
+        for line in dump.splitlines():
+            if "NotificationRecord(" in line:
+                # The trailing space matters: probe packages start with the manager's own name.
+                keeping = f"pkg={base.MANAGER} " in f"{line} "
+                if keeping:
+                    records.append([line])
+            elif keeping and records:
+                records[-1].append(line)
+        return ["\n".join(record) for record in records]
+
+    def no_server(self):
+        """Absence, established by a reply rather than by a query that failed to produce one."""
+        listing = self.shell("sh", "-c", "pidof porter_server || echo " + NO_PROCESS)
+        assert listing in (NO_PROCESS, "") or listing.isdigit(), listing
+        return listing == NO_PROCESS
 
     def run(self):
         self.case("setup", self.setup)
@@ -108,14 +136,37 @@ class Boot(base.Smoke):
             return {"server_pid": pid}
         self.case("app-adb-start", app_adb_start)
 
+        def start_on_boot_is(enable):
+            listing = self.shell("sh", "-c", f"dumpsys package {base.MANAGER} | grep -A4 enabledComponents")
+            return ("BootCompleteReceiver" in listing) == enable
+
         def toggle_start_on_boot(enable):
-            """Presses the switch and waits for the setting to be what was asked for."""
+            """Leaves the setting in the asked-for state, whatever it was before."""
             self.home()
             self.tap("Settings", desc="Settings")
+            if start_on_boot_is(enable):
+                return
             self.tap("Start on boot", screenshot="start-on-boot-" + ("on" if enable else "off"))
-            self.until(f"start on boot is {'on' if enable else 'off'}",
-                       lambda: (("BootCompleteReceiver" in self.shell(
-                           "sh", "-c", f"dumpsys package {base.MANAGER} | grep -A4 enabledComponents")) == enable))
+            # Below API 33 the switch opens a warning about wireless debugging first, and the
+            # write only happens when it is confirmed. Both outcomes are watched for at once: the
+            # dialog takes a moment to appear, so a single look would miss it and then wait out
+            # the state check against a switch that is still asking.
+            outcome = self.until(
+                "the switch either asked or applied",
+                lambda: ("asked" if self.locate("OK") else
+                         "applied" if start_on_boot_is(enable) else None))
+            if outcome == "asked":
+                self.tap("OK")
+            self.until(f"start on boot is {'on' if enable else 'off'}", lambda: start_on_boot_is(enable))
+            # The component list changes before the write that makes it survive a restart has
+            # finished. The preference is written after that call returns, so it is what says the
+            # app is done rather than merely under way.
+            wanted = f'name="start_on_boot" value="{str(enable).lower()}"'
+            self.until("the app finished saving the setting",
+                       lambda: wanted in self.shell(
+                           "su", "0", "cat", f"/data/user_de/0/{base.MANAGER}/shared_prefs/settings.xml",
+                           check=False),
+                       timeout=60)
 
         def start_on_boot():
             """Nothing on the host starts anything: the device has to do it by itself."""
@@ -144,12 +195,12 @@ class Boot(base.Smoke):
             """The same device with the same way in, and the setting the only difference."""
             toggle_start_on_boot(False)
             self.shell("su", "0", "pkill", "-9", "-f", "porter_server")
-            self.until("the server is gone", lambda: not self.pid("porter_server"))
+            self.until("the server is gone", self.no_server)
 
             self.reboot()
             assert self.shell("getprop", "persist.adb.tcp.port") == TCP_PORT, "the way in went away too"
             time.sleep(NO_START_SETTLE)
-            assert not self.pid("porter_server"), "a server started with start on boot turned off"
+            assert self.no_server(), "a server started with start on boot turned off"
             return {}
         self.case("start-on-boot-off", start_on_boot_off)
 
@@ -162,14 +213,16 @@ class Boot(base.Smoke):
             self.reboot()
             assert self.shell("getprop", "persist.adb.tcp.port", check=False) == ""
             assert self.shell("getprop", "service.adb.tcp.port", check=False) == ""
-            self.until("the manager tried and could not get in",
-                       lambda: any(base.NOTIFICATION_CHANNEL_ADB_START in line
-                                   for line in self.manager_notification_channels()),
+            # The retry text, not merely a notification on that channel: the starter posts
+            # "awaiting wifi" when it enqueues the work, before anything has been attempted, and
+            # the worker's running state reuses the same channel.
+            self.until("the manager tried, failed, and said it would try again",
+                       lambda: any(RETRY_TEXT in record for record in self.manager_notifications()),
                        timeout=BOOT_TIMEOUT)
-            # Only after the notification, so this reads as "it gave up and said so" rather than
-            # "it has not got round to it yet".
+            # Only after that, so this reads as "it gave up and said so" rather than "it has not
+            # got round to it yet".
             time.sleep(NO_START_SETTLE)
-            assert not self.pid("porter_server"), "a server started with no ADB port to start it through"
+            assert self.no_server(), "a server started with no ADB port to start it through"
             self.screenshot("boot-without-adb")
             return {}
         self.case("boot-without-adb", boot_without_adb)
