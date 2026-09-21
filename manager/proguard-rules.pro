@@ -40,6 +40,7 @@
 # Entrance of shell
 -keep class eu.darken.porter.manager.shell.Shell {
     public static void main(java.lang.String[], java.lang.String, android.os.IBinder, android.os.Handler);
+    public static void main(java.lang.String[], java.lang.String, android.os.IBinder, android.os.Handler, int);
 }
 
 -assumenosideeffects class android.util.Log {
