@@ -59,8 +59,13 @@ dependencies {
     bridgeImplementation project(":sdk")
     bridgeImplementation project(":shizuku-compat")
     // Only the two flavours built on src/sdk forward a system service call, and only they can:
-    // the wrapper that does it is the Porter SDK's.
+    // the wrapper that does it is the Porter SDK's. The bypass is part of that, not a workaround
+    // for the fixture: an app reaching a system service through the wrapper links the hidden
+    // method itself, and the platform blocks that from an app without one. The manager ships the
+    // same pair for the same reason.
     porterImplementation libs.hidden.compat
     bridgeImplementation libs.hidden.compat
+    porterImplementation "org.lsposed.hiddenapibypass:hiddenapibypass:6.1"
+    bridgeImplementation "org.lsposed.hiddenapibypass:hiddenapibypass:6.1"
     compileOnly libs.hidden.stub
 }

@@ -99,6 +99,12 @@ public class ProbeActivity extends Activity {
      * call was answered as this app rather than forwarded.
      */
     private void forwardOne() {
+        // The wrapper forwards the transaction, but the app still links the hidden method that
+        // writes it, and the platform blocks that from an app: on API 36 the call below is denied
+        // before any binder is reached. Every app integrating this way needs the exemption.
+        if (android.os.Build.VERSION.SDK_INT >= 28) {
+            org.lsposed.hiddenapibypass.HiddenApiBypass.setHiddenApiExemptions("");
+        }
         // Installed before any other call through this library, which keeps the first binder it
         // resolved for a service: a call made ahead of this would cache the unwrapped one.
         SystemServiceBinder.setOnGetBinderListener(PorterBinderWrapper::new);
