@@ -41,11 +41,20 @@ Use a fixed release tag, not a moving branch or a `-SNAPSHOT` version. Source an
 
 The SDK needs Android 7.0 (API 24) or newer.
 
-**You do not need to touch your manifest.** The SDK declares Porter's permission, the package
-visibility entry that Android 11 and newer require, and the provider that receives the connection.
-Manifest merging adds them to your app. If you inspect the merged manifest you will see a provider
-named `eu.darken.porter.sdk.PorterApiProvider` on the `${applicationId}.porter.api` authority; that
-is the SDK's, and it is protected so only Porter can deliver through it.
+**You do not need to touch your manifest.** The SDK declares Porter's permission
+(`eu.darken.porter.permission.API`), the package visibility entry that Android 11 and newer
+require, and the provider that receives the connection. Manifest merging adds them to your app. If
+you inspect the merged manifest you will see a provider named `eu.darken.porter.sdk.PorterApiProvider`
+on the `${applicationId}.porter.api` authority; that is the SDK's, and it is protected so only Porter
+can deliver through it.
+
+### Which backend the SDK talks to
+
+The SDK also speaks to an original Shizuku server, if your app opts in with the `shizuku-compat`
+artifact and the provider block its documentation shows. The choice between the two is made by
+what is installed, not by what is running: an installed Porter always wins, so a Porter that is
+installed but stopped blocks a running Shizuku, and a process that holds a live connection never
+switches backend until that connection dies. Tell users with both installed to start Porter.
 
 ### What a version promises
 
@@ -56,6 +65,12 @@ SDK release numbers are independent of Porter's own app version. While the SDK i
 - The Binder protocol and the provider authority stay compatible across `0.x`. An app built against
   an earlier `0.x` keeps working with a newer Porter.
 - A newer SDK does not require a newer Porter unless a release note says so.
+
+The SDK and the Porter service confirm this when they connect. Each side names the protocol
+version it speaks and the oldest one it still accepts; a newer peer is never a problem on its own.
+When the two do not overlap, no connection is published and `Porter.availability(context)` answers
+`INCOMPATIBLE`; `Porter.incompatibility` then says whether the user has to update Porter
+(`serverTooOld`) or your app needs a newer SDK (`clientTooOld`).
 
 Fixes reach apps only through a new SDK release and a dependency bump in your build. There is no
 runtime update path for the library.
@@ -171,6 +186,9 @@ Bump `version` whenever the service code changes, so Porter replaces a running i
 reusing a stale one. Porter identifies a service by its `tag`, or by the class name when no tag is
 set, so set a stable tag if your service class is obfuscated.
 
+A user service is per Android user. A work profile's copy of your app gets its own service
+process, started with that profile's uid, and never shares one with the personal profile's copy.
+
 ### Forwarding calls to a system service
 
 `connection.wrap(binder)` wraps a system service's Binder so every transaction on it is re-issued
@@ -202,13 +220,19 @@ when (Porter.availability(this)) {
     PorterAvailability.INSTALLED_NOT_CONNECTED -> promptUser("Open Porter and start the service")
     PorterAvailability.NOT_INSTALLED -> promptUser("Install Porter")
     PorterAvailability.INSTALLED_UNRECOGNIZED -> promptUser("Another app owns Porter's permission")
+    PorterAvailability.INCOMPATIBLE -> if (Porter.incompatibility?.serverTooOld == true) {
+        promptUser("Update Porter")
+    } else {
+        promptUser("This app needs an update to work with this Porter")
+    }
 }
 ```
 
 This reports whether a manager is installed, not whether its service is running, so
 `INSTALLED_NOT_CONNECTED` is the normal state before the user starts Porter.
 `INSTALLED_UNRECOGNIZED` means some package other than Porter declares Porter's permission; say so
-rather than naming or launching that package.
+rather than naming or launching that package. `INCOMPATIBLE` means a service is running and
+answered, and the two sides share no protocol version.
 
 ## Multiple app processes
 

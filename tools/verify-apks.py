@@ -15,7 +15,7 @@ aapt = sdk / "cmdline-tools/latest/bin/apkanalyzer"
 signer = sdk / "build-tools/37.0.0/apksigner"
 android = "{http://schemas.android.com/apk/res/android}"
 expected = [
-    ("eu.darken.porter", "eu.darken.porter.permission.API_V23"),
+    ("eu.darken.porter", "eu.darken.porter.permission.API"),
     ("moe.shizuku.privileged.api", "moe.shizuku.manager.permission.API_V23"),
 ]
 parser = argparse.ArgumentParser()

@@ -18,7 +18,7 @@ MANAGER = "eu.darken.porter"
 COMPAT = "moe.shizuku.privileged.api"
 NATIVE = "eu.darken.porter.probe.native"
 LEGACY = "eu.darken.porter.probe.legacy"
-PERMISSION = "eu.darken.porter.permission.API_V23"
+PERMISSION = "eu.darken.porter.permission.API"
 LEGACY_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 # What each probe reports on its BINDER line: the Porter protocol version from the porter
 # flavour, the Shizuku API level from the legacy one. Different numbers, different meanings.
