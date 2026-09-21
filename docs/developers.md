@@ -65,6 +65,9 @@ SDK release numbers are independent of Porter's own app version. While the SDK i
 - The Binder protocol and the provider authority stay compatible across `0.x`. An app built against
   an earlier `0.x` keeps working with a newer Porter.
 - A newer SDK does not require a newer Porter unless a release note says so.
+- Source compatibility only. The public value types are Kotlin data classes, and a field added to
+  one changes its binary signature, so a library compiled against an earlier `0.x` has to be
+  recompiled against the new SDK rather than only run against it.
 
 The SDK and the Porter service confirm this when they connect. Each side names the protocol
 version it speaks and the oldest one it still accepts; a newer peer is never a problem on its own.
