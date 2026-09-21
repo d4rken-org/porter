@@ -5,20 +5,46 @@ runs:
   steps:
     # An app change that needs an SDK change is developed on a porter-api branch of the same name.
     # Building against that branch is what lets the device matrix exercise the pair before the SDK
-    # merges; every other pull request, and every push, builds the pinned commit. The Submodule pin
-    # job still validates the committed pointer either way.
+    # merges. A PR stacked on such a change pairs with its base branch's SDK branch; every other
+    # pull request, and every push, builds the pinned commit. The Submodule pin job still validates
+    # the committed pointer either way.
     - name: Pick the SDK commit to build against
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
         HEAD_REF: ${{ github.head_ref }}
+        BASE_REF: ${{ github.base_ref }}
       run: |
         set -euo pipefail
+        # 0: porter-api has this branch. 1: GitHub answered 404. Anything else (rate limit, network,
+        # auth) aborts the step with gh's output instead of quietly building the pin.
+        sdk_branch_exists() {
+          local reply status
+          if reply=$(gh api "repos/d4rken-org/porter-api/branches/$1" --include 2>&1); then
+            return 0
+          fi
+          status=$(printf '%s\n' "$reply" | sed -n '1s#^HTTP/[0-9.]* \([0-9]\{3\}\) .*#\1#p')
+          if [ "$status" = 404 ]; then
+            return 1
+          fi
+          echo "::error::Looking up porter-api branch '$1' failed (HTTP ${status:-none})"
+          printf '%s\n' "$reply"
+          exit 1
+        }
         pin="$(git -C api rev-parse HEAD)"
-        if [ -n "$HEAD_REF" ] && gh api "repos/d4rken-org/porter-api/branches/$HEAD_REF" --silent 2>/dev/null; then
-          git -C api fetch --depth=1 https://github.com/d4rken-org/porter-api.git "refs/heads/$HEAD_REF"
-          git -C api checkout --quiet --detach FETCH_HEAD
-          echo "Building against porter-api branch $HEAD_REF at $(git -C api log -1 --format='%H (%s)') instead of the pinned $pin"
-        else
-          echo "Building against the pinned porter-api commit $pin"
+        ref=
+        reason=
+        if [ -n "$HEAD_REF" ] && sdk_branch_exists "$HEAD_REF"; then
+          ref="$HEAD_REF"
+          reason="matches this PR's head branch"
+        elif [ -n "$BASE_REF" ] && [ "$BASE_REF" != main ] && sdk_branch_exists "$BASE_REF"; then
+          ref="$BASE_REF"
+          reason="matches this PR's base branch"
         fi
+        if [ -z "$ref" ]; then
+          echo "Building against the pinned porter-api commit $pin (no paired branch)"
+          exit 0
+        fi
+        git -C api fetch --depth=1 https://github.com/d4rken-org/porter-api.git "refs/heads/$ref"
+        git -C api checkout --quiet --detach FETCH_HEAD
+        echo "Building against porter-api branch $ref ($reason) at $(git -C api log -1 --format='%H (%s)') instead of the pinned $pin"
