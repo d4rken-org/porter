@@ -5,12 +5,15 @@ import android.system.Os
 import android.util.AtomicFile
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import java.io.Reader
 import rikka.hidden.compat.PackageManagerApis
 import rikka.shizuku.server.ConfigManager
 import rikka.shizuku.server.util.Logger
@@ -188,9 +191,8 @@ open class ShizukuConfigManager : ConfigManager() {
                 return ShizukuConfig()
             }
 
-            var config: ShizukuConfig? = null
             try {
-                config = GSON_IN.fromJson(InputStreamReader(stream), ShizukuConfig::class.java)
+                return read(InputStreamReader(stream))
             } catch (tr: Throwable) {
                 LOGGER.w(tr, "load config")
             } finally {
@@ -200,8 +202,21 @@ open class ShizukuConfigManager : ConfigManager() {
                     LOGGER.w("failed to close: $e")
                 }
             }
-            if (config != null) return config
             return ShizukuConfig()
+        }
+
+        internal fun read(reader: Reader): ShizukuConfig {
+            val json = JsonParser.parseReader(reader)
+            // Read off the tree: the model would fill in LATEST_VERSION for a missing field.
+            val version = (json as? JsonObject)?.get("version")
+                ?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber }?.asString
+            return when (version) {
+                ShizukuConfig.LATEST_VERSION.toString() -> GSON_IN.fromJson(json, ShizukuConfig::class.java)
+                else -> {
+                    LOGGER.w("config version %s is not the supported %d; starting empty", version, ShizukuConfig.LATEST_VERSION)
+                    ShizukuConfig()
+                }
+            }
         }
 
         fun write(config: ShizukuConfig): Boolean {
