@@ -36,7 +36,7 @@ class ShellTutorialActivity : ComposeActivity() {
             PorterScaffold(stringResource(R.string.home_terminal_title), onBack = { finish() }) { padding ->
                 Column(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     HtmlText(stringResource(R.string.rish_description, "porsh"))
-                    if (DeviceCompatibility.isMiui()) {
+                    if (DeviceCompatibility.isMiui) {
                         HtmlText(stringResource(R.string.terminal_tutorial_miui))
                         HtmlText(stringResource(R.string.terminal_tutorial_miui_2))
                     }

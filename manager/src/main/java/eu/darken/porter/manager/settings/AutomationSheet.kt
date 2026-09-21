@@ -21,7 +21,7 @@ fun AutomationSheet(onDismiss: () -> Unit) {
     val context = LocalContext.current
     var start by rememberSaveable { mutableStateOf(true) }
     var regenerate by rememberSaveable { mutableStateOf(false) }
-    var token by remember { mutableStateOf(PorterSettings.getAuthToken()) }
+    var token by remember { mutableStateOf(PorterSettings.authToken) }
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(stringResource(R.string.home_automation_bottom_sheet_intents), style = MaterialTheme.typography.titleLarge)

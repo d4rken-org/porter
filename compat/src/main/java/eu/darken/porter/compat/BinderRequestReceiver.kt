@@ -1,0 +1,16 @@
+package eu.darken.porter.compat
+
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+
+class BinderRequestReceiver : BroadcastReceiver() {
+
+    override fun onReceive(context: Context, intent: Intent) {
+        if ("rikka.shizuku.intent.action.REQUEST_BINDER" != intent.action || !PorterIdentity.isInstalled(context)) return
+        val forward = Intent("eu.darken.porter.intent.action.REQUEST_BINDER")
+            .setClassName(PorterIdentity.PACKAGE, "eu.darken.porter.manager.receiver.BinderRequestReceiver")
+        if (intent.hasExtra("data")) forward.putExtra("data", intent.getBundleExtra("data"))
+        context.sendBroadcast(forward)
+    }
+}

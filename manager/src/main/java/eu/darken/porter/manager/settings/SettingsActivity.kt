@@ -41,7 +41,7 @@ class SettingsActivity : ComposeActivity() {
     @Composable
     private fun SettingsScreen() {
         val revision = preferencesRevision()
-        val preferences = PorterSettings.getPreferences()
+        val preferences = PorterSettings.preferences
         val values = remember(revision) { preferences.all }
         val dialog by model.dialog.collectAsStateWithLifecycle()
         val canBoot by model.canBoot.collectAsStateWithLifecycle()
@@ -62,7 +62,7 @@ class SettingsActivity : ComposeActivity() {
         val showTcpPort = EnvironmentUtils.isTelevision() && !EnvironmentUtils.isTlsSupported()
         SettingsScreenContent(
             SettingsUiState(
-                startOnBoot = PorterSettings.getStartOnBoot(this@SettingsActivity),
+                startOnBoot = PorterSettings.isStartOnBoot(this@SettingsActivity),
                 startOnBootEnabled = canBoot == true,
                 watchdog = values[PorterSettings.Keys.KEY_WATCHDOG] as? Boolean ?: false,
                 autoUpdateService = values[PorterSettings.Keys.KEY_AUTO_UPDATE_SERVICE] as? Boolean ?: false,
@@ -71,14 +71,14 @@ class SettingsActivity : ComposeActivity() {
                 pairingMethodLabel = pairings[if (values[PorterSettings.Keys.KEY_LEGACY_PAIRING] == true) 1 else 0],
                 showTcpPort = showTcpPort,
                 tcpPortLabel = (values[PorterSettings.Keys.KEY_TCP_PORT] as? String) ?: stringResource(R.string.settings_tcp_port_default),
-                tcpPortNeedsRestart = showTcpPort && EnvironmentUtils.getAdbTcpPort().let { it > 0 && it != PorterSettings.getTcpPort() },
+                tcpPortNeedsRestart = showTcpPort && EnvironmentUtils.getAdbTcpPort().let { it > 0 && it != PorterSettings.tcpPort },
                 themeModeLabel = modes.getOrElse(modeValues.indexOf(mode)) { modes.first() },
                 themeStyleLabel = styles.getOrElse(styleValues.indexOf(style)) { styles.first() },
                 themeColorLabel = if (style == "MATERIAL_YOU" && Build.VERSION.SDK_INT >= 31) stringResource(R.string.porter_theme_color_system)
                     else colors.getOrElse(colorValues.indexOf(color)) { colors.first() },
                 themeColorEnabled = style != "MATERIAL_YOU" || Build.VERSION.SDK_INT < 31,
                 versionName = BuildConfig.VERSION_NAME,
-                showBatteryAction = batteryRestricted && (PorterSettings.getStartOnBoot(this@SettingsActivity) || PorterSettings.getWatchdog()),
+                showBatteryAction = batteryRestricted && (PorterSettings.isStartOnBoot(this@SettingsActivity) || PorterSettings.watchdog),
             ),
             SettingsActions(
                 onBack = { finish() },

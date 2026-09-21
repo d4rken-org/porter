@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.Parcel
-import eu.darken.porter.manager.utils.Logger.LOGGER
+import eu.darken.porter.manager.utils.LOGGER
 import eu.darken.porter.sdk.Porter
 
 object ShellBinderRequestHandler {

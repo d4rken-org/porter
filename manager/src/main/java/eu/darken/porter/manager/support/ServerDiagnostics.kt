@@ -104,7 +104,7 @@ internal object ServerDiagnostics {
     fun captureMetadata(directory: File, phase: String) {
         val details = File(directory, "server-$phase.txt")
         try {
-            details.writeText("Time: ${System.currentTimeMillis()}\nBoot start: ${PorterSettings.getPreferences().getBoolean("start_on_boot", false)}\nWatchdog: ${PorterSettings.getWatchdog()}\n")
+            details.writeText("Time: ${System.currentTimeMillis()}\nBoot start: ${PorterSettings.preferences.getBoolean("start_on_boot", false)}\nWatchdog: ${PorterSettings.watchdog}\n")
             val connection = Porter.connection.value
             if (connection == null || !connection.isAlive) {
                 details.appendText("Porter service unavailable\n")

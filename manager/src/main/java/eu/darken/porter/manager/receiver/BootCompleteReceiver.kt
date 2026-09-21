@@ -12,6 +12,6 @@ class BootCompleteReceiver : BroadcastReceiver() {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED) return
 
         PorterReceiverStarter.start(context)
-        if(PorterSettings.getWatchdog()) WatchdogService.start(context)
+        if(PorterSettings.watchdog) WatchdogService.start(context)
     }
 }

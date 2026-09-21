@@ -44,7 +44,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun checkBatteryOptimization() {
         if (EnvironmentUtils.isTelevision()) return
-        if (!PorterSettings.getStartOnBoot(appContext) && !PorterSettings.getWatchdog()) { shouldShowBatteryOptimizationSnackbar.value = false; return }
+        if (!PorterSettings.isStartOnBoot(appContext) && !PorterSettings.watchdog) { shouldShowBatteryOptimizationSnackbar.value = false; return }
         shouldShowBatteryOptimizationSnackbar.value = !SettingsHelper.isIgnoringBatteryOptimizations(appContext)
     }
 

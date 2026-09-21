@@ -99,7 +99,7 @@ internal object ManagerTransactions {
         // the starter is a separate process running as the server's own uid. What this proves is
         // that the caller runs as that uid and already holds the token it is asking about; it
         // does not single out one launch, and it is not the host application's uid.
-        if (Binder.getCallingUid() != OsUtils.getUid()) {
+        if (Binder.getCallingUid() != OsUtils.uid) {
             throw SecurityException("Permission Denial: validateUserServiceToken from uid " + Binder.getCallingUid())
         }
         val live = service.userServiceManager.isUserServiceTokenLive(data.readString())

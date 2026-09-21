@@ -42,12 +42,12 @@ class TvPairingResultDialogFragment : ComposeDialogFragment() {
         val success = requireArguments().getBoolean("success")
         TvPairingResultActions(success, serviceEnabled,
             onAction = {
-                TvPairingResultStore(PorterSettings.getPreferences()).clear()
+                TvPairingResultStore(PorterSettings.preferences).clear()
                 dismissAllowingStateLoss()
                 if (success) WirelessStart.start(requireActivity(), requireActivity().lifecycleScope)
                 else WirelessStart.pair(requireContext())
             }, onClose = {
-                if (!context.isAccessibilityEnabled()) TvPairingResultStore(PorterSettings.getPreferences()).clear()
+                if (!context.isAccessibilityEnabled()) TvPairingResultStore(PorterSettings.preferences).clear()
                 dismissAllowingStateLoss()
             })
     }

@@ -38,7 +38,7 @@ class ServiceReplacementTest {
         .getSharedPreferences("service-update", Context.MODE_PRIVATE)
 
     @Before fun allowAutomaticUpdates() {
-        PorterSettings.getPreferences().edit()
+        PorterSettings.preferences.edit()
             .putBoolean(PorterSettings.Keys.KEY_AUTO_UPDATE_SERVICE, true).commit()
         PorterStateMachine.instance.set(PorterStateMachine.State.STOPPED)
     }

@@ -10,7 +10,7 @@ import eu.darken.porter.manager.worker.ServiceUpdateWorker
 class PackageReplacedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED || UserHandleCompat.myUserId() != 0
-            || !PorterSettings.getAutoUpdateService()) return
+            || !PorterSettings.autoUpdateService) return
         ServiceUpdateWorker.schedule(context)
     }
 }

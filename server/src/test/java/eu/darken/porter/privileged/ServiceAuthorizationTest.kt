@@ -687,7 +687,7 @@ class ServiceAuthorizationTest {
             withPackageManager(packageManagerListing { user -> if (user == 0) listOf(installedApp) else emptyList() }) {
                 mockStatic(OsUtils::class.java).use { os ->
                     users.`when`<List<Int>> { UserManagerApis.getUserIdsNoThrow() }.thenReturn(listOf(0))
-                    os.`when`<Int> { OsUtils.getUid() }.thenReturn(MANAGER_UID)
+                    os.`when`<Int> { OsUtils.uid }.thenReturn(MANAGER_UID)
 
                     val applications = porterTransact(ServerConstants.BINDER_TRANSACTION_getApplications) { it.writeInt(0) }
                     assertNotNull(ParcelableListSlice.CREATOR.createFromParcel(applications))

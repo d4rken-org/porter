@@ -39,14 +39,14 @@ internal class ServiceUpdateController(
                 Outcome.SKIPPED
             } catch (e: TimeoutCancellationException) {
                 store.write(Phase.FAILED, "The replacement service did not connect in time")
-                eu.darken.porter.manager.utils.Logger.LOGGER.w(e, "Update Porter service timed out")
+                eu.darken.porter.manager.utils.LOGGER.w(e, "Update Porter service timed out")
                 Outcome.FAILED
             } catch (e: CancellationException) {
                 // A launched update may still finish after the worker is stopped. Reconcile on the next connection.
                 throw e
             } catch (e: Exception) {
                 store.write(Phase.FAILED, "${e.javaClass.simpleName}: ${e.message}")
-                eu.darken.porter.manager.utils.Logger.LOGGER.w(e, "Update Porter service")
+                eu.darken.porter.manager.utils.LOGGER.w(e, "Update Porter service")
                 Outcome.FAILED
             } finally {
                 onFinished()

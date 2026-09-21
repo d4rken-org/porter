@@ -12,14 +12,14 @@ import rikka.shizuku.ShizukuApiConstants
 import rikka.shizuku.server.ShizukuLegacyEndpoint
 
 /** The Shizuku wire as Porter answers it: the legacy endpoint plus the app's own transaction codes. */
-class ShizukuServiceEndpoint(private val service: PorterServer) : ShizukuLegacyEndpoint(service.core, service) {
+open class ShizukuServiceEndpoint(private val service: PorterServer) : ShizukuLegacyEndpoint(service.core, service) {
 
-    internal fun enforceManagerPermission(func: String) {
+    protected fun enforceManagerPermission(func: String) {
         service.core.enforceManagerPermission(func, CallerIdentity.fromBinder())
     }
 
     @Throws(RemoteException::class)
-    override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+    open override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
         // Attach builds and delivers its reply below this call; setGlobalAccess holds the same
         // monitor across its own bindApplication, so a pause can never overtake an attach reply.
         // Raw 14 is the pre-v13 attach the legacy endpoint handles itself; 18 is

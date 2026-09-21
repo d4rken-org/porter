@@ -13,9 +13,9 @@ import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.server.IPorterApplication
 
 /** The Porter wire as Porter answers it: the shared endpoint plus the app's own transaction codes. */
-class PorterServiceEndpoint(private val service: PorterServer) : PorterEndpoint(service.core, service) {
+open class PorterServiceEndpoint(private val service: PorterServer) : PorterEndpoint(service.core, service) {
 
-    internal fun enforceManagerPermission(func: String) {
+    protected fun enforceManagerPermission(func: String) {
         service.core.enforceManagerPermission(func, CallerIdentity.fromBinder())
     }
 
@@ -28,7 +28,7 @@ class PorterServiceEndpoint(private val service: PorterServer) : PorterEndpoint(
     }
 
     @Throws(RemoteException::class)
-    override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+    open override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
         when (code) {
             CompatibilitySetup.TRANSACTION -> {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)

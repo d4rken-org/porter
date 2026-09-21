@@ -4,17 +4,17 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Parcel
 import eu.darken.porter.common.DiscoveredApplication
-import eu.darken.porter.common.DiscoveredApplication.ALLOWED
-import eu.darken.porter.common.DiscoveredApplication.API_PORTER
-import eu.darken.porter.common.DiscoveredApplication.API_SHIZUKU
-import eu.darken.porter.common.DiscoveredApplication.COMPANION
-import eu.darken.porter.common.DiscoveredApplication.DEFAULT
-import eu.darken.porter.common.DiscoveredApplication.DENIED
-import eu.darken.porter.common.DiscoveredApplication.DIRECT
-import eu.darken.porter.common.DiscoveredApplication.MANAGED_ONLY
-import eu.darken.porter.common.DiscoveredApplication.NEEDS_COMPANION
-import eu.darken.porter.common.DiscoveredApplication.PENDING_COMPANION
-import eu.darken.porter.common.DiscoveredApplication.UNSUPPORTED
+import eu.darken.porter.common.DiscoveredApplication.Companion.ALLOWED
+import eu.darken.porter.common.DiscoveredApplication.Companion.API_PORTER
+import eu.darken.porter.common.DiscoveredApplication.Companion.API_SHIZUKU
+import eu.darken.porter.common.DiscoveredApplication.Companion.COMPANION
+import eu.darken.porter.common.DiscoveredApplication.Companion.DEFAULT
+import eu.darken.porter.common.DiscoveredApplication.Companion.DENIED
+import eu.darken.porter.common.DiscoveredApplication.Companion.DIRECT
+import eu.darken.porter.common.DiscoveredApplication.Companion.MANAGED_ONLY
+import eu.darken.porter.common.DiscoveredApplication.Companion.NEEDS_COMPANION
+import eu.darken.porter.common.DiscoveredApplication.Companion.PENDING_COMPANION
+import eu.darken.porter.common.DiscoveredApplication.Companion.UNSUPPORTED
 import rikka.shizuku.server.ConfigManager
 
 internal object ApplicationDiscovery {

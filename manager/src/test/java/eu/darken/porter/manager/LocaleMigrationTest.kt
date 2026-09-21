@@ -11,7 +11,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import org.robolectric.util.ReflectionHelpers
 
 /**
  * The one-shot clear of the system locale selection. A user can pick Porter's language in system
@@ -28,18 +27,18 @@ class LocaleMigrationTest {
 
     @Before fun resetSettings() {
         store().edit().clear().commit()
-        ReflectionHelpers.setStaticField(PorterSettings::class.java, "sPreferences", null)
+        PorterSettings.resetForTest()
     }
 
     @Test fun aFreshInstallKeepsTheSystemLocale() {
         PorterSettings.initialize(application)
-        assertFalse(LocaleMigration.needsClear(PorterSettings.getPreferences()))
+        assertFalse(LocaleMigration.needsClear(PorterSettings.preferences))
     }
 
     @Test fun anUpgradeClearsTheLocaleOnce() {
         store().edit().putBoolean(PorterSettings.Keys.KEY_WATCHDOG, true).commit()
         PorterSettings.initialize(application)
-        val prefs = PorterSettings.getPreferences()
+        val prefs = PorterSettings.preferences
         assertTrue(LocaleMigration.needsClear(prefs))
         LocaleMigration.markDone(prefs)
         assertFalse(LocaleMigration.needsClear(prefs))
@@ -48,6 +47,6 @@ class LocaleMigrationTest {
     @Test fun anAlreadyMigratedInstallKeepsTheSystemLocale() {
         store().edit().putBoolean(PorterSettings.Keys.KEY_SYSTEM_LOCALE_MIGRATED, true).commit()
         PorterSettings.initialize(application)
-        assertFalse(LocaleMigration.needsClear(PorterSettings.getPreferences()))
+        assertFalse(LocaleMigration.needsClear(PorterSettings.preferences))
     }
 }
