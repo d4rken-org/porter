@@ -137,7 +137,6 @@ Translation:
           - ".github/dependabot.yml"
           - "VERSION"
           - "version.properties"
-          - "build.gradle.compileSdk36"
           - "tools/ci/**"
           - "tools/release/**"
           - "tools/verify-apks.py"

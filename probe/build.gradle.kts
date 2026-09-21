@@ -1,6 +1,6 @@
 plugins {
-    id "com.android.application"
-    id "org.jetbrains.kotlin.android"
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -12,28 +12,28 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled = true
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             // The probe applies no signing script, so a release variant is unsigned and uninstallable
             // without this. The debug key is what every other probe flavour is already signed with.
-            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     buildFeatures { aidl = true }
     flavorDimensions += "backend"
     productFlavors {
-        porter { applicationIdSuffix = ".native" }
-        bridge { applicationIdSuffix = ".bridge" }
-        legacy { applicationIdSuffix = ".legacy" }
-        terminal { applicationIdSuffix = ".terminal" }
+        create("porter") { applicationIdSuffix = ".native" }
+        create("bridge") { applicationIdSuffix = ".bridge" }
+        create("legacy") { applicationIdSuffix = ".legacy" }
+        create("terminal") { applicationIdSuffix = ".terminal" }
     }
     // Two activities of the same name, one per SDK. The two flavours that speak the Shizuku API
     // share the one under src/shizuku; the two that use the Porter SDK share the one under src/sdk.
     sourceSets {
-        porter { java.srcDirs += "src/sdk/java" }
-        bridge { java.srcDirs += "src/sdk/java" }
-        legacy { java.srcDirs += "src/shizuku/java" }
-        terminal { java.srcDirs += "src/shizuku/java" }
+        getByName("porter") { java.srcDirs("src/sdk/java") }
+        getByName("bridge") { java.srcDirs("src/sdk/java") }
+        getByName("legacy") { java.srcDirs("src/shizuku/java") }
+        getByName("terminal") { java.srcDirs("src/shizuku/java") }
     }
     lint {
         // A non-shipping fixture, like :shell. Lint-vital runs on release variants of application
@@ -52,23 +52,23 @@ androidComponents {
 }
 
 dependencies {
-    legacyImplementation "dev.rikka.shizuku:api:13.1.5"
-    legacyImplementation "dev.rikka.shizuku:provider:13.1.5"
-    terminalImplementation "dev.rikka.shizuku:api:13.1.5"
-    terminalImplementation "dev.rikka.shizuku:provider:13.1.5"
-    porterImplementation project(":sdk")
+    "legacyImplementation"("dev.rikka.shizuku:api:13.1.5")
+    "legacyImplementation"("dev.rikka.shizuku:provider:13.1.5")
+    "terminalImplementation"("dev.rikka.shizuku:api:13.1.5")
+    "terminalImplementation"("dev.rikka.shizuku:provider:13.1.5")
+    "porterImplementation"(project(":sdk"))
     // dev.rikka.shizuku:provider is deliberately absent: it ships the same
     // moe.shizuku.api.BinderContainer class as :shizuku-compat and the two do not dex together.
-    bridgeImplementation project(":sdk")
-    bridgeImplementation project(":shizuku-compat")
+    "bridgeImplementation"(project(":sdk"))
+    "bridgeImplementation"(project(":shizuku-compat"))
     // Only the two flavours built on src/sdk forward a system service call, and only they can:
     // the wrapper that does it is the Porter SDK's. The bypass is part of that, not a workaround
     // for the fixture: an app reaching a system service through the wrapper links the hidden
     // method itself, and the platform blocks that from an app without one. The manager ships the
     // same pair for the same reason.
-    porterImplementation libs.hidden.compat
-    bridgeImplementation libs.hidden.compat
-    porterImplementation "org.lsposed.hiddenapibypass:hiddenapibypass:6.1"
-    bridgeImplementation "org.lsposed.hiddenapibypass:hiddenapibypass:6.1"
-    compileOnly libs.hidden.stub
+    "porterImplementation"(libs.hidden.compat)
+    "bridgeImplementation"(libs.hidden.compat)
+    "porterImplementation"("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
+    "bridgeImplementation"("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
+    compileOnly(libs.hidden.stub)
 }

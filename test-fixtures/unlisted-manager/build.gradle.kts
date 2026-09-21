@@ -1,4 +1,4 @@
-plugins { id "com.android.application" }
+plugins { id("com.android.application") }
 
 android {
     namespace = "eu.darken.porter.unlistedmanager"
