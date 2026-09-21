@@ -183,11 +183,6 @@
     <string name="accessibility_service_description">Fournit une prise en charge de l\'association pour les appareils (par exemple les téléviseurs sous Android 14+) sur lesquels les notifications ou l\'écran partagé ne peuvent pas être utilisés.\n\nPermet à Porter d\'extraire le code d\'association depuis l\'écran d\'association du débogage sans fil. Le service se désactivera de lui-même une fois le code trouvé.</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s ne prend pas en charge la version moderne de Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[L\'ancienne version de Porter est obsolète depuis mars 2019. De plus, elle ne fonctionne pas sur les versions récentes d\'Android.<p>Veuillez demander au développeur de <b>%1$s</b> de mettre à jour son application.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s demande l\'ancienne version de Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> prend en charge la version moderne de Porter, mais demande l\'ancienne version. Cela peut être dû au fait que Porter n\'est pas en cours d\'exécution ; veuillez vérifier dans l\'application Porter.<p>L\'ancienne version de Porter est obsolète depuis mars 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Ouvrir Porter</string>
     <string name="wadb_notification_attempt_now">Réessayer maintenant</string>
 
     <string name="porter_status_running_adb">En cours d\'exécution via ADB</string>

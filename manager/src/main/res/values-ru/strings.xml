@@ -184,11 +184,6 @@
     <string name="accessibility_service_description">Обеспечивает сопряжение на устройствах (например, телевизорах на Android 14+), где нельзя использовать уведомления или разделение экрана.\n\nПозволяет Porter извлекать код сопряжения с экрана сопряжения отладки по Wi-Fi. Служба отключится сама после обнаружения кода сопряжения.</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s не поддерживает современный Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Устаревшая версия Porter не поддерживается с марта 2019 года. Кроме того, она не работает на новых версиях Android.<p>Попросите разработчика <b>%1$s</b> обновить приложение.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s запрашивает устаревший Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> поддерживает современный Porter, но запрашивает устаревший. Возможно, Porter не запущен: проверьте это в приложении Porter.<p>Устаревшая версия Porter не поддерживается с марта 2019 года.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Открыть Porter</string>
     <string name="wadb_notification_attempt_now">Попробовать сейчас</string>
 
     <string name="porter_status_running_adb">Запущен через ADB</string>

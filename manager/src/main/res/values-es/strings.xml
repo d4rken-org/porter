@@ -183,11 +183,6 @@
     <string name="accessibility_service_description">Ofrece compatibilidad con la vinculación en dispositivos (p. ej., televisores con Android 14 o superior) donde no se pueden usar las notificaciones ni la pantalla dividida.\n\nPermite que Porter extraiga el código de vinculación de la pantalla de vinculación de depuración inalámbrica. Se desactivará automáticamente cuando se encuentre el código de vinculación.</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s no es compatible con el Porter moderno</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[El Porter heredado está obsoleto desde marzo de 2019. Además, el Porter heredado no funciona en los sistemas Android más recientes.<p>Pide al desarrollador de <b>%1$s</b> que lo actualice.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s está solicitando el Porter heredado</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> es compatible con el Porter moderno, pero está solicitando el Porter heredado. Esto podría deberse a que Porter no se está ejecutando; compruébalo en la app de Porter.<p>El Porter heredado está obsoleto desde marzo de 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Abrir Porter</string>
     <string name="wadb_notification_attempt_now">Intentar ahora</string>
 
     <string name="porter_status_running_adb">En ejecución mediante ADB</string>

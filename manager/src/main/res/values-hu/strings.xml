@@ -206,10 +206,5 @@
         nélküli hibakeresési párosítási képernyőről. Amint megtalálja a párosítási kódot, a rendszer
         letiltja magát.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s nem támogatja a modern Shizukut</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Az örökölt Porter 2019 márciusa óta elavult. Ezenkívül a régi Porter nem működik újabb Android-rendszereken.<p>Kérdezze meg a fejlesztőt <b>%1$s</b> frissítéséről.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s az örökölt Shizukut kéri</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> modern Porter támogatással rendelkezik, de az örökölt Shizukut kéri. Ez azért lehet, mert a Porter nem fut, ellenőrizze a Porter alkalmazást.<p>Az örökölt Porter 2019 márciusa óta elavult.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Nyissa meg a Shizukut</string>
     <string name="wadb_notification_attempt_now">Próbálja meg most</string>
 </resources>

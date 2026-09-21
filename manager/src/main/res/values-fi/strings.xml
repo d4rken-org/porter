@@ -197,10 +197,5 @@
         Shizukun poimia parituskoodin langattoman debuggauksen paritusnäytöltä. Se poistuu käytöstä,
         kun parituskoodi löytyy.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s ei tue nykyaikaista Shizukua</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Legacy Porter on ollut vanhentunut maaliskuusta 2019 lähtien. Lisäksi vanha Porter ei toimi uudemmissa Android-järjestelmissä.<p>Kysy kehittäjältä <b>%1$s</b> Päivitys.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s pyytää perintöä Shizukua</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> Siinä on moderni Porter-tuki, mutta se pyytää perinteistä Shizukua. Tämä voi johtua siitä, että Porter ei ole käynnissä, tarkista Porter-sovelluksesta.<p>Legacy Porter on ollut vanhentunut maaliskuusta 2019 lähtien.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Avaa Porter</string>
     <string name="wadb_notification_attempt_now">Yritä nyt</string>
 </resources>

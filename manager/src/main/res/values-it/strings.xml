@@ -200,10 +200,5 @@
         schermata di debug wireless. Si disabiliterà automaticamente una volta trovato il codice di
         associazione.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s non supporta il moderno Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Porter legacy è stato deprecato a marzo 2019. Inoltre, Porter legacy non funziona sui sistemi Android più recenti.<p>Chiedi allo sviluppatore<b>%1$s</b> di aggiornare.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s sta richiedendo Porter legacy</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> ha il supporto al Porter moderno, ma sta richiedendo Porter legacy. Questo potrebbe essere perché Porter non è in esecuzione, controlla nell\'app Porter.<p>Porter legacy è stato deprecato a marzo 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Apri Porter</string>
     <string name="wadb_notification_attempt_now">Prova ora</string>
 </resources>

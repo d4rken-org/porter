@@ -199,10 +199,5 @@
         sağlar.\n\nShizuku\'nun eşleştirme kodunu kablosuz hata ayıklama eşleştirme ekranından
         çıkarmasını sağlar. Eşleştirme kodu bulunduğunda kendini devre dışı bırakır.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s, yeni Porter’yu desteklemiyor</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Eski Porter, Mart 2019’dan beri kullanımdan kaldırılmıştır. Ayrıca, eski Porter yeni Android sistemlerinde çalışmaz. <p>Lütfen<b>%1$s</b> geliştiricisinden güncelleme yapmasını isteyin.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s, mevcut Porter gerektiriyor</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> yeni Porter desteğine sahip ama eski Porter talep ediyor. Bu Porter çalışmadığı zaman meydana gelir, lütfen Porter uygulamasını kontrol edin.<p>Eski Porter uygulaması Mart 2019’da kullanımdan kaldırılmıştır.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Porter’yu aç</string>
     <string name="wadb_notification_attempt_now">Şimdi dene</string>
 </resources>

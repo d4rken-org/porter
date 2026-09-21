@@ -210,10 +210,5 @@
         οθόνη.\n\nΕπιτρέπει στο Porter να εξαγάγει τον κωδικό σύζευξης από την οθόνη σύζευξης
         ασύρματου εντοπισμού σφαλμάτων. Θα απενεργοποιηθεί μόνο του μόλις βρεθεί ο κωδικός σύζευξης.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">Το %1$s δεν υποστηρίζει το σύγχρονο Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Το παλαιότερο Porter έχει καταργηθεί από τον Μάρτιο του 2019. Επίσης, το παλαιότερο Porter δεν λειτουργεί σε νεότερα συστήματα Android.<p>Παρακαλούμε ρωτήστε τον προγραμματιστή του <b>%1$s</b> για ενημέρωση.]]></string>
-    <string name="dialog_requesting_legacy_title">Το %1$s ζητά παλαιότερο Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> υποστηρίζει το σύγχρονο Porter, αλλά ζητά παλαιότερο Porter. Αυτό μπορεί να οφείλεται στο ότι το Porter δεν εκτελείται, ελέγξτε στην εφαρμογή Porter.<p>Το παλαιότερο Porter έχει καταργηθεί από τον Μάρτιο του 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Ανοίξτε το Porter</string>
     <string name="wadb_notification_attempt_now">Προσπαθήστε τώρα</string>
 </resources>

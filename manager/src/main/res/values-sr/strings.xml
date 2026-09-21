@@ -197,10 +197,5 @@
         користе.\n\nОмогућава Шизуку-у да издвоји код за упаривање са екрана за упаривање за бежично
         отклањање грешака. Сам ће се деактивирати када се пронађе код за упаривање.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s не подржава модерни Шизуку</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Застарели Шизуку је застарео од марта 2019. Такође, застарели Шизуку не ради на новијим Андроид системима.<p>Замолите програмера <b>%1$s</b> да ажурира.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s захтева старију верзију Шизукуа</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> има подршку за модерни Шизуку, али захтева старији Шизуку. То би могло бити зато што Шизуку не ради, проверите у апликацији Шизуку.<p>Старији Шизуку је застарео од марта 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Отвори Шизуку</string>
     <string name="wadb_notification_attempt_now">Покушај сада</string>
 </resources>

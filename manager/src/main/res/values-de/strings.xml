@@ -182,11 +182,6 @@
     <string name="accessibility_service_description">Bietet Kopplungsunterstützung für Geräte (z. B. Fernseher mit Android 14+), auf denen Benachrichtigungen oder Splitscreen nicht verwendet werden können.\n\nErmöglicht Porter, den Kopplungscode aus dem Kopplungsbildschirm für Debugging über WLAN auszulesen. Der Dienst deaktiviert sich selbst, sobald der Kopplungscode gefunden wurde.</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s unterstützt das moderne Porter nicht</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Das alte Porter ist seit März 2019 veraltet. Außerdem funktioniert das alte Porter nicht auf neueren Android-Systemen.<p>Bitte den Entwickler von <b>%1$s</b>, die App zu aktualisieren.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s fordert das alte Porter an</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> unterstützt das moderne Porter, fordert aber das alte Porter an. Das kann daran liegen, dass Porter nicht läuft. Bitte prüfe das in der Porter-App.<p>Das alte Porter ist seit März 2019 veraltet.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Porter öffnen</string>
     <string name="wadb_notification_attempt_now">Jetzt versuchen</string>
 
     <string name="porter_status_running_adb">Läuft über ADB</string>

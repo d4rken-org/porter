@@ -199,10 +199,5 @@
         zaslona.\n\nOmogoča Porter, da izvleče kodo za seznanjanje z zaslona za brezžično
         odpravljanje napak. Ko najde kodo za seznanjanje, se samodejno onemogoči.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s ne podpira sodobnega jezika Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Podedovana različica Shizukuja je od marca 2019 opuščena. Prav tako podedovana različica Shizukuja ne deluje na novejših sistemih Android.<p>Za posodobitev prosite razvijalca <b>%1$s</b> .]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s zahteva starejšo različico Shizukuja</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> ima podporo za sodoben Porter, vendar zahteva starejši Porter. To je morda zato, ker Porter ne deluje, preverite v aplikaciji Porter.<p>Starejši Porter je od marca 2019 zastarel.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Odpri Porter</string>
     <string name="wadb_notification_attempt_now">Poskusite zdaj</string>
 </resources>

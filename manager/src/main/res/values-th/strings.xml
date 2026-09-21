@@ -189,10 +189,5 @@
         สามารถดึงรหัสการจับคู่จากหน้าจอการจับคู่เพื่อแก้ไขข้อบกพร่องแบบไร้สายได้
         ระบบจะปิดตัวเองเมื่อพบรหัสการจับคู่</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s ไม่รองรับ Porter รุ่นใหม่</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Porter รุ่นเก่าได้ถูกเลิกใช้ไปแล้วตั้งแต่เดือนมีนาคม 2019 นอกจากนี้ Porter รุ่นเก่ายังใช้งานไม่ได้กับระบบ Android ที่ใหม่กว่า <p>โปรดติดต่อผู้พัฒนาของ <b>%1$s</b> เพื่ออัปเดตเป็นเวอร์ชันใหม่]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s กำลังขอร้อง Porter รุ่นเก่า</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> รองรับ Porter รุ่นใหม่ แต่กำลังขอร้อง Porter รุ่นเก่า นี่อาจเป็นเพราะ Porter ไม่ทำงาน โปรดตรวจสอบในแอป Porter <p>Porter รุ่นเก่าได้ถูกเลิกใช้ไปแล้วตั้งแต่เดือนมีนาคมปี 2019]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">เปิด Porter</string>
     <string name="wadb_notification_attempt_now">ลองตอนนี้เลย</string>
 </resources>

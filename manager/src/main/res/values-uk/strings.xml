@@ -204,10 +204,5 @@
         розділений екран.\n\nДозволяє Porter витягувати код сполучення з екрана сполучення для
         бездротового налагодження. Він вимкнеться, як тільки код сполучення буде знайдено.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s не підтримує сучасну версію Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Підтримка старої версії Porter завершилася у березні 2019 року. Також, стара версія Porter не працює на нових версіях Android.<p>Будь ласка, попросіть оновитися у розробника <b>%1$s</b>.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s просить стару версію Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> має підтримку нової версії Porter, але просить стару версію Porter. Це може трапитися тому, що Porter не запущено, будь ласка, перевірте у програмі Porter.<p>Підтримка старої версії Porter завершилася у березні 2019 року.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Відкрити Porter</string>
     <string name="wadb_notification_attempt_now">Спробуйте зараз</string>
 </resources>

@@ -181,11 +181,6 @@
     <string name="accessibility_service_description">Menyediakan dukungan penyambungan untuk perangkat (misalnya TV yang menjalankan Android 14+) yang tidak dapat menggunakan notifikasi atau layar terpisah.\n\nMemungkinkan Porter mengekstrak kode penyambungan dari layar penyambungan proses debug nirkabel. Layanan ini akan menonaktifkan dirinya sendiri setelah kode penyambungan ditemukan.</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s tidak mendukung Porter modern</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Porter lama sudah tidak digunakan lagi sejak Maret 2019. Selain itu, Porter lama tidak berfungsi di sistem Android yang lebih baru.<p>Harap minta developer <b>%1$s</b> untuk memperbarui aplikasinya.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s meminta Porter lama</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> memiliki dukungan Porter modern, tetapi meminta Porter lama. Ini mungkin karena Porter tidak berjalan, harap periksa di aplikasi Porter.<p>Porter lama sudah tidak digunakan lagi sejak Maret 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Buka Porter</string>
     <string name="wadb_notification_attempt_now">Coba sekarang</string>
 
     <string name="porter_status_running_adb">Berjalan melalui ADB</string>

@@ -203,10 +203,5 @@
         emparelhamento do ecrã de depuração sem fios. Será desativado assim que o código de
         emparelhamento for encontrado.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s não é compatível com Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[O Porter legado está obsoleto desde março de 2019. Além disso, o Porter legado não funciona em sistemas Android mais recentes.<p>Peça ao desenvolvedor de <b>%1$s</b> para atualizar.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s está solicitando Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> tem suporte moderno para Porter, mas está solicitando Porter legado. Isso pode acontecer porque o Porter não está em execução. Verifique no aplicativo Porter.<p>O uso do Porter legado foi suspenso desde março de 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Abrir Porter</string>
     <string name="wadb_notification_attempt_now">Tente agora</string>
 </resources>

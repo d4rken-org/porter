@@ -195,10 +195,5 @@
         det möjligt för Porter att extrahera parkopplingskoden från den trådlösa felsökningsskärmen
         för parkoppling. Den inaktiverar sig själv när parkopplingskoden hittas.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s stöder inte moderna Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Legacy Porter har varit föråldrad sedan mars 2019. Legacy Porter fungerar inte heller på nyare Android-system.<p>Vänligen be utvecklaren av <b>%1$s</b> att uppdatera.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s begär äldre Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> har stöd för modern Porter, men begär den äldre versionen av Porter. Detta kan bero på att Porter inte körs, vänligen kontrollera det i Porter-appen.<p>Den äldre versionen av Porter har varit föråldrad sedan mars 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Öppna Porter</string>
     <string name="wadb_notification_attempt_now">Försök nu</string>
 </resources>

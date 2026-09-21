@@ -186,11 +186,6 @@
     <string name="accessibility_service_description">توفّر دعم الإقران للأجهزة (مثل أجهزة التلفزيون التي تعمل بنظام Android 14 أو الأحدث) التي لا يمكن فيها استخدام الإشعارات أو تقسيم الشاشة.\n\nتتيح لـ Porter استخراج رمز الإقران من شاشة إقران تصحيح الأخطاء اللاسلكي. وستوقف نفسها تلقائيًا بمجرد العثور على رمز الإقران.</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s لا يدعم إصدار Porter الحديث</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[تم إيقاف دعم إصدار Porter القديم منذ مارس 2019. كما أن إصدار Porter القديم لا يعمل على أنظمة Android الأحدث.<p>يُرجى مطالبة مطوّر <b>%1$s</b> بتحديثه.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s يطلب إصدار Porter القديم</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> يدعم إصدار Porter الحديث، لكنه يطلب إصدار Porter القديم. قد يكون السبب أن Porter لا يعمل، يُرجى التحقق في تطبيق Porter.<p>تم إيقاف دعم إصدار Porter القديم منذ مارس 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">فتح Porter</string>
     <string name="wadb_notification_attempt_now">المحاولة الآن</string>
 
     <string name="porter_status_running_adb">يعمل عبر ADB</string>
