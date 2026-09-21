@@ -26,14 +26,14 @@ class Shell : Porsh() {
                 cancelStartupTimeout()
                 onGrantedRunnable.run()
             }
-            is PermissionState.Denied -> if (state.shouldShowRationale) {
+            is PermissionState.Denied -> if (state.permanentlyDenied) {
                 deny()
             } else {
                 scope.launch {
                     val answer = try {
                         connection.requestPermission()
                     } catch (e: PorterConnectionLostException) {
-                        PermissionState.Denied(shouldShowRationale = false)
+                        PermissionState.Denied(permanentlyDenied = false)
                     }
                     // The answer arrives on a binder thread; the shell starts on the main one.
                     mainHandler.post { if (answer == PermissionState.Granted) onGrantedRunnable.run() else deny() }

@@ -122,7 +122,7 @@ suspends until they answer.
 suspend fun onPorterReady(connection: PorterConnection) {
     when (val state = connection.checkPermission()) {
         PermissionState.Granted -> doPrivilegedWork(connection)
-        is PermissionState.Denied -> if (state.shouldShowRationale) {
+        is PermissionState.Denied -> if (state.permanentlyDenied) {
             // The user denied it and asked not to be asked again. Explain why you need it
             // and point them at Porter's own screen.
             explainWhyWeNeedIt()
