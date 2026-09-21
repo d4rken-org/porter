@@ -19,30 +19,33 @@ object PorterSettings {
 
     const val NAME = "settings"
 
+    /** Kept out of [NAME] so the backup rules can leave the whole file behind. */
+    const val SECRETS_NAME = "secrets"
+
+    const val SCHEMA_VERSION = 1
+
     object Keys {
+        const val KEY_SCHEMA_VERSION = "schema_version"
         const val KEY_START_ON_BOOT = "start_on_boot"
         const val KEY_WATCHDOG = "watchdog"
         const val KEY_AUTO_UPDATE_SERVICE = "auto_update_service"
         const val KEY_TCP_PORT = "tcp_port"
-        const val KEY_LANGUAGE = "language"
-        const val KEY_TRANSLATION = "translation"
-        const val KEY_TRANSLATION_CONTRIBUTORS = "translation_contributors"
         const val KEY_THEME_STYLE = "theme_style"
         const val KEY_THEME_COLOR = "theme_color"
         const val KEY_NIGHT_MODE = "night_mode"
-        const val KEY_BLACK_NIGHT_THEME = "black_night_theme"
-        const val KEY_USE_SYSTEM_COLOR = "use_system_color"
-        const val KEY_HELP = "help"
-        const val KEY_REPORT_BUG = "report_bug"
         const val KEY_LEGACY_PAIRING = "legacy_pairing"
-        const val KEY_CATEGORY_ADVANCED = "category_advanced"
-        const val KEY_SYSTEM_LOCALE_MIGRATED = "system_locale_migrated"
+        const val KEY_LAUNCH_MODE = "mode"
+        const val KEY_AUTH_TOKEN = "auth_token"
     }
 
     private var storage: SharedPreferences? = null
+    private var secretStorage: SharedPreferences? = null
 
     val preferences: SharedPreferences
         get() = checkNotNull(storage) { "PorterSettings.initialize was not called" }
+
+    private val secrets: SharedPreferences
+        get() = checkNotNull(secretStorage) { "PorterSettings.initialize was not called" }
 
     private fun getSettingsStorageContext(context: Context): Context {
         val storageContext = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -63,36 +66,29 @@ object PorterSettings {
 
     fun initialize(context: Context) {
         if (storage != null) return
-        val preferences = getSettingsStorageContext(context).getSharedPreferences(NAME, Context.MODE_PRIVATE)
+        val storageContext = getSettingsStorageContext(context)
+        val preferences = storageContext.getSharedPreferences(NAME, Context.MODE_PRIVATE)
         storage = preferences
-        val freshInstall = preferences.all.isEmpty()
-        val editor = preferences.edit().remove(Keys.KEY_LANGUAGE)
-        if (freshInstall) {
-            editor.putBoolean(Keys.KEY_SYSTEM_LOCALE_MIGRATED, true)
+        secretStorage = storageContext.getSharedPreferences(SECRETS_NAME, Context.MODE_PRIVATE)
+        migrate(preferences)
+    }
+
+    private fun migrate(preferences: SharedPreferences) {
+        val stored = preferences.getInt(Keys.KEY_SCHEMA_VERSION, 0)
+        if (stored >= SCHEMA_VERSION) return
+        for (from in stored until SCHEMA_VERSION) {
+            when (from) {
+                0 -> Unit
+            }
         }
-        if (!preferences.contains(Keys.KEY_THEME_STYLE)) {
-            editor.putString(
-                Keys.KEY_THEME_STYLE,
-                if (Build.VERSION.SDK_INT >= 31 && preferences.all.isNotEmpty() && preferences.getBoolean(Keys.KEY_USE_SYSTEM_COLOR, true)) {
-                    "MATERIAL_YOU"
-                } else {
-                    "DEFAULT"
-                },
-            )
-        }
-        if (!preferences.contains(Keys.KEY_THEME_COLOR)) {
-            editor.putString(
-                Keys.KEY_THEME_COLOR,
-                if (preferences.getBoolean(Keys.KEY_BLACK_NIGHT_THEME, false)) "AMOLED" else "BLUE",
-            )
-        }
-        editor.apply()
+        preferences.edit().putInt(Keys.KEY_SCHEMA_VERSION, SCHEMA_VERSION).apply()
     }
 
     /** Forgets the storage, so a test can initialize against a cleared one. */
     @VisibleForTesting
     internal fun resetForTest() {
         storage = null
+        secretStorage = null
     }
 
     /** How the service was last started, stored as the code the Java constants used. */
@@ -108,16 +104,16 @@ object PorterSettings {
     }
 
     var lastLaunchMode: LaunchMethod
-        get() = LaunchMethod.fromCode(preferences.getInt("mode", LaunchMethod.UNKNOWN.code))
-        set(method) = preferences.edit().putInt("mode", method.code).apply()
+        get() = LaunchMethod.fromCode(preferences.getInt(Keys.KEY_LAUNCH_MODE, LaunchMethod.UNKNOWN.code))
+        set(method) = preferences.edit().putInt(Keys.KEY_LAUNCH_MODE, method.code).apply()
 
     /** The stored token, generated and stored on first use. */
     val authToken: String
-        get() = preferences.getString("auth_token", null)?.takeIf { it.isNotEmpty() } ?: generateAuthToken()
+        get() = secrets.getString(Keys.KEY_AUTH_TOKEN, null)?.takeIf { it.isNotEmpty() } ?: generateAuthToken()
 
     fun generateAuthToken(): String {
         val token = Token.generateToken()
-        preferences.edit().putString("auth_token", token).apply()
+        secrets.edit().putString(Keys.KEY_AUTH_TOKEN, token).apply()
         return token
     }
 
