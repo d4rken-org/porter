@@ -72,7 +72,7 @@ class PorterStateMachineAttachmentTest {
         Porter.onBinderReceived(server, "eu.darken.porter.manager")
 
         val machine = PorterStateMachine()
-        machine.attachToShizuku()
+        machine.attachToPorter()
         ShadowLooper.idleMainLooper()
 
         assertEquals(State.RUNNING, machine.get())
