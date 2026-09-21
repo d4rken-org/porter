@@ -123,7 +123,7 @@ object PorterReceiverStarter {
             PorterStateMachine.instance.set(PorterStateMachine.State.STARTING)
             Shell.cmd(Starter.internalCommand).exec()
         } catch (e: Exception) {
-            Log.e(AppConstants.TAG, "Failed to start Shizuku with root", e)
+            Log.e(AppConstants.TAG, "Failed to start Porter with root", e)
             PorterStateMachine.instance.update()
         }
     }

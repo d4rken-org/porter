@@ -218,7 +218,7 @@ int main(int argc, char *argv[]) {
 
     uid_t uid = getuid();
     if (uid != 0 && uid != 2000) {
-        perrorf("fatal: run Shizuku from non root nor adb user (uid=%d).\n", uid);
+        perrorf("fatal: run Porter from non root nor adb user (uid=%d).\n", uid);
         exit(EXIT_FATAL_UID);
     }
 
@@ -326,7 +326,7 @@ int main(int argc, char *argv[]) {
             if (kill(pid, SIGKILL) == 0)
                 printf("info: killed %d (%s)\n", pid, name);
             else if (errno == EPERM) {
-                perrorf("fatal: can't kill %d, please try to stop existing Shizuku from app first.\n", pid);
+                perrorf("fatal: can't kill %d, please try to stop existing Porter from app first.\n", pid);
                 exit(EXIT_FATAL_KILL);
             } else {
                 printf("warn: failed to kill %d (%s)\n", pid, name);

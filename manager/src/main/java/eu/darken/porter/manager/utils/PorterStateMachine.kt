@@ -50,7 +50,7 @@ class PorterStateMachine {
      * Explicit, and separate from construction: a second collector would double every transition,
      * and merely holding an instance must not wire anything up.
      */
-    fun attachToShizuku() {
+    fun attachToPorter() {
         if (!attached.compareAndSet(false, true)) return
         scope.launch {
             ServerBinder.binder.collect { binder ->

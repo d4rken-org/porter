@@ -96,7 +96,7 @@ object PorterShellLoader {
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
                     .putExtra("data", data),
-                "Request binder from Shizuku",
+                "Request binder from Porter",
             )
 
             am.startActivityAsUser(null, callingPackage, activityIntent, null, null, null, 0, 0, null, null, Os.getuid() / 100000)
