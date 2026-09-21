@@ -143,8 +143,6 @@
     <string name="notification_adb_pairing_succeed_text">Anda dapat memulai layanan Porter sekarang.</string>
     <string name="notification_adb_pairing_failed_title">Penyambungan gagal</string>
     <string name="notification_adb_pairing_retry">Coba lagi</string>
-    <string name="notification_auth_missing_title">Token autentikasi diperlukan</string>
-    <string name="notification_auth_missing_message">Tambahkan ekstra “auth” ke intent Anda. Token Anda ada di Setelan, di bagian “Kontrol Porter dengan aplikasi otomatisasi”.</string>
     <string name="notification_auth_invalid_title">Token autentikasi tidak valid</string>
     <string name="notification_auth_invalid_message">Pastikan token di intent Anda cocok dengan yang ditampilkan di Setelan, di bagian “Kontrol Porter dengan aplikasi otomatisasi”.</string>
 

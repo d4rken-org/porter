@@ -145,8 +145,6 @@
     <string name="notification_adb_pairing_succeed_text">Vous pouvez maintenant démarrer le service Porter.</string>
     <string name="notification_adb_pairing_failed_title">Échec de l\'association</string>
     <string name="notification_adb_pairing_retry">Réessayer</string>
-    <string name="notification_auth_missing_title">Jeton d\'authentification requis</string>
-    <string name="notification_auth_missing_message">Ajoutez l\'extra « auth » à votre intent. Vous trouverez votre jeton dans les Paramètres, sous « Contrôler Porter avec des applications d\'automatisation ».</string>
     <string name="notification_auth_invalid_title">Jeton d\'authentification invalide</string>
     <string name="notification_auth_invalid_message">Assurez-vous que le jeton de votre intent correspond à celui affiché dans les Paramètres, sous « Contrôler Porter avec des applications d\'automatisation ».</string>
 

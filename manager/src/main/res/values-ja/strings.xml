@@ -143,8 +143,6 @@
     <string name="notification_adb_pairing_succeed_text">Porterサービスを開始できます。</string>
     <string name="notification_adb_pairing_failed_title">ペア設定に失敗しました</string>
     <string name="notification_adb_pairing_retry">再試行</string>
-    <string name="notification_auth_missing_title">認証トークンが必要です</string>
-    <string name="notification_auth_missing_message">インテントに「auth」エクストラを追加してください。トークンは、設定の「自動化アプリでPorterを制御」で確認できます。</string>
     <string name="notification_auth_invalid_title">認証トークンが無効です</string>
     <string name="notification_auth_invalid_message">インテント内のトークンが、設定の「自動化アプリでPorterを制御」に表示されているものと一致していることを確認してください。</string>
 

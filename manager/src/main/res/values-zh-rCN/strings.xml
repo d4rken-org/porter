@@ -143,8 +143,6 @@
     <string name="notification_adb_pairing_succeed_text">您现在可以启动 Porter 服务了。</string>
     <string name="notification_adb_pairing_failed_title">配对失败</string>
     <string name="notification_adb_pairing_retry">重试</string>
-    <string name="notification_auth_missing_title">需要身份验证令牌</string>
-    <string name="notification_auth_missing_message">请在您的 Intent 中添加“auth”附加数据。您可以在“设置”中的“使用自动化应用控制 Porter”下找到您的令牌。</string>
     <string name="notification_auth_invalid_title">身份验证令牌无效</string>
     <string name="notification_auth_invalid_message">请确保 Intent 中的令牌与“设置”中“使用自动化应用控制 Porter”下显示的令牌一致。</string>
 
