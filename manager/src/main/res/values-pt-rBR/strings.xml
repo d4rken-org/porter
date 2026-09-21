@@ -183,11 +183,6 @@
     <string name="accessibility_service_description">Fornece suporte ao pareamento em dispositivos (por exemplo, TVs com Android 14 ou superior) em que não é possível usar notificações ou tela dividida.\n\nPermite que o Porter extraia o código de pareamento da tela de pareamento da depuração por Wi-Fi. O serviço será desativado sozinho assim que o código de pareamento for encontrado.</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s não é compatível com o Porter moderno</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[O Porter legado está descontinuado desde março de 2019. Além disso, o Porter legado não funciona em sistemas Android mais recentes.<p>Peça ao desenvolvedor de <b>%1$s</b> para atualizar.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s está solicitando o Porter legado</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> tem suporte ao Porter moderno, mas está solicitando o Porter legado. Isso pode acontecer porque o Porter não está em execução; verifique no app do Porter.<p>O Porter legado está descontinuado desde março de 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Abrir o Porter</string>
     <string name="wadb_notification_attempt_now">Tentar agora</string>
 
     <string name="porter_status_running_adb">Em execução via ADB</string>

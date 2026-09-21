@@ -198,10 +198,5 @@
         divizat.\n\nPermite Porter să extragă codul de asociere din ecranul de asociere pentru
         depanarea wireless. Se va dezactiva automat odată ce codul de asociere este găsit.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s nu suportă Porter modern</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Vechea versiune Porter a fost retrasă din martie 2019. De asemenea, vechea versiune Porter nu funcționează pe sisteme Android mai noi.<p>Cere dezvoltatorului <b>%1$s</b> să actualizeze.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s solicită Porter vechi</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> are suport Porter modern, dar solicită Porter vechi. Acest lucru se poate datora faptului că Porter nu rulează, verifică în aplicația Porter.<p>Versiunea veche a Porter a fost retrasă din martie 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Deschide Porter</string>
     <string name="wadb_notification_attempt_now">Încearcă acum</string>
 </resources>

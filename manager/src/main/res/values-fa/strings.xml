@@ -196,10 +196,5 @@
         فراهم می‌کند.\n\nبه Porter این امکان را می‌دهد که کد جفت‌سازی را از صفحه جفت‌سازی
         اشکال‌زدایی بی‌سیم استخراج کند. پس از یافتن کد جفت‌سازی، خود را غیرفعال می‌کند.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s از شیزوکوی جدید پشتیبانی نمی کند</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[شیزوکوی قدیمی از مارس ۲۰۱۹ منسوخ شده است. همچنین، Porter قدیمی در دستگاه‌های اندروید جدید کار نمی‌کند.<p>لطفاً از توسعه‌دهنده <b>%1$s</b> بخواهید که به‌روزرسانی کند.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s در حال درخواست Porter قدیمی است</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> پشتیبانی نسخه جدید شیزوکو دارد، اما شیزوکو قدیمی را درخواست می‌کند. این ممکن است به این دلیل باشد که Porter در حال اجرا نیست، لطفاً در برنامه Porter بررسی کنید.<p>Porter قدیمی از مارس ۲۰۱۹ منسوخ شده است.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">باز کردن Porter</string>
     <string name="wadb_notification_attempt_now">همین حالا تلاش کنید</string>
 </resources>

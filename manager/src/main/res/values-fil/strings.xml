@@ -207,11 +207,5 @@
         wireless debugging pairing screen. Hindi ito paganahin kapag natagpuan na ang code ng
         pagpapares.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">Hindi sinusuportahan ng %1$s ang makabagong
-        Porter (API v11+)</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Inihinto na ang suporta sa makalumang Porter (API v10-). Hindi na rin gagana ang makalumang Porter sa mga mas bagong bersyon ng Android.<p>Mangyaring ipaalam sa may-akda ng <b>%1$s</b> na kailangan na nitong mag-update.]]></string>
-    <string name="dialog_requesting_legacy_title">Humihiling ng makalumang Porter ang %1$s</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[Suportado ng <b>%1$s</b> ang makabagong Porter, pero humihiling ito nang makalumang Porter. Pakitingnan sa Porter app kung tumatakbo ba nang maayos ang Porter dahil baka ito ay dahil nagkakaproblema ang Porter.<p>Hindi na suportado ang makalumang Porter simula Marso 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Buksan ang Porter</string>
     <string name="wadb_notification_attempt_now">Subukan ngayon</string>
 </resources>

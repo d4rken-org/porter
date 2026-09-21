@@ -200,10 +200,5 @@
         digunakan.\n\nMendayakan Porter untuk mengekstrak kod gandingan daripada skrin pasangan
         nyahpepijat wayarles. Ia akan melumpuhkan dirinya apabila kod berpasangan ditemui.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s tidak menyokong Porter moden</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Porter warisan telah ditamatkan sejak Mac 2019. Selain itu, Porter warisan tidak berfungsi pada sistem Android yang lebih baharu.<p>Sila minta pembangun <b>%1$s</b> untuk mengemas kini.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s sedang meminta Porter warisan</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> mempunyai sokongan Porter moden, tetapi ia meminta Porter warisan. Ini mungkin kerana Porter tidak berjalan, sila semak dalam aplikasi Porter.<p>Legasi Porter telah ditamatkan sejak Mac 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Buka Porter</string>
     <string name="wadb_notification_attempt_now">Cuba sekarang</string>
 </resources>

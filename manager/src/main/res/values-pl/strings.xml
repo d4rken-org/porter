@@ -198,10 +198,5 @@
         ekranu.\n\nUmożliwia Porter odczytanie kodu parowania z ekranu debugowania bezprzewodowego.
         Usługa wyłączy się automatycznie po znalezieniu kodu.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s nie obsługuje nowego Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Wsparcie dla starszej wersji Porter zostało zakończone w marcu 2019 roku. Ponadto, starsza wersja nie działa na nowszych systemach Android.<p>Poproś dewelopera <b>%1$s</b> o aktualizację aplikacji.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s żąda starszej wersji Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> wspiera nowe Porter, ale żąda starszej wersji. Może to wynikać z faktu, że Porter nie jest uruchomione, sprawdź to w aplikacji Porter.<p>Wsparcie dla starszej wersji Porter zostało zakończone w marcu 2019 roku.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Otwórz Porter</string>
     <string name="wadb_notification_attempt_now">Spróbuj teraz</string>
 </resources>

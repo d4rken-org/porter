@@ -155,10 +155,5 @@
     <string name="accessibility_service_description">為無法使用通知或分割畫面的裝置（例如運行 Android 14+
         的電視）提供配對支援。\n\n使 Porter 能從無線除錯配對畫面擷取配對程式碼。一旦找到配對碼，它就會自動停用。</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s 不支援現代 Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[舊式 Porter 已於 2019 年 3 月被棄用。此外，舊式 Porter 無法在較新版本的 Android 系統上工作。<p>請要求 <b>%1$s</b> 的開發人員進行更新。]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s 正在要求舊版 Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> 支援現代 Porter，但它正在要求舊版 Porter。這可能是因為 Porter 未在執行，請在 Porter 應用程式內檢查。<p>舊版 Porter 已於 2019 年 3 月被棄用。]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">開啟 Porter</string>
     <string name="wadb_notification_attempt_now">現在嘗試</string>
 </resources>

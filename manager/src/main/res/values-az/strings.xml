@@ -198,10 +198,5 @@
         təmin edir.\n\nShizuku-ya simsiz debugging cütləşdirmə ekranından cütləşdirmə kodunu
         çıxarmağa imkan verir. Cütləşdirmə kodu tapıldıqdan sonra özünü deaktiv edəcək.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s müasir Shizukunu dəstəkləmir</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Köhnə Porter 2019-cu ilin mart ayından ləğv edilib. Həmçinin, köhnə Porter daha yeni Android sistemlərində işləmir.<p>Lütfən, <b>%1$s</b> tərtibatçısından yeniləməsini xahiş edin.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s köhnə Şizuku tələb edir</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> müasir Porter dəstəyinə malikdir, lakin o, köhnə Şizuku tələb edir. Bu, Porter işləmədiyinə görə ola bilər, lütfən, Porter proqramında yoxlayın.<p>Legacy Porter 2019-cu ilin mart ayından etibarən köhnəlib]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Shizukunu aç</string>
     <string name="wadb_notification_attempt_now">İndi cəhd et</string>
 </resources>

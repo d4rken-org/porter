@@ -193,10 +193,5 @@
         phép Porter trích xuất mã ghép nối từ màn hình ghép nối gỡ lỗi không dây. Tính năng này sẽ
         tự tắt sau khi tìm thấy mã ghép nối.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s không hỗ trợ Porter hiện đại</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Porter cũ không được dùng nữa kể từ tháng 3 năm 2019. Ngoài ra, Porter cũ không hoạt động trên các hệ thống Android mới hơn.<p>Vui lòng yêu cầu nhà phát triển của <b>%1$s</b> cập nhật.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s đang yêu cầu Porter cũ</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> có hỗ trợ Porter hiện đại, nhưng nó yêu cầu Porter cũ. Điều này có thể do Porter đang không chạy, vui lòng kiểm tra ứng dụng Porter.<p>Porter cũ không được dùng nữa kể từ tháng 3 năm 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Mở Porter</string>
     <string name="wadb_notification_attempt_now">Thử ngay bây giờ</string>
 </resources>

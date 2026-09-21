@@ -181,11 +181,6 @@
     <string name="accessibility_service_description">为无法使用通知或分屏的设备（例如运行 Android 14 及以上版本的电视）提供配对支持。\n\n使 Porter 能够从无线调试配对界面中提取配对码。找到配对码后，它会自动关闭。</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s 不支持现代 Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[旧版 Porter 已于 2019 年 3 月弃用。此外，旧版 Porter 无法在较新的 Android 系统上运行。<p>请要求 <b>%1$s</b> 的开发者进行更新。]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s 正在请求旧版 Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> 支持现代 Porter，但它正在请求旧版 Porter。这可能是因为 Porter 没有运行，请在 Porter 应用内检查。<p>旧版 Porter 已于 2019 年 3 月弃用。]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">打开 Porter</string>
     <string name="wadb_notification_attempt_now">立即尝试</string>
 
     <string name="porter_status_running_adb">通过 ADB 运行</string>

@@ -188,11 +188,6 @@
     <string name="accessibility_service_description">Provides pairing support for devices (e.g., TVs running Android 14+) where notifications or split screen cannot be used.\n\nEnables Porter to extract the pairing code from the wireless debugging pairing screen. It will disable itself once the pairing code is found.</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s does not support modern Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Legacy Porter has been deprecated since March 2019. Also, legacy Porter does not work on newer Android systems.<p>Please ask the developer of <b>%1$s</b> to update.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s is requesting legacy Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> has modern Porter support, but it\'s requesting legacy Porter. This could because Porter is not running, please check in Porter app.<p>Legacy Porter has been deprecated since March 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Open Porter</string>
     <string name="wadb_notification_attempt_now">Attempt now</string>
 
     <string name="porter_status_running_adb">Running via ADB</string>

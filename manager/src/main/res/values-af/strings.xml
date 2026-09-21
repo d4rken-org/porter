@@ -197,10 +197,5 @@
         nie.\n\nStel Porter in staat om die paringskode uit die draadlose ontfouting-paringskerm te
         onttrek. Dit sal homself deaktiveer sodra die paringskode gevind is.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s ondersteun nie moderne Porter nie</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Legacy Porter is sedert Maart 2019 afgekeur. Legacy Porter werk ook nie op nuwer Android-stelsels nie.<p>Vra asseblief die ontwikkelaar van <b>%1$s</b> om op te dateer.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s versoek nalatenskap Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> het moderne Porter-ondersteuning, maar dit versoek ouer Porter. Dit kan wees omdat Porter nie loop nie, kyk asseblief in die Porter-app.<p>Ouderdoms-Porter is sedert Maart 2019 afgekeur.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Maak Porter oop</string>
     <string name="wadb_notification_attempt_now">Probeer nou</string>
 </resources>

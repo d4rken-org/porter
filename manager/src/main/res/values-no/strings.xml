@@ -191,10 +191,5 @@
         Porter å trekke ut paringskoden fra feilsøkingsskjermen for trådløs paring. Den vil
         deaktivere seg selv når paringskoden er funnet.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s støtter ikke moderne Porter</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Legacy Porter har vært avviklet siden mars 2019. Legacy Porter fungerer heller ikke på nyere Android-systemer.<p>Be utvikleren av <b>%1$s</b> om å oppdatere.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s ber om eldre Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> har støtte for moderne Porter, men den ber om den eldre versjonen av Porter. Dette kan være fordi Porter ikke kjører. Sjekk det i Porter-appen.<p>Den eldre versjonen av Porter har vært avviklet siden mars 2019.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Åpne Porter</string>
     <string name="wadb_notification_attempt_now">Forsøk nå</string>
 </resources>

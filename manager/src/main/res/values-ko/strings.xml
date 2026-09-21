@@ -167,10 +167,5 @@
         TV)에 대한 페어링 지원을 제공합니다.\n\nShizuku가 무선 디버깅 페어링 화면에서 페어링 코드를 추출할 수 있도록 합니다. 페어링 코드를 찾으면
         Shizuku가 자동으로 비활성화됩니다.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s는 최신 Shizuku를 지원하지 않음</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[구형 Shizuku는 2019년 3월에 지원이 중단되었습니다. 또한, 구형 Shizuku는 새로운 안드로이드 시스템에서 동작하지 않습니다.<p><b>%1$s</b> 개발자에게 업데이트를 문의하세요.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s가 구형 Shizuku를 요청하고 있음</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b>가 최신 Shizuku를 지원하지만, 구형 Shizuku를 요청하고 있습니다. Shizuku가 실행 중이지 않아서 발생할 수 있으니 Porter 앱에서 확인하세요.<p>구형 Shizuku는 2019년 3월 부터 지원이 중단되었습니다.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Porter 열기</string>
     <string name="wadb_notification_attempt_now">지금 시도하세요</string>
 </resources>

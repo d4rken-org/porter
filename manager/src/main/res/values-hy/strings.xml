@@ -204,10 +204,5 @@
         ծանուցումները կամ բաժանված էկրանը:\n\nՀնարավորություն է տալիս Porter-ին հանել զուգավորման
         կոդը անլար կարգաբերման զուգավորման էկրանից: Այն կանջատի ինքն իրեն, երբ զույգ կոդը գտնվի:</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s-ը չի ընդունում այժմյան Porter-ն</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[Հին Porter-ն համարվում է հնացած 2019-ի մարտից։ Հին Porter-ն չի աշխատում նոր Android-ի փոփոխակներում։<p>Դիմեք <b>%1$s</b>-ի ծրագրավորողին և ասեք, որ ծրագիրը թարմացնի։]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s-ն առաջարկում է օգտվել հին Porter-ից</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b>-ն օժտված է նոր Porter-ից օգտվելու հատկությունից, բայց այն փորձում է օգտվել հին Porter-ից։ Հնարավոր է, որ Porter-ն միացված չէ, ստուգեք Porter ծրագիրը։<p>Հին Porter-ն համարվում է հնացած 2019-ի մարտից։]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Բացել Porter-ն</string>
     <string name="wadb_notification_attempt_now">Փորձեք հիմա</string>
 </resources>

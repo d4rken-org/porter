@@ -200,10 +200,5 @@
         foutopsporingskoppelingsscherm te halen. Het schakelt zichzelf uit zodra de koppelingscode
         is gevonden.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s ondersteunt de moderne Porter niet</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[De oude versie van Porter is sinds maart 2019 buiten gebruik gesteld. Ook werkt de oude versie niet op nieuwere Android-systemen.<p>Vraag alsjeblieft aan de ontwikkelaar van <b>%1$s</b> om het te updaten.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s vraagt om de oude versie van Porter</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> heeft moderne Porter-ondersteuning, maar vraagt om de oude versie van Porter. Dit kan komen doordat Porter niet draait, check alsjeblieft in de Porter-app.<p>De oude versie van Porter is sinds maart 2019 buiten gebruik gesteld.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Open Porter</string>
     <string name="wadb_notification_attempt_now">Probeer nu</string>
 </resources>

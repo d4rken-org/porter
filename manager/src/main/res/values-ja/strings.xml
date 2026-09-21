@@ -181,11 +181,6 @@
     <string name="accessibility_service_description">通知や分割画面を使用できないデバイス（Android 14以降を搭載したTVなど）向けにペア設定のサポートを提供します。\n\nPorterがワイヤレスデバッグのペア設定画面からペア設定コードを取得できるようにします。ペア設定コードが見つかると、自動的に無効になります。</string>
 
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s は最新のPorterに対応していません</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[旧版のPorterは2019年3月に非推奨となりました。また、旧版のPorterは新しいAndroidシステムでは動作しません。<p><b>%1$s</b> の開発者にアップデートを依頼してください。]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s は旧版のPorterを要求しています</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> は最新のPorterに対応していますが、旧版のPorterを要求しています。Porterが実行されていない可能性がありますので、Porterアプリで確認してください。<p>旧版のPorterは2019年3月に非推奨となりました。]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">Porterを開く</string>
     <string name="wadb_notification_attempt_now">今すぐ試す</string>
 
     <string name="porter_status_running_adb">ADB経由で実行中</string>

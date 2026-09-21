@@ -202,10 +202,5 @@
         பிரித்தெடுக்க Porter ஐ இயக்குகிறது. இணைத்தல் குறியீடு கண்டுபிடிக்கப்பட்டதும் அது தானாகவே
         முடக்கப்படும்.</string>
     <!-- Messages for legacy -->
-    <string name="dialog_legacy_not_support_title">%1$s நவீன ஷிசுகுவை ஆதரிக்கவில்லை</string>
-    <string name="dialog_legacy_not_support_message"><![CDATA[மார்ச் 2019 முதல் Legacy Porter நிறுத்தப்பட்டுள்ளது. மேலும், Legacy Porter புதிய Android அமைப்புகளில் வேலை செய்யாது.<p>புதுப்பிக்க <b>%1$s</b> டெவலப்பரிடம் கேளுங்கள்.]]></string>
-    <string name="dialog_requesting_legacy_title">%1$s மரபுவழி ஷிசுகுவைக் கோருகிறது</string>
-    <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> நவீன ஷிசுகு ஆதரவைக் கொண்டுள்ளது, ஆனால் இது மரபுவழி ஷிசுகுவைக் கோருகிறது. ஷிசுகு இயங்காததால் இது நிகழலாம், தயவுசெய்து ஷிசுகு பயன்பாட்டைப் பார்க்கவும்.<p>மரபுவழி ஷிசுகு மார்ச் 2019 முதல் நிறுத்தப்பட்டுள்ளது.]]></string>
-    <string name="dialog_requesting_legacy_button_open_shizuku">ஷிசுகுவைத் திறக்கவும்</string>
     <string name="wadb_notification_attempt_now">இப்போதே முயற்சிக்கவும்</string>
 </resources>
