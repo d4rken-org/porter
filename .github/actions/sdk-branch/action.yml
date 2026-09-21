@@ -1,0 +1,24 @@
+name: Paired SDK branch
+description: On a pull request, build against the porter-api branch of the same name when one exists
+runs:
+  using: composite
+  steps:
+    # An app change that needs an SDK change is developed on a porter-api branch of the same name.
+    # Building against that branch is what lets the device matrix exercise the pair before the SDK
+    # merges; every other pull request, and every push, builds the pinned commit. The Submodule pin
+    # job still validates the committed pointer either way.
+    - name: Pick the SDK commit to build against
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        HEAD_REF: ${{ github.head_ref }}
+      run: |
+        set -euo pipefail
+        pin="$(git -C api rev-parse HEAD)"
+        if [ -n "$HEAD_REF" ] && gh api "repos/d4rken-org/porter-api/branches/$HEAD_REF" --silent 2>/dev/null; then
+          git -C api fetch --depth=1 https://github.com/d4rken-org/porter-api.git "refs/heads/$HEAD_REF"
+          git -C api checkout --quiet --detach FETCH_HEAD
+          echo "Building against porter-api branch $HEAD_REF at $(git -C api log -1 --format='%H (%s)') instead of the pinned $pin"
+        else
+          echo "Building against the pinned porter-api commit $pin"
+        fi

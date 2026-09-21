@@ -56,6 +56,7 @@ jobs:
         with:
           submodules: recursive
           persist-credentials: false
+      - uses: ./.github/actions/sdk-branch
       - name: Test CI helpers
         run: python3 -m unittest discover -s tools/ci -p 'test_*.py'
       - uses: ./.github/actions/android-setup
@@ -100,6 +101,7 @@ jobs:
         with:
           submodules: recursive
           persist-credentials: false
+      - uses: ./.github/actions/sdk-branch
       - uses: ./.github/actions/android-setup
       - run: ./gradlew :manager:lintVitalFossRelease :manager:lintVitalGplayRelease :compat:lintVitalRelease -Pporter.developmentSigning=true
       - name: Upload lint reports

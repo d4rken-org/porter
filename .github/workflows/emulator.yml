@@ -38,6 +38,7 @@ jobs:
         with:
           submodules: recursive
           persist-credentials: false
+      - uses: ./.github/actions/sdk-branch
       - uses: ./.github/actions/android-setup
       - name: Build test APKs
         run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug :probe:assembleBridgeRelease :unlisted-manager-fixture:assembleDebug
