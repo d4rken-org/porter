@@ -786,12 +786,19 @@ class DecisionDatabaseTest(unittest.TestCase):
     def flags(self, raw, uid=1010217):
         with patch.object(self.runner, "shell", return_value=raw) as shell:
             result = self.runner.decision_flags(uid)
-        shell.assert_called_once_with("cat", smoke.DECISIONS, check=False)
+        shell.assert_called_once()
+        # The device decides which of the two answers comes back, so the harness never has to
+        # read an error message to tell "no file" from "could not read".
+        self.assertIn(smoke.Smoke.NO_DECISIONS, shell.call_args.args[-1])
+        self.assertIn(smoke.DECISIONS, shell.call_args.args[-1])
         return result
 
     def test_a_device_that_answered_nothing_has_no_database(self):
-        # adb prints the error on stdout for a missing file, so this is what the helper sees.
-        self.assertEqual(self.flags("cat: " + smoke.DECISIONS + ": No such file or directory"), 0)
+        self.assertEqual(self.flags(smoke.Smoke.NO_DECISIONS), 0)
+
+    def test_a_read_that_failed_is_not_mistaken_for_an_empty_database(self):
+        with self.assertRaisesRegex(AssertionError, "cannot read"):
+            self.flags("cat: " + smoke.DECISIONS + ": Permission denied")
 
     def test_a_uid_the_database_never_heard_of_reads_as_nothing_recorded(self):
         saved = json.dumps({"version": 2, "packages": [{"uid": 10217, "flags": 2}]})
