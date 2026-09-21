@@ -3,6 +3,7 @@ package eu.darken.porter.manager.shell
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.porsh.Porsh
 import eu.darken.porter.porsh.PorshConfig
 import eu.darken.porter.protocol.PorterProtocol
@@ -54,8 +55,20 @@ class Shell : Porsh() {
 
         private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
 
+        /** Entered by porsh copies exported before the handshake carried a loader version. */
         @JvmStatic
-        fun main(args: Array<String>, packageName: String, binder: IBinder, handler: Handler) {
+        fun main(args: Array<String>, packageName: String, binder: IBinder, handler: Handler) =
+            main(args, packageName, binder, handler, 0)
+
+        @JvmStatic
+        fun main(args: Array<String>, packageName: String, binder: IBinder, handler: Handler, loaderVersion: Int) {
+            if (loaderVersion < BuildConfig.PORSH_LOADER_VERSION) {
+                System.err.println(
+                    "The porsh files in this terminal app are from an older Porter (loader $loaderVersion, current ${BuildConfig.PORSH_LOADER_VERSION}). " +
+                        "Export them again from Porter to keep them working.",
+                )
+                System.err.flush()
+            }
             // The loader timeout only covers binder delivery, not the user's permission decision.
             // It is replaced by a startup deadline, which is itself dropped once the wait becomes
             // a human decision.

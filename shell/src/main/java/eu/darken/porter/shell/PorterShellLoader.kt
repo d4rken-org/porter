@@ -117,8 +117,14 @@ object PorterShellLoader {
             }
             val classLoader = BaseDexClassLoader(sourceDir, null, librarySearchPath, ClassLoader.getSystemClassLoader())
             val cls = classLoader.loadClass("eu.darken.porter.manager.shell.Shell")
-            cls.getDeclaredMethod("main", Array<String>::class.java, String::class.java, IBinder::class.java, Handler::class.java)
-                .invoke(null, args, callingPackage, binder, handler)
+            try {
+                cls.getDeclaredMethod("main", Array<String>::class.java, String::class.java, IBinder::class.java, Handler::class.java, Int::class.javaPrimitiveType)
+                    .invoke(null, args, callingPackage, binder, handler, BuildConfig.LOADER_VERSION)
+            } catch (e: NoSuchMethodException) {
+                // A manager that predates the versioned handshake.
+                cls.getDeclaredMethod("main", Array<String>::class.java, String::class.java, IBinder::class.java, Handler::class.java)
+                    .invoke(null, args, callingPackage, binder, handler)
+            }
         } catch (tr: ClassNotFoundException) {
             System.err.println("Class not found")
             System.err.println("Make sure the Porter app is installed and up to date")

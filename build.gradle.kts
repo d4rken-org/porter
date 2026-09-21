@@ -49,3 +49,4 @@ val build = versioning.getProperty("project.versioning.build").toInt()
 extra["versionCode"] = major * 10000000 + minor * 100000 + patch * 1000 + build * 10
 extra["versionName"] = "$major.$minor.$patch-${versioning.getProperty("project.versioning.type")}$build"
 extra["compatVersionCode"] = versioning.getProperty("project.compat.version").toInt()
+extra["porshLoaderVersion"] = versioning.getProperty("project.porsh.loader.version").toInt()

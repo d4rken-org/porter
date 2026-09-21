@@ -15,6 +15,7 @@ android {
         versionCode = rootProject.extra["versionCode"] as Int
         versionName = rootProject.extra["versionName"] as String
         buildConfigField("String", "MANAGER_APPLICATION_ID", "\"${project(":manager").extensions.getByType<ApplicationExtension>().defaultConfig.applicationId}\"")
+        buildConfigField("int", "LOADER_VERSION", "${rootProject.extra["porshLoaderVersion"]}")
     }
     buildTypes {
         debug {

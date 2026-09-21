@@ -74,6 +74,7 @@ android {
         versionCode = rootProject.extra["versionCode"] as Int
         versionName = rootProject.extra["versionName"] as String
         buildConfigField("int", "COMPAT_VERSION_CODE", "${rootProject.extra["compatVersionCode"]}")
+        buildConfigField("int", "PORSH_LOADER_VERSION", "${rootProject.extra["porshLoaderVersion"]}")
         externalNativeBuild {
             cmake {
                 arguments += "-DANDROID_STL=none"
