@@ -45,12 +45,17 @@ TRANSPORT_BACKOFF = 2
 CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence", "porsh",
          "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
          "foreign-signer-peeks", "foreign-signer-binds", "foreign-signer-never-binds",
-         "non-daemon-control", "secondary-user-prompt",
-         "manager-stopped-then-uninstalled", "manager-upgraded-then-uninstalled")
+         "non-daemon-control",
+         "manager-stopped-then-uninstalled", "manager-upgraded-then-uninstalled",
+         # Last: it creates and destroys an Android user, and the framework finishes tearing that
+         # down after the case has returned.
+         "secondary-user-prompt")
 # The host lane backs off to 300s between scans, so a change it has to notice can take that long
 # plus the confirmation grace. The manager lane never backs off.
 HOST_SCAN_TIMEOUT = 360
 MANAGER_SCAN_TIMEOUT = 60
+# Removing an Android user returns before the user list reflects it.
+USER_REMOVAL_TIMEOUT = 120
 # Enough to cover the first two host deadlines after a record was created, which is what a scenario
 # asserting "nothing was removed" has to outlive to mean anything.
 HOST_SETTLE = 45
@@ -429,8 +434,18 @@ class Smoke:
     def restore(self, *aspects):
         """Puts back what a destructive scenario declared it would break."""
         if "users" in aspects:
+            # A case that failed partway can leave another user on screen, and the current user is
+            # not removable: back to user 0 first, or the removals below quietly do nothing.
+            if self.shell("am", "get-current-user", check=False) != "0":
+                self.shell("am", "switch-user", "0", check=False)
+                self.until("user 0 is back on screen",
+                           lambda: self.shell("am", "get-current-user", check=False) == "0", timeout=60)
             for user in self.extra_users():
                 self.shell("pm", "remove-user", user, check=False)
+            # The framework tears a user down in the background, and the package removals that go
+            # with it land on the same packages the next case installs and launches.
+            self.until("the extra users are gone", lambda: not self.extra_users(), timeout=USER_REMOVAL_TIMEOUT)
+            time.sleep(USER_REMOVAL_SETTLE)
         if "manager" in aspects and not self.installed(MANAGER):
             self.adb("install", str(self.args.manager.resolve()))
         if "probes" in aspects:
@@ -904,6 +919,36 @@ class Smoke:
             return {"service_pid": service_pid}
         self.case("non-daemon-control", non_daemon_control, restore=("grants",))
 
+        def manager_stopped_then_uninstalled():
+            server_pid = self.pid("porter_server")
+            service_pid = self.authorized_daemon()
+            self.shell("am", "force-stop", MANAGER)
+            time.sleep(2)
+            assert self.pid("porter_server") == server_pid, "stopping the manager app stopped the server"
+            self.adb("uninstall", MANAGER)
+            self.until("server exits once the manager is gone",
+                       lambda: not self.pid("porter_server"), timeout=MANAGER_SCAN_TIMEOUT)
+            self.until("user service follows the server",
+                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=MANAGER_SCAN_TIMEOUT)
+            return {"server_pid": server_pid, "service_pid": service_pid}
+        self.case("manager-stopped-then-uninstalled", manager_stopped_then_uninstalled,
+                  restore=("manager", "probes", "grants", "service"))
+
+        def manager_upgraded_then_uninstalled():
+            server_pid = self.pid("porter_server")
+            self.adb("install", "-r", str(self.args.manager.resolve()))
+            time.sleep(MANAGER_SETTLE)
+            assert self.pid("porter_server") == server_pid, "an ordinary manager upgrade killed the server"
+            service_pid = self.authorized_daemon()
+            self.adb("uninstall", MANAGER)
+            self.until("server exits once the manager is gone",
+                       lambda: not self.pid("porter_server"), timeout=MANAGER_SCAN_TIMEOUT)
+            self.until("user service follows the server",
+                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=MANAGER_SCAN_TIMEOUT)
+            return {"server_pid": server_pid, "service_pid": service_pid}
+        self.case("manager-upgraded-then-uninstalled", manager_upgraded_then_uninstalled,
+                  restore=("manager", "probes", "grants", "service"))
+
         def secondary_user_prompt():
             """The manager's prompt lives in user 0, so another user on screen cannot answer it."""
             created = self.shell("pm", "create-user", "porter-ci-client")
@@ -938,36 +983,6 @@ class Smoke:
             return {"user": user, "uid": uid}
         self.case("secondary-user-prompt", secondary_user_prompt,
                   restore=("users", "probes", "grants"))
-
-        def manager_stopped_then_uninstalled():
-            server_pid = self.pid("porter_server")
-            service_pid = self.authorized_daemon()
-            self.shell("am", "force-stop", MANAGER)
-            time.sleep(2)
-            assert self.pid("porter_server") == server_pid, "stopping the manager app stopped the server"
-            self.adb("uninstall", MANAGER)
-            self.until("server exits once the manager is gone",
-                       lambda: not self.pid("porter_server"), timeout=MANAGER_SCAN_TIMEOUT)
-            self.until("user service follows the server",
-                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=MANAGER_SCAN_TIMEOUT)
-            return {"server_pid": server_pid, "service_pid": service_pid}
-        self.case("manager-stopped-then-uninstalled", manager_stopped_then_uninstalled,
-                  restore=("manager", "probes", "grants", "service"))
-
-        def manager_upgraded_then_uninstalled():
-            server_pid = self.pid("porter_server")
-            self.adb("install", "-r", str(self.args.manager.resolve()))
-            time.sleep(MANAGER_SETTLE)
-            assert self.pid("porter_server") == server_pid, "an ordinary manager upgrade killed the server"
-            service_pid = self.authorized_daemon()
-            self.adb("uninstall", MANAGER)
-            self.until("server exits once the manager is gone",
-                       lambda: not self.pid("porter_server"), timeout=MANAGER_SCAN_TIMEOUT)
-            self.until("user service follows the server",
-                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=MANAGER_SCAN_TIMEOUT)
-            return {"server_pid": server_pid, "service_pid": service_pid}
-        self.case("manager-upgraded-then-uninstalled", manager_upgraded_then_uninstalled,
-                  restore=("manager", "probes", "grants", "service"))
 
 
     def reports(self):

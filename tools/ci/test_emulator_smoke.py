@@ -443,10 +443,15 @@ class ScenarioRestoreTest(unittest.TestCase):
         self.addCleanup(directory.cleanup)
         self.runner.output = Path(directory.name)
         self.runner.adb = Mock(return_value="")
-        self.runner.shell = Mock(return_value="")
+        # The users aspect asks who is on screen before it removes anything.
+        self.runner.shell = Mock(side_effect=lambda *args, **kwargs:
+                                 "0" if args[:2] == ("am", "get-current-user") else "")
         self.runner.pid = Mock(return_value="5271")
         self.runner.installed = Mock(return_value=False)
-        self.runner.extra_users = Mock(return_value=["10"])
+        # Present, then gone: the aspect waits for the removal to show up in the user list.
+        self.users = ["10"]
+        self.runner.extra_users = Mock(side_effect=lambda: list(self.users))
+        self.runner.shell_removes_user = None
         self.runner.start_service = Mock()
         # cases=None explicitly: a bare Mock would hand case() a truthy attribute to filter on.
         self.runner.args = Mock(cases=None, manager=Path("/apks/manager.apk"),
@@ -462,10 +467,25 @@ class ScenarioRestoreTest(unittest.TestCase):
     def test_a_failing_scenario_still_restores(self):
         def boom():
             raise AssertionError("Timed out: daemon removed after host uninstall")
+        removes = self.runner.shell.side_effect
+
+        def removing(*args, **kwargs):
+            if args[:2] == ("pm", "remove-user"):
+                self.users = []
+            return removes(*args, **kwargs)
+        self.runner.shell.side_effect = removing
         with self.assertRaisesRegex(AssertionError, "Timed out"):
             self.runner.case("probe-case", boom, restore=("users",))
         self.assertEqual(self.runner.results[0]["passed"], False)
         self.runner.shell.assert_any_call("pm", "remove-user", "10", check=False)
+        self.assertEqual(self.users, [])
+
+    def test_a_user_the_framework_never_finished_removing_fails_the_restore(self):
+        with patch.object(smoke, "USER_REMOVAL_TIMEOUT", 0.2), patch.object(smoke.time, "sleep"):
+            with self.assertRaisesRegex(AssertionError, "extra users are gone"):
+                self.runner.case("probe-case", lambda: None, restore=("users",))
+        self.assertFalse(self.runner.results[0]["passed"])
+        self.assertIn("extra users are gone", self.runner.results[0]["restore_failure"])
 
     def test_a_scenario_declaring_nothing_restores_nothing(self):
         self.runner.case("probe-case", lambda: None)
