@@ -17,6 +17,7 @@ import com.topjohnwu.superuser.Shell
 import eu.darken.porter.manager.Helps
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.AppConstants
+import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.PorterSettings.LaunchMethod
 import eu.darken.porter.manager.starter.Starter
@@ -29,7 +30,6 @@ import eu.darken.porter.manager.worker.AdbStartWorker
 object PorterReceiverStarter {
 
     const val NOTIFICATION_ID = 1447
-    private const val CHANNEL_ID = "AdbStartWorker"
 
     enum class WorkerState {
         AWAITING_WIFI,
@@ -58,7 +58,7 @@ object PorterReceiverStarter {
 
     fun buildNotification(context: Context, msg: String? = null): Notification {
         val channel = NotificationChannel(
-            CHANNEL_ID,
+            NotificationChannels.ADB_START,
             context.getString(R.string.wadb_notification_title),
             NotificationManager.IMPORTANCE_LOW
         )
@@ -85,7 +85,7 @@ object PorterReceiverStarter {
             context, 0, wifiIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val nb = NotificationCompat.Builder(context, CHANNEL_ID)
+        val nb = NotificationCompat.Builder(context, NotificationChannels.ADB_START)
         
         if (msg != null) nb.setContentText(msg)
 
@@ -115,7 +115,6 @@ object PorterReceiverStarter {
 
     private fun rootStart(context: Context) {
         if (!Shell.getShell().isRoot) {
-            //NotificationHelper.notify(context, AppConstants.NOTIFICATION_ID_STATUS, AppConstants.NOTIFICATION_CHANNEL_STATUS, R.string.notification_service_start_no_root)
             Shell.getCachedShell()?.close()
             return
         }
@@ -132,7 +131,7 @@ object PorterReceiverStarter {
     private fun showPermissionErrorNotification(context: Context) {
 
         val channel = NotificationChannel(
-            CHANNEL_ID,
+            NotificationChannels.ADB_START,
             context.getString(R.string.wadb_notification_title),
             NotificationManager.IMPORTANCE_LOW
         )
@@ -146,7 +145,7 @@ object PorterReceiverStarter {
 
         val msg = context.getString(R.string.wadb_permission_error_notification_content)
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, NotificationChannels.ADB_START)
             .setSmallIcon(R.drawable.ic_system_icon)
             .setContentTitle(context.getString(R.string.wadb_permission_error_notification_title))
             .setContentText(msg)

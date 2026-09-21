@@ -8,14 +8,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import eu.darken.porter.manager.MainActivity
+import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.PorterSettings
 
 abstract class AuthenticatedReceiver : BroadcastReceiver() {
 
     companion object {
-        private const val CHANNEL_ID = "auth_errors"
-        private const val CHANNEL_NAME = "Authentication Errors"
         private const val NOTIFICATION_ID = 1450
     }
 
@@ -43,8 +42,8 @@ abstract class AuthenticatedReceiver : BroadcastReceiver() {
         val messageStr = getString(message)
 
         val channel = NotificationChannel(
-            CHANNEL_ID,
-            CHANNEL_NAME,
+            NotificationChannels.AUTH,
+            getString(R.string.notification_channel_auth),
             NotificationManager.IMPORTANCE_HIGH
         )
 
@@ -62,7 +61,7 @@ abstract class AuthenticatedReceiver : BroadcastReceiver() {
             this, 0, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(this, NotificationChannels.AUTH)
             .setContentTitle(titleStr)
             .setContentText(messageStr)
             .setContentIntent(launchPendingIntent)

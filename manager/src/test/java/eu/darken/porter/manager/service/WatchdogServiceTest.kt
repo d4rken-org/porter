@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Looper
 import androidx.test.core.app.ApplicationProvider
 import eu.darken.porter.manager.PorterSettings
+import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.utils.PorterStateMachine
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -59,7 +60,7 @@ class WatchdogServiceTest {
     private fun crashNotificationPosted(): Boolean =
         application.getSystemService(NotificationManager::class.java)
             .activeNotifications
-            .any { it.notification.channelId == WatchdogService.CRASH_CHANNEL_ID }
+            .any { it.notification.channelId == NotificationChannels.CRASH }
 
     @Test fun theNotificationStopActionTurnsTheWatchdogOff() {
         val controller = Robolectric.buildService(

@@ -136,6 +136,9 @@
 
     <!-- Notification -->
     <string name="notification_channel_adb_pairing">Wireless debugging pairing</string>
+    <string name="notification_channel_watchdog">Watchdog</string>
+    <string name="notification_channel_crash">Crash reports</string>
+    <string name="notification_channel_auth">Authentication errors</string>
     <string name="notification_adb_pairing_input_paring_code">Enter pairing code</string>
     <string name="notification_adb_pairing_searching_for_service_title">Searching for pairing service</string>
     <string name="notification_adb_pairing_service_found_title">Pairing service found</string>

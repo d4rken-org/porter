@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import eu.darken.porter.manager.AppConstants
+import eu.darken.porter.manager.NotificationChannels
 
 import eu.darken.porter.manager.utils.DeviceCompatibility
 import eu.darken.porter.manager.utils.SettingsHelper
@@ -71,7 +72,7 @@ class AdbPairingTutorialActivity : ComposeActivity() {
     }
     private fun isNotificationEnabled(): Boolean {
         val nm = getSystemService(NotificationManager::class.java)
-        val channel = nm.getNotificationChannel(AdbPairingService.NOTIFICATION_CHANNEL)
+        val channel = nm.getNotificationChannel(NotificationChannels.ADB_PAIRING)
         return nm.areNotificationsEnabled() && (channel == null || channel.importance != NotificationManager.IMPORTANCE_NONE)
     }
     override fun onResume() {

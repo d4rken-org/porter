@@ -18,6 +18,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import eu.darken.porter.manager.MainActivity
+import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.home.HomeActivity
 import eu.darken.porter.manager.ktx.unsafeLazy
@@ -27,7 +28,6 @@ class AdbPairingService : Service() {
 
     companion object {
 
-        const val NOTIFICATION_CHANNEL = "adb_pairing"
         const val NOTIFICATION_ID = 1
 
         private const val tag = "AdbPairingService"
@@ -76,7 +76,7 @@ class AdbPairingService : Service() {
     override fun onCreate() {
         super.onCreate()
         notifications.createNotificationChannel(
-            NotificationChannel(NOTIFICATION_CHANNEL,
+            NotificationChannel(NotificationChannels.ADB_PAIRING,
                 getString(R.string.notification_channel_adb_pairing), NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 setSound(null, null)
@@ -167,7 +167,7 @@ class AdbPairingService : Service() {
     private fun handleResult(success: Boolean, message: String?) {
         stopForeground(STOP_FOREGROUND_DETACH)
         notifications.notify(NOTIFICATION_ID,
-            Notification.Builder(this, NOTIFICATION_CHANNEL)
+            Notification.Builder(this, NotificationChannels.ADB_PAIRING)
                 .setColor(getColor(R.color.notification))
                 .setSmallIcon(R.drawable.ic_system_icon)
                 .setContentTitle(getString(if (success) R.string.notification_adb_pairing_succeed_title
@@ -273,7 +273,7 @@ class AdbPairingService : Service() {
     }
 
     private val searchingNotification by unsafeLazy {
-        Notification.Builder(this, NOTIFICATION_CHANNEL)
+        Notification.Builder(this, NotificationChannels.ADB_PAIRING)
             .setColor(getColor(R.color.notification))
             .setSmallIcon(R.drawable.ic_system_icon)
             .setContentTitle(getString(R.string.notification_adb_pairing_searching_for_service_title))
@@ -282,7 +282,7 @@ class AdbPairingService : Service() {
     }
 
     private fun createInputNotification(host: String, port: Int): Notification {
-        return Notification.Builder(this, NOTIFICATION_CHANNEL)
+        return Notification.Builder(this, NotificationChannels.ADB_PAIRING)
             .setColor(getColor(R.color.notification))
             .setContentTitle(getString(R.string.notification_adb_pairing_service_found_title))
             .setSmallIcon(R.drawable.ic_system_icon)
@@ -292,7 +292,7 @@ class AdbPairingService : Service() {
     }
 
     private val workingNotification by unsafeLazy {
-        Notification.Builder(this, NOTIFICATION_CHANNEL)
+        Notification.Builder(this, NotificationChannels.ADB_PAIRING)
             .setColor(getColor(R.color.notification))
             .setContentTitle(getString(R.string.notification_adb_pairing_working_title))
             .addAction(stopNotificationAction)

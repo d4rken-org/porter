@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import eu.darken.porter.manager.Helps
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.MainActivity
+import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.receiver.PorterReceiverStarter
 import eu.darken.porter.manager.starter.ServiceReplacement
@@ -95,12 +96,9 @@ class WatchdogService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun buildNotification(): Notification {
-        val channelId = "shizuku_watchdog"
-        val channelName = "Watchdog"
-
         val channel = NotificationChannel(
-            channelId,
-            channelName,
+            NotificationChannels.WATCHDOG,
+            getString(R.string.notification_channel_watchdog),
             NotificationManager.IMPORTANCE_LOW
         )
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -124,7 +122,7 @@ class WatchdogService : Service() {
             this, 1, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        return NotificationCompat.Builder(this, channelId)
+        return NotificationCompat.Builder(this, NotificationChannels.WATCHDOG)
             .setContentTitle(getString(R.string.watchdog_running))
             .setSmallIcon(R.drawable.ic_system_icon)
             .setContentIntent(launchPendingIntent)
@@ -138,13 +136,10 @@ class WatchdogService : Service() {
     }
 
     private fun showCrashNotification() {
-        val channelId = CRASH_CHANNEL_ID
-        val channelName = "Crash Reports"
-
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channel = NotificationChannel(
-            channelId,
-            channelName,
+            NotificationChannels.CRASH,
+            getString(R.string.notification_channel_crash),
             NotificationManager.IMPORTANCE_DEFAULT
         )
         nm.createNotificationChannel(channel)
@@ -157,7 +152,7 @@ class WatchdogService : Service() {
         val disableIntent = SettingsPage.Notifications.NotificationChannel.buildIntent(applicationContext)
         val disablePendingIntent = PendingIntent.getActivity(this, 0, disableIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val notification = NotificationCompat.Builder(this, channelId)
+        val notification = NotificationCompat.Builder(this, NotificationChannels.CRASH)
             .setContentTitle(getString(R.string.watchdog_shizuku_crashed_title))
             .setContentText(getString(R.string.watchdog_shizuku_crashed_text))
             .setSmallIcon(R.drawable.ic_system_icon)
@@ -173,7 +168,6 @@ class WatchdogService : Service() {
         private const val TAG = "ShizukuWatchdog"
         private const val NOTIFICATION_ID_WATCHDOG = 1001
         private const val NOTIFICATION_ID_CRASH = 1002
-        const val CRASH_CHANNEL_ID = "crash_reports"
 
         private val isRunning = AtomicBoolean(false)
 

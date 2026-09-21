@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import eu.darken.porter.manager.R
+import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.adb.AdbMdns
 import eu.darken.porter.manager.adb.AdbStarter
 import eu.darken.porter.manager.receiver.PorterReceiverStarter
@@ -164,14 +165,14 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
     private fun showErrorNotification(context: Context, e: Exception) {
         val channel = NotificationChannel(
-            CHANNEL_ID,
+            NotificationChannels.ADB_START,
             context.getString(R.string.wadb_notification_title),
             NotificationManager.IMPORTANCE_LOW
         )
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         nm.createNotificationChannel(channel)
 
-        val nb = NotificationCompat.Builder(context, CHANNEL_ID)
+        val nb = NotificationCompat.Builder(context, NotificationChannels.ADB_START)
 
         val msgNotif = "$e. ${context.getString(R.string.wadb_error_notify_dev)}"
 
@@ -212,7 +213,6 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
                 request
             )
         }
-        const val CHANNEL_ID = "AdbStartWorker"
         const val NOTIFICATION_ID = 1448
     }
 }
