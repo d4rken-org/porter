@@ -3,17 +3,14 @@ package eu.darken.porter.privileged
 import android.os.Bundle
 import android.os.Parcel
 import android.os.RemoteException
-import eu.darken.porter.common.CompatibilitySetup
-import eu.darken.porter.common.DiscoveredApplication
-import eu.darken.porter.common.GlobalAccess
-import eu.darken.porter.common.UserServiceLaunch
+import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.core.CallerIdentity
 import eu.darken.porter.endpoint.PorterEndpoint
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.server.IPorterApplication
 
 /** The Porter wire as Porter answers it: the shared endpoint plus the app's own transaction codes. */
-open class PorterServiceEndpoint(private val service: PorterServer) : PorterEndpoint(service.core, service) {
+open class PorterServiceEndpoint(private val service: PorterServer) : PorterEndpoint(service.core) {
 
     protected fun enforceManagerPermission(func: String) {
         service.core.enforceManagerPermission(func, CallerIdentity.fromBinder())
@@ -30,37 +27,42 @@ open class PorterServiceEndpoint(private val service: PorterServer) : PorterEndp
     @Throws(RemoteException::class)
     open override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
         when (code) {
-            CompatibilitySetup.TRANSACTION -> {
+            AppTransactions.GET_MANAGER -> {
+                data.enforceInterface(PorterProtocol.DESCRIPTOR)
+                ManagerTransactions.getManager(service, data, reply)
+                return true
+            }
+            AppTransactions.COMPATIBILITY_SETUP -> {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 ManagerTransactions.compatibilitySetup(service, data, reply)
                 return true
             }
-            GlobalAccess.TRANSACTION -> {
+            AppTransactions.GLOBAL_ACCESS -> {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 ManagerTransactions.globalAccess(service, data, reply)
                 return true
             }
-            DiscoveredApplication.TRANSACTION -> {
+            AppTransactions.DISCOVER_APPLICATIONS -> {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 ManagerTransactions.discoverApplications(service, data, reply)
                 return true
             }
-            ServerConstants.BINDER_TRANSACTION_getApplications -> {
+            AppTransactions.GET_APPLICATIONS -> {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 ManagerTransactions.getApplications(service, data, reply)
                 return true
             }
-            ServerConstants.BINDER_TRANSACTION_setDebugLogging -> {
+            AppTransactions.SET_DEBUG_LOGGING -> {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 ManagerTransactions.setDebugLogging(service, data, reply)
                 return true
             }
-            ServerConstants.BINDER_TRANSACTION_getDiagnostics -> {
+            AppTransactions.GET_DIAGNOSTICS -> {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 ManagerTransactions.getDiagnostics(service, data, reply)
                 return true
             }
-            UserServiceLaunch.TRANSACTION -> {
+            AppTransactions.USER_SERVICE_LAUNCH -> {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 ManagerTransactions.userServiceLaunch(service, data, reply)
                 return true

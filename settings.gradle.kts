@@ -71,7 +71,7 @@ includeSdkModule("server-shared")
 
 // Present only in newer SDK checkouts; skipped when the pinned commit predates them. Either script
 // name counts: the checkout may predate the SDK's move to Kotlin DSL.
-listOf("protocol", "sdk", "shizuku-compat").forEach { name ->
+listOf("protocol", "manager-protocol", "sdk", "shizuku-compat").forEach { name ->
     val dir = file("$root${File.separator}$name")
     if (File(dir, "build.gradle.kts").isFile || File(dir, "build.gradle").isFile) {
         includeSdkModule(name)

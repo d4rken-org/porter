@@ -13,6 +13,7 @@ import android.os.Parcel
 import android.os.Process
 import android.os.RemoteException
 import com.google.gson.Gson
+import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.common.CompatibilitySetup
 import eu.darken.porter.common.DiscoveredApplication
 import eu.darken.porter.common.GlobalAccess
@@ -30,6 +31,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -203,24 +205,30 @@ class ServiceAuthorizationTest {
         assertThrows(SecurityException::class.java) { service.endpoint.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 1, Bundle()) }
         assertThrows(SecurityException::class.java) { service.endpoint.attachUserService(null, Bundle()) }
         assertThrows(SecurityException::class.java) { service.endpoint.exit() }
+        assertThrows(SecurityException::class.java) { service.managerEndpoint.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION) }
+        assertThrows(SecurityException::class.java) { service.managerEndpoint.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED) }
+        assertThrows(SecurityException::class.java) { service.managerEndpoint.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 1, true, false) }
+        assertThrows(SecurityException::class.java) { service.managerEndpoint.attachUserService(Binder(), "token") }
+        assertThrows(SecurityException::class.java) { service.managerEndpoint.newProcess(arrayOf("sh"), null, null) }
+        assertThrows(SecurityException::class.java) { service.managerEndpoint.exit() }
         verifyNoInteractions(config, userServices)
     }
 
+    /** The manager never speaks the Shizuku wire, so the app's codes are not on it at all. */
     @Test
-    fun diagnosticsAndApplicationsTransactionsRequireManager() {
+    fun appTransactionsAreNotAnsweredOnTheShizukuWire() {
+        ShadowBinder.setCallingUid(MANAGER_UID)
         for (code in intArrayOf(
-            ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications,
-            DiscoveredApplication.TRANSACTION, GlobalAccess.TRANSACTION, CompatibilitySetup.TRANSACTION,
+            AppTransactions.GET_DIAGNOSTICS, AppTransactions.GET_APPLICATIONS, AppTransactions.DISCOVER_APPLICATIONS,
+            AppTransactions.GLOBAL_ACCESS, AppTransactions.COMPATIBILITY_SETUP, AppTransactions.SET_DEBUG_LOGGING,
+            AppTransactions.USER_SERVICE_LAUNCH, AppTransactions.GET_MANAGER,
         )) {
             val request = Parcel.obtain()
             val reply = Parcel.obtain()
             try {
                 request.writeInterfaceToken(ShizukuApiConstants.BINDER_DESCRIPTOR)
                 request.setDataPosition(0)
-                // The shadow binder writes the refusal into the reply, as the real one does over the wire.
-                service.endpoint.transact(code, request, reply, 0)
-                reply.setDataPosition(0)
-                assertThrows(SecurityException::class.java) { reply.readException() }
+                assertFalse("code $code", service.endpoint.transact(code, request, reply, 0))
             } finally {
                 request.recycle()
                 reply.recycle()
@@ -232,8 +240,29 @@ class ServiceAuthorizationTest {
     fun managerUidCanReadFlagsButOtherAppsCannot() {
         ShadowBinder.setCallingUid(MANAGER_UID)
         assertEquals(ConfigManager.FLAG_ALLOWED, service.endpoint.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION))
+        assertEquals(ConfigManager.FLAG_ALLOWED, service.managerEndpoint.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION))
         ShadowBinder.setCallingUid(CLIENT_UID)
         assertThrows(SecurityException::class.java) { service.endpoint.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION) }
+        assertThrows(SecurityException::class.java) { service.managerEndpoint.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION) }
+    }
+
+    /** The manager is the user 0 installation; the same package in another user is an app. */
+    @Test
+    fun theManagerPackageInAnotherUserIsNotTheManager() {
+        val elsewhere = CallerIdentity(MANAGER_UID + 10 * 100000, CLIENT_PID)
+        assertFalse(service.isManager(elsewhere))
+        assertTrue(service.isManager(CallerIdentity(MANAGER_UID, CLIENT_PID)))
+        ShadowBinder.setCallingUid(elsewhere.uid)
+        assertThrows(SecurityException::class.java) { service.managerEndpoint.getFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION) }
+        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("getUid", elsewhere) }
+    }
+
+    /** Holding the Android permission is what gets a binder delivered; it admits nothing by itself. */
+    @Test
+    fun anUnattachedCallerHoldingThePermissionIsRefused() {
+        `when`(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(null)
+        activityMocks.`when`<Int> { ActivityManagerApis.checkPermission(ServerConstants.PERMISSION, CLIENT_PID, CLIENT_UID) }.thenReturn(PackageManager.PERMISSION_GRANTED)
+        assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("transactRemote", CallerIdentity(CLIENT_UID, CLIENT_PID)) }
     }
 
     @Test
@@ -420,10 +449,10 @@ class ServiceAuthorizationTest {
                 val request = Parcel.obtain()
                 val reply = Parcel.obtain()
                 try {
-                    request.writeInterfaceToken(ShizukuApiConstants.BINDER_DESCRIPTOR)
+                    request.writeInterfaceToken(PorterProtocol.DESCRIPTOR)
                     request.writeInt(-1)
                     request.setDataPosition(0)
-                    assertTrue(service.endpoint.transact(DiscoveredApplication.TRANSACTION, request, reply, 0))
+                    assertTrue(service.porterEndpoint.transact(DiscoveredApplication.TRANSACTION, request, reply, 0))
                     reply.setDataPosition(0)
                     reply.readException()
                     assertEquals(DiscoveredApplication.WIRE_VERSION, reply.readInt())
@@ -689,11 +718,15 @@ class ServiceAuthorizationTest {
                     users.`when`<List<Int>> { UserManagerApis.getUserIdsNoThrow() }.thenReturn(listOf(0))
                     os.`when`<Int> { OsUtils.uid }.thenReturn(MANAGER_UID)
 
-                    val applications = porterTransact(ServerConstants.BINDER_TRANSACTION_getApplications) { it.writeInt(0) }
+                    val manager = porterTransact(AppTransactions.GET_MANAGER) {}
+                    assertSame(service.managerEndpoint, manager.readStrongBinder())
+                    manager.recycle()
+
+                    val applications = porterTransact(AppTransactions.GET_APPLICATIONS) { it.writeInt(0) }
                     assertNotNull(ParcelableListSlice.CREATOR.createFromParcel(applications))
                     applications.recycle()
 
-                    val diagnostics = porterTransact(ServerConstants.BINDER_TRANSACTION_getDiagnostics) {}
+                    val diagnostics = porterTransact(AppTransactions.GET_DIAGNOSTICS) {}
                     assertEquals(Process.myPid(), diagnostics.readInt())
                     assertEquals(
                         BuildConfig.PORTER_VERSION_NAME,
@@ -718,7 +751,7 @@ class ServiceAuthorizationTest {
                     assertEquals(CompatibilitySetup.VERSION, setup.readBundle()!!.getInt("version"))
                     setup.recycle()
 
-                    val logging = porterTransact(ServerConstants.BINDER_TRANSACTION_setDebugLogging) {
+                    val logging = porterTransact(AppTransactions.SET_DEBUG_LOGGING) {
                         it.writeStrongBinder(null)
                         it.writeLong(1000)
                     }
@@ -737,9 +770,9 @@ class ServiceAuthorizationTest {
     @Test
     fun appTransactionsOnThePorterWireStillRequireTheirCaller() {
         for (code in intArrayOf(
-            ServerConstants.BINDER_TRANSACTION_getDiagnostics, ServerConstants.BINDER_TRANSACTION_getApplications,
-            ServerConstants.BINDER_TRANSACTION_setDebugLogging, DiscoveredApplication.TRANSACTION,
-            GlobalAccess.TRANSACTION, CompatibilitySetup.TRANSACTION, UserServiceLaunch.TRANSACTION,
+            AppTransactions.GET_DIAGNOSTICS, AppTransactions.GET_APPLICATIONS, AppTransactions.SET_DEBUG_LOGGING,
+            AppTransactions.DISCOVER_APPLICATIONS, AppTransactions.GLOBAL_ACCESS, AppTransactions.COMPATIBILITY_SETUP,
+            AppTransactions.USER_SERVICE_LAUNCH, AppTransactions.GET_MANAGER,
         )) {
             val request = Parcel.obtain()
             val reply = Parcel.obtain()
@@ -779,6 +812,7 @@ class ServiceAuthorizationTest {
         }.`when`(history).connected(any(), anyLong())
         val args = Bundle()
         args.putString(PorterProtocol.ATTACH_PACKAGE_NAME, record.packageName)
+        args.putInt(PorterProtocol.ATTACH_PROTOCOL_VERSION, PorterProtocol.VERSION)
         service.porterEndpoint.attach(mock(IPorterApplication::class.java), args)
         assertTrue(pauseStillBlocked.get())
         pause!!.join(500)

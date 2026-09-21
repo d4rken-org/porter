@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.RemoteException
 import android.text.TextUtils
 import androidx.annotation.RequiresApi
+import eu.darken.porter.privileged.ServerConstants.MANAGER_PERMISSION
 import eu.darken.porter.privileged.util.Android17Compat
 import rikka.hidden.compat.ActivityManagerApis
 import rikka.hidden.compat.PackageManagerApis
@@ -21,9 +22,6 @@ import rikka.shizuku.server.util.Logger
 object BinderSender {
 
     private val LOGGER = Logger("BinderSender")
-
-    private const val PERMISSION_MANAGER = "eu.darken.porter.permission.MANAGER"
-    private const val PERMISSION = "eu.darken.porter.permission.API_V23"
 
     private lateinit var shizukuBinder: Binder
     private lateinit var porterBinder: Binder
@@ -157,14 +155,16 @@ object BinderSender {
             val pi = Android17Compat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS.toLong(), userId)
             val requestedPermissions = pi?.requestedPermissions ?: continue
 
-            if (PERMISSION_MANAGER in requestedPermissions) {
+            if (MANAGER_PERMISSION in requestedPermissions) {
                 val granted = if (pid == -1) {
-                    Android17Compat.checkPermission(PERMISSION_MANAGER, uid) == PackageManager.PERMISSION_GRANTED
+                    Android17Compat.checkPermission(MANAGER_PERMISSION, uid) == PackageManager.PERMISSION_GRANTED
                 } else {
-                    ActivityManagerApis.checkPermission(PERMISSION_MANAGER, pid, uid) == PackageManager.PERMISSION_GRANTED
+                    ActivityManagerApis.checkPermission(MANAGER_PERMISSION, pid, uid) == PackageManager.PERMISSION_GRANTED
                 }
 
-                if (granted) {
+                // The manager is the user 0 installation only; a copy in another user is not
+                // handed a binder it could not use.
+                if (granted && userId == 0) {
                     PorterServer.sendBinderToManager(porterBinder, userId)
                     return
                 }

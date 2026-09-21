@@ -41,7 +41,7 @@ val identity = tasks.register<GeneratePorterBuildIdentity>("generatePorterBuildI
         include("*.gradle.kts", "buildSrc/build.gradle.kts", "buildSrc/src/**", "gradle/**", "gradle.properties", "version.properties")
     })
     val sdkModules = listOf("aidl", "shared", "server-shared", "porsh") +
-        listOf("protocol", "sdk", "shizuku-compat").filter { rootProject.findProject(":$it") != null }
+        listOf("protocol", "manager-protocol", "sdk", "shizuku-compat").filter { rootProject.findProject(":$it") != null }
     (listOf("manager", "server", "common", "starter", "shell", "compat") + sdkModules).forEach { name ->
         sourceInputs.from(rootProject.fileTree(rootProject.project(":$name").projectDir) {
             include("src/**", "*.gradle", "*.gradle.kts", "gradle.properties")
@@ -63,5 +63,6 @@ android {
 }
 
 dependencies {
+    implementation(project(":protocol"))
     compileOnly(libs.hidden.stub)
 }

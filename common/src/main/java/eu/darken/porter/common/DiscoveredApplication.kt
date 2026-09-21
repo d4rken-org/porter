@@ -49,7 +49,7 @@ class DiscoveredApplication(
     override fun describeContents(): Int = 0
 
     companion object {
-        const val TRANSACTION = 10003
+        const val TRANSACTION = AppTransactions.DISCOVER_APPLICATIONS
         const val WIRE_VERSION = 1
         const val API_PORTER = 1
         const val API_SHIZUKU = 2

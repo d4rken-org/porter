@@ -1,12 +1,8 @@
-import com.android.build.api.dsl.ApplicationExtension
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("dev.rikka.tools.refine")
 }
-
-evaluationDependsOn(":manager")
 
 android {
     testOptions { unitTests.isIncludeAndroidResources = true }
@@ -17,7 +13,6 @@ android {
     defaultConfig {
         buildConfigField("String", "PORTER_VERSION_NAME", "\"${rootProject.extra["versionName"]}\"")
         buildConfigField("int", "PORTER_VERSION_CODE", "${rootProject.extra["versionCode"]}")
-        buildConfigField("String", "MANAGER_APPLICATION_ID", "\"${project(":manager").extensions.getByType<ApplicationExtension>().defaultConfig.applicationId}\"")
     }
 }
 
@@ -35,6 +30,8 @@ dependencies {
     compileOnly(project(":shizuku-compat"))
     implementation(project(":starter"))
     implementation(project(":porsh"))
+    implementation(project(":protocol"))
+    implementation(project(":manager-protocol"))
     implementation(project(":server-shared"))
     implementation(libs.hidden.compat)
     compileOnly(libs.hidden.stub)

@@ -4,7 +4,10 @@ import android.app.Activity
 import android.content.ComponentName
 import android.os.Bundle
 import android.os.IBinder
+import android.os.Parcel
 import android.util.Log
+import eu.darken.porter.common.AppTransactions
+import eu.darken.porter.protocol.PorterProtocol
 import android.widget.TextView
 import eu.darken.porter.sdk.PermissionState
 import eu.darken.porter.sdk.Porter
@@ -81,11 +84,19 @@ class ProbeActivity : Activity() {
                 }
                 return
             }
+            // The manager's own binder is handed out over an app-owned code, to the manager alone.
             var managerDenied = false
+            val data = Parcel.obtain()
+            val reply = Parcel.obtain()
             try {
-                connection.updateFlagsForUid(android.os.Process.myUid(), 6, 2)
+                data.writeInterfaceToken(PorterProtocol.DESCRIPTOR)
+                connection.binder.transact(AppTransactions.GET_MANAGER, data, reply, 0)
+                reply.readException()
             } catch (expected: SecurityException) {
                 managerDenied = true
+            } finally {
+                data.recycle()
+                reply.recycle()
             }
             report("AUTHORIZED managerOperationDenied=$managerDenied")
             if (forward) forwardOne(connection)
