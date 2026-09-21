@@ -15,6 +15,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowLooper
 import eu.darken.porter.protocol.PorterProtocol
+import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.sdk.Porter
 
 /**
@@ -26,7 +27,12 @@ import eu.darken.porter.sdk.Porter
 @Config(sdk = [34])
 class PorterStateMachineAttachmentTest {
 
-    @After fun detach() = Porter.onBinderReceived(null, "eu.darken.porter.manager")
+    private val server = AttachingServer()
+
+    @After fun detach() {
+        Porter.onBinderReceived(null, "eu.darken.porter.manager")
+        ServerBinder.drop(server)
+    }
 
     /** Answers the attach, so the SDK keeps the connection; nothing else is called on this path. */
     private class AttachingServer : Binder() {
@@ -51,7 +57,8 @@ class PorterStateMachineAttachmentTest {
     }
 
     @Test fun constructingRegistersNothingWithPorter() {
-        Porter.onBinderReceived(AttachingServer(), "eu.darken.porter.manager")
+        ServerBinder.deliver(server)
+        Porter.onBinderReceived(server, "eu.darken.porter.manager")
 
         val machine = PorterStateMachine()
 
@@ -61,7 +68,8 @@ class PorterStateMachineAttachmentTest {
     @Test fun aConnectionPublishedBeforeAttachIsObservable() = runTest {
         // The StateFlow already holds the connection; the collector runs on the next main-looper
         // turn, as a sticky listener registered off the main thread used to.
-        Porter.onBinderReceived(AttachingServer(), "eu.darken.porter.manager")
+        ServerBinder.deliver(server)
+        Porter.onBinderReceived(server, "eu.darken.porter.manager")
 
         val machine = PorterStateMachine()
         machine.attachToShizuku()

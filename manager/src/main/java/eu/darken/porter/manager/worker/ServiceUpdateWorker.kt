@@ -14,14 +14,14 @@ import eu.darken.porter.manager.model.PorterServiceVersion
 import eu.darken.porter.manager.starter.ServiceReplacement
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.UserHandleCompat
-import eu.darken.porter.sdk.Porter
+import eu.darken.porter.manager.ServerBinder
 
 class ServiceUpdateWorker(context: Context, parameters: WorkerParameters) : CoroutineWorker(context, parameters) {
     override suspend fun doWork(): Result {
         if (!eligible(inputData.getString(TARGET), PorterServiceVersion.installed.buildId,
                 PorterSettings.autoUpdateService, UserHandleCompat.myUserId())) return Result.success()
         val connected = withTimeoutOrNull(15_000) {
-            PorterStateMachine.instance.asFlow().first { it == PorterStateMachine.State.RUNNING && Porter.connection.value?.isAlive == true }
+            PorterStateMachine.instance.asFlow().first { it == PorterStateMachine.State.RUNNING && ServerBinder.isAlive }
         }
         if (connected != null) ServiceReplacement.get(applicationContext).updateInBackground()
         else eu.darken.porter.manager.utils.LOGGER.i("Service update skipped: no running service connected within 15 seconds")

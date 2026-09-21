@@ -37,20 +37,21 @@ object ServerBinder {
     fun deliver(newBinder: IBinder) {
         synchronized(lock) {
             if (held === newBinder) return
-            held?.let { previous ->
-                runCatching { previous.unlinkToDeath(deathRecipient, 0) }
-            }
             try {
                 newBinder.linkToDeath(deathRecipient, 0)
             } catch (e: Exception) {
-                // Already dead: nothing to hold.
+                // Already dead: nothing to hold, and the previous server stays watched.
                 return
             }
+            held?.let { previous -> runCatching { previous.unlinkToDeath(deathRecipient, 0) } }
             held = newBinder
             manager = null
             _binder.value = newBinder
         }
     }
+
+    /** Whether the held server still answers. */
+    val isAlive: Boolean get() = binder.value?.pingBinder() == true
 
     /** Drops [binder] if it is still the one held; a later delivery is left alone. */
     fun drop(binder: IBinder) {

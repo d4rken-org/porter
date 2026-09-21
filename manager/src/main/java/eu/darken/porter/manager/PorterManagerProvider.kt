@@ -19,9 +19,14 @@ class PorterManagerProvider : PorterApiProvider() {
         if (extras == null) return null
 
         // Held before the SDK decides whether it can speak to the server: the manager's own
-        // operations must reach a server the SDK refuses as well.
+        // operations must reach a server the SDK refuses as well, and the user service starter
+        // asks this provider for the binder its server launched it from.
         if (method == PorterProtocol.DELIVERY_METHOD_SEND_BINDER) {
             extras.getBinder(PorterProtocol.DELIVERY_EXTRA_BINDER)?.let { ServerBinder.deliver(it) }
+        }
+        if (method == PorterProtocol.DELIVERY_METHOD_GET_BINDER) {
+            val binder = ServerBinder.binder.value?.takeIf { it.pingBinder() } ?: return super.call(method, arg, extras)
+            return Bundle().apply { putBinder(PorterProtocol.DELIVERY_EXTRA_BINDER, binder) }
         }
 
         return if (method == PorterProtocol.DELIVERY_METHOD_SEND_USER_SERVICE) {
