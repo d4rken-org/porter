@@ -18,11 +18,15 @@ TCP_PORT = "5555"
 BOOT_TIMEOUT = 300
 # Told apart from an empty reply, which a failed adb call also produces.
 NO_PROCESS = "porter-ci-no-server"
-# R.string.wadb_notification_retry, which the starter shows only once an attempt has failed.
-RETRY_TEXT = "Waiting to retry"
+# What WorkManager logs when it hands the work to the worker, which is what tells a worker that
+# actually ran from one that was only enqueued.
+WORKER_STARTED = "Starting work for eu.darken.porter.manager.worker.AdbStartWorker"
 # How long the no-port case waits before calling the absence of a server a result. The worker
 # retries with backoff, so this only has to outlive the first attempt.
 NO_START_SETTLE = 60
+# How long the worker is given to give up. With no port to find it waits on a wireless-debugging
+# authorization that is never coming, and what ends that is WorkManager stopping the worker at its
+# ten-minute execution limit, not anything the app decides. Bounded by that, not by a guess.
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "app-adb-start", "start-on-boot", "start-on-boot-off", "boot-without-adb")
 # Each of these inherits what the case before it established on the device.
@@ -213,14 +217,17 @@ class Boot(base.Smoke):
             self.reboot()
             assert self.shell("getprop", "persist.adb.tcp.port", check=False) == ""
             assert self.shell("getprop", "service.adb.tcp.port", check=False) == ""
-            # The retry text, not merely a notification on that channel: the starter posts
-            # "awaiting wifi" when it enqueues the work, before anything has been attempted, and
-            # the worker's running state reuses the same channel.
-            self.until("the manager tried, failed, and said it would try again",
-                       lambda: any(RETRY_TEXT in record for record in self.manager_notifications()),
+            # That the work ran, not merely that it was enqueued: the starter posts its first
+            # notification when it queues the work, so the notification alone says nothing about
+            # an attempt. What the worker then reports is deliberately not asserted. With no port
+            # to find it can settle on a retry within seconds or sit in "Starting Porter…"
+            # indefinitely, depending on whether discovery times out or the authorization wait
+            # takes over, and a case that picked one of those would pass on the environment rather
+            # than on Porter.
+            self.until("the manager's start worker ran",
+                       lambda: WORKER_STARTED in self.adb("logcat", "-d", "-s", "WM-WorkerWrapper:D", "*:S"),
                        timeout=BOOT_TIMEOUT)
-            # Only after that, so this reads as "it gave up and said so" rather than "it has not
-            # got round to it yet".
+            assert self.manager_notifications(), "the user was told nothing while it tried"
             time.sleep(NO_START_SETTLE)
             assert self.no_server(), "a server started with no ADB port to start it through"
             self.screenshot("boot-without-adb")

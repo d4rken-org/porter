@@ -91,7 +91,7 @@ class NotificationChannelTest(unittest.TestCase):
 
     DUMP = "\n".join([
         "  NotificationRecord(0x1: pkg=com.example user=0)",
-        "      android.text=Waiting to retry",
+        "      android.text=something from another app",
         "  NotificationRecord(0x2: pkg=eu.darken.porter user=0)",
         "      android.title=Starting Porter",
         "      android.text=Awaiting Wi-Fi connection before proceeding",
@@ -105,24 +105,15 @@ class NotificationChannelTest(unittest.TestCase):
         self.assertEqual(len(records), 1)
         self.assertIn("Awaiting Wi-Fi", records[0])
 
-    def test_another_package_s_retry_notice_is_not_the_manager_s(self):
-        with patch.object(self.smoke, "shell", return_value=self.DUMP):
-            records = self.smoke.manager_notifications()
-        self.assertFalse(any(boot.RETRY_TEXT in record for record in records))
-
     def test_a_package_whose_name_starts_the_same_is_not_the_manager(self):
         with patch.object(self.smoke, "shell", return_value=self.DUMP):
             records = self.smoke.manager_notifications()
         self.assertFalse(any("something else" in record for record in records))
 
-    def test_the_retry_notice_is_found_when_it_is_the_manager_s(self):
-        dump = "\n".join([
-            "  NotificationRecord(0x2: pkg=eu.darken.porter user=0)",
-            "      android.text=" + boot.RETRY_TEXT,
-        ])
+    def test_a_dump_with_nothing_from_the_manager_reports_nothing(self):
+        dump = "  NotificationRecord(0x1: pkg=com.example user=0)\n      android.text=hello"
         with patch.object(self.smoke, "shell", return_value=dump):
-            records = self.smoke.manager_notifications()
-        self.assertTrue(any(boot.RETRY_TEXT in record for record in records))
+            self.assertEqual(self.smoke.manager_notifications(), [])
 
 
 class CaseSelectionTest(unittest.TestCase):
