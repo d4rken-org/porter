@@ -9,6 +9,7 @@ import android.provider.Settings
 import android.service.quicksettings.TileService
 import android.util.Log
 import eu.darken.porter.manager.adb.AdbPairingAccessibilityService
+import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.service.WatchdogService
 
 sealed class SettingsPage(
@@ -71,7 +72,7 @@ sealed class SettingsPage(
         object NotificationChannel : Notifications() {
             override fun buildIntent(context: Context): Intent {
                 return super.buildIntent(context).apply {
-                    putExtra(Settings.EXTRA_CHANNEL_ID, WatchdogService.CRASH_CHANNEL_ID)
+                    putExtra(Settings.EXTRA_CHANNEL_ID, NotificationChannels.CRASH)
                 }
             }
         }
