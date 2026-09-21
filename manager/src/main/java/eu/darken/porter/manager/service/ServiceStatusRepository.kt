@@ -6,7 +6,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import eu.darken.porter.manager.Manifest
 import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.model.PorterServiceVersion
 import eu.darken.porter.manager.model.ServiceStatus
@@ -14,7 +13,6 @@ import eu.darken.porter.manager.starter.ServiceReplacement
 import eu.darken.porter.manager.support.ServerDiagnostics
 import eu.darken.porter.manager.utils.LOGGER
 import eu.darken.porter.manager.utils.PorterStateMachine
-import eu.darken.porter.manager.utils.PorterSystemApis
 import eu.darken.porter.manager.utils.UserHandleCompat
 import eu.darken.porter.sdk.Porter
 import eu.darken.porter.server.IPorterService
@@ -87,9 +85,6 @@ internal class ServiceStatusRepository private constructor(private val appContex
             service.checkPermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
         }
 
-        // Before a526d6bb, server will not exit on uninstall, manager installed later will get not permission
-        // Run a random remote transaction here, report no permission as not running
-        PorterSystemApis.instance.checkPermission(Manifest.permission.API, appContext.packageName, 0)
         val info = try {
             ServerDiagnostics.readInfo(binder)
         } catch (e: Exception) {
