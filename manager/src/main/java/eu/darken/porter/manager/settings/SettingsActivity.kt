@@ -19,6 +19,7 @@ import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.Helps
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.receiver.NotifCancelReceiver
+import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.receiver.PorterReceiverStarter
 import eu.darken.porter.manager.ui.*
 import eu.darken.porter.manager.utils.*
@@ -28,9 +29,21 @@ class SettingsActivity : ComposeActivity() {
     private val battery = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { model.batteryResult() }
 
     private var batteryRestricted by mutableStateOf(false)
+    private var alertsBlocked by mutableStateOf(false)
+
+    /** Set when this screen sends the user to the notification settings, which return no result. */
+    private var awaitingAlertsChoice = false
+
     override fun onResume() {
         super.onResume()
         batteryRestricted = !EnvironmentUtils.isTelevision() && !SettingsHelper.isIgnoringBatteryOptimizations(this)
+        alertsBlocked =
+            (PorterSettings.isStartOnBoot(this) && !NotificationAlerts.canAlert(this, NotificationChannels.ADB_START)) ||
+            (PorterSettings.watchdog && !NotificationAlerts.canAlert(this, NotificationChannels.WATCHDOG))
+        if (awaitingAlertsChoice) {
+            awaitingAlertsChoice = false
+            model.alertsResult()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +92,7 @@ class SettingsActivity : ComposeActivity() {
                 themeColorEnabled = style != "MATERIAL_YOU" || Build.VERSION.SDK_INT < 31,
                 versionName = BuildConfig.VERSION_NAME,
                 showBatteryAction = batteryRestricted && (PorterSettings.isStartOnBoot(this@SettingsActivity) || PorterSettings.watchdog),
+                showAlertsAction = alertsBlocked,
             ),
             SettingsActions(
                 onBack = { finish() },
@@ -98,6 +112,7 @@ class SettingsActivity : ComposeActivity() {
                 onAcknowledgements = { startActivity(Intent(this@SettingsActivity, AcknowledgementsActivity::class.java)) },
                 onVersion = { CustomTabsHelper.launchUrlOrCopy(this@SettingsActivity, Helps.DOWNLOAD.get()) },
                 onBatteryOptimization = { SettingsHelper.requestIgnoreBatteryOptimizations(this@SettingsActivity) },
+                onNotificationSettings = { SettingsPage.Notifications.NotificationSettings.launch(this@SettingsActivity) },
             ),
         )
         val dismiss = { model.show(null) }
@@ -128,6 +143,21 @@ class SettingsActivity : ComposeActivity() {
                     model.show(null)
                     runCatching { SettingsHelper.requestIgnoreBatteryOptimizations(this@SettingsActivity, battery) }.onFailure { model.cancelToggle() }
                 })
+            "alerts" -> AlertDialog(
+                onDismissRequest = model::cancelToggle,
+                title = { Text(stringResource(R.string.settings_alerts_blocked_title)) },
+                text = { Text(stringResource(R.string.settings_alerts_blocked_message)) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        model.show(null)
+                        awaitingAlertsChoice = true
+                        SettingsPage.Notifications.NotificationSettings.launch(this@SettingsActivity)
+                    }) { Text(stringResource(R.string.notification_settings)) }
+                },
+                dismissButton = {
+                    TextButton(onClick = model::applyWithoutAlerts) { Text(stringResource(R.string.settings_alerts_blocked_continue)) }
+                },
+            )
             "tcp" -> {
                 val valid = tcpText.isBlank() || tcpText.toIntOrNull()?.let { it in 1..65535 } == true
                 AlertDialog(onDismissRequest = dismiss, title = { Text(stringResource(R.string.settings_tcp_port)) }, text = {

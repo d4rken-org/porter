@@ -1,6 +1,7 @@
 package eu.darken.porter.manager.settings
 
 import android.app.Application
+import android.content.Context
 import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -12,13 +13,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.utils.EnvironmentUtils
+import eu.darken.porter.manager.utils.NotificationAlerts
 import eu.darken.porter.manager.utils.SettingsHelper
 
 class SettingsViewModel @JvmOverloads constructor(
     application: Application,
     private val savedState: SavedStateHandle,
+    private val alertProbe: (Context, String) -> Boolean = { context, channel -> NotificationAlerts.canAlert(context, channel) },
+    private val isTelevision: () -> Boolean = { EnvironmentUtils.isTelevision() },
     private val rootProbe: suspend () -> Boolean = { withContext(Dispatchers.IO) { EnvironmentUtils.isRooted() } },
 ) : AndroidViewModel(application) {
     val dialog: StateFlow<String?> = savedState.getStateFlow("dialog", null)
@@ -57,20 +62,52 @@ class SettingsViewModel @JvmOverloads constructor(
 
     fun toggle(key: String, enabled: Boolean) {
         savedState["pendingSetting"] = key
-        if (enabled && key == PorterSettings.Keys.KEY_START_ON_BOOT && !EnvironmentUtils.isTelevision() && Build.VERSION.SDK_INT < 33) {
+        if (enabled && key == PorterSettings.Keys.KEY_START_ON_BOOT && !isTelevision() && Build.VERSION.SDK_INT < 33) {
             show("boot_warning")
         } else checkBattery(enabled)
     }
 
     fun checkBattery(enabled: Boolean = true) {
-        if (enabled && !EnvironmentUtils.isTelevision() && !SettingsHelper.isIgnoringBatteryOptimizations(getApplication())) {
+        if (enabled && !isTelevision() && !SettingsHelper.isIgnoringBatteryOptimizations(getApplication())) {
             show("battery")
-        } else applyToggle(enabled)
+        } else checkAlerts(enabled)
     }
 
     fun batteryResult() {
-        if (SettingsHelper.isIgnoringBatteryOptimizations(getApplication())) applyToggle(true)
+        if (SettingsHelper.isIgnoringBatteryOptimizations(getApplication())) checkAlerts(true)
         else cancelToggle()
+    }
+
+    /**
+     * Both of these features report only through notifications: start-on-boot has nothing but the
+     * "waiting for wifi" and retry messages to say why no service came back, and the watchdog's own
+     * notification is where its off switch lives. Enabling either while those are muted is allowed,
+     * but not silently.
+     */
+    fun checkAlerts(enabled: Boolean = true) {
+        if (enabled && !alertsAvailable()) show("alerts") else applyToggle(enabled)
+    }
+
+    /** The user was told the alerts are muted and asked for the setting anyway. */
+    fun applyWithoutAlerts() = applyToggle(true)
+
+    /** Back from the notification settings: take the toggle only if the block is actually gone. */
+    fun alertsResult() {
+        if (pendingSetting.value == null) return
+        if (alertsAvailable()) applyToggle(true) else cancelToggle()
+    }
+
+    /**
+     * The crash channel is deliberately absent: its own notification offers turning it off, so a
+     * user who took that action must not be told the watchdog is now misconfigured.
+     */
+    private fun alertsAvailable(): Boolean {
+        val channel = when (pendingSetting.value) {
+            PorterSettings.Keys.KEY_START_ON_BOOT -> NotificationChannels.ADB_START
+            PorterSettings.Keys.KEY_WATCHDOG -> NotificationChannels.WATCHDOG
+            else -> return true
+        }
+        return alertProbe(getApplication(), channel)
     }
 
     fun cancelToggle() { savedState["pendingSetting"] = null; show(null) }
