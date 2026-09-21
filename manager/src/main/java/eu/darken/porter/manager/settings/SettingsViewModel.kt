@@ -129,8 +129,13 @@ class SettingsViewModel @JvmOverloads constructor(
      * cannot redirect it; [toggle] refuses that toggle anyway.
      */
     private fun applyToggle(enabled: Boolean) {
+        // Guarded here and not only in [toggle]: the dialogs on the way to this stay on screen
+        // with their buttons live until the write finishes, so a second confirmation would start
+        // a second write whose completion clears the first one's state.
+        if (saving.value) return
         val key = pendingSetting.value ?: return cancelToggle()
         saving.value = true
+        show(null)
         viewModelScope.launch {
             try {
                 withContext(io) {
