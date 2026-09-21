@@ -23,7 +23,7 @@ jobs:
           set -euo pipefail
           pin="$(git ls-tree HEAD api | awk '{print $3}')"
           if [ -z "$pin" ]; then
-            echo "::error::No gitlink at api/, but settings.gradle builds the Porter SDK from there."
+            echo "::error::No gitlink at api/, but settings.gradle.kts builds the Porter SDK from there."
             exit 1
           fi
           echo "Pinned porter-api commit: $pin"
