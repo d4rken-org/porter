@@ -1086,7 +1086,11 @@ class Smoke:
             assert not self.locate("Allow all the time", MANAGER), "a prompt refused in another user surfaced later"
 
             # The refusal is not remembered, so the ordinary path still prompts and still keeps
-            # its answer to the uid that asked.
+            # its answer to the uid that asked. Revoked first: the case before this one can leave
+            # the owner user's copy already holding the permission, and a client that already has
+            # it never asks, so the prompt this is about would never appear.
+            self.shell("pm", "revoke", NATIVE, PERMISSION)
+            self.shell("am", "force-stop", NATIVE)
             self.launch_probe(NATIVE)
             self.tap("Allow all the time", MANAGER, screenshot="after-secondary-user")
             self.authorized(NATIVE)
