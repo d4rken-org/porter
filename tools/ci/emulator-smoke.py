@@ -395,13 +395,18 @@ class Smoke:
         listing = self.shell("pm", "list", "packages", "--user", user, "-U", package)
         return int(re.search(r"uid:(\d+)", listing).group(1))
 
+    # Told apart from the file's contents on the device, so that a read this side could not
+    # perform reads as "nothing was written" and passes an assertion it never checked.
+    NO_DECISIONS = "porter-ci-no-decision-file"
+
     def decision_flags(self, uid):
         """The saved flags for a uid, or 0 when nothing is recorded about it."""
         # The file only appears once something is saved, so a device that has answered no prompt
         # has no database at all rather than an empty one.
-        raw = self.shell("cat", DECISIONS, check=False)
-        if not raw.startswith("{"):
+        raw = self.shell("sh", "-c", f"test -e {DECISIONS} && cat {DECISIONS} || echo {self.NO_DECISIONS}")
+        if raw == self.NO_DECISIONS:
             return 0
+        assert raw.startswith("{"), f"cannot read {DECISIONS}: {raw!r}"
         for entry in json.loads(raw).get("packages") or ():
             if entry.get("uid") == uid:
                 return entry.get("flags", 0)
@@ -840,6 +845,11 @@ class Smoke:
             server_pid = self.pid("porter_server")
             manager_pid = self.pid(MANAGER)
             boundary = len(self.logs())
+            # The manager's log is never cleared and earlier cases replace the server, so a
+            # CRASHED already in the buffer says nothing about the kill below.
+            def manager_log():
+                return self.adb("logcat", "-d", "--pid=" + manager_pid, "-s", "PorterStateMachine:D", "*:S")
+            manager_boundary = len(manager_log())
             self.shell("su", "0", "kill", "-9", server_pid)
             self.until("the server is gone", lambda: not self.pid("porter_server"))
 
@@ -851,8 +861,7 @@ class Smoke:
             self.until("the user service follows the server that hosted it",
                        lambda: not self.pid(NATIVE + ":porter-probe"))
             self.until("the manager calls it a crash",
-                       lambda: "PorterStateMachine: CRASHED" in
-                               self.adb("logcat", "-d", "--pid=" + manager_pid, "-s", "PorterStateMachine:D", "*:S"))
+                       lambda: "PorterStateMachine: CRASHED" in manager_log()[manager_boundary:])
 
             self.start_service()
             # The same process, reconnected: a privileged call working again is the assertion, not
