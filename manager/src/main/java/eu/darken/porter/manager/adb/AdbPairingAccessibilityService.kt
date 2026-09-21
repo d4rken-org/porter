@@ -61,7 +61,7 @@ class AdbPairingAccessibilityService : AccessibilityService() {
         scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
         pairing = false
         finished = false
-        TvPairingResultStore(PorterSettings.getPreferences()).clear()
+        TvPairingResultStore(PorterSettings.preferences).clear()
         handler.removeCallbacks(timeout)
         handler.postDelayed(timeout, 60_000)
         openPorter(showInstructions = true)
@@ -117,7 +117,7 @@ class AdbPairingAccessibilityService : AccessibilityService() {
         if (finished) return
         finished = true
         handler.removeCallbacks(timeout)
-        TvPairingResultStore(PorterSettings.getPreferences()).save(TvPairingResult(success, message))
+        TvPairingResultStore(PorterSettings.preferences).save(TvPairingResult(success, message))
         if (overlay?.isVisible == true) {
             overlay?.showResult(success)
             handler.postDelayed(returnToPorter, 2_500)

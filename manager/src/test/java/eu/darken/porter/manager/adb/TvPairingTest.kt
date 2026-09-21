@@ -36,7 +36,7 @@ class TvPairingTest {
     private val dispatcher = StandardTestDispatcher()
     private lateinit var controller: ServiceController<AdbPairingAccessibilityService>
     private val service get() = controller.get()
-    private val store get() = TvPairingResultStore(PorterSettings.getPreferences())
+    private val store get() = TvPairingResultStore(PorterSettings.preferences)
     private val views get() = Shadow.extract<ShadowWindowManagerImpl>(service.getSystemService(WindowManager::class.java)).views
     private fun idle() { shadowOf(Looper.getMainLooper()).idle(); dispatcher.scheduler.runCurrent() }
     private fun tree(vararg texts: String) = AccessibilityNodeInfo.obtain().apply {
@@ -62,7 +62,7 @@ class TvPairingTest {
         val result = store.read()!!
         assertFalse(result.success)
         assertEquals(service.getString(R.string.porter_pairing_search_timeout), result.message)
-        assertEquals(result, TvPairingResultStore(PorterSettings.getPreferences()).read())
+        assertEquals(result, TvPairingResultStore(PorterSettings.preferences).read())
         assertNotNull(shadowOf(service).nextStartedActivity)
         store.clear()
         assertNull(store.read())

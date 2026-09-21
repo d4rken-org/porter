@@ -41,10 +41,10 @@ object PorterReceiverStarter {
     fun start(context: Context, forceStart: Boolean = false) {
         if ((UserHandleCompat.myUserId() > 0 || PorterStateMachine.instance.isRunning()) && !forceStart) return
 
-        if (PorterSettings.getLastLaunchMode() == LaunchMethod.ROOT) {
+        if (PorterSettings.lastLaunchMode == LaunchMethod.ROOT) {
             rootStart(context)
         } else if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R || EnvironmentUtils.isTelevision() || EnvironmentUtils.getAdbTcpPort() > 0)
-            && PorterSettings.getLastLaunchMode() == LaunchMethod.ADB) {
+            && PorterSettings.lastLaunchMode == LaunchMethod.ADB) {
                 if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
                     AdbStartWorker.enqueue(context)
                     updateNotification(context, WorkerState.AWAITING_WIFI)

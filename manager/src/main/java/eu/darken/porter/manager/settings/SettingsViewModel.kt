@@ -51,7 +51,7 @@ class SettingsViewModel @JvmOverloads constructor(
 
     fun setAutoUpdateService(enabled: Boolean) {
         if (eu.darken.porter.manager.utils.UserHandleCompat.myUserId() != 0) return
-        PorterSettings.getPreferences().edit().putBoolean(PorterSettings.Keys.KEY_AUTO_UPDATE_SERVICE, enabled).apply()
+        PorterSettings.preferences.edit().putBoolean(PorterSettings.Keys.KEY_AUTO_UPDATE_SERVICE, enabled).apply()
         if (!enabled) eu.darken.porter.manager.worker.ServiceUpdateWorker.cancel(getApplication())
     }
 

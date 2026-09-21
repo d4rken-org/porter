@@ -39,18 +39,18 @@ class PorterApplication : Application() {
 
     private fun init(context: Context) {
         PorterSettings.initialize(context)
-        if (LocaleMigration.needsClear(PorterSettings.getPreferences())) {
+        if (LocaleMigration.needsClear(PorterSettings.preferences)) {
             getSystemService(android.app.LocaleManager::class.java).applicationLocales = android.os.LocaleList.getEmptyLocaleList()
-            LocaleMigration.markDone(PorterSettings.getPreferences())
+            LocaleMigration.markDone(PorterSettings.preferences)
         }
         PorterSystemApis.instance.attachToSystemServices()
         eu.darken.porter.manager.support.DebugRecorder.get(context).attach()
         // After the observers it can drive: the sticky binder-received listener fires
         // synchronously here when the binder is already up.
         PorterStateMachine.instance.attachToShizuku()
-        AppCompatDelegate.setDefaultNightMode(PorterSettings.getNightMode())
+        AppCompatDelegate.setDefaultNightMode(PorterSettings.nightMode)
 
-        if(PorterSettings.getWatchdog()) WatchdogService.start(context)
+        if(PorterSettings.watchdog) WatchdogService.start(context)
     }
 
     override fun onCreate() {

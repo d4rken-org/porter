@@ -62,7 +62,7 @@ object WirelessStart {
     fun pair(context: Context) {
         if (EnvironmentUtils.isTelevision()) {
             context.showAccessibilityDialog()
-        } else if ((context.display?.displayId ?: -1) > 0 || PorterSettings.getLegacyPairing()) {
+        } else if ((context.display?.displayId ?: -1) > 0 || PorterSettings.legacyPairing) {
             // Running in a multi-display environment (e.g., Windows Subsystem for Android),
             // pairing dialog can be displayed simultaneously with Shizuku.
             // Input from notification is harder to use under this situation.

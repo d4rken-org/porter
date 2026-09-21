@@ -18,7 +18,7 @@ internal suspend fun pairAdb(host: String, port: Int, code: String): Unit = susp
         try {
             if (!continuation.isActive) return@dispatch
             val key = try {
-                AdbKey(PreferenceAdbKeyStore(PorterSettings.getPreferences()))
+                AdbKey(PreferenceAdbKeyStore(PorterSettings.preferences))
             } catch (e: Exception) {
                 throw AdbKeyException(e)
             }

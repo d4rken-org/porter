@@ -10,7 +10,7 @@ import eu.darken.porter.manager.model.PorterServiceVersion
 import eu.darken.porter.manager.model.ServiceStatus
 import eu.darken.porter.manager.starter.ServiceReplacement
 import eu.darken.porter.manager.support.ServerDiagnostics
-import eu.darken.porter.manager.utils.Logger.LOGGER
+import eu.darken.porter.manager.utils.LOGGER
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.PorterSystemApis
 import eu.darken.porter.manager.utils.UserHandleCompat

@@ -75,7 +75,7 @@ abstract class HomeActivity : ComposeActivity() {
 
     override fun onPostResume() {
         super.onPostResume()
-        val result = TvPairingResultStore(PorterSettings.getPreferences()).read()
+        val result = TvPairingResultStore(PorterSettings.preferences).read()
         if (result != null) {
             (supportFragmentManager.findFragmentByTag(AccessibilityDialogFragment::class.java.simpleName)
                 as? AccessibilityDialogFragment)?.dismiss()
@@ -107,7 +107,7 @@ abstract class HomeActivity : ComposeActivity() {
             if (running) appsModel.load()
         }
         LaunchedEffect(status) {
-            if (running) PorterSettings.setLastLaunchMode(if (status.uid == 0) PorterSettings.LaunchMethod.ROOT else PorterSettings.LaunchMethod.ADB)
+            if (running) PorterSettings.lastLaunchMode = if (status.uid == 0) PorterSettings.LaunchMethod.ROOT else PorterSettings.LaunchMethod.ADB
         }
         val buildBadge = when {
             BuildConfig.DEBUG -> stringResource(R.string.porter_build_dev)

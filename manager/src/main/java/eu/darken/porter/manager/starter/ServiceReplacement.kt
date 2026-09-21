@@ -58,7 +58,7 @@ internal class ServiceReplacer(
                 // The detached starter can stop the old service before newProcess returns its reply.
             } catch (e: ReplacementLaunchUncertain) {
                 // A slow starter can still replace the service. Keep the watchdog masked during the handoff window.
-                eu.darken.porter.manager.utils.Logger.LOGGER.w(e, "Waiting for uncertain service update launch")
+                eu.darken.porter.manager.utils.LOGGER.w(e, "Waiting for uncertain service update launch")
             }
             onLaunched()
             withTimeout(60_000) {
@@ -96,7 +96,7 @@ internal class ServiceReplacement internal constructor(
     private val controller = run {
         val preferences = appContext.createDeviceProtectedStorageContext().getSharedPreferences("service-update", Context.MODE_PRIVATE)
         ServiceUpdateController(ServiceUpdateStore(preferences, PorterServiceVersion.installed.buildId!!),
-            isPrimaryUser = { UserHandleCompat.myUserId() == 0 }, automaticEnabled = PorterSettings::getAutoUpdateService,
+            isPrimaryUser = { UserHandleCompat.myUserId() == 0 }, automaticEnabled = PorterSettings::autoUpdateService,
             replace = { beforeLaunch, onLaunched ->
                 withContext(Dispatchers.IO) {
                     val apk = File(appContext.applicationInfo.sourceDir)

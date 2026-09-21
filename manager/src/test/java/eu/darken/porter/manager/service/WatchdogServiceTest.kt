@@ -67,16 +67,16 @@ class WatchdogServiceTest {
             Intent(application, WatchdogService::class.java).setAction("ACTION_STOP_SERVICE"),
         )
         controller.create().startCommand(0, 1)
-        assertFalse(PorterSettings.getWatchdog())
+        assertFalse(PorterSettings.watchdog)
         controller.destroy()
-        assertFalse(PorterSettings.getWatchdog())
+        assertFalse(PorterSettings.watchdog)
     }
 
     @Test fun teardownWithoutTheStopActionKeepsTheWatchdogOn() {
         val controller = Robolectric.buildService(WatchdogService::class.java)
         controller.create()
         controller.destroy()
-        assertTrue(PorterSettings.getWatchdog())
+        assertTrue(PorterSettings.watchdog)
     }
 
     @Test fun aCrashReactionIsPostedRatherThanRunInsideTheTransition() {

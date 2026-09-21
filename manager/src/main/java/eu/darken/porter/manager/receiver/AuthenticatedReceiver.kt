@@ -21,7 +21,7 @@ abstract class AuthenticatedReceiver : BroadcastReceiver() {
 
     final override fun onReceive(context: Context, intent: Intent) {
         val authToken = intent.getStringExtra("auth")
-        val expectedToken = PorterSettings.getAuthToken()
+        val expectedToken = PorterSettings.authToken
 
         if (authToken.isNullOrEmpty()) {
             context.notify(

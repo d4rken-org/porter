@@ -44,7 +44,7 @@ object EnvironmentUtils {
     fun getAdbTcpPort(): Int {
         var port = SystemProperties.getInt("service.adb.tcp.port", -1)
         if (port == -1) port = SystemProperties.getInt("persist.adb.tcp.port", -1)
-        if (port == -1 && isTelevision() && !isTlsSupported()) port = PorterSettings.getTcpPort()
+        if (port == -1 && isTelevision() && !isTlsSupported()) port = PorterSettings.tcpPort
         return port
     }
 }

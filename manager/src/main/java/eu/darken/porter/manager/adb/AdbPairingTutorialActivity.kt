@@ -51,7 +51,7 @@ class AdbPairingTutorialActivity : ComposeActivity() {
                         HtmlText(stringResource(R.string.adb_pairing_tutorial_content_notification_blocked))
                         Button(onClick = { SettingsPage.Notifications.NotificationSettings.launch(this@AdbPairingTutorialActivity) }) { Text(stringResource(R.string.notification_settings)) }
                     }
-                    if (DeviceCompatibility.isMiui()) {
+                    if (DeviceCompatibility.isMiui) {
                         HtmlText(stringResource(R.string.adb_pairing_tutorial_content_miui))
                         HtmlText(stringResource(R.string.adb_pairing_tutorial_content_miui_2))
                     }

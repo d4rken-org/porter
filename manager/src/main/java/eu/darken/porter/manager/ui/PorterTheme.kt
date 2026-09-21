@@ -15,7 +15,7 @@ import eu.darken.porter.manager.app.AppActivity
 fun preferencesRevision(): Int {
     var revision by remember { mutableIntStateOf(0) }
     DisposableEffect(Unit) {
-        val preferences = PorterSettings.getPreferences()
+        val preferences = PorterSettings.preferences
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> revision++ }
         preferences.registerOnSharedPreferenceChangeListener(listener)
         onDispose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
@@ -26,8 +26,8 @@ fun preferencesRevision(): Int {
 @Composable
 fun PorterTheme(content: @Composable () -> Unit) {
     val revision = preferencesRevision()
-    val preferences = PorterSettings.getPreferences()
-    val mode = remember(revision) { PorterSettings.getNightMode() }
+    val preferences = PorterSettings.preferences
+    val mode = remember(revision) { PorterSettings.nightMode }
     val style = remember(revision) { preferences.getString(PorterSettings.Keys.KEY_THEME_STYLE, "DEFAULT") }
     val color = remember(revision) { preferences.getString(PorterSettings.Keys.KEY_THEME_COLOR, "BLUE") }
     val dark = when (mode) { 1 -> false; 2 -> true; else -> isSystemInDarkTheme() }

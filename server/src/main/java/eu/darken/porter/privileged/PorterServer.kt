@@ -353,10 +353,10 @@ class PorterServer internal constructor(
                 val entry = configManager.find(record.uid)
                 record.allowed = !paused && entry != null && entry.isAllowed()
                 val reply = Bundle()
-                reply.putInt(BIND_APPLICATION_SERVER_UID, OsUtils.getUid())
+                reply.putInt(BIND_APPLICATION_SERVER_UID, OsUtils.uid)
                 reply.putInt(BIND_APPLICATION_SERVER_VERSION, if (record.apiVersion == -1) 12 else ShizukuApiConstants.SERVER_VERSION)
                 reply.putInt(BIND_APPLICATION_SERVER_PATCH_VERSION, ShizukuApiConstants.SERVER_PATCH_VERSION)
-                reply.putString(BIND_APPLICATION_SERVER_SECONTEXT, OsUtils.getSELinuxContext())
+                reply.putString(BIND_APPLICATION_SERVER_SECONTEXT, OsUtils.seLinuxContext)
                 reply.putBoolean(BIND_APPLICATION_PERMISSION_GRANTED, record.allowed)
                 reply.putBoolean(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, entry != null && entry.isDenied())
                 try {
