@@ -445,7 +445,6 @@ class Smoke:
             # The framework tears a user down in the background, and the package removals that go
             # with it land on the same packages the next case installs and launches.
             self.until("the extra users are gone", lambda: not self.extra_users(), timeout=USER_REMOVAL_TIMEOUT)
-            time.sleep(USER_REMOVAL_SETTLE)
         if "manager" in aspects and not self.installed(MANAGER):
             self.adb("install", str(self.args.manager.resolve()))
         if "probes" in aspects:

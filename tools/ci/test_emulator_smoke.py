@@ -480,6 +480,20 @@ class ScenarioRestoreTest(unittest.TestCase):
         self.runner.shell.assert_any_call("pm", "remove-user", "10", check=False)
         self.assertEqual(self.users, [])
 
+    def test_a_scenario_that_passed_restores_its_users_and_says_nothing(self):
+        """The successful path through the users aspect, which the two below never reach."""
+        removes = self.runner.shell.side_effect
+
+        def removing(*args, **kwargs):
+            if args[:2] == ("pm", "remove-user"):
+                self.users = []
+            return removes(*args, **kwargs)
+        self.runner.shell.side_effect = removing
+        self.runner.case("probe-case", lambda: {"ok": True}, restore=("users",))
+        self.assertTrue(self.runner.results[0]["passed"])
+        self.assertNotIn("restore_failure", self.runner.results[0])
+        self.runner.shell.assert_any_call("pm", "remove-user", "10", check=False)
+
     def test_a_user_the_framework_never_finished_removing_fails_the_restore(self):
         with patch.object(smoke, "USER_REMOVAL_TIMEOUT", 0.2), patch.object(smoke.time, "sleep"):
             with self.assertRaisesRegex(AssertionError, "extra users are gone"):
