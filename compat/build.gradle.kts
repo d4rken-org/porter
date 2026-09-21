@@ -10,7 +10,8 @@ android {
     namespace = "eu.darken.porter.compat"
     defaultConfig {
         applicationId = "moe.shizuku.privileged.api"
-        versionCode = rootProject.extra["versionCode"] as Int
+        // Its own contract number; the name still says which Porter release shipped it.
+        versionCode = rootProject.extra["compatVersionCode"] as Int
         versionName = rootProject.extra["versionName"] as String
     }
     signingConfigs {

@@ -91,7 +91,7 @@ internal class CompatibilityRepository private constructor(private val context: 
             installed == null -> Status.MISSING
             !sameSigner -> Status.CONFLICT
             !ownsPermission(installed) -> Status.INVALID
-            BuildConfig.IS_FOSS && version(installed) < BuildConfig.VERSION_CODE -> Status.UPDATE
+            BuildConfig.IS_FOSS && version(installed) < BuildConfig.COMPAT_VERSION_CODE -> Status.UPDATE
             else -> Status.INSTALLED
         }
         val running = runCatching { Porter.connection.value?.isAlive == true }.getOrDefault(false)
@@ -187,7 +187,7 @@ internal class CompatibilityRepository private constructor(private val context: 
         inspect()
         val current = installed() ?: error("Compatibility app is no longer installed")
         check(mutable.value.isCompanion && mutable.value.supported && !mutable.value.otherUsers) { "Compatibility app cannot be reinstalled here" }
-        check(version(current) <= BuildConfig.VERSION_CODE) { "The installed compatibility app is newer than the included version" }
+        check(version(current) <= BuildConfig.COMPAT_VERSION_CODE) { "The installed compatibility app is newer than the included version" }
         installAndActivate(force = true)
     }
 
@@ -256,7 +256,7 @@ internal class CompatibilityRepository private constructor(private val context: 
             atomic.finishWrite(output)
         } catch (e: Exception) { atomic.failWrite(output); throw e }
         val archive = pm.getPackageArchiveInfo(file.path, flags) ?: error("Invalid bundled APK")
-        check(archive.packageName == PACKAGE && version(archive) == BuildConfig.VERSION_CODE.toLong() && ownsPermission(archive)
+        check(archive.packageName == PACKAGE && version(archive) == BuildConfig.COMPAT_VERSION_CODE.toLong() && ownsPermission(archive)
             && certificate(archive) == certificate(pm.getPackageInfo(context.packageName, flags))) { "Bundled APK identity does not match Porter" }
         return file
     }
