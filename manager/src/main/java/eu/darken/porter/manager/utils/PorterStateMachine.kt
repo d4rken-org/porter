@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import eu.darken.porter.sdk.Porter
+import eu.darken.porter.manager.ServerBinder
 
 class PorterStateMachine {
 
@@ -45,15 +45,16 @@ class PorterStateMachine {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     /**
-     * Starts following the Porter connection. Explicit, and separate from construction: a second
-     * collector would double every transition, and merely holding an instance must not wire
-     * anything up.
+     * Starts following the delivered server binder, which is there whether or not the SDK can
+     * speak to that server: a server the manager has to stop or replace is a running one.
+     * Explicit, and separate from construction: a second collector would double every transition,
+     * and merely holding an instance must not wire anything up.
      */
     fun attachToShizuku() {
         if (!attached.compareAndSet(false, true)) return
         scope.launch {
-            Porter.connection.collect { connection ->
-                if (connection != null) set(State.RUNNING) else setDead()
+            ServerBinder.binder.collect { binder ->
+                if (binder != null) set(State.RUNNING) else setDead()
             }
         }
     }
@@ -84,7 +85,7 @@ class PorterStateMachine {
     }
 
     fun update(): State {
-        val state = if (Porter.connection.value?.isAlive == true) State.RUNNING else State.STOPPED
+        val state = if (ServerBinder.isAlive) State.RUNNING else State.STOPPED
         set(state)
         return state
     }

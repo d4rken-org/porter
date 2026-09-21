@@ -35,7 +35,8 @@ import eu.darken.porter.manager.utils.LOGGER
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.PorterSystemApis
 import eu.darken.porter.manager.utils.UserHandleCompat
-import eu.darken.porter.sdk.Porter
+import eu.darken.porter.server.IPorterService
+import android.content.pm.PackageManager
 
 class RequestPermissionActivity : ComposeActivity() {
     override val protectTouches = true
@@ -148,7 +149,8 @@ internal interface PermissionGateway {
 internal object PorterPermissionGateway : PermissionGateway {
     override fun serviceStates() = PorterStateMachine.instance.asFlow()
     override suspend fun canGrantPermissions() = withContext(Dispatchers.IO) {
-        Porter.connection.value?.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == true
+        val service = IPorterService.Stub.asInterface(ServerBinder.require())
+        service.uid == 0 || service.checkPermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
     }
     override fun dispatch(uid: Int, pid: Int, code: Int, allowed: Boolean, onetime: Boolean) =
         ServerBinder.manager().dispatchPermissionConfirmationResult(uid, pid, code, allowed, onetime)

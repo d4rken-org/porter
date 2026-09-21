@@ -26,7 +26,7 @@ import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.model.PorterServiceVersion
 import eu.darken.porter.manager.utils.PorterStateMachine
-import eu.darken.porter.sdk.Porter
+import eu.darken.porter.manager.ServerBinder
 import java.io.File
 
 class DebugRecorder internal constructor(
@@ -176,7 +176,7 @@ class DebugRecorder internal constructor(
      */
     private fun acquireDebugLease(events: File, remaining: Long) {
         fun note(what: String) = runCatching { events.appendText("$what at ${System.currentTimeMillis()}\n") }
-        val binder = Porter.connection.value?.takeIf { it.isAlive }?.binder
+        val binder = ServerBinder.binder.value?.takeIf { it.pingBinder() }
         if (binder == null) {
             note("Debug logging unavailable")
             return

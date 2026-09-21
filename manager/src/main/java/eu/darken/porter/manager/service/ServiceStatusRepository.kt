@@ -1,6 +1,7 @@
 package eu.darken.porter.manager.service
 
 import android.content.Context
+import android.content.pm.PackageManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
@@ -16,7 +17,8 @@ import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.PorterSystemApis
 import eu.darken.porter.manager.utils.UserHandleCompat
 import eu.darken.porter.sdk.Porter
-import eu.darken.porter.sdk.PorterConnection
+import eu.darken.porter.server.IPorterService
+import android.os.IBinder
 
 internal data class ServiceSnapshot(
     val status: ServiceStatus = ServiceStatus(),
@@ -54,36 +56,42 @@ internal class ServiceStatusRepository private constructor(private val appContex
     fun refresh() {
         scope.launch {
             mutex.withLock {
-                val connection = Porter.connection.value
-                val loaded = try { load(connection) }
+                val binder = ServerBinder.binder.value
+                val loaded = try { load(binder) }
                 catch (e: CancellationException) { throw e }
                 catch (e: Exception) { LOGGER.w(e, "Load service status"); ServiceStatus() }
-                status.value = if (connection === Porter.connection.value && PorterStateMachine.instance.isRunning()) loaded else ServiceStatus()
+                status.value = if (binder === ServerBinder.binder.value && PorterStateMachine.instance.isRunning()) loaded else ServiceStatus()
                 if (PorterStateMachine.instance.isRunning()) ServiceReplacement.get(appContext).reconcile()
             }
         }
     }
 
-    private fun load(connection: PorterConnection?): ServiceStatus {
-        if (!PorterStateMachine.instance.isRunning() || connection == null) {
+    private fun load(binder: IBinder?): ServiceStatus {
+        if (!PorterStateMachine.instance.isRunning() || binder == null) {
             return ServiceStatus()
         }
 
-        val uid = connection.uid
-        val protocolVersion = connection.serverInfo.version
+        // The SDK holds no connection for a server it cannot speak to; the manager is admitted to
+        // these calls whatever the protocol says, so it asks the binder itself then.
+        val connection = Porter.connection.value?.takeIf { it.binder === binder }
+        val service = IPorterService.Stub.asInterface(binder)
+        val uid = connection?.uid ?: service.uid
+        val protocolVersion = connection?.serverInfo?.version ?: Porter.incompatibility?.serverVersion ?: 0
         val seContext = try {
-            connection.seLinuxContext
+            connection?.seLinuxContext ?: service.seLinuxContext
         } catch (tr: Throwable) {
             LOGGER.w(tr, "getSELinuxContext")
             null
         }
-        val permissionTest = connection.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS")
+        val permissionTest = if (uid == 0) true else {
+            service.checkPermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
+        }
 
         // Before a526d6bb, server will not exit on uninstall, manager installed later will get not permission
         // Run a random remote transaction here, report no permission as not running
         PorterSystemApis.instance.checkPermission(Manifest.permission.API, appContext.packageName, 0)
         val info = try {
-            ServerDiagnostics.readInfo(connection.binder)
+            ServerDiagnostics.readInfo(binder)
         } catch (e: Exception) {
             LOGGER.w(e, "Read Porter service version")
             null

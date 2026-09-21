@@ -22,7 +22,7 @@ PERMISSION = "eu.darken.porter.permission.API"
 LEGACY_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 # What each probe reports on its BINDER line: the Porter protocol version from the porter
 # flavour, the Shizuku API level from the legacy one. Different numbers, different meanings.
-PORTER_PROTOCOL_VERSION = 3
+PORTER_PROTOCOL_VERSION = 4
 SHIZUKU_API_VERSION = 13
 PAYLOAD = "porter-ci-shell-access"
 PORSH_DIR = "/data/local/tmp"
