@@ -118,7 +118,7 @@ class CompatibilityActivity : ComposeActivity() {
             }
         }
         var confirmUninstall by rememberSaveable { mutableStateOf(false) }
-        val newer = (state.installedVersionCode ?: 0) > BuildConfig.VERSION_CODE
+        val newer = (state.installedVersionCode ?: 0) > BuildConfig.COMPAT_VERSION_CODE
         PorterScaffold(stringResource(R.string.compat_setup_title), onBack = { finish() }) { padding ->
             Column(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState()).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)) {

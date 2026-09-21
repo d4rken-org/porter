@@ -73,6 +73,7 @@ android {
         applicationId = "eu.darken.porter"
         versionCode = rootProject.extra["versionCode"] as Int
         versionName = rootProject.extra["versionName"] as String
+        buildConfigField("int", "COMPAT_VERSION_CODE", "${rootProject.extra["compatVersionCode"]}")
         externalNativeBuild {
             cmake {
                 arguments += "-DANDROID_STL=none"

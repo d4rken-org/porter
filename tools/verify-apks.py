@@ -11,6 +11,8 @@ import sys
 import xml.etree.ElementTree as ET
 
 sdk = Path(os.environ["ANDROID_HOME"])
+properties = (Path(__file__).resolve().parent.parent / "version.properties").read_text()
+compat_version = re.search(r"^project\.compat\.version=(\d+)$", properties, re.M).group(1)
 aapt = sdk / "cmdline-tools/latest/bin/apkanalyzer"
 signer = sdk / "build-tools/37.0.0/apksigner"
 android = "{http://schemas.android.com/apk/res/android}"
@@ -49,7 +51,7 @@ for apk, (package, permission) in zip([args.manager, args.companion], expected):
     output = subprocess.check_output([str(signer), "verify", "--print-certs", apk], text=True)
     certificates.append(sorted(set(re.findall(r"certificate SHA-256 digest: (\w+)", output))))
     print(hashlib.sha256(Path(apk).read_bytes()).hexdigest(), Path(apk).name)
-assert versions[0] == versions[1], "Manager and companion versions differ"
+assert versions[1] == compat_version, f"Companion versionCode {versions[1]} is not the declared {compat_version}"
 assert certificates[0] and certificates[0] == certificates[1], "Manager and companion signatures differ"
 print("APK identities and matching certificates verified")
 print("Signing certificate SHA-256:", ", ".join(certificates[0]))
