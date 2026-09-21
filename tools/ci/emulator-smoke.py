@@ -227,6 +227,38 @@ class Smoke:
     def pid(self, name):
         return self.shell("pidof", name, check=False)
 
+    def remote_logcat(self, server_pid):
+        """The logcat the service follows itself with, by the arguments it is started with rather
+        than by parentage, so one left behind by a destroyed supervisor is still found after init
+        has adopted it."""
+        following = f"--pid={server_pid}"
+        found = []
+        for line in self.shell("ps", "-A", "-o", "PID,ARGS", check=False).splitlines():
+            pid, _, arguments = line.strip().partition(" ")
+            # A whole argument, not a substring: --pid=312 is a prefix of --pid=3120.
+            if pid.isdigit() and arguments.startswith("logcat") and following in arguments.split():
+                found.append(pid)
+        return found
+
+    def spawned(self, server_pid):
+        """The shells the service started, as {pid: the names of what each of them started}.
+
+        Read as names and parentage rather than command lines, because the command line worth
+        matching on is a multi-line script that ps prints across as many lines as it has. A user
+        service is started through a shell too, so what tells the remote logcat's supervisor apart
+        is the logcat under it; the user service's shell is handed its command on stdin and exits.
+        """
+        rows = []
+        for line in self.shell("ps", "-A", "-o", "PID,PPID,NAME", check=False).splitlines():
+            fields = line.split()
+            if len(fields) == 3 and fields[0].isdigit() and fields[1].isdigit():
+                rows.append(fields)
+        shells = {pid: [] for pid, ppid, name in rows if ppid == server_pid and name == "sh"}
+        for pid, ppid, name in rows:
+            if ppid in shells:
+                shells[ppid].append(name)
+        return shells
+
     def recording(self, command):
         # run-as starts in the manager's data directory, where debug sessions live.
         return self.shell("run-as", MANAGER, "sh", "-c", command, check=False)
@@ -462,6 +494,11 @@ class Smoke:
             path = "no_backup/debug-logs/" + session
             self.until("attached server stream",
                        lambda: "Server stream attached pid=" in self.recording(f"cat {path}/events.txt 2>/dev/null"))
+            server_pid = self.pid("porter_server")
+            supervisor = self.until("the service spawned the stream's supervisor",
+                                    lambda: [pid for pid, started in self.spawned(server_pid).items()
+                                             if "logcat" in started])
+            assert len(supervisor) == 1, supervisor
             # Size growth is a valid liveness signal only below the rotation segment, which a run
             # this short never reaches. Past it the pair shrinks too, so watch for new content.
             baseline = self.recording_size(f"{path}/server.log")
@@ -482,20 +519,56 @@ class Smoke:
             self.tap("Stop recording", occurrence=1)
             self.until("stopped recording", lambda: any(node.get("text") == "Record debug log"
                                                         for node in self.ui().iter("node")))
+            # Closing the stream destroys what the service spawned for it, so the supervisor going
+            # away is what says the stop reached the service rather than only the screen.
+            self.until("the stopped stream's supervisor was destroyed",
+                       lambda: supervisor[0] not in self.spawned(server_pid))
             events = self.recording(f"cat {path}/events.txt 2>/dev/null")
             attached = re.search(r"Server stream attached pid=(\d+)", events)
             assert attached, events
-            assert attached.group(1) == self.pid("porter_server"), events
+            # Read again rather than reused: a service replaced mid-case would take its spawned
+            # processes with it and pass the teardown wait above for the wrong reason.
+            assert attached.group(1) == self.pid("porter_server") == server_pid, events
             for name in ("server-start.txt", "server-stop.txt"):
                 assert self.recording_size(f"{path}/{name}"), name
             (self.output / f"debug-recording-{session}.tar").write_bytes(
                 self.adb("exec-out", "run-as", MANAGER, "tar", "-c", "-C", "no_backup/debug-logs", session, binary=True))
+
+            # A second recording, for the half the first cannot show: the service destroys what it
+            # spawned for a client that dies without closing anything. The stop above is the client
+            # asking; this is the service noticing on its own.
+            open_support()
+            self.tap("Record debug log")
+            self.tap("Record debug log", occurrence=1)
+            abandoned = self.until("second recording session",
+                                   lambda: self.recording("cat no_backup/debug-logs/active 2>/dev/null"))
+            self.until("attached server stream", lambda: "Server stream attached pid=" in
+                       self.recording(f"cat no_backup/debug-logs/{abandoned}/events.txt 2>/dev/null"))
+            bereaved = self.until("the second stream's supervisor",
+                                  lambda: [pid for pid, started in self.spawned(server_pid).items()
+                                           if "logcat" in started])
+            assert len(bereaved) == 1 and bereaved != supervisor, (bereaved, supervisor)
+            self.shell("am", "force-stop", MANAGER)
+            self.until("the dead client's spawned process was destroyed",
+                       lambda: bereaved[0] not in self.spawned(server_pid))
+            # After the wait, not before it: a service that went away with its manager has no
+            # children either, and would satisfy that wait without destroying anything.
+            assert self.pid("porter_server") == server_pid, "stopping the manager app stopped the service"
+            # Evidence, not an assertion. The supervisor traps TERM to take its logcat with it, and
+            # what destroy() sends is not something this suite gets to choose; a logcat listed here
+            # is one that outlived the supervisor that started it.
+            orphans = self.remote_logcat(server_pid)
+            # While the manager is stopped: this recording was ended by its client dying, so its
+            # active marker is still there, and a manager the system revives would resume it and
+            # attach a stream to the session this is removing.
+            self.recording("rm -rf no_backup/debug-logs")
+
             self.shell("pm", "revoke", NATIVE, PERMISSION)
             self.shell("am", "force-stop", NATIVE)
             self.until("revocation terminates user service", lambda: not self.pid(NATIVE + ":porter-probe"))
-            # Never while a recording is active: without the marker a later stop() returns early.
-            self.recording("rm -rf no_backup/debug-logs")
-            return {"session": session, "baseline": baseline, "followed": followed, "streamed": streamed}
+            return {"session": session, "baseline": baseline, "followed": followed,
+                    "streamed": streamed, "supervisor": supervisor[0], "abandoned": abandoned,
+                    "bereaved": bereaved[0], "orphaned_logcats": orphans}
         self.case("debug-recording", debug_recording)
 
         def companion():

@@ -9,7 +9,10 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.TextView;
 import eu.darken.porter.sdk.Porter;
+import eu.darken.porter.sdk.PorterBinderWrapper;
 import eu.darken.porter.sdk.PorterServerInfo;
+import rikka.hidden.compat.PackageManagerApis;
+import rikka.hidden.compat.util.SystemServiceBinder;
 
 public class ProbeActivity extends Activity {
     private TextView status;
@@ -19,6 +22,8 @@ public class ProbeActivity extends Activity {
     private boolean peek;
     /** Announces the binder this process already holds once more, on the next connect() only. */
     private boolean redeliver;
+    /** Runs one system service call twice, through the wire and as this process. */
+    private boolean forward;
     private final Porter.OnBinderReceivedListener received = () -> runOnUiThread(this::connect);
     private final Porter.OnBinderDeadListener died = () -> report("BINDER_DEAD");
     private final Porter.OnRequestPermissionResultListener permission = (code, result) -> {
@@ -42,9 +47,10 @@ public class ProbeActivity extends Activity {
         boolean daemon = getIntent().getBooleanExtra("daemon", false);
         peek = getIntent().getBooleanExtra("peek", false);
         redeliver = getIntent().getBooleanExtra("redeliver", false);
+        forward = getIntent().getBooleanExtra("forward", false);
         args = new Porter.UserServiceArgs(new ComponentName(this, ProbeService.class))
                 .daemon(daemon).processNameSuffix("porter-probe").version(1);
-        report("MODE daemon=" + daemon + " peek=" + peek);
+        report("MODE daemon=" + daemon + " peek=" + peek + " forward=" + forward);
         // Before any listener, so this reports the state selection resolved rather than one a
         // delivery has already changed.
         report("AVAILABILITY " + Porter.getAvailability(this));
@@ -67,6 +73,7 @@ public class ProbeActivity extends Activity {
             try { Porter.updateFlagsForUid(android.os.Process.myUid(), 6, 2); }
             catch (SecurityException expected) { managerDenied = true; }
             report("AUTHORIZED managerOperationDenied=" + managerDenied);
+            if (forward) forwardOne();
             if (redeliver) {
                 // Cleared first: a delivery that is not refused publishes a session and schedules
                 // connect() again, and this would then redeliver without bound.
@@ -83,6 +90,27 @@ public class ProbeActivity extends Activity {
             Porter.bindUserService(args, connection);
             bound = true;
         } catch (Exception e) { report("FAILED " + e); }
+    }
+
+    /**
+     * The same query twice: once through a wrapped system service binder, which the wire forwards
+     * and the server answers, and once against this process's own PackageManager. This app declares
+     * no queries, so the counts differ by package visibility, and equal counts mean the wrapped
+     * call was answered as this app rather than forwarded.
+     */
+    private void forwardOne() {
+        // The wrapper forwards the transaction, but the app still links the hidden method that
+        // writes it, and the platform blocks that from an app: on API 36 the call below is denied
+        // before any binder is reached. Every app integrating this way needs the exemption.
+        if (android.os.Build.VERSION.SDK_INT >= 28) {
+            org.lsposed.hiddenapibypass.HiddenApiBypass.setHiddenApiExemptions("");
+        }
+        // Installed before any other call through this library, which keeps the first binder it
+        // resolved for a service: a call made ahead of this would cache the unwrapped one.
+        SystemServiceBinder.setOnGetBinderListener(PorterBinderWrapper::new);
+        int forwarded = PackageManagerApis.getInstalledPackagesNoThrow(0L, 0).size();
+        int direct = getPackageManager().getInstalledPackages(0).size();
+        report("FORWARDED forwarded=" + forwarded + " direct=" + direct);
     }
 
     private void report(String message) {
