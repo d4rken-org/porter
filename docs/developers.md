@@ -10,8 +10,8 @@ run its own service at that identity.
 
 Contributions and integrations from other app developers are welcome.
 
-The integration has three parts: add the dependency, wait for the connection, and ask for permission
-before doing privileged work. The SDK contributes its own manifest entries, so there is nothing to
+The integration has three parts: add the dependency, collect the connection, and ask for permission
+before doing privileged work. The SDK is Kotlin-first: its asynchronous surface is coroutines and Flow. The SDK contributes its own manifest entries, so there is nothing to
 declare yourself.
 
 ## 1. Add the SDK
@@ -64,64 +64,68 @@ runtime update path for the library.
 
 Porter delivers a Binder to your app once its service is running, typically as your app comes to the
 foreground, and delivers a new one whenever the user restarts Porter while your app is alive. You do
-not control when that happens, so register a listener rather than polling.
+not control when that happens, so observe the connection rather than polling for it.
 
-```java
-public class MyActivity extends Activity {
+`Porter.connection` is a `StateFlow<PorterConnection?>`: null until a connection exists, the
+connection while one does, and null again when it dies. Everything you do with Porter goes through
+the `PorterConnection` it holds.
 
-    private final Porter.OnBinderReceivedListener received = () -> runOnUiThread(this::onPorterReady);
-    private final Porter.OnBinderDeadListener died = () -> showDisconnected();
+```kotlin
+class MyActivity : ComponentActivity() {
 
-    @Override protected void onCreate(Bundle state) {
-        super.onCreate(state);
-        // Sticky: calls you at once if a connection is already held, which is the common
-        // case when your activity is recreated.
-        Porter.addBinderReceivedListenerSticky(received);
-        Porter.addBinderDeadListener(died);
-    }
-
-    @Override protected void onDestroy() {
-        Porter.removeBinderReceivedListener(received);
-        Porter.removeBinderDeadListener(died);
-        super.onDestroy();
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                Porter.connection.collect { connection ->
+                    if (connection == null) showDisconnected() else onPorterReady(connection)
+                }
+            }
+        }
     }
 }
 ```
 
-Both `add` methods take an optional `Handler` if you want the callback somewhere other than the main
-thread. Always remove what you registered; the SDK holds its listeners for the life of the process.
+A `StateFlow` replays its current value, so a collector that starts while a connection is already
+held sees it at once, which is the common case when your activity is recreated. When Porter is
+restarted the flow goes straight from the old connection to the new one; it does not pass through
+null in between, so a collector never sees a gap between two live servers.
 
-`Porter.pingBinder()` answers whether a live connection is held right now. Use it for a one-off check,
-not as a substitute for the listener.
+`Porter.connection.value` answers whether a connection is held right now, and
+`connection.isAlive` whether its Binder still answers. Use them for a one-off check, not as a
+substitute for collecting.
+
+A `PorterConnection` stays bound to the server it was attached to. Hold the one the flow gave you
+for the work at hand, and take the next one from the flow after a restart rather than reusing it.
 
 ## 3. Ask for permission
 
-A connection is not access. Ask before doing privileged work, and handle the answer asynchronously:
-the user sees a dialog.
+A connection is not access. Ask before doing privileged work. The user sees a dialog, so the request
+suspends until they answer.
 
-```java
-private final Porter.OnRequestPermissionResultListener permission = (requestCode, result) -> {
-    if (result == PackageManager.PERMISSION_GRANTED) onPorterReady();
-};
-
-private void onPorterReady() {
-    if (Porter.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
-        doPrivilegedWork();
-    } else if (Porter.shouldShowRequestPermissionRationale()) {
-        // The user denied it and asked not to be asked again. Explain why you need it
-        // and point them at Porter's own screen.
-        explainWhyWeNeedIt();
-    } else {
-        Porter.requestPermission(1);
+```kotlin
+suspend fun onPorterReady(connection: PorterConnection) {
+    when (val state = connection.checkPermission()) {
+        PermissionState.Granted -> doPrivilegedWork(connection)
+        is PermissionState.Denied -> if (state.shouldShowRationale) {
+            // The user denied it and asked not to be asked again. Explain why you need it
+            // and point them at Porter's own screen.
+            explainWhyWeNeedIt()
+        } else if (connection.requestPermission() == PermissionState.Granted) {
+            doPrivilegedWork(connection)
+        }
     }
 }
 ```
 
-Register that listener with `Porter.addRequestPermissionResultListener` and remove it in `onDestroy`,
-the same as the others.
+`connection.permission` is a `StateFlow<PermissionState>` holding the latest state the server
+reported, so a screen can react to a grant or a revocation without asking again.
+`checkPermission()` asks the server and updates that flow. `requestPermission()` throws
+`PorterConnectionLostException` if Porter is restarted or stops before the user answers; take the
+new connection from `Porter.connection` and ask again.
 
-Permission can be revoked while your app runs, and a one-time grant expires. Check
-`checkSelfPermission()` before privileged work rather than caching the answer from earlier in the
+Permission can be revoked while your app runs, and a one-time grant expires. Call
+`checkPermission()` before privileged work rather than caching the answer from earlier in the
 session.
 
 ## 4. Do privileged work
@@ -133,38 +137,48 @@ There are two routes, and they have very different requirements.
 Define an AIDL interface, implement it, and let Porter run it in a process with shell or root
 identity. This needs no hidden API and no platform stubs.
 
-```java
-public class MyService extends IMyService.Stub {
-    @Override public void destroy() { System.exit(0); }
-    @Override public String readRestrictedFile(String path) { /* plain java.io */ }
+```kotlin
+class MyService : IMyService.Stub() {
+    override fun destroy() = exitProcess(0)
+    override fun readRestrictedFile(path: String): String = File(path).readText()
 }
 ```
 
-```java
-Porter.UserServiceArgs args = new Porter.UserServiceArgs(new ComponentName(this, MyService.class))
-        .processNameSuffix("my-service")
-        .version(1)
-        .daemon(false);
+```kotlin
+val args = UserServiceArgs(
+    componentName = ComponentName(this, MyService::class.java),
+    processNameSuffix = "my-service",
+    version = 1,
+    daemon = false,
+)
 
-Porter.bindUserService(args, connection);
+connection.userService(args).collect { service ->
+    val myService = IMyService.Stub.asInterface(service)
+    // ...
+}
 ```
 
-You get an ordinary `ServiceConnection`. `peekUserService` asks for an already-running instance
-without starting one, and `unbindUserService(args, connection, remove)` releases it. Implement a
-`destroy` method that calls `System.exit`, or an unbound service stays alive.
+`userService(args)` is a cold `Flow<IBinder>`: collecting it binds the service and starts it if
+needed, the service's Binder is emitted once Porter reports it connected, and the flow completes
+when the service process dies. Cancelling the collection releases your binding; when the last
+collector of that service is gone, Porter is asked to drop the binding without killing the service.
+`userService(args, start = false)` only binds an instance that is already running, and completes
+without emitting when there is none. `peekUserService(args)` reports a running instance's version
+without binding, and `stopUserService(args)` kills it. Implement a `destroy` method that calls
+`exitProcess`, or a released service stays alive.
 
-Bump `version(...)` whenever the service code changes, so Porter replaces a running instance instead
-of reusing a stale one.
+Bump `version` whenever the service code changes, so Porter replaces a running instance instead of
+reusing a stale one. Porter identifies a service by its `tag`, or by the class name when no tag is
+set, so set a stable tag if your service class is obfuscated.
 
 ### Forwarding calls to a system service
 
-`PorterBinderWrapper` wraps a system service's Binder so every transaction on it is re-issued by
-Porter at its own identity:
+`connection.wrap(binder)` wraps a system service's Binder so every transaction on it is re-issued
+by Porter at its own identity:
 
-```java
-IPackageManager pm = IPackageManager.Stub.asInterface(
-        new PorterBinderWrapper(ServiceManager.getService("package")));
-pm.getInstalledPackages(0, 0);
+```kotlin
+val pm = IPackageManager.Stub.asInterface(connection.wrap(ServiceManager.getService("package")))
+pm.getInstalledPackages(0, 0)
 ```
 
 Be aware of what this route costs you. Porter does not grant your app privileges; it re-issues the
@@ -180,14 +194,14 @@ the user service above. It needs none of that.
 ## 5. Tell the user why nothing happened
 
 If no connection arrives, your app should say something more useful than a spinner.
-`Porter.getAvailability(context)` distinguishes the cases:
+`Porter.availability(context)` distinguishes the cases:
 
-```java
-switch (Porter.getAvailability(this)) {
-    case CONNECTED:               /* a connection is held and answers */         break;
-    case INSTALLED_NOT_CONNECTED: promptUser("Open Porter and start the service"); break;
-    case NOT_INSTALLED:           promptUser("Install Porter");                    break;
-    case INSTALLED_UNRECOGNIZED:  promptUser("Another app owns Porter's permission"); break;
+```kotlin
+when (Porter.availability(this)) {
+    PorterAvailability.CONNECTED -> Unit // a connection is held and answers
+    PorterAvailability.INSTALLED_NOT_CONNECTED -> promptUser("Open Porter and start the service")
+    PorterAvailability.NOT_INSTALLED -> promptUser("Install Porter")
+    PorterAvailability.INSTALLED_UNRECOGNIZED -> promptUser("Another app owns Porter's permission")
 }
 ```
 
@@ -201,19 +215,21 @@ rather than naming or launching that package.
 The provider that receives the connection is not multiprocess, so one process gets the Binder and
 the others ask it for the connection.
 
-Call this as early as possible, in a static initializer of your `Application` class, before any
-provider runs:
+Call this as early as possible, in the companion object's initializer of your `Application` class,
+before any provider runs:
 
-```java
-static {
-    PorterApiProvider.enableMultiProcessSupport(BuildConfig.APPLICATION_ID.equals(currentProcessName));
+```kotlin
+companion object {
+    init {
+        PorterApiProvider.enableMultiProcessSupport(currentProcessName == BuildConfig.APPLICATION_ID)
+    }
 }
 ```
 
 Then in a process that is not the provider process:
 
-```java
-PorterApiProvider.requestBinderForNonProviderProcess(context);
+```kotlin
+PorterApiProvider.requestBinderForNonProviderProcess(context)
 ```
 
 That reads the connection through the SDK's own provider. It does not accept a Binder from a
@@ -235,12 +251,12 @@ Check these before releasing:
 - Porter not installed: your app offers to install it.
 - Access denied, and denied with "don't ask again": privileged work stops and your UI reflects it.
 - Access revoked while running: the next privileged call is refused and your UI recovers.
-- Porter restarted while your app is alive: the connection is replaced and your listener hears about
-  it, without reusing a stale Binder reference.
-- Your app restarted: a sticky listener is told about the existing connection immediately.
+- Porter restarted while your app is alive: `Porter.connection` moves to the new connection and your
+  collector picks it up, without reusing the old `PorterConnection`.
+- Your app restarted: a new collector of `Porter.connection` sees the existing connection at once.
 - Secondary processes: each one obtains the connection, and a process that started before Porter did
   can still get it.
-- Your user service: replaced when you bump its version, and gone after an unbind with removal.
+- Your user service: replaced when you bump its version, and gone after `stopUserService`.
 
 Link users to the [setup guide](/setup). It selects English or German from the browser language,
 with a dropdown to override. The URL is the same in both languages. Keep instructions for your app's

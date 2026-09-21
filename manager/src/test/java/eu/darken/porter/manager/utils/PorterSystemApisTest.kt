@@ -10,7 +10,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import rikka.hidden.compat.util.SystemServiceBinder
-import eu.darken.porter.sdk.PorterBinderWrapper
 
 /**
  * Routing the system services through Shizuku is a step of its own, taken once and separate from
@@ -52,7 +51,7 @@ class PorterSystemApisTest {
         assertTrue(
             "the installed listener did not wrap the binder, so hidden API calls would reach the " +
                 "system as this process rather than as the service",
-            installed.single().onGetBinder(Binder()) is PorterBinderWrapper,
+            installed.single().onGetBinder(Binder()) is PorterForwardingBinder,
         )
     }
 

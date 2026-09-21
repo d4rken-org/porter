@@ -87,7 +87,7 @@ private suspend fun launchReplacementStarter(binder: IBinder, previousPid: Int, 
 
 internal class ServiceReplacement internal constructor(
     private val appContext: Context,
-    private val currentBinder: () -> IBinder? = Porter::getBinder,
+    private val currentBinder: () -> IBinder? = { Porter.connection.value?.binder },
     private val readInfo: (IBinder) -> ServerDiagnostics.Info? = ServerDiagnostics::readInfo,
     private val readUid: (IBinder) -> Int = { IPorterService.Stub.asInterface(it).uid },
     private val launch: suspend (IBinder, Int, File, File) -> Unit = ::launchReplacementStarter,
@@ -121,7 +121,7 @@ internal class ServiceReplacement internal constructor(
         scope.launch {
             controller.reconcile {
                 withContext(Dispatchers.IO) {
-                    runCatching { Porter.getBinder()?.let { ServerDiagnostics.readInfo(it)?.version?.matches(PorterServiceVersion.installed) } == true }.getOrDefault(false)
+                    runCatching { Porter.connection.value?.binder?.let { ServerDiagnostics.readInfo(it)?.version?.matches(PorterServiceVersion.installed) } == true }.getOrDefault(false)
                 }
             }
         }

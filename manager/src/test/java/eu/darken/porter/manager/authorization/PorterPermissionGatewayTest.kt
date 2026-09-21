@@ -52,7 +52,7 @@ class PorterPermissionGatewayTest {
 
     @Before fun attach() = Porter.onBinderReceived(RecordingServer(), "eu.darken.porter.manager")
 
-    @After fun detach() = Porter.resetForTest()
+    @After fun detach() = Porter.onBinderReceived(null, "eu.darken.porter.manager")
 
     private fun reply(allowed: Boolean) = PorterPermissionGateway.dispatch(10123, 4242, 7, Bundle().apply {
         putBoolean(PorterProtocol.PERMISSION_CONFIRMATION_ALLOWED, allowed)

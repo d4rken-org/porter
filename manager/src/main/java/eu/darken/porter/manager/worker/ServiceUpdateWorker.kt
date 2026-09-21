@@ -21,7 +21,7 @@ class ServiceUpdateWorker(context: Context, parameters: WorkerParameters) : Coro
         if (!eligible(inputData.getString(TARGET), PorterServiceVersion.installed.buildId,
                 PorterSettings.getAutoUpdateService(), UserHandleCompat.myUserId())) return Result.success()
         val connected = withTimeoutOrNull(15_000) {
-            PorterStateMachine.instance.asFlow().first { it == PorterStateMachine.State.RUNNING && Porter.pingBinder() }
+            PorterStateMachine.instance.asFlow().first { it == PorterStateMachine.State.RUNNING && Porter.connection.value?.isAlive == true }
         }
         if (connected != null) ServiceReplacement.get(applicationContext).updateInBackground()
         else eu.darken.porter.manager.utils.Logger.LOGGER.i("Service update skipped: no running service connected within 15 seconds")

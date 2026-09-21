@@ -105,12 +105,13 @@ internal object ServerDiagnostics {
         val details = File(directory, "server-$phase.txt")
         try {
             details.writeText("Time: ${System.currentTimeMillis()}\nBoot start: ${PorterSettings.getPreferences().getBoolean("start_on_boot", false)}\nWatchdog: ${PorterSettings.getWatchdog()}\n")
-            val binder = Porter.getBinder()
-            if (binder == null || !binder.pingBinder()) {
+            val connection = Porter.connection.value
+            if (connection == null || !connection.isAlive) {
                 details.appendText("Porter service unavailable\n")
                 return
             }
-            details.appendText("UID: ${Porter.getUid()}\nProtocol: ${Porter.getServerProtocolVersion()}\nSELinux: ${Porter.getSELinuxContext()}\n")
+            val binder = connection.binder
+            details.appendText("UID: ${connection.uid}\nProtocol: ${connection.serverInfo.version}\nSELinux: ${connection.seLinuxContext}\n")
             val info = readInfo(binder) ?: error("Service diagnostics unsupported")
             details.appendText("PID: ${info.pid}\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nInstalled build: ${PorterServiceVersion.installed.buildId}\nService build: ${info.version?.buildId ?: "unknown"}\n")
             info.reconciler?.let {
@@ -159,7 +160,7 @@ internal object ServerDiagnostics {
         var error: InputStream? = null
         var drain: Job? = null
         try {
-            val binder = Porter.getBinder()?.takeIf { it.pingBinder() }
+            val binder = Porter.connection.value?.takeIf { it.isAlive }?.binder
             if (binder == null) {
                 runCatching { notes.appendText("Porter service unavailable\n") }
                 return null

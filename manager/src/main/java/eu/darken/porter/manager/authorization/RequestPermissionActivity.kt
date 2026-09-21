@@ -1,7 +1,6 @@
 package eu.darken.porter.manager.authorization
 
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.activity.compose.BackHandler
@@ -150,11 +149,11 @@ internal interface PermissionGateway {
 internal object PorterPermissionGateway : PermissionGateway {
     override fun serviceStates() = PorterStateMachine.instance.asFlow()
     override suspend fun canGrantPermissions() = withContext(Dispatchers.IO) {
-        Porter.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == PackageManager.PERMISSION_GRANTED
+        Porter.connection.value?.checkRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS") == true
     }
     // The decision travels as a Bundle so the view model stays free of the wire; Porter takes the
     // two flags directly.
-    override fun dispatch(uid: Int, pid: Int, code: Int, data: Bundle) = Porter.dispatchPermissionConfirmationResult(
+    override fun dispatch(uid: Int, pid: Int, code: Int, data: Bundle) = (Porter.connection.value ?: error("Porter is not running")).dispatchPermissionConfirmationResult(
         uid, pid, code,
         data.getBoolean(PERMISSION_CONFIRMATION_ALLOWED, false),
         data.getBoolean(PERMISSION_CONFIRMATION_ONETIME, false),

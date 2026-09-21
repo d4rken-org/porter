@@ -6,7 +6,6 @@ import android.os.RemoteException
 import rikka.hidden.compat.PermissionManagerApis
 import rikka.hidden.compat.UserManagerApis
 import rikka.hidden.compat.util.SystemServiceBinder
-import eu.darken.porter.sdk.PorterBinderWrapper
 import eu.darken.porter.privileged.util.InstalledPackagesCompat
 
 private fun loadUsersFromService(): List<UserInfoCompat> {
@@ -44,7 +43,7 @@ class PorterSystemApis internal constructor(
     @Synchronized
     fun attachToSystemServices() {
         if (ready) return
-        installBinderListener { PorterBinderWrapper(it) }
+        installBinderListener { PorterForwardingBinder(it) }
         ready = true
     }
 
