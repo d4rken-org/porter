@@ -39,10 +39,6 @@ class PorterApplication : Application() {
 
     private fun init(context: Context) {
         PorterSettings.initialize(context)
-        if (LocaleMigration.needsClear(PorterSettings.preferences)) {
-            getSystemService(android.app.LocaleManager::class.java).applicationLocales = android.os.LocaleList.getEmptyLocaleList()
-            LocaleMigration.markDone(PorterSettings.preferences)
-        }
         PorterSystemApis.instance.attachToSystemServices()
         eu.darken.porter.manager.support.DebugRecorder.get(context).attach()
         // After the observers it can drive: the sticky binder-received listener fires
