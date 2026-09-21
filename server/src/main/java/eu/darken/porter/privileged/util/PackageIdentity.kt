@@ -54,8 +54,9 @@ object PackageIdentity {
 
     /**
      * What a record remembers about the installation it was created for: fixed at creation and never
-     * updated. Both components are one per package name device-wide, which is what lets a record
-     * shared across users be kept alive by any user holding a matching installation.
+     * updated. Both components are one per package name device-wide, so a record, which serves one
+     * Android user, is kept alive by any user holding a matching installation and is replaced when
+     * any user's installation stops matching.
      */
     class Identity(
         val packageName: String,

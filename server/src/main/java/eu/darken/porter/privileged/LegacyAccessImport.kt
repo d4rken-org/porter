@@ -2,6 +2,7 @@ package eu.darken.porter.privileged
 
 import androidx.annotation.Keep
 import com.google.gson.Gson
+import eu.darken.porter.protocol.PorterProtocol
 
 internal object LegacyAccessImport {
     const val ALLOW = 2
@@ -101,5 +102,5 @@ internal object LegacyAccessImport {
     fun encode(decisions: List<Decision>): String = GSON.toJson(decisions)
 
     private fun clientPackage(name: String?): Boolean =
-        name != null && name.isNotEmpty() && name != "eu.darken.porter" && name != "moe.shizuku.privileged.api"
+        name != null && name.isNotEmpty() && name != PorterProtocol.MANAGER_APPLICATION_ID && name != ServerConstants.COMPAT_APPLICATION_ID
 }

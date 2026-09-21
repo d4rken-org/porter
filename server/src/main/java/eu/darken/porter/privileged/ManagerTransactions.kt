@@ -25,12 +25,19 @@ internal object ManagerTransactions {
     /** The app's codes all answer, so a one-way delivery of one is a caller error. */
     private fun requireReply(reply: Parcel?): Parcel = reply ?: throw NullPointerException("reply is null")
 
+    /** The user service starter, asking before it has anything to attach with. */
+    private fun isUserServiceHostBootstrap(caller: CallerIdentity): Boolean = caller.uid == OsUtils.uid
+
+    fun getManager(service: PorterServer, data: Parcel, reply: Parcel?) {
+        val out = requireReply(reply)
+        enforceManagerPermission(service, "getManager")
+        out.writeNoException()
+        out.writeStrongBinder(service.managerEndpoint)
+    }
+
     fun compatibilitySetup(service: PorterServer, data: Parcel, reply: Parcel?) {
         val out = requireReply(reply)
         enforceManagerPermission(service, "compatibilitySetup")
-        if (Binder.getCallingUid() / 100000 != 0) {
-            throw SecurityException("Compatibility setup requires the primary Android user")
-        }
         val operation = data.readInt()
         val snapshot = data.readString()
         try {
@@ -95,11 +102,11 @@ internal object ManagerTransactions {
 
     fun userServiceLaunch(service: PorterServer, data: Parcel, reply: Parcel?) {
         val out = requireReply(reply)
-        // Not enforceManagerPermission: that passes only for this pid or the manager app id, and
-        // the starter is a separate process running as the server's own uid. What this proves is
-        // that the caller runs as that uid and already holds the token it is asking about; it
-        // does not single out one launch, and it is not the host application's uid.
-        if (Binder.getCallingUid() != OsUtils.uid) {
+        // Not enforceManagerPermission: the starter is a separate process running as the server's
+        // own uid, and not yet an attached client. This is the one bootstrap admitted on the uid
+        // alone: it proves the caller runs as that uid and already holds the token it is asking
+        // about; it does not single out one launch, and it is not the host application's uid.
+        if (!isUserServiceHostBootstrap(CallerIdentity.fromBinder())) {
             throw SecurityException("Permission Denial: validateUserServiceToken from uid " + Binder.getCallingUid())
         }
         val live = service.userServiceManager.isUserServiceTokenLive(data.readString())

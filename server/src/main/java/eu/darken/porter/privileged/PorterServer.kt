@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.content.pm.UserInfo
 import android.ddm.DdmHandleAppName
 import android.os.Binder
 import android.os.Bundle
@@ -17,13 +16,14 @@ import android.os.Looper
 import android.os.Parcel
 import android.os.RemoteException
 import android.os.ServiceManager
+import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.common.DiscoveredApplication
-import eu.darken.porter.common.util.BuildUtils
 import eu.darken.porter.common.util.OsUtils
 import eu.darken.porter.core.CallerIdentity
 import eu.darken.porter.core.ManagerOperations
 import eu.darken.porter.core.PorterCore
 import eu.darken.porter.core.ServerPolicy
+import eu.darken.porter.endpoint.PorterManagerEndpoint
 import eu.darken.porter.porsh.PorshConfig
 import eu.darken.porter.privileged.ServerConstants.PERMISSION
 import eu.darken.porter.privileged.util.Android17Compat
@@ -64,41 +64,37 @@ class PorterServer internal constructor(
     private val historyWriter: Executor,
     endpointFactory: (PorterServer) -> ShizukuServiceEndpoint,
     porterEndpointFactory: (PorterServer) -> PorterServiceEndpoint,
+    managerEndpointFactory: (PorterServer) -> PorterManagerEndpoint = { PorterManagerEndpoint(it.core, it) },
 ) : ServerPolicy, ManagerOperations {
 
     val core: PorterCore<ShizukuUserServiceManager, ShizukuClientManager, ShizukuConfigManager> =
         PorterCore(userServiceManager, clientManager, configManager, this)
     val endpoint: ShizukuServiceEndpoint = endpointFactory(this)
     val porterEndpoint: PorterServiceEndpoint = porterEndpointFactory(this)
+
+    /** Handed out over [AppTransactions.GET_MANAGER], to the manager only. */
+    val managerEndpoint: PorterManagerEndpoint = managerEndpointFactory(this)
     private val mainHandler = Handler(Looper.myLooper()!!)
     internal lateinit var reconciler: ApkReconciler
     internal val debugLogLeases = DebugLogLeases()
 
-    override fun checkCallerManagerPermission(func: String, caller: CallerIdentity): Boolean =
-        caller.appId() == managerAppId
+    /**
+     * The manager is the installation in Android user 0, the one whose provider the server and
+     * the starters deliver to and whose activity every permission prompt is started in. The same
+     * package in another user is an ordinary app.
+     */
+    internal fun isManager(caller: CallerIdentity): Boolean =
+        caller.appId() == managerAppId && caller.userId() == MANAGER_USER_ID
 
-    private fun checkCallingPermission(caller: CallerIdentity): Int {
-        try {
-            if (ActivityManagerApis.checkPermission(PERMISSION, caller.pid, caller.uid) == PackageManager.PERMISSION_GRANTED) {
-                return PackageManager.PERMISSION_GRANTED
-            }
-            if (Compatibility.isAvailable()) {
-                return ActivityManagerApis.checkPermission(ServerConstants.LEGACY_PERMISSION, caller.pid, caller.uid)
-            }
-        } catch (tr: Throwable) {
-            LOGGER.w(tr, "checkCallingPermission")
-        }
-        return PackageManager.PERMISSION_DENIED
-    }
+    private fun isManager(record: ClientRecord): Boolean = isManager(CallerIdentity(record.uid, record.pid))
+
+    override fun checkCallerManagerPermission(func: String, caller: CallerIdentity): Boolean = isManager(caller)
 
     override fun checkCallerPermission(func: String, caller: CallerIdentity, record: ClientRecord?): Boolean {
-        if (caller.appId() == managerAppId) {
+        if (isManager(caller)) {
             return true
         }
         if (configManager.isAccessPaused) throw SecurityException("App access is paused")
-        if (record == null && checkCallingPermission(caller) == PackageManager.PERMISSION_GRANTED) {
-            return true
-        }
         return false
     }
 
@@ -118,7 +114,7 @@ class PorterServer internal constructor(
     }
 
     override fun onAttaching(caller: CallerIdentity, packageName: String) {
-        if (MANAGER_APPLICATION_ID != packageName) {
+        if (!isManager(caller)) {
             // Declaring a client permission only decides who gets the binder pushed (see providerSuffix).
             // Terminal clients (porsh) fetch it themselves and declare nothing; they are admitted here on
             // the uid/package check above and gated by the user's explicit decision like any client.
@@ -129,7 +125,7 @@ class PorterServer internal constructor(
     override fun onAttached(record: ClientRecord, created: Boolean, reply: Bundle) {
         LOGGER.d("attachApplication: %s %d %d", record.packageName, record.uid, record.pid)
 
-        if (MANAGER_APPLICATION_ID != record.packageName) {
+        if (!isManager(record)) {
             return
         }
         // Both wires reach this hook; the manager is not a permission-gated client on either.
@@ -148,7 +144,7 @@ class PorterServer internal constructor(
     }
 
     override fun onBound(record: ClientRecord, created: Boolean) {
-        if (MANAGER_APPLICATION_ID == record.packageName || !created) {
+        if (isManager(record) || !created) {
             return
         }
         val callingUid = record.uid
@@ -179,15 +175,10 @@ class PorterServer internal constructor(
         }
         val ai = Android17Compat.getApplicationInfo(record.packageName, 0L, userId) ?: return
 
-        val pi = Android17Compat.getPackageInfo(MANAGER_APPLICATION_ID, 0L, userId)
-        val userInfo: UserInfo = UserManagerApis.getUserInfo(userId)
-        val isWorkProfileUser = if (BuildUtils.atLeast30()) {
-            "android.os.usertype.profile.MANAGED" == userInfo.userType
-        } else {
-            (userInfo.flags and UserInfo.FLAG_MANAGED_PROFILE) != 0
-        }
-        if (pi == null && !isWorkProfileUser) {
-            LOGGER.w("Manager not found in non work profile user %d. Revoke permission", userId)
+        // The prompt is the manager's, and the manager lives in user 0 whichever user asks; the
+        // requester's ApplicationInfo travels with the intent, so the prompt can still name it.
+        if (Android17Compat.getPackageInfo(MANAGER_APPLICATION_ID, 0L, MANAGER_USER_ID) == null) {
+            LOGGER.w("Manager not found in user %d. Revoke permission", MANAGER_USER_ID)
             record.dispatchRequestPermissionResult(requestCode, false)
             return
         }
@@ -199,7 +190,7 @@ class PorterServer internal constructor(
             .putExtra("pid", caller.pid)
             .putExtra("requestCode", requestCode)
             .putExtra("applicationInfo", ai)
-        ActivityManagerApis.startActivityNoThrow(intent, null, if (isWorkProfileUser) 0 else userId)
+        ActivityManagerApis.startActivityNoThrow(intent, null, MANAGER_USER_ID)
     }
 
     override fun dispatchPermissionConfirmationResult(requestUid: Int, requestPid: Int, requestCode: Int, allowed: Boolean, onetime: Boolean) {
@@ -349,7 +340,7 @@ class PorterServer internal constructor(
                 for (uid in configManager.allowedUids()) reconcileRuntimePermission(uid)
             }
             for (record in clientManager.attachedClients()) {
-                if (UserHandleCompat.getAppId(record.uid) == managerAppId) continue
+                if (isManager(record)) continue
                 val entry = configManager.find(record.uid)
                 record.allowed = !paused && entry != null && entry.isAllowed()
                 val reply = Bundle()
@@ -537,12 +528,15 @@ class PorterServer internal constructor(
     }
 
     internal fun sendBinderToManager() {
-        sendBinderToManager(porterEndpoint)
+        sendBinderToManager(porterEndpoint, MANAGER_USER_ID)
     }
 
     companion object {
 
-        const val MANAGER_APPLICATION_ID: String = BuildConfig.MANAGER_APPLICATION_ID
+        const val MANAGER_APPLICATION_ID: String = PorterProtocol.MANAGER_APPLICATION_ID
+
+        /** The Android user the manager is the manager in. */
+        const val MANAGER_USER_ID: Int = 0
 
         private val LOGGER = Logger("Service")
 
@@ -568,7 +562,8 @@ class PorterServer internal constructor(
             }
         }
 
-        fun getManagerApplicationInfo(): ApplicationInfo? = Android17Compat.getApplicationInfo(MANAGER_APPLICATION_ID, 0L, 0)
+        fun getManagerApplicationInfo(): ApplicationInfo? =
+            Android17Compat.getApplicationInfo(MANAGER_APPLICATION_ID, 0L, MANAGER_USER_ID)
 
         /**
          * The startup verdict on the manager lookup; `0` means carry on. A failed lookup exits for
@@ -581,6 +576,7 @@ class PorterServer internal constructor(
         fun bootstrap(
             endpointFactory: (PorterServer) -> ShizukuServiceEndpoint,
             porterEndpointFactory: (PorterServer) -> PorterServiceEndpoint,
+            managerEndpointFactory: (PorterServer) -> PorterManagerEndpoint = { PorterManagerEndpoint(it.core, it) },
         ): PorterServer {
             LOGGER.i("starting server...")
 
@@ -593,7 +589,7 @@ class PorterServer internal constructor(
             // reconciler compares against can never describe two different installations. A failed
             // lookup exits too: publishing access while holding no verified baseline is worse than a
             // restart, and the manager restarts the server anyway.
-            val manager = PackageIdentity.of(MANAGER_APPLICATION_ID, 0)
+            val manager = PackageIdentity.of(MANAGER_APPLICATION_ID, MANAGER_USER_ID)
             if (managerStartupExitCode(manager) != 0) {
                 LOGGER.w("manager app is %s in user 0, exiting...", manager.state)
                 exitProcess(managerStartupExitCode(manager))
@@ -614,6 +610,7 @@ class PorterServer internal constructor(
                 Executors.newSingleThreadExecutor(),
                 endpointFactory,
                 porterEndpointFactory,
+                managerEndpointFactory,
             )
 
             HandlerUtil.mainHandler = service.mainHandler
@@ -696,12 +693,6 @@ class PorterServer internal constructor(
                 LOGGER.i("sent binders")
             } catch (tr: Throwable) {
                 LOGGER.e("exception when call getInstalledPackages", tr)
-            }
-        }
-
-        private fun sendBinderToManager(binder: Binder) {
-            for (userId in UserManagerApis.getUserIdsNoThrow()) {
-                sendBinderToManager(binder, userId)
             }
         }
 

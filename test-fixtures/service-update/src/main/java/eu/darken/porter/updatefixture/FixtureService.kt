@@ -8,15 +8,19 @@ import android.os.Looper
 import android.os.Parcel
 import android.os.Process
 import android.os.RemoteException
+import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.common.DiscoveredApplication
 import eu.darken.porter.common.GlobalAccess
 import eu.darken.porter.common.PorterBuildIdentity
+import eu.darken.porter.core.CallerIdentity
 import eu.darken.porter.porsh.PorshConfig
 import eu.darken.porter.privileged.BuildConfig
 import eu.darken.porter.privileged.PorterServer
 import eu.darken.porter.privileged.PorterServiceEndpoint
 import eu.darken.porter.privileged.ServerConstants
 import eu.darken.porter.privileged.ShizukuServiceEndpoint
+import eu.darken.porter.endpoint.PorterManagerEndpoint
+import eu.darken.porter.manager.protocol.PorterManagerProtocol
 import eu.darken.porter.protocol.PorterProtocol
 import java.util.Locale
 import rikka.parcelablelist.ParcelableListSlice
@@ -34,7 +38,7 @@ object FixtureService {
         PorshConfig.setLibraryPath(System.getProperty("porter.library.path"))
         PorshConfig.init(ShizukuApiConstants.BINDER_DESCRIPTOR, 30000)
         Looper.prepareMainLooper()
-        PorterServer.bootstrap(::FixtureEndpoint, ::FixturePorterEndpoint)
+        PorterServer.bootstrap(::FixtureEndpoint, ::FixturePorterEndpoint) { FixtureManagerEndpoint(it) }
         Looper.loop()
     }
 
@@ -96,63 +100,15 @@ object FixtureService {
 
     private fun interceptsLaunch(): Boolean = mode == "preflight" || mode == "handoff-failure" || mode == "slow"
 
-    class FixtureEndpoint(service: PorterServer) : ShizukuServiceEndpoint(service) {
-
-        @Throws(RemoteException::class)
-        override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
-            if (code == ServerConstants.BINDER_TRANSACTION_getDiagnostics) {
-                data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR)
-                enforceManagerPermission("fixtureDiagnostics")
-                writeDiagnostics(reply!!)
-                return true
-            }
-            if (mode == "restricted" && code == DiscoveredApplication.TRANSACTION) {
-                data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR)
-                enforceManagerPermission("fixtureLongList")
-                writeLongApplicationList(reply!!)
-                return true
-            }
-            if (code == GlobalAccess.TRANSACTION || code == DiscoveredApplication.TRANSACTION) {
-                if (mode == "legacy") return false
-                if (mode == "incompatible") {
-                    data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR)
-                    enforceManagerPermission("fixtureCapabilities")
-                    if (code == GlobalAccess.TRANSACTION && data.readInt() == GlobalAccess.WRITE) {
-                        throw IllegalStateException("Manager must reject incompatible protocol before writing")
-                    }
-                    reply!!.writeNoException()
-                    reply.writeInt(999)
-                    return true
-                }
-            }
-            // IShizukuService fixes checkPermission at transaction offset 4 and newProcess at offset 7.
-            if (mode == "restricted" && code == Binder.FIRST_CALL_TRANSACTION + 4) {
-                data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR)
-                enforceManagerPermission("fixturePermission")
-                writeRestrictedPermission(data, reply!!)
-                return true
-            }
-            if (code == Binder.FIRST_CALL_TRANSACTION + 7 && interceptsLaunch()) {
-                data.enforceInterface(ShizukuApiConstants.BINDER_DESCRIPTOR)
-                enforceManagerPermission("fixtureLaunch")
-                val cmd = data.createStringArray()
-                val env = data.createStringArray()
-                val dir = data.readString()
-                val process = super.newProcess(rewriteLaunch(cmd), env, dir)
-                reply!!.writeNoException()
-                reply.writeStrongBinder(process.asBinder())
-                return true
-            }
-            return super.onTransact(code, data, reply, flags)
-        }
-    }
+    /** The Shizuku wire, which neither the manager nor the starter speaks; kept as Porter ships it. */
+    class FixtureEndpoint(service: PorterServer) : ShizukuServiceEndpoint(service)
 
     /** The same modes on the Porter wire, which is the one the manager and the starter use. */
     class FixturePorterEndpoint(service: PorterServer) : PorterServiceEndpoint(service) {
 
         @Throws(RemoteException::class)
         override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
-            if (code == ServerConstants.BINDER_TRANSACTION_getDiagnostics) {
+            if (code == AppTransactions.GET_DIAGNOSTICS) {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 enforceManagerPermission("fixtureDiagnostics")
                 writeDiagnostics(reply!!)
@@ -177,16 +133,26 @@ object FixtureService {
                     return true
                 }
             }
-            // IPorterService numbers its methods explicitly: checkPermission is id 3, newProcess 7.
+            // IPorterService numbers its methods explicitly: checkPermission is id 3.
             if (mode == "restricted" && code == Binder.FIRST_CALL_TRANSACTION + 3) {
                 data.enforceInterface(PorterProtocol.DESCRIPTOR)
                 enforceManagerPermission("fixturePermission")
                 writeRestrictedPermission(data, reply!!)
                 return true
             }
-            if (code == Binder.FIRST_CALL_TRANSACTION + 7 && interceptsLaunch()) {
-                data.enforceInterface(PorterProtocol.DESCRIPTOR)
-                enforceManagerPermission("fixtureLaunch")
+            return super.onTransact(code, data, reply, flags)
+        }
+    }
+
+    /** The manager's binder, where the replacement launch now arrives. */
+    class FixtureManagerEndpoint(private val service: PorterServer) : PorterManagerEndpoint(service.core, service) {
+
+        @Throws(RemoteException::class)
+        override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+            // IPorterManager numbers its methods explicitly: newProcess is id 1.
+            if (code == Binder.FIRST_CALL_TRANSACTION + 1 && interceptsLaunch()) {
+                data.enforceInterface(PorterManagerProtocol.DESCRIPTOR)
+                service.core.enforceManagerPermission("fixtureLaunch", CallerIdentity.fromBinder())
                 val cmd = data.createStringArray()
                 val env = data.createStringArray()
                 val dir = data.readString()

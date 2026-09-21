@@ -9,10 +9,10 @@ import rikka.shizuku.server.util.Logger
  * Holds the debug-logging leases the manager takes out for the duration of a debug recording, and
  * keeps [Logger]'s gate at the furthest deadline any live lease asks for.
  *
- * A lease rather than a flag, for two reasons. The manager app id matches across Android users
- * ([PorterServer.checkCallerManagerPermission]), so two users can record at once and one
- * of them stopping must not strip the detail out of the other's recording. And the gate must close
- * on its own: a manager that is killed mid-recording never asks for it to be turned off.
+ * A lease rather than a flag, for two reasons. A manager process that was restarted mid-recording
+ * asks again with a new token, and the old token going away must not strip the detail out of the
+ * recording that replaced it. And the gate must close on its own: a manager that is killed
+ * mid-recording never asks for it to be turned off.
  *
  * Death notification is the prompt path and the deadline is the backstop. Neither is sufficient
  * alone - a manager that merely stops recording does not die, and death delivery is asynchronous.

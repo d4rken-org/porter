@@ -7,5 +7,5 @@ package eu.darken.porter.common
  * already depends on `:starter`.
  */
 object UserServiceLaunch {
-    const val TRANSACTION = 10007
+    const val TRANSACTION = AppTransactions.USER_SERVICE_LAUNCH
 }
