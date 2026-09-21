@@ -146,8 +146,6 @@
     <string name="notification_adb_pairing_succeed_text">Теперь можно запустить службу Porter.</string>
     <string name="notification_adb_pairing_failed_title">Не удалось выполнить сопряжение</string>
     <string name="notification_adb_pairing_retry">Повторить</string>
-    <string name="notification_auth_missing_title">Требуется токен авторизации</string>
-    <string name="notification_auth_missing_message">Добавьте в интент extra «auth». Токен можно найти в настройках в разделе «Управление Porter через приложения автоматизации».</string>
     <string name="notification_auth_invalid_title">Неверный токен авторизации</string>
     <string name="notification_auth_invalid_message">Убедитесь, что токен в вашем интенте совпадает с токеном в настройках в разделе «Управление Porter через приложения автоматизации».</string>
 

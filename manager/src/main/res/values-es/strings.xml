@@ -145,8 +145,6 @@
     <string name="notification_adb_pairing_succeed_text">Ya puedes iniciar el servicio de Porter.</string>
     <string name="notification_adb_pairing_failed_title">Error de vinculación</string>
     <string name="notification_adb_pairing_retry">Reintentar</string>
-    <string name="notification_auth_missing_title">Se requiere un token de autenticación</string>
-    <string name="notification_auth_missing_message">Añade el extra “auth” a tu intent. Encontrarás tu token en Ajustes, en “Controla Porter con apps de automatización”.</string>
     <string name="notification_auth_invalid_title">Token de autenticación no válido</string>
     <string name="notification_auth_invalid_message">Asegúrate de que el token de tu intent coincida con el que aparece en Ajustes, en “Controla Porter con apps de automatización”.</string>
 

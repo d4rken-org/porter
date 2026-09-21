@@ -148,8 +148,6 @@
     <string name="notification_adb_pairing_succeed_text">يمكنك بدء خدمة Porter الآن.</string>
     <string name="notification_adb_pairing_failed_title">فشل الإقران</string>
     <string name="notification_adb_pairing_retry">إعادة المحاولة</string>
-    <string name="notification_auth_missing_title">يلزم رمز المصادقة</string>
-    <string name="notification_auth_missing_message">أضف البيان الإضافي “auth” إلى الأمر (intent). ستجد رمزك المميز في الإعدادات ضمن “التحكم في Porter عبر تطبيقات الأتمتة”.</string>
     <string name="notification_auth_invalid_title">رمز المصادقة غير صالح</string>
     <string name="notification_auth_invalid_message">تأكد من أن الرمز المميز في الأمر (intent) يطابق الرمز الموجود في الإعدادات ضمن “التحكم في Porter عبر تطبيقات الأتمتة”.</string>
 

@@ -144,8 +144,6 @@
     <string name="notification_adb_pairing_succeed_text">Du kannst den Porter-Dienst jetzt starten.</string>
     <string name="notification_adb_pairing_failed_title">Kopplung fehlgeschlagen</string>
     <string name="notification_adb_pairing_retry">Erneut versuchen</string>
-    <string name="notification_auth_missing_title">Auth-Token erforderlich</string>
-    <string name="notification_auth_missing_message">Füge deinem Intent das Extra „auth“ hinzu. Deinen Token findest du in den Einstellungen unter „Porter mit Automatisierungs-Apps steuern“.</string>
     <string name="notification_auth_invalid_title">Ungültiger Auth-Token</string>
     <string name="notification_auth_invalid_message">Stelle sicher, dass der Token in deinem Intent mit dem in den Einstellungen unter „Porter mit Automatisierungs-Apps steuern“ übereinstimmt.</string>
 
