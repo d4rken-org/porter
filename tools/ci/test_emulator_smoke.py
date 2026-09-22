@@ -49,7 +49,20 @@ class UiDumpTest(unittest.TestCase):
         sleep.assert_called_once_with(0.4)
 
     @patch.object(smoke.time, "sleep")
-    def test_failed_dump_cannot_reuse_a_previous_hierarchy(self, sleep):
+    @patch.object(smoke.time, "monotonic", side_effect=[0, 5, 11, 17, 23])
+    def test_dumps_are_retried_past_three_attempts_while_the_budget_lasts(self, monotonic, sleep):
+        # Each failed attempt starts its own VM before reporting, so a count of three is spent in
+        # about twelve seconds. The fifth attempt here is still inside the thirty second budget.
+        with patch.object(smoke.subprocess, "run", side_effect=[
+                completed(0), self.null_root, completed(0), self.null_root,
+                completed(0), self.null_root, completed(0), self.null_root,
+                completed(0), self.success, completed(0, stdout=self.xml.encode())]):
+            self.assertEqual(self.runner.ui().tag, "hierarchy")
+        self.assertEqual(sleep.call_count, 4)
+
+    @patch.object(smoke.time, "sleep")
+    @patch.object(smoke.time, "monotonic", side_effect=[0, 10, 20, 31])
+    def test_failed_dump_cannot_reuse_a_previous_hierarchy(self, monotonic, sleep):
         remote = {self.path: '<hierarchy><node text="Stale" /></hierarchy>'}
 
         def shell(*args):
@@ -61,11 +74,11 @@ class UiDumpTest(unittest.TestCase):
             self.fail(f"Unexpected command: {args}")
 
         self.runner.shell = Mock(side_effect=shell)
-        with self.assertRaisesRegex(RuntimeError, "after 3 attempts.*commands.log"):
+        with self.assertRaisesRegex(RuntimeError, "in 3 attempts over 31s.*commands.log"):
             self.runner.ui()
         self.assertNotIn(self.path, remote)
         self.assertFalse((self.runner.output / "last-ui.xml").exists())
-        self.assertEqual(sleep.call_count, 2)
+        self.assertEqual(sleep.call_count, 3)
         self.assertEqual(self.runner.shell.call_count, 6)
 
     @patch.object(smoke.time, "sleep")
@@ -83,6 +96,79 @@ class UiDumpTest(unittest.TestCase):
                 self.runner.ui()
         self.assertEqual(run.call_count, 2)
         sleep.assert_not_called()
+
+
+class SettledScreenTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        # The user-switching overlay, as it dumps: the framework's own package and nothing else.
+        self.switching = ET.fromstring('''<hierarchy><node package="android">
+            <node resource-id="android:id/progress_circular" package="android" enabled="true"
+            bounds="[238,522][841,1125]" />
+            <node text="Switching to Owner…" resource-id="android:id/message" package="android"
+            enabled="true" bounds="[296,1141][782,1212]" /></node></hierarchy>''')
+        self.prompt = ET.fromstring('''<hierarchy><node package="eu.darken.porter">
+            <node text="Allow all the time" package="eu.darken.porter" enabled="true"
+            bounds="[556,1176][897,1324]" /></node></hierarchy>''')
+        self.home = ET.fromstring('''<hierarchy><node package="com.google.android.apps.nexuslauncher">
+            <node text="Phone" package="com.google.android.apps.nexuslauncher" enabled="true"
+            bounds="[0,0][100,100]" /></node></hierarchy>''')
+
+    def test_the_switching_overlay_is_not_a_settled_screen(self):
+        self.runner.ui = Mock(return_value=self.switching)
+        self.assertEqual(self.runner.settled_screen(), [])
+
+    def test_a_dump_that_never_arrived_is_not_a_settled_screen(self):
+        self.runner.ui = Mock(side_effect=RuntimeError("uiautomator produced no UI dump"))
+        self.assertEqual(self.runner.settled_screen(), [])
+
+    def test_an_app_window_is_a_settled_screen(self):
+        self.runner.ui = Mock(return_value=self.home)
+        self.assertEqual([n.get("package") for n in self.runner.settled_screen()],
+                         ["com.google.android.apps.nexuslauncher"] * 2)
+
+    @patch.object(smoke.time, "sleep")
+    def test_the_overlay_cannot_answer_for_the_prompt_behind_it(self, sleep):
+        # The overlay carries no prompt of its own, so reading it once answers "absent" for a
+        # screen never looked at.
+        self.runner.ui = Mock(side_effect=[self.switching, self.prompt])
+        self.assertFalse(self.runner.absent("Allow all the time"))
+
+    @patch.object(smoke.time, "sleep")
+    def test_absence_is_confirmed_on_consecutive_settled_reads(self, sleep):
+        self.runner.ui = Mock(side_effect=[self.home, self.home])
+        self.assertTrue(self.runner.absent("Allow all the time"))
+        self.assertEqual(self.runner.ui.call_count, 2)
+
+    @patch.object(smoke.time, "sleep")
+    def test_a_prompt_arriving_on_the_second_read_is_not_absent(self, sleep):
+        self.runner.ui = Mock(side_effect=[self.home, self.prompt])
+        self.assertFalse(self.runner.absent("Allow all the time"))
+
+    @patch.object(smoke.time, "sleep")
+    def test_a_transition_between_settled_reads_starts_the_run_over(self, sleep):
+        # Two settled reads either side of the overlay are not consecutive: the screen moved in
+        # between, and what moved onto it was the prompt.
+        self.runner.ui = Mock(side_effect=[self.home, self.switching, self.home, self.prompt])
+        self.assertFalse(self.runner.absent("Allow all the time"))
+
+    @patch.object(smoke.time, "sleep")
+    @patch.object(smoke.time, "monotonic", side_effect=[0, 10, 50, 91])
+    def test_a_screen_that_never_settles_times_out(self, monotonic, sleep):
+        self.runner.ui = Mock(return_value=self.switching)
+        with self.assertRaisesRegex(AssertionError, "Timed out.*'Allow all the time'"):
+            self.runner.absent("Allow all the time")
+        self.assertEqual(self.runner.ui.call_count, 2)
+
+    @patch.object(smoke.time, "sleep")
+    @patch.object(smoke.time, "monotonic", side_effect=[0, 5, 95])
+    def test_a_settled_read_does_not_get_a_pass_on_the_deadline(self, monotonic, sleep):
+        # A read slow enough to outlast the budget must not be followed by another: settling is
+        # what the count is about, not what excuses it from the clock.
+        self.runner.ui = Mock(side_effect=[self.home, self.home])
+        with self.assertRaisesRegex(AssertionError, "Timed out"):
+            self.runner.absent("Allow all the time")
+        self.assertEqual(self.runner.ui.call_count, 1)
 
 
 class ScrollToActionTest(unittest.TestCase):
