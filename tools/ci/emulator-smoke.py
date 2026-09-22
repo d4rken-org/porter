@@ -60,11 +60,21 @@ HOST_SCAN_TIMEOUT = 360
 MANAGER_SCAN_TIMEOUT = 60
 # Removing an Android user returns before the user list reflects it.
 USER_REMOVAL_TIMEOUT = 120
+# am reports the target user as soon as a switch is queued, so a wait on that report returning is
+# not the switch being over. The screen can take another ~20s while the incoming user's windows
+# are rebuilt, which is what absent() sits through.
+USER_SWITCH_TIMEOUT = 90
 # Enough to cover the first two host deadlines after a record was created, which is what a scenario
 # asserting "nothing was removed" has to outlive to mean anything.
 HOST_SETTLE = 45
 MANAGER_SETTLE = 20
 ADB_TIMEOUT = 45
+# A budget rather than a number of tries: a dump that comes back with no accessibility root has
+# started its own VM to get there, so each failed attempt costs seconds that a count would hide.
+UI_DUMP_TIMEOUT = 30
+# Consecutive readable dumps that stand in for the screen having stopped changing, so that a window
+# on its way out cannot answer a question about what is on screen.
+UI_STABLE_POLLS = 2
 # How the pinned Shizuku server brackets one binder push. It whitelists the package, then calls
 # that package's provider, which starts the app's process; the binder line or the null-provider
 # line closes it. Porter's own server says "sent binders" instead and never logs the first of
@@ -208,25 +218,46 @@ class Smoke:
 
     def ui(self):
         path = "/data/local/tmp/porter-ci-ui.xml"
-        for attempt in range(3):
+        started = time.monotonic()
+        attempts = 0
+        while True:
             self.shell("rm", "-f", path)
             result = self.shell("uiautomator", "dump", path)
+            attempts += 1
             # A null accessibility root is reported on stderr with exit status zero.
             if f"UI hierchary dumped to: {path}" in result:
                 xml = self.shell("cat", path)
                 root = ET.fromstring(xml)
                 (self.output / "last-ui.xml").write_text(xml)
                 return root
-            if attempt < 2:
-                time.sleep(0.4)
-        raise RuntimeError(f"uiautomator produced no UI dump after 3 attempts; "
-                           f"see {self.output / 'commands.log'}")
+            time.sleep(0.4)
+            # Checked after the sleep, so the budget gates the attempt about to start rather than
+            # the one just finished. Reported as time spent, which runs past the budget by however
+            # long the last attempt took.
+            elapsed = time.monotonic() - started
+            if elapsed >= UI_DUMP_TIMEOUT:
+                raise RuntimeError(f"uiautomator produced no UI dump in {attempts} attempts over "
+                                   f"{elapsed:.0f}s; see {self.output / 'commands.log'}")
 
-    def locate(self, text=None, package=MANAGER, prefix=False, scroll=False, occurrence=0, desc=None):
-        """One look at the current window: the button's bounds, or None while it is not there."""
-        root = self.ui()
+    def settled_screen(self):
+        """The nodes of a screen belonging to the user now in front, or [] while there is none.
+
+        The framework draws its user-switching overlay itself, so a dump whose every node carries
+        the "android" package is the transition rather than a screen. Reading one as an answer is
+        how a question about what is on screen gets answered by what is on its way out.
+        """
+        try:
+            nodes = list(self.ui().iter("node"))
+        except RuntimeError:
+            return []
+        if any(node.get("package") not in ("android", "", None) for node in nodes):
+            return nodes
+        return []
+
+    def find(self, nodes, text=None, package=MANAGER, prefix=False, occurrence=0, desc=None):
+        """The button's bounds among nodes already read, or None while it is not there."""
         found = []
-        for node in root.iter("node"):
+        for node in nodes:
             if desc is not None:
                 matches = node.get("content-desc", "") == desc
             else:
@@ -238,6 +269,42 @@ class Smoke:
                     found.append(bounds)
                     if len(found) > occurrence:
                         return found[occurrence]
+        return None
+
+    def absent(self, text, package=MANAGER, timeout=USER_SWITCH_TIMEOUT):
+        """Whether a button stays missing across consecutive settled reads.
+
+        For asserting that nothing is on screen, where one read proves the least: the window that
+        answers it may be the one leaving, and the one being asked about may not have arrived. A
+        read of an unsettled screen starts the run over, so the reads that decide are consecutive
+        and nothing moved between them.
+
+        What it cannot tell is which user a window belongs to, which no dump records. Across a
+        user switch it answers for the screen that settles, not for a named user's screen.
+        """
+        deadline = time.monotonic() + timeout
+        settled = 0
+        while settled < UI_STABLE_POLLS:
+            # Before the read rather than after it, so that a read slow enough to outlast the
+            # budget is not followed by another one.
+            if time.monotonic() >= deadline:
+                raise AssertionError(f"Timed out: a settled screen, looking for {text!r}")
+            nodes = self.settled_screen()
+            if not nodes:
+                settled = 0
+                time.sleep(0.4)
+                continue
+            if self.find(nodes, text, package) is not None:
+                return False
+            settled += 1
+        return True
+
+    def locate(self, text=None, package=MANAGER, prefix=False, scroll=False, occurrence=0, desc=None):
+        """One look at the current window: the button's bounds, or None while it is not there."""
+        root = self.ui()
+        bounds = self.find(root.iter("node"), text, package, prefix, occurrence, desc)
+        if bounds is not None:
+            return bounds
         if scroll:
             container = next((n for n in root.iter("node") if n.get("package") == package
                               and n.get("scrollable") == "true"), None)
@@ -459,7 +526,7 @@ class Smoke:
             # not removable: back to user 0 first, or the removals below quietly do nothing.
             if self.shell("am", "get-current-user", check=False) != "0":
                 self.shell("am", "switch-user", "0", check=False)
-                self.until("user 0 is back on screen",
+                self.until("am reports user 0",
                            lambda: self.shell("am", "get-current-user", check=False) == "0", timeout=60)
             # Asked again on every poll rather than once: a removal issued while the framework is
             # still putting that user down is refused, and a refusal is not worth telling apart
@@ -1074,7 +1141,8 @@ class Smoke:
             assert uid != self.app_uid(NATIVE), "the two installations share a uid"
 
             self.shell("am", "switch-user", user)
-            self.until("the new user is on screen", lambda: self.shell("am", "get-current-user") == user)
+            self.until(f"am reports user {user}", lambda: self.shell("am", "get-current-user") == user,
+                       timeout=USER_SWITCH_TIMEOUT)
             self.adb("logcat", "-c")
             self.launch_probe_as(NATIVE, user)
             # The point of the case: a request nobody could answer is answered rather than left
@@ -1084,18 +1152,11 @@ class Smoke:
                 "a prompt that was never shown was written down as the user's answer"
 
             self.shell("am", "switch-user", "0")
-            self.until("user 0 is back on screen", lambda: self.shell("am", "get-current-user") == "0")
+            self.until("am reports user 0", lambda: self.shell("am", "get-current-user") == "0",
+                       timeout=USER_SWITCH_TIMEOUT)
             self.shell("am", "force-stop", "--user", user, NATIVE)
-            # uiautomator cannot dump while the switch back is still settling, and a dump that
-            # failed is not evidence that no prompt is on screen.
-            def screen_ready():
-                try:
-                    self.ui()
-                    return True
-                except RuntimeError:
-                    return False
-            self.until("the screen came back after the user switch", screen_ready)
-            assert not self.locate("Allow all the time", MANAGER), "a prompt refused in another user surfaced later"
+            assert self.absent("Allow all the time", MANAGER), \
+                "a prompt refused in another user surfaced later"
 
             # The owner user's copy still works, and its answer stays its own. Whether it is
             # asked again depends on what the case before this one left it holding, which is not
