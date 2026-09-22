@@ -1,5 +1,6 @@
 package eu.darken.porter.manager.support
 
+import android.content.Context
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcel
@@ -19,6 +20,7 @@ import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.model.PorterServiceVersion
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.sdk.Porter
+import eu.darken.porter.sdk.PorterAvailability
 import eu.darken.porter.server.IPorterRemoteProcess
 import eu.darken.porter.privileged.ServerConstants
 import java.io.File
@@ -102,7 +104,7 @@ internal object ServerDiagnostics {
         }
     }
 
-    fun captureMetadata(directory: File, phase: String) {
+    suspend fun captureMetadata(context: Context, directory: File, phase: String) {
         val details = File(directory, "server-$phase.txt")
         try {
             details.writeText("Time: ${System.currentTimeMillis()}\nBoot start: ${PorterSettings.preferences.getBoolean("start_on_boot", false)}\nWatchdog: ${PorterSettings.watchdog}\n")
@@ -115,7 +117,8 @@ internal object ServerDiagnostics {
             if (connection != null) {
                 details.appendText("UID: ${connection.uid}\nProtocol: ${connection.serverInfo.version}\nSELinux: ${connection.seLinuxContext}\n")
             } else {
-                details.appendText("SDK connection: none (${Porter.incompatibility ?: "not attached"})\n")
+                val refused = (Porter.availability(context) as? PorterAvailability.Incompatible)?.incompatibility
+                details.appendText("SDK connection: none (${refused ?: "not attached"})\n")
             }
             val info = readInfo(binder) ?: error("Service diagnostics unsupported")
             details.appendText("PID: ${info.pid}\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nInstalled build: ${PorterServiceVersion.installed.buildId}\nService build: ${info.version?.buildId ?: "unknown"}\n")

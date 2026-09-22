@@ -94,7 +94,7 @@ internal class CompatibilityRepository private constructor(private val context: 
             BuildConfig.IS_FOSS && version(installed) < BuildConfig.COMPAT_VERSION_CODE -> Status.UPDATE
             else -> Status.INSTALLED
         }
-        val running = runCatching { Porter.connection.value?.isAlive == true }.getOrDefault(false)
+        val running = runCatching { Porter.connection.value?.binder?.pingBinder() == true }.getOrDefault(false)
         var supported = false
         var otherUsers = false
         var inspectionError: String? = null

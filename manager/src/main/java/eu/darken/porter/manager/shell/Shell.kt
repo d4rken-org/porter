@@ -9,7 +9,7 @@ import eu.darken.porter.porsh.PorshConfig
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.sdk.PermissionState
 import eu.darken.porter.sdk.Porter
-import eu.darken.porter.sdk.PorterConnectionLostException
+import eu.darken.porter.sdk.PorterException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -22,25 +22,29 @@ class Shell : Porsh() {
 
     override fun requestPermission(onGrantedRunnable: Runnable) {
         val connection = Porter.connection.value ?: deny()
-        when (val state = connection.checkPermission()) {
-            PermissionState.Granted -> {
-                cancelStartupTimeout()
-                onGrantedRunnable.run()
-            }
-            is PermissionState.Denied -> if (state.permanentlyDenied) {
+        scope.launch {
+            val state = try {
+                connection.checkPermission()
+            } catch (e: PorterException) {
                 deny()
-            } else {
-                scope.launch {
-                    val answer = try {
+            }
+            val answer = when (state) {
+                PermissionState.Granted -> state
+                is PermissionState.Denied -> if (state.permanentlyDenied) {
+                    deny()
+                } else {
+                    // From here the wait is the user's decision, which the startup deadline does not cover.
+                    cancelStartupTimeout()
+                    try {
                         connection.requestPermission()
-                    } catch (e: PorterConnectionLostException) {
+                    } catch (e: PorterException) {
                         PermissionState.Denied(permanentlyDenied = false)
                     }
-                    // The answer arrives on a binder thread; the shell starts on the main one.
-                    mainHandler.post { if (answer == PermissionState.Granted) onGrantedRunnable.run() else deny() }
                 }
-                cancelStartupTimeout()
             }
+            cancelStartupTimeout()
+            // The answer arrives off the main thread; the shell starts on the main one.
+            mainHandler.post { if (answer == PermissionState.Granted) onGrantedRunnable.run() else deny() }
         }
     }
 
