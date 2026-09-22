@@ -35,7 +35,7 @@ internal class FakePermissionGateway(
         return canGrant
     }
     override fun dispatch(uid: Int, pid: Int, code: Int, allowed: Boolean, onetime: Boolean) {
-        replies += Reply(uid, pid, code, allowed, onetime)
+        replies += FakePermissionGateway.Reply(uid, pid, code, allowed, onetime)
         dispatchFailure?.let { throw it }
     }
 }
@@ -232,21 +232,45 @@ class PermissionViewModelTest {
         assertEquals(1, gateway.replies.size)
     }
 
-    @Test fun serviceThatNeverAppearsFinishesAfterTimeoutWithoutReply() {
+    @Test fun serviceThatNeverAppearsRefusesTheRequestRatherThanDroppingIt() {
         gateway.service.value = State.STARTING
         val model = model()
         dispatcher.scheduler.advanceTimeBy(PermissionViewModel.SERVICE_TIMEOUT - 1)
         assertEquals("waiting", model.stage.value)
         dispatcher.scheduler.advanceTimeBy(2)
         assertEquals("finished", model.stage.value)
-        assertTrue(gateway.replies.isEmpty())
+        // Finishing silently leaves the caller suspended for the life of its process.
+        assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)), gateway.replies)
     }
 
-    @Test fun failedServiceCheckFinishesWithoutReply() {
+    @Test fun failedServiceCheckRefusesTheRequestRatherThanDroppingIt() {
         gateway.failCheck = IllegalStateException("binder gone")
         val model = model(); advance()
         assertEquals("finished", model.stage.value)
-        assertTrue(gateway.replies.isEmpty())
+        assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)), gateway.replies)
+    }
+
+    @Test fun aRequestAdoptedWhileWaitingIsAnsweredWhenTheServiceNeverAppears() {
+        gateway.service.value = State.STARTING
+        val model = model()
+        // Adopted while the startup coroutine is still in flight, which is the window where
+        // reaching "finished" used to dispatch nothing at all for it.
+        assertTrue(model.supersede(10999, 5151, 8))
+        assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)), gateway.replies)
+        dispatcher.scheduler.advanceTimeBy(PermissionViewModel.SERVICE_TIMEOUT + 1)
+        assertEquals("finished", model.stage.value)
+        assertEquals(FakePermissionGateway.Reply(10999, 5151, 8, allowed = false, onetime = true), gateway.replies.last())
+        assertEquals(2, gateway.replies.size)
+    }
+
+    @Test fun theSameRequestCodeArrivingAfterTheAnswerIsGivenThatAnswer() {
+        val model = model(); advance()
+        model.reply(true)
+        // A caller that reuses request codes sends a different request under the same triple, and
+        // the prompt is the only thing that can answer it.
+        assertFalse(model.supersede(10123, 4242, 7))
+        assertEquals(FakePermissionGateway.Reply(10123, 4242, 7, allowed = true, onetime = false), gateway.replies.last())
+        assertEquals(2, gateway.replies.size)
     }
 
     @Test fun failedDispatchStillCountsAsTheOnlyDecision() {

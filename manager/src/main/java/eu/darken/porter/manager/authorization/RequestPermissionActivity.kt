@@ -3,6 +3,7 @@ package eu.darken.porter.manager.authorization
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
+import android.os.SystemClock
 import android.text.TextUtils
 import androidx.activity.compose.BackHandler
 import androidx.activity.viewModels
@@ -48,10 +49,54 @@ class RequestPermissionActivity : ComposeActivity() {
     /** The request this prompt is asking about; [onNewIntent] replaces it. */
     private var request by mutableStateOf<PermissionRequest?>(null)
 
+    /**
+     * When the app this prompt names last changed, as of the composition that drew the new one.
+     *
+     * [PermissionViewModel.supersede] changes which request a tap grants before the frame naming
+     * the new app has been drawn, so a tap already on its way answers for an app the user was not
+     * looking at, and it is stamped where the new name is composed rather than where its intent
+     * arrived, because the grace has to run from the frame the user can read.
+     *
+     * Null while the prompt has only ever named one app. A prompt that never changed app has
+     * nothing to protect against, and an elapsed-realtime baseline of zero would swallow taps for
+     * the first half second after boot.
+     */
+    private var supersededAt: Long? = null
+
+    /** The uid the last composition named, which is not [request] until that composition has run. */
+    private var drawnUid: Int? = null
+
+    /**
+     * Whether a tap now decides the request the user was shown, rather than one that just arrived.
+     *
+     * Two conditions, because the timer alone cannot cover its own start:
+     * [PermissionViewModel.supersede] repoints the model the moment the intent lands, so a tap
+     * already queued would answer for an app no frame has named yet. Comparing what is pointed at
+     * with what was drawn rules that out, and it holds however many requests arrive between two
+     * frames.
+     *
+     * Internal so a test can ask it directly, as [onNewIntent] is public so a test can deliver one:
+     * driving it through a click recomposes first, which is the state it exists to reject.
+     */
+    internal fun userIsAnswering(): Boolean {
+        val asked = request
+        if (asked != null && asked.uid != drawnUid) {
+            LOGGER.w("Ignoring a tap: repointed to ${'$'}{asked.uid}, screen still shows ${'$'}drawnUid")
+            return false
+        }
+        val changed = supersededAt ?: return true
+        val since = SystemClock.elapsedRealtime() - changed
+        if (since >= SUPERSEDE_GRACE) return true
+        LOGGER.w("Ignoring a tap ${'$'}since ms after the prompt changed request")
+        return false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setFinishOnTouchOutside(false)
-        val first = requested(intent)
+        // The saved copy first: a rebuilt process is handed the intent that launched the task,
+        // which names the request this prompt had already replaced.
+        val first = restored(savedInstanceState) ?: requested(intent)
         if (first == null) { finish(); return }
         request = first
         model.initialize(first.uid, first.pid, first.code)
@@ -59,13 +104,33 @@ class RequestPermissionActivity : ComposeActivity() {
             val asked = request ?: return@porterContent
             val ai = asked.info
             val stage by model.stage.collectAsStateWithLifecycle()
-            val identity by produceState(RequestingApp(asked.label, ai.packageName, null, null), asked) {
-                val icon = withContext(Dispatchers.IO) { runCatching { ai.loadIcon(packageManager).toBitmap(96, 96).asImageBitmap() }.getOrNull() }
-                value = RequestingApp(asked.label, ai.packageName, icon, null)
+            // Keyed on the request, so the name and icon reset in the composition a replacement
+            // causes rather than when the coroutine below has decoded the new icon. An icon is as
+            // big as the app that ships it, so that wait is not ours to bound.
+            val identityState = remember(asked) {
+                // The id is a local calculation, so it is on screen with the name. Two copies of
+                // one package in different profiles are otherwise identical down to the icon, and
+                // the row that tells them apart would arrive only after the service answered.
                 val userId = UserHandleCompat.getUserId(asked.uid)
-                if (userId == UserHandleCompat.myUserId()) return@produceState
-                // The user name comes from the service, so the row waits for it. No answer within
-                // the bound leaves the row out, which is honest where a placeholder name is not.
+                val known = userId != UserHandleCompat.myUserId()
+                mutableStateOf(RequestingApp(asked.label, ai.packageName, null, if (known) "$userId" else null))
+            }
+            val identity = identityState.value
+            LaunchedEffect(asked) {
+                // The grace starts here, at the composition that puts the new name on screen.
+                // Compared against what was last drawn rather than what was last delivered, so a
+                // burst that lands between two frames still counts as the one change it looks like.
+                // An app asking again names itself, so it never arms: suppressing those taps would
+                // let it ask on a timer to keep the prompt unanswerable, with back swallowed.
+                if (drawnUid != null && drawnUid != asked.uid) supersededAt = SystemClock.elapsedRealtime()
+                drawnUid = asked.uid
+                val icon = withContext(Dispatchers.IO) { runCatching { ai.loadIcon(packageManager).toBitmap(96, 96).asImageBitmap() }.getOrNull() }
+                val userId = UserHandleCompat.getUserId(asked.uid)
+                val ours = userId == UserHandleCompat.myUserId()
+                identityState.value = RequestingApp(asked.label, ai.packageName, icon, if (ours) null else "$userId")
+                if (ours) return@LaunchedEffect
+                // The name comes from the service, so only it waits. No answer within the bound
+                // leaves the bare id standing, which is honest where a guessed name is not.
                 val profile = try {
                     withTimeout(PermissionViewModel.SERVICE_TIMEOUT) {
                         PorterStateMachine.instance.asFlow().first { it == PorterStateMachine.State.RUNNING }
@@ -74,12 +139,18 @@ class RequestPermissionActivity : ComposeActivity() {
                 } catch (e: TimeoutCancellationException) {
                     LOGGER.e(e, "Binder not received in 5s, requesting user not named")
                     null
-                } ?: return@produceState
-                value = RequestingApp(asked.label, ai.packageName, icon, profile)
+                } ?: return@LaunchedEffect
+                identityState.value = RequestingApp(asked.label, ai.packageName, icon, profile)
             }
             BackHandler(enabled = stage == "waiting" || stage == "ready") {}
             LaunchedEffect(stage) { if (stage == "finished") finish() }
-            PermissionDialogContent(stage, identity, onAllow = { model.reply(true) }, onDeny = { model.reply(false) }, onClose = { finish() })
+            PermissionDialogContent(
+                stage,
+                identity,
+                onAllow = { if (userIsAnswering()) model.reply(true) },
+                onDeny = { if (userIsAnswering()) model.reply(false) },
+                onClose = { finish() },
+            )
         }
     }
 
@@ -95,10 +166,56 @@ class RequestPermissionActivity : ComposeActivity() {
         super.onNewIntent(intent)
         val next = requested(intent) ?: return
         if (!model.supersede(next.uid, next.pid, next.code)) return
-        // Only once the model has taken it: a recreation restores the request being asked about,
-        // which is the one this prompt kept when it refused a newcomer.
+        // Only once the model has taken it. setIntent covers a configuration change; a process
+        // death is handed the launching intent instead, which is what onSaveInstanceState is for.
         setIntent(intent)
         request = next
+    }
+
+    /**
+     * The copy a rebuilt process is restored from. Public so the test that pins it can read what
+     * this writes, as [onNewIntent] is public so a test can deliver one.
+     */
+    public override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // The request this prompt owes an answer to, which is not the one in the launching intent
+        // once onNewIntent has replaced it.
+        val asked = request ?: return
+        outState.putInt(SAVED_UID, asked.uid)
+        outState.putInt(SAVED_PID, asked.pid)
+        outState.putInt(SAVED_CODE, asked.code)
+        outState.putParcelable(SAVED_INFO, asked.info)
+    }
+
+    /**
+     * What a rebuilt process was asking about, or null where it is starting fresh.
+     *
+     * Internal so a test can read it without standing up a raw activity, which leaks a window into
+     * the JVM the rest of the module's tests share.
+     */
+    internal fun restored(state: Bundle?): PermissionRequest? {
+        val saved = state ?: return null
+        val uid = saved.getInt(SAVED_UID, -1)
+        val pid = saved.getInt(SAVED_PID, -1)
+        @Suppress("DEPRECATION") val ai = saved.getParcelable<ApplicationInfo>(SAVED_INFO)
+        if (uid == -1 || pid == -1 || ai == null) return null
+        return PermissionRequest(uid, pid, saved.getInt(SAVED_CODE, -1), ai, labelOf(ai))
+    }
+
+    private fun labelOf(ai: ApplicationInfo) =
+        runCatching { ai.loadLabel(packageManager).toString() }.getOrDefault(ai.packageName)
+
+    internal companion object {
+        private const val SAVED_UID = "asked.uid"
+        private const val SAVED_PID = "asked.pid"
+        private const val SAVED_CODE = "asked.code"
+        private const val SAVED_INFO = "asked.info"
+
+        /**
+         * How long after the prompt changes request a tap is ignored for. Matches what the platform
+         * permission dialog allows itself for the same reason.
+         */
+        const val SUPERSEDE_GRACE = 500L
     }
 
     /** What [intent] asks about, or null when it names no caller to answer. */
@@ -108,8 +225,7 @@ class RequestPermissionActivity : ComposeActivity() {
         val code = intent.getIntExtra("requestCode", -1)
         val ai = intent.getParcelableExtra<ApplicationInfo>("applicationInfo")
         if (uid == -1 || pid == -1 || ai == null) return null
-        val label = runCatching { ai.loadLabel(packageManager).toString() }.getOrDefault(ai.packageName)
-        return PermissionRequest(uid, pid, code, ai, label)
+        return PermissionRequest(uid, pid, code, ai, labelOf(ai))
     }
 }
 
@@ -221,9 +337,9 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
                 else reply(false, limited = true)
             } catch (e: TimeoutCancellationException) {
                 LOGGER.e(e, "Binder not received in 5s")
-                savedState["stage"] = "finished"
+                giveUp()
             } catch (e: CancellationException) { throw e }
-            catch (e: Exception) { LOGGER.e(e, "Permission request failed"); savedState["stage"] = "finished" }
+            catch (e: Exception) { LOGGER.e(e, "Permission request failed"); giveUp() }
         }
     }
     /** Whether this prompt is still in a position to ask, which is while it is on screen unanswered. */
@@ -238,7 +354,14 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
      * decision already made, which covers every request from the uid it was made about.
      */
     fun supersede(uid: Int, pid: Int, code: Int): Boolean {
-        if (this.uid == uid && this.pid == pid && this.code == code) return asking
+        if (this.uid == uid && this.pid == pid && this.code == code) {
+            if (asking) return true
+            // The same triple from a caller that reuses request codes is a different request with
+            // nothing else to answer it. Dispatching twice for one that is merely redelivered is
+            // harmless: the SDK has already taken its waiter off the map.
+            answer(uid, pid, code, allowed = savedState.get<Boolean>("allowed") == true)
+            return false
+        }
         if (asking) {
             answer(this.uid, this.pid, this.code, allowed = false)
             this.uid = uid; this.pid = pid; this.code = code
@@ -247,6 +370,15 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
         answer(uid, pid, code, allowed = uid == this.uid && savedState.get<Boolean>("allowed") == true)
         return false
     }
+
+    /**
+     * Abandons the prompt, refusing whatever request it still owes an answer to.
+     *
+     * Reaching "finished" without dispatching leaves that caller suspended for the life of its
+     * process. The request owed an answer is whichever one [supersede] last adopted, which is why
+     * this refuses rather than only finishing. One-time, because nothing here is the user deciding.
+     */
+    private fun giveUp() = reply(false)
 
     /** Dispatches for a request the user was never shown, so outside [gate] and its one decision. */
     private fun answer(uid: Int, pid: Int, code: Int, allowed: Boolean) {
