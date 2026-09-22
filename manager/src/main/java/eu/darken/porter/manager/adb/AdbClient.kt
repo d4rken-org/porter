@@ -43,7 +43,7 @@ class AdbClient(private val host: String, private val port: Int, private val key
     private val outputStream get() = if (useTls) tlsOutputStream else plainOutputStream
 
     fun connect() {
-        val socket = Socket()
+        socket = Socket()
         val address = InetSocketAddress(host, port)
         socket.connect(address, 5000)
 
