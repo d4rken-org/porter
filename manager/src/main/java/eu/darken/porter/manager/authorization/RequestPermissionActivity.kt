@@ -1,5 +1,6 @@
 package eu.darken.porter.manager.authorization
 
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.text.TextUtils
@@ -43,22 +44,25 @@ class RequestPermissionActivity : ComposeActivity() {
     override val rejectPartialTouches = true
     override val edgeToEdge = false
     private val model: PermissionViewModel by viewModels()
+
+    /** The request this prompt is asking about; [onNewIntent] replaces it. */
+    private var request by mutableStateOf<PermissionRequest?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setFinishOnTouchOutside(false)
-        val uid = intent.getIntExtra("uid", -1)
-        val pid = intent.getIntExtra("pid", -1)
-        val code = intent.getIntExtra("requestCode", -1)
-        val ai = intent.getParcelableExtra<ApplicationInfo>("applicationInfo")
-        if (uid == -1 || pid == -1 || ai == null) { finish(); return }
-        val label = runCatching { ai.loadLabel(packageManager).toString() }.getOrDefault(ai.packageName)
-        model.initialize(uid, pid, code)
+        val first = requested(intent)
+        if (first == null) { finish(); return }
+        request = first
+        model.initialize(first.uid, first.pid, first.code)
         porterContent {
+            val asked = request ?: return@porterContent
+            val ai = asked.info
             val stage by model.stage.collectAsStateWithLifecycle()
-            val identity by produceState(RequestingApp(label, ai.packageName, null, null), ai, uid) {
+            val identity by produceState(RequestingApp(asked.label, ai.packageName, null, null), asked) {
                 val icon = withContext(Dispatchers.IO) { runCatching { ai.loadIcon(packageManager).toBitmap(96, 96).asImageBitmap() }.getOrNull() }
-                value = RequestingApp(label, ai.packageName, icon, null)
-                val userId = UserHandleCompat.getUserId(uid)
+                value = RequestingApp(asked.label, ai.packageName, icon, null)
+                val userId = UserHandleCompat.getUserId(asked.uid)
                 if (userId == UserHandleCompat.myUserId()) return@produceState
                 // The user name comes from the service, so the row waits for it. No answer within
                 // the bound leaves the row out, which is honest where a placeholder name is not.
@@ -71,14 +75,53 @@ class RequestPermissionActivity : ComposeActivity() {
                     LOGGER.e(e, "Binder not received in 5s, requesting user not named")
                     null
                 } ?: return@produceState
-                value = RequestingApp(label, ai.packageName, icon, profile)
+                value = RequestingApp(asked.label, ai.packageName, icon, profile)
             }
             BackHandler(enabled = stage == "waiting" || stage == "ready") {}
             LaunchedEffect(stage) { if (stage == "finished") finish() }
             PermissionDialogContent(stage, identity, onAllow = { model.reply(true) }, onDeny = { model.reply(false) }, onClose = { finish() })
         }
     }
+
+    /**
+     * A request that arrives while this prompt is up, which no new instance is created for.
+     *
+     * Every prompt is a new document of one component, so a second request reaches the prompt
+     * already on screen, whoever it comes from. What the prompt names has to follow what it
+     * answers, or it asks about one app and replies for another. Public so the test that pins
+     * that can deliver one.
+     */
+    public override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val next = requested(intent) ?: return
+        if (!model.supersede(next.uid, next.pid, next.code)) return
+        // Only once the model has taken it: a recreation restores the request being asked about,
+        // which is the one this prompt kept when it refused a newcomer.
+        setIntent(intent)
+        request = next
+    }
+
+    /** What [intent] asks about, or null when it names no caller to answer. */
+    private fun requested(intent: Intent): PermissionRequest? {
+        val uid = intent.getIntExtra("uid", -1)
+        val pid = intent.getIntExtra("pid", -1)
+        val code = intent.getIntExtra("requestCode", -1)
+        val ai = intent.getParcelableExtra<ApplicationInfo>("applicationInfo")
+        if (uid == -1 || pid == -1 || ai == null) return null
+        val label = runCatching { ai.loadLabel(packageManager).toString() }.getOrDefault(ai.packageName)
+        return PermissionRequest(uid, pid, code, ai, label)
+    }
 }
+
+/** One request the prompt can ask about. [ApplicationInfo] brings no equality of its own, so two of
+ *  these built from two intents never compare equal, which is what restarts the identity lookup. */
+internal class PermissionRequest(
+    val uid: Int,
+    val pid: Int,
+    val code: Int,
+    val info: ApplicationInfo,
+    val label: String,
+)
 
 /** The requesting app as the prompt shows it; [profile] is null for the manager's own user. */
 internal data class RequestingApp(
@@ -183,9 +226,40 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
             catch (e: Exception) { LOGGER.e(e, "Permission request failed"); savedState["stage"] = "finished" }
         }
     }
+    /** Whether this prompt is still in a position to ask, which is while it is on screen unanswered. */
+    private val asking get() = initialized && !gate.replied && (stage.value == "waiting" || stage.value == "ready")
+
+    /**
+     * Points this prompt at a newer request, and reports whether it now asks about it.
+     *
+     * Two requests, one prompt, and a caller suspended on each, so whichever is not shown is
+     * answered here or waits out its own process. While the prompt can still ask, that is the
+     * request being replaced. Once it cannot, it is the newcomer, and what answers it is the
+     * decision already made, which covers every request from the uid it was made about.
+     */
+    fun supersede(uid: Int, pid: Int, code: Int): Boolean {
+        if (this.uid == uid && this.pid == pid && this.code == code) return asking
+        if (asking) {
+            answer(this.uid, this.pid, this.code, allowed = false)
+            this.uid = uid; this.pid = pid; this.code = code
+            return true
+        }
+        answer(uid, pid, code, allowed = uid == this.uid && savedState.get<Boolean>("allowed") == true)
+        return false
+    }
+
+    /** Dispatches for a request the user was never shown, so outside [gate] and its one decision. */
+    private fun answer(uid: Int, pid: Int, code: Int, allowed: Boolean) {
+        try { gateway.dispatch(uid, pid, code, allowed = allowed, onetime = !allowed) }
+        catch (e: Exception) { LOGGER.e(e, "dispatchPermissionConfirmationResult") }
+    }
+
     fun reply(allowed: Boolean, limited: Boolean = false) {
         gate.reply {
             savedState["replied"] = true
+            // Kept because it outlives the prompt: a request from the same uid arriving after
+            // this is covered by it, and a refusal instead would undo it.
+            savedState["allowed"] = allowed
             savedState["stage"] = if (limited) "limited" else "finished"
             // A denial is one-time: the user is asked again next time, "don't ask again" is
             // Porter's own screen.

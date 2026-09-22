@@ -2,6 +2,7 @@ package eu.darken.porter.manager.authorization
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.lifecycle.Lifecycle
@@ -107,6 +108,50 @@ class RequestPermissionActivityTest {
             compose.waitUntil(2_000) { compose.onAllNodesWithText(placeholder).fetchSemanticsNodes().isNotEmpty() }
         }.isSuccess
         assertFalse("the prompt rendered \"$placeholder\" as the requesting user", shown)
+    }
+
+    @Test fun aSecondRequestRetargetsThePromptAndRefusesTheOneItReplaced() {
+        // The platform delivering it is what the device check covers; this pins what happens then.
+        val scenario = launch()
+        awaitText(allow)
+        scenario.onActivity {
+            it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 8)
+                .putExtra("applicationInfo", context.applicationInfo))
+        }
+        assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)),
+                     gateway.replies)
+        awaitText(allow)
+        compose.onNodeWithText(allow).performClick()
+        awaitDestroyed(scenario)
+        assertEquals(FakePermissionGateway.Reply(10123, 4242, 8, allowed = true, onetime = false),
+                     gateway.replies.last())
+    }
+
+    @Test fun aSecondRequestFromAnotherAppIsWhatThePromptThenNames() {
+        // Answering for one app while naming another is the spoof this prompt exists to prevent.
+        val other = ApplicationInfo().apply {
+            packageName = "eu.darken.porter.probe.legacy"
+            nonLocalizedLabel = "Shizuku API probe"
+        }
+        val scenario = launch()
+        awaitText(allow)
+        compose.onNodeWithText(context.packageName).assertIsDisplayed()
+        scenario.onActivity {
+            it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
+                .putExtra("applicationInfo", other))
+        }
+        awaitText(other.packageName)
+        compose.onNodeWithText(other.packageName).assertIsDisplayed()
+    }
+
+    @Test fun aSecondRequestWithoutCallerIdentityLeavesThePromptAlone() {
+        val scenario = launch()
+        awaitText(allow)
+        scenario.onActivity { it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)) }
+        compose.onNodeWithText(context.packageName).assertIsDisplayed()
+        assertTrue(gateway.replies.isEmpty())
     }
 
     @Test fun requestWithoutCallerIdentityClosesWithoutReply() {
