@@ -44,6 +44,7 @@ class PorterApplication : Application() {
         // After the observers it can drive: the sticky binder-received listener fires
         // synchronously here when the binder is already up.
         PorterStateMachine.instance.attachToPorter()
+        LaunchModeRecorder.attachToPorter()
         AppCompatDelegate.setDefaultNightMode(PorterSettings.nightMode)
 
         if(PorterSettings.watchdog) WatchdogService.start(context)
