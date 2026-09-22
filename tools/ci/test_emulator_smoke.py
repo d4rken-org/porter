@@ -183,10 +183,14 @@ class ScrollToActionTest(unittest.TestCase):
             scrollable="true" bounds="[0,231][1080,1794]">
             <node text="Install automatically" package="eu.darken.porter" enabled="true"
             bounds="[600,1100][950,1200]" /></node></hierarchy>''')
+        # What a tap on it leads to, which is how tap() tells a gesture that landed from one the
+        # platform dropped on its way to the window.
+        self.after = ET.fromstring('''<hierarchy><node package="eu.darken.porter">
+            <node text="Installing" package="eu.darken.porter" enabled="true" /></node></hierarchy>''')
 
     @patch.object(smoke.time, "sleep")
     def test_retry_scrolls_before_tapping_action_below_saved_import(self, sleep):
-        self.runner.ui = Mock(side_effect=[self.hidden, self.visible])
+        self.runner.ui = Mock(side_effect=[self.hidden, self.visible, self.after])
         self.runner.tap("Install automatically", scroll=True)
         self.assertEqual(self.runner.shell.call_args_list, [
             call("input", "swipe", 540, 1482, 540, 543, 300),
@@ -194,7 +198,7 @@ class ScrollToActionTest(unittest.TestCase):
         ])
 
     def test_visible_action_does_not_scroll(self):
-        self.runner.ui = Mock(return_value=self.visible)
+        self.runner.ui = Mock(side_effect=[self.visible, self.after])
         self.runner.tap("Install automatically", scroll=True)
         self.runner.shell.assert_called_once_with("input", "tap", 775, 1150)
 
@@ -216,14 +220,17 @@ class ContentDescriptionTapTest(unittest.TestCase):
             <node text="Settings" package="eu.darken.porter" enabled="true" bounds="[0,0][100,100]" />
             <node content-desc="Settings" package="eu.darken.porter" enabled="true"
             bounds="[953,126][1058,231]" /></node></hierarchy>''')
+        self.opened = ET.fromstring('''<hierarchy><node package="eu.darken.porter">
+            <node text="Help &amp; support" package="eu.darken.porter" enabled="true" />
+            </node></hierarchy>''')
 
     def test_taps_the_node_carrying_the_content_description(self):
-        self.runner.ui = Mock(return_value=self.screen)
+        self.runner.ui = Mock(side_effect=[self.screen, self.opened])
         self.runner.tap(desc="Settings")
         self.runner.shell.assert_called_once_with("input", "tap", 1005, 178)
 
     def test_text_matching_ignores_content_descriptions(self):
-        self.runner.ui = Mock(return_value=self.screen)
+        self.runner.ui = Mock(side_effect=[self.screen, self.opened])
         self.runner.tap("Settings")
         self.runner.shell.assert_called_once_with("input", "tap", 50, 50)
 
@@ -258,7 +265,11 @@ class StopPorterConfirmationTest(unittest.TestCase):
 
     @patch.object(smoke.time, "sleep")
     def test_confirms_the_dialog_before_waiting_for_the_server_to_exit(self, sleep):
-        self.runner.ui = Mock(side_effect=[self.home, self.service, self.service, self.dialog])
+        # Two reads per tap: the one that locates the button and the one that confirms the
+        # screen moved on from it.
+        self.runner.ui = Mock(side_effect=[self.home, self.service,
+                                           self.service, self.dialog,
+                                           self.dialog, self.service])
         self.runner.pid = Mock(side_effect=["5271", ""])
         self.runner.stop_porter()
         self.assertEqual(self.runner.shell.call_args_list, [
@@ -277,6 +288,134 @@ class StopPorterConfirmationTest(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "Timed out"):
             self.runner.tap("Stop Porter", occurrence=1)
         self.runner.shell.assert_not_called()
+
+
+class TapConfirmationTest(unittest.TestCase):
+    """The platform can drop an injected gesture, so a tap is only done once the screen says so."""
+
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.Smoke(argparse.Namespace(
+            serial="emulator-5554", output=Path(directory.name)))
+        self.runner.shell = Mock()
+        self.runner.screenshot = Mock()
+        self.prompt = ET.fromstring('''<hierarchy><node package="eu.darken.porter">
+            <node text="Allow all the time" package="eu.darken.porter" enabled="true"
+            bounds="[556,1144][897,1292]" /></node></hierarchy>''')
+        self.granted = ET.fromstring('''<hierarchy><node package="eu.darken.porter.probe.native">
+            <node text="AUTHORIZED" package="eu.darken.porter.probe.native" enabled="true" />
+            </node></hierarchy>''')
+        # settle() is spent one read at a time, so zero buys exactly one look per attempt.
+        patcher = patch.object(smoke, "TAP_SETTLE", 0)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def taps(self):
+        return [c for c in self.runner.shell.call_args_list if c.args[0] == "input"]
+
+    def test_a_dropped_gesture_is_tapped_again(self):
+        # The same screen twice is the gesture never having reached the window it was aimed at.
+        self.runner.ui = Mock(side_effect=[self.prompt, self.prompt, self.prompt, self.granted])
+        self.runner.tap("Allow all the time")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)] * 2)
+
+    def test_a_gesture_the_screen_answers_is_not_repeated(self):
+        self.runner.ui = Mock(side_effect=[self.prompt, self.granted])
+        self.runner.tap("Allow all the time")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)])
+
+    def test_a_button_gone_by_the_retry_counts_as_tapped(self):
+        # The screen answered too slowly to be seen, not not at all: tapping where the button was
+        # would land on whatever replaced it.
+        self.runner.ui = Mock(side_effect=[self.prompt, self.prompt, self.granted])
+        self.runner.tap("Allow all the time")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)])
+
+    def test_a_screen_that_never_answers_fails_naming_the_button(self):
+        self.runner.ui = Mock(return_value=self.prompt)
+        with self.assertRaisesRegex(AssertionError, "'Allow all the time'"):
+            self.runner.tap("Allow all the time")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)] * smoke.TAP_ATTEMPTS)
+
+    def test_an_unreadable_screen_is_not_read_as_a_dropped_gesture(self):
+        # A dump that failed says nothing about the tap, and a retry would aim at stale bounds.
+        self.runner.ui = Mock(side_effect=[self.prompt, RuntimeError("no UI dump")])
+        self.runner.tap("Allow all the time")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)])
+
+    def test_the_screenshot_records_what_was_tapped_once(self):
+        self.runner.ui = Mock(side_effect=[self.prompt, self.prompt, self.prompt, self.granted])
+        self.runner.tap("Allow all the time", screenshot="native-permission")
+        self.runner.screenshot.assert_called_once_with("native-permission")
+
+
+class FrameworkErrorDialogTest(unittest.TestCase):
+    """A crashed system app's dialog is about neither Porter nor the probe, and covers both."""
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock()
+        self.crash = ET.fromstring('''<hierarchy><node package="android">
+            <node text="Bluetooth keeps stopping" package="android" enabled="true"
+            bounds="[133,760][947,831]" />
+            <node text="App info" package="android" enabled="true" bounds="[70,870][1010,996]" />
+            <node text="Close app" package="android" enabled="true"
+            bounds="[70,996][1010,1122]" /></node></hierarchy>''')
+        self.switching = ET.fromstring('''<hierarchy><node package="android">
+            <node text="Switching to Owner…" package="android" enabled="true"
+            bounds="[296,1141][782,1212]" /></node></hierarchy>''')
+        self.prompt = ET.fromstring('''<hierarchy><node package="eu.darken.porter">
+            <node text="Allow all the time" package="eu.darken.porter" enabled="true"
+            bounds="[556,1144][897,1292]" /></node></hierarchy>''')
+
+    def test_the_dialog_is_cleared_and_what_it_covered_is_returned(self):
+        self.runner.dump = Mock(side_effect=[self.crash, self.prompt])
+        with contextlib.redirect_stdout(io.StringIO()) as printed:
+            self.assertIs(self.runner.ui(), self.prompt)
+        self.runner.shell.assert_called_once_with("input", "tap", 540, 1059)
+        self.assertIn("Bluetooth keeps stopping", printed.getvalue())
+
+    def test_the_switching_overlay_is_left_alone(self):
+        # Framework-drawn too, and the one thing the suite has to sit through rather than clear.
+        self.runner.dump = Mock(return_value=self.switching)
+        self.assertIs(self.runner.ui(), self.switching)
+        self.runner.shell.assert_not_called()
+
+    def test_a_dialog_that_keeps_returning_is_given_up_on(self):
+        # A service that crashes again on restart would otherwise be dismissed forever.
+        self.runner.dump = Mock(return_value=self.crash)
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertIs(self.runner.ui(), self.crash)
+        self.assertEqual(self.runner.shell.call_count, smoke.FRAMEWORK_ERROR_DISMISSALS)
+
+
+class AllowIfRequestedTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.tap = Mock()
+        self.prompt = ET.fromstring('''<hierarchy><node package="eu.darken.porter">
+            <node text="Allow all the time" package="eu.darken.porter" enabled="true"
+            bounds="[556,1144][897,1292]" /></node></hierarchy>''')
+
+    def test_a_grant_already_held_is_not_waited_on_for_a_dialog(self):
+        self.runner.logs = Mock(return_value=smoke.NATIVE + " AUTHORIZED managerOperationDenied=true")
+        self.runner.ui = Mock()
+        self.runner.allow_if_requested()
+        self.runner.ui.assert_not_called()
+        self.runner.tap.assert_not_called()
+
+    @patch.object(smoke.time, "sleep")
+    def test_a_screen_that_cannot_be_dumped_is_not_the_answer(self, sleep):
+        # The dump this polls with has the short budget, so one unreadable screen used to end the
+        # case where the wait around it still had looks left.
+        self.runner.logs = Mock(return_value="")
+        self.runner.ui = Mock(side_effect=[RuntimeError("no UI dump"), self.prompt])
+        self.runner.allow_if_requested()
+        self.assertEqual([c.args[0] for c in self.runner.ui.call_args_list],
+                         [smoke.UI_POLL_TIMEOUT] * 2)
+        self.runner.tap.assert_called_once_with(
+            "Allow all the time", smoke.MANAGER, screenshot=None)
 
 
 class TransportRetryTest(unittest.TestCase):
