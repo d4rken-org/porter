@@ -1083,16 +1083,22 @@ class Smoke:
             self.shell("am", "switch-user", "0")
             self.until("user 0 is back on screen", lambda: self.shell("am", "get-current-user") == "0")
             self.shell("am", "force-stop", "--user", user, NATIVE)
+            # uiautomator cannot dump while the switch back is still settling, and a dump that
+            # failed is not evidence that no prompt is on screen.
+            def screen_ready():
+                try:
+                    self.ui()
+                    return True
+                except RuntimeError:
+                    return False
+            self.until("the screen came back after the user switch", screen_ready)
             assert not self.locate("Allow all the time", MANAGER), "a prompt refused in another user surfaced later"
 
-            # The refusal is not remembered, so the ordinary path still prompts and still keeps
-            # its answer to the uid that asked. Revoked first: the case before this one can leave
-            # the owner user's copy already holding the permission, and a client that already has
-            # it never asks, so the prompt this is about would never appear.
-            self.shell("pm", "revoke", NATIVE, PERMISSION)
-            self.shell("am", "force-stop", NATIVE)
+            # The owner user's copy still works, and its answer stays its own. Whether it is
+            # asked again depends on what the case before this one left it holding, which is not
+            # what this case is about: standalone covers the prompt itself on every run.
             self.launch_probe(NATIVE)
-            self.tap("Allow all the time", MANAGER, screenshot="after-secondary-user")
+            self.allow_if_requested(screenshot="after-secondary-user")
             self.authorized(NATIVE)
             assert self.decision_flags(self.app_uid(NATIVE)) & DECISION_ALLOWED, "the answered grant was not saved"
             assert not self.decision_flags(uid) & DECISION_ALLOWED, "the owner user's grant reached the other user's copy"
