@@ -29,22 +29,24 @@ class SettingsActivity : ComposeActivity() {
     private val battery = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { model.batteryResult() }
 
     private var batteryRestricted by mutableStateOf(false)
-    private var alertsBlocked by mutableStateOf(false)
 
-    /** Set when this screen sends the user to the notification settings, which return no result. */
-    private var awaitingAlertsChoice = false
+    /**
+     * Bumped on every resume. What the two rows below report can be changed from outside this
+     * screen, so the reads are keyed on this as well as on the preferences.
+     */
+    private var resumed by mutableIntStateOf(0)
 
     override fun onResume() {
         super.onResume()
         batteryRestricted = !EnvironmentUtils.isTelevision() && !SettingsHelper.isIgnoringBatteryOptimizations(this)
-        alertsBlocked =
-            (PorterSettings.isStartOnBoot(this) && !NotificationAlerts.canAlert(this, NotificationChannels.ADB_START)) ||
-            (PorterSettings.watchdog && !NotificationAlerts.canAlert(this, NotificationChannels.WATCHDOG))
-        if (awaitingAlertsChoice) {
-            awaitingAlertsChoice = false
-            model.alertsResult()
-        }
+        resumed++
+        if (model.awaitingAlerts.value) model.alertsResult()
     }
+
+    /** Whether an enabled feature currently has no way to reach the user. */
+    private fun alertsBlocked(): Boolean =
+        (PorterSettings.isStartOnBoot(this) && !NotificationAlerts.canAlert(this, NotificationChannels.ADB_START)) ||
+        (PorterSettings.watchdog && !NotificationAlerts.canAlert(this, NotificationChannels.WATCHDOG))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +61,7 @@ class SettingsActivity : ComposeActivity() {
         val dialog by model.dialog.collectAsStateWithLifecycle()
         val canBoot by model.canBoot.collectAsStateWithLifecycle()
         val togglesBusy by model.busy.collectAsStateWithLifecycle()
+        val alertsBlocked = remember(revision, resumed, togglesBusy) { alertsBlocked() }
         val mode = (values[PorterSettings.Keys.KEY_NIGHT_MODE] as? Int ?: -1).toString()
         val style = values[PorterSettings.Keys.KEY_THEME_STYLE] as? String ?: "DEFAULT"
         val color = values[PorterSettings.Keys.KEY_THEME_COLOR] as? String ?: "BLUE"
@@ -152,7 +155,7 @@ class SettingsActivity : ComposeActivity() {
                 confirmButton = {
                     TextButton(onClick = {
                         model.show(null)
-                        awaitingAlertsChoice = true
+                        model.awaitAlertsChoice()
                         SettingsPage.Notifications.NotificationSettings.launch(this@SettingsActivity)
                     }) { Text(stringResource(R.string.notification_settings)) }
                 },
