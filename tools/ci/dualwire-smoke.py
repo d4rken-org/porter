@@ -12,6 +12,8 @@ spec.loader.exec_module(base)
 
 BRIDGE = "eu.darken.porter.probe.bridge"
 UNLISTED = "eu.darken.porter.unlistedmanager"
+# This suite installs two more, and a crash dialog about either is its own failure to report.
+base.UNDER_TEST |= {BRIDGE, UNLISTED}
 SHIZUKU_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 # A binder that is coming arrives inside the launch window, so that is how long "none arrived" has
 # to hold for. The activity's own mode line says only that the activity ran.

@@ -18,6 +18,9 @@ MANAGER = "eu.darken.porter"
 COMPAT = "moe.shizuku.privileged.api"
 NATIVE = "eu.darken.porter.probe.native"
 LEGACY = "eu.darken.porter.probe.legacy"
+# Everything a suite installs and drives. A crash dialog about one of these is the case failing,
+# not something standing in front of it; the derived suites add their own.
+UNDER_TEST = {MANAGER, COMPAT, NATIVE, LEGACY}
 PERMISSION = "eu.darken.porter.permission.API"
 LEGACY_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 # What each probe reports on its BINDER line: the Porter protocol version from the porter
@@ -72,9 +75,25 @@ ADB_TIMEOUT = 45
 # A budget rather than a number of tries: a dump that comes back with no accessibility root has
 # started its own VM to get there, so each failed attempt costs seconds that a count would hide.
 UI_DUMP_TIMEOUT = 30
+# For a dump taken inside another wait's condition, where the full budget would let one screen
+# spend the whole outer window in a single poll.
+UI_POLL_TIMEOUT = 5
 # Consecutive readable dumps that stand in for the screen having stopped changing, so that a window
 # on its way out cannot answer a question about what is on screen.
 UI_STABLE_POLLS = 2
+# How long a tapped screen has to answer before the tap counts as lost. The platform can drop an
+# injected gesture outright, and a dropped one is indistinguishable from a tap nobody acted on.
+TAP_SETTLE = 3
+TAP_ATTEMPTS = 3
+# The framework's own crash and ANR dialogs, which belong to no app under test and sit in front of
+# whatever the case was about. Both offer this button; the message is phrased around the crashed
+# app's name, so the wording that is not is what identifies them.
+FRAMEWORK_ERROR_BUTTON = "Close app"
+FRAMEWORK_ERROR_TEXT = re.compile(r"(keeps stopping|kept stopping|has stopped|isn't responding)")
+FRAMEWORK_ERROR_DISMISSALS = 2
+# Which app a crash dialog is about, which the dialog itself says only as a label. The crash buffer
+# names the package, and the newest entry in it is the crash whose dialog is in front.
+CRASHED_PROCESS = re.compile(r"\bProcess: (\S+?),", re.MULTILINE)
 # How the pinned Shizuku server brackets one binder push. It whitelists the package, then calls
 # that package's provider, which starts the app's process; the binder line or the null-provider
 # line closes it. Porter's own server says "sent binders" instead and never logs the first of
@@ -216,7 +235,7 @@ class Smoke:
     def expect_log(self, package, message):
         return self.until(f"{package}: {message}", lambda: package + " " + message in self.logs())
 
-    def ui(self):
+    def dump(self, budget=UI_DUMP_TIMEOUT):
         path = "/data/local/tmp/porter-ci-ui.xml"
         started = time.monotonic()
         attempts = 0
@@ -235,11 +254,57 @@ class Smoke:
             # the one just finished. Reported as time spent, which runs past the budget by however
             # long the last attempt took.
             elapsed = time.monotonic() - started
-            if elapsed >= UI_DUMP_TIMEOUT:
+            if elapsed >= budget:
                 raise RuntimeError(f"uiautomator produced no UI dump in {attempts} attempts over "
                                    f"{elapsed:.0f}s; see {self.output / 'commands.log'}")
 
-    def settled_screen(self):
+    def crashed(self):
+        """The package of the newest crash the device recorded, or None if it recorded none."""
+        found = CRASHED_PROCESS.findall(self.adb("logcat", "-d", "-b", "crash", check=False))
+        return found[-1] if found else None
+
+    def framework_error(self, root):
+        """The bounds of the button that clears a crash or ANR dialog raised by something else.
+
+        Such a dialog is drawn by the framework, so every node in it carries the "android"
+        package, the way the user-switching overlay does; what tells those two apart is the
+        message. What the message cannot say is which app crashed, because it names the label:
+        the crash buffer names the package, and a dialog about an app this suite is testing is
+        the failure rather than something in front of it, so it is left where it is. A crash
+        nothing recorded is one nothing can attribute, which is the same answer.
+        """
+        nodes = list(root.iter("node"))
+        if any(node.get("package") not in ("android", "", None) for node in nodes):
+            return None
+        if not any(FRAMEWORK_ERROR_TEXT.search(node.get("text", "")) for node in nodes):
+            return None
+        crashed = self.crashed()
+        if crashed is None or crashed in UNDER_TEST:
+            return None
+        return self.find(nodes, FRAMEWORK_ERROR_BUTTON, package="android")
+
+    def ui(self, budget=UI_DUMP_TIMEOUT):
+        """One readable dump of a screen the device under test owns.
+
+        A crashed system app's dialog answers every question about the screen with itself, and it
+        is about neither Porter nor the probe, so it is cleared and what it covered is read
+        instead. Bounded rather than repeated until clear: a service that crashes again on restart
+        puts its dialog back, and outsitting that is not this suite's job.
+        """
+        root = self.dump(budget)
+        for _ in range(FRAMEWORK_ERROR_DISMISSALS):
+            bounds = self.framework_error(root)
+            if bounds is None:
+                return root
+            message = next(node.get("text") for node in root.iter("node")
+                           if FRAMEWORK_ERROR_TEXT.search(node.get("text", "")))
+            print(f"NOTE dismissing a framework error dialog: {message}", flush=True)
+            left, top, right, bottom = bounds
+            self.shell("input", "tap", (left + right) // 2, (top + bottom) // 2)
+            root = self.dump(budget)
+        return root
+
+    def settled_screen(self, budget=UI_DUMP_TIMEOUT):
         """The nodes of a screen belonging to the user now in front, or [] while there is none.
 
         The framework draws its user-switching overlay itself, so a dump whose every node carries
@@ -247,7 +312,7 @@ class Smoke:
         how a question about what is on screen gets answered by what is on its way out.
         """
         try:
-            nodes = list(self.ui().iter("node"))
+            nodes = list(self.ui(budget).iter("node"))
         except RuntimeError:
             return []
         if any(node.get("package") not in ("android", "", None) for node in nodes):
@@ -299,9 +364,13 @@ class Smoke:
             settled += 1
         return True
 
-    def locate(self, text=None, package=MANAGER, prefix=False, scroll=False, occurrence=0, desc=None):
+    def locate(self, text=None, package=MANAGER, prefix=False, scroll=False, occurrence=0, desc=None,
+               budget=UI_DUMP_TIMEOUT):
         """One look at the current window: the button's bounds, or None while it is not there."""
-        root = self.ui()
+        root = self.ui(budget)
+        # Kept so that whoever acts on these bounds can tell the screen it acted on from the one
+        # it is looking at afterwards.
+        self.last_screen = ET.tostring(root)
         bounds = self.find(root.iter("node"), text, package, prefix, occurrence, desc)
         if bounds is not None:
             return bounds
@@ -315,15 +384,60 @@ class Smoke:
                 self.shell("input", "swipe", x, bottom - inset, x, top + inset, 300)
         return None
 
+    def heard(self, before):
+        """Whether the screen stopped being [before] within [TAP_SETTLE].
+
+        A dump that fails inside the window answers neither way, so it is polled past rather than
+        counted. What follows a window that ends undecided is another look at the button on its
+        own full budget, not a tap at bounds nothing has confirmed.
+        """
+        deadline = time.monotonic() + TAP_SETTLE
+        while True:
+            try:
+                if ET.tostring(self.ui(UI_POLL_TIMEOUT)) != before:
+                    return True
+            except RuntimeError:
+                pass
+            if time.monotonic() >= deadline:
+                return False
+            time.sleep(0.4)
+
     def tap(self, text=None, package=MANAGER, prefix=False, screenshot=None, scroll=False, occurrence=0, desc=None):
+        """Taps a button and returns once the screen has acknowledged it.
+
+        An injected gesture can be dropped before it reaches the window it was aimed at, and a
+        dropped one leaves nothing behind: the case carries on and fails later, somewhere that
+        says nothing about the tap. So the screen is read again afterwards, and a screen that is
+        byte for byte the one that was tapped is a tap that never landed.
+
+        Only an unchanged screen is tapped a second time, and only while the button is still
+        there. Anything else - the dialog gone, the button gone, a different screen - is the tap
+        having been acted on, however little of it has finished.
+        """
         wanted = repr(text) if desc is None else f"content-desc {desc!r}"
         ordinal = f" #{occurrence}" if occurrence else ""
-        left, top, right, bottom = self.until(
-            f"button {wanted}{ordinal} in {package}",
-            lambda: self.locate(text, package, prefix, scroll, occurrence, desc))
-        if screenshot:
-            self.screenshot(screenshot)
-        self.shell("input", "tap", (left + right) // 2, (top + bottom) // 2)
+        description = f"button {wanted}{ordinal} in {package}"
+        for attempt in range(TAP_ATTEMPTS):
+            if attempt == 0:
+                bounds = self.until(description,
+                                    lambda: self.locate(text, package, prefix, scroll, occurrence, desc))
+            else:
+                bounds = self.locate(text, package, prefix, scroll, occurrence, desc)
+                # Gone between the failed tap and this look: it was acted on after all, and
+                # tapping where it used to be would hit whatever took its place.
+                if bounds is None:
+                    return
+            before = self.last_screen
+            # Once: the screenshot records what was tapped, and a retry taps the same screen.
+            if screenshot and attempt == 0:
+                self.screenshot(screenshot)
+            left, top, right, bottom = bounds
+            self.shell("input", "tap", (left + right) // 2, (top + bottom) // 2)
+            if self.heard(before):
+                return
+            print(f"NOTE the screen did not answer a tap on {description}", flush=True)
+        raise AssertionError(f"Tapped {description} {TAP_ATTEMPTS} times and the screen never "
+                             f"changed; see {self.output / 'last-ui.xml'}")
 
     def screenshot(self, name):
         (self.output / f"{name}.png").write_bytes(self.adb("exec-out", "screencap", "-p", binary=True))
@@ -870,11 +984,22 @@ class Smoke:
         A probe that already holds the permission reports AUTHORIZED straight away and never asks,
         so waiting for the dialog would wait for a window that cannot appear. Which of the two
         happens is decided on the device, so both are watched for at once.
+
+        The dump this polls with gets the shorter budget, and a dump that fails inside it counts
+        as "no dialog yet" rather than ending the case: it is one look among many rather than the
+        answer, and on the full budget a single pathological screen spends the whole wait in one
+        poll. What tolerates an unreadable screen is the outer wait, which is still 30s of looks.
         """
+        def asking():
+            try:
+                return self.locate("Allow all the time", prompt_package, budget=UI_POLL_TIMEOUT)
+            except RuntimeError:
+                return None
+
         state = self.until(
             f"{package} authorized or asking for permission",
             lambda: ("granted" if package + " AUTHORIZED" in self.logs()
-                     else "asked" if self.locate("Allow all the time", prompt_package) else None))
+                     else "asked" if asking() else None))
         if state == "asked":
             self.tap("Allow all the time", prompt_package, screenshot=screenshot)
 
