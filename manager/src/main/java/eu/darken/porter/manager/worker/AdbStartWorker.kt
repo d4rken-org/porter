@@ -73,6 +73,9 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
                 fun handleAuth() {
                     val km = applicationContext.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+                    // Before the branches: whichever one runs decides what waits next, and the
+                    // discovery deadline is not it.
+                    timeoutJob?.cancel()
                     if (km.isKeyguardLocked) {
                         val notification = PorterReceiverStarter.buildNotification(
                             applicationContext,
@@ -95,8 +98,19 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
                             }
                         }
                         applicationContext.registerReceiver(unlockReceiver, filter)
-                    } else awaitingAuth = true
-                    timeoutJob?.cancel()
+                    } else {
+                        awaitingAuth = true
+                        // With the device already unlocked, the only thing that turns the setting
+                        // back on is someone in the wireless-debugging screen at this moment. Where
+                        // nobody is, nothing else here can end the wait: discovery has stopped and
+                        // its deadline is gone, so the flow would sit in "Starting Porter…" until
+                        // something outside it intervened. A later change back on replaces this
+                        // deadline with the discovery one.
+                        timeoutJob = launch {
+                            delay(AUTHORIZATION_TIMEOUT)
+                            close(TimeoutException("Timed out waiting for the network to be authorized"))
+                        }
+                    }
                     adbMdns.stop()
                 }
 
@@ -214,5 +228,13 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
             )
         }
         const val NOTIFICATION_ID = 1448
+
+        /**
+         * How long a wait for the network to be authorized is given before the attempt is dropped
+         * and left to the retry. Long enough for someone already looking at the prompt to answer
+         * it, and short enough that a device where no one is looking is not held indefinitely. A
+         * grace period, not a measured figure.
+         */
+        private const val AUTHORIZATION_TIMEOUT = 60_000L
     }
 }
