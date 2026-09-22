@@ -20,6 +20,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import rikka.hidden.compat.PackageManagerApis
 import rikka.hidden.compat.util.SystemServiceBinder
@@ -52,11 +53,11 @@ class ProbeActivity : Activity() {
         forward = intent.getBooleanExtra("forward", false)
         args = UserServiceArgs(ComponentName(this, ProbeService::class.java), processNameSuffix = "porter-probe", version = 1, daemon = daemon)
         report("MODE daemon=$daemon peek=$peek forward=$forward")
-        // Before collecting, so this reports the state selection resolved rather than one a
-        // delivery has already changed.
-        report("AVAILABILITY " + Porter.availability(this))
-        if (Porter.connection.value?.isAlive != true) report("WAITING_FOR_BINDER")
         scope.launch {
+            // Before collecting, so this reports the state selection resolved rather than one a
+            // delivery has already changed.
+            report("AVAILABILITY " + availabilityToken(Porter.availability(this@ProbeActivity)))
+            if (Porter.connection.value?.isAlive() != true) report("WAITING_FOR_BINDER")
             var previous: PorterConnection? = null
             Porter.connection.collect { connection ->
                 if (connection == null) {
@@ -69,7 +70,7 @@ class ProbeActivity : Activity() {
         }
     }
 
-    private fun connect(connection: PorterConnection) {
+    private suspend fun connect(connection: PorterConnection) {
         try {
             report("BINDER uid=" + connection.uid + " version=" + connection.serverInfo.version)
             report("BACKEND " + connection.serverInfo.backend)
@@ -164,11 +165,14 @@ class ProbeActivity : Activity() {
 
     override fun onDestroy() {
         val connection = Porter.connection.value
-        if (bound && connection?.isAlive == true) {
-            try {
-                connection.stopUserService(args)
-            } catch (e: RuntimeException) {
-                Log.w("PorterProbe", "Service disconnected during teardown", e)
+        // Sent before the scope is cancelled below, which would end a stop launched into it.
+        if (bound && connection != null) runBlocking {
+            if (connection.isAlive()) {
+                try {
+                    connection.stopUserService(args)
+                } catch (e: RuntimeException) {
+                    Log.w("PorterProbe", "Service disconnected during teardown", e)
+                }
             }
         }
         scope.cancel()

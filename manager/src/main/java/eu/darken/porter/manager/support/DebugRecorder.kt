@@ -127,7 +127,7 @@ class DebugRecorder internal constructor(
                 scope.launch { stop(child) }
             }
             timer = scope.launch { delay(remaining); scope.launch { stop(child) } }
-            ServerDiagnostics.captureMetadata(directory, "start")
+            ServerDiagnostics.captureMetadata(appContext, directory, "start")
             attachServerStream(directory, remaining)
         } catch (e: Exception) {
             process = null
@@ -242,7 +242,7 @@ class DebugRecorder internal constructor(
             store.finish()
             mutableState.value = State()
             appContext.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
-            ServerDiagnostics.captureMetadata(directory, "stop")
+            ServerDiagnostics.captureMetadata(appContext, directory, "stop")
             store.prune()
         }
     }

@@ -95,7 +95,7 @@ with both installed to start Porter.
 
 What the SDK actually probes for is `moe.shizuku.api.BinderContainer` on the classpath, which is
 what `shizuku-compat` puts there, and what `dev.rikka.shizuku:provider` would put there too. Without
-that class the SDK can unwrap no Shizuku Binder, so a Shizuku-only device reads `NOT_INSTALLED`
+that class the SDK can unwrap no Shizuku Binder, so a Shizuku-only device reads `NotInstalled`
 rather than promising a connection it cannot take.
 
 ### What a version promises
@@ -115,8 +115,9 @@ SDK release numbers are independent of Porter's own app version. While the SDK i
 The SDK and the Porter service confirm this when they connect. Each side names the protocol version
 it speaks and the oldest one it still accepts; a newer peer is never a problem on its own. When the
 two do not overlap, no connection is published and `Porter.availability(context)` answers
-`INCOMPATIBLE`; `Porter.incompatibility` then says whether the user has to update Porter
-(`serverTooOld`) or your app needs a newer SDK (`clientTooOld`).
+`Incompatible`; its `incompatibility` says whether the user has to update Porter (`serverTooOld`)
+or your app needs a newer SDK (`clientTooOld`). An original Shizuku server older than protocol 13 is
+reported the same way, with its `backend` set to `SHIZUKU`.
 
 Fixes reach apps only through a new SDK release and a dependency bump in your build. There is no
 runtime update path for the library.
@@ -154,8 +155,13 @@ The flow moves straight from one connection to the next only when the replacemen
 old server is still alive. A Porter that stops before the new one starts, which is what a restart
 usually looks like, publishes null in between, so handle the null rather than assuming a handover.
 
-`Porter.connection.value` answers whether a connection is held right now, and `connection.isAlive`
+`Porter.connection.value` answers whether a connection is held right now, and `connection.isAlive()`
 whether its Binder still answers. Use them for a one-off check, not as a substitute for collecting.
+
+Every call on a connection that reaches the server suspends and is safe on the main thread; the SDK
+moves the Binder call off it. A failed call throws a `PorterException`: `PorterSecurityException`
+when the server refused it, usually because your app has no grant, and `PorterRemoteException` when
+the Binder call itself failed.
 
 A `PorterConnection` stays bound to the server it was attached to. Hold the one the flow gave you
 for the work at hand, and take the next one from the flow after a restart rather than reusing it.
@@ -185,9 +191,9 @@ suspend fun onPorterReady(connection: PorterConnection) {
 }
 ```
 
-`PorterConnectionLostException` is an `IllegalStateException`. Uncaught inside the collector above it
-takes down the coroutine that was watching `Porter.connection`, so the replacement connection is
-never handled.
+`PorterConnectionLostException` is a `PorterException`, and unchecked. Uncaught inside the collector
+above it takes down the coroutine that was watching `Porter.connection`, so the replacement
+connection is never handled.
 
 `connection.permission` is a `StateFlow<PermissionState>` holding the latest state the server
 reported, so a screen can react to a grant or a revocation without asking again.
@@ -249,8 +255,12 @@ without emitting when there is none. `peekUserService(args)` reports a running i
 without binding.
 
 Dropping a binding does not stop the process, and neither does `stopUserService(args)` on its own:
-all it does is send the `destroy` transaction above. Porter has no other way to stop the process, so
-a service that leaves the method unimplemented keeps running.
+all it does is send the `destroy` transaction above (`UserServiceArgs.TRANSACTION_DESTROY`). Porter
+has no other way to stop the process, so a service that leaves the method unimplemented keeps
+running.
+
+A service is not a daemon unless you set `daemon = true`: it ends when your app's process that bound
+it dies. A daemon outlives that process, so `destroy` is the only thing that ends it.
 
 Bump `version` whenever the service code changes, so Porter replaces a running instance instead of
 reusing a stale one. Porter identifies a service by its `tag`, or by the class name when no tag is
@@ -279,6 +289,10 @@ val pm = IPackageManager.Stub.asInterface(connection.wrap(binder))
 pm.getInstalledPackages(0, 0)
 ```
 
+Each call through the wrapper blocks like any Binder call, so make it off the main thread. A refusal
+comes back in the reply, so the interface's own proxy raises it as the platform's
+`SecurityException`, not as a `PorterException`.
+
 Porter does not grant your app privileges; it re-issues the transaction you construct. Constructing
 it means speaking the system service's AIDL, and that is not in the public SDK. Interfaces like
 `android.content.pm.IPackageManager` are platform-internal, so you need compile-time stubs and, on
@@ -294,55 +308,47 @@ the user service above. It needs none of that.
 `Porter.availability(context)` distinguishes the cases behind a connection that never arrives:
 
 ```kotlin
-when (Porter.availability(this)) {
-    PorterAvailability.CONNECTED -> Unit // a connection is held and answers
-    PorterAvailability.INSTALLED_NOT_CONNECTED -> promptUser("Open Porter and start the service")
-    PorterAvailability.NOT_INSTALLED -> promptUser("Install Porter")
-    PorterAvailability.INSTALLED_UNRECOGNIZED -> promptUser("An unrecognized app owns that permission")
-    PorterAvailability.INCOMPATIBLE -> if (Porter.incompatibility?.serverTooOld == true) {
-        promptUser("Update Porter")
-    } else {
-        promptUser("This app needs an update to work with this Porter")
+lifecycleScope.launch {
+    when (val availability = Porter.availability(this@MyActivity)) {
+        PorterAvailability.Connected -> Unit // a connection is held and answers
+        PorterAvailability.InstalledNotConnected -> promptUser("Open Porter and start the service")
+        PorterAvailability.NotInstalled -> promptUser("Install Porter")
+        PorterAvailability.InstalledUnrecognized -> promptUser("An unrecognized app owns that permission")
+        is PorterAvailability.Incompatible -> if (availability.incompatibility.serverTooOld) {
+            promptUser("Update Porter")
+        } else {
+            promptUser("This app needs an update to work with this Porter")
+        }
     }
 }
 ```
 
-This reports whether a manager is installed, not whether its service is running, so
-`INSTALLED_NOT_CONNECTED` is the normal state before the user starts Porter.
-`INSTALLED_UNRECOGNIZED` means the selected backend's permission belongs to a package this SDK does
-not recognize as its manager; say so rather than naming or launching that package. `INCOMPATIBLE` means a service is running and
-answered, and the two sides share no protocol version.
+It reports whether a manager is installed, not whether its service is running, so `InstalledNotConnected` is the normal state before the user
+starts Porter. `InstalledUnrecognized` means the selected backend's permission belongs to a package
+this SDK does not recognize as its manager; say so rather than naming or launching that package.
+`Incompatible` means a service is running and answered, and the two sides share no protocol version;
+the reason travels with the answer.
 
 ## Apps with several processes
 
 The provider that receives the connection is not multiprocess, so one process gets the Binder and
 the others ask it for the connection.
 
-Call this as early as possible, in the companion object's initializer of your `Application` class,
-before any provider runs:
-
-```kotlin
-companion object {
-    init {
-        PorterApiProvider.enableMultiProcessSupport(currentProcessName == BuildConfig.APPLICATION_ID)
-    }
-}
-```
-
-Then in a process that is not the provider process:
+In every process that is not the provider process, call:
 
 ```kotlin
 PorterApiProvider.requestBinderForNonProviderProcess(context)
 ```
 
-That reads the connection through the SDK's own provider. It does not accept a Binder from a
-broadcast, so another app cannot supply one.
+That reads the connection through the SDK's own provider, off the calling thread, and the result
+arrives on `Porter.connection`. It does not accept a Binder from a broadcast, so another app cannot
+supply one. Calling it in the provider process does nothing, so one call site for every process is
+fine.
 
-A lookup that finds nothing is not retried. The provider process announces a connection only when it
-accepts a new one, so it stays quiet while it already holds a live one, and a secondary process whose
-lookup came back empty is not told again until the current connection dies and is replaced. Call
-`requestBinderForNonProviderProcess()` again when that process next needs privileged access, rather
-than waiting for a notification that may not arrive.
+The first call also starts listening: the provider process announces each connection it publishes,
+and the secondary process asks again then, and again after its connection dies. A lookup that finds
+nothing is not retried on its own, so call `requestBinderForNonProviderProcess()` again when that
+process next needs privileged access. Repeated calls only ask again; they register nothing twice.
 
 ## Before you ship
 

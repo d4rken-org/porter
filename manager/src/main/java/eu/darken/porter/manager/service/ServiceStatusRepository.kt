@@ -15,6 +15,7 @@ import eu.darken.porter.manager.utils.LOGGER
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.UserHandleCompat
 import eu.darken.porter.sdk.Porter
+import eu.darken.porter.sdk.PorterAvailability
 import eu.darken.porter.server.IPorterService
 import android.os.IBinder
 
@@ -64,7 +65,7 @@ internal class ServiceStatusRepository private constructor(private val appContex
         }
     }
 
-    private fun load(binder: IBinder?): ServiceStatus {
+    private suspend fun load(binder: IBinder?): ServiceStatus {
         if (!PorterStateMachine.instance.isRunning() || binder == null) {
             return ServiceStatus()
         }
@@ -74,7 +75,9 @@ internal class ServiceStatusRepository private constructor(private val appContex
         val connection = Porter.connection.value?.takeIf { it.binder === binder }
         val service = IPorterService.Stub.asInterface(binder)
         val uid = connection?.uid ?: service.uid
-        val protocolVersion = connection?.serverInfo?.version ?: Porter.incompatibility?.serverVersion ?: 0
+        val protocolVersion = connection?.serverInfo?.version
+            ?: (Porter.availability(appContext) as? PorterAvailability.Incompatible)?.incompatibility?.serverVersion
+            ?: 0
         val seContext = try {
             connection?.seLinuxContext ?: service.seLinuxContext
         } catch (tr: Throwable) {

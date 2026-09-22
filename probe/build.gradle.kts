@@ -57,9 +57,12 @@ dependencies {
     "terminalImplementation"("dev.rikka.shizuku:api:13.1.5")
     "terminalImplementation"("dev.rikka.shizuku:provider:13.1.5")
     "porterImplementation"(project(":sdk"))
-    // For the app-owned transaction code the probe proves is refused to a client.
+    // For the app-owned transaction code the probe proves is refused to a client, and the
+    // descriptor that call carries.
     "porterImplementation"(project(":common"))
     "bridgeImplementation"(project(":common"))
+    "porterImplementation"(project(":protocol"))
+    "bridgeImplementation"(project(":protocol"))
     // dev.rikka.shizuku:provider is deliberately absent: it ships the same
     // moe.shizuku.api.BinderContainer class as :shizuku-compat and the two do not dex together.
     "bridgeImplementation"(project(":sdk"))

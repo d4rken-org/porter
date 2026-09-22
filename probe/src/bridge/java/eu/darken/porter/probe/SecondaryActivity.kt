@@ -25,10 +25,11 @@ class SecondaryActivity : Activity() {
         status.textSize = 20f
         setContentView(status)
         report("SECONDARY STARTED")
-        report("SECONDARY AVAILABILITY " + Porter.availability(this))
-        // Registers the broadcast receiver, installs the post-death refetch hook, and fetches once.
-        PorterApiProvider.requestBinderForNonProviderProcess(this)
         scope.launch {
+            // Read before the fetch below is started, which could otherwise connect first.
+            report("SECONDARY AVAILABILITY " + availabilityToken(Porter.availability(this@SecondaryActivity)))
+            // Registers the broadcast receiver, installs the post-death refetch hook, and fetches once.
+            PorterApiProvider.requestBinderForNonProviderProcess(this@SecondaryActivity)
             var previous: PorterConnection? = null
             Porter.connection.collect { connection ->
                 if (connection == null) {
