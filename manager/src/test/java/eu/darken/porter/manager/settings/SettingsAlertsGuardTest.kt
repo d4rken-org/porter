@@ -141,6 +141,62 @@ class SettingsAlertsGuardTest {
         assertFalse(PorterSettings.watchdog)
     }
 
+    /** The activity is what a rotation destroys, so the continuation cannot live only there. */
+    @Test fun theWaitForTheNotificationSettingsSurvivesTheScreen() {
+        muted = setOf(NotificationChannels.ADB_START)
+        val state = SavedStateHandle()
+        val model = SettingsViewModel(
+            application, state,
+            alertProbe = { _, channel -> asked += channel; channel !in muted },
+            isTelevision = { false },
+            io = dispatcher,
+            rootProbe = { false },
+        )
+        model.toggle(PorterSettings.Keys.KEY_START_ON_BOOT, true)
+        settle()
+        model.awaitAlertsChoice()
+        assertTrue(model.awaitingAlerts.value)
+
+        // The same saved state, handed to the model a recreated screen would get.
+        val restored = SettingsViewModel(
+            application, state,
+            alertProbe = { _, channel -> channel !in muted },
+            isTelevision = { false },
+            io = dispatcher,
+            rootProbe = { false },
+        )
+        assertTrue(restored.awaitingAlerts.value)
+        assertEquals(PorterSettings.Keys.KEY_START_ON_BOOT, restored.pendingSetting.value)
+        muted = emptySet()
+        restored.alertsResult()
+        settle()
+        assertTrue(startOnBoot())
+        assertFalse(restored.awaitingAlerts.value)
+    }
+
+    @Test fun takingTheToggleClearsTheWaitItWasStartedFrom() {
+        muted = setOf(NotificationChannels.ADB_START)
+        val model = model()
+        model.toggle(PorterSettings.Keys.KEY_START_ON_BOOT, true)
+        settle()
+        model.awaitAlertsChoice()
+        model.applyWithoutAlerts()
+        settle()
+        assertFalse(model.awaitingAlerts.value)
+        assertNull(model.pendingSetting.value)
+    }
+
+    /** A dialog opened while a write is in flight belongs to whatever the user did next. */
+    @Test fun aWriteFinishingDoesNotCloseADialogItDidNotOpen() {
+        val model = model()
+        model.toggle(PorterSettings.Keys.KEY_WATCHDOG, true)
+        assertTrue(model.busy.value)
+        model.show("tcp")
+        settle()
+        assertEquals("tcp", model.dialog.value)
+        assertTrue(PorterSettings.watchdog)
+    }
+
     @Test fun theWatchdogAsksAboutItsOwnChannelAndNotTheCrashOne() {
         val model = model()
         model.toggle(PorterSettings.Keys.KEY_WATCHDOG, true)

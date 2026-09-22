@@ -32,6 +32,16 @@ class SettingsViewModel @JvmOverloads constructor(
     val dialog: StateFlow<String?> = savedState.getStateFlow("dialog", null)
     val pendingSetting: StateFlow<String?> = savedState.getStateFlow("pendingSetting", null)
 
+    /**
+     * Whether this screen is waiting to be returned to from the notification settings, which come
+     * back with no result. Kept here rather than in the activity: the activity is what a rotation
+     * destroys, and losing this while [pendingSetting] survives leaves a toggle that can never be
+     * finished.
+     */
+    val awaitingAlerts: StateFlow<Boolean> = savedState.getStateFlow("awaitingAlerts", false)
+
+    fun awaitAlertsChoice() { savedState["awaitingAlerts"] = true }
+
     private val bootCapable = MutableStateFlow<Boolean?>(null)
 
     private val saving = MutableStateFlow(false)
@@ -121,7 +131,12 @@ class SettingsViewModel @JvmOverloads constructor(
         return alertProbe(getApplication(), channel)
     }
 
-    fun cancelToggle() { savedState["pendingSetting"] = null; show(null) }
+    fun cancelToggle() { clearPending(); show(null) }
+
+    private fun clearPending() {
+        savedState["pendingSetting"] = null
+        savedState["awaitingAlerts"] = false
+    }
 
     /**
      * Off the main thread, because [PorterSettings.setStartOnBoot] writes to disk before it
@@ -146,7 +161,9 @@ class SettingsViewModel @JvmOverloads constructor(
                 }
             } finally {
                 saving.value = false
-                cancelToggle()
+                // Only this toggle's own state: the dialog it was started from is already gone,
+                // and whatever is on screen by now belongs to whatever the user did next.
+                clearPending()
             }
         }
     }
