@@ -23,18 +23,21 @@ Le compagnon aide les applications Shizuku existantes à trouver Porter. Porter 
 
 Pour une application qui prend directement en charge Porter, vous pouvez garder Shizuku installé. Démarrez Porter, sélectionnez-le dans l’application et acceptez la nouvelle demande. Si l’application doit redémarrer, forcez son arrêt dans les paramètres Android, puis rouvrez-la.
 
-Pour une application qui ne prend en charge que Shizuku :
+Pour une application qui ne prend en charge que Shizuku, la version FOSS inclut l’APK Porter Compatibility correspondant :
 
-La version FOSS inclut l’APK de compatibilité correspondant. Installez et démarrez Porter, puis ouvrez la configuration de compatibilité Shizuku depuis l’accueil ou les paramètres. Examinez et confirmez le remplacement. Porter arrête Shizuku et importe automatiquement les accès vérifiables. Si Porter ne peut pas arrêter le service, Porter vous demande d’arrêter le service dans Shizuku et de réessayer. Sans Shizuku installé, choisissez directement l’installation de la compatibilité. Pour une installation manuelle :
+1. Installez et démarrez Porter. Gardez Shizuku installé tant que vous n’avez pas examiné le remplacement.
+2. Ouvrez **Compatibilité Shizuku** depuis l’accueil ou depuis les **Paramètres**.
+3. Si Shizuku est installé, choisissez **Remplacer**. Confirmez **Passer à Porter**. Porter arrête Shizuku, remplace son application et reprend automatiquement les décisions d’accès éligibles. S’il ne peut pas arrêter le service, il vous demande de l’arrêter dans Shizuku et de réessayer.
+4. Sinon, choisissez **Installer automatiquement**.
+5. Revenez à l’application cliente. Acceptez l’accès si vous n’avez pas importé de décision existante. Si elle ne se connecte toujours pas, forcez son arrêt dans les paramètres Android et rouvrez-la.
 
-1. Arrêtez Shizuku et désinstallez son application de gestion. Les applications qui utilisent Shizuku peuvent rester installées.
-2. Installez Porter et l’APK de Porter Compatibility de la même version.
-3. Démarrez Porter.
-4. Forcez l’arrêt de l’application cliente dans les paramètres Android, rouvrez-la et activez son intégration Shizuku.
-5. Acceptez la demande d’accès affichée par Porter.
+Porter importe automatiquement les décisions qu’il peut vérifier auprès des applications installées et de leur accès actuel. Les décisions Porter existantes sont prioritaires. Les paramètres de l’application Shizuku et sa configuration d’association ne sont pas importés. Si la base de données des accès est illisible, vous pouvez continuer et autoriser les applications à nouveau. Porter enregistre les décisions d’accès éligibles avant de supprimer Shizuku ; si l’installation échoue, réessayez ou utilisez **Manuel**, puis **Importer les autorisations enregistrées**.
 
-La configuration intégrée importe automatiquement les décisions d’accès vérifiables. Les choix existants dans Porter sont conservés. Les paramètres et l’appairage de Shizuku ne sont pas transférés. Examinez la confirmation du remplacement avant la désinstallation. Si l’installation échoue, les décisions restent enregistrées pour réessayer.
+Le remplacement intégré est disponible depuis l’utilisateur Android principal. Si Shizuku est installé pour un autre utilisateur ou profil, traitez cette installation séparément. Porter ne supprime pas automatiquement les applications d’un autre utilisateur.
 
+L’APK du compagnon reste téléchargeable séparément depuis la même version. Pour une installation manuelle, arrêtez et désinstallez Shizuku, installez Porter Compatibility, puis démarrez Porter. Utilisez le remplacement intégré de Porter pour transférer les décisions d’accès éligibles ; ouvrir la boîte de dialogue de remplacement ne suffit pas à enregistrer un import. Les restrictions d’installation de l’appareil peuvent aussi s’appliquer à l’installateur intégré ; l’action **Manuel** ouvre l’installateur d’Android.
+
+Une fois installée, la page d’accueil affiche la version de l’application de compatibilité et le nombre d’applications installées qui passent par elle. Touchez sa carte pour voir les détails, réinstaller la copie incluse ou la désinstaller. Porter tente d’abord de désinstaller via son service et ouvre le désinstallateur d’Android en cas d’échec. La retirer interrompt les applications qui ont besoin de la compatibilité ; celles qui prennent directement en charge Porter continuent de fonctionner. L’écran de compatibilité vérifie automatiquement les changements tant qu’il est ouvert.
 ## Porter et Shizuku peuvent-ils fonctionner ensemble ?
 {: #can-porter-and-shizuku-run-together }
 

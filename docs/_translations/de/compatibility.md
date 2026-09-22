@@ -23,18 +23,21 @@ Die Begleit-App hilft bestehenden Shizuku-Apps, Porter zu finden. Porter selbst 
 
 Für eine App mit direkter Porter-Unterstützung kannst du Shizuku installiert lassen. Starte Porter, wähle es in der App aus und bestätige die neue Anfrage. Falls die App einen Neustart verlangt, nutze **Beenden erzwingen** in den Android-Einstellungen und öffne sie erneut.
 
-Für eine App, die nur Shizuku unterstützt:
+Für eine App, die nur Shizuku unterstützt, enthält die FOSS-Version die passende Porter-Compatibility-APK:
 
-Die FOSS-Version enthält die passende Kompatibilitäts-App. Installiere und starte zuerst Porter. Öffne **Shizuku-Kompatibilität** auf der Startseite oder in den Einstellungen. Prüfe den Wechsel und bestätige **Zu Porter wechseln**. Porter beendet Shizuku und übernimmt überprüfbare Zugriffsentscheidungen automatisch. Falls Porter den Dienst nicht beenden kann, fordert Porter dich auf, den Dienst in Shizuku zu beenden und es erneut zu versuchen. Ohne Shizuku wählst du direkt die Installation der Kompatibilitäts-App. Für die manuelle Installation:
+1. Installiere und starte Porter. Lass Shizuku installiert, bis du den Wechsel geprüft hast.
+2. Öffne **Shizuku-Kompatibilität** auf der Startseite oder in den **Einstellungen**.
+3. Ist Shizuku installiert, wähle **Ersetzen**. Bestätige **Zu Porter wechseln**. Porter beendet Shizuku, ersetzt dessen App und übernimmt geeignete Zugriffsentscheidungen automatisch. Kann Porter den Dienst nicht beenden, fordert es dich auf, ihn in Shizuku zu beenden und es erneut zu versuchen.
+4. Andernfalls wähle **Automatisch installieren**.
+5. Kehre zur Client-App zurück. Bestätige den Zugriff, falls du keine bestehende Entscheidung importiert hast. Kann die App weiterhin keine Verbindung herstellen, nutze **Beenden erzwingen** in den Android-Einstellungen und öffne sie erneut.
 
-1. Stoppe Shizuku und deinstalliere dessen Verwaltungs-App. Die Apps, die du mit Shizuku nutzt, können installiert bleiben.
-2. Installiere Porter und die Porter-Compatibility-APK aus derselben Veröffentlichung.
-3. Starte Porter.
-4. Nutze für die betreffende App **Beenden erzwingen** in den Android-Einstellungen, öffne sie erneut und aktiviere ihre Shizuku-Unterstützung.
-5. Bestätige die Zugriffsanfrage, die Porter anzeigt.
+Porter übernimmt automatisch die Entscheidungen, die sich gegen installierte Apps und deren aktuellen Zugriff prüfen lassen. Bestehende Porter-Entscheidungen haben Vorrang. Shizukus App-Einstellungen und Kopplung werden nicht übernommen. Lässt sich die Zugriffsdatenbank nicht lesen, kannst du fortfahren und die Apps erneut freigeben. Porter sichert geeignete Zugriffsentscheidungen, bevor Shizuku entfernt wird; schlägt die Installation fehl, versuche es erneut oder nutze **Manuell** und danach **Gespeicherte Freigaben importieren**.
 
-Die integrierte Einrichtung übernimmt überprüfbare Zugriffsentscheidungen automatisch. Bestehende Porter-Entscheidungen bleiben erhalten. Shizukus App-Einstellungen und Kopplung werden nicht übertragen. Prüfe die Bestätigung des Wechsels vor der Deinstallation. Bei einem Installationsfehler bleiben die Zugriffsentscheidungen zum erneuten Versuch gespeichert.
+Der integrierte Wechsel steht im primären Android-Nutzer zur Verfügung. Ist Shizuku für einen anderen Nutzer oder ein anderes Profil installiert, kümmere dich getrennt um diese Installation. Porter entfernt Apps anderer Nutzer nicht automatisch.
 
+Die Begleit-APK bleibt als separater Download derselben Veröffentlichung verfügbar. Für die manuelle Installation beendest und deinstallierst du Shizuku, installierst Porter Compatibility und startest Porter. Nutze Porters integrierten Wechsel, um geeignete Zugriffsentscheidungen zu übertragen; das bloße Öffnen des Wechsel-Dialogs speichert keinen Import. Installationsbeschränkungen des Geräts können auch für den integrierten Installer gelten; die Aktion **Manuell** öffnet den Android-Installer.
+
+Nach der Installation zeigt die Startseite die Version der Kompatibilitäts-App und wie viele installierte Apps über sie verbunden sind. Tippe auf ihre Karte, um Details zu sehen, die enthaltene Kopie erneut zu installieren oder sie zu deinstallieren. Porter versucht zuerst, über seinen Dienst zu deinstallieren, und öffnet den Android-Deinstaller, falls das fehlschlägt. Das Entfernen unterbricht Apps, die Kompatibilitätsunterstützung brauchen; Apps mit direkter Porter-Unterstützung laufen weiter. Die Kompatibilitätsseite prüft Änderungen automatisch, solange sie geöffnet ist.
 ## Können Porter und Shizuku gleichzeitig laufen?
 {: #can-porter-and-shizuku-run-together }
 

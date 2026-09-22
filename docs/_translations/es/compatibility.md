@@ -23,18 +23,21 @@ El complemento ayuda a las apps existentes de Shizuku a encontrar Porter. Porter
 
 Para una app con soporte directo de Porter, puedes mantener Shizuku instalado. Inicia Porter, selecciónalo en la app y aprueba la nueva solicitud. Si la app pide reiniciarse, fuerza su detención en los ajustes de Android y ábrela de nuevo.
 
-Para una app que solo admite Shizuku:
+Para una app que solo admite Shizuku, la versión FOSS incluye el APK de Porter Compatibility correspondiente:
 
-La versión FOSS incluye el APK de compatibilidad correspondiente. Instala e inicia Porter y abre la configuración de compatibilidad con Shizuku desde el inicio o los ajustes. Revisa y confirma el reemplazo. Porter detiene Shizuku e importa automáticamente los accesos verificables. Si Porter no puede detener el servicio, Porter te pedirá que lo detengas desde Shizuku y lo intentes de nuevo. Si Shizuku no está instalado, elige directamente instalar la compatibilidad. Para la instalación manual:
+1. Instala e inicia Porter. Mantén Shizuku instalado hasta que hayas revisado el reemplazo.
+2. Abre **Compatibilidad con Shizuku** desde la pantalla de inicio o desde **Ajustes**.
+3. Si Shizuku está instalado, elige **Reemplazar**. Confirma **Cambiar a Porter**. Porter detiene Shizuku, sustituye su app y transfiere automáticamente las decisiones de acceso aptas. Si Porter no puede detener el servicio, te pide que lo detengas en Shizuku y lo intentes de nuevo.
+4. En caso contrario, elige **Instalar automáticamente**.
+5. Vuelve a la app cliente. Aprueba el acceso si no importaste una decisión existente. Si la app sigue sin conectarse, fuerza su detención en los ajustes de Android y ábrela de nuevo.
 
-1. Detén Shizuku y desinstala su app de gestión. Las apps que usas con Shizuku pueden seguir instaladas.
-2. Instala Porter y el APK de Porter Compatibility de la misma versión.
-3. Inicia Porter.
-4. Fuerza la detención de la app cliente en los ajustes de Android, ábrela de nuevo y activa su integración con Shizuku.
-5. Aprueba la solicitud de acceso que muestra Porter.
+Porter importa automáticamente las decisiones que puede comprobar frente a las apps instaladas y su acceso actual. Las decisiones existentes de Porter tienen prioridad. Los ajustes de la app de Shizuku y su configuración de vinculación no se importan. Si no se puede leer la base de datos de accesos, puedes continuar y autorizar las apps de nuevo. Porter guarda las decisiones de acceso aptas antes de eliminar Shizuku; si la instalación falla, reinténtalo o usa **Manual** y luego **Importar autorizaciones guardadas**.
 
-La configuración integrada importa automáticamente las decisiones de acceso que se puedan verificar. Se conservan las decisiones existentes de Porter. No se transfieren los ajustes ni el emparejamiento de Shizuku. Revisa la confirmación del reemplazo antes de desinstalar. Si la instalación falla, las decisiones quedan guardadas para reintentar.
+El reemplazo integrado está disponible desde el usuario principal de Android. Si Shizuku está instalado para otro usuario o perfil, resuelve esa instalación por separado. Porter no elimina automáticamente las apps de otro usuario.
 
+El APK del complemento sigue disponible como descarga independiente de la misma versión. Para la instalación manual, detén y desinstala Shizuku, instala Porter Compatibility e inicia Porter. Usa el reemplazo integrado de Porter para transferir las decisiones de acceso aptas; abrir el diálogo de reemplazo por sí solo no guarda ninguna importación. Las restricciones de instalación del dispositivo también pueden afectar al instalador integrado; la acción **Manual** abre el instalador de Android.
+
+Una vez instalado, la pantalla de inicio muestra la versión de la app de compatibilidad y cuántas apps instaladas se conectan a través de ella. Toca su tarjeta para ver detalles, reinstalar la copia incluida o desinstalarla. Porter intenta desinstalar primero mediante su servicio y abre el desinstalador de Android si eso falla. Quitarla interrumpe las apps que necesitan compatibilidad; las apps con soporte directo de Porter siguen funcionando. La pantalla de compatibilidad comprueba los cambios automáticamente mientras está abierta.
 ## ¿Pueden ejecutarse Porter y Shizuku a la vez?
 {: #can-porter-and-shizuku-run-together }
 
