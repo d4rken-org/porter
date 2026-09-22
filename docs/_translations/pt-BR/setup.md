@@ -17,10 +17,12 @@ Baixe o Porter no [GitHub Releases](https://github.com/d4rken-org/porter/release
 2. Abra o APK no dispositivo. Se o Android solicitar, permita que seu navegador ou gerenciador de arquivos instale apps dessa fonte.
 3. Abra o Porter.
 
-Para apps com suporte direto ao Porter, basta instalar o Porter. Se um app só oferece suporte ao Shizuku, instale também o **Porter Compatibility** da mesma versão. Desinstale o Shizuku primeiro: o complemento não pode ser instalado junto com ele. Mantenha o complemento instalado enquanto usar esses apps com o Porter. Consulte o [guia de compatibilidade](/compatibility).
+Para apps com suporte direto ao Porter, basta instalar o Porter. Se um app só oferece suporte ao Shizuku, abra **Compatibilidade com o Shizuku** na versão FOSS para instalar o complemento incluído e revisar a substituição e a importação antes de remover o Shizuku. O APK **Porter Compatibility** separado da mesma versão também continua disponível. Na instalação manual, desinstale o Shizuku primeiro: o complemento não pode ser instalado junto com ele. Mantenha o complemento instalado enquanto usar esses apps com o Porter. Consulte o [guia de compatibilidade](/compatibility).
 
 ## Escolha como iniciar
 {: #choose-how-to-start }
+
+Os métodos de inicialização aparecem diretamente na tela inicial enquanto o serviço está parado.
 
 | Seu dispositivo | Método de inicialização |
 | --- | --- |
@@ -46,6 +48,13 @@ O Porter deixa a depuração do Android ativada quando para. Você pode desativ�
 Normalmente, o pareamento só precisa ser feito uma vez. Iniciar o serviço é uma etapa separada, necessária novamente após reiniciar o dispositivo. Se o Android esquecer o pareamento, repita essas etapas.
 
 Se você escolheu o diálogo dentro do app em **Configurações**, **Inicialização**, **Método de pareamento**, aguarde o diálogo do Porter encontrar o serviço e digite o código ali. Se ele pedir uma porta, use a porta de pareamento do diálogo de código do Android, não a porta de conexão da tela principal de depuração por Wi-Fi.
+
+### Android TV
+{: #android-tv }
+
+Em uma TV com depuração por Wi-Fi, escolha **Pareamento** no Porter e siga as instruções para ativar o serviço de acessibilidade de pareamento. Em até um minuto, abra as **Opções do desenvolvedor**, **Depuração por Wi-Fi** e depois **Parear dispositivo com código de pareamento**. Mantenha esse diálogo aberto enquanto o Porter lê o código e conclui o pareamento.
+
+O Porter mostra um painel de progresso sobre a tela do código de pareamento. Deixe essa tela aberta até o resultado do pareamento aparecer. Em seguida, o Porter abre a tela de resultado e desativa o serviço de acessibilidade de pareamento. Essa tela confirma quando o serviço está desativado, independentemente de o pareamento ter funcionado. Escolha **Iniciar** após um resultado positivo ou **Tentar novamente** após uma falha ou tempo esgotado. Se o Porter não abrir sozinho, abra-o para ver o resultado. Para controles de instalação que não podem ser selecionados pelo controle remoto, consulte os [avisos de instalação na TV](/troubleshooting#a-tv-installation-warning-cannot-be-selected-with-the-remote).
 
 ## Com um computador
 {: #with-a-computer }

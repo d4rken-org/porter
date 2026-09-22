@@ -13,7 +13,7 @@ Porter mendukung API Shizuku yang digunakan aplikasi kompatibel. Kebutuhan penda
 | Dukungan aplikasi | Yang perlu dipasang |
 | --- | --- |
 | Porter langsung | Porter |
-| Shizuku saja | Porter dan Porter Compatibility; hapus Shizuku dahulu |
+| Shizuku saja | Porter dan Porter Compatibility; Porter menggantikan Shizuku jika terpasang |
 | Keduanya, dengan pemilih layanan | Porter, lalu pilih Porter di aplikasi |
 
 Pendamping membantu aplikasi Shizuku menemukan Porter. Porter tetap menjalankan layanan, menampilkan permintaan izin, dan mengelola persetujuan. Biarkan pendamping terpasang saat menggunakan aplikasi yang memerlukannya.

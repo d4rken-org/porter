@@ -17,10 +17,12 @@ Unduh Porter dari [GitHub Releases](https://github.com/d4rken-org/porter/release
 2. Buka APK di perangkat. Jika diminta Android, izinkan browser atau pengelola file memasang aplikasi dari sumber tersebut.
 3. Buka Porter.
 
-Untuk aplikasi yang mendukung Porter secara langsung, Porter saja sudah cukup. Jika hanya mendukung Shizuku, pasang juga **Porter Compatibility** dari rilis yang sama. Hapus Shizuku terlebih dahulu: pendamping tidak dapat dipasang bersamaan dengannya. Biarkan pendamping terpasang selama menggunakan aplikasi tersebut dengan Porter. Lihat [panduan kompatibilitas](/compatibility).
+Untuk aplikasi yang mendukung Porter secara langsung, Porter saja sudah cukup. Jika hanya mendukung Shizuku, buka **Kompatibilitas Shizuku** pada build FOSS untuk memasang pendamping yang disertakan dan meninjau penggantian beserta impornya sebelum Shizuku dihapus. APK **Porter Compatibility** terpisah dari rilis yang sama juga tetap tersedia. Untuk pemasangan manual, hapus Shizuku terlebih dahulu: pendamping tidak dapat dipasang bersamaan dengannya. Biarkan pendamping terpasang selama menggunakan aplikasi tersebut dengan Porter. Lihat [panduan kompatibilitas](/compatibility).
 
 ## Memilih cara menjalankan
 {: #choose-how-to-start }
+
+Metode menjalankan muncul langsung di layar beranda selama layanan berhenti.
 
 | Perangkat Anda | Metode |
 | --- | --- |
@@ -46,6 +48,13 @@ Porter membiarkan setelan proses debug Android aktif saat berhenti. Anda dapat m
 Penyambungan biasanya cukup dilakukan sekali. Menjalankan layanan adalah langkah terpisah yang harus diulang setelah perangkat dimulai ulang. Jika Android melupakan penyambungan, ulangi langkah-langkah ini.
 
 Jika Anda memilih dialog dalam aplikasi di **Setelan**, **Memulai Porter**, **Metode penyambungan**, tunggu sampai dialog Porter menemukan layanan penyambungan, lalu masukkan kode di sana. Jika diminta port, gunakan port penyambungan dari dialog kode Android, bukan port koneksi di layar utama proses debug nirkabel.
+
+### Android TV
+{: #android-tv }
+
+Pada TV dengan proses debug nirkabel, pilih **Penyambungan** di Porter dan ikuti petunjuk untuk mengaktifkan layanan aksesibilitas penyambungan. Dalam satu menit, buka **Opsi developer**, **Proses debug nirkabel**, lalu **Sambungkan perangkat dengan kode penyambungan**. Biarkan dialog itu terbuka selagi Porter membaca kode dan menyelesaikan penyambungan.
+
+Porter menampilkan panel progres di atas layar kode penyambungan. Biarkan layar tersebut terbuka sampai hasil penyambungan muncul. Setelah itu Porter membuka layar hasil dan menonaktifkan layanan aksesibilitas penyambungan. Layar hasil memastikan kapan layanan tersebut nonaktif, terpisah dari berhasil atau tidaknya penyambungan. Pilih **Mulai** setelah berhasil, atau **Coba lagi** setelah kegagalan atau waktu habis. Jika Porter tidak terbuka otomatis, buka aplikasinya untuk melihat hasilnya. Untuk kontrol pemasangan yang tidak dapat dipilih dengan remote, lihat [peringatan pemasangan di TV](/troubleshooting#a-tv-installation-warning-cannot-be-selected-with-the-remote).
 
 ## Dengan komputer
 {: #with-a-computer }

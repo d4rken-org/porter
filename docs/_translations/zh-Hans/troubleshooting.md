@@ -29,6 +29,12 @@ description: 使用调试访问时，设备重启后需要重新启动 Porter，
 - 在 Porter 应用内对话框中输入时，请复制配对码对话框中的配对端口，而不是无线调试主界面的连接端口。
 - 如果 VPN 或本地网络限制阻止设备发现，请尝试允许设备互相通信的网络。
 
+如果配对码被拒绝，请在通知中选择**重试**。如果通知消失或仍显示旧的配对码，请返回 Porter 的**配对**并选择**重新开始配对**。关闭 Android 的旧配对码对话框，打开新的对话框，然后输入新的配对码。无需清除 Porter 的缓存或应用数据。
+
+在 Android TV 上，无论配对成功、失败还是超时，Porter 都会显示结果。失败后请选择**重试**；如有提示，请重新启用配对无障碍服务。如果 Porter 没有自动打开，请手动打开以查看已保存的结果。配对成功后仍需单独执行**启动**这一步。
+
+新的配对会在 Android 的已配对设备列表中显示为 **Porter**。已有条目可能仍显示为 **shizuku**，直到你删除该条目并重新配对。更改显示名称无需替换已保存的密钥，现有配对可以继续使用。该名称与 Porter 应用列表中的 Shizuku API 标记无关。
+
 如果无线调试不可用或不稳定，请[使用电脑启动](/setup#with-a-computer)。
 
 ## 电脑无法找到设备
@@ -61,9 +67,24 @@ description: 使用调试访问时，设备重启后需要重新启动 Porter，
 ## Android 无法安装 APK
 {: #android-wont-install-an-apk }
 
-如果安装的是 **Porter Compatibility**，请先卸载 Shizuku。即使 Android 识别到相同的应用身份，兼容应用也无法覆盖更新签名不同的 Shizuku。
+如果你手动安装独立的 **Porter Compatibility** APK，请先卸载 Shizuku。即使 Android 识别到相同的应用身份，兼容应用也无法覆盖更新签名不同的 Shizuku。Porter 的集成替换会替你卸载 Shizuku。
 
 对于 Porter 本身，旧开发版本的签名可能与公开发布版本不同。Android 无法将一个覆盖安装到另一个上。卸载旧版本也会删除应用数据，请先记录你的设置。然后从所需来源重新安装，并重新授权应用。
+
+## 电视上的安装警告无法用遥控器选中
+{: #a-tv-installation-warning-cannot-be-selected-with-the-remote }
+
+Play 保护机制的警告及其**详细了解**或**仍然安装**按钮属于 Android 安装程序。Porter 无法改变这些按钮在遥控器下的焦点行为，而且仅凭该警告也无法说明 Google 标记某个 APK 的原因。
+
+请确认 APK 来自 [Porter 发布页面](https://github.com/d4rken-org/porter/releases)。如果你在阅读警告后决定继续，使用 USB 或蓝牙鼠标或许可以选中这些按钮。如果你已有通往该电视的已授权 ADB 连接，也可以从那台电脑安装已下载的 APK：
+
+```sh
+adb -s TV_SERIAL install -r /path/to/porter-compat.apk
+```
+
+请将 `TV_SERIAL` 替换为 `adb devices` 中该电视对应的条目，并使用实际下载的 APK 路径。Android 仍可能阻止安装或要求确认。这并不能修复 Play 保护机制的按钮操作，也不保证系统允许安装。
+
+如果安装仍被阻止，请报告警告的准确文字、电视型号、Android 版本和 Porter Compatibility 版本。直接支持 Porter 的应用不需要兼容 APK。
 
 ## 已授权，但操作仍失败
 {: #access-is-allowed-but-an-operation-still-fails }
@@ -77,7 +98,9 @@ description: 使用调试访问时，设备重启后需要重新启动 Porter，
 ## 运行时显示的版本不同
 {: #the-version-shown-while-running-is-different }
 
-**设置**中的**版本**条目显示 Porter 应用版本。点击正在运行的服务卡片，可查看已安装的应用版本、运行中的 Porter 服务版本以及兼容的 Shizuku API 版本。API 版本用于描述兼容性，并非 Porter 的发布版本号。如果更新后 Porter 要求重启服务，请停止后重新启动。
+**设置**中的**版本**条目显示 Porter 应用版本。点击服务卡片可打开**服务**界面，其中会显示已安装应用和运行中服务的版本名称、版本号和构建 ID，以及兼容的 Shizuku API 版本。若要分享诊断信息，请在**设置**、**帮助与支持**中[录制调试日志](#report-a-problem)。API 版本用于描述兼容性，并非 Porter 的发布版本号。构建不同时会显示**有可用的服务更新**。兼容的功能仍可使用，打开 Porter 也不会重启服务。请在 Android 主用户下于服务界面点击**更新服务**并确认，即可用运行中服务的权限应用已安装的构建，无需电脑，也无需重新建立无线调试连接。已连接的应用会短暂断开，授权会保留。如果替换失败，请在旧服务仍在运行时使用**重试更新**，或用你惯用的方式重新启动服务。
+
+在**设置**中，**自动更新服务**可在 Porter 应用更新后检查是否有构建不同的服务正在运行。该选项默认关闭。Android 可能延迟后台任务，手动更新按钮始终可用。已停止的服务会保持停止。失败或中断的更新会显示在主屏幕上，启用看门狗时也是如此。
 
 ## 报告问题
 {: #report-a-problem }

@@ -13,7 +13,7 @@ description: يدعم Porter واجهات Shizuku البرمجية التي تس
 | ما يدعمه تطبيقك | ما يجب تثبيته |
 | --- | --- |
 | Porter مباشرة | Porter |
-| Shizuku فقط | Porter وPorter Compatibility؛ أزل Shizuku أولًا |
+| Shizuku فقط | Porter وPorter Compatibility؛ يحل Porter محل Shizuku إن كان مثبتًا |
 | كلاهما مع اختيار الخدمة | Porter، ثم اختر Porter داخل التطبيق |
 
 يساعد المرافق تطبيقات Shizuku الحالية في العثور على Porter. يظل Porter مسؤولًا عن تشغيل الخدمة وعرض طلبات الإذن وإدارة الموافقات. أبقِ المرافق مثبّتًا ما دمت تستخدم تطبيقات تحتاج إليه.

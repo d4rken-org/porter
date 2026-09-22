@@ -13,7 +13,7 @@ Porter admite las API de Shizuku que utilizan las apps compatibles. La necesidad
 | Qué admite tu app | Qué instalar |
 | --- | --- |
 | Porter directamente | Porter |
-| Solo Shizuku | Porter y Porter Compatibility; elimina Shizuku primero |
+| Solo Shizuku | Porter y Porter Compatibility; Porter sustituye a Shizuku si está instalado |
 | Ambos, con selector de servicio | Porter; después selecciona Porter en la app |
 
 El complemento ayuda a las apps existentes de Shizuku a encontrar Porter. Porter sigue iniciando el servicio, mostrando las solicitudes de permiso y gestionando las autorizaciones. Mantén el complemento instalado mientras uses apps que lo necesiten.

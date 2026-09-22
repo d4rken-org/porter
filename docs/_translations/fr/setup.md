@@ -17,10 +17,12 @@ Téléchargez Porter depuis [GitHub Releases](https://github.com/d4rken-org/port
 2. Ouvrez l’APK sur votre appareil. Si Android le demande, autorisez votre navigateur ou gestionnaire de fichiers à installer des applications depuis cette source.
 3. Ouvrez Porter.
 
-Porter suffit pour les applications qui le prennent directement en charge. Pour une application qui ne prend en charge que Shizuku, installez aussi **Porter Compatibility** de la même version. Désinstallez d’abord Shizuku : le compagnon ne peut pas coexister avec lui. Gardez le compagnon installé tant que vous utilisez ces applications avec Porter. Consultez le [guide de compatibilité](/compatibility).
+Porter suffit pour les applications qui le prennent directement en charge. Pour une application qui ne prend en charge que Shizuku, ouvrez **Compatibilité Shizuku** dans la version FOSS afin d’installer le compagnon inclus et d’examiner le remplacement et l’import avant de désinstaller Shizuku. L’APK **Porter Compatibility** distinct de la même version reste disponible. Pour une installation manuelle, désinstallez d’abord Shizuku : le compagnon ne peut pas coexister avec lui. Gardez le compagnon installé tant que vous utilisez ces applications avec Porter. Consultez le [guide de compatibilité](/compatibility).
 
 ## Choisir le mode de démarrage
 {: #choose-how-to-start }
+
+Les modes de démarrage apparaissent directement sur l’écran d’accueil tant que le service est arrêté.
 
 | Votre appareil | Mode de démarrage |
 | --- | --- |
@@ -46,6 +48,13 @@ Lorsque Porter s’arrête, il laisse les paramètres de débogage Android activ
 L’association n’est normalement nécessaire qu’une fois. Le démarrage du service est une étape distincte, à répéter après chaque redémarrage de l’appareil. Si Android oublie l’association, recommencez ces étapes.
 
 Si vous avez choisi la boîte de dialogue intégrée dans **Paramètres**, **Démarrage**, **Méthode d’association**, attendez que le dialogue de Porter détecte le service, puis saisissez-y le code. S’il demande un port, utilisez le port d’association du dialogue de code d’Android, pas le port de connexion de l’écran principal du débogage sans fil.
+
+### Android TV
+{: #android-tv }
+
+Sur un téléviseur avec le débogage sans fil, choisissez **Association** dans Porter et suivez les instructions pour activer son service d’accessibilité d’association. Dans la minute qui suit, ouvrez les **Options pour les développeurs**, **Débogage sans fil**, puis **Associer l’appareil avec un code d’association**. Gardez cette boîte de dialogue ouverte pendant que Porter lit le code et termine l’association.
+
+Porter affiche un panneau de progression par-dessus l’écran du code d’association. Laissez cet écran ouvert jusqu’à l’affichage du résultat. Porter ouvre ensuite son écran de résultat et désactive son service d’accessibilité d’association. Cet écran confirme la désactivation du service, indépendamment de la réussite de l’association. Choisissez **Démarrer** après une réussite, ou **Réessayer** après un échec ou un délai dépassé. Si Porter ne s’ouvre pas automatiquement, ouvrez-le pour voir le résultat. Pour les commandes d’installation impossibles à sélectionner avec la télécommande, voir les [avertissements d’installation sur téléviseur](/troubleshooting#a-tv-installation-warning-cannot-be-selected-with-the-remote).
 
 ## Avec un ordinateur
 {: #with-a-computer }

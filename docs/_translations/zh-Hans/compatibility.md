@@ -13,7 +13,7 @@ Porter 支持兼容应用使用的 Shizuku API。是否需要可选的兼容应�
 | 应用支持的服务 | 需要安装 |
 | --- | --- |
 | 直接支持 Porter | Porter |
-| 仅支持 Shizuku | Porter 和 Porter Compatibility；先卸载 Shizuku |
+| 仅支持 Shizuku | Porter 和 Porter Compatibility；若已安装 Shizuku，Porter 会将其替换 |
 | 同时支持两者，并可选择服务 | Porter，然后在应用内选择 Porter |
 
 兼容应用帮助现有 Shizuku 应用找到 Porter。启动服务、显示权限请求和管理授权仍由 Porter 负责。使用需要兼容应用的客户端时，请保持兼容应用已安装。

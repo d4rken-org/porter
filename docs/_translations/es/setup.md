@@ -17,10 +17,12 @@ Descarga Porter desde [GitHub Releases](https://github.com/d4rken-org/porter/rel
 2. Abre el APK en tu dispositivo. Si Android lo solicita, permite que tu navegador o gestor de archivos instale apps de esta fuente.
 3. Abre Porter.
 
-Para las apps que admiten Porter directamente, basta con Porter. Si una app solo admite Shizuku, instala también **Porter Compatibility** de la misma versión. Desinstala Shizuku primero: el complemento no puede instalarse junto a él. Mantén el complemento instalado mientras uses esas apps con Porter. Consulta la [guía de compatibilidad](/compatibility).
+Para las apps que admiten Porter directamente, basta con Porter. Si una app solo admite Shizuku, abre **Compatibilidad con Shizuku** en la versión FOSS para instalar el complemento incluido y revisar el reemplazo y la importación antes de desinstalar Shizuku. El APK independiente de **Porter Compatibility** de la misma versión también está disponible. Para la instalación manual, desinstala Shizuku primero: el complemento no puede instalarse junto a él. Mantén el complemento instalado mientras uses esas apps con Porter. Consulta la [guía de compatibilidad](/compatibility).
 
 ## Elige cómo iniciarlo
 {: #choose-how-to-start }
+
+Los métodos de inicio aparecen directamente en la pantalla de inicio mientras el servicio está detenido.
 
 | Tu dispositivo | Método de inicio |
 | --- | --- |
@@ -46,6 +48,13 @@ Porter deja activados los ajustes de depuración de Android cuando se detiene. P
 Normalmente solo necesitas vincular el dispositivo una vez. Iniciar el servicio es un paso independiente que debes repetir tras reiniciar el dispositivo. Si Android olvida la vinculación, repite estos pasos.
 
 Si seleccionaste el diálogo dentro de la app en **Ajustes**, **Inicio**, **Método de vinculación**, espera a que el diálogo de Porter descubra el servicio e introduce allí el código. Si solicita un puerto, usa el puerto de vinculación del diálogo de código de Android, no el puerto de conexión de la pantalla principal de depuración inalámbrica.
+
+### Android TV
+{: #android-tv }
+
+En un televisor con depuración inalámbrica, elige **Vinculación** en Porter y sigue las instrucciones para activar su servicio de accesibilidad de vinculación. Antes de un minuto, abre **Opciones para desarrolladores**, **Depuración inalámbrica** y luego **Emparejar dispositivo con código de sincronización**. Mantén ese diálogo abierto mientras Porter lee el código y completa la vinculación.
+
+Porter muestra un panel de progreso sobre la pantalla del código de vinculación. Déjala abierta hasta que aparezca el resultado de la vinculación. Después Porter abre su pantalla de resultado y desactiva su servicio de accesibilidad de vinculación. Esa pantalla confirma cuándo el servicio está desactivado, con independencia de si la vinculación funcionó. Elige **Iniciar** tras un resultado correcto, o **Reintentar** tras un fallo o si se agota el tiempo. Si Porter no se abre automáticamente, ábrelo para ver el resultado. Para los controles de instalación que no se pueden seleccionar con el mando, consulta las [advertencias de instalación en el televisor](/troubleshooting#a-tv-installation-warning-cannot-be-selected-with-the-remote).
 
 ## Con un ordenador
 {: #with-a-computer }

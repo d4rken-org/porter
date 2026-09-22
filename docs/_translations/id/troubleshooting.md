@@ -29,6 +29,12 @@ Mulai otomatis tetap bergantung pada Android yang menyediakan akses debug dan me
 - Dalam dialog Porter, salin port penyambungan dari dialog kode, bukan port koneksi di layar utama proses debug nirkabel.
 - Jika VPN atau pembatasan jaringan lokal menghalangi penemuan, coba jaringan yang mengizinkan komunikasi antarperangkat.
 
+Jika sebuah kode ditolak, pilih **Coba lagi** di notifikasi. Jika notifikasinya hilang atau masih menampilkan kode lama, kembali ke **Penyambungan** di Porter lalu pilih **Mulai ulang penyambungan**. Tutup dialog kode lama Android, buka yang baru, lalu masukkan kode barunya. Cache atau data aplikasi Porter tidak perlu dihapus.
+
+Di Android TV, Porter menampilkan hasil ketika penyambungan berhasil, gagal, atau kehabisan waktu. Pilih **Coba lagi** setelah kegagalan; aktifkan kembali layanan aksesibilitas penyambungan jika diminta. Jika Porter tidak terbuka otomatis, buka aplikasinya untuk melihat hasil yang tersimpan. Setelah penyambungan berhasil, masih ada langkah **Mulai** yang terpisah.
+
+Penyambungan baru muncul sebagai **Porter** di daftar perangkat tersambung milik Android. Entri lama dapat tetap bernama **shizuku** sampai entri itu dilupakan dan penyambungan diulang. Mengganti label yang ditampilkan tidak mengharuskan kunci tersimpan diganti, dan penyambungan yang ada dapat terus berfungsi. Label ini terpisah dari lencana API Shizuku di daftar aplikasi Porter.
+
 Jika proses debug nirkabel tidak tersedia atau tidak andal, [jalankan lewat komputer](/setup#with-a-computer).
 
 ## Komputer tidak menemukan perangkat
@@ -61,9 +67,24 @@ Jika memakai pendamping, kedua APK Porter harus berasal dari sumber rilis yang s
 ## Android menolak memasang APK
 {: #android-wont-install-an-apk }
 
-Untuk memasang **Porter Compatibility**, hapus Shizuku dahulu. Pendamping tidak dapat memperbarui Shizuku dengan tanda tangan berbeda, meskipun Android melihat identitas aplikasi yang sama.
+Jika APK **Porter Compatibility** terpisah dipasang secara manual, hapus Shizuku dahulu. Pendamping tidak dapat memperbarui Shizuku dengan tanda tangan berbeda, meskipun Android melihat identitas aplikasi yang sama. Penggantian terintegrasi Porter menghapus Shizuku untuk Anda.
 
 Untuk Porter sendiri, build pengembangan lama mungkin memiliki tanda tangan berbeda dari rilis publik. Android tidak dapat memasang salah satunya di atas yang lain. Menghapus pemasangan lama juga menghapus data aplikasi; catat pengaturan sebelum melakukannya. Pasang ulang dari sumber yang diinginkan dan izinkan aplikasi kembali.
+
+## Peringatan pemasangan di TV tidak dapat dipilih dengan remote
+{: #a-tv-installation-warning-cannot-be-selected-with-the-remote }
+
+Peringatan Play Protect beserta tombol **Detail selengkapnya** atau **Tetap pasang** adalah milik pemasang Android. Porter tidak dapat mengubah perilaku fokus remote pada tombol tersebut, dan peringatan itu sendiri tidak menjelaskan alasan Google menandai sebuah APK.
+
+Pastikan APK berasal dari [halaman rilis Porter](https://github.com/d4rken-org/porter/releases). Jika Anda memutuskan melanjutkan setelah membaca peringatannya, mouse USB atau Bluetooth mungkin memungkinkan tombol tersebut dipilih. Jika sudah ada koneksi ADB yang diotorisasi ke TV, APK yang diunduh juga dapat dipasang dari komputer tersebut:
+
+```sh
+adb -s TV_SERIAL install -r /jalur/ke/porter-compat.apk
+```
+
+Ganti `TV_SERIAL` dengan entri TV dari `adb devices` dan gunakan jalur APK yang benar-benar diunduh. Android tetap dapat memblokir pemasangan atau meminta konfirmasi. Cara ini tidak memperbaiki kontrol Play Protect dan tidak menjamin pemasangan diizinkan.
+
+Jika pemasangan tetap terblokir, laporkan teks peringatan yang persis, model TV, versi Android, dan versi Porter Compatibility. Aplikasi dengan dukungan Porter langsung tidak memerlukan APK kompatibilitas.
 
 ## Akses diizinkan, tetapi operasi tetap gagal
 {: #access-is-allowed-but-an-operation-still-fails }
@@ -77,7 +98,9 @@ Beberapa sistem OPPO/OnePlus memiliki **Pemantauan izin** di Opsi developer yang
 ## Versi yang ditampilkan saat berjalan berbeda
 {: #the-version-shown-while-running-is-different }
 
-Entri **Versi** di **Setelan** menunjukkan versi aplikasi Porter. Ketuk kartu layanan yang berjalan untuk melihat versi aplikasi terpasang, layanan Porter aktif, dan API Shizuku yang kompatibel. Versi API menjelaskan kompatibilitas, bukan nomor rilis Porter. Jika Porter meminta layanan dimulai ulang setelah pembaruan, hentikan lalu jalankan kembali.
+Entri **Versi** di **Setelan** menunjukkan versi aplikasi Porter. Ketuk kartu layanan untuk membuka **Layanan**. Layar itu menampilkan aplikasi terpasang dan layanan yang berjalan beserta nama versi, kode versi, dan ID build masing-masing, ditambah versi API Shizuku yang kompatibel. Untuk membagikan detail diagnostik, [rekam log debug](#report-a-problem) di **Setelan**, **Bantuan & dukungan**. Versi API menjelaskan kompatibilitas, bukan nomor rilis Porter. Build yang berbeda memunculkan **Pembaruan layanan tersedia**. Fitur yang kompatibel tetap dapat dipakai; membuka Porter tidak memulai ulang layanan. Ketuk **Perbarui layanan** di layar Layanan pada pengguna Android utama, lalu konfirmasi untuk menerapkan build terpasang memakai hak istimewa layanan yang sedang berjalan, tanpa komputer atau koneksi proses debug nirkabel yang baru. Aplikasi yang terhubung terputus sebentar, dan izin tetap dipertahankan. Jika penggantian gagal, gunakan **Coba perbarui lagi** selagi layanan lama masih berjalan, atau jalankan kembali dengan metode biasa Anda.
+
+Di **Setelan**, **Perbarui layanan otomatis** dapat memeriksa layanan berjalan dengan build berbeda setelah aplikasi Porter diperbarui. Opsi ini nonaktif secara bawaan. Android dapat menunda pekerjaan latar belakang; tombol pembaruan manual tetap tersedia. Layanan yang berhenti tetap berhenti. Pembaruan yang gagal atau terputus ditampilkan di layar beranda, termasuk saat watchdog aktif.
 
 ## Melaporkan masalah
 {: #report-a-problem }
