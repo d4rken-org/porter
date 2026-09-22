@@ -18,6 +18,9 @@ MANAGER = "eu.darken.porter"
 COMPAT = "moe.shizuku.privileged.api"
 NATIVE = "eu.darken.porter.probe.native"
 LEGACY = "eu.darken.porter.probe.legacy"
+# Everything a suite installs and drives. A crash dialog about one of these is the case failing,
+# not something standing in front of it; the derived suites add their own.
+UNDER_TEST = {MANAGER, COMPAT, NATIVE, LEGACY}
 PERMISSION = "eu.darken.porter.permission.API"
 LEGACY_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 # What each probe reports on its BINDER line: the Porter protocol version from the porter
@@ -88,6 +91,9 @@ TAP_ATTEMPTS = 3
 FRAMEWORK_ERROR_BUTTON = "Close app"
 FRAMEWORK_ERROR_TEXT = re.compile(r"(keeps stopping|kept stopping|has stopped|isn't responding)")
 FRAMEWORK_ERROR_DISMISSALS = 2
+# Which app a crash dialog is about, which the dialog itself says only as a label. The crash buffer
+# names the package, and the newest entry in it is the crash whose dialog is in front.
+CRASHED_PROCESS = re.compile(r"\bProcess: (\S+?),", re.MULTILINE)
 # How the pinned Shizuku server brackets one binder push. It whitelists the package, then calls
 # that package's provider, which starts the app's process; the binder line or the null-provider
 # line closes it. Porter's own server says "sent binders" instead and never logs the first of
@@ -252,16 +258,28 @@ class Smoke:
                 raise RuntimeError(f"uiautomator produced no UI dump in {attempts} attempts over "
                                    f"{elapsed:.0f}s; see {self.output / 'commands.log'}")
 
+    def crashed(self):
+        """The package of the newest crash the device recorded, or None if it recorded none."""
+        found = CRASHED_PROCESS.findall(self.adb("logcat", "-d", "-b", "crash", check=False))
+        return found[-1] if found else None
+
     def framework_error(self, root):
-        """The bounds of the button that clears a framework crash or ANR dialog, or None.
+        """The bounds of the button that clears a crash or ANR dialog raised by something else.
 
         Such a dialog is drawn by the framework, so every node in it carries the "android"
-        package, the way the user-switching overlay does; what tells the two apart is the message.
+        package, the way the user-switching overlay does; what tells those two apart is the
+        message. What the message cannot say is which app crashed, because it names the label:
+        the crash buffer names the package, and a dialog about an app this suite is testing is
+        the failure rather than something in front of it, so it is left where it is. A crash
+        nothing recorded is one nothing can attribute, which is the same answer.
         """
         nodes = list(root.iter("node"))
         if any(node.get("package") not in ("android", "", None) for node in nodes):
             return None
         if not any(FRAMEWORK_ERROR_TEXT.search(node.get("text", "")) for node in nodes):
+            return None
+        crashed = self.crashed()
+        if crashed is None or crashed in UNDER_TEST:
             return None
         return self.find(nodes, FRAMEWORK_ERROR_BUTTON, package="android")
 
@@ -367,16 +385,19 @@ class Smoke:
         return None
 
     def heard(self, before):
-        """Whether the screen stopped being [before] within [TAP_SETTLE]."""
+        """Whether the screen stopped being [before] within [TAP_SETTLE].
+
+        A dump that fails inside the window answers neither way, so it is polled past rather than
+        counted. What follows a window that ends undecided is another look at the button on its
+        own full budget, not a tap at bounds nothing has confirmed.
+        """
         deadline = time.monotonic() + TAP_SETTLE
         while True:
             try:
                 if ET.tostring(self.ui(UI_POLL_TIMEOUT)) != before:
                     return True
             except RuntimeError:
-                # A screen that cannot be dumped is not a screen that ignored the tap, and
-                # tapping it again would aim at bounds nothing has confirmed.
-                return True
+                pass
             if time.monotonic() >= deadline:
                 return False
             time.sleep(0.4)

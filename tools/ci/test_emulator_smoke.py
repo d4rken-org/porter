@@ -15,6 +15,9 @@ spec = importlib.util.spec_from_file_location("emulator_smoke", Path(__file__).w
 smoke = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(smoke)
 
+# One entry of the crash buffer, which is where the package behind a crash dialog is named.
+CRASH = "E AndroidRuntime: FATAL EXCEPTION: main\nE AndroidRuntime: Process: %s, PID: 4242\n"
+
 OFFLINE = b"adb: device offline\n"
 NOT_FOUND = b"adb: device 'emulator-5554' not found\n"
 
@@ -338,9 +341,16 @@ class TapConfirmationTest(unittest.TestCase):
             self.runner.tap("Allow all the time")
         self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)] * smoke.TAP_ATTEMPTS)
 
-    def test_an_unreadable_screen_is_not_read_as_a_dropped_gesture(self):
-        # A dump that failed says nothing about the tap, and a retry would aim at stale bounds.
-        self.runner.ui = Mock(side_effect=[self.prompt, RuntimeError("no UI dump")])
+    def test_an_unreadable_screen_decides_nothing_either_way(self):
+        # A dump that failed says nothing about the tap, so the look that decides is the next one,
+        # taken on its own full budget by the retry rather than inside the settle window.
+        self.runner.ui = Mock(side_effect=[
+            self.prompt, RuntimeError("no UI dump"), self.prompt, self.granted])
+        self.runner.tap("Allow all the time")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)] * 2)
+
+    def test_an_unreadable_screen_over_a_button_that_went_away_is_not_tapped_again(self):
+        self.runner.ui = Mock(side_effect=[self.prompt, RuntimeError("no UI dump"), self.granted])
         self.runner.tap("Allow all the time")
         self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)])
 
@@ -356,6 +366,7 @@ class FrameworkErrorDialogTest(unittest.TestCase):
     def setUp(self):
         self.runner = smoke.Smoke.__new__(smoke.Smoke)
         self.runner.shell = Mock()
+        self.runner.adb = Mock(return_value=CRASH % "com.android.bluetooth")
         self.crash = ET.fromstring('''<hierarchy><node package="android">
             <node text="Bluetooth keeps stopping" package="android" enabled="true"
             bounds="[133,760][947,831]" />
@@ -368,6 +379,28 @@ class FrameworkErrorDialogTest(unittest.TestCase):
         self.prompt = ET.fromstring('''<hierarchy><node package="eu.darken.porter">
             <node text="Allow all the time" package="eu.darken.porter" enabled="true"
             bounds="[556,1144][897,1292]" /></node></hierarchy>''')
+
+    def test_a_crash_in_an_app_under_test_is_left_on_screen(self):
+        # Dismissing it would hide the failure the case is there to catch behind a later timeout.
+        self.runner.adb = Mock(return_value=CRASH % smoke.MANAGER)
+        self.runner.dump = Mock(return_value=self.crash)
+        self.assertIs(self.runner.ui(), self.crash)
+        self.runner.shell.assert_not_called()
+
+    def test_a_crash_nothing_recorded_is_left_on_screen(self):
+        # Nothing attributes it, and an unattributed dialog is not one to clear on a guess.
+        self.runner.adb = Mock(return_value="")
+        self.runner.dump = Mock(return_value=self.crash)
+        self.assertIs(self.runner.ui(), self.crash)
+        self.runner.shell.assert_not_called()
+
+    def test_the_newest_crash_is_the_one_the_dialog_is_about(self):
+        # The buffer keeps every crash of the run, and an old one of ours is not this dialog.
+        self.runner.adb = Mock(return_value=(CRASH % smoke.NATIVE) + (CRASH % "com.android.bluetooth"))
+        self.runner.dump = Mock(side_effect=[self.crash, self.prompt])
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertIs(self.runner.ui(), self.prompt)
+        self.runner.shell.assert_called_once_with("input", "tap", 540, 1059)
 
     def test_the_dialog_is_cleared_and_what_it_covered_is_returned(self):
         self.runner.dump = Mock(side_effect=[self.crash, self.prompt])
