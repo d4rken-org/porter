@@ -29,6 +29,12 @@ Le démarrage automatique dépend toujours de la disponibilité du débogage dan
 - Dans le dialogue intégré de Porter, utilisez le port d’association du dialogue de code, pas le port de connexion de l’écran principal du débogage sans fil.
 - Si un VPN ou une restriction du réseau bloque la détection, essayez un réseau autorisant la communication entre appareils.
 
+Si un code a été refusé, choisissez **Réessayer** dans la notification. Si la notification est absente ou affiche encore un ancien code, revenez à **Association** dans Porter et choisissez **Relancer l’association**. Fermez l’ancien dialogue de code d’Android, ouvrez-en un nouveau, puis saisissez le nouveau code. Il n’est pas nécessaire de vider le cache ou les données de Porter.
+
+Sur Android TV, Porter affiche un résultat lorsque l’association réussit, échoue ou expire. Choisissez **Réessayer** après un échec ; réactivez le service d’accessibilité d’association si cela vous est demandé. Si Porter ne s’ouvre pas automatiquement, ouvrez-le pour voir le résultat enregistré. Une association réussie est suivie d’une étape **Démarrer** distincte.
+
+Les nouvelles associations apparaissent sous le nom **Porter** dans la liste des appareils associés d’Android. Une entrée existante peut encore s’appeler **shizuku** tant que vous ne l’avez pas oubliée pour refaire l’association. Renommer le libellé affiché n’oblige pas à remplacer la clé enregistrée, et une association existante peut continuer de fonctionner. Ce libellé est indépendant des badges d’API Shizuku dans la liste des applications de Porter.
+
 Si le débogage sans fil est indisponible ou instable, [démarrez depuis un ordinateur](/setup#with-a-computer).
 
 ## L’ordinateur ne trouve pas l’appareil
@@ -61,9 +67,24 @@ Avec le compagnon, les deux APK doivent provenir de la même source de publicati
 ## Android refuse d’installer un APK
 {: #android-wont-install-an-apk }
 
-Pour installer **Porter Compatibility**, désinstallez d’abord Shizuku. Le compagnon ne peut pas mettre à jour une installation Shizuku signée différemment, même si Android reconnaît la même identité d’application.
+Pour installer à la main l’APK **Porter Compatibility** distinct, désinstallez d’abord Shizuku. Le compagnon ne peut pas mettre à jour une installation Shizuku signée différemment, même si Android reconnaît la même identité d’application. Le remplacement intégré de Porter désinstalle Shizuku pour vous.
 
 Pour Porter, une ancienne version de développement peut avoir une signature différente de la version publique. Android refuse alors l’installation par-dessus. Désinstaller l’ancienne version supprime aussi ses données ; notez votre configuration avant de le faire. Réinstallez depuis la source souhaitée et autorisez à nouveau vos applications.
+
+## Un avertissement d’installation sur téléviseur ne peut pas être sélectionné avec la télécommande
+{: #a-tv-installation-warning-cannot-be-selected-with-the-remote }
+
+L’avertissement Play Protect et ses boutons **Plus de détails** ou **Installer quand même** appartiennent au programme d’installation d’Android. Porter ne peut pas modifier leur comportement de focus à la télécommande, et l’avertissement seul n’explique pas pourquoi Google a signalé un APK.
+
+Vérifiez que l’APK provient de la [page des versions de Porter](https://github.com/d4rken-org/porter/releases). Si vous décidez de continuer après avoir lu l’avertissement, une souris USB ou Bluetooth permet parfois de sélectionner ces boutons. Si vous disposez déjà d’une connexion ADB autorisée vers le téléviseur, vous pouvez aussi installer l’APK téléchargé depuis cet ordinateur :
+
+```sh
+adb -s TV_SERIAL install -r /chemin/vers/porter-compat.apk
+```
+
+Remplacez `TV_SERIAL` par l’entrée du téléviseur dans `adb devices` et utilisez le chemin réel de l’APK téléchargé. Android peut toujours bloquer l’installation ou demander une confirmation. Cela ne corrige pas les commandes de Play Protect et ne garantit pas que l’installation soit autorisée.
+
+Si l’installation reste bloquée, signalez le texte exact de l’avertissement, le modèle du téléviseur, la version d’Android et la version de Porter Compatibility. Les applications prenant directement en charge Porter n’ont pas besoin de l’APK de compatibilité.
 
 ## L’accès est autorisé, mais une opération échoue
 {: #access-is-allowed-but-an-operation-still-fails }
@@ -77,7 +98,9 @@ Certains systèmes OPPO/OnePlus proposent **Surveillance des autorisations** dan
 ## La version affichée pendant l’exécution est différente
 {: #the-version-shown-while-running-is-different }
 
-L’entrée **Version** dans **Paramètres** indique la version de l’application Porter. Touchez la carte du service en cours d’exécution pour voir la version installée, celle du service Porter actif et celle de l’API Shizuku compatible. La version API décrit la compatibilité, pas la version de Porter. Si Porter demande un redémarrage du service après une mise à jour, arrêtez-le et redémarrez-le.
+L’entrée **Version** dans **Paramètres** indique la version de l’application Porter. Touchez la carte du service pour ouvrir **Service**. Cet écran affiche l’application installée et le service en cours d’exécution avec leurs noms de version, codes de version et identifiants de build, ainsi que la version de l’API Shizuku compatible. Pour partager des informations de diagnostic, [enregistrez un journal de débogage](#report-a-problem) dans **Paramètres**, **Aide et assistance**. La version API décrit la compatibilité, pas la version de Porter. Un build différent affiche **Mise à jour du service disponible**. Les fonctions compatibles restent utilisables ; ouvrir Porter ne redémarre pas le service. Touchez **Mettre à jour le service** sur l’écran Service depuis l’utilisateur Android principal et confirmez pour appliquer le build installé avec les privilèges du service en cours d’exécution, sans ordinateur ni nouvelle connexion de débogage sans fil. Les applications connectées sont brièvement déconnectées et les autorisations sont conservées. Si le remplacement échoue, utilisez **Réessayer la mise à jour** tant que l’ancien service fonctionne encore, ou redémarrez-le avec votre méthode habituelle.
+
+Dans **Paramètres**, **Mettre à jour le service automatiquement** vérifie, après une mise à jour de l’application Porter, s’il existe un service en cours d’exécution avec un build différent. L’option est désactivée par défaut. Android peut retarder les tâches en arrière-plan ; le bouton de mise à jour manuelle reste disponible. Un service arrêté reste arrêté. Les mises à jour échouées ou interrompues sont affichées sur l’écran d’accueil, y compris lorsque le chien de garde est activé.
 
 ## Signaler un problème
 {: #report-a-problem }

@@ -13,7 +13,7 @@ Porter prend en charge les API de Shizuku utilisées par les applications compat
 | Prise en charge par votre application | À installer |
 | --- | --- |
 | Porter directement | Porter |
-| Shizuku uniquement | Porter et Porter Compatibility ; désinstallez d’abord Shizuku |
+| Shizuku uniquement | Porter et Porter Compatibility ; Porter remplace Shizuku s’il est installé |
 | Les deux, avec un sélecteur de service | Porter, puis choisissez Porter dans l’application |
 
 Le compagnon aide les applications Shizuku existantes à trouver Porter. Porter continue de démarrer le service, d’afficher les demandes d’autorisation et de gérer les accès. Gardez le compagnon installé pour les applications qui en ont besoin.

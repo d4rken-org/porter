@@ -13,7 +13,7 @@ Porter は対応アプリが使う Shizuku API をサポートしています。
 | アプリの対応状況 | インストールするもの |
 | --- | --- |
 | Porter に直接対応 | Porter |
-| Shizuku のみに対応 | Porter と Porter Compatibility。先に Shizuku を削除 |
+| Shizuku のみに対応 | Porter と Porter Compatibility。Shizuku がインストール済みなら Porter が置き換えます |
 | 両方に対応し、サービスを選択可能 | Porter をインストールし、アプリ内で Porter を選択 |
 
 互換アプリは、既存の Shizuku 対応アプリが Porter を見つけるために使われます。サービスの起動、許可要求の表示、アクセス許可の管理は Porter が行います。必要なアプリを使う間は互換アプリを残してください。
