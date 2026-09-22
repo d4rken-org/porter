@@ -15,20 +15,20 @@ I use Shizuku in my own apps, [SD Maid SE](https://github.com/d4rken-org/sdmaid-
 ## Get started
 
 1. Install Porter from [GitHub Releases](https://github.com/d4rken-org/porter/releases).
-2. [Start Porter](https://porter.darken.eu/setup) using wireless debugging, a computer, or root.
-3. Open an app that supports Porter and approve its access request.
+2. Start Porter and follow the in-app instructions ([detailed guide](https://porter.darken.eu/setup)).
+3. Grant access to the apps that ask for it.
 
-Porter requires Android 7.0 or newer. Starting without a computer requires Android 11 or newer with wireless debugging, or an already rooted device. After restarting your device, start Porter again before using apps that rely on it.
+**Requirements:** Android 7.0 or newer, plus either a computer, Android 11 or newer with wireless debugging, or a rooted device.
+
+Porter's service stops when the device restarts. Start it again afterwards.
 
 ## Using apps that support Shizuku
 
 Apps with built-in Porter support only need Porter.
 
-Apps that only support Shizuku need the **Porter Compatibility** companion, included in the Porter download from GitHub Releases. Start the Porter service, then open **Shizuku compatibility** from the home screen or **Settings** and pick **Install automatically**.
+Apps that only support Shizuku need the **Porter Compatibility** companion, included in the Porter download. Start Porter, open **Shizuku compatibility** from the home screen and follow the instructions.
 
-If Shizuku is installed, that screen offers **Replace** instead, which can carry over eligible access choices. Don't uninstall Shizuku yourself first: Porter needs it installed to read those choices.
-
-Porter can run alongside Shizuku, but the compatibility companion replaces it.
+If Shizuku is installed, leave it installed: that screen offers to replace it and carry over your existing access choices.
 
 [Choose the right setup for your apps](https://porter.darken.eu/compatibility).
 
