@@ -3,6 +3,9 @@ package eu.darken.porter.manager.authorization
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Bundle
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.lifecycle.Lifecycle
@@ -21,6 +24,10 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.shadows.ShadowSystemClock
+import java.time.Duration
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /** The real prompt activity through recreation: one decision, one reply, no re-prompt. */
 @RunWith(RobolectricTestRunner::class)
@@ -97,12 +104,16 @@ class RequestPermissionActivityTest {
         assertEquals(1, gateway.replies.size)
     }
 
-    @Test fun profileLineStaysAwayWhileTheServiceCannotNameTheUser() {
+    @Test fun theUserIdIsShownAtOnceAndOnlyItsNameWaitsForTheService() {
         PorterStateMachine.instance.set(PorterStateMachine.State.STOPPED)
         val otherUserId = UserHandleCompat.myUserId() + 1
         launch(uid = otherUserId * UserHandleCompat.PER_USER_RANGE + 10123)
         awaitText(allow)
-        // Without the binder a user lookup can only answer "Unknown"; the prompt must say nothing instead.
+        // The id is what separates two copies of one package in two profiles, which are otherwise
+        // identical down to the icon, so it cannot wait on a service that may never answer.
+        compose.onNodeWithText("$otherUserId").assertIsDisplayed()
+        // A name, unlike an id, would be guessed. Without the binder the lookup can only say
+        // "Unknown", and that must not reach the screen.
         val placeholder = "Unknown ($otherUserId)"
         val shown = runCatching {
             compose.waitUntil(2_000) { compose.onAllNodesWithText(placeholder).fetchSemanticsNodes().isNotEmpty() }
@@ -128,6 +139,166 @@ class RequestPermissionActivityTest {
                      gateway.replies.last())
     }
 
+    @Test fun aTapLandingBeforeTheNewRequestHasBeenSeenDecidesNothing() {
+        // supersede() changes which request an allow grants before the frame naming the new app is
+        // drawn, so a tap already on its way would answer for an app the user never looked at.
+        val other = ApplicationInfo().apply {
+            packageName = "eu.darken.porter.probe.legacy"
+            nonLocalizedLabel = "Shizuku API probe"
+        }
+        val scenario = launch()
+        awaitText(allow)
+        scenario.onActivity {
+            it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
+                .putExtra("applicationInfo", other))
+        }
+        awaitText(other.packageName)
+        compose.onNodeWithText(allow).performClick()
+        // Only the refusal of the request that was replaced; nothing was granted to either app.
+        assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)),
+                     gateway.replies)
+        assertEquals(Lifecycle.State.RESUMED, scenario.state)
+
+        ShadowSystemClock.advanceBy(Duration.ofMillis(RequestPermissionActivity.SUPERSEDE_GRACE))
+        compose.onNodeWithText(allow).performClick()
+        awaitDestroyed(scenario)
+        assertEquals(FakePermissionGateway.Reply(10999, 5151, 8, allowed = true, onetime = false),
+                     gateway.replies.last())
+    }
+
+    /** An app whose icon decode blocks, which is the wait the prompt used to keep the old name for. */
+    private class SlowIconApp(pkg: String, val gate: CountDownLatch) : ApplicationInfo() {
+        init { packageName = pkg; nonLocalizedLabel = "Shizuku API probe" }
+        override fun loadIcon(pm: android.content.pm.PackageManager?): Drawable {
+            gate.await(10, TimeUnit.SECONDS)
+            return ColorDrawable(0xFF00FF00.toInt())
+        }
+    }
+
+    @Test fun theNewAppIsNamedWhileItsIconIsStillDecoding() {
+        // The name must come from the composition the request change causes, not from the icon
+        // decode that follows it: the requesting app controls how long that decode takes.
+        val gate = CountDownLatch(1)
+        val other = SlowIconApp("eu.darken.porter.probe.legacy", gate)
+        val scenario = launch()
+        awaitText(allow)
+        compose.onNodeWithText(context.packageName).assertIsDisplayed()
+        try {
+            scenario.onActivity {
+                // Delivered in-process, so the extra is never parceled and this instance survives.
+                it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
+                    .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
+                    .putExtra("applicationInfo", other))
+            }
+            awaitText(other.packageName)
+            // The decode has not returned, so this is the composition and not the producer.
+            compose.onNodeWithText(context.packageName).assertDoesNotExist()
+        } finally {
+            gate.countDown()
+        }
+    }
+
+    @Test fun aTapBeforeTheNewNameIsDrawnDecidesNothing() {
+        // supersede() repoints the model the moment the intent lands, so a tap already queued
+        // would answer for an app no frame has named. The timer cannot cover its own start.
+        //
+        // Asked directly rather than through performClick, which resolves its node by idling
+        // first: that recomposes and stamps the timer, so a click can only ever exercise the
+        // timer and would pass with the invariant deleted.
+        val other = ApplicationInfo().apply {
+            packageName = "eu.darken.porter.probe.legacy"
+            nonLocalizedLabel = "Shizuku API probe"
+        }
+        val scenario = launch()
+        awaitText(allow)
+        scenario.onActivity {
+            assertTrue("a prompt that never changed app answers normally", it.userIsAnswering())
+            it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
+                .putExtra("applicationInfo", other))
+            // Same main-thread message as the delivery: nothing has recomposed, so the timer has
+            // not been stamped and only the drawn-vs-pointed-at check can refuse this.
+            assertFalse("a tap before the new name is drawn must not decide", it.userIsAnswering())
+        }
+    }
+
+
+    @Test fun aRebuiltProcessReadsTheRequestItAdoptedNotTheOneThatLaunchedIt() {
+        // Read through the scenario rather than a raw Robolectric activity: one built by hand
+        // leaves a window behind in the JVM the module's other tests share, and the next test to
+        // assert on focus never gets it.
+        //
+        // What this cannot cover is onCreate preferring restored() over requested(intent), which
+        // scenario.recreate() also cannot show: it keeps the setIntent intent, so the bundle and
+        // the intent name the same request and neither can be seen to win. What a real activity
+        // writes into that bundle is pinned by onSaveInstanceStateCarriesTheAdoptedRequest.
+        val other = ApplicationInfo().apply {
+            packageName = "eu.darken.porter.probe.legacy"
+            nonLocalizedLabel = "Shizuku API probe"
+        }
+        val saved = Bundle().apply {
+            putInt("asked.uid", 10999)
+            putInt("asked.pid", 5151)
+            putInt("asked.code", 8)
+            putParcelable("asked.info", other)
+        }
+        val scenario = launch()
+        awaitText(allow)
+        scenario.onActivity {
+            val adopted = it.restored(saved)
+            assertEquals(10999, adopted?.uid)
+            assertEquals(5151, adopted?.pid)
+            assertEquals(8, adopted?.code)
+            assertEquals(other.packageName, adopted?.info?.packageName)
+            // A process starting fresh has no saved copy and falls through to its intent.
+            assertNull(it.restored(null))
+            assertNull("a bundle naming no caller is not a request", it.restored(Bundle()))
+        }
+    }
+
+    @Test fun onSaveInstanceStateCarriesTheAdoptedRequest() {
+        // onSaveInstanceState is the only copy a rebuilt process gets; setIntent does not survive
+        // process death, so what it wrote is what decides which caller is answered.
+        val other = ApplicationInfo().apply {
+            packageName = "eu.darken.porter.probe.legacy"
+            nonLocalizedLabel = "Shizuku API probe"
+        }
+        val scenario = launch()
+        awaitText(allow)
+        scenario.onActivity {
+            it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
+                .putExtra("applicationInfo", other))
+        }
+        val saved = Bundle()
+        scenario.onActivity { it.onSaveInstanceState(saved) }
+        assertEquals(10999, saved.getInt("asked.uid", -1))
+        assertEquals(5151, saved.getInt("asked.pid", -1))
+        assertEquals(8, saved.getInt("asked.code", -1))
+        @Suppress("DEPRECATION")
+        assertEquals(other.packageName, saved.getParcelable<ApplicationInfo>("asked.info")?.packageName)
+    }
+
+    @Test fun oneAppAskingAgainCannotKeepThePromptFromBeingAnswered() {
+        // The name on screen does not change, so there is nothing to mislead a tap. Arming the
+        // guard here would let an app that re-asks on a timer keep every tap from landing.
+        val scenario = launch()
+        awaitText(allow)
+        repeat(3) { round ->
+            scenario.onActivity {
+                it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
+                    .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 8 + round)
+                    .putExtra("applicationInfo", context.applicationInfo))
+            }
+        }
+        awaitText(allow)
+        compose.onNodeWithText(allow).performClick()
+        awaitDestroyed(scenario)
+        assertEquals(FakePermissionGateway.Reply(10123, 4242, 10, allowed = true, onetime = false),
+                     gateway.replies.last())
+    }
+
     @Test fun aSecondRequestFromAnotherAppIsWhatThePromptThenNames() {
         // Answering for one app while naming another is the spoof this prompt exists to prevent.
         val other = ApplicationInfo().apply {
@@ -147,7 +318,8 @@ class RequestPermissionActivityTest {
     }
 
     @Test fun theRequestBeingAskedAboutIsWhatARecreationRestores() {
-        // The activity keeps it in its intent, which is the only copy a rebuilt process gets.
+        // A configuration change keeps the intent setIntent wrote. Process death does not, which
+        // is what aRebuiltProcessAnswersTheRequestItAdoptedNotTheOneThatLaunchedIt covers.
         val scenario = launch()
         awaitText(allow)
         scenario.onActivity {
