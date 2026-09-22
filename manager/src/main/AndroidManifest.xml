@@ -192,6 +192,22 @@
                     The watchdog service is opt-in and toggleable via settings, so users can choose to disable it at any time if not desired." />
         </service>
 
+        <!-- WorkManager ships this without a type, and an app targeting 35 or later may not start
+             a foreground service that has none. The start worker promotes itself through it while
+             it waits behind the keyguard. -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Starting the API service without root means connecting to the device's own ADB daemon,
+                    which cannot be done while the device is locked. The app asks the platform to enable wireless
+                    debugging and, where that is refused until the user is present, waits for the screen to be
+                    unlocked before trying again. This service keeps the app alive for that wait, which only happens
+                    during a start the user asked for or one the device was configured to perform at boot, and ends
+                    as soon as the screen is unlocked." />
+        </service>
+
         <receiver
             android:name=".receiver.BinderRequestReceiver"
             android:directBootAware="true"

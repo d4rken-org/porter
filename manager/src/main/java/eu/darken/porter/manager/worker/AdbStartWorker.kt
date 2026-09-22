@@ -4,11 +4,10 @@ import android.app.KeyguardManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+import android.content.pm.ServiceInfo
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Build
@@ -41,6 +40,15 @@ import eu.darken.porter.manager.utils.EnvironmentUtils
 import eu.darken.porter.manager.utils.PorterStateMachine
 
 class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+
+    /**
+     * Set when this run handed the attempt to a replacement, so the cancellation it asked for is
+     * not reported as one the user has to wait out. Written from the unlock broadcast on the main
+     * thread, read from the coroutine the cancellation lands in.
+     */
+    @Volatile
+    private var handedOff = false
+
     override suspend fun doWork(): Result {
         try {
             updateNotification(
@@ -60,7 +68,19 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
                 var awaitingAuth = false
                 var timeoutJob: Job? = null
-                var unlockReceiver: BroadcastReceiver? = null
+
+                // WorkManager promotes a worker to the foreground and takes it back down only when
+                // the run ends, so the wait behind the keyguard is the run: the unlock hands the
+                // attempt to a replacement, which repeats the enable and the discovery below
+                // without holding a foreground service for the rest of the startup.
+                val unlockWaiter = UnlockWaiter(applicationContext) {
+                    // An unlock that arrives while this run is already being stopped must not put
+                    // the work back: a cancel is one of the things that stops it.
+                    if (!isStopped) {
+                        handedOff = true
+                        enqueue(applicationContext)
+                    }
+                }
 
                 fun startDiscoveryWithTimeout() {
                     adbMdns.start()
@@ -77,27 +97,30 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
                     // discovery deadline is not it.
                     timeoutJob?.cancel()
                     if (km.isKeyguardLocked) {
-                        val notification = PorterReceiverStarter.buildNotification(
-                            applicationContext,
-                            null
-                        )
-                        val foregroundInfo = ForegroundInfo(
-                            PorterReceiverStarter.NOTIFICATION_ID,
-                            notification
-                        )
-                        setForegroundAsync(foregroundInfo)
-
-                        val filter = IntentFilter(Intent.ACTION_USER_PRESENT)
-                        unlockReceiver = object : BroadcastReceiver() {
-                            override fun onReceive(context: Context, intent: Intent) {
-                                if (intent.action == Intent.ACTION_USER_PRESENT) {
-                                    context.unregisterReceiver(this)
-                                    unlockReceiver = null
-                                    Settings.Global.putInt(cr, "adb_wifi_enabled", 1)
-                                }
+                        // Every further write of the setting lands here again while the keyguard is
+                        // up, and one wait is all there is to have.
+                        if (unlockWaiter.start()) {
+                            val notification = PorterReceiverStarter.buildNotification(
+                                applicationContext,
+                                null
+                            )
+                            // The type the manifest declares for WorkManager's own foreground
+                            // service. Without it the platform refuses to start the service at all
+                            // from an app targeting 35 or later.
+                            val foregroundInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                                ForegroundInfo(
+                                    PorterReceiverStarter.NOTIFICATION_ID,
+                                    notification,
+                                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+                                )
+                            } else {
+                                ForegroundInfo(
+                                    PorterReceiverStarter.NOTIFICATION_ID,
+                                    notification
+                                )
                             }
+                            setForegroundAsync(foregroundInfo)
                         }
-                        applicationContext.registerReceiver(unlockReceiver, filter)
                     } else {
                         awaitingAuth = true
                         // With the device already unlocked, the only thing that turns the setting
@@ -133,7 +156,7 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
                     adbMdns.stop()
                     timeoutJob?.cancel()
                     cr.unregisterContentObserver(observer)
-                    unlockReceiver?.let { applicationContext.unregisterReceiver(it) }
+                    unlockWaiter.stop()
                 }
             }.first()
             
@@ -145,6 +168,15 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
             return Result.success()
         } catch (e: CancellationException) {
+            if (handedOff) {
+                // The replacement posts its own state when it starts, but it may sit on an unmet
+                // constraint first, and WorkManager takes the foreground notification down with
+                // this run. Re-posting it leaves the attempt something to show for itself and the
+                // actions to cancel it with.
+                updateNotification(applicationContext, WorkerState.RUNNING)
+                throw e
+            }
+
             val state = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                 WorkerState.AWAITING_RETRY
             } else {
