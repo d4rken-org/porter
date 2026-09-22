@@ -146,6 +146,36 @@ class RequestPermissionActivityTest {
         compose.onNodeWithText(other.packageName).assertIsDisplayed()
     }
 
+    @Test fun theRequestBeingAskedAboutIsWhatARecreationRestores() {
+        // The activity keeps it in its intent, which is the only copy a rebuilt process gets.
+        val scenario = launch()
+        awaitText(allow)
+        scenario.onActivity {
+            it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 8)
+                .putExtra("applicationInfo", context.applicationInfo))
+        }
+        scenario.onActivity { assertEquals(8, it.intent.getIntExtra("requestCode", -1)) }
+        scenario.recreate()
+        awaitText(allow)
+        compose.onNodeWithText(allow).performClick()
+        awaitDestroyed(scenario)
+        assertEquals(FakePermissionGateway.Reply(10123, 4242, 8, allowed = true, onetime = false),
+                     gateway.replies.last())
+    }
+
+    @Test fun aRefusedNewcomerIsNotWhatARecreationRestores() {
+        val scenario = launch()
+        awaitText(allow)
+        compose.onNodeWithText(allow).performClick()
+        scenario.onActivity {
+            it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
+                .putExtra("applicationInfo", context.applicationInfo))
+            assertEquals(7, it.intent.getIntExtra("requestCode", -1))
+        }
+    }
+
     @Test fun aSecondRequestWithoutCallerIdentityLeavesThePromptAlone() {
         val scenario = launch()
         awaitText(allow)
