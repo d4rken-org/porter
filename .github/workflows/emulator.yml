@@ -110,10 +110,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 36 only. On the API 30 image the manager's own ADB client reaches the port `adb tcpip`
-        # opens and adbd marks the connection offline before the handshake finishes, so the app
-        # cannot start the server there and this suite would be measuring that instead. Whether
-        # that belongs to adbd on R or to Porter is not established.
+        # 36 only, and that is the image rather than Porter. On the API 30 google_apis x86_64
+        # image adbd serves the host over the emulator pipe and never opens a listening socket
+        # for the port `adb tcpip` reports: service.adb.tcp.port reads 5555 and adbd logs "adbd
+        # listening on tcp:5555", but nothing is bound to 5555 and a device-local connect is
+        # refused. The manager takes that port from the property and goes straight at it, so its
+        # five attempts each fail to connect and it never sends an ADB byte. The "already
+        # offline" lines an earlier reading rested on are the host's own transport reattaching
+        # after adbd restarts, and appear with no app installed. That pipe is an emulator
+        # transport, so none of this describes a physical Android 11 device; one was not tested.
         api: [36]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
