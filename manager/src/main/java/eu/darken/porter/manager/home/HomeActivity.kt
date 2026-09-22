@@ -93,7 +93,6 @@ abstract class HomeActivity : ComposeActivity() {
         var dialog by rememberSaveable { mutableStateOf<String?>(null) }
         val wirelessAdbAvailable = remember { Build.VERSION.SDK_INT >= 30 || EnvironmentUtils.isTelevision() || EnvironmentUtils.getAdbTcpPort() > 0 }
         val tlsSupported = remember { EnvironmentUtils.isTlsSupported() }
-        val status = snapshot.status
         val appsState by appsModel.state.collectAsStateWithLifecycle()
         val compatState by compatibility.state.collectAsStateWithLifecycle()
         val reboot by homeModel.shouldShowRebootDialog.collectAsStateWithLifecycle()
@@ -105,9 +104,6 @@ abstract class HomeActivity : ComposeActivity() {
         val running = snapshot.running
         LaunchedEffect(compatState.status, compatState.installedVersionCode) {
             if (running) appsModel.load()
-        }
-        LaunchedEffect(status) {
-            if (running) PorterSettings.lastLaunchMode = if (status.uid == 0) PorterSettings.LaunchMethod.ROOT else PorterSettings.LaunchMethod.ADB
         }
         val buildBadge = when {
             BuildConfig.DEBUG -> stringResource(R.string.porter_build_dev)
