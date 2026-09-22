@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.asFlow
 import androidx.work.*
 import java.io.EOFException
+import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -193,6 +194,7 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
             val ignored = listOf(
                 EOFException::class,
                 SecurityException::class,
+                SocketTimeoutException::class,
                 TimeoutException::class
             )
             if (ignored.none { it.isInstance(e) }) showErrorNotification(applicationContext, e)

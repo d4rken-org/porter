@@ -46,6 +46,7 @@ class AdbClient(private val host: String, private val port: Int, private val key
         socket = Socket()
         val address = InetSocketAddress(host, port)
         socket.connect(address, 5000)
+        socket.soTimeout = READ_TIMEOUT_MS
 
         socket.tcpNoDelay = true
         plainInputStream = DataInputStream(socket.getInputStream())
@@ -62,6 +63,7 @@ class AdbClient(private val host: String, private val port: Int, private val key
 
             val sslContext = key.sslContext
             tlsSocket = sslContext.socketFactory.createSocket(socket, host, port, true) as SSLSocket
+            tlsSocket.soTimeout = READ_TIMEOUT_MS
             tlsSocket.startHandshake()
             Log.d(TAG, "Handshake succeeded.")
 
@@ -179,5 +181,14 @@ class AdbClient(private val host: String, private val port: Int, private val key
             } catch (e: Exception) {
             }
         }
+    }
+
+    companion object {
+        /**
+         * Every read once the socket is up. An adbd that accepts the connection and then says
+         * nothing has no deadline of its own, and [read] blocks in readFully. Long enough to
+         * outlast the starter's own run, which the shell stream waits on; not a measured figure.
+         */
+        private const val READ_TIMEOUT_MS = 60_000
     }
 }
