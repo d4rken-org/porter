@@ -264,6 +264,11 @@ interface AdbKeyStore {
     fun get(): ByteArray?
 }
 
+/**
+ * Holds [AdbKey]'s ciphertext rather than the key itself. The AndroidKeyStore key that wraps it
+ * never leaves the device, so a restored copy fails to decrypt and a new ADB identity is generated
+ * in its place, which is why this is allowed in the backed-up settings file. See `BackupRulesTest`.
+ */
 class PreferenceAdbKeyStore(private val preference: SharedPreferences) : AdbKeyStore {
 
     private val preferenceKey = "adbkey"

@@ -19,7 +19,10 @@ object PorterSettings {
 
     const val NAME = "settings"
 
-    /** Kept out of [NAME] so the backup rules can leave the whole file behind. */
+    /**
+     * Backup inclusion is per file, not per key, so anything a restore could use has to live
+     * outside the [NAME] file that the rules carry. Pinned by `BackupRulesTest`.
+     */
     const val SECRETS_NAME = "secrets"
 
     const val SCHEMA_VERSION = 1
