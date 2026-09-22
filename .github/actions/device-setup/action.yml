@@ -1,0 +1,14 @@
+name: Device test host setup
+description: Set up the host tools the emulator suites use, without the Gradle and NDK build toolchain
+runs:
+  using: composite
+  steps:
+    # keytool, for the foreign-signer cases' throwaway keystore.
+    - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 #v5.7.0
+      with:
+        distribution: temurin
+        java-version: '21'
+    # sdkmanager and adb. apksigner comes from the build-tools the emulator packages step installs.
+    - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 #v3.2.2
+      with:
+        packages: platform-tools
