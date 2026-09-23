@@ -93,6 +93,9 @@ installed Porter always wins, so a Porter that is installed but stopped blocks a
 a process that holds a live connection never switches backend until that connection dies. Tell users
 with both installed to start Porter.
 
+Shizuku+'s Plus flavor declares its own permission, `af.shizuku.plus.permission.API_V23`, instead of
+Shizuku's, and counts as Shizuku here.
+
 What the SDK actually probes for is `moe.shizuku.api.BinderContainer` on the classpath, which is
 what `shizuku-compat` puts there, and what `dev.rikka.shizuku:provider` would put there too. Without
 that class the SDK can unwrap no Shizuku Binder, so a Shizuku-only device reads `NotInstalled`
@@ -161,7 +164,9 @@ whether its Binder still answers. Use them for a one-off check, not as a substit
 Every call on a connection that reaches the server suspends and is safe on the main thread; the SDK
 moves the Binder call off it. A failed call throws a `PorterException`: `PorterSecurityException`
 when the server refused it, usually because your app has no grant, and `PorterRemoteException` when
-the Binder call itself failed.
+the Binder call itself failed. Cancelling a call returns at once, so `withTimeout` around it works
+against a server that stopped answering. A call still queued is then never made; one already sent
+takes effect anyway.
 
 A `PorterConnection` stays bound to the server it was attached to. Hold the one the flow gave you
 for the work at hand, and take the next one from the flow after a restart rather than reusing it.
@@ -248,8 +253,9 @@ connection.userService(args).collect { binder ->
 needed, and the service's Binder is emitted once Porter reports it connected. The flow completes
 when Porter reports the service died, and also when the connection it was collected on is replaced
 or dies, whether or not the service is still running. Collect it again on the connection the flow
-hands you next. Cancelling the collection releases your binding; when the last collector of that
-service is gone, Porter is asked to drop the binding.
+hands you next, and again on the same connection after the service died; the SDK's README shows a
+shared flow that does both. Cancelling the collection releases your binding at once; when the last
+collector of that service is gone, Porter is asked to drop the binding.
 `userService(args, start = false)` only binds an instance that is already running, and completes
 without emitting when there is none. `peekUserService(args)` reports a running instance's version
 without binding.
@@ -310,10 +316,10 @@ the user service above. It needs none of that.
 ```kotlin
 lifecycleScope.launch {
     when (val availability = Porter.availability(this@MyActivity)) {
-        PorterAvailability.Connected -> Unit // a connection is held and answers
-        PorterAvailability.InstalledNotConnected -> promptUser("Open Porter and start the service")
+        is PorterAvailability.Connected -> Unit // a connection is held and answers
+        is PorterAvailability.InstalledNotConnected -> offerToOpen(availability.packageName, "Start the service")
         PorterAvailability.NotInstalled -> promptUser("Install Porter")
-        PorterAvailability.InstalledUnrecognized -> promptUser("An unrecognized app owns that permission")
+        is PorterAvailability.InstalledUnrecognized -> promptUser("An unrecognized app owns that permission")
         is PorterAvailability.Incompatible -> if (availability.incompatibility.serverTooOld) {
             promptUser("Update Porter")
         } else {
@@ -325,9 +331,15 @@ lifecycleScope.launch {
 
 It reports whether a manager is installed, not whether its service is running, so `InstalledNotConnected` is the normal state before the user
 starts Porter. `InstalledUnrecognized` means the selected backend's permission belongs to a package
-this SDK does not recognize as its manager; say so rather than naming or launching that package.
-`Incompatible` means a service is running and answered, and the two sides share no protocol version;
-the reason travels with the answer.
+this SDK does not recognize as its manager; say so rather than presenting or launching that package
+as the manager. `Incompatible` means a service is running and answered, and the two sides share no
+protocol version; the reason travels with the answer.
+
+Every case but `NotInstalled` carries `packageName`: the app that declares the backend's permission,
+found by the permission rather than by name, so a renamed fork or Shizuku+ is found too. Open that
+package to send the user to their manager. It names the manager; it does not prove that package
+served the connection, and `Connected` and `Incompatible` name none when no app declares the
+permission any more. The installed and connected cases also carry the `backend`.
 
 ## Apps with several processes
 
