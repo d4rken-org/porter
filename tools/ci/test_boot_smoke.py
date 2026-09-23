@@ -3,7 +3,7 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 
 spec = importlib.util.spec_from_file_location("boot_smoke", Path(__file__).with_name("boot-smoke.py"))
@@ -116,6 +116,25 @@ class NotificationChannelTest(unittest.TestCase):
             self.assertEqual(self.smoke.manager_notifications(), [])
 
 
+class ManagerJobsTest(unittest.TestCase):
+    """Unfinished WorkManager work, as JobScheduler lists it for the manager."""
+
+    def test_both_dump_formats_are_read(self):
+        runner = boot.Boot.__new__(boot.Boot)
+        runner.shell = Mock(return_value="\n".join((
+            "Registered 3 jobs:",
+            # Android 16, as dumped on an API 36 emulator.
+            "  JOB androidx.work.systemjobscheduler:u0a216/2: 17e38cd "
+            "@androidx.work.systemjobscheduler@eu.darken.porter/androidx.work.impl.background.systemjob.SystemJobService",
+            # The older form.
+            "  JOB #u0a216/3: 4b2c1b1 eu.darken.porter/androidx.work.impl.background.systemjob.SystemJobService",
+            # A probe package whose name starts with the manager's.
+            "  JOB #u0a217/1: 5c3d2e2 eu.darken.porter.probe.native/androidx.work.impl.background.systemjob.SystemJobService",
+            "    Source: uid=u0a216 user=0 pkg=eu.darken.porter",
+        )))
+        self.assertEqual(len(runner.manager_jobs()), 2)
+
+
 class CaseSelectionTest(unittest.TestCase):
     """A narrowed run must not assert against a device the cases it dropped would have built."""
 
@@ -141,6 +160,12 @@ class CaseSelectionTest(unittest.TestCase):
         # It sets the toggle it needs rather than inheriting whichever way a previous case left it.
         args = self.parse("setup", "app-adb-start", "start-on-boot", "boot-without-adb")
         self.assertNotIn("start-on-boot-off", args.cases)
+
+    def test_the_automation_case_needs_the_app_started_server(self):
+        with self.assertRaises(SystemExit):
+            self.parse("setup", "automation-broadcasts")
+        self.assertEqual(self.parse("setup", "app-adb-start", "automation-broadcasts").cases,
+                         ["setup", "app-adb-start", "automation-broadcasts"])
 
     def test_the_whole_chain_is_accepted(self):
         args = self.parse("setup", "app-adb-start", "start-on-boot")
