@@ -2,6 +2,7 @@
 """Start Porter the way a user does, from the app itself, and make it survive a reboot."""
 import argparse
 import importlib.util
+import re
 from pathlib import Path
 import shlex
 import time
@@ -24,16 +25,22 @@ WORKER_STARTED = "Starting work for eu.darken.porter.manager.worker.AdbStartWork
 # How long the no-port case waits before calling the absence of a server a result. The worker
 # retries with backoff, so this only has to outlive the first attempt.
 NO_START_SETTLE = 60
+SETTINGS_DIR = "/data/user_de/0/eu.darken.porter/shared_prefs"
+AUTOMATION_TOKEN = "porter-ci-automation-token"
+AUTOMATION_SECRETS = ('<?xml version="1.0" encoding="utf-8" standalone="yes" ?>'
+                      f'<map><string name="auth_token">{AUTOMATION_TOKEN}</string></map>')
 # How long the worker is given to give up. With no port to find it waits on a wireless-debugging
 # authorization that is never coming, and what ends that is WorkManager stopping the worker at its
 # ten-minute execution limit, not anything the app decides. Bounded by that, not by a guess.
 # The order run() declares, which --case narrows without ever reordering.
-CASES = ("setup", "app-adb-start", "start-on-boot", "start-on-boot-off", "boot-without-adb")
+CASES = ("setup", "app-adb-start", "automation-broadcasts", "start-on-boot", "start-on-boot-off",
+         "boot-without-adb")
 # Each of these inherits what the case before it established on the device.
 # Each of these inherits what the case before it established on the device. boot-without-adb does
 # not name start-on-boot-off: it sets the toggle it needs rather than assuming a previous case
 # left it either way.
 REQUIRES = {
+    "automation-broadcasts": ("app-adb-start",),
     "start-on-boot": ("app-adb-start",),
     "start-on-boot-off": ("app-adb-start", "start-on-boot"),
     "boot-without-adb": ("app-adb-start", "start-on-boot"),
@@ -109,6 +116,15 @@ class Boot(base.Smoke):
                 records[-1].append(line)
         return ["\n".join(record) for record in records]
 
+    def manager_jobs(self):
+        """The JobScheduler jobs the manager has registered, which is where WorkManager keeps work
+        that has not finished."""
+        dump = self.shell("dumpsys", "jobscheduler", base.MANAGER, check=False)
+        # Android 16 prints "JOB <namespace>:u0a216/2: ... @<namespace>@eu.darken.porter/...",
+        # where older releases print "JOB #u0a216/2: ... eu.darken.porter/...".
+        return [line.strip() for line in dump.splitlines()
+                if re.match(r"\s*JOB\s", line) and re.search(rf"[ @]{re.escape(base.MANAGER)}/", line)]
+
     def no_server(self):
         """Absence, established by a reply rather than by a query that failed to produce one."""
         listing = self.shell("sh", "-c", "pidof porter_server || echo " + NO_PROCESS)
@@ -139,6 +155,45 @@ class Boot(base.Smoke):
             self.authorized(base.NATIVE)
             return {"server_pid": pid}
         self.case("app-adb-start", app_adb_start)
+
+        def automation_broadcasts():
+            """The START and STOP intents the automation sheet tells users to send, token and all."""
+            # Only the token lives in these preferences. Written while the manager is stopped, so no
+            # process holds a copy to write back over it; the server outlives that stop.
+            self.shell("am", "force-stop", base.MANAGER)
+            self.shell("run-as", base.MANAGER, "sh", "-c",
+                       f"mkdir -p {SETTINGS_DIR} && printf %s {shlex.quote(AUTOMATION_SECRETS)}"
+                       f" > {SETTINGS_DIR}/secrets.xml")
+            # A force-stopped package receives no broadcast that names only its package, and a
+            # device whose automation fires has the manager in its ordinary state.
+            self.home()
+            server = self.pid("porter_server")
+            assert server, "app-adb-start left no server running"
+            # A STOP that reaches a manager still waiting for its binder is dropped, not deferred.
+            self.until("the relaunched manager is connected",
+                       lambda: self.locate("Running via ADB", prefix=True))
+
+            def broadcast(action, auth):
+                self.shell("am", "broadcast", "-a", f"{base.MANAGER}.{action}", "-p", base.MANAGER,
+                           "--es", "auth", auth)
+
+            broadcast("STOP", "not-the-token")
+            # The refusal shows itself, which is what makes the server still running mean something.
+            self.until("the wrong token is reported", lambda: any(
+                "Invalid auth token" in record for record in self.manager_notifications()))
+            assert self.pid("porter_server") == server, "a STOP with the wrong token stopped the server"
+
+            broadcast("STOP", AUTOMATION_TOKEN)
+            self.until("STOP stopped the server", self.no_server)
+
+            broadcast("START", AUTOMATION_TOKEN)
+            started = self.until("START started a server", lambda: self.pid("porter_server"), timeout=120)
+            self.until("the new server sent its binders", lambda: "sent binders" in self.server_log(started))
+            # START went through WorkManager, which runs unfinished work again after a reboot. Left
+            # pending, it could start the server the next case's boot is meant to start by itself.
+            self.until("the start work finished", lambda: not self.manager_jobs(), timeout=60)
+            return {"stopped": server, "started": started}
+        self.case("automation-broadcasts", automation_broadcasts)
 
         def start_on_boot_is(enable):
             listing = self.shell("sh", "-c", f"dumpsys package {base.MANAGER} | grep -A4 enabledComponents")
