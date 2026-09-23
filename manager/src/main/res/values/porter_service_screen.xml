@@ -19,6 +19,6 @@
     <string name="porter_service_api_value">Porter protocol: %1$d</string>
     <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
     <string name="porter_root_requirement">Requires a rooted device. Porter requests root access when you press Start.</string>
-    <string name="porter_version_compact">%1$s (%2$d)</string>
-    <string name="porter_build_compact">%1$s (%2$s)</string>
+    <string name="porter_version_compact">Version: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Build: %1$s (%2$s)</string>
 </resources>
