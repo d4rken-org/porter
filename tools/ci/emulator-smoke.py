@@ -75,6 +75,9 @@ USER_SWITCH_TIMEOUT = 90
 HOST_SETTLE = 45
 MANAGER_SETTLE = 20
 ADB_TIMEOUT = 45
+# An install compiles the APK on the device, which an Android 7 emulator under software rendering
+# has run past ADB_TIMEOUT for the manager.
+INSTALL_TIMEOUT = 180
 # A budget rather than a number of tries: a dump that comes back with no accessibility root has
 # started its own VM to get there, so each failed attempt costs seconds that a count would hide.
 UI_DUMP_TIMEOUT = 30
@@ -177,7 +180,9 @@ class Smoke:
         self.probe_pid = None
         self.foreign_apk = None
 
-    def adb(self, *args, check=True, binary=False, timeout=ADB_TIMEOUT):
+    def adb(self, *args, check=True, binary=False, timeout=None):
+        if timeout is None:
+            timeout = INSTALL_TIMEOUT if args and args[0] == "install" else ADB_TIMEOUT
         command = ["adb", "-s", self.args.serial, *map(str, args)]
         for attempt in range(TRANSPORT_ATTEMPTS):
             result = subprocess.run(command, capture_output=True, timeout=timeout)

@@ -26,6 +26,29 @@ def completed(returncode, stdout=b"", stderr=b""):
     return smoke.subprocess.CompletedProcess(["adb"], returncode, stdout, stderr)
 
 
+class AdbTimeoutTest(unittest.TestCase):
+    """An install compiles on the device and gets longer than any other command."""
+
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.Smoke(argparse.Namespace(serial="emulator-5554", output=Path(directory.name)))
+
+    def timeout_of(self, *args, **kwargs):
+        with patch.object(smoke.subprocess, "run", return_value=completed(0)) as run:
+            self.runner.adb(*args, **kwargs)
+        return run.call_args.kwargs["timeout"]
+
+    def test_installs_get_the_install_budget(self):
+        self.assertEqual(self.timeout_of("install", "-r", "/tmp/a.apk"), smoke.INSTALL_TIMEOUT)
+
+    def test_other_commands_keep_the_adb_budget(self):
+        self.assertEqual(self.timeout_of("shell", "pm list packages"), smoke.ADB_TIMEOUT)
+
+    def test_an_explicit_timeout_still_wins(self):
+        self.assertEqual(self.timeout_of("install", "/tmp/a.apk", timeout=7), 7)
+
+
 class UiDumpTest(unittest.TestCase):
     def setUp(self):
         directory = tempfile.TemporaryDirectory()
