@@ -179,13 +179,25 @@ class Smoke:
         self.results = []
         self.probe_pid = None
         self.foreign_apk = None
+        self.install_hangs = 0
 
     def adb(self, *args, check=True, binary=False, timeout=None):
         if timeout is None:
             timeout = INSTALL_TIMEOUT if args and args[0] == "install" else ADB_TIMEOUT
         command = ["adb", "-s", self.args.serial, *map(str, args)]
         for attempt in range(TRANSPORT_ATTEMPTS):
-            result = subprocess.run(command, capture_output=True, timeout=timeout)
+            try:
+                result = subprocess.run(command, capture_output=True, timeout=timeout)
+            except subprocess.TimeoutExpired:
+                if not args or args[0] != "install" or "--no-streaming" in args:
+                    raise
+                # An Android 7 emulator in CI has hung a streamed install past any budget, with
+                # nothing in the case's log to say why. What the device was doing is kept, and the
+                # install is tried once more the older way: a push, then pm install. -r keeps the
+                # second attempt harmless if the first one did finish.
+                self.install_hang_evidence(command)
+                again = ["--no-streaming", *(() if "-r" in args else ("-r",)), *args[1:]]
+                return self.adb("install", *again, check=check, binary=binary, timeout=timeout)
             stderr = result.stderr.decode(errors="replace")
             with (self.output / "commands.log").open("a") as log:
                 log.write(shlex.join(command) + "\n")
@@ -200,6 +212,20 @@ class Smoke:
         if check and result.returncode:
             raise RuntimeError(f"{shlex.join(command)}: {stderr}")
         return result.stdout if binary else result.stdout.decode(errors="replace").strip()
+
+    def install_hang_evidence(self, command):
+        """The device's state when an install stopped answering, beside the case's own log."""
+        print(f"NOTE install timed out, retrying without streaming: {shlex.join(command)}", flush=True)
+        self.install_hangs += 1
+        with (self.output / f"install-hang-{self.install_hangs}.txt").open("w") as evidence:
+            for label, query in (
+                    ("processes", ("shell", "toybox ps -A -o PID,PPID,STAT,NAME,ARGS")),
+                    ("broadcasts", ("shell", "dumpsys activity broadcasts")),
+                    ("logcat", ("logcat", "-d", "-v", "threadtime"))):
+                try:
+                    evidence.write(f"=== {label}\n{self.adb(*query, check=False)}\n")
+                except subprocess.TimeoutExpired:
+                    evidence.write(f"=== {label}\n(timed out)\n")
 
     def shell(self, *args, **kwargs):
         return self.adb("shell", shlex.join(map(str, args)), **kwargs)
