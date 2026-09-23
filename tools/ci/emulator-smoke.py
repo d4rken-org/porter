@@ -73,6 +73,9 @@ USER_SWITCH_TIMEOUT = 90
 # Enough to cover the first two host deadlines after a record was created, which is what a scenario
 # asserting "nothing was removed" has to outlive to mean anything.
 HOST_SETTLE = 45
+# Past the first host deadline after a record was created. A scan that finds nothing changed puts
+# the next one 30s out, so waiting this long leaves a stretch no scan falls into.
+HOST_QUIET = 17
 MANAGER_SETTLE = 20
 ADB_TIMEOUT = 45
 # An install compiles the APK on the device, which an Android 7 emulator under software rendering
@@ -1265,6 +1268,10 @@ class Smoke:
         def replaced_by_a_foreign_signer():
             """A live daemon of the original signer, with the replacement installed over it."""
             original = self.authorized_daemon()
+            # Between the uninstall and the install the package is absent in every user. On
+            # Android 7 that outlasts the scan's confirmation grace, so a scan landing there removes
+            # the daemon before the replacement can bind.
+            time.sleep(HOST_QUIET)
             self.adb("uninstall", NATIVE)
             # Bounds the interval hand_over_reason() reads: the replacement only exists from here
             # on, so every warning about it was logged after this point.
