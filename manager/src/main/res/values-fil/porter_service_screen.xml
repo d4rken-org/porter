@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Serbisyo</string>
+    <string name="porter_view_service">Tingnan ang serbisyo</string>
+    <string name="porter_service_starting">Sinisimulan ang serbisyo ng Porter…</string>
+    <string name="porter_service_stopping">Inihihinto ang serbisyo ng Porter…</string>
+    <string name="porter_service_checking">Binabasa ang status ng serbisyo…</string>
+    <string name="porter_apps_service_unavailable">Hindi available ang access ng application habang nakahinto o nagbabago ang serbisyo.</string>
+    <string name="porter_apps_counts_unavailable">Hindi available ang bilang ng mga application.</string>
+    <string name="porter_background_operation">Operasyon sa background</string>
+    <string name="porter_service_failed_running">Hindi natapos ang nakaraang update. Tumatakbo pa rin ang serbisyo. Puwede mong subukan ulit ang update.</string>
+    <string name="porter_service_failed_stopped">Hindi natapos ang nakaraang update. Nakahinto ang serbisyo. Pumunta sa dashboard para simulan ito ulit.</string>
+    <string name="porter_service_build_different_summary">Ibang build ang ginagamit ng tumatakbong serbisyo kaysa sa naka-install na app. Available pa rin ang mga compatible na feature.</string>
+    <string name="porter_service_build_unknown_summary">Hindi maiulat ng tumatakbong serbisyo ang pagkakakilanlan ng build nito. I-update ito para magamit ang naka-install na build. Available pa rin ang mga compatible na feature.</string>
+    <string name="porter_service_healthy">Normal na gumagana ang lahat.</string>
+    <string name="porter_service_progress_background">Puwede mong iwan ang screen na ito. Magpapatuloy ang operasyon sa background.</string>
+    <string name="porter_build_identity_unavailable">Hindi available ang pagkakakilanlan ng build</string>
+    <string name="porter_installed_app">Naka-install na app</string>
+    <string name="porter_running_service">Tumatakbong serbisyo</string>
+    <string name="porter_service_api_value">Porter protocol: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Kailangan ng device na may root. Hihingi ang Porter ng root access kapag pinindot mo ang Simulan.</string>
+    <string name="porter_version_compact">Bersyon: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Build: %1$s (%2$s)</string>
+</resources>

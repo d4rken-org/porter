@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Mga app</string>
+    <string name="porter_home_subtitle">ADB access para sa iyong mga app</string>
+    <string name="porter_startup">Pagsisimula</string>
+    <string name="porter_version">Bersyon</string>
+    <string name="porter_pairing_method">Paraan ng pagpapares</string>
+    <string name="porter_status_restricted">Pinaghihigpitan ng Android ang ilang pahintulot ng ADB.</string>
+    <string name="porter_status_stop_message">Madidiskonekta ang mga app na gumagamit ng Porter kapag inihinto ito. Kailangan mong manual na simulan ulit ang Porter, na maaaring mangailangan ng kompyuter.</string>
+    <string name="porter_status_details_hint">Buksan ang mga detalye ng serbisyo at mga opsyon sa paghinto</string>
+    <string name="porter_status_ready">Handa na ang Porter. Makakakonekta at makakahiling na ng access ang mga compatible na app.</string>
+    <string name="porter_pairing_notification">Notification</string>
+    <string name="porter_pairing_dialog">Dialog sa loob ng app</string>
+    <string name="porter_manage_apps_action">Pamahalaan ang mga app</string>
+    <string name="porter_primary_user_title">Gamitin ang pangunahing user ng Android</string>
+    <string name="porter_primary_user_description">Hindi masisimulan ang Porter mula sa user o profile ng Android na ito. Lumipat sa pangunahing user ng device, i-install doon ang Porter kung kailangan, at simulan ang serbisyo nito. Pagkatapos ay bumalik dito para pamahalaan ang mga app mo.</string>
+    <string name="porter_secondary_user_stop_message">Madidiskonekta ang mga app sa lahat ng user ng Android kapag inihinto ang Porter. Para simulan ito ulit, lumipat sa pangunahing user ng device at buksan doon ang Porter.</string>
+</resources>

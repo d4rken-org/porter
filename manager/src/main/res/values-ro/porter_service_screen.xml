@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Serviciu</string>
+    <string name="porter_view_service">Vezi serviciul</string>
+    <string name="porter_service_starting">Se pornește serviciul Porter…</string>
+    <string name="porter_service_stopping">Se oprește serviciul Porter…</string>
+    <string name="porter_service_checking">Se citește starea serviciului…</string>
+    <string name="porter_apps_service_unavailable">Accesul aplicațiilor nu este disponibil cât timp serviciul este oprit sau în curs de schimbare.</string>
+    <string name="porter_apps_counts_unavailable">Numărul de aplicații nu este disponibil.</string>
+    <string name="porter_background_operation">Funcționare în fundal</string>
+    <string name="porter_service_failed_running">Actualizarea anterioară nu s-a finalizat. Serviciul încă rulează. Poți reîncerca actualizarea.</string>
+    <string name="porter_service_failed_stopped">Actualizarea anterioară nu s-a finalizat. Serviciul este oprit. Accesează panoul principal pentru a-l porni din nou.</string>
+    <string name="porter_service_build_different_summary">Serviciul care rulează folosește un alt build decât aplicația instalată. Funcțiile compatibile rămân disponibile.</string>
+    <string name="porter_service_build_unknown_summary">Serviciul care rulează nu își poate raporta identitatea build-ului. Actualizează-l pentru a folosi build-ul instalat. Funcțiile compatibile rămân disponibile.</string>
+    <string name="porter_service_healthy">Totul funcționează normal.</string>
+    <string name="porter_service_progress_background">Poți părăsi acest ecran. Operațiunea continuă în fundal.</string>
+    <string name="porter_build_identity_unavailable">Identitatea build-ului nu este disponibilă</string>
+    <string name="porter_installed_app">Aplicație instalată</string>
+    <string name="porter_running_service">Serviciu în execuție</string>
+    <string name="porter_service_api_value">Protocol Porter: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Necesită un dispozitiv cu root. Porter solicită acces root când apeși „Pornire”.</string>
+    <string name="porter_version_compact">Versiune: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Build: %1$s (%2$s)</string>
+</resources>

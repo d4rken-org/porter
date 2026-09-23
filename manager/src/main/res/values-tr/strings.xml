@@ -5,13 +5,13 @@
     <string name="home_status_service_not_running">%1$s çalışmıyor</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Bilgisayara bağlanarak başlatın]]></string>
-    <string name="home_adb_description"><![CDATA[Rootsuz cihazlar için Porter’yu başlatmak için adb kullanmanız gerekir (bilgisayar bağlantısı gerektirir). Bu işlemin cihaz her yeniden başlatıldığında tekrarlanması gerekir. Lütfen <b><a href="%1$s">yardımı okuyun</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Rootsuz cihazlar için Porter’ı başlatmak için adb kullanmanız gerekir (bilgisayar bağlantısı gerektirir). Bu işlemin cihaz her yeniden başlatıldığında tekrarlanması gerekir. Lütfen <b><a href="%1$s">yardımı okuyun</a></b>.]]></string>
     <string name="home_adb_button_view_command">Komutu görüntüle</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Başka hususlar da var, lütfen önce yardımı okuduğunuzu onaylayın.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Gönder</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Kablosuz hata ayıklama ile başlat]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Android 11 ve üzeri sürümlerde, Kablosuz hata ayıklama ve Porter\'yu cihazınızdan bir bilgisayara bağlanmadan direkt aktif edebilirsiniz.<p>Lütfen öncelikle adım adım kılavuz\'u inceleyin.]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Android 11 ve üzeri sürümlerde, Kablosuz hata ayıklama ve Porter\'ı cihazınızdan bir bilgisayara bağlanmadan direkt aktif edebilirsiniz.<p>Lütfen öncelikle adım adım kılavuz\'u inceleyin.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Android 11 ve önceki sürümlerde, Kablosuz hata ayıklama’yı aktif etmek için bir bilgisayara bağlanmak gereklidir.]]></string>
     <string name="home_wireless_adb_view_guide_button">Adım adım kılavuz</string>
     <!-- Adb -->
@@ -27,26 +27,23 @@
     <string name="dialog_adb_port">Port</string>
     <string name="adb_pairing">Eşleştiriliyor</string>
     <string name="dialog_adb_pairing_title">Cihazla eşleş</string>
-    <string name="dialog_adb_pairing_discovery">Eşleştirme servisi aranıyor</string>
+    <string name="dialog_adb_pairing_discovery">Eşleştirme hizmeti aranıyor</string>
     <string name="dialog_adb_pairing_paring_code">Eşleşme kodu</string>
     <string name="paring_code_is_wrong">Eşleme kodu yanlış.</string>
-    <string name="cannot_connect_port">Kablosuz hata ayıklama servisine bağlanılamıyor.\n\nLütfen
-        Porter\'nun ağ erişimini kısıtlayabilen tüm güvenlik duvarı, reklam engelleme, VPN veya
+    <string name="cannot_connect_port">Kablosuz hata ayıklama hizmetine bağlanılamıyor.\n\nLütfen
+        Porter\'ın ağ erişimini kısıtlayabilen tüm güvenlik duvarı, reklam engelleme, VPN veya
         benzeri uygulamalarda beyaz listeye alındığından emin olun.</string>
     <string name="dialog_wireless_adb_not_enabled">Kablosuz hata ayıklama etkin değil.
         \nNot, Android 11’den önce kablosuz hata ayıklamayı etkinleştirmek için bilgisayar
         bağlantısının şart olduğunu unutmayın.</string>
     <string name="dialog_usb_debugging_not_enabled">USB hata ayıklama etkin değil.\nLütfen
         \"Geliştirici Seçenekleri\"nde etkinleştirin.</string>
-    <string name="dialog_adb_pairing_accessibility_permission">Android 14\'te, Porter\'yu Paket
+    <string name="dialog_adb_pairing_accessibility_permission">Android 14\'te, Porter\'ı Paket
         Yükleyici ile yüklemek/güncellemek, eşleştirme için erişilebilirlik hizmetini etkinleştirmek
         için gerekli olan ^1 iznini iptal eder.\n\nBu izni vermek için aşağıdaki ADB komutunu
         çalıştırın:\n\n^2\n\nKomutu çalıştırdıktan sonra eşleştirme işlemine devam
-        edebilirsiniz.\n\nNot: Bunu ADB ile Porter\'yu yükleyerek/güncelleyerek atlayabilirsiniz.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Eşleştirme işlemini başlatmak için lütfen
-        erişilebilirlik hizmetini etkinleştirin. Bu, Porter\'nun eşleştirme kodunu algılamasını
-        sağlar.\n\nKod bulunduğunda veya enerji tasarrufu için 1 dakika sonra erişilebilirlik
-        hizmeti kapatılacaktır.</string>
+        edebilirsiniz.\n\nNot: Bunu ADB ile Porter\'ı yükleyerek/güncelleyerek atlayabilirsiniz.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Eşleştirme işlemini başlatmak için lütfen erişilebilirlik hizmetini etkinleştirin. Bu, Porter’ın eşleştirme kodunu algılamasını sağlar.\n\nErişilebilirlik hizmeti, eşleştirme denemesinden sonra veya bir dakika içinde kod bulunamazsa kapanır. Porter sonucu gösterir ve yeniden denemenize izin verir.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Lütfen aşağıdaki adımları uygulayarak
         eşleştirmeyi başlatın:\n- \"Geliştirici Seçenekleri\"ne gidin\n- \"USB hata ayıklama\" ve
         \"Kablosuz hata ayıklama\"yı etkinleştirin\n- \"Kablosuz hata ayıklama\"nın sol tarafına
@@ -71,15 +68,15 @@
         tarafına dokunun, ardından \"Cihazı eşleştirme koduyla eşleştir\" seçeneğine dokunun.
         Eşleştirmeyi tamamlamak için bildirimdeki kodu girin.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Eşleştirme işlemi, Porter\'dan
-        gelen bir bildirimle etkileşim kurmanızı gerektirir. Lütfen Porter\'nun bildirim
+        gelen bir bildirimle etkileşim kurmanızı gerektirir. Lütfen Porter\'ın bildirim
         göndermesine izin verin.</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI kullanıcılarının sistem ayarlarında
         \"Bildirim\" - \"Bildirim gölgesi\"nden bildirim stilini \"Android\" olarak değiştirmeleri
         gerekebilir.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Aksi takdirde, bildirimden eşleştirme kodunu
         giremeyebilirsiniz.</string>
-    <string name="adb_pairing_tutorial_content_finish">Porter\'ya geri dön ve Porter\'yu başlat.</string>
-    <string name="adb_pairing_tutorial_content_network">Porter\'nun yerel ağa erişmesi gerekiyor.
+    <string name="adb_pairing_tutorial_content_finish">Porter\'a geri dön ve Porter\'ı başlat.</string>
+    <string name="adb_pairing_tutorial_content_network">Porter\'ın yerel ağa erişmesi gerekiyor.
         Ağ izniyle kontrol edilir.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Bazı sistemler
         (örneğin MIUI), uygulamaların görünmediği durumlarda ağa erişmesini yasaklar, uygulama ön
@@ -98,20 +95,20 @@
     <string name="home_app_management_empty">Porter iznini talep eden veya beyan eden uygulamalar
         burada gösterilecektir.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">Porter\'yu otomasyon uygulamalarıyla kontrol edin</string>
+    <string name="home_automation_title">Porter\'ı otomasyon uygulamalarıyla kontrol edin</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB’nin izni sınırlıdır</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Cihaz üreticinizin adb iznini sınırlaması son derece olasıdır. <p>Bu belgede<b><a href="%1$s">sisteminiz için bir çözüm olabilir</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* Porter’nun root ile çalıştırılması
+    <string name="app_management_item_summary_requires_root">* Porter’ın root ile çalıştırılması
         gerekli</string>
     <string name="app_management_toggle_all">Tümünü aç/kapat</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">Porter’yu terminal uygulamalarında kullanın</string>
+    <string name="home_terminal_title">Porter’ı terminal uygulamalarında kullanın</string>
     <string name="home_terminal_description">Porter aracılığıyla terminal uygulamalarında kabuk
         komutlarını çalıştırın</string>
     <string name="terminal_tutorial_miui">Kullanıcılar, MIUI\'nin dışa aktarma işlevi tarafından
         kullanılan Depolama Erişim Çerçevesini bozduğunu bildirdi.</string>
-    <string name="terminal_tutorial_miui_2">Eğer MIUI kullanıyorsanız, dosyayı Porter\'nun
+    <string name="terminal_tutorial_miui_2">Eğer MIUI kullanıyorsanız, dosyayı Porter\'ın
         APK\'sındaki varlıklar klasöründen çıkarmanız gerekebilir.</string>
     <string name="terminal_tutorial_1">Dosyaları yeni bir klasöre aktarın.</string>
     <string name="terminal_tutorial_1_description">İki dosya dışa aktarılacak: %1$s ve %2$s.
@@ -133,9 +130,9 @@
         ayıklama yetkili ağları hatırlamıyor.\n\nHer yeniden başlatmada yetkilendirme diyalogu
         açıldığında \"İzin ver\" tuşuna tıklayarak ağı yeniden yetkilendirmeniz gerekecek.</string>
     <string name="settings_watchdog">Bekçi köpeği</string>
-    <string name="settings_watchdog_summary">Çökerse Porter\'yu otomatik olarak yeniden başlat</string>
+    <string name="settings_watchdog_summary">Çökerse Porter\'ı otomatik olarak yeniden başlat</string>
     <string name="settings_restart_dialog_title">Yeniden Başlatma Gerekli</string>
-    <string name="settings_restart_dialog_message">Porter\'nun bu ayarı uygulayabilmesi için
+    <string name="settings_restart_dialog_message">Porter\'ın bu ayarı uygulayabilmesi için
         yeniden başlatması gerekiyor.</string>
     <string name="settings_tcp_port">TCP bağlantı noktası</string>
     <string name="settings_tcp_port_default">Varsayılan (5555)</string>
@@ -151,9 +148,9 @@
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter arka planda zaten başlıyor</string>
     <string name="toast_accessibility_tv_only">Bu hizmet yalnızca TV cihazlarında desteklenmektedir.</string>
-    <string name="toast_pairing_timeout">Porter eşleştirme servisi zaman doldu.</string>
+    <string name="toast_pairing_timeout">Porter eşleştirme hizmeti zaman aşımına uğradı.</string>
     <!-- Stop -->
-    <string name="action_stop">Porter’yu durdur</string>
+    <string name="action_stop">Porter’ı durdur</string>
     <!-- Notification -->
     <string name="notification_channel_adb_pairing">Kablosuz hata ayıklama eşleştirmesi</string>
     <string name="notification_adb_pairing_input_paring_code">Eşleştirme kodunu girin</string>
@@ -166,8 +163,8 @@
     <string name="notification_adb_pairing_failed_title">Eşleştirme başarısız</string>
     <string name="notification_adb_pairing_retry">Yeniden dene</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">Porter’ya erişim</string>
-    <string name="permission_description">Uygulamanın Porter’yu kullanmasına izin verin.</string>
+    <string name="permission_label">Porter’a erişim</string>
+    <string name="permission_description">Uygulamanın Porter’ı kullanmasına izin verin.</string>
     <string name="permission_warning_template"><![CDATA[<b>%1$s</b> uygulamasına %2$s için izin verilsin mi\?]]></string>
     <string name="grant_dialog_button_allow_always">Her zaman izin ver</string>
     <string name="grant_dialog_button_deny">"Reddet"</string>
@@ -176,13 +173,13 @@
     <string name="start_with_root_failed">Root izni verilmediği veya bu aygıtın rootlu olmadığı için
         hizmet başlatılamıyor.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Porter\'ya Başlarken…</string>
+    <string name="wadb_notification_title">Porter başlatılıyor…</string>
     <string name="wadb_notification_wifi_required">Devam etmeden önce Wi-Fi bağlantısı bekleniyor</string>
     <string name="wadb_notification_retry">Yeniden denemeyi bekliyor.</string>
     <string name="wadb_error_title">Önyükleme sırasında hata oluştu</string>
     <string name="wadb_error_notify_dev">Geliştiriciyi bilgilendirmek için dokunun.</string>
     <string name="wadb_permission_error_notification_title">İzin Hatası</string>
-    <string name="wadb_permission_error_notification_content">Porter\'nun önyükleme sırasında
+    <string name="wadb_permission_error_notification_content">Porter\'ın önyükleme sırasında
         WRITE_SECURE_SETTINGS ayarına ihtiyacı var. Nasıl izin vereceğinizi öğrenmek için dokunun.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Bekçi köpeği çalışıyor</string>
@@ -196,8 +193,63 @@
     <string name="toast_copied_to_clipboard">Panoya kopyalandı</string>
     <string name="accessibility_service_description">Bildirimlerin veya bölünmüş ekranın
         kullanılamadığı cihazlar (örneğin, Android 14+ çalıştıran TV\'ler) için eşleştirme desteği
-        sağlar.\n\nShizuku\'nun eşleştirme kodunu kablosuz hata ayıklama eşleştirme ekranından
+        sağlar.\n\nPorter\'ın eşleştirme kodunu kablosuz hata ayıklama eşleştirme ekranından
         çıkarmasını sağlar. Eşleştirme kodu bulunduğunda kendini devre dışı bırakır.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Şimdi dene</string>
+    <string name="home_root_description"><![CDATA[Magisk kullanıyorsanız %1$s başka bir seçenektir. Uygulamaların %2$s için açık destek sunması gerekir.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intent’ler</string>
+    <string name="home_automation_bottom_sheet_label_action">Eylem</string>
+    <string name="home_automation_bottom_sheet_label_package">Paket</string>
+    <string name="home_automation_bottom_sheet_label_target">Hedef</string>
+    <string name="home_automation_bottom_sheet_label_extras">Ekstralar</string>
+    <string name="home_automation_regenerate_token">Belirteç yeniden oluşturulsun mu?</string>
+    <string name="home_automation_regenerate_token_message">Intent’lerinizi yeni belirteçle yeniden yapılandırmanız gerekecek.</string>
+    <string name="home_dialog_reboot_required_title">Yeniden başlatma gerekli</string>
+    <string name="home_dialog_reboot_required_message">Porter’ın düzgün çalışması için cihazın yeniden başlatılması gerekiyor. Devam etmek için lütfen cihazınızı yeniden başlatın.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Yinelenen uygulama algılandı</string>
+    <string name="home_dialog_duplicate_app_detected_message">Cihazınızda bu uygulamanın başka bir sürümü yüklü. Devam etmek için lütfen tüm yinelenen sürümleri kaldırın ve cihazınızı yeniden başlatın.</string>
+    <string name="home_dialog_button_exit">Çık</string>
+    <string name="settings_alerts_blocked_title">Arka plan uyarıları</string>
+    <string name="settings_alerts_blocked_summary">Porter bildirimleri engellendiği için önyüklemede başlatma ve bekçi köpeği, ilgilenmeniz gerektiğinde size haber veremez.</string>
+    <string name="settings_alerts_blocked_message">Bu özellik ne yaptığını ve neyin ters gittiğini bir bildirimle bildirir. Porter bildirimleri şu anda engelli olduğundan, size hiçbir şey söylemeden çalışır.</string>
+    <string name="settings_alerts_blocked_continue">Yine de aç</string>
+    <string name="follow_system">Sistemi takip et</string>
+    <string name="start">Başlat</string>
+    <string name="stop">Durdur</string>
+    <string name="notification_channel_watchdog">Bekçi köpeği</string>
+    <string name="notification_channel_crash">Çökme raporları</string>
+    <string name="notification_channel_auth">Kimlik doğrulama hataları</string>
+    <string name="notification_auth_invalid_title">Geçersiz kimlik doğrulama belirteci</string>
+    <string name="notification_auth_invalid_message">Intent’inizdeki belirtecin, Ayarlar’daki “Porter’ı otomasyon uygulamalarıyla kontrol edin” altındaki belirteçle eşleştiğinden emin olun.</string>
+    <string name="porter_status_running_adb">ADB ile çalışıyor</string>
+    <string name="porter_status_running_root">Root ile çalışıyor</string>
+    <string name="porter_status_restart_service">Çalışan hizmeti güncellemek için Porter’ı yeniden başlatın.</string>
+    <string name="porter_status_version_unknown">Bilinmiyor</string>
+    <string name="porter_status_versions">Yüklü Porter: %1$s\nÇalışan hizmet: %2$s\nShizuku API: %3$d · Yama: %4$d</string>
+    <string name="porter_acknowledgements">Teşekkürler</string>
+    <string name="porter_acknowledgements_summary">Kaynak projeler, açık kaynak kütüphaneler ve lisanslar.</string>
+    <string name="porter_acknowledgements_thanks">Teşekkür ederiz</string>
+    <string name="porter_licenses">Lisanslar</string>
+    <string name="porter_ack_shizuku">Porter’ın temeli olan Shizuku’yu ve API’lerini oluşturdukları için RikkaApps’e ve tüm katkıda bulunanlara.</string>
+    <string name="porter_ack_thedjchi">Porter’ın temel aldığı Shizuku çatalını sürdürdükleri için thedjchi’ye ve katkıda bulunanlara.</string>
+    <string name="porter_ack_symbuzzer">Shizuku üzerindeki çalışmaları sürdürdükleri ve çatallarını paylaştıkları için symbuzzer’a ve katkıda bulunanlara.</string>
+    <string name="porter_ack_plus">ShizukuPlus ve isteğe bağlı bir uyumluluk uygulaması fikrine ilham verdikleri için thejaustin’e ve katkıda bulunanlara.</string>
+    <string name="porter_ack_maxpatchs">Simge, maskot tasarımları ve banner için teşekkürler.</string>
+    <string name="porter_license_porter">Porter ve orijinal Shizuku uygulaması · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API ve Porter çatalı · MIT License</string>
+    <string name="porter_license_notice">Telif hakkı ve atıf bildirimleri</string>
+    <string name="porter_pairing_restart">Eşleştirmeyi yeniden başlat</string>
+    <string name="porter_pairing_retry_instructions">Bir kod reddedildiyse veya bildirim kaybolduysa eşleştirmeyi buradan yeniden başlatın. Ardından Android’in eski eşleştirme kodu iletişim kutusunu kapatın ve yenisini açın. Yeni kodu kullanın; Porter’ın verilerini temizlemeniz gerekmez.</string>
+    <string name="porter_pairing_search_timeout">Bir dakika içinde eşleştirme kodu alınamadı. Eşleştirme durduruldu. “Yeniden dene”yi seçin, ardından “Kablosuz hata ayıklama” bölümünde yeni bir eşleştirme kodu iletişim kutusu açın.</string>
+    <string name="porter_pairing_attempt_timeout">Eşleştirme bağlantısı zaman aşımına uğradı. “Kablosuz hata ayıklama” bölümünde yeni bir eşleştirme kodu iletişim kutusu açıp yeniden deneyin.</string>
+    <string name="porter_pairing_failed_retry">Eşleştirme başarısız oldu. “Kablosuz hata ayıklama” bölümünde yeni bir eşleştirme kodu iletişim kutusu açıp yeniden deneyin.</string>
+    <string name="porter_pairing_notification_timeout">Bildirim zaman aşımına uğradığı için eşleştirme durduruldu. “Yeniden dene”yi seçin, ardından “Kablosuz hata ayıklama” bölümünde yeni bir eşleştirme kodu iletişim kutusu açın.</string>
+    <string name="porter_tv_pairing_progress_title">Porter eşleştirmesi</string>
+    <string name="porter_tv_pairing_wait">Lütfen eşleştirme kodu penceresini açık bırakın ve bekleyin.</string>
+    <string name="porter_tv_pairing_return">Eşleştirme erişilebilirlik hizmetini kapatmak için Porter’a dönülüyor…</string>
+    <string name="porter_tv_pairing_disabling">Eşleştirme erişilebilirlik hizmeti kapatılıyor…</string>
+    <string name="porter_tv_pairing_complete">Eşleştirme erişilebilirlik hizmeti kapalı. Tüm eşleştirme adımları tamamlandı. Bu pencereyi kapatabilirsiniz.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Eşleştirme erişilebilirlik hizmeti hâlâ etkin. Erişilebilirlik ayarlarından kapatın.</string>
+    <string name="porter_tv_pairing_open_accessibility">Erişilebilirlik ayarlarını aç</string>
 </resources>

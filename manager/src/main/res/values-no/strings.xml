@@ -8,7 +8,7 @@
     <string name="home_adb_description"><![CDATA[For enheter uten root må du bruke adb for å starte Porter (krever datamaskintilkobling). Denne prosessen må gjentas hver gang enheten startes på nytt. Vennligst <b><a href=\"%1$s\">les hjelpen</a></b>.]]></string>
     <string name="home_adb_button_view_command">Vis kommando</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Det er noen andre hensyn å ta. Vennligst bekreft at du har lest hjelpen først.]]></string>
-    <string name="home_adb_dialog_view_command_button_send">Sende</string>
+    <string name="home_adb_dialog_view_command_button_send">Send</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Start via trådløs feilsøking]]></string>
     <string name="home_wireless_adb_description"><![CDATA[På Android 11 eller nyere kan du aktivere trådløs feilsøking og starte Porter direkte fra enheten din, uten å koble til en datamaskin.<p>Se først den trinnvise veiledningen.]]></string>
@@ -22,9 +22,9 @@
         stoppes Porter.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Prøv å deaktivere og
         aktivere «Trådløs feilsøking» hvis den fortsetter å søke.</string>
-    <string name="dialog_adb_port">Havn</string>
+    <string name="dialog_adb_port">Port</string>
     <string name="adb_pairing">Paring</string>
-    <string name="dialog_adb_pairing_title">Koble til enhet</string>
+    <string name="dialog_adb_pairing_title">Par med enhet</string>
     <string name="dialog_adb_pairing_discovery">Søker etter paringstjeneste</string>
     <string name="dialog_adb_pairing_paring_code">Paringskode</string>
     <string name="paring_code_is_wrong">Paringskoden er feil.</string>
@@ -40,14 +40,11 @@
         som er nødvendig for å aktivere tilgjengelighetstjenesten for paring.\n\nFor å gi den, kjør
         følgende ADB-kommando:\n\n^2\n\nEtter at du har kjørt kommandoen, kan du fortsette med
         paringsprosessen.\n\nMerk: Du kan omgå dette ved å installere/oppdatere Porter med ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Vennligst aktiver
-        tilgjengelighetstjenesten for å starte paringsprosessen. Dette lar Porter oppdage
-        paringskoden.\n\nTilgjengelighetstjenesten slås av når koden blir funnet, eller etter 1
-        minutt for å spare energi.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Aktiver tilgjengelighetstjenesten for å starte paringen. Dette lar Porter oppdage paringskoden.\n\nTilgjengelighetstjenesten slås av etter paringsforsøket, eller hvis ingen kode blir funnet innen ett minutt. Porter viser resultatet og lar deg prøve igjen.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Start paringen ved å utføre følgende
         trinn:\n– Naviger til «Utvikleralternativer»\n– Aktiver «USB-feilsøking» og «Trådløs
-        feilsøking»\n– Trykk på venstre side av «Trådløs feilsøking»\n– Trykk på «Par enhet med
-        paringskode». Porter vil automatisk oppdage paringskoden.</string>
+        feilsøking»\n– Trykk på venstre side av «Trådløs feilsøking»\n– Trykk på «Koble til enheten med
+        tilkoblingskode». Porter vil automatisk oppdage paringskoden.</string>
     <string name="adb_pairing_requires_multi_window">Vennligst aktiver delt skjermmodus (flere
         vinduer) først.</string>
     <string name="adb_pairing_requires_multi_window_reason">Systemet krever at paringsdialogen
@@ -64,7 +61,7 @@
     <string name="adb_pairing_tutorial_content_steps">Naviger til «Utvikleralternativer», og aktiver
         deretter «USB-feilsøking» og «Trådløs feilsøking».</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Trykk på venstre side av «Trådløs
-        feilsøking», og trykk deretter på «Koble sammen enhet med paringskode». Skriv inn koden i
+        feilsøking», og trykk deretter på «Koble til enheten med tilkoblingskode». Skriv inn koden i
         varselet for å fullføre paringen.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Paringsprosessen krever at du
         interagerer med en varsling fra Porter. Vennligst la Porter poste varsler.</string>
@@ -85,8 +82,8 @@
     <!-- Home - Application management -->
     <string name="home_app_management_title">Applikasjonsadministrasjon</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="one"><![CDATA[Autorisert %d -applikasjon]]></item>
-        <item quantity="other"><![CDATA[Autoriserte %d applikasjoner]]></item>
+        <item quantity="one"><![CDATA[%d autorisert applikasjon]]></item>
+        <item quantity="other"><![CDATA[%d autoriserte applikasjoner]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Trykk for å administrere autoriserte apper]]></string>
     <string name="home_app_management_empty">Apper som har bedt om eller erklært Porter-tillatelsen
@@ -103,12 +100,11 @@
     <string name="home_terminal_description">Kjør skallkommandoer i terminalapper gjennom Porter</string>
     <string name="terminal_tutorial_miui">Brukere har rapportert at MIUI bryter Storage Access
         Framework, som brukes av eksportfunksjonen.</string>
-    <string name="terminal_tutorial_miui_2">Hvis du bruker MIUI, må du kanskje pakke ut filen fra
-        mappen med ressurser i Shizukus APK.</string>
+    <string name="terminal_tutorial_miui_2">Hvis du bruker MIUI, må du kanskje pakke ut filen fra assets-mappen i Porters APK.</string>
     <string name="terminal_tutorial_1">Eksporter filene til en ny mappe.</string>
     <string name="terminal_tutorial_1_description">To filer vil bli eksportert: %1$s og %2$s. Hvis
         filene allerede finnes i den valgte mappen, vil de bli slettet.</string>
-    <string name="terminal_export_files">Eksportfiler</string>
+    <string name="terminal_export_files">Eksporter filer</string>
     <string name="terminal_tutorial_2">Bruk terminalappen din til å kopiere filene til den private
         filkatalogen.</string>
     <string name="terminal_tutorial_2_description">Tips: Hvis hjemmekatalogen (~) til terminalappen
@@ -119,11 +115,11 @@
     <string name="rish_description"><![CDATA[Med %1$skan du kjøre skallkommandoer i en hvilken som helst terminalapp.<p>Trykk for å lære mer om hvordan du bruker det.]]></string>
     <!-- Settings -->
     <string name="settings_title">Innstillinger</string>
-    <string name="settings_start_on_boot">Start på oppstart</string>
+    <string name="settings_start_on_boot">Start ved oppstart</string>
     <string name="settings_start_on_boot_summary">Krever Android 11+ eller root</string>
     <string name="settings_start_on_boot_bug">På grunn av en feil i Android 11-12 husker ikke
         trådløs feilsøking noen autoriserte nettverk.\n\nDu må autorisere nettverket på nytt ved
-        hver omstart ved å trykke på \"Tillat\" når autorisasjonsdialogen dukker opp.</string>
+        hver omstart ved å trykke på «Tillat» når autorisasjonsdialogen dukker opp.</string>
     <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Start Porter automatisk på nytt hvis den krasjer</string>
     <string name="settings_restart_dialog_title">Omstart kreves</string>
@@ -136,14 +132,14 @@
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Porten må være mellom 1 og 65535</string>
     <string name="snackbar_battery_optimization_home">Batterioptimalisering må deaktiveres for at
-        oppstart på oppstart/watchdog skal fungere riktig.</string>
+        start ved oppstart/watchdog skal fungere riktig.</string>
     <string name="snackbar_battery_optimization_settings">Vennligst deaktiver batterioptimalisering
         for å bruke denne funksjonen.</string>
-    <string name="snackbar_action_fix">Fiksere</string>
+    <string name="snackbar_action_fix">Fiks</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Porter begynner allerede i bakgrunnen</string>
+    <string name="toast_shizuku_already_starting">Porter starter allerede i bakgrunnen</string>
     <string name="toast_accessibility_tv_only">Denne tjenesten støttes kun på TV-enheter.</string>
-    <string name="toast_pairing_timeout">Porter-paringstjenesten gikk ut.</string>
+    <string name="toast_pairing_timeout">Tidsavbrudd for Porter-paringstjenesten</string>
     <!-- Stop -->
     <string name="action_stop">Stopp Porter</string>
     <!-- Notification -->
@@ -156,31 +152,31 @@
     <string name="notification_adb_pairing_succeed_title">Vellykket paring</string>
     <string name="notification_adb_pairing_succeed_text">Du kan starte Porter-tjenesten nå.</string>
     <string name="notification_adb_pairing_failed_title">Paringen mislyktes</string>
-    <string name="notification_adb_pairing_retry">Prøve</string>
+    <string name="notification_adb_pairing_retry">Prøv igjen</string>
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">tilgang til Porter</string>
     <string name="permission_description">La appen bruke Porter.</string>
-    <string name="permission_warning_template"><![CDATA[Tillate <b>%1$s</b> til %2$s?]]></string>
-    <string name="grant_dialog_button_allow_always">Gi all tid</string>
-    <string name="grant_dialog_button_deny">"Benekte"</string>
+    <string name="permission_warning_template"><![CDATA[Vil du gi <b>%1$s</b> %2$s?]]></string>
+    <string name="grant_dialog_button_allow_always">Tillat hele tiden</string>
+    <string name="grant_dialog_button_deny">"Ikke tillat"</string>
     <!-- Starter -->
-    <string name="starter">Forrett</string>
+    <string name="starter">Oppstart</string>
     <string name="start_with_root_failed">Kan ikke starte tjenesten fordi root-tillatelse ikke er
         gitt, eller denne enheten ikke er rootet.</string>
     <!-- WADB Starter -->
     <string name="wadb_notification_title">Starter Porter…</string>
-    <string name="wadb_notification_wifi_required">Venter på Wi-Fi-tilkobling før jeg fortsetter</string>
+    <string name="wadb_notification_wifi_required">Venter på Wi-Fi-tilkobling for å fortsette</string>
     <string name="wadb_notification_retry">Venter på å prøve på nytt</string>
-    <string name="wadb_error_title">Feil ved oppstart ved oppstart</string>
+    <string name="wadb_error_title">Feil under start ved oppstart</string>
     <string name="wadb_error_notify_dev">Trykk for å varsle utvikleren.</string>
     <string name="wadb_permission_error_notification_title">Tillatelsesfeil</string>
     <string name="wadb_permission_error_notification_content">Porter trenger WRITE_SECURE_SETTINGS
-        for å starte på oppstart. Trykk for å lære hvordan du gir det.</string>
+        for å starte ved oppstart. Trykk for å lære hvordan du gir det.</string>
     <!-- Watchdog -->
-    <string name="watchdog_running">Vakthunden er i gang</string>
+    <string name="watchdog_running">Watchdog er i gang</string>
     <string name="watchdog_turn_off">Slå av</string>
     <string name="watchdog_shizuku_crashed_title">Porter krasjet nylig</string>
-    <string name="watchdog_shizuku_crashed_text">Vakthunden startet tjenesten på nytt. Trykk for å
+    <string name="watchdog_shizuku_crashed_text">Watchdog startet tjenesten på nytt. Trykk for å
         lære om mulige løsninger som kan forhindre fremtidige krasj.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Slå av varsler</string>
     <!-- Misc -->
@@ -192,4 +188,59 @@
         deaktivere seg selv når paringskoden er funnet.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Forsøk nå</string>
+    <string name="home_root_description"><![CDATA[Hvis du bruker Magisk, er %1$s et annet alternativ. Apper trenger eksplisitt støtte for %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intents</string>
+    <string name="home_automation_bottom_sheet_label_action">Handling</string>
+    <string name="home_automation_bottom_sheet_label_package">Pakke</string>
+    <string name="home_automation_bottom_sheet_label_target">Mål</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extras</string>
+    <string name="home_automation_regenerate_token">Generere nytt token?</string>
+    <string name="home_automation_regenerate_token_message">Du må konfigurere intentene dine på nytt med det nye tokenet.</string>
+    <string name="home_dialog_reboot_required_title">Omstart kreves</string>
+    <string name="home_dialog_reboot_required_message">Enheten må startes på nytt for at Porter skal fungere riktig. Start enheten på nytt for å fortsette.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Duplisert app oppdaget</string>
+    <string name="home_dialog_duplicate_app_detected_message">En annen versjon av denne appen er installert på enheten. Avinstaller alle dupliserte versjoner og start enheten på nytt for å fortsette.</string>
+    <string name="home_dialog_button_exit">Avslutt</string>
+    <string name="settings_alerts_blocked_title">Bakgrunnsvarsler</string>
+    <string name="settings_alerts_blocked_summary">Varsler fra Porter er blokkert, så start ved oppstart og watchdog kan ikke gi deg beskjed når de trenger oppmerksomhet.</string>
+    <string name="settings_alerts_blocked_message">Denne funksjonen rapporterer hva den gjør, og hva som gikk galt, via et varsel. Varsler fra Porter er for øyeblikket blokkert, så den ville kjørt uten å gi deg beskjed om noe.</string>
+    <string name="settings_alerts_blocked_continue">Slå på likevel</string>
+    <string name="follow_system">Følg systemet</string>
+    <string name="start">Start</string>
+    <string name="stop">Stopp</string>
+    <string name="notification_channel_watchdog">Watchdog</string>
+    <string name="notification_channel_crash">Krasjrapporter</string>
+    <string name="notification_channel_auth">Autentiseringsfeil</string>
+    <string name="notification_auth_invalid_title">Ugyldig autentiseringstoken</string>
+    <string name="notification_auth_invalid_message">Kontroller at tokenet i intenten samsvarer med det i Innstillinger under «Styr Porter med automatiseringsapper».</string>
+    <string name="porter_status_running_adb">Kjører via ADB</string>
+    <string name="porter_status_running_root">Kjører via root</string>
+    <string name="porter_status_restart_service">Start Porter på nytt for å oppdatere den kjørende tjenesten.</string>
+    <string name="porter_status_version_unknown">Ukjent</string>
+    <string name="porter_status_versions">Installert Porter: %1$s\nKjørende tjeneste: %2$s\nShizuku API: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Anerkjennelser</string>
+    <string name="porter_acknowledgements_summary">Oppstrømsprosjekter, åpen kildekode-biblioteker og lisenser.</string>
+    <string name="porter_acknowledgements_thanks">Takk</string>
+    <string name="porter_licenses">Lisenser</string>
+    <string name="porter_ack_shizuku">Til RikkaApps og alle bidragsytere for å ha laget Shizuku og API-ene, grunnlaget for Porter.</string>
+    <string name="porter_ack_thedjchi">Til thedjchi og bidragsytere for å vedlikeholde Shizuku-forken som Porter er basert på.</string>
+    <string name="porter_ack_symbuzzer">Til symbuzzer og bidragsytere for å videreføre arbeidet med Shizuku og dele forken sin.</string>
+    <string name="porter_ack_plus">Til thejaustin og bidragsytere for ShizukuPlus og inspirasjonen til en valgfri kompatibilitetsapp.</string>
+    <string name="porter_ack_maxpatchs">Takk for ikonet, maskotdesignene og banneret.</string>
+    <string name="porter_license_porter">Porter og den opprinnelige Shizuku-appen · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API og Porter-forken av det · MIT License</string>
+    <string name="porter_license_notice">Merknader om opphavsrett og kildeangivelse</string>
+    <string name="porter_pairing_restart">Start paringen på nytt</string>
+    <string name="porter_pairing_retry_instructions">Hvis en kode ble avvist eller varselet forsvant, starter du paringen på nytt her. Lukk deretter Androids gamle dialogboks med paringskode, og åpne en ny. Bruk den nye koden; du trenger ikke å tømme Porters data.</string>
+    <string name="porter_pairing_search_timeout">Ingen paringskode ble mottatt innen ett minutt. Paringen er stoppet. Velg Prøv igjen, og åpne deretter en ny dialogboks med paringskode i Trådløs feilsøking.</string>
+    <string name="porter_pairing_attempt_timeout">Tidsavbrudd for paringstilkoblingen. Åpne en ny dialogboks med paringskode i Trådløs feilsøking, og prøv igjen.</string>
+    <string name="porter_pairing_failed_retry">Paringen mislyktes. Åpne en ny dialogboks med paringskode i Trådløs feilsøking, og prøv igjen.</string>
+    <string name="porter_pairing_notification_timeout">Paringen er stoppet fordi varselet fikk tidsavbrudd. Velg Prøv igjen, og åpne deretter en ny dialogboks med paringskode i Trådløs feilsøking.</string>
+    <string name="porter_tv_pairing_progress_title">Porter-paring</string>
+    <string name="porter_tv_pairing_wait">La vinduet med paringskoden være åpent, og vent.</string>
+    <string name="porter_tv_pairing_return">Går tilbake til Porter for å slå av tilgjengelighetstjenesten for paring…</string>
+    <string name="porter_tv_pairing_disabling">Slår av tilgjengelighetstjenesten for paring…</string>
+    <string name="porter_tv_pairing_complete">Tilgjengelighetstjenesten for paring er slått av. Alle paringstrinn er fullført. Du kan lukke dette vinduet.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Tilgjengelighetstjenesten for paring er fortsatt på. Slå den av i innstillingene for Tilgjengelighet.</string>
+    <string name="porter_tv_pairing_open_accessibility">Åpne innstillinger for Tilgjengelighet</string>
 </resources>

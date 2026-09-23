@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_apps_counts">Авторизовано: %1$d · Сумісних: %2$d</string>
+    <string name="porter_discovery_partial">Не вдалося перевірити деякі профілі. Список може бути неповним.</string>
+    <string name="porter_discovery_legacy">Перезапустіть Porter, щоб знайти більше додатків і переглянути історію підключень.</string>
+    <string name="porter_connections_explanation">Додатки можуть підключатися автоматично під час запуску Porter. Час підключення не означає, коли додаток використовували востаннє.</string>
+    <string name="porter_connection_needs_companion">Потрібен додаток сумісності</string>
+    <string name="porter_connection_unsupported">Дозвіл оголошено; інтеграцію не розпізнано</string>
+    <string name="porter_connection_managed">Раніше підключався або керувався</string>
+    <string name="porter_connection_unknown">Відомості про підключення недоступні</string>
+    <string name="porter_connection_never_recorded">Останнє підключення: невідомо</string>
+    <string name="porter_connection_last">Останнє підключення: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d додатку потрібен додаток сумісності</item>
+        <item quantity="few">%d додаткам потрібен додаток сумісності</item>
+        <item quantity="many">%d додаткам потрібен додаток сумісності</item>
+        <item quantity="other">%d додаткам потрібен додаток сумісності</item>
+    </plurals>
+    <string name="porter_compatibility_needed">Потрібен додаток сумісності</string>
+    <string name="porter_get_compatibility">Отримати додаток сумісності</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Ви дозволили доступ %d додатку, якому потрібен додаток сумісності Porter. Доступ стане можливим після встановлення додатка сумісності.</item>
+        <item quantity="few">Ви дозволили доступ %d додаткам, яким потрібен додаток сумісності Porter. Доступ стане можливим після встановлення додатка сумісності.</item>
+        <item quantity="many">Ви дозволили доступ %d додаткам, яким потрібен додаток сумісності Porter. Доступ стане можливим після встановлення додатка сумісності.</item>
+        <item quantity="other">Ви дозволили доступ %d додаткам, яким потрібен додаток сумісності Porter. Доступ стане можливим після встановлення додатка сумісності.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Не вдалося активувати доступ. Перевірте дозволи цього додатка в налаштуваннях Android.</string>
+    <string name="porter_pause_access">Призупинити доступ</string>
+    <string name="porter_pause_access_summary">Призупинити доступ для всіх додатків. Їхні збережені дозволи залишаться.</string>
+    <string name="porter_global_access_restart">Перезапустіть Porter, щоб використовувати загальне керування доступом.</string>
+    <string name="porter_access_paused">Доступ додатків призупинено</string>
+    <string name="porter_status_access_paused">Porter працює, але доступ додатків призупинено. Відновіть доступ у розділі «Додатки».</string>
+</resources>

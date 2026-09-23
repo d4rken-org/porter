@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">Le débogage sans fil n\'est pas activé.\nRemarque : avant Android 11, une connexion à un ordinateur est indispensable pour activer le débogage sans fil.</string>
     <string name="dialog_usb_debugging_not_enabled">Le débogage USB n\'est pas activé.\nVeuillez l\'activer dans les \"Options pour les développeurs\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">Sur Android 14, l\'installation ou la mise à jour de Porter via le programme d\'installation de packages révoque l\'autorisation ^1, nécessaire pour activer le service d\'accessibilité utilisé pour l\'association.\n\nPour l\'accorder, exécutez la commande ADB suivante :\n\n^2\n\nUne fois la commande exécutée, vous pouvez poursuivre l\'association.\n\nRemarque : vous pouvez contourner ce problème en installant ou en mettant à jour Porter via ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Veuillez activer le service d\'accessibilité pour lancer l\'association. Cela permet à Porter de détecter le code d\'association.\n\nLe service d\'accessibilité sera désactivé dès que le code sera trouvé, ou après 1 minute pour économiser la batterie.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Veuillez activer le service d\'accessibilité pour lancer l\'association. Cela permet à Porter de détecter le code d\'association.\n\nLe service d\'accessibilité sera désactivé après la tentative d\'association, ou si aucun code n\'est trouvé dans un délai d\'une minute. Porter affichera le résultat et vous permettra de réessayer.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Veuillez lancer l\'association en suivant ces étapes :\n- Accédez aux \"Options pour les développeurs\"\n- Activez le \"Débogage USB\" et le \"Débogage sans fil\"\n- Appuyez sur la partie gauche de \"Débogage sans fil\"\n- Appuyez sur \"Associer l\'appareil avec un code d\'association\". Porter détectera automatiquement le code d\'association.</string>
     <string name="adb_pairing_requires_multi_window">Veuillez d\'abord passer en mode écran partagé (multifenêtre).</string>
     <string name="adb_pairing_requires_multi_window_reason">Le système exige que la boîte de dialogue d\'association reste toujours visible. Le mode écran partagé est le seul moyen d\'afficher simultanément cette application et la boîte de dialogue du système.</string>
@@ -200,4 +200,25 @@
     <string name="porter_license_porter">Porter et l\'application Shizuku d\'origine · Licence Apache 2.0</string>
     <string name="porter_license_api">API Shizuku et son fork Porter · Licence MIT</string>
     <string name="porter_license_notice">Mentions de droits d\'auteur et d\'attribution</string>
+
+    <string name="settings_alerts_blocked_title">Alertes en arrière-plan</string>
+    <string name="settings_alerts_blocked_summary">Les notifications de Porter sont bloquées : le lancement au démarrage et le chien de garde ne peuvent donc pas vous prévenir lorsqu\'ils nécessitent votre attention.</string>
+    <string name="settings_alerts_blocked_message">Cette fonctionnalité indique ce qu\'elle fait, et ce qui a échoué, via une notification. Les notifications de Porter étant actuellement bloquées, elle fonctionnerait sans rien vous signaler.</string>
+    <string name="settings_alerts_blocked_continue">Activer quand même</string>
+    <string name="notification_channel_watchdog">Chien de garde</string>
+    <string name="notification_channel_crash">Rapports de plantage</string>
+    <string name="notification_channel_auth">Erreurs d\'authentification</string>
+    <string name="porter_pairing_restart">Relancer l\'association</string>
+    <string name="porter_pairing_retry_instructions">Si un code a été refusé ou si la notification a disparu, relancez l\'association ici. Fermez ensuite l\'ancienne boîte de dialogue du code d\'association d\'Android et ouvrez-en une nouvelle. Utilisez le nouveau code ; il n\'est pas nécessaire d\'effacer les données de Porter.</string>
+    <string name="porter_pairing_search_timeout">Aucun code d\'association n\'a été reçu en une minute. L\'association est arrêtée. Choisissez Réessayer, puis ouvrez une nouvelle boîte de dialogue du code d\'association dans Débogage sans fil.</string>
+    <string name="porter_pairing_attempt_timeout">La connexion d\'association a expiré. Ouvrez une nouvelle boîte de dialogue du code d\'association dans Débogage sans fil et réessayez.</string>
+    <string name="porter_pairing_failed_retry">L\'association a échoué. Ouvrez une nouvelle boîte de dialogue du code d\'association dans Débogage sans fil et réessayez.</string>
+    <string name="porter_pairing_notification_timeout">L\'association est arrêtée car la notification a expiré. Choisissez Réessayer, puis ouvrez une nouvelle boîte de dialogue du code d\'association dans Débogage sans fil.</string>
+    <string name="porter_tv_pairing_progress_title">Association de Porter</string>
+    <string name="porter_tv_pairing_wait">Veuillez laisser la fenêtre du code d\'association ouverte et patienter.</string>
+    <string name="porter_tv_pairing_return">Retour à Porter pour désactiver le service d\'accessibilité d\'association…</string>
+    <string name="porter_tv_pairing_disabling">Désactivation du service d\'accessibilité d\'association…</string>
+    <string name="porter_tv_pairing_complete">Le service d\'accessibilité d\'association est désactivé. Toutes les étapes d\'association sont terminées. Vous pouvez fermer cette fenêtre.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Le service d\'accessibilité d\'association est toujours activé. Désactivez-le dans les paramètres d\'accessibilité.</string>
+    <string name="porter_tv_pairing_open_accessibility">Ouvrir les paramètres d\'accessibilité</string>
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Εφαρμογές</string>
+    <string name="porter_home_subtitle">Πρόσβαση ADB για τις εφαρμογές σας</string>
+    <string name="porter_startup">Εκκίνηση</string>
+    <string name="porter_version">Έκδοση</string>
+    <string name="porter_pairing_method">Μέθοδος σύζευξης</string>
+    <string name="porter_status_restricted">Ορισμένες άδειες ADB περιορίζονται από το Android.</string>
+    <string name="porter_status_stop_message">Η διακοπή του Porter αποσυνδέει τις εφαρμογές που το χρησιμοποιούν. Θα πρέπει να ξεκινήσετε ξανά το Porter χειροκίνητα, κάτι που μπορεί να απαιτεί υπολογιστή.</string>
+    <string name="porter_status_details_hint">Άνοιγμα λεπτομερειών υπηρεσίας και επιλογών διακοπής</string>
+    <string name="porter_status_ready">Το Porter είναι έτοιμο. Οι συμβατές εφαρμογές μπορούν πλέον να συνδεθούν και να ζητήσουν πρόσβαση.</string>
+    <string name="porter_pairing_notification">Ειδοποίηση</string>
+    <string name="porter_pairing_dialog">Παράθυρο διαλόγου εντός εφαρμογής</string>
+    <string name="porter_manage_apps_action">Διαχείριση εφαρμογών</string>
+    <string name="porter_primary_user_title">Χρήση του κύριου χρήστη Android</string>
+    <string name="porter_primary_user_description">Το Porter δεν μπορεί να ξεκινήσει από αυτόν τον χρήστη ή το προφίλ του Android. Μεταβείτε στον κύριο χρήστη της συσκευής, εγκαταστήστε εκεί το Porter αν χρειάζεται και ξεκινήστε την υπηρεσία του. Στη συνέχεια επιστρέψτε εδώ για να διαχειριστείτε τις εφαρμογές σας.</string>
+    <string name="porter_secondary_user_stop_message">Η διακοπή του Porter αποσυνδέει τις εφαρμογές σε όλους τους χρήστες του Android. Για να το ξεκινήσετε ξανά, μεταβείτε στον κύριο χρήστη της συσκευής και ανοίξτε εκεί το Porter.</string>
+</resources>

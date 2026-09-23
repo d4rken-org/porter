@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Diensopdatering beskikbaar</string>
+    <string name="porter_service_update_action">Dateer diens op</string>
+    <string name="porter_service_update_summary">Opdatering ontkoppel gekoppelde programme kortliks. Bestaande toestemmings word behou.</string>
+    <string name="porter_service_update_primary">Maak Porter in die primêre Android-gebruiker oop om die diens op te dateer.</string>
+    <string name="porter_service_update_features">Dateer die diens op om hierdie kenmerke te aktiveer.</string>
+    <string name="porter_service_auto_update">Dateer diens outomaties op</string>
+    <string name="porter_service_auto_update_summary">Vervang ná \'n Porter-programopdatering \'n lopende diens met \'n ander bou in die agtergrond. Dit ontkoppel gekoppelde programme kortliks. \'n Gestopte diens bly gestop.</string>
+    <string name="porter_service_update_interrupted">Die vorige diensopdatering is nie voltooi nie. Probeer weer as die diens steeds loop, of begin dit weer vanaf die Diens-skerm.</string>
+    <string name="porter_global_access_update">Globale toegangsbeheer is nie in die lopende diens beskikbaar nie.</string>
+    <string name="porter_discovery_update">Die lopende diens ondersteun nie die huidige programontdekking- en verbindingsgeskiedeniskenmerke nie. Beskikbare programme word met sy ouer koppelvlak gewys.</string>
+    <string name="porter_service_updating">Dateer tans Porter-diens op…</string>
+    <string name="porter_service_update_failed">Kon nie Porter-diens opdateer nie</string>
+    <string name="porter_service_update_failed_summary">Die lopende diens kon nie met die geïnstalleerde weergawe vervang word nie. As dit steeds loop, kan jy weer probeer. Begin andersins die diens weer vanaf die Diens-skerm.</string>
+    <string name="porter_service_update_retry">Probeer opdatering weer</string>
+</resources>

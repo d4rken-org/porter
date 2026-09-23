@@ -11,7 +11,7 @@
     <string name="home_adb_dialog_view_command_button_send">Küldés</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Kezdje a vezeték nélküli hibakereséssel]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Android 11 vagy újabb rendszeren engedélyezheti a vezeték nélküli hibakeresést, és közvetlenül az eszközéről indíthatja el a Shizukut, anélkül, hogy számítógéphez csatlakozna..<p>Először tekintse meg a lépésről lépésre szóló útmutatót.]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Android 11 vagy újabb rendszeren engedélyezheti a vezeték nélküli hibakeresést, és közvetlenül az eszközéről indíthatja el a Portert, anélkül, hogy számítógéphez csatlakozna.<p>Először tekintse meg a lépésről lépésre szóló útmutatót.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Az Android 11 előtt a vezeték nélküli hibakeresés engedélyezéséhez csatlakozni kell egy számítógéphez.]]></string>
     <string name="home_wireless_adb_view_guide_button">Lépésről-lépésre útmutató</string>
     <!-- Adb -->
@@ -22,7 +22,7 @@
         hibakeresés\"t, ekkor a Porter le fog állni.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Próbálja kikapcsolni majd
         engedélyezni a \"Vezeték nélküli hibakeresés\" opciót, ha továbbra is keres.</string>
-    <string name="dialog_adb_port">Kikötő</string>
+    <string name="dialog_adb_port">Port</string>
     <string name="adb_pairing">Párosítás</string>
     <string name="dialog_adb_pairing_title">Párosítás a készülékkel</string>
     <string name="dialog_adb_pairing_discovery">Párosítási szolgáltatás keresése</string>
@@ -43,11 +43,7 @@
         futtassa a következő ADB parancsot:\n\n^2\n\nA parancs futtatása után folytathatja a
         párosítási folyamatot.\n\nMegjegyzés: ezt megkerülheti a Porter ADB-vel történő
         telepítésével/frissítésével.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Kérjük, engedélyezze az
-        akadálymentesítési szolgáltatást a párosítási folyamat megkezdéséhez. Ez lehetővé teszi a
-        Porter számára a párosítási kód észlelését.\n\nAz akadálymentesítési szolgáltatás
-        kikapcsol, amikor a kód megtalálható, vagy 1 perc elteltével az energiatakarékosság
-        érdekében.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Kérjük, kapcsolja be a kisegítő szolgáltatást a párosítási folyamat megkezdéséhez. Ez lehetővé teszi, hogy a Porter észlelje a párosítókódot.\n\nA kisegítő szolgáltatás kikapcsol a párosítási kísérlet után, vagy ha egy percen belül nem található kód. A Porter megjeleníti az eredményt, és lehetővé teszi az újrapróbálkozást.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Kérjük, kezdje el a párosítást a
         következő lépések végrehajtásával:\n- Navigáljon a „Fejlesztői beállítások” menüpontra\n-
         Engedélyezze az „USB hibakeresést” és a „Vezeték nélküli hibakeresést”\n- Koppintson a
@@ -72,17 +68,16 @@
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Koppintson a „Vezeték nélküli
         hibakeresés” bal oldalára, majd az „Eszköz párosítása párosítási kóddal” lehetőségre. A
         párosítás befejezéséhez írja be az értesítésben található kódot.</string>
-    <string name="adb_pairing_tutorial_content_notification_blocked">A párosítási folyamat során
-        kapcsolatba kell lépni Porter értesítésével. Kérjük, engedélyezze a Shizukunak, hogy
-        értesítéseket tegyen közzé.</string>
+    <string name="adb_pairing_tutorial_content_notification_blocked">A párosítás során a Porter egyik
+        értesítését kell használnia. Kérjük, engedélyezze a Porternek, hogy értesítéseket
+        jelenítsen meg.</string>
     <string name="adb_pairing_tutorial_content_miui">Előfordulhat, hogy a MIUI-felhasználóknak át
         kell váltaniuk az értesítési stílust \"Android\"-ra a \"Értesítés\" - \"Értesítési árnyék\"
         lehetőségről a rendszerbeállításokban.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Ellenkező esetben előfordulhat, hogy nem
         tudja megadni az értesítésben szereplő párosítási kódot.</string>
-    <string name="adb_pairing_tutorial_content_finish">Menj vissza Shizukuba és indítsd el a
-        Shizukut.</string>
-    <string name="adb_pairing_tutorial_content_network">A Shizukunak hozzá kell férnie a helyi
+    <string name="adb_pairing_tutorial_content_finish">Lépjen vissza a Porterbe, és indítsa el a Portert.</string>
+    <string name="adb_pairing_tutorial_content_network">A Porternek hozzá kell férnie a helyi
         hálózathoz. Ezt a hálózati engedély szabályozza.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Néhány rendszer
         (például az MIUI) nem engedélyezi az alkalmazásoknak a hálózathoz való hozzáférést, amikor
@@ -101,7 +96,7 @@
     <string name="home_app_management_empty">Azok az alkalmazások jelennek meg itt, amelyek kérték
         vagy deklarálták a Porter engedélyt.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">Irányítsd a Shizukut automatizálási alkalmazásokkal</string>
+    <string name="home_automation_title">A Porter vezérlése automatizálási alkalmazásokkal</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Az adb engedélye korlátozott</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Nagyon valószínű, hogy az eszköz gyártója korlátozza az adb engedélyét.<p>Lehet, hogy van megoldás a rendszeréhez ebben a <b><a href=\"%1$s\">dokumentumban</a></b>.]]></string>
@@ -109,7 +104,7 @@
         fusson</string>
     <string name="app_management_toggle_all">Összes ki-/bekapcsolása</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">Használja a Shizukut a terminál appokban</string>
+    <string name="home_terminal_title">A Porter használata terminálalkalmazásokban</string>
     <string name="home_terminal_description">Futtassa a shell parancsokat terminálalkalmazásokban a
         Porter segítségével</string>
     <string name="terminal_tutorial_miui">A felhasználók arról számoltak be, hogy az MIUI sérti a
@@ -159,7 +154,7 @@
     <!-- Stop -->
     <string name="action_stop">A Porter leállítása</string>
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">Vezeték nélküli hibakeresés pairing</string>
+    <string name="notification_channel_adb_pairing">Vezeték nélküli hibakeresési párosítás</string>
     <string name="notification_adb_pairing_input_paring_code">Írja be a párosítási kódot</string>
     <string name="notification_adb_pairing_searching_for_service_title">Párosítási szolgáltatás
         keresése</string>
@@ -191,9 +186,9 @@
         WRITE_SECURE_SETTINGS jogosultságra szorul. Koppintson ide, ha szeretné megtudni, hogyan
         engedélyezheti ezt.</string>
     <!-- Watchdog -->
-    <string name="watchdog_running">A felügyeleti szerv fut</string>
+    <string name="watchdog_running">Az őrzőkutya fut</string>
     <string name="watchdog_turn_off">Kikapcsolás</string>
-    <string name="watchdog_shizuku_crashed_title">Porter nemrég lezuhant</string>
+    <string name="watchdog_shizuku_crashed_title">A Porter nemrég összeomlott</string>
     <string name="watchdog_shizuku_crashed_text">A Watchdog újraindította a szolgáltatást.
         Koppintson a lehetséges javításokról a jövőbeli összeomlások megelőzése érdekében.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Kapcsolja ki a riasztásokat</string>
@@ -207,4 +202,59 @@
         letiltja magát.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Próbálja meg most</string>
+    <string name="home_root_description"><![CDATA[Ha Magiskot használ, a(z) %1$s is egy lehetőség. Az alkalmazásoknak kifejezetten támogatniuk kell ezt: %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intentek</string>
+    <string name="home_automation_bottom_sheet_label_action">Művelet</string>
+    <string name="home_automation_bottom_sheet_label_package">Csomag</string>
+    <string name="home_automation_bottom_sheet_label_target">Cél</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extrák</string>
+    <string name="home_automation_regenerate_token">Újragenerálja a tokent?</string>
+    <string name="home_automation_regenerate_token_message">Az intenteket újra be kell állítania az új tokennel.</string>
+    <string name="home_dialog_reboot_required_title">Újraindítás szükséges</string>
+    <string name="home_dialog_reboot_required_message">A Porter megfelelő működéséhez újra kell indítani az eszközt. A folytatáshoz indítsa újra az eszközt.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Duplikált alkalmazás észlelve</string>
+    <string name="home_dialog_duplicate_app_detected_message">Az alkalmazás egy másik verziója is telepítve van az eszközön. A folytatáshoz távolítsa el az összes duplikált verziót, és indítsa újra az eszközt.</string>
+    <string name="home_dialog_button_exit">Kilépés</string>
+    <string name="settings_alerts_blocked_title">Háttérértesítések</string>
+    <string name="settings_alerts_blocked_summary">A Porter értesítései le vannak tiltva, így a rendszerindításkori indítás és az őrzőkutya nem tudja jelezni, ha beavatkozásra van szükség.</string>
+    <string name="settings_alerts_blocked_message">Ez a funkció értesítésben jelzi, mit csinál, és mi romlott el. A Porter értesítései jelenleg le vannak tiltva, így úgy futna, hogy semmiről sem tájékoztatná Önt.</string>
+    <string name="settings_alerts_blocked_continue">Bekapcsolás mindenképp</string>
+    <string name="follow_system">Rendszer szerint</string>
+    <string name="start">Indítás</string>
+    <string name="stop">Leállítás</string>
+    <string name="notification_channel_watchdog">Őrzőkutya</string>
+    <string name="notification_channel_crash">Összeomlási jelentések</string>
+    <string name="notification_channel_auth">Hitelesítési hibák</string>
+    <string name="notification_auth_invalid_title">Érvénytelen hitelesítési token</string>
+    <string name="notification_auth_invalid_message">Győződjön meg arról, hogy az intentben szereplő token megegyezik a Beállítások „A Porter vezérlése automatizálási alkalmazásokkal” részében lévővel.</string>
+    <string name="porter_status_running_adb">ADB-n keresztül fut</string>
+    <string name="porter_status_running_root">Root jogosultsággal fut</string>
+    <string name="porter_status_restart_service">A futó szolgáltatás frissítéséhez indítsa újra a Portert.</string>
+    <string name="porter_status_version_unknown">Ismeretlen</string>
+    <string name="porter_status_versions">Telepített Porter: %1$s\nFutó szolgáltatás: %2$s\nShizuku API: %3$d · Javítás: %4$d</string>
+    <string name="porter_acknowledgements">Köszönetnyilvánítás</string>
+    <string name="porter_acknowledgements_summary">Upstream projektek, nyílt forráskódú könyvtárak és licencek.</string>
+    <string name="porter_acknowledgements_thanks">Köszönjük</string>
+    <string name="porter_licenses">Licencek</string>
+    <string name="porter_ack_shizuku">A RikkaAppsnek és minden közreműködőnek a Shizuku és API-jai megalkotásáért, amelyek a Porter alapját adják.</string>
+    <string name="porter_ack_thedjchi">thedjchinek és a közreműködőknek a Shizuku azon forkjának karbantartásáért, amelyen a Porter alapul.</string>
+    <string name="porter_ack_symbuzzer">symbuzzernek és a közreműködőknek a Shizukun végzett munka folytatásáért és forkjuk megosztásáért.</string>
+    <string name="porter_ack_plus">thejaustinnak és a közreműködőknek a ShizukuPlusért és az opcionális kompatibilitási alkalmazás ötletéért.</string>
+    <string name="porter_ack_maxpatchs">Köszönjük az ikont, a kabalafigura-terveket és a bannert.</string>
+    <string name="porter_license_porter">A Porter és az eredeti Shizuku alkalmazás · Apache License 2.0</string>
+    <string name="porter_license_api">A Shizuku API és annak Porter-forkja · MIT License</string>
+    <string name="porter_license_notice">Szerzői jogi és forrásmegjelölési közlemények</string>
+    <string name="porter_pairing_restart">Párosítás újraindítása</string>
+    <string name="porter_pairing_retry_instructions">Ha a kódot elutasították, vagy az értesítés eltűnt, itt indítsa újra a párosítást. Ezután zárja be az Android régi párosítókód-párbeszédpanelét, és nyisson egy újat. Az új kódot használja; a Porter adatait nem kell törölnie.</string>
+    <string name="porter_pairing_search_timeout">Egy percen belül nem érkezett párosítókód. A párosítás leállt. Válassza az Újra lehetőséget, majd nyisson egy új párosítókód-párbeszédpanelt a Vezeték nélküli hibakeresésben.</string>
+    <string name="porter_pairing_attempt_timeout">A párosítási kapcsolat túllépte az időkorlátot. Nyisson egy új párosítókód-párbeszédpanelt a Vezeték nélküli hibakeresésben, és próbálja újra.</string>
+    <string name="porter_pairing_failed_retry">A párosítás sikertelen. Nyisson egy új párosítókód-párbeszédpanelt a Vezeték nélküli hibakeresésben, és próbálja újra.</string>
+    <string name="porter_pairing_notification_timeout">A párosítás leállt, mert az értesítés időkorlátja lejárt. Válassza az Újra lehetőséget, majd nyisson egy új párosítókód-párbeszédpanelt a Vezeték nélküli hibakeresésben.</string>
+    <string name="porter_tv_pairing_progress_title">Porter párosítás</string>
+    <string name="porter_tv_pairing_wait">Hagyja nyitva a párosítókód ablakát, és várjon.</string>
+    <string name="porter_tv_pairing_return">Visszatérés a Porterhez a párosítási kisegítő szolgáltatás kikapcsolásához…</string>
+    <string name="porter_tv_pairing_disabling">A párosítási kisegítő szolgáltatás kikapcsolása…</string>
+    <string name="porter_tv_pairing_complete">A párosítási kisegítő szolgáltatás ki van kapcsolva. Minden párosítási lépés befejeződött. Bezárhatja ezt az ablakot.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">A párosítási kisegítő szolgáltatás még be van kapcsolva. Kapcsolja ki a Kisegítő lehetőségek beállításaiban.</string>
+    <string name="porter_tv_pairing_open_accessibility">Kisegítő lehetőségek megnyitása</string>
 </resources>

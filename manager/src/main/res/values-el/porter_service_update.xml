@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Διαθέσιμη ενημέρωση υπηρεσίας</string>
+    <string name="porter_service_update_action">Ενημέρωση υπηρεσίας</string>
+    <string name="porter_service_update_summary">Η ενημέρωση αποσυνδέει για λίγο τις συνδεδεμένες εφαρμογές. Οι υπάρχουσες άδειες διατηρούνται.</string>
+    <string name="porter_service_update_primary">Ανοίξτε το Porter στον κύριο χρήστη του Android για να ενημερώσετε την υπηρεσία.</string>
+    <string name="porter_service_update_features">Ενημερώστε την υπηρεσία για να ενεργοποιήσετε αυτές τις λειτουργίες.</string>
+    <string name="porter_service_auto_update">Αυτόματη ενημέρωση υπηρεσίας</string>
+    <string name="porter_service_auto_update_summary">Μετά από ενημέρωση της εφαρμογής Porter, αντικαθιστά στο παρασκήνιο μια υπηρεσία σε εκτέλεση που έχει διαφορετικό build. Αυτό αποσυνδέει για λίγο τις συνδεδεμένες εφαρμογές. Μια σταματημένη υπηρεσία παραμένει σταματημένη.</string>
+    <string name="porter_service_update_interrupted">Η προηγούμενη ενημέρωση υπηρεσίας δεν ολοκληρώθηκε. Δοκιμάστε ξανά αν η υπηρεσία εξακολουθεί να εκτελείται ή ξεκινήστε την ξανά από την οθόνη Υπηρεσία.</string>
+    <string name="porter_global_access_update">Ο καθολικός έλεγχος πρόσβασης δεν είναι διαθέσιμος στην υπηρεσία που εκτελείται.</string>
+    <string name="porter_discovery_update">Η υπηρεσία που εκτελείται δεν υποστηρίζει τις τρέχουσες λειτουργίες εντοπισμού εφαρμογών και ιστορικού συνδέσεων. Οι διαθέσιμες εφαρμογές εμφανίζονται μέσω της παλαιότερης διεπαφής της.</string>
+    <string name="porter_service_updating">Ενημέρωση υπηρεσίας Porter…</string>
+    <string name="porter_service_update_failed">Δεν ήταν δυνατή η ενημέρωση της υπηρεσίας Porter</string>
+    <string name="porter_service_update_failed_summary">Δεν ήταν δυνατή η αντικατάσταση της υπηρεσίας που εκτελείται με την εγκατεστημένη έκδοση. Αν εξακολουθεί να εκτελείται, μπορείτε να δοκιμάσετε ξανά. Διαφορετικά, ξεκινήστε ξανά την υπηρεσία από την οθόνη Υπηρεσία.</string>
+    <string name="porter_service_update_retry">Επανάληψη ενημέρωσης</string>
+</resources>

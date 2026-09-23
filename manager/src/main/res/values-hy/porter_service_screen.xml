@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Ծառայություն</string>
+    <string name="porter_view_service">Դիտել ծառայությունը</string>
+    <string name="porter_service_starting">Porter ծառայությունը գործարկվում է…</string>
+    <string name="porter_service_stopping">Porter ծառայությունը կանգնեցվում է…</string>
+    <string name="porter_service_checking">Ծառայության կարգավիճակը կարդացվում է…</string>
+    <string name="porter_apps_service_unavailable">Հավելվածների մուտքը հասանելի չէ, քանի դեռ ծառայությունը կանգնեցված է կամ փոփոխվում է։</string>
+    <string name="porter_apps_counts_unavailable">Հավելվածների քանակը հասանելի չէ։</string>
+    <string name="porter_background_operation">Ֆոնային աշխատանք</string>
+    <string name="porter_service_failed_running">Նախորդ թարմացումը չավարտվեց։ Ծառայությունը դեռ աշխատում է։ Կարող եք կրկին փորձել թարմացումը։</string>
+    <string name="porter_service_failed_stopped">Նախորդ թարմացումը չավարտվեց։ Ծառայությունը կանգնեցված է։ Այն կրկին գործարկելու համար անցեք վահանակ։</string>
+    <string name="porter_service_build_different_summary">Աշխատող ծառայությունն օգտագործում է տեղադրված հավելվածից տարբեր կառուցում։ Համատեղելի գործառույթները մնում են հասանելի։</string>
+    <string name="porter_service_build_unknown_summary">Աշխատող ծառայությունը չի կարող հաղորդել իր կառուցման նույնականացումը։ Թարմացրեք այն՝ տեղադրված կառուցումն օգտագործելու համար։ Համատեղելի գործառույթները մնում են հասանելի։</string>
+    <string name="porter_service_healthy">Ամեն ինչ աշխատում է բնականոն։</string>
+    <string name="porter_service_progress_background">Կարող եք լքել այս էկրանը։ Գործողությունը շարունակվում է ֆոնային ռեժիմում։</string>
+    <string name="porter_build_identity_unavailable">Կառուցման նույնականացումը հասանելի չէ</string>
+    <string name="porter_installed_app">Տեղադրված հավելված</string>
+    <string name="porter_running_service">Աշխատող ծառայություն</string>
+    <string name="porter_service_api_value">Porter արձանագրություն՝ %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Պահանջվում է root իրավունքներով սարք։ Porter-ը root մուտք է հայցում, երբ սեղմում եք «Գործարկել»։</string>
+    <string name="porter_version_compact">Տարբերակ՝ %1$s (%2$d)</string>
+    <string name="porter_build_compact">Կառուցում՝ %1$s (%2$s)</string>
+</resources>

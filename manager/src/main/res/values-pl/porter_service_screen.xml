@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Usługa</string>
+    <string name="porter_view_service">Pokaż usługę</string>
+    <string name="porter_service_starting">Uruchamianie usługi Porter…</string>
+    <string name="porter_service_stopping">Zatrzymywanie usługi Porter…</string>
+    <string name="porter_service_checking">Odczytywanie stanu usługi…</string>
+    <string name="porter_apps_service_unavailable">Dostęp aplikacji jest niedostępny, gdy usługa jest zatrzymana lub zmienia stan.</string>
+    <string name="porter_apps_counts_unavailable">Liczba aplikacji jest niedostępna.</string>
+    <string name="porter_background_operation">Działanie w tle</string>
+    <string name="porter_service_failed_running">Poprzednia aktualizacja nie została ukończona. Usługa nadal działa. Możesz ponowić aktualizację.</string>
+    <string name="porter_service_failed_stopped">Poprzednia aktualizacja nie została ukończona. Usługa jest zatrzymana. Przejdź do panelu głównego, aby ją ponownie uruchomić.</string>
+    <string name="porter_service_build_different_summary">Działająca usługa używa innej kompilacji niż zainstalowana aplikacja. Zgodne funkcje pozostają dostępne.</string>
+    <string name="porter_service_build_unknown_summary">Działająca usługa nie może podać swojej kompilacji. Zaktualizuj ją, aby używać zainstalowanej kompilacji. Zgodne funkcje pozostają dostępne.</string>
+    <string name="porter_service_healthy">Wszystko działa prawidłowo.</string>
+    <string name="porter_service_progress_background">Możesz opuścić ten ekran. Operacja będzie kontynuowana w tle.</string>
+    <string name="porter_build_identity_unavailable">Identyfikator kompilacji niedostępny</string>
+    <string name="porter_installed_app">Zainstalowana aplikacja</string>
+    <string name="porter_running_service">Działająca usługa</string>
+    <string name="porter_service_api_value">Protokół Porter: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Wymaga urządzenia z rootem. Porter poprosi o dostęp root po naciśnięciu Uruchom.</string>
+    <string name="porter_version_compact">Wersja: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Kompilacja: %1$s (%2$s)</string>
+</resources>

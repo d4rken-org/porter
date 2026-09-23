@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_apps_counts">அங்கீகரிக்கப்பட்டவை: %1$d · இணக்கமானவை: %2$d</string>
+    <string name="porter_discovery_partial">சில சுயவிவரங்களைச் சரிபார்க்க முடியவில்லை. இந்தப் பட்டியல் முழுமையற்றதாக இருக்கலாம்.</string>
+    <string name="porter_discovery_legacy">மேலும் பயன்பாடுகளைக் கண்டறியவும் இணைப்பு வரலாற்றைப் பார்க்கவும் Porter ஐ மறுதொடக்கம் செய்யவும்.</string>
+    <string name="porter_connections_explanation">Porter தொடங்கும்போது பயன்பாடுகள் தானாக இணையலாம். ஒரு பயன்பாடு கடைசியாக எப்போது பயன்படுத்தப்பட்டது என்பதை இணைப்பு நேரம் குறிக்காது.</string>
+    <string name="porter_connection_needs_companion">இணக்கத்தன்மை பயன்பாடு தேவை</string>
+    <string name="porter_connection_unsupported">அனுமதி அறிவிக்கப்பட்டுள்ளது; ஒருங்கிணைப்பு அடையாளம் காணப்படவில்லை</string>
+    <string name="porter_connection_managed">முன்பு இணைக்கப்பட்டது அல்லது நிர்வகிக்கப்பட்டது</string>
+    <string name="porter_connection_unknown">இணைப்பு விவரங்கள் கிடைக்கவில்லை</string>
+    <string name="porter_connection_never_recorded">கடைசி இணைப்பு: தெரியவில்லை</string>
+    <string name="porter_connection_last">கடைசி இணைப்பு: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d பயன்பாட்டுக்கு இணக்கத்தன்மை பயன்பாடு தேவை</item>
+        <item quantity="other">%d பயன்பாடுகளுக்கு இணக்கத்தன்மை பயன்பாடு தேவை</item>
+    </plurals>
+    <string name="porter_compatibility_needed">இணக்கத்தன்மை பயன்பாடு தேவை</string>
+    <string name="porter_get_compatibility">இணக்கத்தன்மை பயன்பாட்டைப் பெறு</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Porter இணக்கத்தன்மை பயன்பாடு தேவைப்படும் %d பயன்பாட்டுக்கு அணுகலை அனுமதித்துள்ளீர்கள். இணக்கத்தன்மை பயன்பாடு நிறுவப்பட்டதும் அதன் அணுகல் கிடைக்கும்.</item>
+        <item quantity="other">Porter இணக்கத்தன்மை பயன்பாடு தேவைப்படும் %d பயன்பாடுகளுக்கு அணுகலை அனுமதித்துள்ளீர்கள். இணக்கத்தன்மை பயன்பாடு நிறுவப்பட்டதும் அவற்றின் அணுகல் கிடைக்கும்.</item>
+    </plurals>
+    <string name="porter_access_pending_android">அணுகலைச் செயல்படுத்த முடியவில்லை. Android அமைப்புகளில் இந்தப் பயன்பாட்டின் அனுமதிகளைச் சரிபார்க்கவும்.</string>
+    <string name="porter_pause_access">அணுகலை இடைநிறுத்து</string>
+    <string name="porter_pause_access_summary">அனைத்துப் பயன்பாடுகளுக்கும் அணுகலை இடைநிறுத்தும். அவற்றின் சேமித்த அனுமதிகள் தக்கவைக்கப்படும்.</string>
+    <string name="porter_global_access_restart">பொது அணுகல் கட்டுப்பாட்டைப் பயன்படுத்த Porter ஐ மறுதொடக்கம் செய்யவும்.</string>
+    <string name="porter_access_paused">பயன்பாட்டு அணுகல் இடைநிறுத்தப்பட்டுள்ளது</string>
+    <string name="porter_status_access_paused">Porter இயங்குகிறது, ஆனால் பயன்பாட்டு அணுகல் இடைநிறுத்தப்பட்டுள்ளது. “பயன்பாடுகள்” பிரிவில் அணுகலைத் தொடரவும்.</string>
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_apps_counts">مجاز: %1$d · سازگار: %2$d</string>
+    <string name="porter_discovery_partial">برخی نمایه‌ها بررسی نشدند. ممکن است این فهرست کامل نباشد.</string>
+    <string name="porter_discovery_legacy">برای یافتن برنامه‌های بیشتر و دیدن سابقه اتصال، Porter را دوباره راه‌اندازی کنید.</string>
+    <string name="porter_connections_explanation">برنامه‌ها می‌توانند هنگام راه‌اندازی Porter به‌طور خودکار وصل شوند. زمان اتصال نشان نمی‌دهد برنامه آخرین بار چه زمانی استفاده شده است.</string>
+    <string name="porter_connection_needs_companion">به برنامه سازگاری نیاز دارد</string>
+    <string name="porter_connection_unsupported">مجوز اعلام شده؛ یکپارچه‌سازی شناسایی نشد</string>
+    <string name="porter_connection_managed">قبلاً وصل یا مدیریت شده</string>
+    <string name="porter_connection_unknown">جزئیات اتصال در دسترس نیست</string>
+    <string name="porter_connection_never_recorded">آخرین اتصال: نامشخص</string>
+    <string name="porter_connection_last">آخرین اتصال: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d برنامه به برنامه سازگاری نیاز دارد</item>
+        <item quantity="other">%d برنامه به برنامه سازگاری نیاز دارند</item>
+    </plurals>
+    <string name="porter_compatibility_needed">برنامه سازگاری لازم است</string>
+    <string name="porter_get_compatibility">دریافت برنامه سازگاری</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">به %d برنامه که به برنامه سازگاری Porter نیاز دارد اجازه دسترسی داده‌اید. دسترسی آن پس از نصب برنامه سازگاری فعال می‌شود.</item>
+        <item quantity="other">به %d برنامه که به برنامه سازگاری Porter نیاز دارند اجازه دسترسی داده‌اید. دسترسی آن‌ها پس از نصب برنامه سازگاری فعال می‌شود.</item>
+    </plurals>
+    <string name="porter_access_pending_android">دسترسی فعال نشد. مجوزهای این برنامه را در تنظیمات Android بررسی کنید.</string>
+    <string name="porter_pause_access">توقف موقت دسترسی</string>
+    <string name="porter_pause_access_summary">دسترسی همه برنامه‌ها موقتاً متوقف می‌شود. مجوزهای ذخیره‌شده آن‌ها حفظ می‌شوند.</string>
+    <string name="porter_global_access_restart">برای استفاده از کنترل سراسری دسترسی، Porter را دوباره راه‌اندازی کنید.</string>
+    <string name="porter_access_paused">دسترسی برنامه‌ها موقتاً متوقف است</string>
+    <string name="porter_status_access_paused">Porter در حال اجرا است، اما دسترسی برنامه‌ها موقتاً متوقف است. دسترسی را از بخش «برنامه‌ها» از سر بگیرید.</string>
+</resources>

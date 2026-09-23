@@ -2,29 +2,29 @@
 <resources>
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s on käynnissä</string>
-    <string name="home_status_service_not_running">%1$s ei juokse</string>
+    <string name="home_status_service_not_running">%1$s ei ole käynnissä</string>
     <!-- Home - Adb -->
-    <string name="home_adb_title"><![CDATA[Aloita yhdistämällä tietokoneeseen]]></string>
-    <string name="home_adb_description"><![CDATA[Laitteille, joilla ei ole rootia, sinun täytyy käyttää adb:tä Shizukun käynnistämiseen (vaatii tietokoneyhteyden). Tämä prosessi täytyy toistaa aina, kun laite käynnistetään uudelleen. Anteeksi <b><a href=\"%1$s\">Lue apua</a></b>.]]></string>
+    <string name="home_adb_title"><![CDATA[Käynnistä yhdistämällä tietokoneeseen]]></string>
+    <string name="home_adb_description"><![CDATA[Laitteilla, joilla ei ole rootia, Porter on käynnistettävä adb:llä (vaatii tietokoneyhteyden). Tämä on toistettava aina, kun laite käynnistetään uudelleen. <b><a href=\"%1$s\">Lue ohje</a></b>.]]></string>
     <string name="home_adb_button_view_command">Näytä komento</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* On muitakin huomioita, vahvista ensin, että olet lukenut ohjeen.]]></string>
-    <string name="home_adb_dialog_view_command_button_send">Lähettää</string>
+    <string name="home_adb_dialog_view_command_button_send">Lähetä</string>
     <!-- Home - Wireless Adb -->
-    <string name="home_wireless_adb_title"><![CDATA[Aloita langattomalla debuggauksella]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Android 11:llä tai uudemmilla voit ottaa langattoman debuggauksen käyttöön ja käynnistää Shizukun suoraan laitteelta, ilman että sinun tarvitsee yhdistää tietokoneeseen.<p>Katso ensin vaiheittaiset ohjeet.]]></string>
+    <string name="home_wireless_adb_title"><![CDATA[Käynnistä langattomalla virheenkorjauksella]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Android 11:ssä tai uudemmassa voit ottaa langattoman virheenkorjauksen käyttöön ja käynnistää Porterin suoraan laitteelta ilman tietokoneyhteyttä.<p>Katso ensin vaiheittaiset ohjeet.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Ennen Android 11:tä langattoman virheenkorjauksen mahdollistamiseksi vaadittiin tietokoneeseen yhdistäminen.]]></string>
     <string name="home_wireless_adb_view_guide_button">Vaiheittainen opas</string>
     <!-- Adb -->
     <string name="dialog_adb_discovery">Langattoman virheenkorjauspalvelun etsiminen</string>
-    <string name="dialog_adb_discovery_message">Ota käyttöön \"Langaton debugging\" kohdassa
+    <string name="dialog_adb_discovery_message">Ota käyttöön \"Langaton virheenkorjaus\" kohdassa
         \"Kehittäjäasetukset\". \"Langaton virheenkorjaus\" poistetaan automaattisesti käytöstä, kun
-        verkko muuttuu.\n\nHuomaa, älä poista käytöstä \"Kehittäjäasetukset\" tai \"USB-debugging\"
+        verkko muuttuu.\n\nHuomaa, älä poista käytöstä \"Kehittäjäasetukset\" tai \"USB-virheenkorjaus\"
         -toimintoja, muuten Porter pysäytetään.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Yritä poistaa käytöstä ja
-        ottaa käyttöön \"Langaton debuggaus\", jos se jatkaa etsintää.</string>
-    <string name="dialog_adb_port">Satama</string>
+        ottaa käyttöön \"Langaton virheenkorjaus\", jos se jatkaa etsintää.</string>
+    <string name="dialog_adb_port">Portti</string>
     <string name="adb_pairing">Paritus</string>
-    <string name="dialog_adb_pairing_title">Pari laitteeseen</string>
+    <string name="dialog_adb_pairing_title">Muodosta laitepari</string>
     <string name="dialog_adb_pairing_discovery">Etsitään parituspalvelua</string>
     <string name="dialog_adb_pairing_paring_code">Parituskoodi</string>
     <string name="paring_code_is_wrong">Parituskoodi on väärä.</string>
@@ -36,79 +36,63 @@
         oli välttämätön.</string>
     <string name="dialog_usb_debugging_not_enabled">USB-virheenkorjaus ei ole käytössä.\nOta se
         käyttöön kohdassa \"Kehittäjäasetukset\".</string>
-    <string name="dialog_adb_pairing_accessibility_permission">Android 14:ssä Shizukun
-        asentaminen/päivittäminen pakettiasentajalla peruuttaa ^1-käyttöoikeuden, jota tarvitaan
-        pariliitoksen esteettömyyspalvelun käyttöönottoon.\n\nMyöntääksesi käyttöoikeuden, suorita
-        seuraava ADB-komento:\n\n^2\n\nKomennon suorittamisen jälkeen voit jatkaa pariliitoksen
-        muodostamista.\n\nHuomautus: voit ohittaa tämän asentamalla/päivittämällä Shizukun ADB:llä.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Ole hyvä ja ota saavutettavuuspalvelu
-        käyttöön aloittaaksesi paritusprosessin. Tämä mahdollistaa Shizukun tunnistaa
-        parituskoodin.\n\nEsteettömyyspalvelu kytketään pois päältä, kun koodi löytyy, tai minuutin
-        kuluttua energian säästämiseksi.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">Aloita pariliitos suorittamalla
+    <string name="dialog_adb_pairing_accessibility_permission">Android 14:ssä Porterin asentaminen/päivittäminen pakettiasentajalla peruuttaa ^1-käyttöoikeuden, jota tarvitaan parituksen saavutettavuuspalvelun käyttöönottoon.\n\nMyönnä käyttöoikeus suorittamalla seuraava ADB-komento:\n\n^2\n\nKomennon suorittamisen jälkeen voit jatkaa paritusta.\n\nHuomautus: voit ohittaa tämän asentamalla/päivittämällä Porterin ADB:llä.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Ota saavutettavuuspalvelu käyttöön aloittaaksesi parituksen. Näin Porter voi tunnistaa parituskoodin.\n\nSaavutettavuuspalvelu poistetaan käytöstä paritusyrityksen jälkeen tai jos koodia ei löydy minuutin kuluessa. Porter näyttää tuloksen ja antaa sinun yrittää uudelleen.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">Aloita paritus suorittamalla
         seuraavat vaiheet:\n- Siirry kohtaan \"Kehittäjäasetukset\"\n- Ota käyttöön
         \"USB-virheenkorjaus\" ja \"Langaton virheenkorjaus\"\n- Napauta \"Langaton virheenkorjaus\"
-        -kohdan vasenta puolta\n- Napauta \"Yhdistä laite pariliitoskoodilla\". Porter tunnistaa
-        pariliitoskoodin automaattisesti.</string>
+        -kohdan vasenta puolta\n- Napauta \"Muodosta laitepari laiteparikoodilla\". Porter tunnistaa
+        parituskoodin automaattisesti.</string>
     <string name="adb_pairing_requires_multi_window">Siirry ensin jaetun ruudun (moniikkuna) tilaan.</string>
     <string name="adb_pairing_requires_multi_window_reason">Järjestelmä vaatii, että
-        pariliitosvalintaikkuna on aina näkyvissä. Jaetun näytön tilan käyttö on ainoa tapa, jolla
+        parituksen valintaikkuna on aina näkyvissä. Jaetun näytön tilan käyttö on ainoa tapa, jolla
         tämä sovellus ja järjestelmävalintaikkuna voivat olla näkyvissä samanaikaisesti.</string>
     <string name="adb_error_key_store">Langattoman virheenkorjauksen avaimen luominen
         epäonnistui.\nTämä voi johtua siitä, että laitteen KeyStore-mekanismi on rikki.</string>
     <string name="adb_pair_required">Käy ensin läpi paritusvaihe.</string>
-    <string name="enable">Ottaa käyttöön</string>
-    <string name="development_settings">Kehittäjävaihtoehdot</string>
-    <string name="notification_settings">Ilmoitusvaihtoehdot</string>
-    <string name="adb_pairing_tutorial_content_notification">Shizukun ilmoitus auttaa sinua
-        täydentämään parituksen.</string>
+    <string name="enable">Ota käyttöön</string>
+    <string name="development_settings">Kehittäjäasetukset</string>
+    <string name="notification_settings">Ilmoitusasetukset</string>
+    <string name="adb_pairing_tutorial_content_notification">Porterin ilmoitus auttaa sinua viimeistelemään parituksen.</string>
     <string name="adb_pairing_tutorial_content_steps">Siirry kohtaan \"Kehittäjäasetukset\" ja ota
         sitten käyttöön \"USB-virheenkorjaus\" ja \"Langaton virheenkorjaus\".</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Napauta \"Langaton
-        virheenkorjaus\" -kohdan vasenta puolta ja napauta sitten \"Yhdistä laite
-        pariliitoskoodilla\". Syötä ilmoituksessa oleva koodi pariliitoksen viimeistelemiseksi.</string>
-    <string name="adb_pairing_tutorial_content_notification_blocked">Paritusprosessi vaatii, että
-        olet vuorovaikutuksessa Shizukun ilmoituksen kanssa. Sallithan Shizukun lähettää
-        ilmoituksia.</string>
+        virheenkorjaus\" -kohdan vasenta puolta ja napauta sitten \"Muodosta laitepari
+        laiteparikoodilla\". Syötä ilmoituksessa oleva koodi parituksen viimeistelemiseksi.</string>
+    <string name="adb_pairing_tutorial_content_notification_blocked">Paritus edellyttää, että käytät Porterin ilmoitusta. Salli Porterin lähettää ilmoituksia.</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI:n käyttäjät saattavat joutua vaihtamaan
         ilmoitustyylin \"Android\"-muotoon \"Notification\" - \"Notification shade\" -asetuksista
         järjestelmäasetuksista.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Muussa tapauksessa et ehkä pysty syöttämään
-        ilmoituksessa näkyvää pariliitoskoodia.</string>
-    <string name="adb_pairing_tutorial_content_finish">Mene takaisin Shizukuun ja aloita Porter.</string>
-    <string name="adb_pairing_tutorial_content_network">Shizukun on käytettävä paikallisverkkoa.
-        Sitä hallitsee verkkokäyttöoikeus.</string>
-    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Jotkin järjestelmät
-        (kuten MIUI) estävät sovelluksia käyttämästä verkkoa, kun ne eivät ole näkyvissä, vaikka
-        sovellus käyttäisi etualalla olevaa palvelua. Poista Shizukun akun optimointiominaisuudet
-        käytöstä tällaisissa järjestelmissä.</string>
+        ilmoituksessa näkyvää parituskoodia.</string>
+    <string name="adb_pairing_tutorial_content_finish">Palaa Porteriin ja käynnistä Porter.</string>
+    <string name="adb_pairing_tutorial_content_network">Porterin on käytettävä paikallisverkkoa. Sitä hallitaan verkkoluvalla.</string>
+    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Jotkin järjestelmät (kuten MIUI) estävät sovelluksia käyttämästä verkkoa, kun ne eivät ole näkyvissä, vaikka sovellus käyttäisi etualan palvelua. Poista Porterin akun optimointi käytöstä tällaisissa järjestelmissä.</string>
     <!-- Home - Root -->
-    <string name="home_root_title"><![CDATA[Start (rootatuille laitteille)]]></string>
-    <string name="home_root_button_start">Aloittaa</string>
+    <string name="home_root_title"><![CDATA[Käynnistä (rootatuille laitteille)]]></string>
+    <string name="home_root_button_start">Käynnistä</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Sovellusten hallinta</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="one"><![CDATA[Valtuutettu %d sovellus]]></item>
-        <item quantity="other"><![CDATA[Valtuutettu %d Sovelluksia]]></item>
+        <item quantity="one"><![CDATA[%d valtuutettu sovellus]]></item>
+        <item quantity="other"><![CDATA[%d valtuutettua sovellusta]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Napauta hallitaksesi valtuutettuja sovelluksia]]></string>
     <string name="home_app_management_empty">Sovellukset, jotka ovat pyytäneet tai ilmoittaneet
         Porter-luvan, näkyvät tässä.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">Ohjaa Shizukua automaatiosovelluksilla</string>
+    <string name="home_automation_title">Ohjaa Porteria automaatiosovelluksilla</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">adb:n lupa on rajoitettu</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[On hyvin mahdollista, että laitevalmistajasi rajoittaa adb:n käyttöoikeuksia.<p>Järjestelmällesi saattaa olla ratkaisu <b><a href=\"%1$s\">Tämä asiakirja</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* vaatii Shizukun juoksuja rootilla</string>
+    <string name="app_management_item_summary_requires_root">* vaatii, että Porter on käynnissä rootilla</string>
     <string name="app_management_toggle_all">Kytke kaikki päälle</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">Käytä Shizukua terminaalisovelluksissa</string>
-    <string name="home_terminal_description">Suorita shell-komentoja päätesovelluksissa Shizukun
-        kautta</string>
+    <string name="home_terminal_title">Käytä Porteria päätesovelluksissa</string>
+    <string name="home_terminal_description">Suorita shell-komentoja päätesovelluksissa Porterin kautta</string>
     <string name="terminal_tutorial_miui">Käyttäjät ovat raportoineet, että MIUI rikkoo
         vientitoiminnon käyttämän Storage Access Frameworkin.</string>
-    <string name="terminal_tutorial_miui_2">Jos käytät MIUI-käyttöjärjestelmää, sinun on ehkä
-        purettava tiedosto Shizukun APK:n resurssikansiosta.</string>
+    <string name="terminal_tutorial_miui_2">Jos käytät MIUI:ta, sinun on ehkä purettava tiedosto Porterin APK:n assets-kansiosta.</string>
     <string name="terminal_tutorial_1">Vie tiedostot uuteen kansioon.</string>
     <string name="terminal_tutorial_1_description">Kaksi tiedostoa viedään: %1$s ja %2$s. Jos
         tiedostot ovat jo valitussa kansiossa, ne poistetaan.</string>
@@ -123,7 +107,7 @@
     <string name="rish_description"><![CDATA[Komentosarjalla %1$svoit suorittaa komentotulkkikomentoja missä tahansa päätesovelluksessa.<p>Napauta saadaksesi lisätietoja sen käytöstä.]]></string>
     <!-- Settings -->
     <string name="settings_title">Asetukset</string>
-    <string name="settings_start_on_boot">Aloita käynnistyksestä</string>
+    <string name="settings_start_on_boot">Käynnistä laitteen käynnistyessä</string>
     <string name="settings_start_on_boot_summary">Vaatii Android 11+:n tai rootin</string>
     <string name="settings_start_on_boot_bug">Android 11-12 -versioiden virheen vuoksi langaton
         virheenkorjaus ei muista valtuutettuja verkkoja.\n\nSinun on valtuutettava verkko uudelleen
@@ -142,60 +126,111 @@
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Portin tulee olla välillä 1–65535</string>
     <string name="snackbar_battery_optimization_home">Akun optimointi täytyy olla pois päältä, jotta
-        käynnistys käynnistyksellä/watchdogilla toimisi kunnolla.</string>
+        käynnistys laitteen käynnistyessä ja vahtikoira toimivat kunnolla.</string>
     <string name="snackbar_battery_optimization_settings">Ole hyvä ja poista akun optimointi
         käytöstä tämän ominaisuuden käyttämiseksi.</string>
-    <string name="snackbar_action_fix">Kiinnittää</string>
+    <string name="snackbar_action_fix">Korjaa</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Porter aloittaa jo taustalla</string>
+    <string name="toast_shizuku_already_starting">Porter käynnistyy jo taustalla</string>
     <string name="toast_accessibility_tv_only">Tätä palvelua tuetaan vain TV-laitteissa.</string>
-    <string name="toast_pairing_timeout">Shizukun pariliitospalvelu aikakatkaistiin.</string>
+    <string name="toast_pairing_timeout">Porterin parituspalvelu aikakatkaistiin</string>
     <!-- Stop -->
-    <string name="action_stop">Pysäyttäkää Porter</string>
+    <string name="action_stop">Pysäytä Porter</string>
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">Langaton debuggausparitus</string>
+    <string name="notification_channel_adb_pairing">Langattoman virheenkorjauksen paritus</string>
     <string name="notification_adb_pairing_input_paring_code">Syötä parituskoodi</string>
     <string name="notification_adb_pairing_searching_for_service_title">Etsitään parituspalvelua</string>
     <string name="notification_adb_pairing_service_found_title">Parituspalvelu löytynyt</string>
     <string name="notification_adb_pairing_stop_searching">Lopeta etsintä</string>
     <string name="notification_adb_pairing_working_title">Parittaminen käynnissä</string>
     <string name="notification_adb_pairing_succeed_title">Paritus onnistui</string>
-    <string name="notification_adb_pairing_succeed_text">Voit aloittaa Porter-palvelun nyt.</string>
+    <string name="notification_adb_pairing_succeed_text">Voit käynnistää Porter-palvelun nyt.</string>
     <string name="notification_adb_pairing_failed_title">Paritus epäonnistui</string>
-    <string name="notification_adb_pairing_retry">Yritä</string>
+    <string name="notification_adb_pairing_retry">Yritä uudelleen</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">pääsy Shizukuun</string>
-    <string name="permission_description">Salli sovelluksen käyttää Shizukua.</string>
-    <string name="permission_warning_template"><![CDATA[Sallia <b>%1$s</b> jotta %2$s?]]></string>
-    <string name="grant_dialog_button_allow_always">Anna koko ajan</string>
-    <string name="grant_dialog_button_deny">"Kieltää"</string>
+    <string name="permission_label">käyttää Porteria</string>
+    <string name="permission_description">Salli sovelluksen käyttää Porteria.</string>
+    <string name="permission_warning_template"><![CDATA[Sallitaanko, että <b>%1$s</b> voi %2$s?]]></string>
+    <string name="grant_dialog_button_allow_always">Salli aina</string>
+    <string name="grant_dialog_button_deny">"Älä salli"</string>
     <!-- Starter -->
     <string name="starter">Käynnistin</string>
     <string name="start_with_root_failed">Palvelua ei voi käynnistää, koska root-oikeutta ei
         myönnetä tai laite ei ole rootattu.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Shizukun aloittaminen…</string>
-    <string name="wadb_notification_wifi_required">Odotan Wi-Fi-yhteyttä ennen kuin jatkan</string>
+    <string name="wadb_notification_title">Käynnistetään Porteria…</string>
+    <string name="wadb_notification_wifi_required">Odotetaan Wi-Fi-yhteyttä ennen jatkamista</string>
     <string name="wadb_notification_retry">Odotetaan uudelleenyritystä</string>
     <string name="wadb_error_title">Virhe käynnistyksen yhteydessä</string>
     <string name="wadb_error_notify_dev">Napauta ilmoittaaksesi kehittäjälle.</string>
     <string name="wadb_permission_error_notification_title">Lupavirhe</string>
-    <string name="wadb_permission_error_notification_content">Shizukun täytyy WRITE_SECURE_SETTINGS
-        käynnistyäkseen. Napauta oppiaksesi, miten se myönnetään.</string>
+    <string name="wadb_permission_error_notification_content">Porter tarvitsee WRITE_SECURE_SETTINGS-luvan käynnistyäkseen laitteen käynnistyessä. Napauta ja katso, miten se myönnetään.</string>
     <!-- Watchdog -->
-    <string name="watchdog_running">Vahtikoira on juoksemassa</string>
+    <string name="watchdog_running">Vahtikoira on käynnissä</string>
     <string name="watchdog_turn_off">Sammuta</string>
     <string name="watchdog_shizuku_crashed_title">Porter kaatui äskettäin</string>
-    <string name="watchdog_shizuku_crashed_text">Watchdog käynnisti palvelun uudelleen. Napauta
+    <string name="watchdog_shizuku_crashed_text">Vahtikoira käynnisti palvelun uudelleen. Napauta
         oppiaksesi mahdollisista korjauksista tulevien kaatumisten estämiseksi.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Sammuta hälytykset</string>
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">Selainta ei voi käynnistää</string>
     <string name="toast_copied_to_clipboard">Kopioitu leikepöydälle</string>
-    <string name="accessibility_service_description">Tarjoaa paritustuen laitteille (esim. Android
-        14+ -televisioille), joissa ilmoituksia tai jaettua näyttöä ei voi käyttää.\n\nMahdollistaa
-        Shizukun poimia parituskoodin langattoman debuggauksen paritusnäytöltä. Se poistuu käytöstä,
-        kun parituskoodi löytyy.</string>
+    <string name="accessibility_service_description">Tarjoaa paritustuen laitteille (esim. Android 14+ -televisioille), joissa ilmoituksia tai jaettua näyttöä ei voi käyttää.\n\nAntaa Porterin poimia parituskoodin langattoman virheenkorjauksen paritusnäytöltä. Palvelu poistuu käytöstä, kun parituskoodi löytyy.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Yritä nyt</string>
+    <string name="home_root_description"><![CDATA[Jos käytät Magiskia, %1$s on toinen vaihtoehto. Sovelluksissa on oltava nimenomainen %2$s-tuki.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intentit</string>
+    <string name="home_automation_bottom_sheet_label_action">Toiminto</string>
+    <string name="home_automation_bottom_sheet_label_package">Paketti</string>
+    <string name="home_automation_bottom_sheet_label_target">Kohde</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extras</string>
+    <string name="home_automation_regenerate_token">Luodaanko tunnus uudelleen?</string>
+    <string name="home_automation_regenerate_token_message">Sinun on määritettävä intentit uudelleen uudella tunnuksella.</string>
+    <string name="home_dialog_reboot_required_title">Uudelleenkäynnistys vaaditaan</string>
+    <string name="home_dialog_reboot_required_message">Laite on käynnistettävä uudelleen, jotta Porter toimii oikein. Jatka käynnistämällä laite uudelleen.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Sovelluksen kaksoiskappale havaittu</string>
+    <string name="home_dialog_duplicate_app_detected_message">Laitteeseen on asennettu toinen versio tästä sovelluksesta. Jatka poistamalla kaikki kaksoiskappaleet ja käynnistämällä laite uudelleen.</string>
+    <string name="home_dialog_button_exit">Poistu</string>
+    <string name="settings_alerts_blocked_title">Taustailmoitukset</string>
+    <string name="settings_alerts_blocked_summary">Porterin ilmoitukset on estetty, joten käynnistys laitteen käynnistyessä ja vahtikoira eivät voi ilmoittaa, kun ne tarvitsevat huomiota.</string>
+    <string name="settings_alerts_blocked_message">Tämä ominaisuus kertoo ilmoituksella, mitä se tekee ja mikä meni pieleen. Porterin ilmoitukset on tällä hetkellä estetty, joten se toimisi kertomatta sinulle mitään.</string>
+    <string name="settings_alerts_blocked_continue">Ota silti käyttöön</string>
+    <string name="follow_system">Seuraa järjestelmää</string>
+    <string name="start">Käynnistä</string>
+    <string name="stop">Pysäytä</string>
+    <string name="notification_channel_watchdog">Vahtikoira</string>
+    <string name="notification_channel_crash">Kaatumisraportit</string>
+    <string name="notification_channel_auth">Todennusvirheet</string>
+    <string name="notification_auth_invalid_title">Virheellinen todennustunnus</string>
+    <string name="notification_auth_invalid_message">Varmista, että intentin tunnus vastaa tunnusta, joka näkyy Asetuksissa kohdassa ”Ohjaa Porteria automaatiosovelluksilla”.</string>
+    <string name="porter_status_running_adb">Käynnissä ADB:n kautta</string>
+    <string name="porter_status_running_root">Käynnissä rootin kautta</string>
+    <string name="porter_status_restart_service">Käynnistä Porter uudelleen, niin käynnissä oleva palvelu päivittyy.</string>
+    <string name="porter_status_version_unknown">Tuntematon</string>
+    <string name="porter_status_versions">Asennettu Porter: %1$s\nKäynnissä oleva palvelu: %2$s\nShizuku API: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Kiitokset</string>
+    <string name="porter_acknowledgements_summary">Alkuperäisprojektit, avoimen lähdekoodin kirjastot ja lisenssit.</string>
+    <string name="porter_acknowledgements_thanks">Kiitos</string>
+    <string name="porter_licenses">Lisenssit</string>
+    <string name="porter_ack_shizuku">RikkaAppsille ja kaikille osallistujille Shizukun ja sen rajapintojen luomisesta. Ne ovat Porterin perusta.</string>
+    <string name="porter_ack_thedjchi">thedjchille ja osallistujille sen Shizuku-forkin ylläpitämisestä, johon Porter perustuu.</string>
+    <string name="porter_ack_symbuzzer">symbuzzerille ja osallistujille Shizukun kehityksen jatkamisesta ja forkinsa jakamisesta.</string>
+    <string name="porter_ack_plus">thejaustinille ja osallistujille ShizukuPlusista ja inspiraatiosta valinnaiseen yhteensopivuussovellukseen.</string>
+    <string name="porter_ack_maxpatchs">Kiitos kuvakkeesta, maskottisuunnitelmista ja bannerista.</string>
+    <string name="porter_license_porter">Porter ja alkuperäinen Shizuku-sovellus · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API ja sen Porter-fork · MIT License</string>
+    <string name="porter_license_notice">Tekijänoikeus- ja nimeämisilmoitukset</string>
+    <string name="porter_pairing_restart">Aloita paritus uudelleen</string>
+    <string name="porter_pairing_retry_instructions">Jos koodi hylättiin tai ilmoitus katosi, aloita paritus uudelleen tästä. Sulje sitten Androidin vanha parituskoodin valintaikkuna ja avaa uusi. Käytä uutta koodia; Porterin tietoja ei tarvitse tyhjentää.</string>
+    <string name="porter_pairing_search_timeout">Parituskoodia ei vastaanotettu minuutin kuluessa. Paritus on pysäytetty. Valitse Yritä uudelleen ja avaa sitten uusi parituskoodin valintaikkuna kohdassa Langaton virheenkorjaus.</string>
+    <string name="porter_pairing_attempt_timeout">Parituksen yhteys aikakatkaistiin. Avaa uusi parituskoodin valintaikkuna kohdassa Langaton virheenkorjaus ja yritä uudelleen.</string>
+    <string name="porter_pairing_failed_retry">Paritus epäonnistui. Avaa uusi parituskoodin valintaikkuna kohdassa Langaton virheenkorjaus ja yritä uudelleen.</string>
+    <string name="porter_pairing_notification_timeout">Paritus pysäytettiin, koska ilmoitus aikakatkaistiin. Valitse Yritä uudelleen ja avaa sitten uusi parituskoodin valintaikkuna kohdassa Langaton virheenkorjaus.</string>
+    <string name="porter_tv_pairing_progress_title">Porter-paritus</string>
+    <string name="porter_tv_pairing_wait">Pidä parituskoodin ikkuna auki ja odota.</string>
+    <string name="porter_tv_pairing_return">Palataan Porteriin parituksen saavutettavuuspalvelun poistamiseksi käytöstä…</string>
+    <string name="porter_tv_pairing_disabling">Poistetaan parituksen saavutettavuuspalvelua käytöstä…</string>
+    <string name="porter_tv_pairing_complete">Parituksen saavutettavuuspalvelu on poistettu käytöstä. Kaikki paritusvaiheet on suoritettu. Voit sulkea tämän ikkunan.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Parituksen saavutettavuuspalvelu on yhä käytössä. Poista se käytöstä Saavutettavuus-asetuksista.</string>
+    <string name="porter_tv_pairing_open_accessibility">Avaa Saavutettavuus-asetukset</string>
 </resources>

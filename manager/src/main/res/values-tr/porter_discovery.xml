@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_apps_counts">Yetkili: %1$d · Uyumlu: %2$d</string>
+    <string name="porter_discovery_partial">Bazı profiller denetlenemedi. Bu liste eksik olabilir.</string>
+    <string name="porter_discovery_legacy">Daha fazla uygulama bulmak ve bağlantı geçmişini görmek için Porter’ı yeniden başlatın.</string>
+    <string name="porter_connections_explanation">Uygulamalar, Porter başladığında otomatik olarak bağlanabilir. Bağlantı zamanı, bir uygulamanın en son ne zaman kullanıldığını göstermez.</string>
+    <string name="porter_connection_needs_companion">Uyumluluk uygulaması gerekir</string>
+    <string name="porter_connection_unsupported">İzin bildirildi; entegrasyon tanınmadı</string>
+    <string name="porter_connection_managed">Daha önce bağlandı veya yönetildi</string>
+    <string name="porter_connection_unknown">Bağlantı ayrıntıları mevcut değil</string>
+    <string name="porter_connection_never_recorded">Son bağlantı: Bilinmiyor</string>
+    <string name="porter_connection_last">Son bağlantı: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d uygulama uyumluluk uygulamasını gerektiriyor</item>
+        <item quantity="other">%d uygulama uyumluluk uygulamasını gerektiriyor</item>
+    </plurals>
+    <string name="porter_compatibility_needed">Uyumluluk uygulaması gerekli</string>
+    <string name="porter_get_compatibility">Uyumluluk uygulamasını edinin</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Porter uyumluluk uygulamasına ihtiyaç duyan %d uygulamaya erişim izni verdiniz. Uyumluluk uygulaması yüklendiğinde erişimi etkinleşecek.</item>
+        <item quantity="other">Porter uyumluluk uygulamasına ihtiyaç duyan %d uygulamaya erişim izni verdiniz. Uyumluluk uygulaması yüklendiğinde erişimleri etkinleşecek.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Erişim etkinleştirilemedi. Bu uygulamanın izinlerini Android ayarlarında denetleyin.</string>
+    <string name="porter_pause_access">Erişimi duraklat</string>
+    <string name="porter_pause_access_summary">Tüm uygulamaların erişimini duraklatın. Kayıtlı izinleri korunur.</string>
+    <string name="porter_global_access_restart">Genel erişim denetimini kullanmak için Porter’ı yeniden başlatın.</string>
+    <string name="porter_access_paused">Uygulama erişimi duraklatıldı</string>
+    <string name="porter_status_access_paused">Porter çalışıyor ancak uygulama erişimi duraklatıldı. Erişimi Uygulamalar bölümünden sürdürün.</string>
+</resources>

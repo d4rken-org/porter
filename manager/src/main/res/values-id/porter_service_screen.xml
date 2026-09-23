@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Layanan</string>
+    <string name="porter_view_service">Lihat layanan</string>
+    <string name="porter_service_starting">Memulai layanan Porter…</string>
+    <string name="porter_service_stopping">Menghentikan layanan Porter…</string>
+    <string name="porter_service_checking">Membaca status layanan…</string>
+    <string name="porter_apps_service_unavailable">Akses aplikasi tidak tersedia selama layanan berhenti atau sedang berubah.</string>
+    <string name="porter_apps_counts_unavailable">Jumlah aplikasi tidak tersedia.</string>
+    <string name="porter_background_operation">Operasi latar belakang</string>
+    <string name="porter_service_failed_running">Pembaruan sebelumnya tidak selesai. Layanan masih berjalan. Anda dapat mencoba memperbarui lagi.</string>
+    <string name="porter_service_failed_stopped">Pembaruan sebelumnya tidak selesai. Layanan berhenti. Buka dasbor untuk memulainya lagi.</string>
+    <string name="porter_service_build_different_summary">Layanan yang berjalan menggunakan build yang berbeda dari aplikasi yang terinstal. Fitur yang kompatibel tetap tersedia.</string>
+    <string name="porter_service_build_unknown_summary">Layanan yang berjalan tidak dapat melaporkan identitas build-nya. Perbarui layanan untuk menggunakan build yang terinstal. Fitur yang kompatibel tetap tersedia.</string>
+    <string name="porter_service_healthy">Semuanya berfungsi normal.</string>
+    <string name="porter_service_progress_background">Anda dapat meninggalkan layar ini. Operasi berlanjut di latar belakang.</string>
+    <string name="porter_build_identity_unavailable">Identitas build tidak tersedia</string>
+    <string name="porter_installed_app">Aplikasi terinstal</string>
+    <string name="porter_running_service">Layanan berjalan</string>
+    <string name="porter_service_api_value">Protokol Porter: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Memerlukan perangkat yang di-root. Porter meminta akses root saat Anda menekan Mulai.</string>
+    <string name="porter_version_compact">Versi: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Build: %1$s (%2$s)</string>
+</resources>

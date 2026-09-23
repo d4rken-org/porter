@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_apps_counts">Auktoriserade: %1$d · Kompatibla: %2$d</string>
+    <string name="porter_discovery_partial">Vissa profiler kunde inte kontrolleras. Listan kan vara ofullständig.</string>
+    <string name="porter_discovery_legacy">Starta om Porter för att hitta fler appar och se anslutningshistoriken.</string>
+    <string name="porter_connections_explanation">Appar kan ansluta automatiskt när Porter startar. Anslutningstiden visar inte när en app senast användes.</string>
+    <string name="porter_connection_needs_companion">Kräver kompatibilitetsappen</string>
+    <string name="porter_connection_unsupported">Behörighet deklarerad, integrationen känns inte igen</string>
+    <string name="porter_connection_managed">Tidigare ansluten eller hanterad</string>
+    <string name="porter_connection_unknown">Anslutningsdetaljer är inte tillgängliga</string>
+    <string name="porter_connection_never_recorded">Senast ansluten: Okänt</string>
+    <string name="porter_connection_last">Senast ansluten: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d app kräver kompatibilitetsappen</item>
+        <item quantity="other">%d appar kräver kompatibilitetsappen</item>
+    </plurals>
+    <string name="porter_compatibility_needed">Kompatibilitetsappen behövs</string>
+    <string name="porter_get_compatibility">Hämta kompatibilitetsappen</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Du har gett åtkomst till %d app som behöver Porters kompatibilitetsapp. Dess åtkomst blir tillgänglig när kompatibilitetsappen har installerats.</item>
+        <item quantity="other">Du har gett åtkomst till %d appar som behöver Porters kompatibilitetsapp. Deras åtkomst blir tillgänglig när kompatibilitetsappen har installerats.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Åtkomsten kunde inte aktiveras. Kontrollera appens behörigheter i Androids inställningar.</string>
+    <string name="porter_pause_access">Pausa åtkomst</string>
+    <string name="porter_pause_access_summary">Pausa åtkomsten för alla appar. Deras sparade behörigheter behålls.</string>
+    <string name="porter_global_access_restart">Starta om Porter för att använda global åtkomstkontroll.</string>
+    <string name="porter_access_paused">Appåtkomsten är pausad</string>
+    <string name="porter_status_access_paused">Porter körs, men appåtkomsten är pausad. Återuppta åtkomsten under Appar.</string>
+</resources>

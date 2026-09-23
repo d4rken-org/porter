@@ -42,9 +42,7 @@
         parowania.\n\nAby je przyznać, uruchom następujące polecenie ADB:\n\n^2\n\nPo uruchomieniu
         polecenia możesz kontynuować proces parowania.\n\nUwaga: możesz ominąć ten problem,
         instalując/aktualizując program Porter za pomocą programu ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Włącz usługę ułatwień dostępu, aby
-        rozpocząć proces parowania. Pozwoli to Porter wykryć kod parowania.\n\nUsługa zostanie
-        wyłączona po znalezieniu kodu lub po minucie, aby oszczędzać energię.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Włącz usługę ułatwień dostępu, aby rozpocząć proces parowania. Pozwoli to Porter wykryć kod parowania.\n\nUsługa ułatwień dostępu zostanie wyłączona po próbie parowania lub jeśli w ciągu minuty nie zostanie znaleziony żaden kod. Porter wyświetli wynik i pozwoli spróbować ponownie.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Rozpocznij parowanie, wykonując
         następujące kroki:\n- Przejdź do „Opcji programistycznych”\n- Włącz „Debugowanie USB” i
         „Debugowanie bezprzewodowe”\n- Dotknij lewej strony „Debugowania bezprzewodowego”\n- Dotknij
@@ -67,12 +65,12 @@
         „Debugowanie bezprzewodowe”, a następnie dotknij opcji „Sparuj urządzenie przy użyciu kodu
         parowania”. Wprowadź kod z powiadomienia, aby dokończyć parowanie.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Proces parowania wymaga
-        interakcji z powiadomieniem od Porter. Zezwol Porter na wyświetlanie powiadomień.</string>
+        interakcji z powiadomieniem od Porter. Zezwól Porter na wyświetlanie powiadomień.</string>
     <string name="adb_pairing_tutorial_content_miui">Użytkownicy MIUI mogą potrzebować zmiany stylu
         powiadomień na \"Android\" w ustawieniach systemu (Powiadomienia -&gt; Styl powiadomień).</string>
     <string name="adb_pairing_tutorial_content_miui_2">W przeciwnym razie możesz nie móc wpisać kodu
         parowania z powiadomienia.</string>
-    <string name="adb_pairing_tutorial_content_finish">Wróć do Porter i zacznij Porter.</string>
+    <string name="adb_pairing_tutorial_content_finish">Wróć do Porter i uruchom Porter.</string>
     <string name="adb_pairing_tutorial_content_network">Porter musi uzyskać dostęp do lokalnej
         sieci. Jest kontrolowany przez uprawnienia sieciowe.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Niektóre systemy
@@ -119,7 +117,7 @@
         miejscu umożliwi uruchomienie %1$s bez wpisywania ścieżki.\n\nW przeciwnym razie możesz
         utworzyć alias dla %2$s w pliku konfiguracyjnym %3$s Twojej aplikacji terminalowej.</string>
     <string name="terminal_tutorial_3">Otwórz powłokę za pomocą następującego polecenia:</string>
-    <string name="rish_description"><![CDATA[Za pomocą %1$smożesz uruchamiać polecenia powłoki w dowolnej aplikacji terminalowej.<p>Kliknij, aby dowiedzieć się więcej o sposobie korzystania z tej opcji.]]></string>
+    <string name="rish_description"><![CDATA[Za pomocą %1$s możesz uruchamiać polecenia powłoki w dowolnej aplikacji terminalowej.<p>Kliknij, aby dowiedzieć się więcej o sposobie korzystania z tej opcji.]]></string>
     <!-- Settings -->
     <string name="settings_title">Ustawienia</string>
     <string name="settings_start_on_boot">Uruchamiaj przy starcie</string>
@@ -199,4 +197,59 @@
         Usługa wyłączy się automatycznie po znalezieniu kodu.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Spróbuj teraz</string>
+    <string name="home_root_description"><![CDATA[Jeśli używasz Magisk, %1$s to kolejna opcja. Aplikacje muszą bezpośrednio obsługiwać %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intencje</string>
+    <string name="home_automation_bottom_sheet_label_action">Akcja</string>
+    <string name="home_automation_bottom_sheet_label_package">Pakiet</string>
+    <string name="home_automation_bottom_sheet_label_target">Cel</string>
+    <string name="home_automation_bottom_sheet_label_extras">Dodatkowe dane</string>
+    <string name="home_automation_regenerate_token">Wygenerować nowy token?</string>
+    <string name="home_automation_regenerate_token_message">Musisz ponownie skonfigurować swoje intencje z nowym tokenem.</string>
+    <string name="home_dialog_reboot_required_title">Wymagany restart</string>
+    <string name="home_dialog_reboot_required_message">Do prawidłowego działania Porter wymagany jest restart urządzenia. Aby kontynuować, uruchom ponownie urządzenie.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Wykryto zduplikowaną aplikację</string>
+    <string name="home_dialog_duplicate_app_detected_message">Na urządzeniu jest zainstalowana inna wersja tej aplikacji. Aby kontynuować, odinstaluj wszystkie zduplikowane wersje i uruchom ponownie urządzenie.</string>
+    <string name="home_dialog_button_exit">Wyjdź</string>
+    <string name="settings_alerts_blocked_title">Alerty w tle</string>
+    <string name="settings_alerts_blocked_summary">Powiadomienia z Porter są zablokowane, więc uruchamianie przy starcie i nadzorowanie nie mogą poinformować Cię, gdy wymagają uwagi.</string>
+    <string name="settings_alerts_blocked_message">Ta funkcja informuje o swoim działaniu i błędach za pomocą powiadomienia. Powiadomienia z Porter są obecnie zablokowane, więc działałaby bez żadnych informacji.</string>
+    <string name="settings_alerts_blocked_continue">Włącz mimo to</string>
+    <string name="follow_system">Zgodnie z systemem</string>
+    <string name="start">Uruchom</string>
+    <string name="stop">Zatrzymaj</string>
+    <string name="notification_channel_watchdog">Nadzorowanie</string>
+    <string name="notification_channel_crash">Raporty o awariach</string>
+    <string name="notification_channel_auth">Błędy uwierzytelniania</string>
+    <string name="notification_auth_invalid_title">Nieprawidłowy token uwierzytelniania</string>
+    <string name="notification_auth_invalid_message">Upewnij się, że token w intencji jest zgodny z tokenem w Ustawieniach w sekcji „Kontroluj Porter za pomocą aplikacji automatyzacyjnych”.</string>
+    <string name="porter_status_running_adb">Działa przez ADB</string>
+    <string name="porter_status_running_root">Działa przez root</string>
+    <string name="porter_status_restart_service">Uruchom ponownie Porter, aby zaktualizować działającą usługę.</string>
+    <string name="porter_status_version_unknown">Nieznana</string>
+    <string name="porter_status_versions">Zainstalowany Porter: %1$s\nDziałająca usługa: %2$s\nShizuku API: %3$d · Poprawka: %4$d</string>
+    <string name="porter_acknowledgements">Podziękowania</string>
+    <string name="porter_acknowledgements_summary">Projekty źródłowe, biblioteki open source i licencje.</string>
+    <string name="porter_acknowledgements_thanks">Dziękujemy</string>
+    <string name="porter_licenses">Licencje</string>
+    <string name="porter_ack_shizuku">Dla RikkaApps i wszystkich współtwórców za stworzenie Shizuku i jego API, fundamentu Porter.</string>
+    <string name="porter_ack_thedjchi">Dla thedjchi i współtwórców za utrzymywanie forka Shizuku, na którym bazuje Porter.</string>
+    <string name="porter_ack_symbuzzer">Dla symbuzzer i współtwórców za dalszą pracę nad Shizuku i udostępnienie swojego forka.</string>
+    <string name="porter_ack_plus">Dla thejaustin i współtwórców za ShizukuPlus i inspirację do opcjonalnej aplikacji zgodności.</string>
+    <string name="porter_ack_maxpatchs">Dziękujemy za ikonę, projekty maskotki i baner.</string>
+    <string name="porter_license_porter">Porter i oryginalna aplikacja Shizuku · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API i jego fork Porter · MIT License</string>
+    <string name="porter_license_notice">Informacje o prawach autorskich i autorstwie</string>
+    <string name="porter_pairing_restart">Uruchom parowanie ponownie</string>
+    <string name="porter_pairing_retry_instructions">Jeśli kod został odrzucony lub powiadomienie zniknęło, uruchom tutaj parowanie ponownie. Następnie zamknij stare okno kodu parowania Androida i otwórz nowe. Użyj nowego kodu; nie musisz czyścić danych Porter.</string>
+    <string name="porter_pairing_search_timeout">W ciągu minuty nie otrzymano kodu parowania. Parowanie zostało zatrzymane. Wybierz Ponów, a następnie otwórz nowe okno kodu parowania w Debugowaniu bezprzewodowym.</string>
+    <string name="porter_pairing_attempt_timeout">Upłynął limit czasu połączenia parowania. Otwórz nowe okno kodu parowania w Debugowaniu bezprzewodowym i spróbuj ponownie.</string>
+    <string name="porter_pairing_failed_retry">Parowanie nie powiodło się. Otwórz nowe okno kodu parowania w Debugowaniu bezprzewodowym i spróbuj ponownie.</string>
+    <string name="porter_pairing_notification_timeout">Parowanie zostało zatrzymane, ponieważ upłynął limit czasu powiadomienia. Wybierz Ponów, a następnie otwórz nowe okno kodu parowania w Debugowaniu bezprzewodowym.</string>
+    <string name="porter_tv_pairing_progress_title">Parowanie Porter</string>
+    <string name="porter_tv_pairing_wait">Pozostaw okno kodu parowania otwarte i poczekaj.</string>
+    <string name="porter_tv_pairing_return">Powrót do Porter w celu wyłączenia usługi ułatwień dostępu używanej do parowania…</string>
+    <string name="porter_tv_pairing_disabling">Wyłączanie usługi ułatwień dostępu używanej do parowania…</string>
+    <string name="porter_tv_pairing_complete">Usługa ułatwień dostępu używana do parowania jest wyłączona. Wszystkie kroki parowania zostały ukończone. Możesz zamknąć to okno.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Usługa ułatwień dostępu używana do parowania jest nadal włączona. Wyłącz ją w ustawieniach Ułatwień dostępu.</string>
+    <string name="porter_tv_pairing_open_accessibility">Otwórz ustawienia Ułatwień dostępu</string>
 </resources>

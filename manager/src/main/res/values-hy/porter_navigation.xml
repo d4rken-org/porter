@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Հավելվածներ</string>
+    <string name="porter_home_subtitle">ADB մուտք ձեր հավելվածների համար</string>
+    <string name="porter_startup">Գործարկում</string>
+    <string name="porter_version">Տարբերակ</string>
+    <string name="porter_pairing_method">Զուգակցման եղանակ</string>
+    <string name="porter_status_restricted">ADB-ի որոշ թույլտվություններ սահմանափակված են Android-ի կողմից։</string>
+    <string name="porter_status_stop_message">Porter-ը կանգնեցնելիս անջատվում են այն օգտագործող հավելվածները։ Porter-ը պետք է կրկին գործարկեք ձեռքով, ինչը կարող է համակարգիչ պահանջել։</string>
+    <string name="porter_status_details_hint">Բացել ծառայության մանրամասները և կանգնեցման ընտրանքները</string>
+    <string name="porter_status_ready">Porter-ը պատրաստ է։ Համատեղելի հավելվածներն այժմ կարող են միանալ և մուտք հայցել։</string>
+    <string name="porter_pairing_notification">Ծանուցում</string>
+    <string name="porter_pairing_dialog">Ներհավելվածային երկխոսություն</string>
+    <string name="porter_manage_apps_action">Կառավարել հավելվածները</string>
+    <string name="porter_primary_user_title">Օգտագործեք Android-ի հիմնական օգտատիրոջը</string>
+    <string name="porter_primary_user_description">Porter-ը հնարավոր չէ գործարկել Android-ի այս օգտատիրոջից կամ պրոֆիլից։ Անցեք սարքի հիմնական օգտատիրոջը, անհրաժեշտության դեպքում տեղադրեք Porter-ն այնտեղ և գործարկեք դրա ծառայությունը։ Ապա վերադարձեք այստեղ՝ ձեր հավելվածները կառավարելու համար։</string>
+    <string name="porter_secondary_user_stop_message">Porter-ը կանգնեցնելիս անջատվում են Android-ի բոլոր օգտատերերի հավելվածները։ Այն կրկին գործարկելու համար անցեք սարքի հիմնական օգտատիրոջը և բացեք Porter-ն այնտեղ։</string>
+</resources>

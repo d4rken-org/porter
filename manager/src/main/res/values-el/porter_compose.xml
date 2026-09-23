@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Πίσω</string>
+    <string name="porter_local_network_permission">Επιτρέψτε την πρόσβαση στο τοπικό σας δίκτυο, ώστε το Porter να μπορεί να βρει την υπηρεσία ασύρματου εντοπισμού σφαλμάτων του Android και να συνδεθεί σε αυτήν.</string>
+    <string name="porter_pairing_dialog_instructions">Ανοίξτε τον Ασύρματο εντοπισμό σφαλμάτων στις Επιλογές για προγραμματιστές του Android και επιλέξτε Σύζευξη συσκευής με κωδικό σύζευξης. Εισαγάγετε εδώ τη θύρα και τον κωδικό σύζευξης.</string>
+    <string name="porter_permission_detail">Το Porter θα εκτελεί εντολές στη συσκευή σας για αυτήν την εφαρμογή, με τα ίδια προνόμια που έχει το ίδιο το Porter. Επιτρέψτε μόνο εφαρμογές που εμπιστεύεστε.</string>
+    <string name="porter_permission_waiting">Αναμονή για το Porter…</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Gaan terug</string>
+    <string name="porter_local_network_permission">Laat toegang tot jou plaaslike netwerk toe sodat Porter Android se draadlose-ontfoutingsdiens kan vind en daaraan kan koppel.</string>
+    <string name="porter_pairing_dialog_instructions">Maak Draadlose ontfouting in Android se ontwikkelaaropsies oop en kies “Gebruik saambindkode om toestel saam te bind”. Voer die poort en paringskode hier in.</string>
+    <string name="porter_permission_detail">Porter sal namens hierdie program opdragte op jou toestel uitvoer, met dieselfde regte as Porter self. Laat net programme toe wat jy vertrou.</string>
+    <string name="porter_permission_waiting">Wag tans vir Porter…</string>
+</resources>

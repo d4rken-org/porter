@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_apps_counts">Gemagtig: %1$d · Versoenbaar: %2$d</string>
+    <string name="porter_discovery_partial">Sommige profiele kon nie nagegaan word nie. Hierdie lys is dalk onvolledig.</string>
+    <string name="porter_discovery_legacy">Herbegin Porter om meer programme te ontdek en verbindingsgeskiedenis te sien.</string>
+    <string name="porter_connections_explanation">Programme kan outomaties koppel wanneer Porter begin. Die verbindingstyd dui nie aan wanneer \'n program laas gebruik is nie.</string>
+    <string name="porter_connection_needs_companion">Vereis versoenbaarheidsprogram</string>
+    <string name="porter_connection_unsupported">Toestemming verklaar; integrasie nie herken nie</string>
+    <string name="porter_connection_managed">Voorheen gekoppel of bestuur</string>
+    <string name="porter_connection_unknown">Verbindingsbesonderhede onbeskikbaar</string>
+    <string name="porter_connection_never_recorded">Laas gekoppel: onbekend</string>
+    <string name="porter_connection_last">Laas gekoppel: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d program vereis die versoenbaarheidsprogram</item>
+        <item quantity="other">%d programme vereis die versoenbaarheidsprogram</item>
+    </plurals>
+    <string name="porter_compatibility_needed">Versoenbaarheidsprogram nodig</string>
+    <string name="porter_get_compatibility">Kry versoenbaarheidsprogram</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Jy het toegang toegelaat vir %d program wat die Porter-versoenbaarheidsprogram nodig het. Sy toegang sal beskikbaar word wanneer die versoenbaarheidsprogram geïnstalleer is.</item>
+        <item quantity="other">Jy het toegang toegelaat vir %d programme wat die Porter-versoenbaarheidsprogram nodig het. Hulle toegang sal beskikbaar word wanneer die versoenbaarheidsprogram geïnstalleer is.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Toegang kon nie geaktiveer word nie. Gaan hierdie program se toestemmings in Android-instellings na.</string>
+    <string name="porter_pause_access">Onderbreek toegang</string>
+    <string name="porter_pause_access_summary">Onderbreek toegang vir alle programme. Hulle gestoorde toestemmings word behou.</string>
+    <string name="porter_global_access_restart">Herbegin Porter om globale toegangsbeheer te gebruik.</string>
+    <string name="porter_access_paused">Programtoegang is onderbreek</string>
+    <string name="porter_status_access_paused">Porter loop, maar programtoegang is onderbreek. Hervat toegang in Programme.</string>
+</resources>

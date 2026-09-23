@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Porter’ı kullan</string>
+    <string name="permission_description">Bu uygulamanın Porter üzerinden sistem API’lerini kullanmasına izin verin.</string>
+    <string name="porter_missing">Bu yardımcı uygulamayı kullanmak için Porter’ı eşleşen imza sertifikasıyla yükleyin.</string>
+</resources>

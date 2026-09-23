@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">서비스 업데이트 가능</string>
+    <string name="porter_service_update_action">서비스 업데이트</string>
+    <string name="porter_service_update_summary">업데이트하는 동안 연결된 앱의 연결이 잠시 끊어집니다. 기존 권한은 유지됩니다.</string>
+    <string name="porter_service_update_primary">서비스를 업데이트하려면 Android 기본 사용자에서 Porter를 여세요.</string>
+    <string name="porter_service_update_features">이 기능을 사용하려면 서비스를 업데이트하세요.</string>
+    <string name="porter_service_auto_update">서비스 자동 업데이트</string>
+    <string name="porter_service_auto_update_summary">Porter 앱 업데이트 후, 다른 빌드로 실행 중인 서비스를 백그라운드에서 교체합니다. 이때 연결된 앱의 연결이 잠시 끊어집니다. 중지된 서비스는 중지된 상태로 유지됩니다.</string>
+    <string name="porter_service_update_interrupted">이전 서비스 업데이트가 완료되지 않았습니다. 서비스가 아직 실행 중이면 다시 시도하고, 그렇지 않으면 \"서비스\" 화면에서 다시 시작하세요.</string>
+    <string name="porter_global_access_update">실행 중인 서비스에서는 전역 접근 제어를 사용할 수 없습니다.</string>
+    <string name="porter_discovery_update">실행 중인 서비스는 현재 앱 검색 및 연결 기록 기능을 지원하지 않습니다. 사용 가능한 앱은 이전 인터페이스를 통해 표시됩니다.</string>
+    <string name="porter_service_updating">Porter 서비스 업데이트 중…</string>
+    <string name="porter_service_update_failed">Porter 서비스를 업데이트할 수 없습니다</string>
+    <string name="porter_service_update_failed_summary">실행 중인 서비스를 설치된 버전으로 교체할 수 없습니다. 서비스가 아직 실행 중이면 다시 시도할 수 있습니다. 그렇지 않으면 \"서비스\" 화면에서 서비스를 다시 시작하세요.</string>
+    <string name="porter_service_update_retry">업데이트 다시 시도</string>
+</resources>

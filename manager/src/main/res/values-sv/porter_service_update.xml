@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Tjänstuppdatering tillgänglig</string>
+    <string name="porter_service_update_action">Uppdatera tjänsten</string>
+    <string name="porter_service_update_summary">Uppdateringen kopplar kortvarigt från anslutna appar. Befintliga behörigheter behålls.</string>
+    <string name="porter_service_update_primary">Öppna Porter i den primära Android-användaren för att uppdatera tjänsten.</string>
+    <string name="porter_service_update_features">Uppdatera tjänsten för att aktivera de här funktionerna.</string>
+    <string name="porter_service_auto_update">Uppdatera tjänsten automatiskt</string>
+    <string name="porter_service_auto_update_summary">Efter en uppdatering av Porter-appen ersätts en körande tjänst i bakgrunden om den har ett annat bygge. Detta kopplar kortvarigt från anslutna appar. En stoppad tjänst förblir stoppad.</string>
+    <string name="porter_service_update_interrupted">Den föregående tjänstuppdateringen slutfördes inte. Försök igen om tjänsten fortfarande körs, eller starta den igen från skärmen Tjänst.</string>
+    <string name="porter_global_access_update">Global åtkomstkontroll är inte tillgänglig i den körande tjänsten.</string>
+    <string name="porter_discovery_update">Den körande tjänsten stöder inte de aktuella funktionerna för appidentifiering och anslutningshistorik. Tillgängliga appar visas via dess äldre gränssnitt.</string>
+    <string name="porter_service_updating">Uppdaterar Porter-tjänsten…</string>
+    <string name="porter_service_update_failed">Det gick inte att uppdatera Porter-tjänsten</string>
+    <string name="porter_service_update_failed_summary">Den körande tjänsten kunde inte ersättas med den installerade versionen. Om den fortfarande körs kan du försöka igen. Annars startar du tjänsten igen från skärmen Tjänst.</string>
+    <string name="porter_service_update_retry">Försök uppdatera igen</string>
+</resources>

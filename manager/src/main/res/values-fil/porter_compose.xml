@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Bumalik</string>
+    <string name="porter_local_network_permission">Payagan ang access sa iyong lokal na network para mahanap at makakonekta ang Porter sa serbisyo ng wireless na pag-debug ng Android.</string>
+    <string name="porter_pairing_dialog_instructions">Buksan ang Wireless na pag-debug sa Mga opsyon ng developer ng Android at piliin ang Ipares ang device gamit ang code ng pagpapares. Ilagay dito ang port at ang code ng pagpapares.</string>
+    <string name="porter_permission_detail">Magpapatakbo ang Porter ng mga command sa iyong device para sa app na ito, na may parehong pribilehiyo ng Porter mismo. Payagan lang ang mga app na pinagkakatiwalaan mo.</string>
+    <string name="porter_permission_waiting">Hinihintay ang Porter…</string>
+</resources>

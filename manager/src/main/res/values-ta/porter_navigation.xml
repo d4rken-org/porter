@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">பயன்பாடுகள்</string>
+    <string name="porter_home_subtitle">உங்கள் பயன்பாடுகளுக்கான ADB அணுகல்</string>
+    <string name="porter_startup">தொடக்கம்</string>
+    <string name="porter_version">பதிப்பு</string>
+    <string name="porter_pairing_method">இணைத்தல் முறை</string>
+    <string name="porter_status_restricted">சில ADB அனுமதிகள் Android ஆல் கட்டுப்படுத்தப்பட்டுள்ளன.</string>
+    <string name="porter_status_stop_message">Porter ஐ நிறுத்தினால், அதைப் பயன்படுத்தும் பயன்பாடுகளின் இணைப்பு துண்டிக்கப்படும். Porter ஐ மீண்டும் கைமுறையாகத் தொடங்க வேண்டும், அதற்குக் கணினி தேவைப்படலாம்.</string>
+    <string name="porter_status_details_hint">சேவை விவரங்களையும் நிறுத்தும் விருப்பங்களையும் திற</string>
+    <string name="porter_status_ready">Porter தயாராக உள்ளது. இணக்கமான பயன்பாடுகள் இப்போது இணைந்து அணுகலைக் கோரலாம்.</string>
+    <string name="porter_pairing_notification">அறிவிப்பு</string>
+    <string name="porter_pairing_dialog">பயன்பாட்டிலுள்ள உரையாடல்</string>
+    <string name="porter_manage_apps_action">பயன்பாடுகளை நிர்வகி</string>
+    <string name="porter_primary_user_title">முதன்மை Android பயனரைப் பயன்படுத்தவும்</string>
+    <string name="porter_primary_user_description">இந்த Android பயனர் அல்லது சுயவிவரத்திலிருந்து Porter ஐத் தொடங்க முடியாது. சாதனத்தின் முதன்மைப் பயனருக்கு மாறி, தேவைப்பட்டால் அங்கே Porter ஐ நிறுவி, அதன் சேவையைத் தொடங்கவும். பிறகு உங்கள் பயன்பாடுகளை நிர்வகிக்க இங்கே திரும்பவும்.</string>
+    <string name="porter_secondary_user_stop_message">Porter ஐ நிறுத்தினால், அனைத்து Android பயனர்களிலும் பயன்பாடுகளின் இணைப்பு துண்டிக்கப்படும். மீண்டும் தொடங்க, சாதனத்தின் முதன்மைப் பயனருக்கு மாறி அங்கே Porter ஐத் திறக்கவும்.</string>
+</resources>

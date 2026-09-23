@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Vissza</string>
+    <string name="porter_local_network_permission">Engedélyezze a helyi hálózathoz való hozzáférést, hogy a Porter megtalálja az Android vezeték nélküli hibakeresési szolgáltatását, és csatlakozni tudjon hozzá.</string>
+    <string name="porter_pairing_dialog_instructions">Nyissa meg a Vezeték nélküli hibakeresést az Android fejlesztői beállításaiban, és válassza az Eszköz párosítása párosítókóddal lehetőséget. Itt adja meg a portot és a párosítókódot.</string>
+    <string name="porter_permission_detail">A Porter ennek az alkalmazásnak a nevében parancsokat futtat az eszközén, ugyanazokkal a jogosultságokkal, amelyekkel maga a Porter is rendelkezik. Csak megbízható alkalmazásoknak adjon engedélyt.</string>
+    <string name="porter_permission_waiting">Várakozás a Porterre…</string>
+</resources>

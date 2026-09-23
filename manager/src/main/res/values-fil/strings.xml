@@ -44,10 +44,7 @@
         pagpapares.\n\nPara ibigay ito, patakbuhin ang sumusunod na utos ng ADB:\n\n^2\n\nPagkatapos
         patakbuhin ang utos, maaari ka nang magpatuloy sa proseso ng pagpapares.\n\nPaalala: maaari
         mo itong iwasan sa pamamagitan ng pag-install/pag-update ng Porter gamit ang ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Mangyaring paganahin ang serbisyo ng
-        pag-access upang simulan ang proseso ng pagpapares. Pinapayagan nito si Porter na makita
-        ang code ng pagpapares.\n\nAng serbisyo sa pag-access ay papatayin kapag natagpuan ang code
-        o pagkatapos ng 1 minuto upang makatipid ng enerhiya.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Mangyaring paganahin ang serbisyo ng accessibility para simulan ang proseso ng pagpapares. Pinapayagan nito ang Porter na matukoy ang code ng pagpapares.\n\nMao-off ang serbisyo ng accessibility pagkatapos ng pagtatangkang magpares, o kung walang makitang code sa loob ng isang minuto. Ipapakita ng Porter ang resulta at maaari mong subukang muli.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Mangyaring simulan ang pagpapares sa
         pamamagitan ng pagsasagawa ng mga sumusunod na hakbang:\n- Mag-navigate sa \"Mga Pagpipilian
         sa Developer\"\n- Paganahin ang \"USB debugging\" at \"Wireless debugging\"\n- I-tap ang
@@ -208,4 +205,59 @@
         pagpapares.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Subukan ngayon</string>
+    <string name="home_root_description"><![CDATA[Kung gumagamit ka ng Magisk, isa pang opsyon ang %1$s. Kailangan ng mga app ng tahasang suporta para sa %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Mga intent</string>
+    <string name="home_automation_bottom_sheet_label_action">Aksyon</string>
+    <string name="home_automation_bottom_sheet_label_package">Package</string>
+    <string name="home_automation_bottom_sheet_label_target">Target</string>
+    <string name="home_automation_bottom_sheet_label_extras">Mga extra</string>
+    <string name="home_automation_regenerate_token">Gumawa ng bagong token?</string>
+    <string name="home_automation_regenerate_token_message">Kakailanganin mong i-configure ulit ang mga intent mo gamit ang bagong token.</string>
+    <string name="home_dialog_reboot_required_title">Kailangang mag-reboot</string>
+    <string name="home_dialog_reboot_required_message">Kailangang i-reboot ang device para gumana nang maayos ang Porter. Para magpatuloy, paki-reboot ang iyong device.</string>
+    <string name="home_dialog_duplicate_app_detected_title">May nakitang duplicate na app</string>
+    <string name="home_dialog_duplicate_app_detected_message">May ibang bersyon ng app na ito na naka-install sa iyong device. Para magpatuloy, paki-uninstall ang lahat ng duplicate na bersyon at i-reboot ang iyong device.</string>
+    <string name="home_dialog_button_exit">Lumabas</string>
+    <string name="settings_alerts_blocked_title">Mga alerto sa background</string>
+    <string name="settings_alerts_blocked_summary">Naka-block ang mga notification mula sa Porter, kaya hindi ka masasabihan ng Magsimula sa boot at ng Tagapagbantay kapag kailangan nila ng atensyon.</string>
+    <string name="settings_alerts_blocked_message">Iniuulat ng feature na ito ang ginagawa nito, at kung ano ang nagkaproblema, sa pamamagitan ng notification. Kasalukuyang naka-block ang mga notification mula sa Porter, kaya tatakbo ito nang walang sinasabi sa iyo.</string>
+    <string name="settings_alerts_blocked_continue">I-on pa rin</string>
+    <string name="follow_system">Sundin ang system</string>
+    <string name="start">Simulan</string>
+    <string name="stop">Ihinto</string>
+    <string name="notification_channel_watchdog">Tagapagbantay</string>
+    <string name="notification_channel_crash">Mga ulat ng crash</string>
+    <string name="notification_channel_auth">Mga error sa authentication</string>
+    <string name="notification_auth_invalid_title">Invalid na auth token</string>
+    <string name="notification_auth_invalid_message">Tiyaking tumutugma ang token sa iyong intent sa token sa Mga Setting sa ilalim ng “Kontrolin ang Porter gamit ang mga automation app”.</string>
+    <string name="porter_status_running_adb">Tumatakbo sa pamamagitan ng ADB</string>
+    <string name="porter_status_running_root">Tumatakbo sa pamamagitan ng root</string>
+    <string name="porter_status_restart_service">I-restart ang Porter para i-update ang tumatakbong serbisyo.</string>
+    <string name="porter_status_version_unknown">Hindi alam</string>
+    <string name="porter_status_versions">Naka-install na Porter: %1$s\nTumatakbong serbisyo: %2$s\nShizuku API: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Mga pagkilala</string>
+    <string name="porter_acknowledgements_summary">Mga upstream na proyekto, open-source na library, at lisensya.</string>
+    <string name="porter_acknowledgements_thanks">Salamat</string>
+    <string name="porter_licenses">Mga lisensya</string>
+    <string name="porter_ack_shizuku">Sa RikkaApps at sa lahat ng contributor sa paggawa ng Shizuku at ng mga API nito, ang pundasyon ng Porter.</string>
+    <string name="porter_ack_thedjchi">Kay thedjchi at sa mga contributor sa pagpapanatili ng Shizuku fork na pinagbatayan ng Porter.</string>
+    <string name="porter_ack_symbuzzer">Kay symbuzzer at sa mga contributor sa pagpapatuloy ng trabaho sa Shizuku at sa pagbabahagi ng kanilang fork.</string>
+    <string name="porter_ack_plus">Kay thejaustin at sa mga contributor para sa ShizukuPlus at sa inspirasyon para sa opsyonal na compatibility app.</string>
+    <string name="porter_ack_maxpatchs">Salamat sa icon, mga disenyo ng mascot, at banner.</string>
+    <string name="porter_license_porter">Porter at ang orihinal na Shizuku application · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API at ang Porter fork nito · MIT License</string>
+    <string name="porter_license_notice">Mga abiso sa copyright at attribution</string>
+    <string name="porter_pairing_restart">I-restart ang pagpapares</string>
+    <string name="porter_pairing_retry_instructions">Kung tinanggihan ang code o nawala ang notification, i-restart dito ang pagpapares. Pagkatapos ay isara ang lumang dialog ng code ng pagpapares ng Android at magbukas ng bago. Gamitin ang bagong code; hindi mo kailangang i-clear ang data ng Porter.</string>
+    <string name="porter_pairing_search_timeout">Walang natanggap na code ng pagpapares sa loob ng isang minuto. Huminto ang pagpapares. Piliin ang Subukan ulit, pagkatapos ay magbukas ng bagong dialog ng code ng pagpapares sa Wireless na pag-debug.</string>
+    <string name="porter_pairing_attempt_timeout">Nag-time out ang koneksyon sa pagpapares. Magbukas ng bagong dialog ng code ng pagpapares sa Wireless na pag-debug at subukan ulit.</string>
+    <string name="porter_pairing_failed_retry">Hindi nagtagumpay ang pagpapares. Magbukas ng bagong dialog ng code ng pagpapares sa Wireless na pag-debug at subukan ulit.</string>
+    <string name="porter_pairing_notification_timeout">Huminto ang pagpapares dahil nag-time out ang notification. Piliin ang Subukan ulit, pagkatapos ay magbukas ng bagong dialog ng code ng pagpapares sa Wireless na pag-debug.</string>
+    <string name="porter_tv_pairing_progress_title">Pagpapares ng Porter</string>
+    <string name="porter_tv_pairing_wait">Pakiiwang bukas ang window ng code ng pagpapares at maghintay.</string>
+    <string name="porter_tv_pairing_return">Bumabalik sa Porter para i-off ang serbisyo ng accessibility para sa pagpapares…</string>
+    <string name="porter_tv_pairing_disabling">Ino-off ang serbisyo ng accessibility para sa pagpapares…</string>
+    <string name="porter_tv_pairing_complete">Naka-off na ang serbisyo ng accessibility para sa pagpapares. Kumpleto na ang lahat ng hakbang sa pagpapares. Puwede mo nang isara ang window na ito.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Naka-enable pa rin ang serbisyo ng accessibility para sa pagpapares. I-off ito sa mga setting ng Accessibility.</string>
+    <string name="porter_tv_pairing_open_accessibility">Buksan ang mga setting ng Accessibility</string>
 </resources>

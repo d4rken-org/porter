@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Hizmet güncellemesi mevcut</string>
+    <string name="porter_service_update_action">Hizmeti güncelle</string>
+    <string name="porter_service_update_summary">Güncelleme, bağlı uygulamaların bağlantısını kısa süreliğine keser. Mevcut izinler korunur.</string>
+    <string name="porter_service_update_primary">Hizmeti güncellemek için Porter’ı birincil Android kullanıcısında açın.</string>
+    <string name="porter_service_update_features">Bu özellikleri etkinleştirmek için hizmeti güncelleyin.</string>
+    <string name="porter_service_auto_update">Hizmeti otomatik güncelle</string>
+    <string name="porter_service_auto_update_summary">Porter uygulaması güncellendikten sonra, farklı bir derlemeyle çalışan hizmeti arka planda değiştirir. Bu, bağlı uygulamaların bağlantısını kısa süreliğine keser. Durdurulmuş bir hizmet durdurulmuş olarak kalır.</string>
+    <string name="porter_service_update_interrupted">Önceki hizmet güncellemesi tamamlanmadı. Hizmet hâlâ çalışıyorsa yeniden deneyin veya Hizmet ekranından yeniden başlatın.</string>
+    <string name="porter_global_access_update">Genel erişim denetimi çalışan hizmette kullanılamıyor.</string>
+    <string name="porter_discovery_update">Çalışan hizmet, güncel uygulama bulma ve bağlantı geçmişi özelliklerini desteklemiyor. Kullanılabilir uygulamalar eski arayüzü kullanılarak gösterilir.</string>
+    <string name="porter_service_updating">Porter hizmeti güncelleniyor…</string>
+    <string name="porter_service_update_failed">Porter hizmeti güncellenemedi</string>
+    <string name="porter_service_update_failed_summary">Çalışan hizmet yüklü sürümle değiştirilemedi. Hâlâ çalışıyorsa yeniden deneyebilirsiniz. Aksi takdirde hizmeti Hizmet ekranından yeniden başlatın.</string>
+    <string name="porter_service_update_retry">Güncellemeyi yeniden dene</string>
+</resources>

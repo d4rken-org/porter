@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Folosește Porter</string>
+    <string name="permission_description">Permite acestei aplicații să folosească API-uri de sistem prin Porter.</string>
+    <string name="porter_missing">Instalează Porter cu certificatul de semnare corespunzător pentru a folosi această aplicație însoțitoare.</string>
+</resources>

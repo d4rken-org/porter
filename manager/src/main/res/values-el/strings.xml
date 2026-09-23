@@ -8,7 +8,7 @@
     <string name="home_adb_description"><![CDATA[Για συσκευές χωρίς πρόσβαση root, πρέπει να χρησιμοποιήσετε το adb για την εκκίνηση του Porter (απαιτεί σύνδεση σε υπολογιστή). Αυτή η διαδικασία θα πρέπει να επαναλαμβάνεται κάθε φορά που επανεκκινείται η συσκευή. <b><a href="%1$s">Διαβάστε τη βοήθεια</a></b>.]]></string>
     <string name="home_adb_button_view_command">Προβολή εντολής</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Υπάρχουν και άλλες σκέψεις, παρακαλούμε επιβεβαιώστε ότι έχετε διαβάσει πρώτα τη βοήθεια.]]></string>
-    <string name="home_adb_dialog_view_command_button_send">Στέλνω</string>
+    <string name="home_adb_dialog_view_command_button_send">Αποστολή</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Έναρξη μέσω Ασύρματου εντοπισμού σφαλμάτων]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Σε Android 11 ή νεότερη έκδοση, μπορείτε να ενεργοποιήσετε την ασύρματη αποσφαλμάτωση και να ξεκινήσετε το Porter απευθείας από τη συσκευή σας, χωρίς να συνδεθείτε σε υπολογιστή.<p>Παρακαλούμε δείτε πρώτα τον αναλυτικό οδηγό.]]></string>
@@ -45,10 +45,7 @@
         εκχωρήσετε, εκτελέστε την ακόλουθη εντολή ADB:\n\n^2\n\nΑφού εκτελέσετε την εντολή, μπορείτε
         να συνεχίσετε με τη διαδικασία σύζευξης.\n\nΣημείωση: μπορείτε να παρακάμψετε αυτήν την
         επιλογή εγκαθιστώντας/ενημερώνοντας το Porter με το ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Ενεργοποιήστε την υπηρεσία
-        προσβασιμότητας για να ξεκινήσει η διαδικασία σύζευξης. Αυτό επιτρέπει στο Porter να
-        εντοπίσει τον κωδικό σύζευξης.\n\nΗ υπηρεσία προσβασιμότητας θα απενεργοποιηθεί όταν βρεθεί
-        ο κωδικός ή μετά από 1 λεπτό για εξοικονόμηση ενέργειας.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Ενεργοποιήστε την υπηρεσία προσβασιμότητας για να ξεκινήσει η διαδικασία σύζευξης. Αυτό επιτρέπει στο Porter να εντοπίσει τον κωδικό σύζευξης.\n\nΗ υπηρεσία προσβασιμότητας θα απενεργοποιηθεί μετά την απόπειρα σύζευξης ή αν δεν βρεθεί κωδικός μέσα σε ένα λεπτό. Το Porter θα εμφανίσει το αποτέλεσμα και θα σας επιτρέψει να δοκιμάσετε ξανά.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Ξεκινήστε τη σύζευξη ακολουθώντας τα
         παρακάτω βήματα:\n- Μεταβείτε στις \"Επιλογές προγραμματιστή\"\n- Ενεργοποιήστε τις
         \"Εντοπισμός σφαλμάτων USB\" και \"Ασύρματος εντοπισμός σφαλμάτων\"\n- Πατήστε την αριστερή
@@ -63,7 +60,7 @@
         εντοπισμό σφαλμάτων.\nΑυτό μπορεί να οφείλεται στο ότι ο μηχανισμός KeyStore αυτής της
         συσκευής είναι κατεστραμμένος.</string>
     <string name="adb_pair_required">Παρακαλούμε ακολουθήστε πρώτα το βήμα σύζευξης.</string>
-    <string name="enable">Ενεργοποιώ</string>
+    <string name="enable">Ενεργοποίηση</string>
     <string name="development_settings">Επιλογές προγραμματιστή</string>
     <string name="notification_settings">Επιλογές ειδοποιήσεων</string>
     <string name="adb_pairing_tutorial_content_notification">Μια ειδοποίηση από το Porter θα σας
@@ -92,12 +89,12 @@
         λειτουργίες βελτιστοποίησης μπαταρίας για το Porter σε τέτοια συστήματα.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Έναρξη (για συσκευές με root)]]></string>
-    <string name="home_root_button_start">Αρχή</string>
+    <string name="home_root_button_start">Έναρξη</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Διαχείριση εφαρμογών</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="one"><![CDATA[Εξουσιοδοτημένη εφαρμογή %d]]></item>
-        <item quantity="other"><![CDATA[Εξουσιοδοτημένες %d εφαρμογές]]></item>
+        <item quantity="one"><![CDATA[%d εξουσιοδοτημένη εφαρμογή]]></item>
+        <item quantity="other"><![CDATA[%d εξουσιοδοτημένες εφαρμογές]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Πατήστε για να διαχειριστείτε εξουσιοδοτημένες εφαρμογές]]></string>
     <string name="home_app_management_empty">Οι εφαρμογές που έχουν ζητήσει ή δηλώσει την άδεια
@@ -132,7 +129,7 @@
     <string name="rish_description"><![CDATA[Με το %1$s, μπορείτε να εκτελέσετε εντολές shell σε οποιαδήποτε εφαρμογή τερματικού.<p>Πατήστε για να μάθετε περισσότερα σχετικά με τον τρόπο χρήσης του.]]></string>
     <!-- Settings -->
     <string name="settings_title">Ρυθμίσεις</string>
-    <string name="settings_start_on_boot">Ξεκινήστε από την εκκίνηση</string>
+    <string name="settings_start_on_boot">Εκκίνηση με την ενεργοποίηση της συσκευής</string>
     <string name="settings_start_on_boot_summary">Απαιτεί Android 11+ ή root</string>
     <string name="settings_start_on_boot_bug">Λόγω ενός σφάλματος στο Android 11-12, η ασύρματη
         αποσφαλμάτωση δεν θυμάται κανένα εξουσιοδοτημένο δίκτυο.\n\nΘα χρειαστεί να εξουσιοδοτείτε
@@ -147,14 +144,15 @@
     <string name="settings_tcp_port">Θύρα TCP</string>
     <string name="settings_tcp_port_default">Προεπιλογή (5555)</string>
     <string name="settings_user_interface">Εμφάνιση</string>
-    <string name="settings_support">Υποστηρίζω</string>
+    <string name="settings_support">Υποστήριξη</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Η θύρα πρέπει να είναι μεταξύ 1 και 65535</string>
     <string name="snackbar_battery_optimization_home">Η βελτιστοποίηση μπαταρίας πρέπει να είναι
-        απενεργοποιημένη για να λειτουργήσει σωστά η εκκίνηση κατά την εκκίνηση/επιτήρηση.</string>
+        απενεργοποιημένη για να λειτουργούν σωστά η «Εκκίνηση με την ενεργοποίηση της συσκευής» και ο
+        «Άγρυπνος φρουρός».</string>
     <string name="snackbar_battery_optimization_settings">Απενεργοποιήστε τη βελτιστοποίηση
         μπαταρίας για να χρησιμοποιήσετε αυτήν τη δυνατότητα.</string>
-    <string name="snackbar_action_fix">Διορθώνω</string>
+    <string name="snackbar_action_fix">Διόρθωση</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Το Porter ξεκινά ήδη στο παρασκήνιο</string>
     <string name="toast_accessibility_tv_only">Αυτή η υπηρεσία υποστηρίζεται μόνο σε συσκευές
@@ -173,32 +171,32 @@
     <string name="notification_adb_pairing_succeed_text">Μπορείτε να ξεκινήσετε την υπηρεσία Porter
         τώρα.</string>
     <string name="notification_adb_pairing_failed_title">Η σύζευξη απέτυχε</string>
-    <string name="notification_adb_pairing_retry">Δοκιμάζω πάλι</string>
+    <string name="notification_adb_pairing_retry">Επανάληψη</string>
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">πρόσβαση στο Porter</string>
     <string name="permission_description">Επιτρέψτε στην εφαρμογή να χρησιμοποιεί το Porter.</string>
     <string name="permission_warning_template"><![CDATA[Επιτρέπεται η χρήση του <b>%1$s</b> σε %2$s;]]></string>
     <string name="grant_dialog_button_allow_always">Επιτρέπεται συνεχώς</string>
-    <string name="grant_dialog_button_deny">"Αρνούμαι"</string>
+    <string name="grant_dialog_button_deny">"Άρνηση"</string>
     <!-- Starter -->
-    <string name="starter">Μίζα</string>
+    <string name="starter">Εκκινητής</string>
     <string name="start_with_root_failed">Δεν είναι δυνατή η εκκίνηση της υπηρεσίας επειδή δεν έχει
         παραχωρηθεί άδεια root ή επειδή αυτή η συσκευή δεν έχει root.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Έναρξη Σιζούκου…</string>
+    <string name="wadb_notification_title">Εκκίνηση του Porter…</string>
     <string name="wadb_notification_wifi_required">Αναμονή σύνδεσης Wi-Fi πριν προχωρήσετε</string>
     <string name="wadb_notification_retry">Αναμονή για επανάληψη</string>
-    <string name="wadb_error_title">Σφάλμα κατά την εκκίνηση κατά την εκκίνηση</string>
+    <string name="wadb_error_title">Σφάλμα κατά την αυτόματη εκκίνηση</string>
     <string name="wadb_error_notify_dev">Πατήστε για να ειδοποιήσετε τον προγραμματιστή.</string>
     <string name="wadb_permission_error_notification_title">Σφάλμα άδειας</string>
-    <string name="wadb_permission_error_notification_content">Ο Porter χρειάζεται
-        WRITE_SECURE_SETTINGS για να ξεκινήσει από την εκκίνηση. Αγγίξτε το για να μάθετε πώς
-        μπορείτε να το εκχωρήσετε.</string>
+    <string name="wadb_permission_error_notification_content">Το Porter χρειάζεται
+        WRITE_SECURE_SETTINGS για να ξεκινά με την ενεργοποίηση της συσκευής. Πατήστε για να
+        μάθετε πώς να παραχωρήσετε την άδεια.</string>
     <!-- Watchdog -->
-    <string name="watchdog_running">Το Watchdog τρέχει</string>
-    <string name="watchdog_turn_off">Κλείνω</string>
-    <string name="watchdog_shizuku_crashed_title">Ο Porter συνετρίβη πρόσφατα</string>
-    <string name="watchdog_shizuku_crashed_text">Το Watchdog επανεκκίνησε την υπηρεσία. Πατήστε για
+    <string name="watchdog_running">Ο άγρυπνος φρουρός εκτελείται</string>
+    <string name="watchdog_turn_off">Απενεργοποίηση</string>
+    <string name="watchdog_shizuku_crashed_title">Το Porter κατέρρευσε πρόσφατα</string>
+    <string name="watchdog_shizuku_crashed_text">Ο άγρυπνος φρουρός επανεκκίνησε την υπηρεσία. Πατήστε για
         να μάθετε σχετικά με πιθανές επιδιορθώσεις για την αποτροπή μελλοντικών σφαλμάτων.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Απενεργοποίηση ειδοποιήσεων</string>
     <!-- Misc -->
@@ -211,4 +209,59 @@
         ασύρματου εντοπισμού σφαλμάτων. Θα απενεργοποιηθεί μόνο του μόλις βρεθεί ο κωδικός σύζευξης.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Προσπαθήστε τώρα</string>
+    <string name="home_root_description"><![CDATA[Αν χρησιμοποιείτε Magisk, το %1$s είναι μια ακόμη επιλογή. Οι εφαρμογές χρειάζονται ρητή υποστήριξη για το %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intents</string>
+    <string name="home_automation_bottom_sheet_label_action">Ενέργεια</string>
+    <string name="home_automation_bottom_sheet_label_package">Πακέτο</string>
+    <string name="home_automation_bottom_sheet_label_target">Στόχος</string>
+    <string name="home_automation_bottom_sheet_label_extras">Πρόσθετα</string>
+    <string name="home_automation_regenerate_token">Επαναδημιουργία διακριτικού;</string>
+    <string name="home_automation_regenerate_token_message">Θα χρειαστεί να ρυθμίσετε ξανά τα intents σας με το νέο διακριτικό.</string>
+    <string name="home_dialog_reboot_required_title">Απαιτείται επανεκκίνηση</string>
+    <string name="home_dialog_reboot_required_message">Απαιτείται επανεκκίνηση της συσκευής για να λειτουργεί σωστά το Porter. Για να συνεχίσετε, επανεκκινήστε τη συσκευή σας.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Εντοπίστηκε διπλότυπη εφαρμογή</string>
+    <string name="home_dialog_duplicate_app_detected_message">Στη συσκευή σας είναι εγκατεστημένη άλλη έκδοση αυτής της εφαρμογής. Για να συνεχίσετε, απεγκαταστήστε όλες τις διπλότυπες εκδόσεις και επανεκκινήστε τη συσκευή σας.</string>
+    <string name="home_dialog_button_exit">Έξοδος</string>
+    <string name="settings_alerts_blocked_title">Ειδοποιήσεις παρασκηνίου</string>
+    <string name="settings_alerts_blocked_summary">Οι ειδοποιήσεις του Porter είναι αποκλεισμένες, οπότε η «Εκκίνηση με την ενεργοποίηση της συσκευής» και ο «Άγρυπνος φρουρός» δεν μπορούν να σας ενημερώσουν όταν χρειάζονται την προσοχή σας.</string>
+    <string name="settings_alerts_blocked_message">Αυτή η λειτουργία αναφέρει τι κάνει και τι πήγε στραβά μέσω μιας ειδοποίησης. Οι ειδοποιήσεις του Porter είναι αυτήν τη στιγμή αποκλεισμένες, οπότε θα λειτουργούσε χωρίς να σας ενημερώνει για τίποτα.</string>
+    <string name="settings_alerts_blocked_continue">Ενεργοποίηση ούτως ή άλλως</string>
+    <string name="follow_system">Σύμφωνα με το σύστημα</string>
+    <string name="start">Έναρξη</string>
+    <string name="stop">Διακοπή</string>
+    <string name="notification_channel_watchdog">Άγρυπνος φρουρός</string>
+    <string name="notification_channel_crash">Αναφορές κατάρρευσης</string>
+    <string name="notification_channel_auth">Σφάλματα ελέγχου ταυτότητας</string>
+    <string name="notification_auth_invalid_title">Μη έγκυρο διακριτικό ελέγχου ταυτότητας</string>
+    <string name="notification_auth_invalid_message">Βεβαιωθείτε ότι το διακριτικό στο intent σας ταιριάζει με αυτό στις Ρυθμίσεις, στην ενότητα «Ελέγξτε το Porter με εφαρμογές αυτοματισμού».</string>
+    <string name="porter_status_running_adb">Εκτελείται μέσω ADB</string>
+    <string name="porter_status_running_root">Εκτελείται μέσω root</string>
+    <string name="porter_status_restart_service">Επανεκκινήστε το Porter για να ενημερώσετε την υπηρεσία που εκτελείται.</string>
+    <string name="porter_status_version_unknown">Άγνωστη</string>
+    <string name="porter_status_versions">Εγκατεστημένο Porter: %1$s\nΥπηρεσία σε εκτέλεση: %2$s\nShizuku API: %3$d · Διόρθωση: %4$d</string>
+    <string name="porter_acknowledgements">Ευχαριστίες</string>
+    <string name="porter_acknowledgements_summary">Αρχικά έργα, βιβλιοθήκες ανοιχτού κώδικα και άδειες χρήσης.</string>
+    <string name="porter_acknowledgements_thanks">Σας ευχαριστούμε</string>
+    <string name="porter_licenses">Άδειες χρήσης</string>
+    <string name="porter_ack_shizuku">Στο RikkaApps και σε όλους τους συνεισφέροντες για τη δημιουργία του Shizuku και των API του, του θεμελίου του Porter.</string>
+    <string name="porter_ack_thedjchi">Στον thedjchi και στους συνεισφέροντες για τη συντήρηση του fork του Shizuku στο οποίο βασίζεται το Porter.</string>
+    <string name="porter_ack_symbuzzer">Στον symbuzzer και στους συνεισφέροντες για τη συνέχιση της εργασίας στο Shizuku και την κοινοποίηση του fork τους.</string>
+    <string name="porter_ack_plus">Στον thejaustin και στους συνεισφέροντες για το ShizukuPlus και την έμπνευση για μια προαιρετική εφαρμογή συμβατότητας.</string>
+    <string name="porter_ack_maxpatchs">Ευχαριστούμε για το εικονίδιο, τα σχέδια της μασκότ και το banner.</string>
+    <string name="porter_license_porter">Το Porter και η αρχική εφαρμογή Shizuku · Apache License 2.0</string>
+    <string name="porter_license_api">Το Shizuku API και το fork του για το Porter · MIT License</string>
+    <string name="porter_license_notice">Σημειώσεις πνευματικών δικαιωμάτων και απόδοσης</string>
+    <string name="porter_pairing_restart">Επανεκκίνηση σύζευξης</string>
+    <string name="porter_pairing_retry_instructions">Αν ένας κωδικός απορρίφθηκε ή η ειδοποίηση εξαφανίστηκε, επανεκκινήστε τη σύζευξη εδώ. Έπειτα κλείστε το παλιό παράθυρο κωδικού σύζευξης του Android και ανοίξτε ένα νέο. Χρησιμοποιήστε τον νέο κωδικό· δεν χρειάζεται να διαγράψετε τα δεδομένα του Porter.</string>
+    <string name="porter_pairing_search_timeout">Δεν λήφθηκε κωδικός σύζευξης μέσα σε ένα λεπτό. Η σύζευξη σταμάτησε. Επιλέξτε Επανάληψη και, στη συνέχεια, ανοίξτε ένα νέο παράθυρο κωδικού σύζευξης στον Ασύρματο εντοπισμό σφαλμάτων.</string>
+    <string name="porter_pairing_attempt_timeout">Έληξε το χρονικό όριο της σύνδεσης σύζευξης. Ανοίξτε ένα νέο παράθυρο κωδικού σύζευξης στον Ασύρματο εντοπισμό σφαλμάτων και δοκιμάστε ξανά.</string>
+    <string name="porter_pairing_failed_retry">Η σύζευξη απέτυχε. Ανοίξτε ένα νέο παράθυρο κωδικού σύζευξης στον Ασύρματο εντοπισμό σφαλμάτων και δοκιμάστε ξανά.</string>
+    <string name="porter_pairing_notification_timeout">Η σύζευξη σταμάτησε επειδή έληξε το χρονικό όριο της ειδοποίησης. Επιλέξτε Επανάληψη και, στη συνέχεια, ανοίξτε ένα νέο παράθυρο κωδικού σύζευξης στον Ασύρματο εντοπισμό σφαλμάτων.</string>
+    <string name="porter_tv_pairing_progress_title">Σύζευξη Porter</string>
+    <string name="porter_tv_pairing_wait">Αφήστε ανοιχτό το παράθυρο κωδικού σύζευξης και περιμένετε.</string>
+    <string name="porter_tv_pairing_return">Επιστροφή στο Porter για απενεργοποίηση της υπηρεσίας προσβασιμότητας σύζευξης…</string>
+    <string name="porter_tv_pairing_disabling">Απενεργοποίηση της υπηρεσίας προσβασιμότητας σύζευξης…</string>
+    <string name="porter_tv_pairing_complete">Η υπηρεσία προσβασιμότητας σύζευξης είναι απενεργοποιημένη. Όλα τα βήματα σύζευξης ολοκληρώθηκαν. Μπορείτε να κλείσετε αυτό το παράθυρο.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Η υπηρεσία προσβασιμότητας σύζευξης είναι ακόμη ενεργοποιημένη. Απενεργοποιήστε την στις ρυθμίσεις Προσβασιμότητας.</string>
+    <string name="porter_tv_pairing_open_accessibility">Άνοιγμα ρυθμίσεων Προσβασιμότητας</string>
 </resources>

@@ -201,10 +201,10 @@
     <string name="porter_license_notice">Urheberrechts- und Quellenhinweise</string>
     <string name="porter_pairing_restart">Kopplung neu starten</string>
     <string name="porter_pairing_retry_instructions">Wenn ein Code abgelehnt wurde oder die Benachrichtigung verschwunden ist, starte die Kopplung hier neu. Schließe danach Androids alten Kopplungscode-Dialog und öffne einen neuen. Verwende den neuen Code; Porters App-Daten musst du nicht löschen.</string>
-    <string name="porter_pairing_search_timeout">Innerhalb einer Minute wurde kein Kopplungscode empfangen. Die Kopplung wurde beendet. Wähle „Erneut versuchen“ und öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog.</string>
-    <string name="porter_pairing_attempt_timeout">Zeitüberschreitung bei der Kopplungsverbindung. Öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog und versuche es erneut.</string>
-    <string name="porter_pairing_failed_retry">Kopplung fehlgeschlagen. Öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog und versuche es erneut.</string>
-    <string name="porter_pairing_notification_timeout">Die Kopplung wurde beendet, weil die Benachrichtigung abgelaufen ist. Wähle „Erneut versuchen“ und öffne in den Einstellungen für drahtloses Debugging einen neuen Kopplungscode-Dialog.</string>
+    <string name="porter_pairing_search_timeout">Innerhalb einer Minute wurde kein Kopplungscode empfangen. Die Kopplung wurde beendet. Wähle „Erneut versuchen“ und öffne unter „Debugging über WLAN“ einen neuen Kopplungscode-Dialog.</string>
+    <string name="porter_pairing_attempt_timeout">Zeitüberschreitung bei der Kopplungsverbindung. Öffne unter „Debugging über WLAN“ einen neuen Kopplungscode-Dialog und versuche es erneut.</string>
+    <string name="porter_pairing_failed_retry">Kopplung fehlgeschlagen. Öffne unter „Debugging über WLAN“ einen neuen Kopplungscode-Dialog und versuche es erneut.</string>
+    <string name="porter_pairing_notification_timeout">Die Kopplung wurde beendet, weil die Benachrichtigung abgelaufen ist. Wähle „Erneut versuchen“ und öffne unter „Debugging über WLAN“ einen neuen Kopplungscode-Dialog.</string>
     <string name="porter_tv_pairing_progress_title">Porter-Kopplung</string>
     <string name="porter_tv_pairing_wait">Bitte lasse das Fenster mit dem Kopplungscode geöffnet und warte.</string>
     <string name="porter_tv_pairing_return">Porter wird geöffnet, um den Bedienungshilfen-Dienst für die Kopplung zu deaktivieren…</string>
@@ -212,4 +212,11 @@
     <string name="porter_tv_pairing_complete">Der Bedienungshilfen-Dienst für die Kopplung ist deaktiviert. Alle Kopplungsschritte sind abgeschlossen. Du kannst dieses Fenster schließen.</string>
     <string name="porter_tv_pairing_cleanup_delayed">Der Bedienungshilfen-Dienst für die Kopplung ist noch aktiviert. Deaktiviere ihn in den Einstellungen für Bedienungshilfen.</string>
     <string name="porter_tv_pairing_open_accessibility">Einstellungen für Bedienungshilfen öffnen</string>
+    <string name="settings_alerts_blocked_title">Hintergrundwarnungen</string>
+    <string name="settings_alerts_blocked_summary">Benachrichtigungen von Porter sind blockiert. Start beim Systemstart und Watchdog können dich daher nicht informieren, wenn etwas deine Aufmerksamkeit erfordert.</string>
+    <string name="settings_alerts_blocked_message">Diese Funktion meldet über eine Benachrichtigung, was sie tut und was schiefgelaufen ist. Benachrichtigungen von Porter sind derzeit blockiert, daher würde sie laufen, ohne dir etwas mitzuteilen.</string>
+    <string name="settings_alerts_blocked_continue">Trotzdem aktivieren</string>
+    <string name="notification_channel_watchdog">Watchdog</string>
+    <string name="notification_channel_crash">Absturzberichte</string>
+    <string name="notification_channel_auth">Authentifizierungsfehler</string>
 </resources>

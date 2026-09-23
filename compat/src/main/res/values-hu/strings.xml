@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Porter használata</string>
+    <string name="permission_description">Lehetővé teszi az alkalmazás számára, hogy a Porteren keresztül használja a rendszer-API-kat.</string>
+    <string name="porter_missing">A kísérőalkalmazás használatához telepítse a Portert a megfelelő aláíró tanúsítvánnyal.</string>
+</resources>

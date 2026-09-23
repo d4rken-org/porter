@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">استفاده از Porter</string>
+    <string name="permission_description">به این برنامه اجازه می‌دهد از طریق Porter از APIهای سیستم استفاده کند.</string>
+    <string name="porter_missing">برای استفاده از این برنامه همراه، Porter را با گواهی امضای منطبق نصب کنید.</string>
+</resources>

@@ -28,9 +28,7 @@
     <string name="dialog_adb_pairing_discovery">جستجوی خدمات مرتبط کردن</string>
     <string name="dialog_adb_pairing_paring_code">رمز مرتبط کردن</string>
     <string name="paring_code_is_wrong">رمز مرتبط کردن اشتباه است.</string>
-    <string name="cannot_connect_port">نمی توانم به سرویس اشکال زدایی بی سیم وصل شوم.\n\nلطفا مطمئن
-        شوید که شیزوکو در تمام برنامه های فایروال، مسدودسازی تبلیغات، VPN یا برنامه های مشابه که
-        دسترسی به شبکه را محدود می کنند، در لیست سفید قرار دارد.</string>
+    <string name="cannot_connect_port">اتصال به سرویس اشکال‌زدایی بی‌سیم ممکن نیست.\n\nلطفاً مطمئن شوید Porter در همه برنامه‌های دیوار آتش، مسدودکننده تبلیغات، VPN یا برنامه‌های مشابهی که ممکن است دسترسی به شبکه را محدود کنند، در فهرست مجاز قرار دارد.</string>
     <string name="dialog_wireless_adb_not_enabled">اشکال‌زدایی بی‌سیم فعال نیست.\nتوجه داشته باشید،
         قبل از اندروید ۱۱، برای فعال کردن اشکال‌زدایی بی‌سیم، اتصال به رایانه ضروری است.</string>
     <string name="dialog_usb_debugging_not_enabled">اشکال‌زدایی USB فعال نیست.\nلطفاً آن را در
@@ -40,13 +38,8 @@
         جفت‌سازی لازم است، لغو می‌کند.\n\nبرای اعطای آن، دستور ADB زیر را اجرا کنید:\n\n^2\n\nپس از
         اجرای دستور، می‌توانید فرآیند جفت‌سازی را ادامه دهید.\n\nتوجه: می‌توانید با نصب/به‌روزرسانی
         Porter با ADB، از این مرحله عبور کنید.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">لطفاً برای شروع فرآیند جفت‌سازی، سرویس
-        دسترسی را فعال کنید. این به شیزوکو اجازه می‌دهد تا کد جفت‌سازی را تشخیص دهد.\n\nسرویس دسترسی
-        هنگام یافتن کد یا پس از ۱ دقیقه برای صرفه‌جویی در مصرف انرژی خاموش می‌شود.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">لطفاً با انجام مراحل زیر، جفت‌سازی را
-        شروع کنید:\n- به «گزینه‌های توسعه‌دهنده» بروید\n- «اشکال‌زدایی USB» و «اشکال‌زدایی بی‌سیم»
-        را فعال کنید\n- روی سمت چپ «اشکال‌زدایی بی‌سیم» ضربه بزنید\n- روی «جفت‌سازی دستگاه با کد
-        جفت‌سازی» ضربه بزنید. شیزوکو به‌طور خودکار کد جفت‌سازی را تشخیص می‌دهد.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">لطفاً برای شروع فرایند مرتبط‌سازی، سرویس دسترس‌پذیری را فعال کنید. این کار به Porter امکان می‌دهد کد مرتبط‌سازی را تشخیص دهد.\n\nسرویس دسترس‌پذیری پس از تلاش برای مرتبط‌سازی، یا اگر ظرف یک دقیقه کدی پیدا نشود، خاموش می‌شود. Porter نتیجه را نشان می‌دهد و امکان تلاش مجدد را فراهم می‌کند.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">لطفاً با انجام مراحل زیر مرتبط‌سازی را شروع کنید:\n- به «گزینه‌های توسعه‌دهنده» بروید\n- «اشکال‌زدایی USB» و «اشکال‌زدایی بی‌سیم» را فعال کنید\n- روی سمت چپ «اشکال‌زدایی بی‌سیم» ضربه بزنید\n- روی «مرتبط کردن دستگاه با کد مرتبط‌سازی» ضربه بزنید. Porter کد مرتبط‌سازی را به‌طور خودکار تشخیص می‌دهد.</string>
     <string name="adb_pairing_requires_multi_window">لطفاً ابتدا وارد حالت تقسیم صفحه (چند پنجره)
         شوید.</string>
     <string name="adb_pairing_requires_multi_window_reason">سیستم نیاز دارد که دیالوگ جفت سازی همیشه
@@ -62,9 +55,7 @@
         مرتبط کردن را تکمیل کنید.</string>
     <string name="adb_pairing_tutorial_content_steps">به «گزینه‌های توسعه‌دهنده» بروید، سپس
         «اشکال‌زدایی USB» و «اشکال‌زدایی بی‌سیم» را فعال کنید.</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">روی سمت چپ «اشکال‌زدایی بی‌سیم»
-        ضربه بزنید، سپس روی «جفت کردن دستگاه با کد جفت‌سازی» ضربه بزنید. کد را در اعلان وارد کنید تا
-        جفت‌سازی تکمیل شود.</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">روی سمت چپ «اشکال‌زدایی بی‌سیم» ضربه بزنید، سپس روی «مرتبط کردن دستگاه با کد مرتبط‌سازی» ضربه بزنید. کد را در اعلان وارد کنید تا مرتبط‌سازی کامل شود.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">فرآیند مرتبط شدن به شما نیاز
         دارد که با اعلان Porter تعامل داشته باشید. لطفاً به Porter اجازه دهید تا اعلان‌ها را ارسال
         کند.</string>
@@ -72,13 +63,9 @@
         تنظیمات دستگاه، سبک اعلان را به \"اندروید\" از \"اعلان ها\" - \"سایه اعلان\" تغییر دهند.</string>
     <string name="adb_pairing_tutorial_content_miui_2">در غیر این صورت، ممکن است نتوانید کد جفت سازی
         را از طریق اعلان وارد کنید.</string>
-    <string name="adb_pairing_tutorial_content_finish">برگرد به شیزوکو و شیزوکو را شروع کن.</string>
-    <string name="adb_pairing_tutorial_content_network">شیزوکو باید به شبکه محلی دسترسی پیدا کند.
-        این سیستم توسط مجوز شبکه کنترل می شود.</string>
-    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">برخی سیستم ها (مانند
-        MIUI) اجازه نمی دهند برنامه ها زمانی که قابل مشاهده نیستند، حتی اگر برنامه از سرویس پیش
-        زمینه استفاده کند، به شبکه دسترسی پیدا کنند. لطفا ویژگی های بهینه سازی باتری شیزوکو را در
-        چنین سیستم هایی غیرفعال کنید.</string>
+    <string name="adb_pairing_tutorial_content_finish">به Porter برگردید و Porter را راه‌اندازی کنید.</string>
+    <string name="adb_pairing_tutorial_content_network">Porter باید به شبکه محلی دسترسی داشته باشد. این دسترسی با مجوز شبکه کنترل می‌شود.</string>
+    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">برخی سیستم‌ها (مانند MIUI) اجازه نمی‌دهند برنامه‌ها وقتی قابل مشاهده نیستند به شبکه دسترسی داشته باشند، حتی اگر برنامه از سرویس پیش‌زمینه استفاده کند. لطفاً در چنین سیستم‌هایی ویژگی‌های بهینه‌سازی باتری را برای Porter غیرفعال کنید.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[راه‌اندازی (برای دستگاه‌هایی با دسترسی ریشه)]]></string>
     <string name="home_root_button_start">راه‌اندازی</string>
@@ -92,7 +79,7 @@
     <string name="home_app_management_empty">برنامه‌هایی که درخواست مجوز Porter را داده‌اند یا آن
         را اعلام کرده‌اند، اینجا نمایش داده می‌شوند.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">کنترل شیزوکو با برنامه‌های اتوماسیون</string>
+    <string name="home_automation_title">کنترل Porter با برنامه‌های اتوماسیون</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">مجوز adb محدود است</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[این احتمال وجود دارد که سازنده دستگاه شما مجوز adb را محدود کند.<p>ممکن است راه حلی برای دستگاه شما در <b><a href=\"%1$s\">این سند</a></b> وجود داشته باشد.]]></string>
@@ -105,8 +92,7 @@
         Porter</string>
     <string name="terminal_tutorial_miui">کاربران گزارش داده‌اند که MIUI چارچوب دسترسی به حافظه
         (Storage Access Framework) را که توسط تابع export استفاده می‌شود، نقض می‌کند.</string>
-    <string name="terminal_tutorial_miui_2">اگر از MIUI استفاده می‌کنید، ممکن است مجبور شوید فایل را
-        از پوشه assets در APK شیزوکو استخراج کنید.</string>
+    <string name="terminal_tutorial_miui_2">اگر از MIUI استفاده می‌کنید، ممکن است لازم باشد فایل را از پوشه assets در APK برنامه Porter استخراج کنید.</string>
     <string name="terminal_tutorial_1">فایل‌ها را به یک پوشه جدید صادر کنید.</string>
     <string name="terminal_tutorial_1_description">دو فایل صادر می‌شوند: %1$s و %2$s. اگر این
         فایل‌ها از قبل در پوشه انتخاب شده وجود داشته باشند، حذف خواهند شد.</string>
@@ -127,11 +113,9 @@
         هیچ شبکه مجاز را به یاد نمی آورد.\n\nدر هر راه اندازی مجدد باید شبکه را با ضربه زدن روی
         «اجازه» هنگام ظاهر شدن دیالوگ مجوزدهی مجددا، مجددا تأیید کنید.</string>
     <string name="settings_watchdog">دیده‌بان</string>
-    <string name="settings_watchdog_summary">در صورت خرابی، شیزوکو را به طور خودکار مجدداً راه
-        اندازی کنید</string>
+    <string name="settings_watchdog_summary">راه‌اندازی مجدد خودکار Porter در صورت خرابی</string>
     <string name="settings_restart_dialog_title">راه اندازی مجدد مورد نیاز است</string>
-    <string name="settings_restart_dialog_message">شیزوکو باید بازی را دوباره شروع کند تا بتواند این
-        تنظیم را اعمال کند.</string>
+    <string name="settings_restart_dialog_message">برای اعمال این تنظیم، Porter باید دوباره راه‌اندازی شود.</string>
     <string name="settings_tcp_port">پورت TCP</string>
     <string name="settings_tcp_port_default">پیش‌فرض (۵۵۵۵)</string>
     <string name="settings_user_interface">ظاهر</string>
@@ -144,10 +128,10 @@
         بهینه‌سازی باتری را غیرفعال کنید.</string>
     <string name="snackbar_action_fix">رفع</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">شیزوکو از قبل در پس‌زمینه شروع به کار کرده است</string>
+    <string name="toast_shizuku_already_starting">Porter هم‌اکنون در پس‌زمینه در حال راه‌اندازی است</string>
     <string name="toast_accessibility_tv_only">این سرویس فقط روی دستگاه های تلویزیونی پشتیبانی می
         شود.</string>
-    <string name="toast_pairing_timeout">سرویس جفت سازی شیزوکو تمام شد.</string>
+    <string name="toast_pairing_timeout">مهلت سرویس مرتبط‌سازی Porter به پایان رسید</string>
     <!-- Stop -->
     <string name="action_stop">توقف Porter</string>
     <!-- Notification -->
@@ -173,18 +157,17 @@
     <string name="start_with_root_failed">نمی‌توان خدمات را راه‌اندازی کرد زیرا مجوز ریشه داده نشده
         است یا این دستگاه روت نشده است.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">شروع شیزوکو…</string>
+    <string name="wadb_notification_title">در حال راه‌اندازی Porter…</string>
     <string name="wadb_notification_wifi_required">قبل از ادامه، منتظر اتصال Wi-Fi هستم</string>
     <string name="wadb_notification_retry">منتظر تلاش مجدد هستم</string>
     <string name="wadb_error_title">خطا هنگام شروع بوت</string>
     <string name="wadb_error_notify_dev">برای اطلاع به توسعه‌دهنده، ضربه بزنید.</string>
     <string name="wadb_permission_error_notification_title">خطای مجوز</string>
-    <string name="wadb_permission_error_notification_content">شیزوکو برای شروع به کار در هنگام بوت
-        شدن به WRITE_SECURE_SETTINGS نیاز دارد. برای یادگیری نحوه اعطای آن، روی ضربه بزنید.</string>
+    <string name="wadb_permission_error_notification_content">Porter برای شروع در بوت به WRITE_SECURE_SETTINGS نیاز دارد. برای آشنایی با نحوه اعطای آن ضربه بزنید.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">واچ داگ در حال اجرا است</string>
     <string name="watchdog_turn_off">خاموش</string>
-    <string name="watchdog_shizuku_crashed_title">شیزوکو اخیراً تصادف کرد</string>
+    <string name="watchdog_shizuku_crashed_title">Porter اخیراً از کار افتاد</string>
     <string name="watchdog_shizuku_crashed_text">واچ‌داگ سرویس را مجدداً راه‌اندازی کرد. برای کسب
         اطلاعات در مورد راه‌حل‌های احتمالی برای جلوگیری از خرابی‌های آینده، ضربه بزنید.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">خاموش کردن هشدارها</string>
@@ -197,4 +180,59 @@
         اشکال‌زدایی بی‌سیم استخراج کند. پس از یافتن کد جفت‌سازی، خود را غیرفعال می‌کند.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">همین حالا تلاش کنید</string>
+    <string name="home_root_description"><![CDATA[اگر از Magisk استفاده می‌کنید، %1$s گزینه دیگری است. برنامه‌ها باید به‌طور صریح از %2$s پشتیبانی کنند.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intentها</string>
+    <string name="home_automation_bottom_sheet_label_action">عمل (Action)</string>
+    <string name="home_automation_bottom_sheet_label_package">بسته (Package)</string>
+    <string name="home_automation_bottom_sheet_label_target">هدف (Target)</string>
+    <string name="home_automation_bottom_sheet_label_extras">موارد اضافی (Extras)</string>
+    <string name="home_automation_regenerate_token">توکن دوباره ساخته شود؟</string>
+    <string name="home_automation_regenerate_token_message">باید Intentهای خود را با توکن جدید دوباره پیکربندی کنید.</string>
+    <string name="home_dialog_reboot_required_title">راه‌اندازی مجدد لازم است</string>
+    <string name="home_dialog_reboot_required_message">برای عملکرد درست Porter، دستگاه باید دوباره راه‌اندازی شود. برای ادامه، لطفاً دستگاه خود را دوباره راه‌اندازی کنید.</string>
+    <string name="home_dialog_duplicate_app_detected_title">برنامه تکراری شناسایی شد</string>
+    <string name="home_dialog_duplicate_app_detected_message">نسخه دیگری از این برنامه روی دستگاه شما نصب است. برای ادامه، لطفاً همه نسخه‌های تکراری را حذف نصب کنید و دستگاه را دوباره راه‌اندازی کنید.</string>
+    <string name="home_dialog_button_exit">خروج</string>
+    <string name="settings_alerts_blocked_title">هشدارهای پس‌زمینه</string>
+    <string name="settings_alerts_blocked_summary">اعلان‌های Porter مسدود شده‌اند، بنابراین «شروع در بوت» و دیده‌بان نمی‌توانند در مواقع نیاز به شما اطلاع دهند.</string>
+    <string name="settings_alerts_blocked_message">این قابلیت کارهایی را که انجام می‌دهد و خطاهای رخ‌داده را از طریق اعلان گزارش می‌کند. اعلان‌های Porter در حال حاضر مسدود هستند، بنابراین بدون اینکه چیزی به شما بگوید اجرا می‌شود.</string>
+    <string name="settings_alerts_blocked_continue">در هر صورت روشن شود</string>
+    <string name="follow_system">پیروی از سیستم</string>
+    <string name="start">راه‌اندازی</string>
+    <string name="stop">توقف</string>
+    <string name="notification_channel_watchdog">دیده‌بان</string>
+    <string name="notification_channel_crash">گزارش‌های خرابی</string>
+    <string name="notification_channel_auth">خطاهای احراز هویت</string>
+    <string name="notification_auth_invalid_title">توکن احراز هویت نامعتبر</string>
+    <string name="notification_auth_invalid_message">مطمئن شوید توکن موجود در Intent شما با توکنی که در تنظیمات، بخش «کنترل Porter با برنامه‌های اتوماسیون» آمده است یکسان باشد.</string>
+    <string name="porter_status_running_adb">در حال اجرا از طریق ADB</string>
+    <string name="porter_status_running_root">در حال اجرا از طریق root</string>
+    <string name="porter_status_restart_service">برای به‌روزرسانی سرویس در حال اجرا، Porter را دوباره راه‌اندازی کنید.</string>
+    <string name="porter_status_version_unknown">نامشخص</string>
+    <string name="porter_status_versions">Porter نصب‌شده: %1$s\nسرویس در حال اجرا: %2$s\nShizuku API: %3$d · وصله: %4$d</string>
+    <string name="porter_acknowledgements">قدردانی</string>
+    <string name="porter_acknowledgements_summary">پروژه‌های بالادستی، کتابخانه‌های متن‌باز و مجوزها.</string>
+    <string name="porter_acknowledgements_thanks">سپاسگزاریم</string>
+    <string name="porter_licenses">مجوزها</string>
+    <string name="porter_ack_shizuku">به RikkaApps و همه مشارکت‌کنندگان برای ساخت Shizuku و APIهای آن، که پایه Porter است.</string>
+    <string name="porter_ack_thedjchi">به thedjchi و مشارکت‌کنندگان برای نگهداری فورک Shizuku که Porter بر پایه آن ساخته شده است.</string>
+    <string name="porter_ack_symbuzzer">به symbuzzer و مشارکت‌کنندگان برای ادامه کار روی Shizuku و به اشتراک گذاشتن فورک خود.</string>
+    <string name="porter_ack_plus">به thejaustin و مشارکت‌کنندگان برای ShizukuPlus و الهام‌بخشیدن به ایده یک برنامه سازگاری اختیاری.</string>
+    <string name="porter_ack_maxpatchs">سپاس برای آیکون، طرح‌های شخصیت نمادین و بنر.</string>
+    <string name="porter_license_porter">Porter و برنامه اصلی Shizuku · مجوز Apache 2.0</string>
+    <string name="porter_license_api">Shizuku API و فورک Porter آن · مجوز MIT</string>
+    <string name="porter_license_notice">اطلاعیه‌های حق نشر و انتساب</string>
+    <string name="porter_pairing_restart">شروع دوباره مرتبط‌سازی</string>
+    <string name="porter_pairing_retry_instructions">اگر کدی رد شد یا اعلان ناپدید شد، مرتبط‌سازی را از اینجا دوباره شروع کنید. سپس کادر گفتگوی قدیمی کد مرتبط‌سازی Android را ببندید و یک کادر جدید باز کنید. از کد جدید استفاده کنید؛ لازم نیست داده‌های Porter را پاک کنید.</string>
+    <string name="porter_pairing_search_timeout">در یک دقیقه هیچ کد مرتبط‌سازی دریافت نشد. مرتبط‌سازی متوقف شد. «سعی مجدد» را انتخاب کنید، سپس در «اشکال‌زدایی بی‌سیم» کادر گفتگوی جدیدی برای کد مرتبط‌سازی باز کنید.</string>
+    <string name="porter_pairing_attempt_timeout">مهلت اتصال مرتبط‌سازی به پایان رسید. در «اشکال‌زدایی بی‌سیم» کادر گفتگوی جدیدی برای کد مرتبط‌سازی باز کنید و دوباره امتحان کنید.</string>
+    <string name="porter_pairing_failed_retry">مرتبط‌سازی انجام نشد. در «اشکال‌زدایی بی‌سیم» کادر گفتگوی جدیدی برای کد مرتبط‌سازی باز کنید و دوباره امتحان کنید.</string>
+    <string name="porter_pairing_notification_timeout">مرتبط‌سازی متوقف شد، چون مهلت اعلان به پایان رسید. «سعی مجدد» را انتخاب کنید، سپس در «اشکال‌زدایی بی‌سیم» کادر گفتگوی جدیدی برای کد مرتبط‌سازی باز کنید.</string>
+    <string name="porter_tv_pairing_progress_title">مرتبط‌سازی Porter</string>
+    <string name="porter_tv_pairing_wait">لطفاً پنجره کد مرتبط‌سازی را باز نگه دارید و منتظر بمانید.</string>
+    <string name="porter_tv_pairing_return">در حال بازگشت به Porter برای خاموش کردن سرویس دسترس‌پذیری مرتبط‌سازی…</string>
+    <string name="porter_tv_pairing_disabling">در حال خاموش کردن سرویس دسترس‌پذیری مرتبط‌سازی…</string>
+    <string name="porter_tv_pairing_complete">سرویس دسترس‌پذیری مرتبط‌سازی خاموش است. همه مراحل مرتبط‌سازی کامل شد. می‌توانید این پنجره را ببندید.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">سرویس دسترس‌پذیری مرتبط‌سازی هنوز فعال است. آن را در تنظیمات دسترس‌پذیری خاموش کنید.</string>
+    <string name="porter_tv_pairing_open_accessibility">باز کردن تنظیمات دسترس‌پذیری</string>
 </resources>

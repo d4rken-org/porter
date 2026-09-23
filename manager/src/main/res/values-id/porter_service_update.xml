@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Pembaruan layanan tersedia</string>
+    <string name="porter_service_update_action">Perbarui layanan</string>
+    <string name="porter_service_update_summary">Pembaruan akan memutus koneksi aplikasi yang terhubung untuk sementara. Izin yang ada tetap dipertahankan.</string>
+    <string name="porter_service_update_primary">Buka Porter di pengguna utama Android untuk memperbarui layanan.</string>
+    <string name="porter_service_update_features">Perbarui layanan untuk mengaktifkan fitur-fitur ini.</string>
+    <string name="porter_service_auto_update">Perbarui layanan secara otomatis</string>
+    <string name="porter_service_auto_update_summary">Setelah aplikasi Porter diperbarui, ganti layanan yang berjalan dengan build berbeda di latar belakang. Ini akan memutus koneksi aplikasi yang terhubung untuk sementara. Layanan yang berhenti tetap berhenti.</string>
+    <string name="porter_service_update_interrupted">Pembaruan layanan sebelumnya tidak selesai. Coba lagi jika layanan masih berjalan, atau mulai lagi dari layar Layanan.</string>
+    <string name="porter_global_access_update">Kontrol akses global tidak tersedia di layanan yang berjalan.</string>
+    <string name="porter_discovery_update">Layanan yang berjalan tidak mendukung fitur penemuan aplikasi dan riwayat koneksi saat ini. Aplikasi yang tersedia ditampilkan menggunakan antarmuka lamanya.</string>
+    <string name="porter_service_updating">Memperbarui layanan Porter…</string>
+    <string name="porter_service_update_failed">Tidak dapat memperbarui layanan Porter</string>
+    <string name="porter_service_update_failed_summary">Layanan yang berjalan tidak dapat diganti dengan versi yang terinstal. Jika masih berjalan, Anda dapat mencoba lagi. Jika tidak, mulai layanan lagi dari layar Layanan.</string>
+    <string name="porter_service_update_retry">Coba perbarui lagi</string>
+</resources>

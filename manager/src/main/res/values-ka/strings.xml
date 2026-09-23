@@ -37,15 +37,12 @@
         კავშირი აუცილებელია.</string>
     <string name="dialog_usb_debugging_not_enabled">USB გამართვა არ არის ჩართული.\nგთხოვთ, ჩართოთ
         იგი \"დეველოპერის ოფციებში\".</string>
-    <string name="dialog_adb_pairing_accessibility_permission">Android 14-ზე, Porter-ს
+    <string name="dialog_adb_pairing_accessibility_permission">Android 14-ზე, Porter-ის
         ინსტალაცია/განახლება პაკეტის ინსტალატორით აუქმებს ^1 ნებართვას, რომელიც აუცილებელია
-        დაწყვილებისთვის ხელმისაწვდომობის სერვისის ჩასართავად.\n\nმის მისანიჭებლად, შეასრულეთ შემდეგი
+        დაწყვილებისთვის მარტივი წვდომის სერვისის ჩასართავად.\n\nმის მისანიჭებლად, შეასრულეთ შემდეგი
         ADB ბრძანება:\n\n^2\n\nბრძანების შესრულების შემდეგ, შეგიძლიათ გააგრძელოთ დაწყვილების
-        პროცესი.\n\nშენიშვნა: ამის გვერდის ავლა შეგიძლიათ Porter-ს ADB-ით ინსტალაციით/განახლებით.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">გთხოვთ, ჩართოთ ხელმისაწვდომობის სერვისი
-        დაწყვილების პროცესის დასაწყებად. ეს საშუალებას აძლევს Porter-ს აღმოაჩინოს დაწყვილების
-        კოდი.\n\nხელმისაწვდომობის სერვისი გამორთულია კოდის პოვნისას ან 1 წუთის შემდეგ ენერგიის
-        დაზოგვის მიზნით.</string>
+        პროცესი.\n\nშენიშვნა: ამის გვერდის ავლა შეგიძლიათ Porter-ის ADB-ით ინსტალაციით/განახლებით.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">გთხოვთ, ჩართოთ მარტივი წვდომის სერვისი დაწყვილების პროცესის დასაწყებად. ეს საშუალებას აძლევს Porter-ს აღმოაჩინოს დაწყვილების კოდი.\n\nმარტივი წვდომის სერვისი გამოირთვება დაწყვილების მცდელობის შემდეგ ან თუ ერთ წუთში კოდი ვერ მოიძებნა. Porter გაჩვენებთ შედეგს და ხელახლა ცდის საშუალებას მოგცემთ.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">დაწყვილება დაიწყეთ შემდეგი ნაბიჯების
         შესრულებით:\n- გადადით „დეველოპერის პარამეტრებზე“\n- ჩართეთ „USB გამართვა“ და „უკაბელო
         გამართვა“\n- შეეხეთ „უკაბელო გამართვის“ მარცხენა მხარეს\n- შეეხეთ „მოწყობილობის დაწყვილების
@@ -61,7 +58,7 @@
     <string name="enable">ჩართვა</string>
     <string name="development_settings">დეველოპერის პარამეტრები</string>
     <string name="notification_settings">შეტყობინებების პარამეტრები</string>
-    <string name="adb_pairing_tutorial_content_notification">შიზუკუს შეტყობინება დაგეხმარებათ
+    <string name="adb_pairing_tutorial_content_notification">Porter-ის შეტყობინება დაგეხმარებათ
         დაწყვილების დასრულებაში.</string>
     <string name="adb_pairing_tutorial_content_steps">გადადით „დეველოპერის პარამეტრებში“, შემდეგ
         ჩართეთ „USB გამართვა“ და „უკაბელო გამართვა“.</string>
@@ -69,32 +66,32 @@
         მარცხენა მხარეს, შემდეგ შეეხეთ „მოწყობილობის დაწყვილება დაწყვილების კოდით“. დაწყვილების
         დასასრულებლად შეიყვანეთ შეტყობინებაში მითითებული კოდი.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">დაწყვილების პროცესს სჭირდება
-        ურთიერთობა შიზუკუს შეტყობინებასთან. გთხოვთ, ნება მიეცით Porter-ს გამოაქვეყნოს
+        ურთიერთობა Porter-ის შეტყობინებასთან. გთხოვთ, ნება მიეცით Porter-ს გამოაქვეყნოს
         შეტყობინებები.</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI-ის მომხმარებლებს შეიძლება დასჭირდეთ
         შეტყობინების სტილის გადართვა \"Android\"-ზე \"შეტყობინებიდან\" - \"შეტყობინებების
         ჩრდილიდან\" სისტემის პარამეტრებში.</string>
     <string name="adb_pairing_tutorial_content_miui_2">წინააღმდეგ შემთხვევაში, შესაძლოა ვერ შეძლოთ
         შეტყობინებიდან დაკავშირების კოდის შეყვანა.</string>
-    <string name="adb_pairing_tutorial_content_finish">დაბრუნდით შიზუკუში და დაიწყეთ შიზუკუ.</string>
-    <string name="adb_pairing_tutorial_content_network">შიზუკუს ლოკალურ ქსელზე წვდომა სჭირდება. ის
+    <string name="adb_pairing_tutorial_content_finish">დაბრუნდით Porter-ში და გაუშვით Porter.</string>
+    <string name="adb_pairing_tutorial_content_network">Porter-ს ლოკალურ ქსელზე წვდომა სჭირდება. ის
         ქსელის ნებართვით კონტროლდება.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">ზოგიერთი სისტემა
         (მაგალითად, MIUI) კრძალავს აპლიკაციებს ქსელზე წვდომას, როდესაც ისინი არ არიან ხილული,
         მაშინაც კი, თუ აპლიკაცია იყენებს წინა პლანის სერვისს. გთხოვთ, გამორთოთ ბატარეის ოპტიმიზაციის
-        ფუნქციები Porter-სთვის ასეთ სისტემებზე.</string>
+        ფუნქციები Porter-ისთვის ასეთ სისტემებზე.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[დაწყება (rooted მოწყობილობებისთვის)]]></string>
     <string name="home_root_button_start">დაწყება</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">აპლიკაციის მართვა</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="one"><![CDATA[ავტორიზებული %d განაცხადი]]></item>
-        <item quantity="other"><![CDATA[ავტორიზებული %d პროგრამები]]></item>
+        <item quantity="one"><![CDATA[%d ავტორიზებული აპი]]></item>
+        <item quantity="other"><![CDATA[%d ავტორიზებული აპი]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[შეეხეთ ავტორიზებული აპების სამართავად]]></string>
     <string name="home_app_management_empty">აპლიკაციები, რომლებმაც მოითხოვეს ან გამოაცხადეს
-        Porter-ს ნებართვა, გამოჩნდება აქ.</string>
+        Porter-ის ნებართვა, გამოჩნდება აქ.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">აკონტროლეთ Porter ავტომატიზაციის აპლიკაციებით</string>
     <!-- Application management -->
@@ -105,10 +102,10 @@
     <!-- Terminal -->
     <string name="home_terminal_title">გამოიყენეთ Porter ტერმინალის აპებში</string>
     <string name="home_terminal_description">ტერმინალის აპლიკაციებში shell ბრძანებების გაშვება
-        Porter-ს მეშვეობით</string>
+        Porter-ის მეშვეობით</string>
     <string name="terminal_tutorial_miui">მომხმარებლებმა განაცხადეს, რომ MIUI არღვევს Storage Access
         Framework-ს, რომელსაც ექსპორტის ფუნქცია იყენებს.</string>
-    <string name="terminal_tutorial_miui_2">თუ MIUI-ს იყენებთ, შესაძლოა ფაილის ამოღება Porter-ს APK
+    <string name="terminal_tutorial_miui_2">თუ MIUI-ს იყენებთ, შესაძლოა ფაილის ამოღება Porter-ის APK
         ფაილის assets საქაღალდიდან დაგჭირდეთ.</string>
     <string name="terminal_tutorial_1">ფაილების ექსპორტი ახალ საქაღალდეში.</string>
     <string name="terminal_tutorial_1_description">ექსპორტირებული იქნება ორი ფაილი: %1$s და %2$s. თუ
@@ -131,7 +128,7 @@
         ავტორიზაცია ყოველი გადატვირთვისას „დაშვებაზე“ შეხებით, როდესაც ავტორიზაციის დიალოგური
         ფანჯარა გამოჩნდება.</string>
     <string name="settings_watchdog">მაკონტროლებელი</string>
-    <string name="settings_watchdog_summary">ავტომატური გადატვირთვა Porter-სთვის, თუ ის გაითიშება</string>
+    <string name="settings_watchdog_summary">ავტომატური გადატვირთვა Porter-ისთვის, თუ ის გაითიშება</string>
     <string name="settings_restart_dialog_title">გადატვირთვა აუცილებელია</string>
     <string name="settings_restart_dialog_message">ამ პარამეტრის გამოსაყენებლად Porter-ს
         გადატვირთვაა საჭირო.</string>
@@ -150,9 +147,9 @@
     <string name="toast_shizuku_already_starting">Porter უკვე იწყება ფონზე</string>
     <string name="toast_accessibility_tv_only">ეს სერვისი მხოლოდ ტელევიზორის მოწყობილობებზეა
         მხარდაჭერილი.</string>
-    <string name="toast_pairing_timeout">შიზუკუს დაწყვილების სერვისს ვადა ამოეწურა.</string>
+    <string name="toast_pairing_timeout">Porter-ის დაწყვილების სერვისს ვადა ამოეწურა.</string>
     <!-- Stop -->
-    <string name="action_stop">შეაჩერე შიზუკუ</string>
+    <string name="action_stop">Porter-ის შეჩერება</string>
     <!-- Notification -->
     <string name="notification_channel_adb_pairing">უსადენო გამართვის დაწყვილება</string>
     <string name="notification_adb_pairing_input_paring_code">შეიყვანეთ დაწყვილების კოდი</string>
@@ -166,7 +163,7 @@
     <string name="notification_adb_pairing_failed_title">დაწყვილება ვერ მოხერხდა</string>
     <string name="notification_adb_pairing_retry">ხელახლა სცადეთ</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">წვდომა Porter</string>
+    <string name="permission_label">Porter-ზე წვდომა</string>
     <string name="permission_description">მიეცით აპს საშუალება გამოიყენოს Porter.</string>
     <string name="permission_warning_template"><![CDATA[ნება დართეთ <b>%1$s</b> მდე %2$s?]]></string>
     <string name="grant_dialog_button_allow_always">ნება დართეთ ყველა დროის</string>
@@ -176,18 +173,17 @@
     <string name="start_with_root_failed">შეუძლებელია სერვისის დაწყება, რადგან root ნებართვა არ არის
         გაცემული ან ეს მოწყობილობა არ არის rooted.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">შიზუკუს დაწყება…</string>
+    <string name="wadb_notification_title">ეშვება Porter…</string>
     <string name="wadb_notification_wifi_required">გაგრძელებამდე Wi-Fi კავშირის მოლოდინი</string>
     <string name="wadb_notification_retry">ველოდები ხელახლა ცდას</string>
     <string name="wadb_error_title">შეცდომა ჩატვირთვისას</string>
     <string name="wadb_error_notify_dev">შეეხეთ დეველოპერის შესატყობინებლად.</string>
     <string name="wadb_permission_error_notification_title">ნებართვის შეცდომა</string>
-    <string name="wadb_permission_error_notification_content">შიზუკუს WRITE_SECURE_SETTINGS სჭირდება
-        ჩატვირთვის დასაწყებად. შეეხეთ იმას, რომ გაიგოთ როგორ მიანიჭოთ იგი.</string>
+    <string name="wadb_permission_error_notification_content">ჩატვირთვისას გასაშვებად Porter-ს WRITE_SECURE_SETTINGS სჭირდება. შეეხეთ, რომ გაიგოთ, როგორ მიანიჭოთ ის.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog მუშაობს</string>
     <string name="watchdog_turn_off">გამორთვა</string>
-    <string name="watchdog_shizuku_crashed_title">შიზუკუ ცოტა ხნის წინ ჩამოვარდა</string>
+    <string name="watchdog_shizuku_crashed_title">Porter ცოტა ხნის წინ ჩამოვარდა</string>
     <string name="watchdog_shizuku_crashed_text">Watchdog-მა განაახლა სერვისი. შეეხეთ პოტენციურ
         გამოსწორებებს, რათა თავიდან აიცილოთ მომავალი ავარიები.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">გამორთეთ შეტყობინებები</string>
@@ -201,4 +197,59 @@
         პოვნის შემდეგ.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">სცადეთ ახლა.</string>
+    <string name="home_root_description"><![CDATA[თუ Magisk-ს იყენებთ, %1$s კიდევ ერთი ვარიანტია. აპებს %2$s-ის აშკარა მხარდაჭერა სჭირდებათ.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intent-ები</string>
+    <string name="home_automation_bottom_sheet_label_action">მოქმედება</string>
+    <string name="home_automation_bottom_sheet_label_package">პაკეტი</string>
+    <string name="home_automation_bottom_sheet_label_target">სამიზნე</string>
+    <string name="home_automation_bottom_sheet_label_extras">დამატებითი მონაცემები</string>
+    <string name="home_automation_regenerate_token">ხელახლა შეიქმნას ტოკენი?</string>
+    <string name="home_automation_regenerate_token_message">თქვენი Intent-ების ხელახლა კონფიგურირება ახალი ტოკენით მოგიწევთ.</string>
+    <string name="home_dialog_reboot_required_title">საჭიროა გადატვირთვა</string>
+    <string name="home_dialog_reboot_required_message">Porter-ის გამართული მუშაობისთვის საჭიროა მოწყობილობის გადატვირთვა. გასაგრძელებლად, გთხოვთ, გადატვირთოთ მოწყობილობა.</string>
+    <string name="home_dialog_duplicate_app_detected_title">აღმოჩენილია დუბლიკატი აპი</string>
+    <string name="home_dialog_duplicate_app_detected_message">თქვენს მოწყობილობაზე დაინსტალირებულია ამ აპის სხვა ვერსია. გასაგრძელებლად, გთხოვთ, წაშალოთ ყველა დუბლიკატი ვერსია და გადატვირთოთ მოწყობილობა.</string>
+    <string name="home_dialog_button_exit">გასვლა</string>
+    <string name="settings_alerts_blocked_title">ფონური გაფრთხილებები</string>
+    <string name="settings_alerts_blocked_summary">Porter-ის შეტყობინებები დაბლოკილია, ამიტომ ჩატვირთვისას დაწყება და მაკონტროლებელი ვერ შეგატყობინებენ, როცა თქვენი ყურადღება სჭირდებათ.</string>
+    <string name="settings_alerts_blocked_message">ეს ფუნქცია შეტყობინებით გაცნობებთ, რას აკეთებს და რა მოხდა არასწორად. Porter-ის შეტყობინებები ამჟამად დაბლოკილია, ამიტომ ის ისე იმუშავებს, რომ არაფერს შეგატყობინებთ.</string>
+    <string name="settings_alerts_blocked_continue">მაინც ჩართვა</string>
+    <string name="follow_system">სისტემის მიხედვით</string>
+    <string name="start">დაწყება</string>
+    <string name="stop">შეჩერება</string>
+    <string name="notification_channel_watchdog">მაკონტროლებელი</string>
+    <string name="notification_channel_crash">ავარიის ანგარიშები</string>
+    <string name="notification_channel_auth">ავთენტიფიკაციის შეცდომები</string>
+    <string name="notification_auth_invalid_title">ავთენტიფიკაციის არასწორი ტოკენი</string>
+    <string name="notification_auth_invalid_message">დარწმუნდით, რომ თქვენს Intent-ში მითითებული ტოკენი ემთხვევა პარამეტრების „აკონტროლეთ Porter ავტომატიზაციის აპლიკაციებით“ განყოფილებაში მითითებულს.</string>
+    <string name="porter_status_running_adb">გაშვებულია ADB-ით</string>
+    <string name="porter_status_running_root">გაშვებულია root-ით</string>
+    <string name="porter_status_restart_service">გაშვებული სერვისის გასაახლებლად გადატვირთეთ Porter.</string>
+    <string name="porter_status_version_unknown">უცნობია</string>
+    <string name="porter_status_versions">დაინსტალირებული Porter: %1$s\nგაშვებული სერვისი: %2$s\nShizuku API: %3$d · პაჩი: %4$d</string>
+    <string name="porter_acknowledgements">მადლიერება</string>
+    <string name="porter_acknowledgements_summary">საწყისი პროექტები, ღია კოდის ბიბლიოთეკები და ლიცენზიები.</string>
+    <string name="porter_acknowledgements_thanks">მადლობა</string>
+    <string name="porter_licenses">ლიცენზიები</string>
+    <string name="porter_ack_shizuku">RikkaApps-სა და ყველა მონაწილეს Shizuku-სა და მისი API-ების შექმნისთვის, რომლებიც Porter-ის საფუძველია.</string>
+    <string name="porter_ack_thedjchi">thedjchi-სა და მონაწილეებს Shizuku-ს იმ ფორკის მხარდაჭერისთვის, რომელსაც Porter ეფუძნება.</string>
+    <string name="porter_ack_symbuzzer">symbuzzer-სა და მონაწილეებს Shizuku-ზე მუშაობის გაგრძელებისა და თავიანთი ფორკის გაზიარებისთვის.</string>
+    <string name="porter_ack_plus">thejaustin-სა და მონაწილეებს ShizukuPlus-ისთვის და არჩევითი თავსებადობის აპის იდეისთვის.</string>
+    <string name="porter_ack_maxpatchs">მადლობა ხატულის, თილისმის დიზაინებისა და ბანერისთვის.</string>
+    <string name="porter_license_porter">Porter და ორიგინალური Shizuku აპი · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API და მისი Porter ფორკი · MIT License</string>
+    <string name="porter_license_notice">საავტორო უფლებებისა და ატრიბუციის შეტყობინებები</string>
+    <string name="porter_pairing_restart">დაწყვილების თავიდან დაწყება</string>
+    <string name="porter_pairing_retry_instructions">თუ კოდი უარყოფილ იქნა ან შეტყობინება გაქრა, დაწყვილება აქ თავიდან დაიწყეთ. შემდეგ დახურეთ Android-ის ძველი დაწყვილების კოდის დიალოგი და გახსენით ახალი. გამოიყენეთ ახალი კოდი; Porter-ის მონაცემების გასუფთავება საჭირო არ არის.</string>
+    <string name="porter_pairing_search_timeout">ერთი წუთის განმავლობაში დაწყვილების კოდი არ მიღებულა. დაწყვილება შეჩერდა. აირჩიეთ „ხელახლა სცადეთ“, შემდეგ „უსადენო გამართვაში“ გახსენით დაწყვილების კოდის ახალი დიალოგი.</string>
+    <string name="porter_pairing_attempt_timeout">დაწყვილების კავშირის დრო ამოიწურა. „უსადენო გამართვაში“ გახსენით დაწყვილების კოდის ახალი დიალოგი და ხელახლა სცადეთ.</string>
+    <string name="porter_pairing_failed_retry">დაწყვილება ვერ მოხერხდა. „უსადენო გამართვაში“ გახსენით დაწყვილების კოდის ახალი დიალოგი და ხელახლა სცადეთ.</string>
+    <string name="porter_pairing_notification_timeout">დაწყვილება შეჩერდა, რადგან შეტყობინების დრო ამოიწურა. აირჩიეთ „ხელახლა სცადეთ“, შემდეგ „უსადენო გამართვაში“ გახსენით დაწყვილების კოდის ახალი დიალოგი.</string>
+    <string name="porter_tv_pairing_progress_title">Porter-ის დაწყვილება</string>
+    <string name="porter_tv_pairing_wait">გთხოვთ, დატოვოთ დაწყვილების კოდის ფანჯარა ღია და დაელოდოთ.</string>
+    <string name="porter_tv_pairing_return">ვბრუნდებით Porter-ში დაწყვილების მარტივი წვდომის სერვისის გამოსართავად…</string>
+    <string name="porter_tv_pairing_disabling">ითიშება დაწყვილების მარტივი წვდომის სერვისი…</string>
+    <string name="porter_tv_pairing_complete">დაწყვილების მარტივი წვდომის სერვისი გამორთულია. დაწყვილების ყველა ნაბიჯი დასრულდა. შეგიძლიათ ეს ფანჯარა დახუროთ.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">დაწყვილების მარტივი წვდომის სერვისი კვლავ ჩართულია. გამორთეთ ის მარტივი წვდომის პარამეტრებში.</string>
+    <string name="porter_tv_pairing_open_accessibility">მარტივი წვდომის პარამეტრების გახსნა</string>
 </resources>

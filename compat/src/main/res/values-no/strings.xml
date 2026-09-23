@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Bruk Porter</string>
+    <string name="permission_description">La denne appen bruke system-API-er via Porter.</string>
+    <string name="porter_missing">Installer Porter med det samsvarende signeringssertifikatet for å bruke denne tilleggsappen.</string>
+</resources>

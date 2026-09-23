@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">A Depuração por Wi-Fi não está ativada.\nObservação: antes do Android 11, é obrigatório conectar a um computador para ativar a depuração por Wi-Fi.</string>
     <string name="dialog_usb_debugging_not_enabled">A depuração USB não está ativada.\nAtive-a nas \"Opções do desenvolvedor\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">No Android 14, instalar/atualizar o Porter pelo Instalador de pacotes revoga a permissão ^1, necessária para ativar o serviço de acessibilidade usado no pareamento.\n\nPara concedê-la, execute o seguinte comando ADB:\n\n^2\n\nDepois de executar o comando, você pode continuar o processo de pareamento.\n\nObservação: você pode evitar isso instalando/atualizando o Porter pelo ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Ative o serviço de acessibilidade para iniciar o processo de pareamento. Isso permite que o Porter detecte o código de pareamento.\n\nO serviço de acessibilidade será desativado quando o código for encontrado ou após 1 minuto, para economizar energia.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Ative o serviço de acessibilidade para iniciar o processo de pareamento. Isso permite que o Porter detecte o código de pareamento.\n\nO serviço de acessibilidade será desativado após a tentativa de pareamento ou se nenhum código for encontrado em um minuto. O Porter mostrará o resultado e permitirá que você tente de novo.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Para iniciar o pareamento, siga estes passos:\n- Acesse as \"Opções do desenvolvedor\"\n- Ative a \"Depuração USB\" e a \"Depuração por Wi-Fi\"\n- Toque no lado esquerdo de \"Depuração por Wi-Fi\"\n- Toque em \"Parear dispositivo com código de pareamento\". O Porter detectará o código de pareamento automaticamente.</string>
     <string name="adb_pairing_requires_multi_window">Ative o modo de tela dividida (multijanela) primeiro.</string>
     <string name="adb_pairing_requires_multi_window_reason">O sistema exige que a caixa de diálogo de pareamento fique sempre visível. Usar o modo de tela dividida é a única forma de manter este app e a caixa de diálogo do sistema visíveis ao mesmo tempo.</string>
@@ -200,4 +200,24 @@
     <string name="porter_license_porter">Porter e o aplicativo Shizuku original · Licença Apache 2.0</string>
     <string name="porter_license_api">API Shizuku e seu fork do Porter · Licença MIT</string>
     <string name="porter_license_notice">Avisos de copyright e atribuição</string>
+    <string name="settings_alerts_blocked_title">Alertas em segundo plano</string>
+    <string name="settings_alerts_blocked_summary">As notificações do Porter estão bloqueadas, então o início na inicialização e o watchdog não conseguem avisar você quando precisarem de atenção.</string>
+    <string name="settings_alerts_blocked_message">Este recurso informa por notificação o que está fazendo e o que deu errado. As notificações do Porter estão bloqueadas no momento, então ele funcionaria sem avisar você de nada.</string>
+    <string name="settings_alerts_blocked_continue">Ativar mesmo assim</string>
+    <string name="notification_channel_watchdog">Watchdog</string>
+    <string name="notification_channel_crash">Relatórios de falhas</string>
+    <string name="notification_channel_auth">Erros de autenticação</string>
+    <string name="porter_pairing_restart">Reiniciar pareamento</string>
+    <string name="porter_pairing_retry_instructions">Se um código foi rejeitado ou a notificação desapareceu, reinicie o pareamento aqui. Depois, feche a caixa de diálogo antiga do código de pareamento do Android e abra uma nova. Use o novo código; não é necessário limpar os dados do Porter.</string>
+    <string name="porter_pairing_search_timeout">Nenhum código de pareamento foi recebido em um minuto. O pareamento foi interrompido. Escolha Tentar novamente e abra uma nova caixa de diálogo de código de pareamento na Depuração por Wi-Fi.</string>
+    <string name="porter_pairing_attempt_timeout">A conexão de pareamento expirou. Abra uma nova caixa de diálogo de código de pareamento na Depuração por Wi-Fi e tente novamente.</string>
+    <string name="porter_pairing_failed_retry">Falha no pareamento. Abra uma nova caixa de diálogo de código de pareamento na Depuração por Wi-Fi e tente novamente.</string>
+    <string name="porter_pairing_notification_timeout">O pareamento foi interrompido porque a notificação expirou. Escolha Tentar novamente e abra uma nova caixa de diálogo de código de pareamento na Depuração por Wi-Fi.</string>
+    <string name="porter_tv_pairing_progress_title">Pareamento do Porter</string>
+    <string name="porter_tv_pairing_wait">Deixe a janela do código de pareamento aberta e aguarde.</string>
+    <string name="porter_tv_pairing_return">Voltando ao Porter para desativar o serviço de acessibilidade de pareamento…</string>
+    <string name="porter_tv_pairing_disabling">Desativando o serviço de acessibilidade de pareamento…</string>
+    <string name="porter_tv_pairing_complete">O serviço de acessibilidade de pareamento está desativado. Todas as etapas de pareamento foram concluídas. Você pode fechar esta janela.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">O serviço de acessibilidade de pareamento ainda está ativado. Desative-o nas configurações de Acessibilidade.</string>
+    <string name="porter_tv_pairing_open_accessibility">Abrir configurações de Acessibilidade</string>
 </resources>

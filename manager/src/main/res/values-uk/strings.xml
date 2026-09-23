@@ -25,11 +25,11 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Будь ласка, спробуйте
         вимкнути та увімкнути \"Налагодження через Wi-Fi\", якщо пошук продовжується.</string>
     <string name="dialog_adb_port">Порт</string>
-    <string name="adb_pairing">Парування</string>
-    <string name="dialog_adb_pairing_title">Спарувати з пристроєм</string>
-    <string name="dialog_adb_pairing_discovery">Пошук сервісу парування</string>
-    <string name="dialog_adb_pairing_paring_code">Код парування</string>
-    <string name="paring_code_is_wrong">Код парування неправильний.</string>
+    <string name="adb_pairing">Сполучення</string>
+    <string name="dialog_adb_pairing_title">Сполучити з пристроєм</string>
+    <string name="dialog_adb_pairing_discovery">Пошук сервісу сполучення</string>
+    <string name="dialog_adb_pairing_paring_code">Код сполучення</string>
+    <string name="paring_code_is_wrong">Код сполучення неправильний.</string>
     <string name="cannot_connect_port">Не можу підключитися до бездротової служби
         налагодження.\n\nБудь ласка, переконайтеся, що Porter внесений до білого списку у всіх
         фаєрволах, блокуванні реклами, VPN чи подібних додатках, які можуть обмежувати доступ до
@@ -44,14 +44,8 @@
         служби доступності для сполучення.\n\nЩоб надати його, виконайте таку команду
         ADB:\n\n^2\n\nПісля виконання команди ви можете продовжити процес сполучення.\n\nПримітка:
         ви можете обійти це, встановивши/оновивши Porter за допомогою ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Будь ласка, увімкніть службу доступності,
-        щоб розпочати процес сполучення. Це дозволить Porter виявити код сполучення.\n\nСлужба
-        доступності буде вимкнена після знаходження коду або через 1 хвилину для економії енергії.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">Будь ласка, розпочніть сполучення,
-        виконавши такі кроки:\n- Перейдіть до розділу \"Параметри розробника\"\n- Увімкніть
-        \"Налагодження USB\" та \"Налагодження бездротового зв\'язку\"\n- Натисніть ліву частину
-        \"Налагодження бездротового зв\'язку\"\n- Натисніть \"Спів\'язати пристрій за допомогою коду
-        сполучення\". Porter автоматично визначить код сполучення.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Будь ласка, увімкніть службу доступності, щоб розпочати процес сполучення. Це дозволить Porter виявити код сполучення.\n\nСлужба доступності вимкнеться після спроби сполучення або якщо код не буде знайдено протягом хвилини. Porter покаже результат і дозволить спробувати ще раз.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">Будь ласка, розпочніть сполучення, виконавши такі кроки:\n- Перейдіть до розділу «Параметри розробника»\n- Увімкніть «Налагодження USB» і «Налагодження через Wi-Fi»\n- Натисніть ліву частину пункту «Налагодження через Wi-Fi»\n- Натисніть «Підключати пристрій за допомогою коду підключення». Porter автоматично визначить код сполучення.</string>
     <string name="adb_pairing_requires_multi_window">Спершу увійдіть в режим розділеного екрана
         (багатьох вікон).</string>
     <string name="adb_pairing_requires_multi_window_reason">Система вимагає, щоб діалог поєднання
@@ -59,18 +53,15 @@
         додаток і системний діалог видимими одночасно.</string>
     <string name="adb_error_key_store">Не вдається згенерувати ключ для бездротового
         налагодження.\nМожливо, це пов\'язано з тим, що механізм KeyStore цього пристрою зламаний.</string>
-    <string name="adb_pair_required">Будь ласка, спочатку пройдіть етап парування.</string>
+    <string name="adb_pair_required">Будь ласка, спочатку пройдіть етап сполучення.</string>
     <string name="enable">Увімкнути</string>
     <string name="development_settings">Параметри розробника</string>
     <string name="notification_settings">Налаштування повідомлень</string>
     <string name="adb_pairing_tutorial_content_notification">Повідомлення від Porter допоможе вам
-        закінчити парування.</string>
-    <string name="adb_pairing_tutorial_content_steps">Перейдіть до розділу «Параметри розробника»,
-        потім увімкніть «Налагодження по USB» та «Налагодження по бездротовому зв’язку».</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">Торкніться ліворуч опції
-        «Бездротове налагодження», потім натисніть «Підключити пристрій за допомогою коду
-        сполучення». Введіть код зі сповіщення, щоб завершити сполучення.</string>
-    <string name="adb_pairing_tutorial_content_notification_blocked">Процес парування потребує, щоб
+        закінчити сполучення.</string>
+    <string name="adb_pairing_tutorial_content_steps">Перейдіть до розділу «Параметри розробника», потім увімкніть «Налагодження USB» і «Налагодження через Wi-Fi».</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">Натисніть ліву частину пункту «Налагодження через Wi-Fi», потім натисніть «Підключати пристрій за допомогою коду підключення». Введіть код зі сповіщення, щоб завершити сполучення.</string>
+    <string name="adb_pairing_tutorial_content_notification_blocked">Процес сполучення потребує, щоб
         ви взаємодіяли із сповіщенням від Porter. Будь ласка, дозвольте Porter публікувати
         сповіщення.</string>
     <string name="adb_pairing_tutorial_content_miui">Користувачам MIUI, иожливо, доведеться змінити
@@ -78,9 +69,8 @@
         налаштуваннях.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Інакше ви можете не мати змоги ввести код
         пари з повідомлення.</string>
-    <string name="adb_pairing_tutorial_content_finish">Повернись до Шізуку і почни Шізуку.</string>
-    <string name="adb_pairing_tutorial_content_network">Шідзуку потрібно отримати доступ до місцевої
-        мережі. Він контролюється мережевим дозволом.</string>
+    <string name="adb_pairing_tutorial_content_finish">Поверніться до Porter і запустіть Porter.</string>
+    <string name="adb_pairing_tutorial_content_network">Porter потрібен доступ до локальної мережі. Він контролюється дозволом на доступ до мережі.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Деякі системи
         (наприклад, MIUI) забороняють додаткам доступ до мережі, якщо вони не видимі, навіть якщо
         додаток використовує передній план. Будь ласка, вимкніть функції оптимізації батареї для
@@ -100,7 +90,7 @@
     <string name="home_app_management_empty">Тут відображатимуться програми, які запросили або
         оголосили дозвіл Porter.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">Керуйте Сідзуку за допомогою програм автоматизації</string>
+    <string name="home_automation_title">Керуйте Porter за допомогою додатків автоматизації</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Дозвіл на adb обмежений</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Можливо, ваш виробник пристрою лімітує дозвіл adb.<p>Можливо, є рішення для вашої системи у <b><a href="%1$s">цьому документі</a></b>.]]></string>
@@ -134,11 +124,10 @@
         пам\'ятає жодної авторизованої мережі.\n\nВам потрібно буде повторно авторизувати мережу при
         кожному перезавантаженні, натискаючи «Дозволити», коли з\'являється діалогове повідомлення
         авторизації.</string>
-    <string name="settings_watchdog">Сторожовий пес</string>
+    <string name="settings_watchdog">Сторожовий таймер</string>
     <string name="settings_watchdog_summary">Автоматично перезапускати Porter у разі збою</string>
     <string name="settings_restart_dialog_title">Потрібно перезавантажити</string>
-    <string name="settings_restart_dialog_message">Шізуку потрібно почати заново, щоб застосувати
-        цей настрій.</string>
+    <string name="settings_restart_dialog_message">Щоб застосувати це налаштування, потрібно перезапустити Porter.</string>
     <string name="settings_tcp_port">TCP-порт</string>
     <string name="settings_tcp_port_default">За замовчуванням (5555)</string>
     <string name="settings_user_interface">Зовнішній вигляд</string>
@@ -151,22 +140,22 @@
         щоб використовувати цю функцію.</string>
     <string name="snackbar_action_fix">Виправити</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Шизуку вже починається на задньому плані</string>
+    <string name="toast_shizuku_already_starting">Porter уже запускається у фоновому режимі</string>
     <string name="toast_accessibility_tv_only">Ця послуга підтримується лише на телевізійних
         пристроях.</string>
-    <string name="toast_pairing_timeout">Сервіс парування Шідзуку закінчився.</string>
+    <string name="toast_pairing_timeout">Час очікування служби сполучення Porter минув</string>
     <!-- Stop -->
     <string name="action_stop">Зупинити Porter</string>
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">Парування для налагодження по Wi-Fi</string>
-    <string name="notification_adb_pairing_input_paring_code">Уведіть код парування</string>
-    <string name="notification_adb_pairing_searching_for_service_title">Пошук пристрою для парування</string>
-    <string name="notification_adb_pairing_service_found_title">Сервіс парування знайдено</string>
+    <string name="notification_channel_adb_pairing">Сполучення для налагодження через Wi-Fi</string>
+    <string name="notification_adb_pairing_input_paring_code">Уведіть код сполучення</string>
+    <string name="notification_adb_pairing_searching_for_service_title">Пошук сервісу сполучення</string>
+    <string name="notification_adb_pairing_service_found_title">Сервіс сполучення знайдено</string>
     <string name="notification_adb_pairing_stop_searching">Зупинити пошук</string>
     <string name="notification_adb_pairing_working_title">Виконується створення пари</string>
-    <string name="notification_adb_pairing_succeed_title">Парування успішне</string>
+    <string name="notification_adb_pairing_succeed_title">Сполучення успішне</string>
     <string name="notification_adb_pairing_succeed_text">Тепер ви можете запустити сервіс Porter.</string>
-    <string name="notification_adb_pairing_failed_title">Парування невдале</string>
+    <string name="notification_adb_pairing_failed_title">Сполучення невдале</string>
     <string name="notification_adb_pairing_retry">Спробувати ще раз</string>
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">доступ до Porter</string>
@@ -179,7 +168,7 @@
     <string name="start_with_root_failed">Неможливо запустити службу, оскільки не надано дозвіл root
         або цей пристрій не рутовано.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Початок гри «Шідзуку»…</string>
+    <string name="wadb_notification_title">Запуск Porter…</string>
     <string name="wadb_notification_wifi_required">Очікування підключення до Wi-Fi перед
         продовженням</string>
     <string name="wadb_notification_retry">Очікування повторної спроби</string>
@@ -192,9 +181,8 @@
     <!-- Watchdog -->
     <string name="watchdog_running">Сторожовий таймер працює</string>
     <string name="watchdog_turn_off">Вимикати</string>
-    <string name="watchdog_shizuku_crashed_title">Нещодавно розбився Сідзуку</string>
-    <string name="watchdog_shizuku_crashed_text">Watchdog перезапустив службу. Натисніть, щоб
-        дізнатися про можливі виправлення для запобігання майбутнім збоям.</string>
+    <string name="watchdog_shizuku_crashed_title">Porter нещодавно аварійно завершив роботу</string>
+    <string name="watchdog_shizuku_crashed_text">Сторожовий таймер перезапустив службу. Натисніть, щоб дізнатися про можливі виправлення для запобігання майбутнім збоям.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Вимкнути сповіщення</string>
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">Не вдається запустити браузер</string>
@@ -205,4 +193,59 @@
         бездротового налагодження. Він вимкнеться, як тільки код сполучення буде знайдено.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Спробуйте зараз</string>
+    <string name="home_root_description"><![CDATA[Якщо ви використовуєте Magisk, можна також використати %1$s. Додатки мають явно підтримувати %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Інтенти</string>
+    <string name="home_automation_bottom_sheet_label_action">Дія</string>
+    <string name="home_automation_bottom_sheet_label_package">Пакет</string>
+    <string name="home_automation_bottom_sheet_label_target">Ціль</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extras</string>
+    <string name="home_automation_regenerate_token">Створити новий токен?</string>
+    <string name="home_automation_regenerate_token_message">Вам доведеться заново налаштувати інтенти з новим токеном.</string>
+    <string name="home_dialog_reboot_required_title">Потрібне перезавантаження</string>
+    <string name="home_dialog_reboot_required_message">Для належної роботи Porter потрібно перезавантажити пристрій. Щоб продовжити, перезавантажте пристрій.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Виявлено дублікат додатка</string>
+    <string name="home_dialog_duplicate_app_detected_message">На пристрої встановлено іншу версію цього додатка. Щоб продовжити, видаліть усі дублікати й перезавантажте пристрій.</string>
+    <string name="home_dialog_button_exit">Вийти</string>
+    <string name="settings_alerts_blocked_title">Фонові сповіщення</string>
+    <string name="settings_alerts_blocked_summary">Сповіщення від Porter заблоковано, тому запуск під час завантаження та сторожовий таймер не зможуть повідомити, коли потрібна ваша увага.</string>
+    <string name="settings_alerts_blocked_message">Ця функція повідомляє про свою роботу та помилки через сповіщення. Зараз сповіщення від Porter заблоковано, тож вона працюватиме, нічого вам не повідомляючи.</string>
+    <string name="settings_alerts_blocked_continue">Усе одно ввімкнути</string>
+    <string name="follow_system">Як у системі</string>
+    <string name="start">Запустити</string>
+    <string name="stop">Зупинити</string>
+    <string name="notification_channel_watchdog">Сторожовий таймер</string>
+    <string name="notification_channel_crash">Звіти про збої</string>
+    <string name="notification_channel_auth">Помилки автентифікації</string>
+    <string name="notification_auth_invalid_title">Недійсний токен автентифікації</string>
+    <string name="notification_auth_invalid_message">Переконайтеся, що токен в інтенті збігається з токеном у налаштуваннях у розділі «Керуйте Porter за допомогою додатків автоматизації».</string>
+    <string name="porter_status_running_adb">Працює через ADB</string>
+    <string name="porter_status_running_root">Працює через root</string>
+    <string name="porter_status_restart_service">Перезапустіть Porter, щоб оновити запущену службу.</string>
+    <string name="porter_status_version_unknown">Невідомо</string>
+    <string name="porter_status_versions">Встановлений Porter: %1$s\nЗапущена служба: %2$s\nShizuku API: %3$d · Патч: %4$d</string>
+    <string name="porter_acknowledgements">Подяки</string>
+    <string name="porter_acknowledgements_summary">Вихідні проєкти, бібліотеки з відкритим кодом і ліцензії.</string>
+    <string name="porter_acknowledgements_thanks">Дякуємо</string>
+    <string name="porter_licenses">Ліцензії</string>
+    <string name="porter_ack_shizuku">RikkaApps і всім учасникам за створення Shizuku та його API, основи Porter.</string>
+    <string name="porter_ack_thedjchi">thedjchi та учасникам за підтримку форку Shizuku, на якому базується Porter.</string>
+    <string name="porter_ack_symbuzzer">symbuzzer та учасникам за продовження роботи над Shizuku й публікацію свого форку.</string>
+    <string name="porter_ack_plus">thejaustin та учасникам за ShizukuPlus та ідею необов’язкового додатка сумісності.</string>
+    <string name="porter_ack_maxpatchs">Дякуємо за іконку, дизайн маскота та банер.</string>
+    <string name="porter_license_porter">Porter і оригінальний додаток Shizuku · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API та його форк для Porter · MIT License</string>
+    <string name="porter_license_notice">Повідомлення про авторські права та атрибуцію</string>
+    <string name="porter_pairing_restart">Перезапустити сполучення</string>
+    <string name="porter_pairing_retry_instructions">Якщо код було відхилено або сповіщення зникло, перезапустіть сполучення тут. Потім закрийте старе вікно Android із кодом сполучення й відкрийте нове. Використайте новий код; очищати дані Porter не потрібно.</string>
+    <string name="porter_pairing_search_timeout">Код сполучення не отримано протягом хвилини. Сполучення зупинено. Виберіть «Спробувати ще раз», потім відкрийте нове вікно з кодом сполучення в розділі «Налагодження через Wi-Fi».</string>
+    <string name="porter_pairing_attempt_timeout">Час очікування з’єднання для сполучення минув. Відкрийте нове вікно з кодом сполучення в розділі «Налагодження через Wi-Fi» й спробуйте ще раз.</string>
+    <string name="porter_pairing_failed_retry">Не вдалося виконати сполучення. Відкрийте нове вікно з кодом сполучення в розділі «Налагодження через Wi-Fi» й спробуйте ще раз.</string>
+    <string name="porter_pairing_notification_timeout">Сполучення зупинено, бо минув час очікування сповіщення. Виберіть «Спробувати ще раз», потім відкрийте нове вікно з кодом сполучення в розділі «Налагодження через Wi-Fi».</string>
+    <string name="porter_tv_pairing_progress_title">Сполучення Porter</string>
+    <string name="porter_tv_pairing_wait">Не закривайте вікно з кодом сполучення й зачекайте.</string>
+    <string name="porter_tv_pairing_return">Повернення до Porter, щоб вимкнути службу доступності для сполучення…</string>
+    <string name="porter_tv_pairing_disabling">Вимкнення служби доступності для сполучення…</string>
+    <string name="porter_tv_pairing_complete">Службу доступності для сполучення вимкнено. Усі кроки сполучення виконано. Можна закрити це вікно.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Служба доступності для сполучення досі ввімкнена. Вимкніть її в налаштуваннях доступності.</string>
+    <string name="porter_tv_pairing_open_accessibility">Відкрити налаштування доступності</string>
 </resources>

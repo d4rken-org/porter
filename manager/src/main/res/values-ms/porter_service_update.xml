@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Kemas kini perkhidmatan tersedia</string>
+    <string name="porter_service_update_action">Kemas kini perkhidmatan</string>
+    <string name="porter_service_update_summary">Semasa kemas kini, apl yang bersambung akan diputuskan sambungannya buat seketika. Kebenaran sedia ada dikekalkan.</string>
+    <string name="porter_service_update_primary">Buka Porter dalam pengguna utama Android untuk mengemas kini perkhidmatan.</string>
+    <string name="porter_service_update_features">Kemas kini perkhidmatan untuk mendayakan ciri ini.</string>
+    <string name="porter_service_auto_update">Kemas kini perkhidmatan secara automatik</string>
+    <string name="porter_service_auto_update_summary">Selepas apl Porter dikemas kini, gantikan perkhidmatan yang berjalan dengan binaan berbeza di latar belakang. Apl yang bersambung akan diputuskan sambungannya buat seketika. Perkhidmatan yang dihentikan kekal dihentikan.</string>
+    <string name="porter_service_update_interrupted">Kemas kini perkhidmatan sebelumnya tidak selesai. Cuba semula jika perkhidmatan masih berjalan, atau mulakannya semula daripada skrin Perkhidmatan.</string>
+    <string name="porter_global_access_update">Kawalan akses global tidak tersedia dalam perkhidmatan yang berjalan.</string>
+    <string name="porter_discovery_update">Perkhidmatan yang berjalan tidak menyokong ciri penemuan apl dan sejarah sambungan semasa. Apl yang tersedia dipaparkan menggunakan antara mukanya yang lebih lama.</string>
+    <string name="porter_service_updating">Mengemas kini perkhidmatan Porter…</string>
+    <string name="porter_service_update_failed">Tidak dapat mengemas kini perkhidmatan Porter</string>
+    <string name="porter_service_update_failed_summary">Perkhidmatan yang berjalan tidak dapat digantikan dengan versi yang dipasang. Jika ia masih berjalan, anda boleh mencuba semula. Jika tidak, mulakan perkhidmatan semula daripada skrin Perkhidmatan.</string>
+    <string name="porter_service_update_retry">Cuba kemas kini semula</string>
+</resources>

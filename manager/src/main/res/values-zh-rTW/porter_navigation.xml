@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">應用程式</string>
+    <string name="porter_home_subtitle">為您的應用程式提供 ADB 存取</string>
+    <string name="porter_startup">啟動</string>
+    <string name="porter_version">版本</string>
+    <string name="porter_pairing_method">配對方式</string>
+    <string name="porter_status_restricted">部分 ADB 權限受到 Android 限制。</string>
+    <string name="porter_status_stop_message">停止 Porter 會中斷使用它的應用程式連線。您必須手動重新啟動 Porter，這可能需要電腦。</string>
+    <string name="porter_status_details_hint">開啟服務詳細資料和停止選項</string>
+    <string name="porter_status_ready">Porter 已就緒。相容的應用程式現在可以連線並要求存取權。</string>
+    <string name="porter_pairing_notification">通知</string>
+    <string name="porter_pairing_dialog">應用程式內對話框</string>
+    <string name="porter_manage_apps_action">管理應用程式</string>
+    <string name="porter_primary_user_title">使用 Android 主要使用者</string>
+    <string name="porter_primary_user_description">無法從此 Android 使用者或設定檔啟動 Porter。請切換至裝置的主要使用者，視需要在該處安裝 Porter 並啟動其服務，然後返回此處管理您的應用程式。</string>
+    <string name="porter_secondary_user_stop_message">停止 Porter 會中斷所有 Android 使用者的應用程式連線。若要重新啟動，請切換至裝置的主要使用者並在該處開啟 Porter。</string>
+</resources>

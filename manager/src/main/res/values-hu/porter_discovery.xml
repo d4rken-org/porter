@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_apps_counts">Engedélyezett: %1$d · Kompatibilis: %2$d</string>
+    <string name="porter_discovery_partial">Néhány profilt nem sikerült ellenőrizni. A lista hiányos lehet.</string>
+    <string name="porter_discovery_legacy">Indítsa újra a Portert további alkalmazások felderítéséhez és a kapcsolódási előzmények megtekintéséhez.</string>
+    <string name="porter_connections_explanation">Az alkalmazások automatikusan csatlakozhatnak, amikor a Porter elindul. A csatlakozás ideje nem jelzi, mikor használtak utoljára egy alkalmazást.</string>
+    <string name="porter_connection_needs_companion">Kompatibilitási alkalmazás szükséges</string>
+    <string name="porter_connection_unsupported">Engedély deklarálva; az integráció nem ismerhető fel</string>
+    <string name="porter_connection_managed">Korábban csatlakozott vagy kezelt</string>
+    <string name="porter_connection_unknown">A kapcsolat részletei nem érhetők el</string>
+    <string name="porter_connection_never_recorded">Utolsó csatlakozás: ismeretlen</string>
+    <string name="porter_connection_last">Utolsó csatlakozás: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d alkalmazásnak kompatibilitási alkalmazás szükséges</item>
+        <item quantity="other">%d alkalmazásnak kompatibilitási alkalmazás szükséges</item>
+    </plurals>
+    <string name="porter_compatibility_needed">Kompatibilitási alkalmazás szükséges</string>
+    <string name="porter_get_compatibility">Kompatibilitási alkalmazás beszerzése</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Hozzáférést engedélyezett %d alkalmazásnak, amelyhez a Porter kompatibilitási alkalmazás szükséges. A hozzáférése akkor válik elérhetővé, amikor a kompatibilitási alkalmazás telepítve lesz.</item>
+        <item quantity="other">Hozzáférést engedélyezett %d alkalmazásnak, amelyekhez a Porter kompatibilitási alkalmazás szükséges. A hozzáférésük akkor válik elérhetővé, amikor a kompatibilitási alkalmazás telepítve lesz.</item>
+    </plurals>
+    <string name="porter_access_pending_android">A hozzáférést nem sikerült aktiválni. Ellenőrizze az alkalmazás engedélyeit az Android beállításaiban.</string>
+    <string name="porter_pause_access">Hozzáférés szüneteltetése</string>
+    <string name="porter_pause_access_summary">Az összes alkalmazás hozzáférésének szüneteltetése. A mentett engedélyeik megmaradnak.</string>
+    <string name="porter_global_access_restart">A globális hozzáférés-vezérlés használatához indítsa újra a Portert.</string>
+    <string name="porter_access_paused">Az alkalmazások hozzáférése szünetel</string>
+    <string name="porter_status_access_paused">A Porter fut, de az alkalmazások hozzáférése szünetel. A hozzáférést az Alkalmazások részben folytathatja.</string>
+</resources>

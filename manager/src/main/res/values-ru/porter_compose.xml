@@ -3,4 +3,6 @@
     <string name="porter_navigate_back">Назад</string>
     <string name="porter_local_network_permission">Разрешите доступ к локальной сети, чтобы Porter мог найти службу отладки по Wi-Fi Android и подключиться к ней.</string>
     <string name="porter_pairing_dialog_instructions">Откройте «Отладку по Wi-Fi» в разделе «Для разработчиков» Android и выберите «Подключить устройство с помощью кода подключения». Введите здесь порт и код сопряжения.</string>
+    <string name="porter_permission_detail">Porter будет выполнять команды на вашем устройстве для этого приложения с теми же правами, что и у самого Porter. Разрешайте доступ только тем приложениям, которым доверяете.</string>
+    <string name="porter_permission_waiting">Ожидание Porter…</string>
 </resources>

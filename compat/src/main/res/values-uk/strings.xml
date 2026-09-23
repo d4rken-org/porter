@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">використовувати Porter</string>
+    <string name="permission_description">Дозволити цьому додатку використовувати системні API через Porter.</string>
+    <string name="porter_missing">Встановіть Porter із відповідним сертифікатом підпису, щоб використовувати цей супутній додаток.</string>
+</resources>
