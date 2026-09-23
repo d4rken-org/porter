@@ -8,6 +8,10 @@ plugins {
 
 android {
     namespace = "eu.darken.porter.compat"
+    lint {
+        // CI runs lintVital, which reports fatal issues only, and a call the minimum SDK lacks crashes.
+        fatal += "NewApi"
+    }
     defaultConfig {
         applicationId = "moe.shizuku.privileged.api"
         // Its own contract number; the name still says which Porter release shipped it.

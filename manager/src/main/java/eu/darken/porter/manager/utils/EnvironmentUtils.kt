@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
 import android.os.SystemProperties
+import androidx.annotation.ChecksSdkIntAtLeast
 import eu.darken.porter.manager.PorterApplication
 import eu.darken.porter.manager.PorterSettings
 import com.topjohnwu.superuser.Shell
@@ -27,6 +28,7 @@ object EnvironmentUtils {
                 appContext.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK))
     }
 
+    @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.R)
     fun isTlsSupported(): Boolean {
         return if (isTelevision())
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU

@@ -1,6 +1,8 @@
 package eu.darken.porter.manager.home
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -23,6 +25,7 @@ import eu.darken.porter.manager.ui.ComposeDialogFragment
 import eu.darken.porter.manager.ui.LocalNetworkPermission
 import eu.darken.porter.manager.utils.SettingsHelper
 
+@RequiresApi(Build.VERSION_CODES.R)
 class AdbPairDialogFragment : ComposeDialogFragment() {
     private val model: PairingViewModel by viewModels()
     /** Written while [Content] composes and read by [Actions], which composes after it. */
@@ -74,6 +77,7 @@ class AdbPairDialogFragment : ComposeDialogFragment() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.R)
 class PairingViewModel(application: Application, savedStateHandle: SavedStateHandle) : AndroidViewModel(application) {
     val endpoint = MutableStateFlow("127.0.0.1" to -1)
     val busy = MutableStateFlow(false)

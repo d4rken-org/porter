@@ -4,7 +4,9 @@ import android.Manifest.permission.WRITE_SECURE_SETTINGS
 import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,6 +25,7 @@ import eu.darken.porter.manager.ui.ComposeDialogFragment
 import eu.darken.porter.manager.ui.LocalNetworkPermission
 import eu.darken.porter.manager.utils.SettingsPage
 
+@RequiresApi(Build.VERSION_CODES.R)
 class AdbDialogFragment : ComposeDialogFragment() {
     private val model: DiscoveryViewModel by viewModels()
     /** Written while [Content] composes and read by [Actions], which composes after it. */
@@ -54,6 +57,7 @@ class AdbDialogFragment : ComposeDialogFragment() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.R)
 class DiscoveryViewModel(application: Application) : AndroidViewModel(application) {
     val port = MutableStateFlow(-1)
     private var consumed = false
