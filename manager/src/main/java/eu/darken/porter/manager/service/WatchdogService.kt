@@ -1,7 +1,6 @@
 package eu.darken.porter.manager.service
 
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
@@ -14,6 +13,7 @@ import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -96,13 +96,8 @@ class WatchdogService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun buildNotification(): Notification {
-        val channel = NotificationChannel(
-            NotificationChannels.WATCHDOG,
-            getString(R.string.notification_channel_watchdog),
-            NotificationManager.IMPORTANCE_LOW
-        )
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.createNotificationChannel(channel)
+        NotificationChannels.create(this, NotificationChannels.WATCHDOG,
+            getString(R.string.notification_channel_watchdog), NotificationManager.IMPORTANCE_LOW)
 
         val launchIntent = Intent(this, MainActivity::class.java).apply {
             addFlags(
@@ -137,29 +132,27 @@ class WatchdogService : Service() {
 
     private fun showCrashNotification() {
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(
-            NotificationChannels.CRASH,
-            getString(R.string.notification_channel_crash),
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        nm.createNotificationChannel(channel)
+        NotificationChannels.create(this, NotificationChannels.CRASH,
+            getString(R.string.notification_channel_crash), NotificationManager.IMPORTANCE_DEFAULT)
 
         val learnMoreIntent = Intent(Intent.ACTION_VIEW).apply {
             setData(Uri.parse(Helps.STOPPING))
         }
         val learnMorePendingIntent = PendingIntent.getActivity(this, 0, learnMoreIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val disableIntent = SettingsPage.Notifications.NotificationChannel.buildIntent(applicationContext)
-        val disablePendingIntent = PendingIntent.getActivity(this, 0, disableIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val notification = NotificationCompat.Builder(this, NotificationChannels.CRASH)
+        val builder = NotificationCompat.Builder(this, NotificationChannels.CRASH)
             .setContentTitle(getString(R.string.watchdog_shizuku_crashed_title))
             .setContentText(getString(R.string.watchdog_shizuku_crashed_text))
             .setSmallIcon(R.drawable.ic_system_icon)
             .setContentIntent(learnMorePendingIntent)
             .setAutoCancel(true)
-            .addAction(0, getString(R.string.watchdog_shizuku_crashed_action_turn_off_alerts), disablePendingIntent)
-            .build()
+        // The screen that turns off one channel, which is what this opens, arrived with channels.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val disableIntent = SettingsPage.Notifications.NotificationChannel.buildIntent(applicationContext)
+            val disablePendingIntent = PendingIntent.getActivity(this, 0, disableIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            builder.addAction(0, getString(R.string.watchdog_shizuku_crashed_action_turn_off_alerts), disablePendingIntent)
+        }
+        val notification = builder.build()
 
         nm.notify(NOTIFICATION_ID_CRASH, notification)
     }
@@ -177,7 +170,7 @@ class WatchdogService : Service() {
         @JvmStatic
         fun start(context: Context) {
             try {
-                context.startForegroundService(Intent(context, WatchdogService::class.java))
+                ContextCompat.startForegroundService(context, Intent(context, WatchdogService::class.java))
             } catch (e: Exception) {
                 Log.e("PorterApplication", "Failed to start WatchdogService: ${e.message}" )
             }

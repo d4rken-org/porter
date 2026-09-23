@@ -65,6 +65,11 @@ sealed class SettingsPage(
         override fun buildIntent(context: Context): Intent {
             return super.buildIntent(context).apply {
                 putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                // Before Oreo the same screen reads these instead, and closes at once without them.
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                    putExtra("app_package", context.packageName)
+                    putExtra("app_uid", context.applicationInfo.uid)
+                }
             }
         }
 
@@ -78,7 +83,12 @@ sealed class SettingsPage(
         }
     }
 
-    object InternetPanel : SettingsPage(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
+    object InternetPanel : SettingsPage(Settings.Panel.ACTION_INTERNET_CONNECTIVITY) {
+        // The panel arrived in Android 10; before it nothing resolves the action.
+        override fun buildIntent(context: Context): Intent =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) super.buildIntent(context)
+            else Intent(Settings.ACTION_WIFI_SETTINGS).apply { flags = defaultFlags }
+    }
     object Accessibility : SettingsPage(Settings.ACTION_ACCESSIBILITY_SETTINGS)
 
     protected val defaultFlags =

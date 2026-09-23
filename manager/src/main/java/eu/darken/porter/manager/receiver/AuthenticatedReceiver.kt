@@ -1,6 +1,5 @@
 package eu.darken.porter.manager.receiver
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -65,14 +64,9 @@ abstract class AuthenticatedReceiver : BroadcastReceiver() {
     }
 
     private fun Context.notifyInvalidToken() {
-        val channel = NotificationChannel(
-            NotificationChannels.AUTH,
-            getString(R.string.notification_channel_auth),
-            NotificationManager.IMPORTANCE_HIGH
-        )
-
+        NotificationChannels.create(this, NotificationChannels.AUTH, getString(R.string.notification_channel_auth),
+            NotificationManager.IMPORTANCE_HIGH)
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.createNotificationChannel(channel)
 
         val launchIntent = Intent(this, MainActivity::class.java).apply {
             addFlags(
