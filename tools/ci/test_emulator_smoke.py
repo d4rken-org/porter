@@ -48,6 +48,34 @@ class AdbTimeoutTest(unittest.TestCase):
     def test_an_explicit_timeout_still_wins(self):
         self.assertEqual(self.timeout_of("install", "/tmp/a.apk", timeout=7), 7)
 
+    def hang_then(self, *answers):
+        hung = smoke.subprocess.TimeoutExpired(["adb"], 180)
+        return patch.object(smoke.subprocess, "run", side_effect=[hung, *answers])
+
+    def test_a_hung_install_is_tried_once_more_without_streaming(self):
+        # The evidence reads come between the two attempts.
+        with self.hang_then(completed(0), completed(0), completed(0), completed(0, stdout=b"Success")) as run:
+            self.assertEqual(self.runner.adb("install", "/tmp/a.apk"), "Success")
+        retry = run.call_args_list[-1].args[0]
+        self.assertEqual(retry[3:], ["install", "--no-streaming", "-r", "/tmp/a.apk"])
+        self.assertTrue((self.runner.output / "install-hang-1.txt").exists())
+
+    def test_a_reinstall_is_not_given_a_second_r(self):
+        with self.hang_then(completed(0), completed(0), completed(0), completed(0)) as run:
+            self.runner.adb("install", "-r", "/tmp/a.apk")
+        self.assertEqual(run.call_args_list[-1].args[0][3:], ["install", "--no-streaming", "-r", "/tmp/a.apk"])
+
+    def test_the_retry_is_not_retried(self):
+        hung = smoke.subprocess.TimeoutExpired(["adb"], 180)
+        with patch.object(smoke.subprocess, "run", side_effect=[hung, completed(0), completed(0), completed(0), hung]):
+            with self.assertRaises(smoke.subprocess.TimeoutExpired):
+                self.runner.adb("install", "/tmp/a.apk")
+
+    def test_other_commands_that_hang_still_fail(self):
+        with patch.object(smoke.subprocess, "run", side_effect=smoke.subprocess.TimeoutExpired(["adb"], 45)):
+            with self.assertRaises(smoke.subprocess.TimeoutExpired):
+                self.runner.adb("shell", "pm list packages")
+
 
 class UiDumpTest(unittest.TestCase):
     def setUp(self):
