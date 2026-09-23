@@ -69,7 +69,7 @@ jobs:
       - uses: ./.github/actions/sdk-branch
       - uses: ./.github/actions/android-setup
       - name: Build test APKs
-        run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug :probe:assembleBridgeRelease :unlisted-manager-fixture:assembleDebug
+        run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug :probe:assembleBridgeRelease :unlisted-manager-fixture:assembleDebug :service-update-fixture:assembleDebug
       # Several roots, so the artifact is rooted at the workspace and every job downloads each APK to
       # the path it was built at.
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
@@ -83,6 +83,7 @@ jobs:
             probe/build/outputs/apk/bridge/release/*.apk
             probe/build/outputs/mapping/bridgeRelease/mapping.txt
             test-fixtures/unlisted-manager/build/outputs/apk/debug/*.apk
+            test-fixtures/service-update/build/outputs/apk/debug/*.apk
           if-no-files-found: error
 
   smoke:
@@ -100,13 +101,15 @@ jobs:
       fail-fast: false
       matrix:
         api: [30, 36]
-        suite: [emulator, compat-install, dualwire]
+        suite: [emulator, compat-install, dualwire, update]
         include:
           # Keyed on the suite alone, so this augments the two dualwire combinations rather than
           # creating new ones. A top-level extra: list would multiply every combination and hand
           # these arguments to the other suites, whose parsers reject what they do not know.
           - suite: dualwire
             extra: --bridge probe/build/outputs/apk/bridge/release/*.apk --unlisted test-fixtures/unlisted-manager/build/outputs/apk/debug/*.apk
+          - suite: update
+            extra: --fixture test-fixtures/service-update/build/outputs/apk/debug/*.apk
           # Android 7.0, the documented minimum, for the release-gated paths the other levels never
           # take. Its image panics in goldfish_dma_mmap about 20s into boot unless GL DMA is off,
           # which from the host looks like a device that never answers adb shell.
