@@ -64,6 +64,12 @@ jobs:
           # these arguments to the other suites, whose parsers reject what they do not know.
           - suite: dualwire
             extra: --bridge probe/build/outputs/apk/bridge/release/*.apk --unlisted test-fixtures/unlisted-manager/build/outputs/apk/debug/*.apk
+          # Android 7.0, the documented minimum, for the release-gated paths the other levels never
+          # take. Its image panics in goldfish_dma_mmap about 20s into boot unless GL DMA is off,
+          # which from the host looks like a device that never answers adb shell.
+          - api: 24
+            suite: emulator
+            features: -feature -GLDMA,-GLDMA2
           - api: 34
             suite: compat-install
             target: android-tv
@@ -123,7 +129,7 @@ jobs:
           profile: ${{ matrix.profile || 'pixel_2' }}
           avd-name: porter-ci
           emulator-port: 5554
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none ${{ matrix.features }}
           disable-animations: true
           script: >-
             python3 tools/ci/${{ matrix.suite }}-smoke.py --serial emulator-5554 ${{ matrix.input }}
