@@ -38,7 +38,8 @@ class AdbPairingServiceTest {
     private val service get() = controller.get()
     private val notifications = shadowOf(context.getSystemService(NotificationManager::class.java))
     private val nsd = shadowOf(context.getSystemService(NsdManager::class.java))
-    private val notification get() = notifications.getNotification(AdbPairingService.NOTIFICATION_ID)
+    /** The one pairing notification on screen: a result replaces the progress, never sits beside it. */
+    private val notification get() = notifications.allNotifications.single()
     private fun idle() { shadowOf(Looper.getMainLooper()).idle(); dispatcher.scheduler.runCurrent() }
     private fun title() = notification.extras.getCharSequence(Notification.EXTRA_TITLE).toString()
 

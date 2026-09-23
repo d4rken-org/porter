@@ -57,7 +57,7 @@ abstract class HomeActivity : ComposeActivity() {
     private fun consumeIntent(intent: Intent) {
         if (intent.getBooleanExtra(EXTRA_START_SERVICE_VIA_WADB, false)) {
             intent.removeExtra(EXTRA_START_SERVICE_VIA_WADB)
-            getSystemService(NotificationManager::class.java).cancel(AdbPairingService.NOTIFICATION_ID)
+            getSystemService(NotificationManager::class.java).cancel(AdbPairingService.RESULT_NOTIFICATION_ID)
             if (UserHandleCompat.myUserId() == 0 && !ServiceReplacement.get(this).state.value.running && !PorterStateMachine.instance.isRunning()) {
                 WirelessStart.start(this, lifecycleScope)
             }
