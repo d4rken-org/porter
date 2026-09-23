@@ -1,6 +1,7 @@
 package eu.darken.porter.manager.home
 
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Build
@@ -17,6 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.Helps
+import eu.darken.porter.manager.MainActivity
 import eu.darken.porter.manager.starter.ServiceReplacement
 import eu.darken.porter.manager.starter.Starter
 import eu.darken.porter.manager.starter.StarterActivity
@@ -55,6 +57,10 @@ abstract class HomeActivity : ComposeActivity() {
     }
 
     private fun consumeIntent(intent: Intent) {
+        if (intent.getBooleanExtra(EXTRA_START_PAIRING, false)) {
+            intent.removeExtra(EXTRA_START_PAIRING)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && EnvironmentUtils.isTlsSupported()) WirelessStart.pair(this)
+        }
         if (intent.getBooleanExtra(EXTRA_START_SERVICE_VIA_WADB, false)) {
             intent.removeExtra(EXTRA_START_SERVICE_VIA_WADB)
             getSystemService(NotificationManager::class.java).cancel(AdbPairingService.RESULT_NOTIFICATION_ID)
@@ -142,5 +148,12 @@ abstract class HomeActivity : ComposeActivity() {
     companion object {
         const val EXTRA_SHOW_PAIRING_DIALOG = "show_pairing_dialog"
         const val EXTRA_START_SERVICE_VIA_WADB = "start_service_via_wadb"
+        private const val EXTRA_START_PAIRING = "start_pairing"
+
+        /** The action gives PendingIntents built from this an identity of their own; extras don't count toward it. */
+        fun pairingIntent(context: Context): Intent = Intent(context, MainActivity::class.java)
+            .setAction("${BuildConfig.APPLICATION_ID}.action.START_PAIRING")
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            .putExtra(EXTRA_START_PAIRING, true)
     }
 }
