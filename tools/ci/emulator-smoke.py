@@ -484,12 +484,13 @@ class Smoke:
                 time.sleep(1)
 
     def unlock(self):
-        """Dismisses the lock screen until it stays gone. Android 7 raises it on a switch back to
-        the owner user, over everything a case then looks for, and can raise it a moment after am
-        reports the switch done."""
+        """Dismisses the lock screen until it stays gone. A switch back to the owner user can raise
+        it over everything a case then looks for, a moment after am reports the switch done; seen
+        on Android 7 and on 11. Both report it in the policy dump's KeyguardStateMonitor as
+        mIsShowing, and only Android 7 also as mShowingLockscreen."""
         def gone():
             self.shell("wm", "dismiss-keyguard", check=False)
-            return "mShowingLockscreen=true" not in self.shell("dumpsys", "window", "policy", check=False)
+            return "mIsShowing=true" not in self.shell("dumpsys", "window", "policy", check=False)
         self.until("the lock screen is gone", gone)
 
     def install_for_user(self, user, package, apk):
