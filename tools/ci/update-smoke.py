@@ -105,8 +105,10 @@ class Update(base.Smoke):
 
     def successor(self, old, root=False):
         """The replacement for server pid `old`: a new process running the manager's build."""
-        new = self.until("a replacement server", lambda: (pid := self.pid("porter_server")) and pid != old and pid,
-                         timeout=REPLACEMENT_TIMEOUT)
+        # The old server's child keeps its name until it execs the starter, so pidof passes through
+        # "6113 6173" before settling on the replacement alone.
+        new = self.until("a replacement server", lambda: len(pids := self.pid("porter_server").split()) == 1
+                         and pids[0] != old and pids[0], timeout=REPLACEMENT_TIMEOUT)
         self.until("the replacement sent its binders", lambda: "sent binders" in self.server_log(new),
                    timeout=REPLACEMENT_TIMEOUT)
         assert self.classpath(new, root) == self.manager_apk(), "the replacement does not run the installed build"

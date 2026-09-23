@@ -55,5 +55,23 @@ class RestoreTest(unittest.TestCase):
         self.session.communicate.assert_called_once()
 
 
+def poll(description, condition, timeout=30):
+    while not (value := condition()):
+        pass
+    return value
+
+
+class SuccessorTest(unittest.TestCase):
+    def test_waits_out_the_old_servers_child(self):
+        runner = update.Update.__new__(update.Update)
+        runner.pid = Mock(side_effect=["6113", "6113 6173", "", "6178"])
+        runner.until = poll
+        runner.server_log = Mock(return_value="I Service : sent binders")
+        runner.classpath = Mock(return_value="base.apk")
+        runner.manager_apk = Mock(return_value="base.apk")
+        self.assertEqual(runner.successor("6113"), "6178")
+        runner.server_log.assert_called_once_with("6178")
+
+
 if __name__ == "__main__":
     unittest.main()
