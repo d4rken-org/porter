@@ -48,7 +48,7 @@ object WirelessStart {
             if (tcpPort <= 0 && !EnvironmentUtils.isTlsSupported()) {
                 WadbNotEnabledDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
             // If ADB IS NOT listening to a TCP port but the device supports TLS, start mDns discovery
-            } else if (tcpPort <= 0) {
+            } else if (tcpPort <= 0 && EnvironmentUtils.isTlsSupported()) {
                 AdbDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
             // Otherwise ADB IS already listening to a TCP port. Use it as-is.
             } else {

@@ -120,7 +120,7 @@ abstract class HomeActivity : ComposeActivity() {
                 onOpenCompatibility = { startActivity(Intent(this@HomeActivity, eu.darken.porter.manager.compatibility.CompatibilityActivity::class.java)) },
                 onOpenService = { startActivity(Intent(this@HomeActivity, eu.darken.porter.manager.service.ServiceActivity::class.java)) },
                 onStartRoot = { if (service.state.value.canStart) startActivity(Intent(this@HomeActivity, StarterActivity::class.java).putExtra(StarterActivity.EXTRA_IS_ROOT, true)) },
-                onPairWireless = { if (service.state.value.canStart) WirelessStart.pair(this@HomeActivity) },
+                onPairWireless = { if (service.state.value.canStart && EnvironmentUtils.isTlsSupported()) WirelessStart.pair(this@HomeActivity) },
                 onStartWireless = { if (service.state.value.canStart) WirelessStart.start(this@HomeActivity, lifecycleScope) },
                 onViewWirelessGuide = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) },
                 onShowAdbCommand = { if (service.state.value.canStart) dialog = "command" },

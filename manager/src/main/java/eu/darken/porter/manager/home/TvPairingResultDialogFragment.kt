@@ -22,6 +22,7 @@ import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.adb.TvPairingResult
 import eu.darken.porter.manager.adb.TvPairingResultStore
 import eu.darken.porter.manager.ui.ComposeDialogFragment
+import eu.darken.porter.manager.utils.EnvironmentUtils
 import eu.darken.porter.manager.utils.SettingsPage
 
 class TvPairingResultDialogFragment : ComposeDialogFragment() {
@@ -45,7 +46,7 @@ class TvPairingResultDialogFragment : ComposeDialogFragment() {
                 TvPairingResultStore(PorterSettings.preferences).clear()
                 dismissAllowingStateLoss()
                 if (success) WirelessStart.start(requireActivity(), requireActivity().lifecycleScope)
-                else WirelessStart.pair(requireContext())
+                else if (EnvironmentUtils.isTlsSupported()) WirelessStart.pair(requireContext())
             }, onClose = {
                 if (!context.isAccessibilityEnabled()) TvPairingResultStore(PorterSettings.preferences).clear()
                 dismissAllowingStateLoss()

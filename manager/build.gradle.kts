@@ -87,6 +87,10 @@ android {
         prefab = true
     }
     experimentalProperties["android.experimental.enableScreenshotTest"] = true
+    lint {
+        // CI runs lintVital, which reports fatal issues only, and a call the minimum SDK lacks crashes.
+        fatal += "NewApi"
+    }
     signingConfigs {
         create("sign")
     }

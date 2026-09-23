@@ -62,6 +62,13 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
             // An adbd already listening on TCP (e.g. set up by a computer or another manager) is used as-is.
             val port = EnvironmentUtils.getAdbTcpPort().takeIf { it > 0 } ?: callbackFlow {
+                // The TLS service this discovers is wireless debugging's, which arrived in Android 11.
+                // Earlier, discovery can only run into its timeout, so the attempt ends here the same way,
+                // after the same request to turn wireless debugging on.
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                    Settings.Global.putInt(cr, "adb_wifi_enabled", 1)
+                    throw TimeoutException("No ADB port, and no wireless debugging to discover one")
+                }
                 val adbMdns = AdbMdns(applicationContext, AdbMdns.TLS_CONNECT) { p ->
                     if (p.second > 0) trySend(p.second)
                 }

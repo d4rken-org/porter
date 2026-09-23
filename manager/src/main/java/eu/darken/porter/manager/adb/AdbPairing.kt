@@ -1,6 +1,8 @@
 package eu.darken.porter.manager.adb
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.atomic.AtomicReference
@@ -11,6 +13,7 @@ import eu.darken.porter.manager.PorterSettings
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
+@RequiresApi(Build.VERSION_CODES.R)
 internal suspend fun pairAdb(host: String, port: Int, code: String): Unit = suspendCancellableCoroutine { continuation ->
     val activeClient = AtomicReference<AdbPairingClient?>()
     continuation.invokeOnCancellation { activeClient.get()?.cancel() }

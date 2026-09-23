@@ -2,6 +2,7 @@ package eu.darken.porter.manager.adb
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -39,7 +40,11 @@ class AdbPairingAccessibilityService : AccessibilityService() {
             handler.postDelayed(this, 1_000)
         }
     }
-    internal var pair: suspend (String, Int, String) -> Unit = ::pairAdb
+    internal var pair: suspend (String, Int, String) -> Unit = { host, port, code ->
+        // Unreachable: onServiceConnected turns the service off wherever TLS pairing does not exist.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) throw IllegalStateException("No TLS pairing before Android 11")
+        pairAdb(host, port, code)
+    }
     private val timeout = Runnable {
         finishPairing(false, tvPairingUiContext().getString(R.string.porter_pairing_search_timeout))
     }
