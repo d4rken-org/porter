@@ -47,6 +47,9 @@ TRANSPORT_FAILURE = re.compile(r"^(adb: |error: ).*(device offline|device still 
                                re.MULTILINE)
 TRANSPORT_ATTEMPTS = 3
 TRANSPORT_BACKOFF = 2
+# Android 7's logd refuses a clear now and then ("failed to clear the 'main' log") and takes the
+# next one.
+LOGCAT_CLEAR_ATTEMPTS = 5
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence", "porsh",
          "server-crash-recovery", "root-server", "decisions-across-start-modes",
@@ -240,7 +243,9 @@ class Smoke:
         started = time.monotonic()
         attempts = 0
         while True:
-            self.shell("rm", "-f", path)
+            # Unchecked: an Android 7 emulator once failed this with no output at all, and the
+            # dump below is judged by uiautomator's own reply, not by the file being gone first.
+            self.shell("rm", "-f", path, check=False)
             result = self.shell("uiautomator", "dump", path)
             attempts += 1
             # A null accessibility root is reported on stderr with exit status zero.
@@ -445,14 +450,68 @@ class Smoke:
     def pid(self, name):
         return self.shell("pidof", name, check=False)
 
+    def processes(self, columns):
+        """Every process, one line per row with a header first. Named as toybox's, because Android 7
+        points ps at toolbox's, which takes neither -A nor -o."""
+        return self.shell("toybox", "ps", "-A", "-o", columns, check=False).splitlines()
+
+    def kill_server(self, check=True):
+        """Every porter_server, as root. By pid, because Android 7's pkill takes neither -9 nor -f."""
+        pids = self.pid("porter_server").split()
+        if pids:
+            self.shell("su", "0", "kill", "-9", *pids, check=check)
+        elif check:
+            raise AssertionError("no porter_server to kill")
+
+    def create_user(self, name):
+        """A new Android user's id. Android 7's pm exits 1 even after printing that it succeeded,
+        so the reply decides."""
+        reply = self.shell("pm", "create-user", name, check=False)
+        found = re.search(r"created user id (\d+)", reply)
+        assert found, f"pm create-user {name}: {reply}"
+        return found.group(1)
+
+    def clear_logcat(self):
+        """Empties the log. A clear that did not happen would leave in the lines it is there to
+        bound, so a refusal is retried rather than ignored."""
+        for attempt in range(1, LOGCAT_CLEAR_ATTEMPTS + 1):
+            try:
+                self.adb("logcat", "-c")
+                return
+            except RuntimeError as e:
+                if "failed to clear" not in str(e) or attempt == LOGCAT_CLEAR_ATTEMPTS:
+                    raise
+                time.sleep(1)
+
+    def unlock(self):
+        """Dismisses the lock screen until it stays gone. Android 7 raises it on a switch back to
+        the owner user, over everything a case then looks for, and can raise it a moment after am
+        reports the switch done."""
+        def gone():
+            self.shell("wm", "dismiss-keyguard", check=False)
+            return "mShowingLockscreen=true" not in self.shell("dumpsys", "window", "policy", check=False)
+        self.until("the lock screen is gone", gone)
+
+    def install_for_user(self, user, package, apk):
+        """The installation user 0 has, added for another user. Android 7's pm has no
+        install-existing and says so; there the same APK goes in for that user as an update."""
+        try:
+            reply = self.shell("pm", "install-existing", "--user", user, package)
+        except RuntimeError as e:
+            if "unknown command" not in str(e).lower():
+                raise
+            reply = str(e)
+        if "unknown command" in reply.lower():
+            self.adb("install", "-r", "--user", user, str(apk.resolve()))
+
     def remote_logcat(self, server_pid):
         """The logcat the service follows itself with, by the arguments it is started with rather
         than by parentage, so one left behind by a destroyed supervisor is still found after init
         has adopted it."""
         following = f"--pid={server_pid}"
         found = []
-        for line in self.shell("ps", "-A", "-o", "PID,ARGS", check=False).splitlines():
-            pid, _, arguments = line.strip().partition(" ")
+        for line in self.processes("PID,ARGS"):
+            pid, arguments = (line.split(maxsplit=1) + ["", ""])[:2]
             # A whole argument, not a substring: --pid=312 is a prefix of --pid=3120.
             if pid.isdigit() and arguments.startswith("logcat") and following in arguments.split():
                 found.append(pid)
@@ -467,7 +526,7 @@ class Smoke:
         is the logcat under it; the user service's shell is handed its command on stdin and exits.
         """
         rows = []
-        for line in self.shell("ps", "-A", "-o", "PID,PPID,NAME", check=False).splitlines():
+        for line in self.processes("PID,PPID,NAME"):
             fields = line.split()
             if len(fields) == 3 and fields[0].isdigit() and fields[1].isdigit():
                 rows.append(fields)
@@ -576,8 +635,20 @@ class Smoke:
         return [user for user in USER_ID.findall(self.shell("pm", "list", "users")) if user != "0"]
 
     def app_uid(self, package, user="0"):
-        listing = self.shell("pm", "list", "packages", "--user", user, "-U", package)
-        return int(re.search(r"uid:(\d+)", listing).group(1))
+        try:
+            listing = self.shell("pm", "list", "packages", "--user", user, "-U", package)
+        except RuntimeError as e:
+            if "unknown option" not in str(e).lower():
+                raise
+            listing = ""
+        found = re.search(r"uid:(\d+)", listing)
+        if found:
+            return int(found.group(1))
+        # Android 7's pm has no -U. Its package dump names the app id userId, and a user's uids
+        # are that user's range of 100000 plus the app id.
+        app_id = re.search(r"userId=(\d+)", self.shell("dumpsys", "package", package))
+        assert app_id, f"no uid for {package}"
+        return int(user) * 100000 + int(app_id.group(1))
 
     # Told apart from the file's contents on the device, so that a read this side could not
     # perform reads as "nothing was written" and passes an assertion it never checked.
@@ -668,7 +739,7 @@ class Smoke:
         if "shell-service" in aspects:
             # A root server left running would become the fixture for every case after this one,
             # so this replaces whatever is there rather than only filling a gap.
-            self.shell("su", "0", "pkill", "-9", "-f", "porter_server", check=False)
+            self.kill_server(check=False)
             self.until("the server is gone", lambda: not self.pid("porter_server"))
             self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
             self.start_service()
@@ -1074,7 +1145,7 @@ class Smoke:
         def root_server():
             """Everything the ADB-started server is asked for, asked of a uid 0 one."""
             assert self.root_available(), "this image's su does not give the ADB shell root"
-            self.shell("su", "0", "pkill", "-9", "-f", "porter_server")
+            self.kill_server()
             self.until("the shell server is gone", lambda: not self.pid("porter_server"))
             self.start_service(root=True)
             server_pid = self.pid("porter_server")
@@ -1093,7 +1164,7 @@ class Smoke:
         def decisions_across_start_modes():
             """One decision database, written by a uid 0 server and read by a uid 2000 one."""
             assert self.root_available(), "this image's su does not give the ADB shell root"
-            self.shell("su", "0", "pkill", "-9", "-f", "porter_server")
+            self.kill_server()
             self.until("the shell server is gone", lambda: not self.pid("porter_server"))
             self.start_service(root=True)
 
@@ -1104,10 +1175,11 @@ class Smoke:
             assert self.decision_flags(uid) & DECISION_ALLOWED, "the root server saved nothing"
             # Root writes into the ADB shell's directory, so it hands the file back rather than
             # leaving one the shell cannot open the next time Porter is started that way.
-            owner = self.shell("su", "0", "stat", "-c", "%U:%G", DECISIONS)
+            # Android 7's stat pads the group name ("shell:   shell").
+            owner = "".join(self.shell("su", "0", "stat", "-c", "%U:%G", DECISIONS).split())
             assert owner == "shell:shell", f"the root server left the database owned by {owner}"
 
-            self.shell("su", "0", "pkill", "-9", "-f", "porter_server")
+            self.kill_server()
             self.until("the root server is gone", lambda: not self.pid("porter_server"))
             self.start_service()
             self.launch_probe(NATIVE)
@@ -1144,9 +1216,8 @@ class Smoke:
 
         def host_removed_from_one_user():
             service_pid = self.authorized_daemon()
-            created = self.shell("pm", "create-user", "porter-ci")
-            user = re.search(r"id (\d+)", created).group(1)
-            self.shell("pm", "install-existing", "--user", user, NATIVE)
+            user = self.create_user("porter-ci")
+            self.install_for_user(user, NATIVE, self.args.native)
             self.shell("pm", "uninstall", "--user", "0", NATIVE)
             # Cross-user sharing is a documented contract: any user holding a matching installation
             # keeps the record alive.
@@ -1165,7 +1236,7 @@ class Smoke:
             self.adb("uninstall", NATIVE)
             # Bounds the interval hand_over_reason() reads: the replacement only exists from here
             # on, so every warning about it was logged after this point.
-            self.adb("logcat", "-c")
+            self.clear_logcat()
             self.adb("install", str(self.foreign_probe()))
             assert original in self.service_pids(NATIVE), "the daemon was gone before the bind"
             return original
@@ -1205,7 +1276,7 @@ class Smoke:
             # What this case is about is the scan removing the record of a package that came back
             # under a different signer, and the scan says so itself. Clearing here bounds the
             # interval to the replacement.
-            self.adb("logcat", "-c")
+            self.clear_logcat()
             self.adb("install", str(self.foreign_probe()))
             self.until("the host scan removed the replaced package's record",
                        lambda: f"host replaced {NATIVE}" in self.adb(
@@ -1258,17 +1329,16 @@ class Smoke:
 
         def secondary_user_prompt():
             """The manager's prompt lives in user 0, so another user on screen cannot answer it."""
-            created = self.shell("pm", "create-user", "porter-ci-client")
-            user = re.search(r"id (\d+)", created).group(1)
+            user = self.create_user("porter-ci-client")
             self.shell("am", "start-user", user)
-            self.shell("pm", "install-existing", "--user", user, NATIVE)
+            self.install_for_user(user, NATIVE, self.args.native)
             uid = self.app_uid(NATIVE, user)
             assert uid != self.app_uid(NATIVE), "the two installations share a uid"
 
             self.shell("am", "switch-user", user)
             self.until(f"am reports user {user}", lambda: self.shell("am", "get-current-user") == user,
                        timeout=USER_SWITCH_TIMEOUT)
-            self.adb("logcat", "-c")
+            self.clear_logcat()
             self.launch_probe_as(NATIVE, user)
             # The point of the case: a request nobody could answer is answered rather than left
             # open. Before the server checked, this waited here until the case timed out.
@@ -1279,6 +1349,8 @@ class Smoke:
             self.shell("am", "switch-user", "0")
             self.until("am reports user 0", lambda: self.shell("am", "get-current-user") == "0",
                        timeout=USER_SWITCH_TIMEOUT)
+            # Before the absence check too, which a lock screen covering everything would pass.
+            self.unlock()
             self.shell("am", "force-stop", "--user", user, NATIVE)
             assert self.absent("Allow all the time", MANAGER), \
                 "a prompt refused in another user surfaced later"
