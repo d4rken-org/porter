@@ -198,7 +198,7 @@ class Boot(base.Smoke):
         def start_on_boot_off():
             """The same device with the same way in, and the setting the only difference."""
             toggle_start_on_boot(False)
-            self.shell("su", "0", "pkill", "-9", "-f", "porter_server")
+            self.kill_server()
             self.until("the server is gone", self.no_server)
 
             self.reboot()

@@ -68,7 +68,7 @@ class UiDumpTest(unittest.TestCase):
     def test_failed_dump_cannot_reuse_a_previous_hierarchy(self, monotonic, sleep):
         remote = {self.path: '<hierarchy><node text="Stale" /></hierarchy>'}
 
-        def shell(*args):
+        def shell(*args, **kwargs):
             if args == ("rm", "-f", self.path):
                 remote.pop(self.path, None)
                 return ""
@@ -945,6 +945,139 @@ class LaunchProbeRetryTest(unittest.TestCase):
         self.assertEqual(len(self.starts()), 1)
 
 
+class KillServerTest(unittest.TestCase):
+    """Killing every server by pid, since Android 7's pkill takes neither -9 nor -f."""
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock(return_value="")
+        self.runner.pid = Mock(return_value="3120 3300")
+
+    def test_every_server_is_killed_as_root(self):
+        self.runner.kill_server()
+        self.runner.pid.assert_called_once_with("porter_server")
+        self.runner.shell.assert_called_once_with("su", "0", "kill", "-9", "3120", "3300", check=True)
+
+    def test_no_server_where_one_was_expected_fails(self):
+        self.runner.pid.return_value = ""
+        with self.assertRaisesRegex(AssertionError, "no porter_server"):
+            self.runner.kill_server()
+        self.runner.shell.assert_not_called()
+
+    def test_no_server_is_fine_when_only_clearing_the_way(self):
+        self.runner.pid.return_value = ""
+        self.runner.kill_server(check=False)
+        self.runner.shell.assert_not_called()
+
+
+class ClearLogcatTest(unittest.TestCase):
+    """The clear Android 7's logd refuses now and then."""
+    REFUSED = RuntimeError("adb -s emulator-5554 logcat -c: failed to clear the 'main' log")
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.adb = Mock(return_value="")
+        sleep = patch.object(smoke.time, "sleep")
+        sleep.start()
+        self.addCleanup(sleep.stop)
+
+    def test_a_refusal_is_asked_again(self):
+        self.runner.adb.side_effect = [self.REFUSED, ""]
+        self.runner.clear_logcat()
+        self.assertEqual(self.runner.adb.call_count, 2)
+
+    def test_a_clear_that_never_happens_fails_the_case(self):
+        self.runner.adb.side_effect = self.REFUSED
+        with self.assertRaisesRegex(RuntimeError, "failed to clear"):
+            self.runner.clear_logcat()
+        self.assertEqual(self.runner.adb.call_count, smoke.LOGCAT_CLEAR_ATTEMPTS)
+
+    def test_any_other_failure_is_not_retried(self):
+        self.runner.adb.side_effect = RuntimeError("adb: device offline")
+        with self.assertRaises(RuntimeError):
+            self.runner.clear_logcat()
+        self.assertEqual(self.runner.adb.call_count, 1)
+
+
+class UnlockTest(unittest.TestCase):
+    """The lock screen Android 7 raises on a switch back to the owner user."""
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        # Each look dismisses, then reads the policy dump; answers alternate accordingly.
+        self.dumps = []
+        self.runner.shell = Mock(side_effect=lambda *args, **kwargs:
+                                 self.dumps.pop(0) if args[:2] == ("dumpsys", "window") else "")
+
+        def until(description, predicate, **kwargs):
+            for _ in range(5):
+                if predicate():
+                    return True
+            raise AssertionError(f"Timed out: {description}")
+        self.runner.until = until
+
+    def dismissals(self):
+        return [call for call in self.runner.shell.call_args_list if call.args[:2] == ("wm", "dismiss-keyguard")]
+
+    def test_a_lock_screen_raised_late_is_dismissed_again(self):
+        self.dumps = ["    mShowingLockscreen=true", "    mShowingLockscreen=false"]
+        self.runner.unlock()
+        self.assertEqual(len(self.dismissals()), 2)
+
+    def test_a_dump_without_the_field_counts_as_unlocked(self):
+        self.dumps = ["WINDOW MANAGER POLICY STATE"]
+        self.runner.unlock()
+        self.assertEqual(len(self.dismissals()), 1)
+
+
+class CreateUserTest(unittest.TestCase):
+    """A new user's id, read from pm's reply because Android 7 exits 1 after succeeding."""
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock(return_value="Success: created user id 11")
+
+    def test_the_id_comes_from_the_reply_whatever_the_exit_status(self):
+        self.assertEqual(self.runner.create_user("porter-ci"), "11")
+        self.runner.shell.assert_called_once_with("pm", "create-user", "porter-ci", check=False)
+
+    def test_a_reply_without_an_id_fails_the_case(self):
+        self.runner.shell.return_value = "Error: couldn't create User."
+        with self.assertRaisesRegex(AssertionError, "couldn't create User"):
+            self.runner.create_user("porter-ci")
+
+
+class InstallForUserTest(unittest.TestCase):
+    """Adding user 0's installation for another user, with and without pm install-existing."""
+    APK = Path("/tmp/probe.apk")
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock(return_value="Package eu.darken.porter.probe.native installed for user: 10")
+        self.runner.adb = Mock(return_value="Success")
+
+    def test_install_existing_where_pm_has_it(self):
+        self.runner.install_for_user("10", smoke.NATIVE, self.APK)
+        self.runner.shell.assert_called_once_with("pm", "install-existing", "--user", "10", smoke.NATIVE)
+        self.runner.adb.assert_not_called()
+
+    def test_android_7_answering_on_stdout_gets_the_apk(self):
+        self.runner.shell.return_value = "Error: unknown command 'install-existing'"
+        self.runner.install_for_user("10", smoke.NATIVE, self.APK)
+        self.runner.adb.assert_called_once_with("install", "-r", "--user", "10", str(self.APK.resolve()))
+
+    def test_android_7_failing_the_command_gets_the_apk(self):
+        self.runner.shell.side_effect = RuntimeError("adb shell ...: Error: unknown command 'install-existing'")
+        self.runner.install_for_user("10", smoke.NATIVE, self.APK)
+        self.runner.adb.assert_called_once_with("install", "-r", "--user", "10", str(self.APK.resolve()))
+
+    def test_any_other_failure_is_the_case_failing(self):
+        self.runner.shell.side_effect = RuntimeError("adb shell ...: Failure [not installed for 0]")
+        with self.assertRaisesRegex(RuntimeError, "not installed"):
+            self.runner.install_for_user("10", smoke.NATIVE, self.APK)
+        self.runner.adb.assert_not_called()
+
+
 class SpawnedProcessReadingTest(unittest.TestCase):
     """What the service spawned for a debug recording, as the case finds it and loses it."""
     SERVER = "3120"
@@ -977,6 +1110,12 @@ class SpawnedProcessReadingTest(unittest.TestCase):
         self.runner.shell.return_value = "PID PPID NAME\nwhile kill -0 $c\n4180 3120 sh"
         self.assertEqual(self.runner.spawned(self.SERVER), {"4180": []})
 
+    def test_the_listing_is_toyboxs_which_android_7_does_not_link_as_ps(self):
+        self.runner.spawned(self.SERVER)
+        self.runner.remote_logcat(self.SERVER)
+        for call in self.runner.shell.call_args_list:
+            self.assertEqual(call.args[:4], ("toybox", "ps", "-A", "-o"))
+
     def test_the_remote_logcat_is_found_by_what_it_follows(self):
         self.runner.shell.return_value = "\n".join((
             "PID ARGS",
@@ -988,6 +1127,10 @@ class SpawnedProcessReadingTest(unittest.TestCase):
             # Another logcat, following something else.
             "4300 logcat -v threadtime --pid=9999 -T 1",
         ))
+        self.assertEqual(self.runner.remote_logcat(self.SERVER), ["4181"])
+
+    def test_padded_columns_still_find_the_logcat(self):
+        self.runner.shell.return_value = "  PID ARGS\n 4181   logcat -v threadtime --pid=3120 -T 1"
         self.assertEqual(self.runner.remote_logcat(self.SERVER), ["4181"])
 
     def test_a_reaped_logcat_leaves_nothing_to_find(self):
@@ -1092,3 +1235,20 @@ class AppUidTest(unittest.TestCase):
         with patch.object(self.runner, "shell", return_value="package:p uid:10217") as shell:
             self.assertEqual(self.runner.app_uid("p"), 10217)
         self.assertEqual(shell.call_args.args[4], "0")
+
+    def test_android_7_without_minus_u_is_read_from_the_package_dump(self):
+        # What API 24 answers: pm rejects -U, and dumpsys names the app id userId.
+        replies = ["Error: Unknown option: -U", "  Package [p] (8f2c1d0):\n    userId=10085\n"]
+        with patch.object(self.runner, "shell", side_effect=replies) as shell:
+            self.assertEqual(self.runner.app_uid("p", "10"), 1010085)
+        self.assertEqual(shell.call_args.args, ("dumpsys", "package", "p"))
+
+    def test_minus_u_rejected_with_an_exit_status_also_falls_back(self):
+        replies = [RuntimeError("adb shell ...: Error: Unknown option: -U"), "    userId=10085\n"]
+        with patch.object(self.runner, "shell", side_effect=replies):
+            self.assertEqual(self.runner.app_uid("p"), 10085)
+
+    def test_any_other_pm_failure_is_the_case_failing(self):
+        with patch.object(self.runner, "shell", side_effect=RuntimeError("adb: device offline")):
+            with self.assertRaisesRegex(RuntimeError, "offline"):
+                self.runner.app_uid("p")
