@@ -23,6 +23,7 @@ import java.net.Socket
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.net.InetSocketAddress
+import javax.net.ssl.SSLProtocolException
 import javax.net.ssl.SSLSocket
 
 private const val TAG = "AdbClient"
@@ -71,7 +72,13 @@ class AdbClient(private val host: String, private val port: Int, private val key
             tlsOutputStream = DataOutputStream(tlsSocket.outputStream)
             useTls = true
 
-            message = read()
+            // adbd checks the client certificate after this side of the handshake has already
+            // completed, so an unpaired key surfaces here as an SSLV3_ALERT_CERTIFICATE_UNKNOWN alert.
+            message = try {
+                read()
+            } catch (e: SSLProtocolException) {
+                throw AdbPairingRequiredException(e)
+            }
         } else if (message.command == A_AUTH) {
             if (message.command != A_AUTH && message.arg0 != ADB_AUTH_TOKEN) error("not A_AUTH ADB_AUTH_TOKEN")
             write(A_AUTH, ADB_AUTH_SIGNATURE, 0, key.sign(message.data))

@@ -14,3 +14,6 @@ open class AdbException : Exception {
 class AdbInvalidPairingCodeException : AdbException()
 
 class AdbKeyException(cause: Throwable) : AdbException(cause)
+
+/** Wireless debugging refused this app's key: it has not been paired on this device, or no longer is. */
+class AdbPairingRequiredException(cause: Throwable) : AdbException(cause)

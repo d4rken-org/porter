@@ -30,7 +30,9 @@ import kotlinx.coroutines.withTimeout
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.adb.AdbMdns
+import eu.darken.porter.manager.adb.AdbPairingRequiredException
 import eu.darken.porter.manager.adb.AdbStarter
+import eu.darken.porter.manager.home.HomeActivity
 import eu.darken.porter.manager.receiver.PorterReceiverStarter
 import eu.darken.porter.manager.receiver.PorterReceiverStarter.WorkerState
 import eu.darken.porter.manager.receiver.PorterReceiverStarter.updateNotification
@@ -172,6 +174,7 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
             val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.cancel(PorterReceiverStarter.NOTIFICATION_ID)
+            nm.cancel(NOTIFICATION_ID)
 
             return Result.success()
         } catch (e: CancellationException) {
@@ -196,6 +199,13 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
             updateNotification(applicationContext, state)
 
             throw e
+        } catch (e: AdbPairingRequiredException) {
+            // No retry can succeed until the user pairs again.
+            PorterStateMachine.instance.update()
+            val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.cancel(PorterReceiverStarter.NOTIFICATION_ID)
+            showPairingRequiredNotification(applicationContext)
+            return Result.failure()
         } catch (e: Exception) {
             val ignored = listOf(
                 EOFException::class,
@@ -241,6 +251,30 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
             .setContentIntent(pendingIntent)
             .setSilent(true)
             .setStyle(NotificationCompat.BigTextStyle().bigText(msgNotif))
+            .build()
+
+        nm.notify(NOTIFICATION_ID, notification)
+    }
+
+    private fun showPairingRequiredNotification(context: Context) {
+        NotificationChannels.create(context, NotificationChannels.ADB_START,
+            context.getString(R.string.wadb_notification_title), NotificationManager.IMPORTANCE_LOW)
+        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val msg = context.getString(R.string.wadb_pair_required_notification)
+        val pendingIntent = PendingIntent.getActivity(
+            context, NOTIFICATION_ID, HomeActivity.pairingIntent(context),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, NotificationChannels.ADB_START)
+            .setSmallIcon(R.drawable.ic_system_icon)
+            .setContentTitle(context.getString(R.string.adb_pair_required_title))
+            .setContentText(msg)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setSilent(true)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(msg))
             .build()
 
         nm.notify(NOTIFICATION_ID, notification)

@@ -12,7 +12,6 @@ import com.topjohnwu.superuser.CallbackList
 import com.topjohnwu.superuser.Shell
 import java.net.ConnectException
 import java.net.SocketTimeoutException
-import javax.net.ssl.SSLProtocolException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.CancellationException
@@ -24,7 +23,9 @@ import kotlinx.coroutines.withContext
 import eu.darken.porter.manager.AppConstants.EXTRA
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.adb.AdbKeyException
+import eu.darken.porter.manager.adb.AdbPairingRequiredException
 import eu.darken.porter.manager.adb.AdbStarter
+import eu.darken.porter.manager.home.HomeActivity
 import eu.darken.porter.manager.utils.PorterStateMachine
 
 
@@ -62,14 +63,19 @@ class StarterActivity : ComposeActivity() {
                     Text(output.text.trim(), fontFamily = FontFamily.Monospace, style = MaterialTheme.typography.bodySmall)
                 }
             }
-            val message = when (output.error) {
-                is AdbKeyException -> R.string.adb_error_key_store
-                is NotRootedException -> R.string.start_with_root_failed
-                is SocketTimeoutException, is ConnectException -> R.string.cannot_connect_port
-                is SSLProtocolException -> R.string.adb_pair_required
-                else -> null
+            if (output.error is AdbPairingRequiredException) {
+                if (!dismissed) MessageDialog(stringResource(R.string.adb_pair_required_title), stringResource(R.string.adb_pair_required),
+                    { dismissed = true }, confirm = stringResource(R.string.adb_pairing),
+                    onConfirm = { startActivity(HomeActivity.pairingIntent(this)); finish() })
+            } else {
+                val message = when (output.error) {
+                    is AdbKeyException -> R.string.adb_error_key_store
+                    is NotRootedException -> R.string.start_with_root_failed
+                    is SocketTimeoutException, is ConnectException -> R.string.cannot_connect_port
+                    else -> null
+                }
+                if (message != null && !dismissed) MessageDialog(stringResource(R.string.porter_support_error), stringResource(message), { dismissed = true })
             }
-            if (message != null && !dismissed) MessageDialog(stringResource(R.string.porter_support_error), stringResource(message), { dismissed = true })
         }
     }
     override fun onWindowFocusChanged(hasFocus: Boolean) {

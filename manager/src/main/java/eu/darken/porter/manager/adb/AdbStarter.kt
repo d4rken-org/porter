@@ -1,6 +1,7 @@
 package eu.darken.porter.manager.adb
 
 import android.content.Context
+import android.util.Log
 import java.net.SocketTimeoutException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -9,6 +10,8 @@ import kotlinx.coroutines.withContext
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.starter.Starter
 import eu.darken.porter.manager.utils.PorterStateMachine
+
+private const val TAG = "AdbStarter"
 
 object AdbStarter {
     suspend fun startAdb(context: Context, port: Int, log: ((String) -> Unit)? = null) {
@@ -28,30 +31,29 @@ object AdbStarter {
 
             log?.invoke("Connecting on port $port...")
 
-            AdbClient("127.0.0.1", port, key).use { client ->
-                connectWithRetry(client)
+            connectWithRetry(port, key).use { client ->
                 log?.invoke("Successfully connected on port $port...\n")
                 client.runCommand("shell:${Starter.internalCommand}")
             }
         }
     }
 
-    private suspend fun connectWithRetry(client: AdbClient) {
+    private suspend fun connectWithRetry(port: Int, key: AdbKey): AdbClient {
         var delayTime = 0L
         val maxAttempts = 5
         for (attempt in 1..maxAttempts) {
+            delay(delayTime)
+            val client = AdbClient("127.0.0.1", port, key)
             try {
-                delay(delayTime)
                 client.connect()
-                break
+                return client
             } catch (e: Exception) {
-                if (
-                    attempt == maxAttempts ||
-                    e is CancellationException ||
-                    e is SocketTimeoutException
-                ) throw e
+                client.close()
+                Log.w(TAG, "Connection attempt $attempt of $maxAttempts failed", e)
+                if (attempt == maxAttempts || e is SocketTimeoutException || e is AdbPairingRequiredException) throw e
                 delayTime += 1000
             }
         }
+        error("unreachable")
     }
 }
