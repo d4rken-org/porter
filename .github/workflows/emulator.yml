@@ -16,8 +16,50 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    name: Decide what to test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      devices: ${{ steps.decide.outputs.devices }}
+    steps:
+      - name: Look for anything besides documentation
+        id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          # Pushes to main gate releases and dispatches are asked for, so both always test.
+          if [ "$EVENT" != pull_request ]; then
+            echo devices=true >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # The file list stops at 3000 entries, and what it leaves out could be code.
+          if [ "$(gh api "repos/$REPO/pulls/$PR" --jq .changed_files)" -ge 3000 ]; then
+            echo devices=true >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # A rename's old path counts too: moving code into docs/ removes it from the build.
+          files="$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[] | .filename, (.previous_filename // empty)')"
+          # None of these reaches an APK: the user guide, the store listing, agent context and the
+          # markdown at the repository root.
+          code="$(printf '%s\n' "$files" | grep -vE '^(docs|fastlane|\.claude)/|^[^/]+\.md$' || true)"
+          if [ -n "$code" ]; then
+            echo devices=true >> "$GITHUB_OUTPUT"
+          else
+            echo "Documentation only, so the device jobs report without starting an emulator."
+            echo devices=false >> "$GITHUB_OUTPUT"
+          fi
+
   apks:
     name: Build test APKs
+    needs: changes
+    if: needs.changes.outputs.devices == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
@@ -45,14 +87,15 @@ jobs:
 
   smoke:
     name: ${{ matrix.suite }} (Android ${{ matrix.api }})
-    needs: apks
-    # A skipped job satisfies a required check, so these run when the build failed too and fail
-    # themselves. Only a cancelled run skips them.
-    if: ${{ !cancelled() }}
+    needs: [changes, apks]
+    # A skipped job satisfies a required check, so these start whatever happened before them, in a
+    # cancelled run too, and decide in their first steps.
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
       SHIZUKU_SHA256: 6e273ab0e991c4e79bc8b1bbb9b9dd739ccac1a8712a541a214078886b7b790f
+      DEVICE_TESTS: ${{ needs.changes.outputs.devices }}
     strategy:
       fail-fast: false
       matrix:
@@ -72,49 +115,61 @@ jobs:
             input: --dpad
     steps:
       - name: Require the test APKs
-        if: needs.apks.result != 'success'
+        id: require
+        if: always() && (cancelled() || needs.changes.result != 'success' || (env.DEVICE_TESTS == 'true' && needs.apks.result != 'success'))
         run: |
-          echo "::error::Building the test APKs failed, so there is nothing to test."
+          echo "::error::The run was cancelled, or deciding what to test or building the test APKs did not succeed, so nothing was tested."
           exit 1
+      - name: Nothing to test for documentation
+        if: needs.changes.result == 'success' && env.DEVICE_TESTS != 'true'
+        run: echo "This change touches documentation only."
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        if: env.DEVICE_TESTS == 'true'
         with:
           persist-credentials: false
       - uses: ./.github/actions/device-setup
+        if: env.DEVICE_TESTS == 'true'
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c #v8.0.1
+        if: env.DEVICE_TESTS == 'true'
         with:
           name: porter-emulator-apks
       - name: Restore pinned Shizuku cache
+        if: env.DEVICE_TESTS == 'true'
         id: shizuku-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 #v6.1.0
         with:
           path: ${{ runner.temp }}/shizuku.apk
           key: shizuku-apk-${{ env.SHIZUKU_SHA256 }}
       - name: Download pinned Shizuku for coexistence testing
-        if: steps.shizuku-cache.outputs.cache-hit != 'true'
+        if: env.DEVICE_TESTS == 'true' && steps.shizuku-cache.outputs.cache-hit != 'true'
         run: |
           curl --fail --location --retry 5 --retry-delay 10 --retry-max-time 180 \
             --connect-timeout 15 --max-time 120 -o "$RUNNER_TEMP/shizuku.apk" \
             https://github.com/RikkaApps/Shizuku/releases/download/v13.6.0/shizuku-v13.6.0.r1086.2650830c-release.apk
       - name: Verify pinned Shizuku checksum
+        if: env.DEVICE_TESTS == 'true'
         run: echo "$SHIZUKU_SHA256  $RUNNER_TEMP/shizuku.apk" | sha256sum --check
       - name: Save verified Shizuku cache
-        if: steps.shizuku-cache.outputs.cache-hit != 'true'
+        if: env.DEVICE_TESTS == 'true' && steps.shizuku-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 #v6.1.0
         with:
           path: ${{ runner.temp }}/shizuku.apk
           key: shizuku-apk-${{ env.SHIZUKU_SHA256 }}
       - name: Enable KVM
+        if: env.DEVICE_TESTS == 'true'
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Install emulator packages
+        if: env.DEVICE_TESTS == 'true'
         env:
           EMULATOR_API: ${{ matrix.api }}
           EMULATOR_TARGET: ${{ matrix.target || 'google_apis' }}
           EMULATOR_ARCH: ${{ matrix.arch || 'x86_64' }}
         run: python3 tools/ci/install-sdk.py platform-tools "build-tools;37.0.0" "platforms;android-$EMULATOR_API" emulator "system-images;android-$EMULATOR_API;$EMULATOR_TARGET;$EMULATOR_ARCH"
       - name: Run real Binder and permission scenarios
+        if: env.DEVICE_TESTS == 'true'
         uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d #v2.38.0
         with:
           api-level: ${{ matrix.api }}
@@ -134,7 +189,7 @@ jobs:
             --shizuku "$RUNNER_TEMP/shizuku.apk"
             --output build/emulator-results ${{ matrix.extra }}
       - name: Upload device test evidence
-        if: always()
+        if: always() && env.DEVICE_TESTS == 'true' && steps.require.outcome != 'failure'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
           name: porter-${{ matrix.suite }}-api-${{ matrix.api }}
@@ -145,11 +200,13 @@ jobs:
 
   boot:
     name: boot (Android ${{ matrix.api }})
-    needs: apks
-    if: ${{ !cancelled() }}
+    needs: [changes, apks]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     # Three reboots, each of which has to come all the way back up before the case can judge it.
     timeout-minutes: 60
+    env:
+      DEVICE_TESTS: ${{ needs.changes.outputs.devices }}
     strategy:
       fail-fast: false
       matrix:
@@ -165,27 +222,37 @@ jobs:
         api: [36]
     steps:
       - name: Require the test APKs
-        if: needs.apks.result != 'success'
+        id: require
+        if: always() && (cancelled() || needs.changes.result != 'success' || (env.DEVICE_TESTS == 'true' && needs.apks.result != 'success'))
         run: |
-          echo "::error::Building the test APKs failed, so there is nothing to test."
+          echo "::error::The run was cancelled, or deciding what to test or building the test APKs did not succeed, so nothing was tested."
           exit 1
+      - name: Nothing to test for documentation
+        if: needs.changes.result == 'success' && env.DEVICE_TESTS != 'true'
+        run: echo "This change touches documentation only."
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        if: env.DEVICE_TESTS == 'true'
         with:
           persist-credentials: false
       - uses: ./.github/actions/device-setup
+        if: env.DEVICE_TESTS == 'true'
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c #v8.0.1
+        if: env.DEVICE_TESTS == 'true'
         with:
           name: porter-emulator-apks
       - name: Enable KVM
+        if: env.DEVICE_TESTS == 'true'
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Install emulator packages
+        if: env.DEVICE_TESTS == 'true'
         env:
           EMULATOR_API: ${{ matrix.api }}
         run: python3 tools/ci/install-sdk.py platform-tools "build-tools;37.0.0" "platforms;android-$EMULATOR_API" emulator "system-images;android-$EMULATOR_API;google_apis;x86_64"
       - name: Start Porter from the app and reboot
+        if: env.DEVICE_TESTS == 'true'
         uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d #v2.38.0
         with:
           api-level: ${{ matrix.api }}
@@ -202,7 +269,7 @@ jobs:
             --native probe/build/outputs/apk/porter/debug/*.apk
             --output build/emulator-results
       - name: Upload device test evidence
-        if: always()
+        if: always() && env.DEVICE_TESTS == 'true' && steps.require.outcome != 'failure'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
           name: porter-boot-api-${{ matrix.api }}
