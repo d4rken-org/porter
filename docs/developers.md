@@ -228,8 +228,8 @@ Three routes, with very different requirements.
 `sdk-extras` runs a command at Porter's identity and returns its exit code and output:
 
 ```kotlin
-val result = connection.exec(context, "sh", "-c", "pm list packages -3")
-if (result.exitCode == 0) show(result.output)
+val result = connection.exec("sh", "-c", "pm list packages -3")
+if (result.exitCode == 0) show(result.output) else log(result.errors)
 ```
 
 The command runs in a user service that `sdk-extras` ships, named `your.app:porter_shell`. The first
@@ -237,15 +237,55 @@ call starts it and later calls reuse it, so there is nothing to declare or imple
 both backends.
 
 `exec` closes the command's input and reads its output as UTF-8. For a command that takes input,
-writes binary output or runs until you stop it, `connection.startProcess(context, ...)` returns a
-`java.lang.Process` whose streams are pipes to the command. Read what it writes as it comes, or it
-blocks once a pipe is full.
+writes binary output or runs until you stop it, `connection.startProcess(...)` returns a
+`PorterShellProcess`, a `java.lang.Process` whose streams are pipes to the command. Read what it
+writes as it comes, or it blocks once a pipe is full:
 
-Cancelling either call returns at once and kills the command and the processes it started, so
-`withTimeout` bounds one that hangs. A command also dies with the app process that started it. A
-command that is not found exits with 127, as in a shell. A working directory that does not exist, or
-a service that stops while the command runs, throws `PorterShellException`. A missing grant throws
-the SDK's `PorterSecurityException`, as for any user service.
+```kotlin
+// Output as it comes
+val logcat = connection.startProcess("logcat", "-v", "brief")
+withContext(Dispatchers.IO) {
+    try {
+        logcat.inputStream.bufferedReader().useLines { lines -> lines.take(100).forEach(::show) }
+    } finally {
+        logcat.destroy()
+    }
+}
+
+// Input
+val writer = connection.startProcess("sh", "-c", "cat > /data/local/tmp/main.obb")
+withContext(Dispatchers.IO) {
+    try {
+        writer.outputStream.use { source.copyTo(it) }
+        check(writer.waitFor() == 0)
+    } finally {
+        writer.destroy()
+    }
+}
+```
+
+Cancelling `exec` kills the command and the processes it started, so `withTimeout` bounds one that
+hangs. `startProcess` hands the command to you once it returns: stop it with `destroy()`, which
+sends SIGKILL the same way. SIGKILL gives the command no chance to clean up, unlike the SIGTERM of a
+local `Process.destroy()`. A command that has to finish something gets a signal of its own first,
+which suspends and is safe on the main thread. Send it once the command is running: a signal it has
+no handler for yet ends it instead.
+
+```kotlin
+val recording = connection.startProcess("screenrecord", "/sdcard/Movies/demo.mp4")
+try {
+    // ... later, once it is recording
+    recording.signal(OsConstants.SIGINT) // screenrecord finishes the file on SIGINT
+    withContext(Dispatchers.IO) { recording.waitFor() }
+} finally {
+    withContext(Dispatchers.IO) { recording.destroy() }
+}
+```
+
+A command also dies with the app process that started it. A command that is not found exits with
+127, as in a shell. A working directory that does not exist, or a service that stops while the
+command runs, throws `PorterShellException`. A missing grant throws the SDK's
+`PorterSecurityException`, as for any user service.
 
 A shell script is text in and text out. When you need structured results or many calls in a row,
 your own service below does the same work in-process.

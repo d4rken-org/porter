@@ -21,7 +21,7 @@ Pendamping membantu aplikasi Shizuku menemukan Porter. Porter tetap menjalankan 
 ## Beralih dari Shizuku
 {: #switch-from-shizuku }
 
-Untuk aplikasi dengan dukungan langsung Porter, Shizuku boleh tetap terpasang. Jalankan Porter, pilih di aplikasi, lalu setujui permintaan baru. Jika aplikasi meminta mulai ulang, paksa berhenti melalui Setelan Android dan buka kembali.
+Untuk aplikasi dengan dukungan langsung Porter, Shizuku boleh tetap terpasang. Jalankan Porter, pilih di aplikasi, lalu setujui permintaan baru. Aplikasi yang sudah terhubung ke Shizuku tetap memakai Shizuku sampai dimulai ulang, jadi paksa berhenti melalui Setelan Android dan buka kembali.
 
 Untuk aplikasi yang hanya mendukung Shizuku, build FOSS menyertakan APK Porter Compatibility yang sesuai:
 
