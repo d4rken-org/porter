@@ -28,7 +28,9 @@ class AdbPairingService : Service() {
 
     companion object {
 
-        const val NOTIFICATION_ID = 1
+        private const val NOTIFICATION_ID = 1
+        /** Apart from [NOTIFICATION_ID]: the system updates a foreground notification asynchronously after the service leaves the foreground. */
+        const val RESULT_NOTIFICATION_ID = 2
 
         private const val tag = "AdbPairingService"
 
@@ -90,7 +92,7 @@ class AdbPairingService : Service() {
         when (intent?.action) {
             startAction -> {
                 reset()
-                notifications.cancel(NOTIFICATION_ID)
+                notifications.cancel(RESULT_NOTIFICATION_ID)
                 if (foreground(searchingNotification)) startSearch()
             }
             replyAction -> {
@@ -165,8 +167,8 @@ class AdbPairingService : Service() {
     }
 
     private fun handleResult(success: Boolean, message: String?) {
-        stopForeground(STOP_FOREGROUND_DETACH)
-        notifications.notify(NOTIFICATION_ID,
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        notifications.notify(RESULT_NOTIFICATION_ID,
             Notification.Builder(this, NotificationChannels.ADB_PAIRING)
                 .setColor(getColor(R.color.notification))
                 .setSmallIcon(R.drawable.ic_system_icon)
