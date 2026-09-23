@@ -11,38 +11,35 @@
     <string name="home_adb_dialog_view_command_button_send">Odeslat</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Spustit pomocí WiFi debuging]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Na verzi Android 11 nebo vyšší můžete povolit Bezdrátové ladění a spustit Porter přímo z vašeho zařízení, bez připojení k počítači. Přečtěte si prosím prvně návod krok-za-krokem před spuštěním.]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Na Androidu 11 nebo novějším můžete povolit bezdrátové ladění a spustit Porter přímo ze zařízení, bez připojení k počítači.<p>Nejprve si prosím přečtěte návod krok za krokem.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Před Androidem 11, připojení k počítači je vyžadováno k povolení Bezdrátového Ladění.]]></string>
     <string name="home_wireless_adb_view_guide_button">Návod krok-za-krokem</string>
     <!-- Adb -->
     <string name="dialog_adb_discovery">Hledání služby bezdrátového ladění</string>
-    <string name="dialog_adb_discovery_message">Povolte „Bezdrátové ladění“ v „Možnosti pro vývojáře“. „Bezdrátové ladění“ je při změně sítě automaticky deaktivováno.
-\n
-\nNezapínejte „Možnosti pro vývojáře“ nebo „Ladění USB“, jinak bude Porter zastaven.</string>
+    <string name="dialog_adb_discovery_message">Povolte „Bezdrátové ladění“ v sekci „Pro vývojáře“. „Bezdrátové ladění“ se při změně sítě automaticky vypne.\n\nNevypínejte možnosti pro vývojáře ani „Ladění přes USB“, jinak bude Porter zastaven.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Prosím zkuste zakázat a znovu povolit \"Bezdrátové ladění\" pokud nepřestává hledat.</string>
-    <string name="dialog_adb_port">Přístav</string>
+    <string name="dialog_adb_port">Port</string>
     <string name="adb_pairing">Párování</string>
     <string name="dialog_adb_pairing_title">Párovat se zařízením</string>
     <string name="dialog_adb_pairing_discovery">Hledání zařízení pro párování</string>
     <string name="dialog_adb_pairing_paring_code">Kód pro párování</string>
     <string name="paring_code_is_wrong">Chybný kód pro párování.</string>
     <string name="cannot_connect_port">Nelze se připojit k bezdrátové ladicí službě.\n\nUjistěte se prosím, že je Porter na bílé listině ve všech firewallech, blokovačích reklam, VPN nebo podobných aplikacích, které mohou omezovat přístup k síti.</string>
-    <string name="dialog_wireless_adb_not_enabled">Bezdrátové ladění není povoleno.
-\nPřed povolením systému Android 11 je pro povolení bezdrátového ladění nutné připojení k počítači.</string>
-    <string name="dialog_usb_debugging_not_enabled">Ladění přes USB není povolené.\nProsím, povolte to v \"Možnostech vývojářů\".</string>
+    <string name="dialog_wireless_adb_not_enabled">Bezdrátové ladění není povoleno.\nPřed Androidem 11 je k povolení bezdrátového ladění nutné připojení k počítači.</string>
+    <string name="dialog_usb_debugging_not_enabled">Ladění přes USB není povoleno.\nPovolte ho prosím v sekci „Pro vývojáře“.</string>
     <string name="dialog_adb_pairing_accessibility_permission">V systému Android 14 instalace/aktualizace Porter pomocí instalačního programu balíčků ruší oprávnění ^1, které je vyžadováno k povolení služby přístupnosti pro párování.\n\nChcete-li jej udělit, spusťte následující příkaz ADB:\n\n^2\n\nPo spuštění příkazu můžete pokračovat v procesu párování.\n\nPoznámka: Tomuto se můžete vyhnout instalací/aktualizací Porter pomocí ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Prosím, povolte službu přístupnosti pro zahájení procesu párování. To umožňuje Porter detekovat párovací kód.\n\nSlužba přístupnosti bude vypnuta po nalezení kódu nebo po 1 minutě, aby se šetřila energie.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">Párování spusťte provedením následujících kroků:\n- Přejděte do sekce „Možnosti pro vývojáře“\n- Povolte „Ladění USB“ a „Bezdrátové ladění“\n- Klepněte na levou stranu sekce „Bezdrátové ladění“\n- Klepněte na „Spárovat zařízení s párovacím kódem“. Porter automaticky detekuje párovací kód.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Pro zahájení párování prosím povolte službu přístupnosti. Porter tak může rozpoznat párovací kód.\n\nSlužba přístupnosti se vypne po pokusu o párování, nebo pokud do jedné minuty nenajde žádný kód. Porter zobrazí výsledek a umožní vám to zkusit znovu.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">Párování spusťte provedením následujících kroků:\n- Přejděte do sekce „Pro vývojáře“\n- Povolte „Ladění přes USB“ a „Bezdrátové ladění“\n- Klepněte na levou stranu položky „Bezdrátové ladění“\n- Klepněte na „Párovat zařízení pomocí párovacího kódu“. Porter párovací kód automaticky rozpozná.</string>
     <string name="adb_pairing_requires_multi_window">Nejprve prosím přejděte do režimu rozdělené obrazovky (více oken).</string>
     <string name="adb_pairing_requires_multi_window_reason">Systém vyžaduje, aby byl dialog pro párování vždy viditelný. Použití režimu rozdělené obrazovky je jediný způsob, jak zajistit, aby tato aplikace a dialogové okno systému byly viditelné současně.</string>
     <string name="adb_error_key_store">Nelze vygenerovat klíč pro bezdrátové ladění.\nMůže to být způsobeno chybou mechanismu úložiště klíčů v tomto zařízení.</string>
     <string name="adb_pair_required">Nejprve projděte krok párování.</string>
     <string name="enable">Zapnout</string>
-    <string name="development_settings">Možnosti vývojářů</string>
+    <string name="development_settings">Pro vývojáře</string>
     <string name="notification_settings">Nastavení oznámení</string>
     <string name="adb_pairing_tutorial_content_notification">Notifikace od Porter vám pomůže dokončit párování.</string>
-    <string name="adb_pairing_tutorial_content_steps">Přejděte do části „Možnosti pro vývojáře“ a poté povolte „Ladění USB“ a „Bezdrátové ladění“.</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">Klepněte na levou stranu „Bezdrátové ladění“ a poté klepněte na „Spárovat zařízení s párovacím kódem“. Zadejte kód z oznámení pro dokončení párování.</string>
+    <string name="adb_pairing_tutorial_content_steps">Přejděte do sekce „Pro vývojáře“ a poté povolte „Ladění přes USB“ a „Bezdrátové ladění“.</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">Klepněte na levou stranu položky „Bezdrátové ladění“ a poté klepněte na „Párovat zařízení pomocí párovacího kódu“. Párování dokončíte zadáním kódu z oznámení.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Proces párování vyžaduje interakci s oznámením od Porter. Prosím povolte Porter posílat oznámení.</string>
     <string name="adb_pairing_tutorial_content_miui">Uživatelé MIUI možná budou muset přepnout styl oznámení na \"Android\" z \"Oznámení\" - \"Lišta Oznámení\" v nastavení systému.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Jinak se vám nemusí podařit zadat párovací kód z oznámení.</string>
@@ -55,10 +52,10 @@
     <!-- Home - Application management -->
     <string name="home_app_management_title">Správa aplikací</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="one"><![CDATA[Autorizovaná %d aplikace]]></item>
-        <item quantity="few"><![CDATA[Autorizováno %d aplikací]]></item>
-        <item quantity="many"><![CDATA[Autorizovány %d aplikace]]></item>
-        <item quantity="other"><![CDATA[Autorizovány %d aplikace]]></item>
+        <item quantity="one"><![CDATA[Autorizována %d aplikace]]></item>
+        <item quantity="few"><![CDATA[Autorizovány %d aplikace]]></item>
+        <item quantity="many"><![CDATA[Autorizováno %d aplikace]]></item>
+        <item quantity="other"><![CDATA[Autorizováno %d aplikací]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Klepnutím můžete spravovat autorizované aplikace]]></string>
     <string name="home_app_management_empty">Aplikace, které požádaly nebo deklarovaly povolení Porter, se zde zobrazí.</string>
@@ -83,10 +80,10 @@
     <string name="rish_description"><![CDATA[Pomocí %1$smůžete spouštět příkazy shellu v jakékoli terminálové aplikaci.<p>Klepnutím se dozvíte více o jeho použití.]]></string>
     <!-- Settings -->
     <string name="settings_title">Nastavení</string>
-    <string name="settings_start_on_boot">Začněte na botě</string>
+    <string name="settings_start_on_boot">Spustit po startu</string>
     <string name="settings_start_on_boot_summary">Vyžaduje Android 11+ nebo root</string>
     <string name="settings_start_on_boot_bug">Kvůli chybě v systému Android 11-12 si bezdrátové ladění nepamatuje žádné autorizované sítě.\n\nPři každém restartu budete muset síť znovu autorizovat klepnutím na „Povolit“, jakmile se zobrazí dialogové okno pro autorizaci.</string>
-    <string name="settings_watchdog">Hlídací pes</string>
+    <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Automaticky restartovat Porter v případě pádu</string>
     <string name="settings_restart_dialog_title">Vyžadován restart</string>
     <string name="settings_restart_dialog_message">Aby se toto nastavení projevilo, je nutné restartovat Porter.</string>
@@ -100,7 +97,7 @@
     <string name="snackbar_battery_optimization_settings">Pro použití této funkce prosím vypněte optimalizaci baterie.</string>
     <string name="snackbar_action_fix">Opravit</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Porter už začíná v pozadí</string>
+    <string name="toast_shizuku_already_starting">Porter se již spouští na pozadí</string>
     <string name="toast_accessibility_tv_only">Tato služba je podporována pouze na televizních zařízeních.</string>
     <string name="toast_pairing_timeout">Časový limit párovací služby Porter vypršel.</string>
     <!-- Stop -->
@@ -119,7 +116,7 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">přístup k Porter</string>
     <string name="permission_description">povolí aplikaci používat systémová rozhraní API s vyššími oprávněními (Porter).</string>
-    <string name="permission_warning_template"><![CDATA[Povolit aplikaci </b>%1$s</b> %2$s\?]]></string>
+    <string name="permission_warning_template"><![CDATA[Povolit aplikaci <b>%1$s</b> %2$s\?]]></string>
     <string name="grant_dialog_button_allow_always">Povolit vždy</string>
     <string name="grant_dialog_button_deny">"Zakázat"</string>
     <!-- Starter -->
@@ -129,14 +126,14 @@
     <string name="wadb_notification_title">Startování Porter…</string>
     <string name="wadb_notification_wifi_required">Čekání na připojení k Wi-Fi před pokračováním</string>
     <string name="wadb_notification_retry">Čekání na opakování</string>
-    <string name="wadb_error_title">Chyba při startu při startu</string>
+    <string name="wadb_error_title">Chyba při spouštění po startu</string>
     <string name="wadb_error_notify_dev">Klepněte pro upozornění vývojáře.</string>
     <string name="wadb_permission_error_notification_title">Chyba oprávnění</string>
     <string name="wadb_permission_error_notification_content">Porter potřebuje WRITE_SECURE_SETTINGS začít na startu. Klepněte a zjistěte, jak ji udělit.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog běží</string>
     <string name="watchdog_turn_off">Vypnout</string>
-    <string name="watchdog_shizuku_crashed_title">Porter nedávno havarovala</string>
+    <string name="watchdog_shizuku_crashed_title">Porter nedávno spadl</string>
     <string name="watchdog_shizuku_crashed_text">Watchdog službu znovu spustil. Klepněte a zjistěte o možných řešeních, jak předejít budoucím pádům.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Vypnout upozornění</string>
     <!-- Misc -->
@@ -145,4 +142,59 @@
     <string name="accessibility_service_description">Podporuje párování zařízení (např. televizorů s Androidem 14+), kde nelze používat oznámení nebo rozdělenou obrazovku.\n\nUmožňuje Porter extrahovat párovací kód z obrazovky pro ladění bezdrátového ladění. Jakmile najdete párovací kód, deaktivuje se.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Pokus nyní</string>
+    <string name="home_root_description"><![CDATA[Pokud používáte Magisk, další možností je %1$s. Aplikace musí %2$s výslovně podporovat.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intenty</string>
+    <string name="home_automation_bottom_sheet_label_action">Akce</string>
+    <string name="home_automation_bottom_sheet_label_package">Balíček</string>
+    <string name="home_automation_bottom_sheet_label_target">Cíl</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extras</string>
+    <string name="home_automation_regenerate_token">Vygenerovat nový token?</string>
+    <string name="home_automation_regenerate_token_message">Své intenty budete muset znovu nastavit s novým tokenem.</string>
+    <string name="home_dialog_reboot_required_title">Je nutný restart</string>
+    <string name="home_dialog_reboot_required_message">Aby Porter správně fungoval, je nutné restartovat zařízení. Chcete-li pokračovat, restartujte prosím zařízení.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Zjištěna duplicitní aplikace</string>
+    <string name="home_dialog_duplicate_app_detected_message">V zařízení je nainstalována jiná verze této aplikace. Chcete-li pokračovat, odinstalujte prosím všechny duplicitní verze a restartujte zařízení.</string>
+    <string name="home_dialog_button_exit">Ukončit</string>
+    <string name="settings_alerts_blocked_title">Upozornění na pozadí</string>
+    <string name="settings_alerts_blocked_summary">Oznámení aplikace Porter jsou blokována, takže spuštění po startu a watchdog vás nemohou upozornit, když vyžadují pozornost.</string>
+    <string name="settings_alerts_blocked_message">Tato funkce hlásí prostřednictvím oznámení, co dělá a co se nepovedlo. Oznámení aplikace Porter jsou momentálně blokována, takže by běžela, aniž by vám cokoli sdělila.</string>
+    <string name="settings_alerts_blocked_continue">Přesto zapnout</string>
+    <string name="follow_system">Podle systému</string>
+    <string name="start">Spustit</string>
+    <string name="stop">Zastavit</string>
+    <string name="notification_channel_watchdog">Watchdog</string>
+    <string name="notification_channel_crash">Hlášení o pádech</string>
+    <string name="notification_channel_auth">Chyby ověření</string>
+    <string name="notification_auth_invalid_title">Neplatný ověřovací token</string>
+    <string name="notification_auth_invalid_message">Ujistěte se, že token ve vašem intentu odpovídá tokenu v Nastavení v sekci „Ovládejte Porter pomocí automatizačních aplikací“.</string>
+    <string name="porter_status_running_adb">Běží přes ADB</string>
+    <string name="porter_status_running_root">Běží přes root</string>
+    <string name="porter_status_restart_service">Restartujte Porter, aby se spuštěná služba aktualizovala.</string>
+    <string name="porter_status_version_unknown">Neznámá</string>
+    <string name="porter_status_versions">Nainstalovaný Porter: %1$s\nSpuštěná služba: %2$s\nShizuku API: %3$d · Oprava: %4$d</string>
+    <string name="porter_acknowledgements">Poděkování</string>
+    <string name="porter_acknowledgements_summary">Původní projekty, open-source knihovny a licence.</string>
+    <string name="porter_acknowledgements_thanks">Děkujeme</string>
+    <string name="porter_licenses">Licence</string>
+    <string name="porter_ack_shizuku">RikkaApps a všem přispěvatelům za vytvoření Shizuku a jeho API, základu Porter.</string>
+    <string name="porter_ack_thedjchi">thedjchi a přispěvatelům za údržbu forku Shizuku, ze kterého Porter vychází.</string>
+    <string name="porter_ack_symbuzzer">symbuzzer a přispěvatelům za pokračování práce na Shizuku a sdílení jejich forku.</string>
+    <string name="porter_ack_plus">thejaustin a přispěvatelům za ShizukuPlus a inspiraci pro volitelnou aplikaci pro kompatibilitu.</string>
+    <string name="porter_ack_maxpatchs">Děkujeme za ikonu, návrhy maskota a banner.</string>
+    <string name="porter_license_porter">Porter a původní aplikace Shizuku · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API a jeho fork pro Porter · MIT License</string>
+    <string name="porter_license_notice">Upozornění na autorská práva a uvedení autorů</string>
+    <string name="porter_pairing_restart">Restartovat párování</string>
+    <string name="porter_pairing_retry_instructions">Pokud byl kód odmítnut nebo oznámení zmizelo, restartujte párování zde. Pak zavřete starý dialog Androidu s párovacím kódem a otevřete nový. Použijte nový kód; data Porter mazat nemusíte.</string>
+    <string name="porter_pairing_search_timeout">Během jedné minuty nebyl přijat žádný párovací kód. Párování bylo zastaveno. Zvolte „Zkusit znovu“ a pak v Bezdrátovém ladění otevřete nový dialog s párovacím kódem.</string>
+    <string name="porter_pairing_attempt_timeout">Časový limit připojení pro párování vypršel. V Bezdrátovém ladění otevřete nový dialog s párovacím kódem a zkuste to znovu.</string>
+    <string name="porter_pairing_failed_retry">Párování selhalo. V Bezdrátovém ladění otevřete nový dialog s párovacím kódem a zkuste to znovu.</string>
+    <string name="porter_pairing_notification_timeout">Párování bylo zastaveno, protože vypršel časový limit oznámení. Zvolte „Zkusit znovu“ a pak v Bezdrátovém ladění otevřete nový dialog s párovacím kódem.</string>
+    <string name="porter_tv_pairing_progress_title">Párování Porter</string>
+    <string name="porter_tv_pairing_wait">Nechte okno s párovacím kódem otevřené a počkejte.</string>
+    <string name="porter_tv_pairing_return">Návrat do Porter kvůli vypnutí služby přístupnosti pro párování…</string>
+    <string name="porter_tv_pairing_disabling">Vypínání služby přístupnosti pro párování…</string>
+    <string name="porter_tv_pairing_complete">Služba přístupnosti pro párování je vypnutá. Všechny kroky párování jsou dokončeny. Toto okno můžete zavřít.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Služba přístupnosti pro párování je stále zapnutá. Vypněte ji v nastavení přístupnosti.</string>
+    <string name="porter_tv_pairing_open_accessibility">Otevřít nastavení přístupnosti</string>
 </resources>

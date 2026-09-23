@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Service</string>
+    <string name="porter_view_service">Service bekijken</string>
+    <string name="porter_service_starting">Porter-service starten…</string>
+    <string name="porter_service_stopping">Porter-service stoppen…</string>
+    <string name="porter_service_checking">Servicestatus lezen…</string>
+    <string name="porter_apps_service_unavailable">App-toegang is niet beschikbaar zolang de service gestopt is of wordt gewijzigd.</string>
+    <string name="porter_apps_counts_unavailable">Aantallen apps zijn niet beschikbaar.</string>
+    <string name="porter_background_operation">Werking op de achtergrond</string>
+    <string name="porter_service_failed_running">De vorige update is niet voltooid. De service is nog actief. Je kunt de update opnieuw proberen.</string>
+    <string name="porter_service_failed_stopped">De vorige update is niet voltooid. De service is gestopt. Ga naar het dashboard om hem opnieuw te starten.</string>
+    <string name="porter_service_build_different_summary">De actieve service gebruikt een andere build dan de geïnstalleerde app. Compatibele functies blijven beschikbaar.</string>
+    <string name="porter_service_build_unknown_summary">De actieve service kan zijn build-identiteit niet doorgeven. Update de service om de geïnstalleerde build te gebruiken. Compatibele functies blijven beschikbaar.</string>
+    <string name="porter_service_healthy">Alles werkt normaal.</string>
+    <string name="porter_service_progress_background">Je kunt dit scherm verlaten. De bewerking gaat door op de achtergrond.</string>
+    <string name="porter_build_identity_unavailable">Build-identiteit niet beschikbaar</string>
+    <string name="porter_installed_app">Geïnstalleerde app</string>
+    <string name="porter_running_service">Actieve service</string>
+    <string name="porter_service_api_value">Porter-protocol: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Vereist een geroot apparaat. Porter vraagt om root-toegang wanneer je op Starten drukt.</string>
+    <string name="porter_version_compact">Versie: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Build: %1$s (%2$s)</string>
+</resources>

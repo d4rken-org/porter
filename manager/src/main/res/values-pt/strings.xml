@@ -4,38 +4,38 @@
     <string name="home_status_service_is_running">%1$s está em execução</string>
     <string name="home_status_service_not_running">%1$s não está em execução</string>
     <!-- Home - Adb -->
-    <string name="home_adb_title"><![CDATA[Comece conectando-se a um computador]]></string>
-    <string name="home_adb_description"><![CDATA[Para dispositivos sem root, você precisa usar o adb para iniciar o Porter (requer conexão com o computador). Esse processo precisa ser repetido toda vez que o dispositivo for reiniciado. Por favor, <b><a href="%1$s">leia o Ajuda</a></b>.]]></string>
+    <string name="home_adb_title"><![CDATA[Comece por ligar-se a um computador]]></string>
+    <string name="home_adb_description"><![CDATA[Para dispositivos sem root, tem de usar o adb para iniciar o Porter (requer ligação ao computador). Este processo tem de ser repetido sempre que o dispositivo for reiniciado. Por favor, <b><a href="%1$s">leia a Ajuda</a></b>.]]></string>
     <string name="home_adb_button_view_command">Ver o comando</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Existem algumas outras considerações, por favor confirme que você leu a ajuda primeiro.]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Existem algumas outras considerações, por favor confirme primeiro que leu a ajuda.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Mandar</string>
     <!-- Home - Wireless Adb -->
-    <string name="home_wireless_adb_title"><![CDATA[Iniciar via depuração sem fio]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[No Android 11 ou superior, você pode ativar a depuração sem fio e iniciar o Porter diretamente do seu dispositivo, sem conectar a um computador.<p>Veja o guia passo a passo primeiro.]]></string>
-    <string name="home_wireless_adb_description_pre_11"><![CDATA[Antes do Android 11, é necessário conectar-se a um computador para ativar a depuração sem fio.]]></string>
+    <string name="home_wireless_adb_title"><![CDATA[Iniciar via depuração sem fios]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[No Android 11 ou superior, pode ativar a depuração sem fios e iniciar o Porter diretamente a partir do seu dispositivo, sem o ligar a um computador.<p>Veja o guia passo a passo primeiro.]]></string>
+    <string name="home_wireless_adb_description_pre_11"><![CDATA[Antes do Android 11, é necessário ligar-se a um computador para ativar a depuração sem fios.]]></string>
     <string name="home_wireless_adb_view_guide_button">Guia passo a passo</string>
     <!-- Adb -->
-    <string name="dialog_adb_discovery">Procurando serviço de depuração sem fio</string>
-    <string name="dialog_adb_discovery_message">Ative \"Depuração sem fio\" em \"Opções do
-        desenvolvedor\". A \"depuração sem fio\" é desabilitada automaticamente quando a rede muda.
+    <string name="dialog_adb_discovery">A procurar o serviço de depuração sem fios</string>
+    <string name="dialog_adb_discovery_message">Ative a \"Depuração sem fios\" nas \"Opções de
+        programador\". A \"Depuração sem fios\" é desativada automaticamente quando a rede muda.
         \n
-        \nObserve que não desative \"Opções do desenvolvedor\" ou \"Depuração USB\" ou Porter será
+        \nNão desative as \"Opções de programador\" nem a \"Depuração USB\", caso contrário o Porter será
         parado.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Por favor, tente
-        desabilitar e habilitar \"Depuração sem fio\" se continuar procurando.</string>
+        desativar e ativar a \"Depuração sem fios\" se continuar a procurar.</string>
     <string name="dialog_adb_port">Porta</string>
     <string name="adb_pairing">Emparelhamento</string>
     <string name="dialog_adb_pairing_title">Emparelhar com dispositivo</string>
-    <string name="dialog_adb_pairing_discovery">Procurando serviço de pareamento</string>
-    <string name="dialog_adb_pairing_paring_code">Código de pareamento</string>
+    <string name="dialog_adb_pairing_discovery">A procurar o serviço de emparelhamento</string>
+    <string name="dialog_adb_pairing_paring_code">Código de emparelhamento</string>
     <string name="paring_code_is_wrong">O código de emparelhamento está errado.</string>
     <string name="cannot_connect_port">Não consigo ligar-me ao serviço de depuração sem fios.\n\nPor
         favor, certifique-se de que o Porter está na lista branca em todas as aplicações de
         firewall, bloqueadores de anúncios, VPN ou semelhantes que possam restringir o acesso à
         rede.</string>
-    <string name="dialog_wireless_adb_not_enabled">A depuração sem fio não está habilitada.
-        \nObserve que, antes do Android 11, para habilitar a depuração sem fio, a conexão com o
-        computador é obrigatória.</string>
+    <string name="dialog_wireless_adb_not_enabled">A depuração sem fios não está ativada.
+        \nAntes do Android 11, para ativar a depuração sem fios, é obrigatória a ligação a um
+        computador.</string>
     <string name="dialog_usb_debugging_not_enabled">A depuração USB não está ativada.\nAtive-a nas
         \"Opções do programador\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">No Android 14, a
@@ -44,17 +44,14 @@
         conceder, execute o seguinte comando ADB:\n\n^2\n\nApós executar o comando, pode continuar
         com o processo de emparelhamento.\n\nNota: pode contornar isto instalando/atualizando o
         Porter com o ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Por favor, ative o serviço de
-        acessibilidade para iniciar o processo de emparelhamento. Isto permite que o Porter detete
-        o código de emparelhamento.\n\nO serviço de acessibilidade será desativado quando o código
-        for encontrado ou após 1 minuto para poupar energia.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Ative o serviço de acessibilidade para iniciar o processo de emparelhamento. Isto permite que o Porter detete o código de emparelhamento.\n\nO serviço de acessibilidade será desativado após a tentativa de emparelhamento ou se nenhum código for encontrado no espaço de um minuto. O Porter mostrará o resultado e permitirá tentar novamente.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Para iniciar o emparelhamento, siga os
         seguintes passos:\n- Aceda a \"Opções de programador\"\n- Ative \"Depuração USB\" e
         \"Depuração sem fios\"\n- Toque no lado esquerdo de \"Depuração sem fios\"\n- Toque em
-        \"Emparelhar dispositivo com código de emparelhamento\". O Porter detetará o código de
+        \"Sincronize dispositivo com código de sincronização\". O Porter detetará o código de
         emparelhamento automaticamente.</string>
-    <string name="adb_pairing_requires_multi_window">Por favor, entre primeiro no modo de tela
-        dividida (várias janelas).</string>
+    <string name="adb_pairing_requires_multi_window">Por favor, entre primeiro no modo de ecrã
+        dividido (várias janelas).</string>
     <string name="adb_pairing_requires_multi_window_reason">O sistema exige que o diálogo de
         emparelhamento seja sempre visível. Usar o modo de ecrã dividido é a única forma de permitir
         que esta aplicação e o diálogo do sistema sejam visíveis ao mesmo tempo.</string>
@@ -62,21 +59,21 @@
         pode dever-se ao facto de o mecanismo KeyStore deste dispositivo estar avariado.</string>
     <string name="adb_pair_required">Por favor, passe primeiro pela etapa de emparelhamento.</string>
     <string name="enable">Ativar</string>
-    <string name="development_settings">Opções do desenvolvedor</string>
+    <string name="development_settings">Opções de programador</string>
     <string name="notification_settings">Opções de notificação</string>
-    <string name="adb_pairing_tutorial_content_notification">Uma notificação de Porter ajudará você
+    <string name="adb_pairing_tutorial_content_notification">Uma notificação do Porter irá ajudá-lo
         a concluir o emparelhamento.</string>
     <string name="adb_pairing_tutorial_content_steps">Aceda às \"Opções do programador\" e ative a
         \"Depuração USB\" e a \"Depuração sem fios\".</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Toque no lado esquerdo de
-        \"Depuração sem fios\" e, em seguida, toque em \"Emparelhar dispositivo com código de
-        emparelhamento\". Introduza o código na notificação para concluir o emparelhamento.</string>
+        \"Depuração sem fios\" e, em seguida, toque em \"Sincronize dispositivo com código de
+        sincronização\". Introduza o código na notificação para concluir o emparelhamento.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">O processo de emparelhamento
-        precisa que você interaja com uma notificação de Porter. Por favor, permita que Porter
+        precisa que interaja com uma notificação do Porter. Por favor, permita que o Porter
         mostre notificações.</string>
-    <string name="adb_pairing_tutorial_content_miui">Os usuários do MIUI podem precisar mudar o
-        estilo de notificação para \"Android\" de \"Notificação\" - \"Sombra de notificação\" nas
-        configurações do sistema.</string>
+    <string name="adb_pairing_tutorial_content_miui">Os utilizadores da MIUI podem ter de mudar o
+        estilo de notificação para \"Android\" em \"Notificação\" - \"Sombra de notificação\" nas
+        definições do sistema.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Caso contrário, pode não conseguir introduzir
         o código de emparelhamento a partir da notificação.</string>
     <string name="adb_pairing_tutorial_content_finish">Volta para a Porter e começa a Porter.</string>
@@ -90,16 +87,17 @@
     <string name="home_root_title"><![CDATA[Iniciar (para dispositivos com root)]]></string>
     <string name="home_root_button_start">Iniciar</string>
     <!-- Home - Application management -->
-    <string name="home_app_management_title">Gerenciamento de aplicativos</string>
+    <string name="home_app_management_title">Gestão de aplicações</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="one"><![CDATA[%d aplicativo autorizado]]></item>
-        <item quantity="other"><![CDATA[%d aplicativos autorizados]]></item>
+        <item quantity="one"><![CDATA[%d aplicação autorizada]]></item>
+        <item quantity="many"><![CDATA[%d de aplicações autorizadas]]></item>
+        <item quantity="other"><![CDATA[%d aplicações autorizadas]]></item>
     </plurals>
-    <string name="home_app_management_view_authorized_apps"><![CDATA[Toque para gerenciar aplicativos autorizados]]></string>
+    <string name="home_app_management_view_authorized_apps"><![CDATA[Toque para gerir as aplicações autorizadas]]></string>
     <string name="home_app_management_empty">As aplicações que solicitaram ou declararam a permissão
         Porter serão apresentadas aqui.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">Controlo Porter com aplicações de automação</string>
+    <string name="home_automation_title">Controle o Porter com aplicações de automação</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">A permissão do adb é limitada</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[É altamente possível que o fabricante do seu dispositivo limite a permissão do adb.<p>Pode haver uma solução para o seu sistema <b><a href="%1$s">neste documento</a></b>.]]></string>
@@ -107,7 +105,7 @@
         com root</string>
     <string name="app_management_toggle_all">Alternar tudo</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">Use Porter em aplicativos de terminal</string>
+    <string name="home_terminal_title">Use o Porter em aplicações de terminal</string>
     <string name="home_terminal_description">Execute comandos de shell em aplicações de terminal
         através do Porter.</string>
     <string name="terminal_tutorial_miui">Os utilizadores relataram que a MIUI quebra o Storage
@@ -117,7 +115,7 @@
     <string name="terminal_tutorial_1">Exporte os ficheiros para uma nova pasta.</string>
     <string name="terminal_tutorial_1_description">Serão exportados dois ficheiros: %1$s e %2$s. Se
         os ficheiros já existirem na pasta selecionada, serão eliminados.</string>
-    <string name="terminal_export_files">Exportar arquivos</string>
+    <string name="terminal_export_files">Exportar ficheiros</string>
     <string name="terminal_tutorial_2">Utilize a aplicação de terminal para copiar os ficheiros para
         o diretório de ficheiros privados.</string>
     <string name="terminal_tutorial_2_description">Dica: Se o diretório inicial da sua aplicação de
@@ -127,7 +125,7 @@
     <string name="terminal_tutorial_3">Abra um terminal com o seguinte comando:</string>
     <string name="rish_description"><![CDATA[Com %1$s, pode executar comandos shell em qualquer aplicação de terminal.<p>Toque para saber mais sobre como utilizá-lo.]]></string>
     <!-- Settings -->
-    <string name="settings_title">Configurações</string>
+    <string name="settings_title">Definições</string>
     <string name="settings_start_on_boot">Iniciar no arranque</string>
     <string name="settings_start_on_boot_summary">Requer Android 11 ou superior ou root.</string>
     <string name="settings_start_on_boot_bug">Devido a uma falha no Android 11-12, a depuração sem
@@ -157,25 +155,25 @@
     <!-- Stop -->
     <string name="action_stop">Parar Porter</string>
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">Emparelhamento de depuração sem fio</string>
-    <string name="notification_adb_pairing_input_paring_code">Digite o código de pareamento</string>
-    <string name="notification_adb_pairing_searching_for_service_title">Procurando serviço de
-        pareamento</string>
+    <string name="notification_channel_adb_pairing">Emparelhamento de depuração sem fios</string>
+    <string name="notification_adb_pairing_input_paring_code">Introduza o código de emparelhamento</string>
+    <string name="notification_adb_pairing_searching_for_service_title">A procurar o serviço de
+        emparelhamento</string>
     <string name="notification_adb_pairing_service_found_title">Serviço de emparelhamento encontrado</string>
     <string name="notification_adb_pairing_stop_searching">Parar pesquisa</string>
     <string name="notification_adb_pairing_working_title">Emparelhamento em progresso</string>
-    <string name="notification_adb_pairing_succeed_title">Pareamento bem sucedido</string>
-    <string name="notification_adb_pairing_succeed_text">Você pode iniciar o serviço Porter agora.</string>
-    <string name="notification_adb_pairing_failed_title">Pareamento falhou</string>
+    <string name="notification_adb_pairing_succeed_title">Emparelhamento bem-sucedido</string>
+    <string name="notification_adb_pairing_succeed_text">Pode iniciar o serviço Porter agora.</string>
+    <string name="notification_adb_pairing_failed_title">O emparelhamento falhou</string>
     <string name="notification_adb_pairing_retry">Repetir</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">Acessar Porter</string>
-    <string name="permission_description">Permita que o aplicativo use o Porter.</string>
+    <string name="permission_label">Aceder ao Porter</string>
+    <string name="permission_description">Permita que a aplicação use o Porter.</string>
     <string name="permission_warning_template"><![CDATA[Permitir <b>%1$s</b> a %2$s\?]]></string>
     <string name="grant_dialog_button_allow_always">Permitir o tempo todo</string>
     <string name="grant_dialog_button_deny">"Negar"</string>
     <!-- Starter -->
-    <string name="starter">Iniciante</string>
+    <string name="starter">Iniciador</string>
     <string name="start_with_root_failed">Não é possível iniciar o serviço porque a permissão de
         root não foi concedida ou este dispositivo não está enraizado.</string>
     <!-- WADB Starter -->
@@ -204,4 +202,59 @@
         emparelhamento for encontrado.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Tente agora</string>
+    <string name="home_root_description"><![CDATA[Se usa o Magisk, %1$s é outra opção. As aplicações precisam de suporte explícito para %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intents</string>
+    <string name="home_automation_bottom_sheet_label_action">Ação</string>
+    <string name="home_automation_bottom_sheet_label_package">Pacote</string>
+    <string name="home_automation_bottom_sheet_label_target">Destino</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extras</string>
+    <string name="home_automation_regenerate_token">Gerar um novo token?</string>
+    <string name="home_automation_regenerate_token_message">Terá de reconfigurar as suas intents com o novo token.</string>
+    <string name="home_dialog_reboot_required_title">Reinício necessário</string>
+    <string name="home_dialog_reboot_required_message">É necessário reiniciar o dispositivo para que o Porter funcione corretamente. Para continuar, reinicie o dispositivo.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Aplicação duplicada detetada</string>
+    <string name="home_dialog_duplicate_app_detected_message">Está instalada outra versão desta aplicação no seu dispositivo. Para continuar, desinstale todas as versões duplicadas e reinicie o dispositivo.</string>
+    <string name="home_dialog_button_exit">Sair</string>
+    <string name="settings_alerts_blocked_title">Alertas em segundo plano</string>
+    <string name="settings_alerts_blocked_summary">As notificações do Porter estão bloqueadas, pelo que o início no arranque e o cão de guarda não o podem avisar quando precisarem de atenção.</string>
+    <string name="settings_alerts_blocked_message">Esta funcionalidade indica através de uma notificação o que está a fazer e o que correu mal. As notificações do Porter estão atualmente bloqueadas, pelo que funcionaria sem o avisar de nada.</string>
+    <string name="settings_alerts_blocked_continue">Ativar mesmo assim</string>
+    <string name="follow_system">Seguir o sistema</string>
+    <string name="start">Iniciar</string>
+    <string name="stop">Parar</string>
+    <string name="notification_channel_watchdog">Cão de guarda</string>
+    <string name="notification_channel_crash">Relatórios de falhas</string>
+    <string name="notification_channel_auth">Erros de autenticação</string>
+    <string name="notification_auth_invalid_title">Token de autenticação inválido</string>
+    <string name="notification_auth_invalid_message">Certifique-se de que o token na sua intent corresponde ao indicado em Definições, em “Controle o Porter com aplicações de automação”.</string>
+    <string name="porter_status_running_adb">Em execução via ADB</string>
+    <string name="porter_status_running_root">Em execução via root</string>
+    <string name="porter_status_restart_service">Reinicie o Porter para atualizar o serviço em execução.</string>
+    <string name="porter_status_version_unknown">Desconhecida</string>
+    <string name="porter_status_versions">Porter instalado: %1$s\nServiço em execução: %2$s\nAPI do Shizuku: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Agradecimentos</string>
+    <string name="porter_acknowledgements_summary">Projetos de origem, bibliotecas de código aberto e licenças.</string>
+    <string name="porter_acknowledgements_thanks">Obrigado</string>
+    <string name="porter_licenses">Licenças</string>
+    <string name="porter_ack_shizuku">À RikkaApps e a todos os colaboradores por criarem o Shizuku e as suas APIs, a base do Porter.</string>
+    <string name="porter_ack_thedjchi">A thedjchi e aos colaboradores por manterem o fork do Shizuku em que o Porter se baseia.</string>
+    <string name="porter_ack_symbuzzer">A symbuzzer e aos colaboradores por continuarem o trabalho no Shizuku e partilharem o seu fork.</string>
+    <string name="porter_ack_plus">A thejaustin e aos colaboradores pelo ShizukuPlus e pela inspiração para uma aplicação de compatibilidade opcional.</string>
+    <string name="porter_ack_maxpatchs">Obrigado pelo ícone, pelos designs da mascote e pelo banner.</string>
+    <string name="porter_license_porter">Porter e a aplicação Shizuku original · Licença Apache 2.0</string>
+    <string name="porter_license_api">API do Shizuku e o respetivo fork do Porter · Licença MIT</string>
+    <string name="porter_license_notice">Avisos de direitos de autor e de atribuição</string>
+    <string name="porter_pairing_restart">Reiniciar emparelhamento</string>
+    <string name="porter_pairing_retry_instructions">Se um código foi rejeitado ou a notificação desapareceu, reinicie aqui o emparelhamento. Depois, feche a caixa de diálogo antiga do código de emparelhamento do Android e abra uma nova. Use o novo código; não precisa de limpar os dados do Porter.</string>
+    <string name="porter_pairing_search_timeout">Não foi recebido nenhum código de emparelhamento no espaço de um minuto. O emparelhamento parou. Escolha Repetir e abra uma nova caixa de diálogo de código de emparelhamento em Depuração sem fios.</string>
+    <string name="porter_pairing_attempt_timeout">A ligação de emparelhamento excedeu o tempo limite. Abra uma nova caixa de diálogo de código de emparelhamento em Depuração sem fios e tente novamente.</string>
+    <string name="porter_pairing_failed_retry">O emparelhamento falhou. Abra uma nova caixa de diálogo de código de emparelhamento em Depuração sem fios e tente novamente.</string>
+    <string name="porter_pairing_notification_timeout">O emparelhamento parou porque a notificação excedeu o tempo limite. Escolha Repetir e abra uma nova caixa de diálogo de código de emparelhamento em Depuração sem fios.</string>
+    <string name="porter_tv_pairing_progress_title">Emparelhamento do Porter</string>
+    <string name="porter_tv_pairing_wait">Mantenha a janela do código de emparelhamento aberta e aguarde.</string>
+    <string name="porter_tv_pairing_return">A voltar ao Porter para desativar o serviço de acessibilidade de emparelhamento…</string>
+    <string name="porter_tv_pairing_disabling">A desativar o serviço de acessibilidade de emparelhamento…</string>
+    <string name="porter_tv_pairing_complete">O serviço de acessibilidade de emparelhamento está desativado. Todos os passos de emparelhamento estão concluídos. Pode fechar esta janela.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">O serviço de acessibilidade de emparelhamento ainda está ativado. Desative-o nas definições de Acessibilidade.</string>
+    <string name="porter_tv_pairing_open_accessibility">Abrir definições de Acessibilidade</string>
 </resources>

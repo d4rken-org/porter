@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Aplikasi</string>
+    <string name="porter_home_subtitle">Akses ADB untuk apl anda</string>
+    <string name="porter_startup">Permulaan</string>
+    <string name="porter_version">Versi</string>
+    <string name="porter_pairing_method">Kaedah gandingan</string>
+    <string name="porter_status_restricted">Sesetengah kebenaran ADB dihadkan oleh Android.</string>
+    <string name="porter_status_stop_message">Menghentikan Porter akan memutuskan sambungan apl yang menggunakannya. Anda perlu memulakan Porter semula secara manual, yang mungkin memerlukan komputer.</string>
+    <string name="porter_status_details_hint">Buka butiran perkhidmatan dan pilihan henti</string>
+    <string name="porter_status_ready">Porter sedia. Apl yang serasi kini boleh menyambung dan meminta akses.</string>
+    <string name="porter_pairing_notification">Pemberitahuan</string>
+    <string name="porter_pairing_dialog">Dialog dalam apl</string>
+    <string name="porter_manage_apps_action">Urus apl</string>
+    <string name="porter_primary_user_title">Gunakan pengguna utama Android</string>
+    <string name="porter_primary_user_description">Porter tidak boleh dimulakan daripada pengguna atau profil Android ini. Tukar kepada pengguna utama peranti, pasang Porter di sana jika perlu dan mulakan perkhidmatannya. Kemudian kembali ke sini untuk mengurus apl anda.</string>
+    <string name="porter_secondary_user_stop_message">Menghentikan Porter akan memutuskan sambungan apl dalam semua pengguna Android. Untuk memulakannya semula, tukar kepada pengguna utama peranti dan buka Porter di sana.</string>
+</resources>

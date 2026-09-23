@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Служба</string>
+    <string name="porter_view_service">Показать службу</string>
+    <string name="porter_service_starting">Запуск службы Porter…</string>
+    <string name="porter_service_stopping">Остановка службы Porter…</string>
+    <string name="porter_service_checking">Получение состояния службы…</string>
+    <string name="porter_apps_service_unavailable">Доступ приложений недоступен, пока служба остановлена или меняет состояние.</string>
+    <string name="porter_apps_counts_unavailable">Количество приложений недоступно.</string>
+    <string name="porter_background_operation">Фоновая операция</string>
+    <string name="porter_service_failed_running">Предыдущее обновление не завершилось. Служба по-прежнему работает. Можно повторить обновление.</string>
+    <string name="porter_service_failed_stopped">Предыдущее обновление не завершилось. Служба остановлена. Перейдите на главный экран, чтобы снова её запустить.</string>
+    <string name="porter_service_build_different_summary">Запущенная служба использует другую сборку, чем установленное приложение. Совместимые функции остаются доступны.</string>
+    <string name="porter_service_build_unknown_summary">Запущенная служба не может сообщить свою сборку. Обновите её до установленной сборки. Совместимые функции остаются доступны.</string>
+    <string name="porter_service_healthy">Всё работает нормально.</string>
+    <string name="porter_service_progress_background">Можно покинуть этот экран. Операция продолжится в фоновом режиме.</string>
+    <string name="porter_build_identity_unavailable">Сведения о сборке недоступны</string>
+    <string name="porter_installed_app">Установленное приложение</string>
+    <string name="porter_running_service">Запущенная служба</string>
+    <string name="porter_service_api_value">Протокол Porter: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Требуется устройство с root. Porter запросит root-доступ, когда вы нажмёте «Запустить».</string>
+    <string name="porter_version_compact">Версия: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Сборка: %1$s (%2$s)</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Porter-ის გამოყენება</string>
+    <string name="permission_description">ნებას რთავს ამ აპს, გამოიყენოს სისტემური API-ები Porter-ის მეშვეობით.</string>
+    <string name="porter_missing">ამ დამხმარე აპის გამოსაყენებლად დააინსტალირეთ Porter შესაბამისი ხელმოწერის სერტიფიკატით.</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Gamitin ang Porter</string>
+    <string name="permission_description">Payagan ang app na ito na gumamit ng mga system API sa pamamagitan ng Porter.</string>
+    <string name="porter_missing">I-install ang Porter na may katugmang signing certificate para magamit ang companion na ito.</string>
+</resources>

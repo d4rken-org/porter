@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Używanie Porter</string>
+    <string name="permission_description">Zezwala tej aplikacji na korzystanie z systemowych API przez Porter.</string>
+    <string name="porter_missing">Zainstaluj Porter z pasującym certyfikatem podpisu, aby używać tej aplikacji towarzyszącej.</string>
+</resources>

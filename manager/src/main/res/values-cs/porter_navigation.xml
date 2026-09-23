@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Aplikace</string>
+    <string name="porter_home_subtitle">Přístup ADB pro vaše aplikace</string>
+    <string name="porter_startup">Spuštění</string>
+    <string name="porter_version">Verze</string>
+    <string name="porter_pairing_method">Způsob párování</string>
+    <string name="porter_status_restricted">Některá oprávnění ADB jsou omezena Androidem.</string>
+    <string name="porter_status_stop_message">Zastavení Porter odpojí aplikace, které jej používají. Porter pak musíte znovu spustit ručně, k čemuž může být potřeba počítač.</string>
+    <string name="porter_status_details_hint">Otevřít podrobnosti o službě a možnosti zastavení</string>
+    <string name="porter_status_ready">Porter je připraven. Kompatibilní aplikace se nyní mohou připojit a požádat o přístup.</string>
+    <string name="porter_pairing_notification">Oznámení</string>
+    <string name="porter_pairing_dialog">Dialog v aplikaci</string>
+    <string name="porter_manage_apps_action">Spravovat aplikace</string>
+    <string name="porter_primary_user_title">Použijte primárního uživatele Androidu</string>
+    <string name="porter_primary_user_description">Porter nelze spustit z tohoto uživatele nebo profilu Androidu. Přepněte na primárního uživatele zařízení, v případě potřeby tam Porter nainstalujte a spusťte jeho službu. Pak se sem vraťte a spravujte své aplikace.</string>
+    <string name="porter_secondary_user_stop_message">Zastavení Porter odpojí aplikace u všech uživatelů Androidu. Chcete-li jej znovu spustit, přepněte na primárního uživatele zařízení a otevřete Porter tam.</string>
+</resources>

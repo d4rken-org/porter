@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Porter 사용</string>
+    <string name="permission_description">이 앱이 Porter를 통해 시스템 API를 사용하도록 허용합니다.</string>
+    <string name="porter_missing">이 컴패니언 앱을 사용하려면 일치하는 서명 인증서가 있는 Porter를 설치하세요.</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Հասանելի է ծառայության թարմացում</string>
+    <string name="porter_service_update_action">Թարմացնել ծառայությունը</string>
+    <string name="porter_service_update_summary">Թարմացումը կարճ ժամանակով անջատում է միացված հավելվածները։ Առկա թույլտվությունները պահպանվում են։</string>
+    <string name="porter_service_update_primary">Բացեք Porter-ը Android-ի հիմնական օգտատիրոջում՝ ծառայությունը թարմացնելու համար։</string>
+    <string name="porter_service_update_features">Թարմացրեք ծառայությունը՝ այս գործառույթները միացնելու համար։</string>
+    <string name="porter_service_auto_update">Թարմացնել ծառայությունն ավտոմատ</string>
+    <string name="porter_service_auto_update_summary">Porter հավելվածի թարմացումից հետո այլ կառուցմամբ աշխատող ծառայությունը փոխարինվում է ֆոնային ռեժիմում։ Սա կարճ ժամանակով անջատում է միացված հավելվածները։ Կանգնեցված ծառայությունը մնում է կանգնեցված։</string>
+    <string name="porter_service_update_interrupted">Ծառայության նախորդ թարմացումը չավարտվեց։ Կրկին փորձեք, եթե ծառայությունը դեռ աշխատում է, կամ կրկին գործարկեք այն «Ծառայություն» էկրանից։</string>
+    <string name="porter_global_access_update">Մուտքի ընդհանուր կառավարումը հասանելի չէ աշխատող ծառայությունում։</string>
+    <string name="porter_discovery_update">Աշխատող ծառայությունը չի աջակցում հավելվածների հայտնաբերման և միացումների պատմության ընթացիկ գործառույթները։ Հասանելի հավելվածները ցուցադրվում են դրա հին միջերեսով։</string>
+    <string name="porter_service_updating">Porter ծառայությունը թարմացվում է…</string>
+    <string name="porter_service_update_failed">Չհաջողվեց թարմացնել Porter ծառայությունը</string>
+    <string name="porter_service_update_failed_summary">Չհաջողվեց աշխատող ծառայությունը փոխարինել տեղադրված տարբերակով։ Եթե այն դեռ աշխատում է, կարող եք կրկին փորձել։ Հակառակ դեպքում կրկին գործարկեք ծառայությունը «Ծառայություն» էկրանից։</string>
+    <string name="porter_service_update_retry">Կրկին փորձել թարմացումը</string>
+</resources>

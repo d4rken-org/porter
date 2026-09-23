@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Aplicații</string>
+    <string name="porter_home_subtitle">Acces ADB pentru aplicațiile tale</string>
+    <string name="porter_startup">Pornire</string>
+    <string name="porter_version">Versiune</string>
+    <string name="porter_pairing_method">Metodă de asociere</string>
+    <string name="porter_status_restricted">Unele permisiuni ADB sunt restricționate de Android.</string>
+    <string name="porter_status_stop_message">Oprirea Porter deconectează aplicațiile care îl folosesc. Va trebui să pornești din nou Porter manual, ceea ce poate necesita un computer.</string>
+    <string name="porter_status_details_hint">Deschide detaliile serviciului și opțiunile de oprire</string>
+    <string name="porter_status_ready">Porter este gata. Aplicațiile compatibile se pot conecta acum și pot solicita acces.</string>
+    <string name="porter_pairing_notification">Notificare</string>
+    <string name="porter_pairing_dialog">Dialog în aplicație</string>
+    <string name="porter_manage_apps_action">Gestionează aplicațiile</string>
+    <string name="porter_primary_user_title">Folosește utilizatorul Android principal</string>
+    <string name="porter_primary_user_description">Porter nu poate fi pornit din acest utilizator sau profil Android. Comută la utilizatorul principal al dispozitivului, instalează Porter acolo dacă este necesar și pornește-i serviciul. Apoi revino aici pentru a gestiona aplicațiile.</string>
+    <string name="porter_secondary_user_stop_message">Oprirea Porter deconectează aplicațiile din toți utilizatorii Android. Pentru a-l porni din nou, comută la utilizatorul principal al dispozitivului și deschide Porter acolo.</string>
+</resources>

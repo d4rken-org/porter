@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Назад</string>
+    <string name="porter_local_network_permission">Дозволите приступ локалној мрежи да би Porter могао да пронађе Android услугу бежичног отклањања грешака и повеже се са њом.</string>
+    <string name="porter_pairing_dialog_instructions">Отворите „Бежично отклањање грешака“ у Android опцијама за програмере и изаберите „Упарите уређај помоћу кода за упаривање“. Овде унесите порт и код за упаривање.</string>
+    <string name="porter_permission_detail">Porter ће за ову апликацију извршавати команде на вашем уређају са истим привилегијама које има и сам Porter. Дозволите само апликације којима верујете.</string>
+    <string name="porter_permission_waiting">Чека се Porter…</string>
+</resources>

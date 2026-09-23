@@ -42,10 +42,7 @@
         deze machtiging te verlenen, voer je de volgende ADB-opdracht uit:\n\n^2\n\nNa het uitvoeren
         van de opdracht kun je doorgaan met het koppelingsproces.\n\nOpmerking: Je kan dit omzeilen
         door Porter te installeren/bijwerken met ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Schakel alsjeblieft de
-        toegankelijkheidsservice in om het koppelingsproces te starten. Hierdoor kan Porter de
-        koppelingscode detecteren.\n\nDe toegankelijkheidsservice wordt uitgeschakeld zodra de code
-        is gevonden of na 1 minuut inactiviteit om energie te besparen.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Schakel de toegankelijkheidsservice in om het koppelen te starten. Hierdoor kan Porter de koppelingscode detecteren.\n\nDe toegankelijkheidsservice wordt uitgeschakeld na de koppelpoging, of als er binnen een minuut geen code wordt gevonden. Porter toont het resultaat en laat je het opnieuw proberen.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Begin met koppelen door de volgende
         stappen uit te voeren:\n- Ga naar \'Ontwikkelaarsopties\'\n- Schakel \'USB-foutopsporing\'
         en \'Draadloze foutopsporing\' in\n- Klik op de linkerkant van \'Draadloze
@@ -67,7 +64,7 @@
     <string name="adb_pairing_tutorial_content_steps">Ga naar \'Ontwikkelaarsopties\' en schakel
         \'USB-foutopsporing\' en \'Draadloze foutopsporing\' in.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Klik op de linkerkant van
-        \'Draadloos debuggen\' en klik vervolgens op \'Apparaat koppelen met koppelingscode\'. Voer
+        \'Draadloze foutopsporing\' en klik vervolgens op \'Apparaat koppelen met koppelingscode\'. Voer
         de code in de melding in om het koppelen te voltooien.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Het koppelproces vereist dat je
         reageert op een melding van Porter. Laat Porter alsjeblieft meldingen plaatsen.</string>
@@ -187,7 +184,7 @@
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog loopt</string>
     <string name="watchdog_turn_off">Uitschakelen</string>
-    <string name="watchdog_shizuku_crashed_title">Porter is onlangs neergestort</string>
+    <string name="watchdog_shizuku_crashed_title">Porter is onlangs gecrasht</string>
     <string name="watchdog_shizuku_crashed_text">De waakhond startte de service opnieuw. Klik om te
         leren over mogelijke oplossingen om toekomstige crashes te voorkomen.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Zet meldingen uit</string>
@@ -201,4 +198,59 @@
         is gevonden.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Probeer nu</string>
+    <string name="home_root_description"><![CDATA[Als je Magisk gebruikt, is %1$s een andere optie. Apps moeten %2$s expliciet ondersteunen.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intents</string>
+    <string name="home_automation_bottom_sheet_label_action">Actie</string>
+    <string name="home_automation_bottom_sheet_label_package">Pakket</string>
+    <string name="home_automation_bottom_sheet_label_target">Doel</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extra’s</string>
+    <string name="home_automation_regenerate_token">Token opnieuw genereren?</string>
+    <string name="home_automation_regenerate_token_message">Je moet je intents opnieuw configureren met het nieuwe token.</string>
+    <string name="home_dialog_reboot_required_title">Opnieuw opstarten vereist</string>
+    <string name="home_dialog_reboot_required_message">Je apparaat moet opnieuw worden opgestart om Porter goed te laten werken. Start je apparaat opnieuw op om door te gaan.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Dubbele app gedetecteerd</string>
+    <string name="home_dialog_duplicate_app_detected_message">Er is een andere versie van deze app op je apparaat geïnstalleerd. Verwijder alle dubbele versies en start je apparaat opnieuw op om door te gaan.</string>
+    <string name="home_dialog_button_exit">Afsluiten</string>
+    <string name="settings_alerts_blocked_title">Achtergrondmeldingen</string>
+    <string name="settings_alerts_blocked_summary">Meldingen van Porter zijn geblokkeerd, dus “Starten bij het opstarten” en “Bewaker” kunnen je niet laten weten wanneer ze aandacht nodig hebben.</string>
+    <string name="settings_alerts_blocked_message">Deze functie meldt via een melding wat ze doet en wat er misging. Meldingen van Porter zijn momenteel geblokkeerd, dus ze zou draaien zonder je iets te laten weten.</string>
+    <string name="settings_alerts_blocked_continue">Toch inschakelen</string>
+    <string name="follow_system">Systeem volgen</string>
+    <string name="start">Starten</string>
+    <string name="stop">Stoppen</string>
+    <string name="notification_channel_watchdog">Bewaker</string>
+    <string name="notification_channel_crash">Crashrapporten</string>
+    <string name="notification_channel_auth">Authenticatiefouten</string>
+    <string name="notification_auth_invalid_title">Ongeldig authenticatietoken</string>
+    <string name="notification_auth_invalid_message">Zorg dat het token in je intent overeenkomt met het token in Instellingen onder “Bestuur Porter met automatiseringsapps”.</string>
+    <string name="porter_status_running_adb">Actief via ADB</string>
+    <string name="porter_status_running_root">Actief via root</string>
+    <string name="porter_status_restart_service">Start Porter opnieuw om de actieve service te updaten.</string>
+    <string name="porter_status_version_unknown">Onbekend</string>
+    <string name="porter_status_versions">Geïnstalleerde Porter: %1$s\nActieve service: %2$s\nShizuku API: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Dankbetuigingen</string>
+    <string name="porter_acknowledgements_summary">Upstream-projecten, opensourcebibliotheken en licenties.</string>
+    <string name="porter_acknowledgements_thanks">Bedankt</string>
+    <string name="porter_licenses">Licenties</string>
+    <string name="porter_ack_shizuku">Aan RikkaApps en alle bijdragers voor het maken van Shizuku en de API’s ervan, de basis van Porter.</string>
+    <string name="porter_ack_thedjchi">Aan thedjchi en bijdragers voor het onderhouden van de Shizuku-fork waarop Porter is gebaseerd.</string>
+    <string name="porter_ack_symbuzzer">Aan symbuzzer en bijdragers voor het voortzetten van het werk aan Shizuku en het delen van hun fork.</string>
+    <string name="porter_ack_plus">Aan thejaustin en bijdragers voor ShizukuPlus en de inspiratie voor een optionele compatibiliteitsapp.</string>
+    <string name="porter_ack_maxpatchs">Bedankt voor het icoon, de mascotteontwerpen en de banner.</string>
+    <string name="porter_license_porter">Porter en de oorspronkelijke Shizuku-app · Apache-licentie 2.0</string>
+    <string name="porter_license_api">Shizuku API en de Porter-fork ervan · MIT-licentie</string>
+    <string name="porter_license_notice">Auteursrecht- en naamsvermeldingen</string>
+    <string name="porter_pairing_restart">Koppelen opnieuw starten</string>
+    <string name="porter_pairing_retry_instructions">Als een code is geweigerd of de melding is verdwenen, start je het koppelen hier opnieuw. Sluit daarna het oude dialoogvenster met de koppelingscode van Android en open een nieuw venster. Gebruik de nieuwe code; je hoeft de gegevens van Porter niet te wissen.</string>
+    <string name="porter_pairing_search_timeout">Er is binnen een minuut geen koppelingscode ontvangen. Het koppelen is gestopt. Kies Opnieuw en open daarna een nieuw dialoogvenster met een koppelingscode in Draadloze foutopsporing.</string>
+    <string name="porter_pairing_attempt_timeout">Er is een time-out opgetreden bij de koppelingsverbinding. Open een nieuw dialoogvenster met een koppelingscode in Draadloze foutopsporing en probeer het opnieuw.</string>
+    <string name="porter_pairing_failed_retry">Koppelen mislukt. Open een nieuw dialoogvenster met een koppelingscode in Draadloze foutopsporing en probeer het opnieuw.</string>
+    <string name="porter_pairing_notification_timeout">Het koppelen is gestopt omdat er een time-out is opgetreden voor de melding. Kies Opnieuw en open daarna een nieuw dialoogvenster met een koppelingscode in Draadloze foutopsporing.</string>
+    <string name="porter_tv_pairing_progress_title">Porter koppelen</string>
+    <string name="porter_tv_pairing_wait">Laat het venster met de koppelingscode open en wacht even.</string>
+    <string name="porter_tv_pairing_return">Terug naar Porter om de toegankelijkheidsservice voor koppelen uit te schakelen…</string>
+    <string name="porter_tv_pairing_disabling">Toegankelijkheidsservice voor koppelen uitschakelen…</string>
+    <string name="porter_tv_pairing_complete">De toegankelijkheidsservice voor koppelen is uitgeschakeld. Alle koppelingsstappen zijn voltooid. Je kunt dit venster sluiten.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">De toegankelijkheidsservice voor koppelen is nog ingeschakeld. Schakel deze uit in de toegankelijkheidsinstellingen.</string>
+    <string name="porter_tv_pairing_open_accessibility">Toegankelijkheidsinstellingen openen</string>
 </resources>

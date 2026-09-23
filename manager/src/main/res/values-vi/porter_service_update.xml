@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Có bản cập nhật dịch vụ</string>
+    <string name="porter_service_update_action">Cập nhật dịch vụ</string>
+    <string name="porter_service_update_summary">Việc cập nhật sẽ ngắt kết nối các ứng dụng đang kết nối trong giây lát. Các quyền hiện có được giữ nguyên.</string>
+    <string name="porter_service_update_primary">Hãy mở Porter trong người dùng Android chính để cập nhật dịch vụ.</string>
+    <string name="porter_service_update_features">Hãy cập nhật dịch vụ để bật các tính năng này.</string>
+    <string name="porter_service_auto_update">Tự động cập nhật dịch vụ</string>
+    <string name="porter_service_auto_update_summary">Sau khi ứng dụng Porter được cập nhật, thay thế dịch vụ đang chạy bằng bản dựng khác ở chế độ nền. Việc này sẽ ngắt kết nối các ứng dụng đang kết nối trong giây lát. Dịch vụ đã dừng sẽ vẫn dừng.</string>
+    <string name="porter_service_update_interrupted">Lần cập nhật dịch vụ trước chưa hoàn tất. Hãy thử lại nếu dịch vụ vẫn đang chạy, hoặc khởi động lại dịch vụ từ màn hình Dịch vụ.</string>
+    <string name="porter_global_access_update">Dịch vụ đang chạy không hỗ trợ kiểm soát quyền truy cập chung.</string>
+    <string name="porter_discovery_update">Dịch vụ đang chạy không hỗ trợ các tính năng phát hiện ứng dụng và lịch sử kết nối hiện tại. Các ứng dụng khả dụng được hiển thị bằng giao diện cũ hơn của dịch vụ.</string>
+    <string name="porter_service_updating">Đang cập nhật dịch vụ Porter…</string>
+    <string name="porter_service_update_failed">Không thể cập nhật dịch vụ Porter</string>
+    <string name="porter_service_update_failed_summary">Không thể thay thế dịch vụ đang chạy bằng phiên bản đã cài đặt. Nếu dịch vụ vẫn đang chạy, bạn có thể thử lại. Nếu không, hãy khởi động lại dịch vụ từ màn hình Dịch vụ.</string>
+    <string name="porter_service_update_retry">Thử cập nhật lại</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Palvelu</string>
+    <string name="porter_view_service">Näytä palvelu</string>
+    <string name="porter_service_starting">Käynnistetään Porter-palvelua…</string>
+    <string name="porter_service_stopping">Pysäytetään Porter-palvelua…</string>
+    <string name="porter_service_checking">Luetaan palvelun tilaa…</string>
+    <string name="porter_apps_service_unavailable">Sovellusten käyttöoikeudet eivät ole käytettävissä, kun palvelu on pysäytetty tai sen tila muuttuu.</string>
+    <string name="porter_apps_counts_unavailable">Sovellusten määriä ei ole saatavilla.</string>
+    <string name="porter_background_operation">Taustatoiminto</string>
+    <string name="porter_service_failed_running">Edellinen päivitys ei valmistunut. Palvelu on yhä käynnissä. Voit yrittää päivitystä uudelleen.</string>
+    <string name="porter_service_failed_stopped">Edellinen päivitys ei valmistunut. Palvelu on pysäytetty. Käynnistä se uudelleen koontinäytöstä.</string>
+    <string name="porter_service_build_different_summary">Käynnissä oleva palvelu käyttää eri koontiversiota kuin asennettu sovellus. Yhteensopivat ominaisuudet ovat edelleen käytettävissä.</string>
+    <string name="porter_service_build_unknown_summary">Käynnissä oleva palvelu ei pysty ilmoittamaan koontiversionsa tunnistetta. Päivitä se, niin se käyttää asennettua koontiversiota. Yhteensopivat ominaisuudet ovat edelleen käytettävissä.</string>
+    <string name="porter_service_healthy">Kaikki toimii normaalisti.</string>
+    <string name="porter_service_progress_background">Voit poistua tästä näytöstä. Toiminto jatkuu taustalla.</string>
+    <string name="porter_build_identity_unavailable">Koontiversion tunniste ei ole saatavilla</string>
+    <string name="porter_installed_app">Asennettu sovellus</string>
+    <string name="porter_running_service">Käynnissä oleva palvelu</string>
+    <string name="porter_service_api_value">Porter-protokolla: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Vaatii rootatun laitteen. Porter pyytää root-oikeuksia, kun painat Käynnistä.</string>
+    <string name="porter_version_compact">Versio: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Koontiversio: %1$s (%2$s)</string>
+</resources>

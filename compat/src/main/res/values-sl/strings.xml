@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Uporaba aplikacije Porter</string>
+    <string name="permission_description">Tej aplikaciji dovoli uporabo sistemskih API-jev prek aplikacije Porter.</string>
+    <string name="porter_missing">Namestite Porter z ujemajočim se podpisnim potrdilom, da boste lahko uporabljali to spremljevalno aplikacijo.</string>
+</resources>

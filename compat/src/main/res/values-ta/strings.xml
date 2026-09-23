@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Porter ஐப் பயன்படுத்து</string>
+    <string name="permission_description">Porter மூலம் சிஸ்டம் API களைப் பயன்படுத்த இந்தப் பயன்பாட்டை அனுமதிக்கும்.</string>
+    <string name="porter_missing">இந்தத் துணைப் பயன்பாட்டைப் பயன்படுத்த, பொருந்தும் கையொப்பச் சான்றிதழுடன் Porter ஐ நிறுவவும்.</string>
+</resources>

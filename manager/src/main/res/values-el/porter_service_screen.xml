@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Υπηρεσία</string>
+    <string name="porter_view_service">Προβολή υπηρεσίας</string>
+    <string name="porter_service_starting">Εκκίνηση υπηρεσίας Porter…</string>
+    <string name="porter_service_stopping">Διακοπή υπηρεσίας Porter…</string>
+    <string name="porter_service_checking">Ανάγνωση κατάστασης υπηρεσίας…</string>
+    <string name="porter_apps_service_unavailable">Η πρόσβαση εφαρμογών δεν είναι διαθέσιμη όσο η υπηρεσία είναι σταματημένη ή αλλάζει κατάσταση.</string>
+    <string name="porter_apps_counts_unavailable">Οι αριθμοί εφαρμογών δεν είναι διαθέσιμοι.</string>
+    <string name="porter_background_operation">Λειτουργία στο παρασκήνιο</string>
+    <string name="porter_service_failed_running">Η προηγούμενη ενημέρωση δεν ολοκληρώθηκε. Η υπηρεσία εξακολουθεί να εκτελείται. Μπορείτε να επαναλάβετε την ενημέρωση.</string>
+    <string name="porter_service_failed_stopped">Η προηγούμενη ενημέρωση δεν ολοκληρώθηκε. Η υπηρεσία έχει σταματήσει. Μεταβείτε στον πίνακα ελέγχου για να την ξεκινήσετε ξανά.</string>
+    <string name="porter_service_build_different_summary">Η υπηρεσία που εκτελείται χρησιμοποιεί διαφορετικό build από την εγκατεστημένη εφαρμογή. Οι συμβατές λειτουργίες παραμένουν διαθέσιμες.</string>
+    <string name="porter_service_build_unknown_summary">Η υπηρεσία που εκτελείται δεν μπορεί να αναφέρει την ταυτότητα του build της. Ενημερώστε την για να χρησιμοποιεί το εγκατεστημένο build. Οι συμβατές λειτουργίες παραμένουν διαθέσιμες.</string>
+    <string name="porter_service_healthy">Όλα λειτουργούν κανονικά.</string>
+    <string name="porter_service_progress_background">Μπορείτε να φύγετε από αυτήν την οθόνη. Η λειτουργία συνεχίζεται στο παρασκήνιο.</string>
+    <string name="porter_build_identity_unavailable">Η ταυτότητα build δεν είναι διαθέσιμη</string>
+    <string name="porter_installed_app">Εγκατεστημένη εφαρμογή</string>
+    <string name="porter_running_service">Υπηρεσία σε εκτέλεση</string>
+    <string name="porter_service_api_value">Πρωτόκολλο Porter: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Απαιτεί συσκευή με root. Το Porter ζητά πρόσβαση root όταν πατάτε Έναρξη.</string>
+    <string name="porter_version_compact">Έκδοση: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Build: %1$s (%2$s)</string>
+</resources>

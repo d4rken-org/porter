@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">无线调试未启用。\n注意：在 Android 11 之前，必须连接电脑才能启用无线调试。</string>
     <string name="dialog_usb_debugging_not_enabled">USB 调试未启用。\n请在“开发者选项”中启用。</string>
     <string name="dialog_adb_pairing_accessibility_permission">在 Android 14 上，通过软件包安装程序安装/更新 Porter 会撤销 ^1 权限，而启用配对所需的无障碍服务需要该权限。\n\n要授予该权限，请运行以下 ADB 命令：\n\n^2\n\n运行命令后，即可继续配对。\n\n注意：通过 ADB 安装/更新 Porter 可以避免此问题。</string>
-    <string name="dialog_adb_pairing_accessibility_enable">请启用无障碍服务以开始配对。这样 Porter 才能检测到配对码。\n\n为节省电量，无障碍服务会在找到配对码后或 1 分钟后自动关闭。</string>
+    <string name="dialog_adb_pairing_accessibility_enable">请启用无障碍服务以开始配对。这样 Porter 才能检测到配对码。\n\n无障碍服务会在配对尝试结束后关闭，或在一分钟内未找到配对码时关闭。Porter 会显示结果并允许您重试。</string>
     <string name="dialog_adb_pairing_accessibility_navigate">请按以下步骤开始配对：\n- 进入“开发者选项”\n- 启用“USB 调试”和“无线调试”\n- 点按“无线调试”左侧\n- 点按“使用配对码配对设备”。Porter 会自动检测配对码。</string>
     <string name="adb_pairing_requires_multi_window">请先进入分屏（多窗口）模式。</string>
     <string name="adb_pairing_requires_multi_window_reason">系统要求配对对话框始终可见。只有使用分屏模式才能让此应用和系统对话框同时可见。</string>
@@ -198,4 +198,24 @@
     <string name="porter_license_porter">Porter 及原版 Shizuku 应用 · Apache License 2.0</string>
     <string name="porter_license_api">Shizuku API 及其 Porter 分支 · MIT License</string>
     <string name="porter_license_notice">版权与署名声明</string>
+    <string name="settings_alerts_blocked_title">后台提醒</string>
+    <string name="settings_alerts_blocked_summary">Porter 的通知已被屏蔽，因此开机启动和看门狗无法在需要您处理时通知您。</string>
+    <string name="settings_alerts_blocked_message">此功能会通过通知告诉您它正在做什么以及出了什么问题。Porter 的通知目前已被屏蔽，因此它将在不通知您的情况下运行。</string>
+    <string name="settings_alerts_blocked_continue">仍然开启</string>
+    <string name="notification_channel_watchdog">看门狗</string>
+    <string name="notification_channel_crash">崩溃报告</string>
+    <string name="notification_channel_auth">身份验证错误</string>
+    <string name="porter_pairing_restart">重新开始配对</string>
+    <string name="porter_pairing_retry_instructions">如果配对码被拒绝或通知消失，请在此处重新开始配对。然后关闭 Android 旧的配对码对话框并打开一个新的。使用新的配对码即可，无需清除 Porter 的数据。</string>
+    <string name="porter_pairing_search_timeout">一分钟内未收到配对码，配对已停止。请选择“重试”，然后在“无线调试”中打开新的配对码对话框。</string>
+    <string name="porter_pairing_attempt_timeout">配对连接超时。请在“无线调试”中打开新的配对码对话框，然后重试。</string>
+    <string name="porter_pairing_failed_retry">配对失败。请在“无线调试”中打开新的配对码对话框，然后重试。</string>
+    <string name="porter_pairing_notification_timeout">由于通知超时，配对已停止。请选择“重试”，然后在“无线调试”中打开新的配对码对话框。</string>
+    <string name="porter_tv_pairing_progress_title">Porter 配对</string>
+    <string name="porter_tv_pairing_wait">请保持配对码窗口打开并等待。</string>
+    <string name="porter_tv_pairing_return">正在返回 Porter 以关闭配对无障碍服务…</string>
+    <string name="porter_tv_pairing_disabling">正在关闭配对无障碍服务…</string>
+    <string name="porter_tv_pairing_complete">配对无障碍服务已关闭。所有配对步骤均已完成。您可以关闭此窗口。</string>
+    <string name="porter_tv_pairing_cleanup_delayed">配对无障碍服务仍处于启用状态。请在无障碍设置中将其关闭。</string>
+    <string name="porter_tv_pairing_open_accessibility">打开无障碍设置</string>
 </resources>

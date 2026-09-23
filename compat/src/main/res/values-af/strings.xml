@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Gebruik Porter</string>
+    <string name="permission_description">Laat hierdie program toe om stelsel-API’s deur Porter te gebruik.</string>
+    <string name="porter_missing">Installeer Porter met die ooreenstemmende ondertekeningsertifikaat om hierdie metgeselprogram te gebruik.</string>
+</resources>

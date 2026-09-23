@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Szolgáltatásfrissítés érhető el</string>
+    <string name="porter_service_update_action">Szolgáltatás frissítése</string>
+    <string name="porter_service_update_summary">A frissítés rövid időre bontja a csatlakoztatott alkalmazások kapcsolatát. A meglévő engedélyek megmaradnak.</string>
+    <string name="porter_service_update_primary">A szolgáltatás frissítéséhez nyissa meg a Portert az elsődleges Android-felhasználóként.</string>
+    <string name="porter_service_update_features">Frissítse a szolgáltatást ezen funkciók engedélyezéséhez.</string>
+    <string name="porter_service_auto_update">Szolgáltatás automatikus frissítése</string>
+    <string name="porter_service_auto_update_summary">A Porter alkalmazás frissítése után a háttérben lecseréli a más buildet használó futó szolgáltatást. Ez rövid időre bontja a csatlakoztatott alkalmazások kapcsolatát. A leállított szolgáltatás leállítva marad.</string>
+    <string name="porter_service_update_interrupted">Az előző szolgáltatásfrissítés nem fejeződött be. Próbálja újra, ha a szolgáltatás még fut, vagy indítsa el újra a Szolgáltatás képernyőn.</string>
+    <string name="porter_global_access_update">A globális hozzáférés-vezérlés nem érhető el a futó szolgáltatásban.</string>
+    <string name="porter_discovery_update">A futó szolgáltatás nem támogatja a jelenlegi alkalmazásfelderítést és a kapcsolódási előzményeket. Az elérhető alkalmazások a régebbi felületén keresztül jelennek meg.</string>
+    <string name="porter_service_updating">A Porter szolgáltatás frissítése…</string>
+    <string name="porter_service_update_failed">Nem sikerült frissíteni a Porter szolgáltatást</string>
+    <string name="porter_service_update_failed_summary">A futó szolgáltatást nem sikerült lecserélni a telepített verzióra. Ha még fut, újrapróbálhatja. Ellenkező esetben indítsa el újra a szolgáltatást a Szolgáltatás képernyőn.</string>
+    <string name="porter_service_update_retry">Frissítés újrapróbálása</string>
+</resources>

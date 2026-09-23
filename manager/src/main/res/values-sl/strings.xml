@@ -10,17 +10,17 @@
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Obstaja nekaj premislekov. Prosimo, potrdite, da ste najprej prebrali pomoč.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Pošlji</string>
     <!-- Home - Wireless Adb -->
-    <string name="home_wireless_adb_title"><![CDATA[Začni preko Brezžičnega razhroščevanja]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Na Androidu 11 ali več, lahko vklopite Brezžično razhroščevanje in začnete Porter direktno iz vaše naprave, brez povezovanja na računalnik.<p>Prosimo, najprej poglejte vodnik po korakih.]]></string>
-    <string name="home_wireless_adb_description_pre_11"><![CDATA[Pred Androidom 11, je povezava z računalnikom potrebna, da omogočite Brezžično razhroščevanje.]]></string>
+    <string name="home_wireless_adb_title"><![CDATA[Začni prek brezžičnega odpravljanja napak]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Na Androidu 11 ali več, lahko vklopite brezžično odpravljanje napak in začnete Porter direktno iz vaše naprave, brez povezovanja na računalnik.<p>Prosimo, najprej poglejte vodnik po korakih.]]></string>
+    <string name="home_wireless_adb_description_pre_11"><![CDATA[Pred Androidom 11, je povezava z računalnikom potrebna, da omogočite brezžično odpravljanje napak.]]></string>
     <string name="home_wireless_adb_view_guide_button">Vodnik po korakih</string>
     <!-- Adb -->
-    <string name="dialog_adb_discovery">Iskanje storitve za Brezžično razhroščevanje</string>
-    <string name="dialog_adb_discovery_message">Prosimo omogočite \"Brezžično razhroščevanje\" v
-        \"Nastavitvah za razvijalce\". \"Brezžično razhroščevanje\" je avtomatsko onemogočeno, ko se
+    <string name="dialog_adb_discovery">Iskanje storitve za brezžično odpravljanje napak</string>
+    <string name="dialog_adb_discovery_message">Prosimo omogočite »Brezžično odpravljanje napak« v
+        »Možnostih za razvijalce«. »Brezžično odpravljanje napak« je avtomatsko onemogočeno, ko se
         spremeni omrežje.
         \n
-        \nPozor! Ne onemogočajte \"Nastavitev za razvijalce\" ali \"USB razhroščevanja\", drugače bo
+        \nPozor! Ne onemogočajte »Možnosti za razvijalce« ali »Odpravljanja napak prek USB-ja«, drugače bo
         Porter ustavljen.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Če iskanje še naprej
         traja, poskusite onemogočiti in nato omogočiti »Brezžično odpravljanje napak«.</string>
@@ -31,10 +31,10 @@
     <string name="dialog_adb_pairing_paring_code">Koda za seznanitev</string>
     <string name="paring_code_is_wrong">Koda za seznanitev je napačna.</string>
     <string name="cannot_connect_port">Ne morem se povezati na brezžično storitev za odpravljanje
-        napak.\n\nProsimo, poskrbite, da je Porter na beli listi v vseh požarnih zidovnih zidovih,
-        blokatorjih, VPN-jih ali podobnih aplikacijah, ki lahko omejujejo dostop do omrežja.</string>
-    <string name="dialog_wireless_adb_not_enabled">Brezžično razhroščevanje ni omogočeno.
-        \nPozor! Pred Androidom 11, je za omogočanje brezžičnega razhroščevanja potreben računalnik.</string>
+        napak.\n\nProsimo, poskrbite, da je Porter na beli listi v vseh požarnih zidovih,
+        blokatorjih oglasov, VPN-jih ali podobnih aplikacijah, ki lahko omejujejo dostop do omrežja.</string>
+    <string name="dialog_wireless_adb_not_enabled">Brezžično odpravljanje napak ni omogočeno.
+        \nPozor! Pred Androidom 11, je za omogočanje brezžičnega odpravljanja napak potreben računalnik.</string>
     <string name="dialog_usb_debugging_not_enabled">Odpravljanje napak prek USB-ja ni
         omogočeno.\nOmogočite ga v »Možnostih za razvijalce«.</string>
     <string name="dialog_adb_pairing_accessibility_permission">V sistemu Android 14
@@ -45,29 +45,30 @@
         program Porter z ADB.</string>
     <string name="dialog_adb_pairing_accessibility_enable">Za začetek postopka seznanjanja omogočite
         storitev dostopnosti. To bo Porter omogočilo zaznavanje kode za seznanjanje.\n\nStoritev
-        dostopnosti se bo izklopila, ko bo koda najdena, ali po 1 minuti, da se prihrani energija.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">Začnite z združevanjem tako, da
+        dostopnosti se bo izklopila po poskusu seznanjanja ali če v eni minuti ne najde kode. Porter bo
+        prikazal rezultat in vam omogočil ponovni poskus.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">Začnite s seznanjanjem tako, da
         izvedete naslednje korake:\n- Pomaknite se do »Možnosti za razvijalce«\n- Omogočite
-        »Odpravljanje napak USB« in »Odpravljanje napak brezžično«\n- Dotaknite se leve strani
-        »Odpravljanje napak brezžično«\n- Dotaknite se »Združi napravo s kodo za združevanje«.
-        Porter bo samodejno zaznal kodo za združevanje.</string>
+        »Odpravljanje napak prek USB-ja« in »Brezžično odpravljanje napak«\n- Dotaknite se leve strani
+        »Brezžično odpravljanje napak«\n- Dotaknite se »Seznanitev naprave s kodo za seznanjanje«.
+        Porter bo samodejno zaznal kodo za seznanjanje.</string>
     <string name="adb_pairing_requires_multi_window">Najprej vklopite način deljenega zaslona (več
         oken).</string>
-    <string name="adb_pairing_requires_multi_window_reason">Sistem zahteva, da je dialog za
-        združevanje vedno viden. Uporaba deljenega zaslona je edini način, da sta ta aplikacija in
+    <string name="adb_pairing_requires_multi_window_reason">Sistem zahteva, da je pogovorno okno za
+        seznanjanje vedno vidno. Uporaba deljenega zaslona je edini način, da sta ta aplikacija in
         sistemsko okno hkrati vidna.</string>
-    <string name="adb_error_key_store">Ni mogoče generirati ključa za brezžično razhroščevanje.\nTo
+    <string name="adb_error_key_store">Ni mogoče generirati ključa za brezžično odpravljanje napak.\nTo
         je morda zato, ker je mehanizem KeyStore na tej napravi pokvarjen.</string>
     <string name="adb_pair_required">Najprej sledite koraku seznanjanja.</string>
     <string name="enable">Omogoči</string>
     <string name="development_settings">Možnosti za razvijalce</string>
     <string name="notification_settings">Možnosti obveščanja</string>
-    <string name="adb_pairing_tutorial_content_notification">Obvestilo Shizukuja vam bo pomagalo
+    <string name="adb_pairing_tutorial_content_notification">Obvestilo aplikacije Porter vam bo pomagalo
         dokončati seznanjanje.</string>
     <string name="adb_pairing_tutorial_content_steps">Pojdite na »Možnosti za razvijalce« in nato
-        omogočite »Odpravljanje napak USB« in »Odpravljanje napak brezžično«.</string>
+        omogočite »Odpravljanje napak prek USB-ja« in »Brezžično odpravljanje napak«.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Dotaknite se leve strani
-        »Brezžično odpravljanje napak« in nato »Seznani napravo s kodo za seznanjanje«. Vnesite kodo
+        »Brezžično odpravljanje napak« in nato »Seznanitev naprave s kodo za seznanjanje«. Vnesite kodo
         iz obvestila, da dokončate seznanjanje.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Postopek seznanjanja zahteva
         interakcijo z obvestilom Porter. Dovolite Porter objavljanje obvestil.</string>
@@ -88,10 +89,10 @@
     <!-- Home - Application management -->
     <string name="home_app_management_title">Upravljanje aplikacij</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="one"><![CDATA[Pooblaščena aplikacija %d]]></item>
-        <item quantity="two"><![CDATA[Pooblaščene %d aplikacije]]></item>
-        <item quantity="few"><![CDATA[Pooblaščene %d aplikacije]]></item>
-        <item quantity="other"><![CDATA[Pooblaščene %d aplikacije]]></item>
+        <item quantity="one"><![CDATA[%d pooblaščena aplikacija]]></item>
+        <item quantity="two"><![CDATA[%d pooblaščeni aplikaciji]]></item>
+        <item quantity="few"><![CDATA[%d pooblaščene aplikacije]]></item>
+        <item quantity="other"><![CDATA[%d pooblaščenih aplikacij]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Dotaknite se za upravljanje pooblaščenih aplikacij]]></string>
     <string name="home_app_management_empty">Tukaj bodo prikazane aplikacije, ki so zahtevale ali
@@ -104,13 +105,12 @@
     <string name="app_management_item_summary_requires_root">* zahteva, da Porter teče s root-om</string>
     <string name="app_management_toggle_all">Preklopi vse</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">Uporaba Shizukuja v terminalskih aplikacijah</string>
-    <string name="home_terminal_description">Zaženite ukaze lupine v terminalskih aplikacijah prek
-        Shizukuja</string>
+    <string name="home_terminal_title">Uporaba aplikacije Porter v terminalskih aplikacijah</string>
+    <string name="home_terminal_description">Zaženite ukaze lupine v terminalskih aplikacijah prek aplikacije Porter</string>
     <string name="terminal_tutorial_miui">Uporabniki so poročali, da MIUI krši ogrodje za dostop do
         shrambe, ki ga uporablja funkcija izvoza.</string>
     <string name="terminal_tutorial_miui_2">Če uporabljate MIUI, boste morda morali datoteko izvleči
-        iz mape z sredstvi v Shizukujevem APK-ju.</string>
+        iz mape assets v APK-ju aplikacije Porter.</string>
     <string name="terminal_tutorial_1">Izvozite datoteke v novo mapo.</string>
     <string name="terminal_tutorial_1_description">Izvoženi bosta dve datoteki: %1$s in %2$s. Če
         datoteke že obstajajo v izbrani mapi, bodo izbrisane.</string>
@@ -131,7 +131,7 @@
         napak ne pomni nobenih pooblaščenih omrežij.\n\nOb vsakem ponovnem zagonu boste morali
         ponovno avtorizirati omrežje tako, da tapnete »Dovoli«, ko se pojavi okno za avtorizacijo.</string>
     <string name="settings_watchdog">Nadzorni pes</string>
-    <string name="settings_watchdog_summary">Samodejni ponovni zagon Shizukuja, če se sesuje</string>
+    <string name="settings_watchdog_summary">Samodejni ponovni zagon aplikacije Porter, če se sesuje</string>
     <string name="settings_restart_dialog_title">Potreben je ponovni zagon</string>
     <string name="settings_restart_dialog_message">Porter mora začeti znova, da lahko uporabi to
         nastavitev.</string>
@@ -140,22 +140,22 @@
     <string name="settings_user_interface">Videz</string>
     <string name="settings_support">Podpora</string>
     <!-- Snackbar -->
-    <string name="snackbar_invalid_port">Pristanišče mora biti med 1 in 65535</string>
+    <string name="snackbar_invalid_port">Vrata morajo biti med 1 in 65535</string>
     <string name="snackbar_battery_optimization_home">Optimizacija baterije mora biti onemogočena,
         da zagon ob zagonu/watchdogu deluje pravilno.</string>
     <string name="snackbar_battery_optimization_settings">Prosimo, da onemogočite optimizacijo
         baterije za uporabo te funkcije.</string>
-    <string name="snackbar_action_fix">Popraviti</string>
+    <string name="snackbar_action_fix">Popravi</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Porter že začne v ozadju</string>
+    <string name="toast_shizuku_already_starting">Porter se že zaganja v ozadju</string>
     <string name="toast_accessibility_tv_only">Ta storitev je podprta samo na televizijskih
         napravah.</string>
-    <string name="toast_pairing_timeout">Storitev za parjenje Porter je potekla.</string>
+    <string name="toast_pairing_timeout">Časovna omejitev storitve za seznanjanje Porter je potekla.</string>
     <!-- Stop -->
     <string name="action_stop">Ustavi Porter</string>
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">Seznanjanje brezžičnega razhroščevanja</string>
-    <string name="notification_adb_pairing_input_paring_code">Vnesite seznantitveno kodo</string>
+    <string name="notification_channel_adb_pairing">Seznanjanje za brezžično odpravljanje napak</string>
+    <string name="notification_adb_pairing_input_paring_code">Vnesite kodo za seznanjanje</string>
     <string name="notification_adb_pairing_searching_for_service_title">Iskanje storitve za
         seznanjanje</string>
     <string name="notification_adb_pairing_service_found_title">Storitev za seznanjanje najdena</string>
@@ -167,7 +167,7 @@
     <string name="notification_adb_pairing_retry">Poskusi znova</string>
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">dostop do Porter</string>
-    <string name="permission_description">Dovoli aplikaciji uporabo Shizukuja.</string>
+    <string name="permission_description">Dovoli aplikaciji uporabo aplikacije Porter.</string>
     <string name="permission_warning_template"><![CDATA[Dovoli <b>%1$s</b> do %2$s?]]></string>
     <string name="grant_dialog_button_allow_always">Dovoli ves čas</string>
     <string name="grant_dialog_button_deny">"Zavrni"</string>
@@ -176,10 +176,10 @@
     <string name="start_with_root_failed">Storitve ni mogoče zagnati, ker ni odobreno dovoljenje
         root ali pa ta naprava nima root dostopa.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Začetek Šizukuja…</string>
+    <string name="wadb_notification_title">Zaganjanje aplikacije Porter…</string>
     <string name="wadb_notification_wifi_required">Čakanje na Wi-Fi povezavo, preden nadaljujem</string>
     <string name="wadb_notification_retry">Čakanje na ponovni poskus</string>
-    <string name="wadb_error_title">Napaka ob zagonu zagona</string>
+    <string name="wadb_error_title">Napaka pri zagonu ob vklopu naprave</string>
     <string name="wadb_error_notify_dev">Tapnite, da obvestite razvijalca.</string>
     <string name="wadb_permission_error_notification_title">Napaka pri dovoljenju</string>
     <string name="wadb_permission_error_notification_content">Porter potrebuje
@@ -187,7 +187,7 @@
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog teče</string>
     <string name="watchdog_turn_off">Izklop</string>
-    <string name="watchdog_shizuku_crashed_title">Porter je pred kratkim doživela nesrečo</string>
+    <string name="watchdog_shizuku_crashed_title">Porter se je pred kratkim sesul</string>
     <string name="watchdog_shizuku_crashed_text">Watchdog je ponovno zagnal storitev. Tapnite, da
         izveste o možnih popravkih za preprečevanje prihodnjih zrušitev.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Izklopite opozorila</string>
@@ -200,4 +200,59 @@
         odpravljanje napak. Ko najde kodo za seznanjanje, se samodejno onemogoči.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Poskusite zdaj</string>
+    <string name="home_root_description"><![CDATA[Če uporabljate Magisk, je %1$s še ena možnost. Aplikacije morajo izrecno podpirati %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Namere</string>
+    <string name="home_automation_bottom_sheet_label_action">Dejanje</string>
+    <string name="home_automation_bottom_sheet_label_package">Paket</string>
+    <string name="home_automation_bottom_sheet_label_target">Cilj</string>
+    <string name="home_automation_bottom_sheet_label_extras">Dodatki</string>
+    <string name="home_automation_regenerate_token">Želite znova ustvariti žeton?</string>
+    <string name="home_automation_regenerate_token_message">Svoje namere boste morali znova nastaviti z novim žetonom.</string>
+    <string name="home_dialog_reboot_required_title">Potreben je ponovni zagon</string>
+    <string name="home_dialog_reboot_required_message">Za pravilno delovanje aplikacije Porter je potreben ponovni zagon naprave. Za nadaljevanje znova zaženite napravo.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Zaznana je podvojena aplikacija</string>
+    <string name="home_dialog_duplicate_app_detected_message">V napravi je nameščena druga različica te aplikacije. Za nadaljevanje odstranite vse podvojene različice in znova zaženite napravo.</string>
+    <string name="home_dialog_button_exit">Izhod</string>
+    <string name="settings_alerts_blocked_title">Opozorila v ozadju</string>
+    <string name="settings_alerts_blocked_summary">Obvestila aplikacije Porter so blokirana, zato vas funkciji »Zaženi ob zagonu« in »Nadzorni pes« ne moreta obvestiti, ko potrebujeta pozornost.</string>
+    <string name="settings_alerts_blocked_message">Ta funkcija o svojem delovanju in napakah poroča z obvestilom. Obvestila aplikacije Porter so trenutno blokirana, zato bi delovala, ne da bi vas o čemer koli obvestila.</string>
+    <string name="settings_alerts_blocked_continue">Vseeno vklopi</string>
+    <string name="follow_system">Sledi sistemu</string>
+    <string name="start">Začni</string>
+    <string name="stop">Ustavi</string>
+    <string name="notification_channel_watchdog">Nadzorni pes</string>
+    <string name="notification_channel_crash">Poročila o zrušitvah</string>
+    <string name="notification_channel_auth">Napake pri preverjanju pristnosti</string>
+    <string name="notification_auth_invalid_title">Neveljaven žeton za preverjanje pristnosti</string>
+    <string name="notification_auth_invalid_message">Preverite, ali se žeton v vaši nameri ujema s tistim v Nastavitvah pod »Upravljajte Porter z aplikacijami za avtomatizacijo«.</string>
+    <string name="porter_status_running_adb">Deluje prek ADB</string>
+    <string name="porter_status_running_root">Deluje z dostopom root</string>
+    <string name="porter_status_restart_service">Znova zaženite Porter, da posodobite delujočo storitev.</string>
+    <string name="porter_status_version_unknown">Neznano</string>
+    <string name="porter_status_versions">Nameščeni Porter: %1$s\nDelujoča storitev: %2$s\nShizuku API: %3$d · Popravek: %4$d</string>
+    <string name="porter_acknowledgements">Zahvale</string>
+    <string name="porter_acknowledgements_summary">Izvorni projekti, odprtokodne knjižnice in licence.</string>
+    <string name="porter_acknowledgements_thanks">Hvala</string>
+    <string name="porter_licenses">Licence</string>
+    <string name="porter_ack_shizuku">RikkaApps in vsem sodelavcem za ustvarjanje Shizuku in njegovih API-jev, temelja aplikacije Porter.</string>
+    <string name="porter_ack_thedjchi">thedjchi in sodelavcem za vzdrževanje razcepa Shizuku, na katerem temelji Porter.</string>
+    <string name="porter_ack_symbuzzer">symbuzzer in sodelavcem za nadaljnje delo na Shizuku in deljenje svojega razcepa.</string>
+    <string name="porter_ack_plus">thejaustin in sodelavcem za ShizukuPlus in navdih za izbirno aplikacijo za združljivost.</string>
+    <string name="porter_ack_maxpatchs">Hvala za ikono, oblikovanje maskote in pasico.</string>
+    <string name="porter_license_porter">Porter in izvirna aplikacija Shizuku · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API in njegov razcep za Porter · MIT License</string>
+    <string name="porter_license_notice">Obvestila o avtorskih pravicah in navedbi avtorstva</string>
+    <string name="porter_pairing_restart">Znova začni seznanjanje</string>
+    <string name="porter_pairing_retry_instructions">Če je bila koda zavrnjena ali je obvestilo izginilo, tukaj znova začnite seznanjanje. Nato zaprite staro Androidovo pogovorno okno s kodo za seznanjanje in odprite novo. Uporabite novo kodo; podatkov aplikacije Porter vam ni treba počistiti.</string>
+    <string name="porter_pairing_search_timeout">V eni minuti ni bila prejeta nobena koda za seznanjanje. Seznanjanje je ustavljeno. Izberite Poskusi znova in nato v Brezžičnem odpravljanju napak odprite novo pogovorno okno s kodo za seznanjanje.</string>
+    <string name="porter_pairing_attempt_timeout">Časovna omejitev povezave za seznanjanje je potekla. V Brezžičnem odpravljanju napak odprite novo pogovorno okno s kodo za seznanjanje in poskusite znova.</string>
+    <string name="porter_pairing_failed_retry">Seznanjanje ni uspelo. V Brezžičnem odpravljanju napak odprite novo pogovorno okno s kodo za seznanjanje in poskusite znova.</string>
+    <string name="porter_pairing_notification_timeout">Seznanjanje je ustavljeno, ker je časovna omejitev obvestila potekla. Izberite Poskusi znova in nato v Brezžičnem odpravljanju napak odprite novo pogovorno okno s kodo za seznanjanje.</string>
+    <string name="porter_tv_pairing_progress_title">Seznanjanje Porter</string>
+    <string name="porter_tv_pairing_wait">Pustite okno s kodo za seznanjanje odprto in počakajte.</string>
+    <string name="porter_tv_pairing_return">Vračanje v Porter za izklop storitve dostopnosti za seznanjanje…</string>
+    <string name="porter_tv_pairing_disabling">Izklapljanje storitve dostopnosti za seznanjanje…</string>
+    <string name="porter_tv_pairing_complete">Storitev dostopnosti za seznanjanje je izklopljena. Vsi koraki seznanjanja so končani. To okno lahko zaprete.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Storitev dostopnosti za seznanjanje je še vedno omogočena. Izklopite jo v nastavitvah Dostopnosti.</string>
+    <string name="porter_tv_pairing_open_accessibility">Odpri nastavitve Dostopnosti</string>
 </resources>

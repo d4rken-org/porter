@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Օգտագործել Porter-ը</string>
+    <string name="permission_description">Թույլատրել այս հավելվածին օգտագործել համակարգային API-ներ Porter-ի միջոցով։</string>
+    <string name="porter_missing">Տեղադրեք Porter-ը համապատասխան ստորագրման վկայականով՝ այս ուղեկից հավելվածն օգտագործելու համար։</string>
+</resources>

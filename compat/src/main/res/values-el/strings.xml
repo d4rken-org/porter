@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Χρήση του Porter</string>
+    <string name="permission_description">Επιτρέπει σε αυτήν την εφαρμογή να χρησιμοποιεί API συστήματος μέσω του Porter.</string>
+    <string name="porter_missing">Εγκαταστήστε το Porter με το αντίστοιχο πιστοποιητικό υπογραφής για να χρησιμοποιήσετε αυτήν τη συνοδευτική εφαρμογή.</string>
+</resources>

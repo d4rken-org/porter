@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Använd Porter</string>
+    <string name="permission_description">Tillåt den här appen att använda system-API:er via Porter.</string>
+    <string name="porter_missing">Installera Porter med matchande signeringscertifikat för att använda den här kompletterande appen.</string>
+</resources>

@@ -43,14 +43,11 @@
         concederla, esegui il seguente comando ADB:\n\n^2\n\nDopo aver eseguito il comando, puoi
         continuare con il processo di associazione.\n\nNota: puoi aggirare questo problema
         installando/aggiornando Porter con ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Abilita il servizio di accessibilità per
-        avviare il processo di associazione. Questo permetterà a Porter di rilevare il codice di
-        associazione.\n\nIl servizio di accessibilità verrà disattivato quando il codice verrà
-        trovato o dopo 1 minuto per risparmiare energia.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Abilita il servizio di accessibilità per avviare il processo di accoppiamento. Questo permette a Porter di rilevare il codice di accoppiamento.\n\nIl servizio di accessibilità verrà disattivato dopo il tentativo di accoppiamento o se non viene trovato alcun codice entro un minuto. Porter mostrerà il risultato e ti permetterà di riprovare.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Per avviare l\'associazione, procedere
         come segue:\n- Vai su \"Opzioni sviluppatore\"\n- Abilita \"Debug USB\" e \"Debug
-        wireless\"\n- Tocca il lato sinistro di \"Debug wireless\"\n- Tocca \"Associa dispositivo
-        con codice di associazione\". Porter rileverà automaticamente il codice di associazione.</string>
+        wireless\"\n- Tocca il lato sinistro di \"Debug wireless\"\n- Tocca \"Accoppia dispositivo
+        con codice di accoppiamento\". Porter rileverà automaticamente il codice di accoppiamento.</string>
     <string name="adb_pairing_requires_multi_window">Entra prima nella modalità schermo diviso
         (multi-finestra).</string>
     <string name="adb_pairing_requires_multi_window_reason">Il sistema richiede che la dialogo di
@@ -67,8 +64,8 @@
     <string name="adb_pairing_tutorial_content_steps">Vai su \"Opzioni sviluppatore\", quindi
         abilita \"Debug USB\" e \"Debug wireless\".</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Tocca il lato sinistro di \"Debug
-        wireless\", quindi tocca \"Associa dispositivo con codice di associazione\". Inserisci il
-        codice nella notifica per completare l\'associazione.</string>
+        wireless\", quindi tocca \"Accoppia dispositivo con codice di accoppiamento\". Inserisci il
+        codice nella notifica per completare l\'accoppiamento.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Il processo di accoppiamento
         richiede che tu interagisca con una notifica di Porter. Consenti a Porter di mostrare
         notifiche.</string>
@@ -91,6 +88,7 @@
     <string name="home_app_management_title">Gestione dell\'applicazione</string>
     <plurals name="home_app_management_authorized_apps_count">
         <item quantity="one"><![CDATA[%d applicazione autorizzata]]></item>
+        <item quantity="many"><![CDATA[%d di applicazioni autorizzate]]></item>
         <item quantity="other"><![CDATA[%d applicazioni autorizzate]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Premere per gestire le app autorizzate]]></string>
@@ -122,7 +120,7 @@
         possibile eseguire %1$s senza scrivere il percorso.\n\nIn caso contrario, è possibile creare
         un alias per %2$s nel file di configurazione %3$s dell\'app terminale.</string>
     <string name="terminal_tutorial_3">Aprire una shell con il seguente comando:</string>
-    <string name="rish_description"><![CDATA[Con %1$spuoi eseguire comandi shell in qualsiasi app terminale.<p>Tocca per saperne di più su come utilizzarlo.]]></string>
+    <string name="rish_description"><![CDATA[Con %1$s puoi eseguire comandi shell in qualsiasi app terminale.<p>Tocca per saperne di più su come utilizzarlo.]]></string>
     <!-- Settings -->
     <string name="settings_title">Impostazioni</string>
     <string name="settings_start_on_boot">Avvia all\'avvio</string>
@@ -201,4 +199,59 @@
         associazione.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Prova ora</string>
+    <string name="home_root_description"><![CDATA[Se usi Magisk, %1$s è un’altra opzione. Le app devono supportare esplicitamente %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intent</string>
+    <string name="home_automation_bottom_sheet_label_action">Azione</string>
+    <string name="home_automation_bottom_sheet_label_package">Pacchetto</string>
+    <string name="home_automation_bottom_sheet_label_target">Destinazione</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extra</string>
+    <string name="home_automation_regenerate_token">Rigenerare il token?</string>
+    <string name="home_automation_regenerate_token_message">Dovrai riconfigurare i tuoi intent con il nuovo token.</string>
+    <string name="home_dialog_reboot_required_title">Riavvio necessario</string>
+    <string name="home_dialog_reboot_required_message">È necessario riavviare il dispositivo affinché Porter funzioni correttamente. Per continuare, riavvia il dispositivo.</string>
+    <string name="home_dialog_duplicate_app_detected_title">App duplicata rilevata</string>
+    <string name="home_dialog_duplicate_app_detected_message">Sul dispositivo è installata un’altra versione di questa app. Per continuare, disinstalla tutte le versioni duplicate e riavvia il dispositivo.</string>
+    <string name="home_dialog_button_exit">Esci</string>
+    <string name="settings_alerts_blocked_title">Avvisi in background</string>
+    <string name="settings_alerts_blocked_summary">Le notifiche di Porter sono bloccate, quindi l’avvio all’accensione e il cane da guardia non possono avvisarti quando richiedono attenzione.</string>
+    <string name="settings_alerts_blocked_message">Questa funzione comunica tramite una notifica cosa sta facendo e cosa è andato storto. Le notifiche di Porter sono attualmente bloccate, quindi funzionerebbe senza avvisarti di nulla.</string>
+    <string name="settings_alerts_blocked_continue">Attiva comunque</string>
+    <string name="follow_system">Segui il sistema</string>
+    <string name="start">Avvia</string>
+    <string name="stop">Arresta</string>
+    <string name="notification_channel_watchdog">Cane da guardia</string>
+    <string name="notification_channel_crash">Segnalazioni di arresti anomali</string>
+    <string name="notification_channel_auth">Errori di autenticazione</string>
+    <string name="notification_auth_invalid_title">Token di autenticazione non valido</string>
+    <string name="notification_auth_invalid_message">Assicurati che il token nel tuo intent corrisponda a quello in Impostazioni, alla voce “Controlla Porter con le app di automazione”.</string>
+    <string name="porter_status_running_adb">In esecuzione tramite ADB</string>
+    <string name="porter_status_running_root">In esecuzione tramite root</string>
+    <string name="porter_status_restart_service">Riavvia Porter per aggiornare il servizio in esecuzione.</string>
+    <string name="porter_status_version_unknown">Sconosciuta</string>
+    <string name="porter_status_versions">Porter installato: %1$s\nServizio in esecuzione: %2$s\nAPI Shizuku: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Ringraziamenti</string>
+    <string name="porter_acknowledgements_summary">Progetti originali, librerie open source e licenze.</string>
+    <string name="porter_acknowledgements_thanks">Grazie</string>
+    <string name="porter_licenses">Licenze</string>
+    <string name="porter_ack_shizuku">A RikkaApps e a tutti i collaboratori per aver creato Shizuku e le sue API, la base di Porter.</string>
+    <string name="porter_ack_thedjchi">A thedjchi e ai collaboratori per la manutenzione del fork di Shizuku su cui si basa Porter.</string>
+    <string name="porter_ack_symbuzzer">A symbuzzer e ai collaboratori per aver proseguito il lavoro su Shizuku e condiviso il loro fork.</string>
+    <string name="porter_ack_plus">A thejaustin e ai collaboratori per ShizukuPlus e l’ispirazione per un’app di compatibilità opzionale.</string>
+    <string name="porter_ack_maxpatchs">Grazie per l’icona, i design della mascotte e il banner.</string>
+    <string name="porter_license_porter">Porter e l’applicazione Shizuku originale · Licenza Apache 2.0</string>
+    <string name="porter_license_api">API Shizuku e il suo fork per Porter · Licenza MIT</string>
+    <string name="porter_license_notice">Note su copyright e attribuzione</string>
+    <string name="porter_pairing_restart">Riavvia accoppiamento</string>
+    <string name="porter_pairing_retry_instructions">Se un codice è stato rifiutato o la notifica è scomparsa, riavvia qui l’accoppiamento. Poi chiudi la vecchia finestra del codice di accoppiamento di Android e aprine una nuova. Usa il nuovo codice; non è necessario cancellare i dati di Porter.</string>
+    <string name="porter_pairing_search_timeout">Nessun codice di accoppiamento ricevuto entro un minuto. L’accoppiamento è stato interrotto. Scegli Riprova, poi apri una nuova finestra del codice di accoppiamento in Debug wireless.</string>
+    <string name="porter_pairing_attempt_timeout">Timeout della connessione di accoppiamento. Apri una nuova finestra del codice di accoppiamento in Debug wireless e riprova.</string>
+    <string name="porter_pairing_failed_retry">Accoppiamento non riuscito. Apri una nuova finestra del codice di accoppiamento in Debug wireless e riprova.</string>
+    <string name="porter_pairing_notification_timeout">L’accoppiamento è stato interrotto perché la notifica è scaduta. Scegli Riprova, poi apri una nuova finestra del codice di accoppiamento in Debug wireless.</string>
+    <string name="porter_tv_pairing_progress_title">Accoppiamento Porter</string>
+    <string name="porter_tv_pairing_wait">Lascia aperta la finestra del codice di accoppiamento e attendi.</string>
+    <string name="porter_tv_pairing_return">Ritorno a Porter per disattivare il servizio di accessibilità per l’accoppiamento…</string>
+    <string name="porter_tv_pairing_disabling">Disattivazione del servizio di accessibilità per l’accoppiamento…</string>
+    <string name="porter_tv_pairing_complete">Il servizio di accessibilità per l’accoppiamento è disattivato. Tutti i passaggi dell’accoppiamento sono stati completati. Puoi chiudere questa finestra.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Il servizio di accessibilità per l’accoppiamento è ancora attivo. Disattivalo nelle impostazioni di Accessibilità.</string>
+    <string name="porter_tv_pairing_open_accessibility">Apri impostazioni di Accessibilità</string>
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Appar</string>
+    <string name="porter_home_subtitle">ADB-åtkomst för dina appar</string>
+    <string name="porter_startup">Uppstart</string>
+    <string name="porter_version">Version</string>
+    <string name="porter_pairing_method">Parkopplingsmetod</string>
+    <string name="porter_status_restricted">Vissa ADB-behörigheter begränsas av Android.</string>
+    <string name="porter_status_stop_message">Om du stoppar Porter kopplas appar som använder den från. Du måste starta Porter igen manuellt, vilket kan kräva en dator.</string>
+    <string name="porter_status_details_hint">Öppna tjänstdetaljer och alternativ för att stoppa</string>
+    <string name="porter_status_ready">Porter är redo. Kompatibla appar kan nu ansluta och begära åtkomst.</string>
+    <string name="porter_pairing_notification">Avisering</string>
+    <string name="porter_pairing_dialog">Dialogruta i appen</string>
+    <string name="porter_manage_apps_action">Hantera appar</string>
+    <string name="porter_primary_user_title">Använd den primära Android-användaren</string>
+    <string name="porter_primary_user_description">Porter kan inte startas från den här Android-användaren eller profilen. Byt till enhetens primära användare, installera Porter där vid behov och starta dess tjänst. Återvänd sedan hit för att hantera dina appar.</string>
+    <string name="porter_secondary_user_stop_message">Om du stoppar Porter kopplas appar från för alla Android-användare. Starta den igen genom att byta till enhetens primära användare och öppna Porter där.</string>
+</resources>

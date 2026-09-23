@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Programme</string>
+    <string name="porter_home_subtitle">ADB-toegang vir jou programme</string>
+    <string name="porter_startup">Opstart</string>
+    <string name="porter_version">Weergawe</string>
+    <string name="porter_pairing_method">Paringsmetode</string>
+    <string name="porter_status_restricted">Sommige ADB-toestemmings word deur Android beperk.</string>
+    <string name="porter_status_stop_message">As jy Porter stop, word programme wat dit gebruik, ontkoppel. Jy moet Porter weer handmatig begin, wat dalk \'n rekenaar vereis.</string>
+    <string name="porter_status_details_hint">Maak diensbesonderhede en stopopsies oop</string>
+    <string name="porter_status_ready">Porter is gereed. Versoenbare programme kan nou koppel en toegang versoek.</string>
+    <string name="porter_pairing_notification">Kennisgewing</string>
+    <string name="porter_pairing_dialog">Dialoog in program</string>
+    <string name="porter_manage_apps_action">Bestuur programme</string>
+    <string name="porter_primary_user_title">Gebruik die primêre Android-gebruiker</string>
+    <string name="porter_primary_user_description">Porter kan nie vanaf hierdie Android-gebruiker of -profiel begin word nie. Skakel oor na die toestel se primêre gebruiker, installeer Porter daar indien nodig, en begin sy diens. Keer dan hierheen terug om jou programme te bestuur.</string>
+    <string name="porter_secondary_user_stop_message">As jy Porter stop, word programme by alle Android-gebruikers ontkoppel. Om dit weer te begin, skakel oor na die toestel se primêre gebruiker en maak Porter daar oop.</string>
+</resources>

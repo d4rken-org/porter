@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">Отладка по Wi-Fi не включена.\nВнимание: до Android 11 для включения отладки по Wi-Fi обязательно подключение к компьютеру.</string>
     <string name="dialog_usb_debugging_not_enabled">Отладка по USB не включена.\nВключите её в разделе «Для разработчиков».</string>
     <string name="dialog_adb_pairing_accessibility_permission">На Android 14 установка или обновление Porter через установщик пакетов отзывает разрешение ^1, которое необходимо для включения службы специальных возможностей при сопряжении.\n\nЧтобы предоставить его, выполните следующую команду ADB:\n\n^2\n\nПосле выполнения команды можно продолжить сопряжение.\n\nПримечание: этого можно избежать, устанавливая или обновляя Porter через ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Включите службу специальных возможностей, чтобы начать сопряжение. Это позволит Porter обнаружить код сопряжения.\n\nСлужба специальных возможностей отключится после обнаружения кода или через 1 минуту для экономии энергии.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Включите службу специальных возможностей, чтобы начать сопряжение. Это позволит Porter обнаружить код сопряжения.\n\nСлужба специальных возможностей отключится после попытки сопряжения или если код не будет найден в течение минуты. Porter покажет результат и позволит повторить попытку.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Чтобы начать сопряжение, выполните следующие шаги:\n- Откройте раздел «Для разработчиков»\n- Включите «Отладку по USB» и «Отладку по Wi-Fi»\n- Нажмите на левую часть пункта «Отладка по Wi-Fi»\n- Нажмите «Подключить устройство с помощью кода подключения». Porter автоматически обнаружит код сопряжения.</string>
     <string name="adb_pairing_requires_multi_window">Сначала включите режим разделённого экрана (многооконный режим).</string>
     <string name="adb_pairing_requires_multi_window_reason">Система требует, чтобы диалог сопряжения всегда оставался видимым. Только режим разделённого экрана позволяет одновременно видеть это приложение и системный диалог.</string>
@@ -201,4 +201,24 @@
     <string name="porter_license_porter">Porter и оригинальное приложение Shizuku · Apache License 2.0</string>
     <string name="porter_license_api">Shizuku API и его форк для Porter · MIT License</string>
     <string name="porter_license_notice">Уведомления об авторских правах и атрибуции</string>
+    <string name="settings_alerts_blocked_title">Фоновые оповещения</string>
+    <string name="settings_alerts_blocked_summary">Уведомления от Porter заблокированы, поэтому запуск при загрузке и watchdog не смогут сообщить, когда требуется ваше внимание.</string>
+    <string name="settings_alerts_blocked_message">Эта функция сообщает о своей работе и возникших ошибках через уведомление. Сейчас уведомления от Porter заблокированы, поэтому она будет работать, ничего вам не сообщая.</string>
+    <string name="settings_alerts_blocked_continue">Всё равно включить</string>
+    <string name="notification_channel_watchdog">Watchdog</string>
+    <string name="notification_channel_crash">Отчёты о сбоях</string>
+    <string name="notification_channel_auth">Ошибки аутентификации</string>
+    <string name="porter_pairing_restart">Перезапустить сопряжение</string>
+    <string name="porter_pairing_retry_instructions">Если код был отклонён или уведомление исчезло, перезапустите сопряжение здесь. Затем закройте старое окно Android с кодом сопряжения и откройте новое. Используйте новый код; очищать данные Porter не нужно.</string>
+    <string name="porter_pairing_search_timeout">Код сопряжения не получен в течение минуты. Сопряжение остановлено. Нажмите «Повторить», затем откройте новое окно с кодом сопряжения в разделе «Отладка по Wi-Fi».</string>
+    <string name="porter_pairing_attempt_timeout">Время ожидания подключения для сопряжения истекло. Откройте новое окно с кодом сопряжения в разделе «Отладка по Wi-Fi» и повторите попытку.</string>
+    <string name="porter_pairing_failed_retry">Не удалось выполнить сопряжение. Откройте новое окно с кодом сопряжения в разделе «Отладка по Wi-Fi» и повторите попытку.</string>
+    <string name="porter_pairing_notification_timeout">Сопряжение остановлено, так как истекло время ожидания уведомления. Нажмите «Повторить», затем откройте новое окно с кодом сопряжения в разделе «Отладка по Wi-Fi».</string>
+    <string name="porter_tv_pairing_progress_title">Сопряжение Porter</string>
+    <string name="porter_tv_pairing_wait">Не закрывайте окно с кодом сопряжения и подождите.</string>
+    <string name="porter_tv_pairing_return">Возврат в Porter для отключения службы специальных возможностей для сопряжения…</string>
+    <string name="porter_tv_pairing_disabling">Отключение службы специальных возможностей для сопряжения…</string>
+    <string name="porter_tv_pairing_complete">Служба специальных возможностей для сопряжения отключена. Все шаги сопряжения выполнены. Можно закрыть это окно.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Служба специальных возможностей для сопряжения всё ещё включена. Отключите её в настройках специальных возможностей.</string>
+    <string name="porter_tv_pairing_open_accessibility">Открыть настройки специальных возможностей</string>
 </resources>

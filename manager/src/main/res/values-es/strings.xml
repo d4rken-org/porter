@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">La Depuración inalámbrica no está activada.\nNota: antes de Android 11, para activar la depuración inalámbrica es imprescindible conectarse a una computadora.</string>
     <string name="dialog_usb_debugging_not_enabled">La Depuración por USB no está activada.\nActívala en \"Opciones para desarrolladores\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">En Android 14, instalar o actualizar Porter con el instalador de paquetes revoca el permiso ^1, necesario para activar el servicio de accesibilidad para la vinculación.\n\nPara concederlo, ejecuta el siguiente comando de ADB:\n\n^2\n\nDespués de ejecutar el comando, puedes continuar con el proceso de vinculación.\n\nNota: puedes evitar esto instalando o actualizando Porter mediante ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Activa el servicio de accesibilidad para iniciar el proceso de vinculación. Esto permite que Porter detecte el código de vinculación.\n\nEl servicio de accesibilidad se desactivará cuando se encuentre el código o después de 1 minuto para ahorrar energía.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Activa el servicio de accesibilidad para iniciar el proceso de vinculación. Esto permite que Porter detecte el código de vinculación.\n\nEl servicio de accesibilidad se desactivará tras el intento de vinculación o si no se encuentra ningún código en un minuto. Porter mostrará el resultado y te permitirá volver a intentarlo.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Inicia la vinculación siguiendo estos pasos:\n- Ve a \"Opciones para desarrolladores\"\n- Activa \"Depuración por USB\" y \"Depuración inalámbrica\"\n- Toca el lado izquierdo de \"Depuración inalámbrica\"\n- Toca \"Emparejar dispositivo con código de sincronización\". Porter detectará automáticamente el código de vinculación.</string>
     <string name="adb_pairing_requires_multi_window">Primero entra en el modo de pantalla dividida (multiventana).</string>
     <string name="adb_pairing_requires_multi_window_reason">El sistema requiere que el diálogo de vinculación esté siempre visible. Usar el modo de pantalla dividida es la única forma de que esta app y el diálogo del sistema sean visibles al mismo tiempo.</string>
@@ -200,4 +200,24 @@
     <string name="porter_license_porter">Porter y la aplicación Shizuku original · Licencia Apache 2.0</string>
     <string name="porter_license_api">API de Shizuku y su fork para Porter · Licencia MIT</string>
     <string name="porter_license_notice">Avisos de copyright y atribución</string>
+    <string name="settings_alerts_blocked_title">Alertas en segundo plano</string>
+    <string name="settings_alerts_blocked_summary">Las notificaciones de Porter están bloqueadas, así que el inicio al arrancar y el watchdog no pueden avisarte cuando requieran atención.</string>
+    <string name="settings_alerts_blocked_message">Esta función informa mediante una notificación de lo que está haciendo y de lo que ha fallado. Las notificaciones de Porter están bloqueadas, así que funcionaría sin avisarte de nada.</string>
+    <string name="settings_alerts_blocked_continue">Activar de todos modos</string>
+    <string name="notification_channel_watchdog">Watchdog</string>
+    <string name="notification_channel_crash">Informes de fallos</string>
+    <string name="notification_channel_auth">Errores de autenticación</string>
+    <string name="porter_pairing_restart">Reiniciar la vinculación</string>
+    <string name="porter_pairing_retry_instructions">Si se rechazó un código o desapareció la notificación, reinicia aquí la vinculación. Después, cierra el diálogo antiguo del código de vinculación de Android y abre uno nuevo. Usa el código nuevo; no es necesario borrar los datos de Porter.</string>
+    <string name="porter_pairing_search_timeout">No se recibió ningún código de vinculación en un minuto. La vinculación se ha detenido. Elige Reintentar y abre un nuevo diálogo de código de vinculación en Depuración inalámbrica.</string>
+    <string name="porter_pairing_attempt_timeout">Se agotó el tiempo de espera de la conexión de vinculación. Abre un nuevo diálogo de código de vinculación en Depuración inalámbrica y vuelve a intentarlo.</string>
+    <string name="porter_pairing_failed_retry">Error de vinculación. Abre un nuevo diálogo de código de vinculación en Depuración inalámbrica y vuelve a intentarlo.</string>
+    <string name="porter_pairing_notification_timeout">La vinculación se ha detenido porque se agotó el tiempo de espera de la notificación. Elige Reintentar y abre un nuevo diálogo de código de vinculación en Depuración inalámbrica.</string>
+    <string name="porter_tv_pairing_progress_title">Vinculación de Porter</string>
+    <string name="porter_tv_pairing_wait">Deja abierta la ventana del código de vinculación y espera.</string>
+    <string name="porter_tv_pairing_return">Volviendo a Porter para desactivar el servicio de accesibilidad de vinculación…</string>
+    <string name="porter_tv_pairing_disabling">Desactivando el servicio de accesibilidad de vinculación…</string>
+    <string name="porter_tv_pairing_complete">El servicio de accesibilidad de vinculación está desactivado. Se han completado todos los pasos de vinculación. Puedes cerrar esta ventana.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">El servicio de accesibilidad de vinculación sigue activado. Desactívalo en los ajustes de Accesibilidad.</string>
+    <string name="porter_tv_pairing_open_accessibility">Abrir ajustes de Accesibilidad</string>
 </resources>

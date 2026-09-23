@@ -5,24 +5,21 @@
     <string name="home_status_service_not_running">%1$s davam etmir</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Kompüterə qoşularaq başlayın]]></string>
-    <string name="home_adb_description"><![CDATA[Root olmayan cihazlarda Porter-nu işə salmaq üçün adb-dən istifadə etməlisiniz (kompüter bağlantısı tələb olunur). Cihaz hər dəfə yenidən işə salındıqda bu proses təkrarlanmalıdır. Lütfən, <b><a href="%1$s">yardımı oxuyun</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Root olmayan cihazlarda Porter-i işə salmaq üçün adb-dən istifadə etməlisiniz (kompüter bağlantısı tələb olunur). Cihaz hər dəfə yenidən işə salındıqda bu proses təkrarlanmalıdır. Lütfən, <b><a href="%1$s">yardımı oxuyun</a></b>.]]></string>
     <string name="home_adb_button_view_command">Əmirə baxın</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Bəzi başqa mülahizələr də var, lütfən, əvvəlcə yardımı oxuduğunuzu təsdiqləyin.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Göndər</string>
     <!-- Home - Wireless Adb -->
-    <string name="home_wireless_adb_title"><![CDATA[Simsiz debaq ilə başladın]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Android 11 və ya daha yuxarı versiyalarda siz Simsiz debaqı aktivləşdirə və kompüterə qoşulmadan Porter-nu birbaşa cihazınızdan başlada bilərsiniz.<p>Lütfən, əvvəlcə addım-addım təlimata baxın.]]></string>
-    <string name="home_wireless_adb_description_pre_11"><![CDATA[Android 11 - dən aşağı android versiyalarında simsiz debaq üçün kompüterə bağlanmaq mütləqdir]]></string>
+    <string name="home_wireless_adb_title"><![CDATA[Simsiz sazlama ilə başladın]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Android 11 və ya daha yuxarı versiyalarda siz Simsiz sazlamanı aktivləşdirə və kompüterə qoşulmadan Porter-i birbaşa cihazınızdan başlada bilərsiniz.<p>Lütfən, əvvəlcə addım-addım təlimata baxın.]]></string>
+    <string name="home_wireless_adb_description_pre_11"><![CDATA[Android 11 - dən aşağı Android versiyalarında simsiz sazlamanı aktivləşdirmək üçün kompüterə bağlanmaq mütləqdir]]></string>
     <string name="home_wireless_adb_view_guide_button">Addım-Addım Təlimat</string>
     <!-- Adb -->
-    <string name="dialog_adb_discovery">Simsiz debaq cihazı axtarılır</string>
-    <string name="dialog_adb_discovery_message">Lütfən, \"Tərtibatçı seçimləri\"ndə \"Simsiz Debaq\"
-        funksiyasını aktivləşdirin. Şəbəkə dəyişdikdə \"Simsiz Debaq\" avtomatik olaraq söndürülür.
-        \n
-        \nQeyd edək ki, Tərtibatçı seçimlərini, USB Debaqı və ya Porter-nu söndürməyin</string>
+    <string name="dialog_adb_discovery">Simsiz sazlama xidməti axtarılır</string>
+    <string name="dialog_adb_discovery_message">Lütfən, \"Tərtibatçı seçimləri\"ndə \"Simsiz sazlama\"nı aktiv edin. Şəbəkə dəyişdikdə \"Simsiz sazlama\" avtomatik söndürülür.\n\nQeyd: \"Tərtibatçı seçimləri\"ni və ya \"USB sazlaması\"nı söndürməyin, əks halda Porter dayandırılacaq.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Əgər axtarış davam edirsə,
-        zəhmət olmasa \"Wireless debugging\" funksiyasını söndürüb aktiv etməyə çalışın.</string>
-    <string name="dialog_adb_port">Liman</string>
+        zəhmət olmasa \"Simsiz sazlama\" funksiyasını söndürüb aktiv etməyə çalışın.</string>
+    <string name="dialog_adb_port">Port</string>
     <string name="adb_pairing">Cütləşmə</string>
     <string name="dialog_adb_pairing_title">Cihaz ilə cütləşdir</string>
     <string name="dialog_adb_pairing_discovery">Cütləşdirmə servisi axtarılır</string>
@@ -30,25 +27,22 @@
     <string name="paring_code_is_wrong">Cütləşmə kodu yanlışdır</string>
     <string name="cannot_connect_port">Simsiz sazlama xidmətinə qoşulmaq mümkün deyil.\n\nŞəbəkəyə
         girişi məhdudlaşdıra bilən bütün firewall, reklam bloku, VPN və ya oxşar tətbiqlərdə
-        Porter-nun ağ siyahıya salındığından əmin olun.</string>
-    <string name="dialog_wireless_adb_not_enabled">Simsiz debaq aktiv edilməyib.
-        \nQeyd edək ki, Android 11-dən əvvəl simsiz debaqı aktivləşdirmək üçün kompüter bağlantısı
+        Porter-in ağ siyahıya salındığından əmin olun.</string>
+    <string name="dialog_wireless_adb_not_enabled">Simsiz sazlama aktiv edilməyib.
+        \nQeyd edək ki, Android 11-dən əvvəl simsiz sazlamanı aktivləşdirmək üçün kompüter bağlantısı
         mütləqdir.</string>
-    <string name="dialog_usb_debugging_not_enabled">USB debugging aktiv deyil.\nZəhmət olmasa, onu
-        \"İnkişaf etdirici seçimləri\" bölməsində aktiv edin.</string>
+    <string name="dialog_usb_debugging_not_enabled">USB sazlaması aktiv deyil.\nZəhmət olmasa, onu
+        \"Tərtibatçı seçimləri\" bölməsində aktiv edin.</string>
     <string name="dialog_adb_pairing_accessibility_permission">Android 14-də, Paket Quraşdırıcısı
-        ilə Porter-nu quraşdırmaq/yeniləmək, cütləşmə üçün əlçatanlıq xidmətini aktivləşdirmək üçün
+        ilə Porter-i quraşdırmaq/yeniləmək, cütləşmə üçün əlçatanlıq xidmətini aktivləşdirmək üçün
         tələb olunan ^1 icazəsini ləğv edir.\n\nBunu etmək üçün aşağıdakı ADB əmrini
         işlədin:\n\n^2\n\nƏmri işlətdikdən sonra cütləşmə prosesinə davam edə bilərsiniz.\n\nQeyd:
-        Porter-nu ADB ilə quraşdırmaq/yeniləməklə bunu keçə bilərsiniz.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Zəhmət olmasa, cütləşdirmə prosesini
-        başlatmaq üçün əlçatanlıq xidmətini aktiv edin. Bu, Shizukuya cütləşdirmə kodunu aşkar
-        etməyə imkan verir.\n\nƏlçatanlıq xidməti kod tapıldıqda və ya enerji qənaəti üçün 1 dəqiqə
-        sonra söndürüləcək.</string>
+        Porter-i ADB ilə quraşdırmaq/yeniləməklə bunu keçə bilərsiniz.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Zəhmət olmasa, cütləşdirmə prosesini başlatmaq üçün əlçatımlılıq xidmətini aktiv edin. Bu, Porter-ə cütləşdirmə kodunu aşkar etməyə imkan verir.\n\nƏlçatımlılıq xidməti cütləşdirmə cəhdindən sonra və ya bir dəqiqə ərzində kod tapılmazsa söndürüləcək. Porter nəticəni göstərəcək və yenidən cəhd etməyə imkan verəcək.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Zəhmət olmasa, cütləşdirməyə aşağıdakı
-        addımları yerinə yetirməklə başlayın:\n- \"İnkişaf etdirici Seçimləri\"nə keçid edin\n-
-        \"USB debugging\" və \"Wireless debugging\"i aktiv edin\n- \"Simsiz debugging\" bölməsinin
-        sol tərəfinə toxunun\n- \"Cihazı cütləşdirmə kodu ilə qoş\" düyməsini bas. Porter
+        addımları yerinə yetirməklə başlayın:\n- \"Tərtibatçı seçimləri\"nə keçid edin\n-
+        \"USB sazlaması\"nı və \"Simsiz sazlama\"nı aktiv edin\n- \"Simsiz sazlama\" bölməsinin
+        sol tərəfinə toxunun\n- \"Cihazı cütləşdirmə kodu ilə cütləşdirin\" düyməsini basın. Porter
         cütləşdirmə kodunu avtomatik aşkar edəcək.</string>
     <string name="adb_pairing_requires_multi_window">Əvvəlcə bölünmüş ekran (çoxu pəncərə) rejiminə
         daxil olun.</string>
@@ -61,21 +55,21 @@
     <string name="enable">Aktiv et</string>
     <string name="development_settings">Tərtibatçı seçimləri</string>
     <string name="notification_settings">Bildiriş seçimləri</string>
-    <string name="adb_pairing_tutorial_content_notification">Shizukudan gələn bildiriş cütləşdirməni
+    <string name="adb_pairing_tutorial_content_notification">Porter-dən gələn bildiriş cütləşdirməni
         tamamlamağınız üçün sizə kömək edə bilər</string>
-    <string name="adb_pairing_tutorial_content_steps">\"Developer Options\"a keçin, sonra \"USB
-        debugging\" və \"Wireless debugging\" funksiyalarını aktivləşdirin.</string>
+    <string name="adb_pairing_tutorial_content_steps">\"Tərtibatçı seçimləri\"nə keçin, sonra \"USB
+        sazlaması\" və \"Simsiz sazlama\" funksiyalarını aktivləşdirin.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">\"Simsiz sazlama\"nın sol
         tərəfinə toxunun, sonra \"Cihazı cütləşdirmə kodu ilə cütləşdirin\" üzərinə toxunun.
         Qoşulmanı tamamlamaq üçün bildirişdə kodu daxil edin.</string>
-    <string name="adb_pairing_tutorial_content_notification_blocked">Cütləşmə prosesi Shizukudan
-        gələn bildirişi görməyinizi tələb edir. Zəhmət olmasa, Porter-ya bildirişlər göndərməyə
+    <string name="adb_pairing_tutorial_content_notification_blocked">Cütləşmə prosesi Porter-dən
+        gələn bildirişi görməyinizi tələb edir. Zəhmət olmasa, Porter-ə bildirişlər göndərməyə
         icazə verin.</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI istifadəçiləri sistem parametrlərində
         bildiriş tərzini \"Bildiriş\" - \"Bildiriş kölgəsi\"ndən \"Android\"ə keçirməli ola bilərlər</string>
     <string name="adb_pairing_tutorial_content_miui_2">Əks halda, siz bildirişdəki cütləşdirmə
         kodunu daxil edə bilməyəcəksiniz.</string>
-    <string name="adb_pairing_tutorial_content_finish">Şizukuya qayıdın və Şizukuya başlayın.</string>
+    <string name="adb_pairing_tutorial_content_finish">Porter-ə qayıdın və Porter-i başladın.</string>
     <string name="adb_pairing_tutorial_content_network">Porter yerli şəbəkəyə daxil olmalıdır.
         Şəbəkə icazəsi ilə idarə olunur.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Bəzi sistemlər
@@ -89,20 +83,20 @@
     <string name="home_app_management_title">tətbiqin idarə edilməsi</string>
     <plurals name="home_app_management_authorized_apps_count">
         <item quantity="one"><![CDATA[İcazə verilmiş %d proqram]]></item>
-        <item quantity="other"><![CDATA[İcazə verilmiş %d proqramlar]]></item>
+        <item quantity="other"><![CDATA[İcazə verilmiş %d proqram]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[İcazə verilmiş proqramları idarə etmək üçün toxunun]]></string>
     <string name="home_app_management_empty">Porter icazəsini tələb edən və ya bəyan edən tətbiqlər
         burada göstəriləcək.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">Avtomatlaşdırma proqramları ilə Porter-ya nəzarət edin</string>
+    <string name="home_automation_title">Avtomatlaşdırma proqramları ilə Porter-ə nəzarət edin</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">adb icazəsi məhduddur</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Çox güman ki, cihazınızın istehsalçısı adb icazəsini məhdudlaşdırır.<p>Sisteminiz üçün <b><a href="%1$s">bu sənəddə</a></b> həll yolu ola bilər.]]></string>
     <string name="app_management_item_summary_requires_root">* Porter rootla işləməsini tələb edir</string>
     <string name="app_management_toggle_all">Hamısını dəyiş</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">Shizikunu terminal proqramlarında istifadə edin</string>
+    <string name="home_terminal_title">Porter-i terminal proqramlarında istifadə edin</string>
     <string name="home_terminal_description">Porter vasitəsilə terminal proqramlarında qabıq
         əmrlərini işlədin</string>
     <string name="terminal_tutorial_miui">İstifadəçilər MIUI-nin ixrac funksiyası tərəfindən
@@ -150,9 +144,9 @@
     <string name="toast_accessibility_tv_only">Bu xidmət yalnız TV cihazlarında dəstəklənir.</string>
     <string name="toast_pairing_timeout">Porter cütləşdirmə xidmətinin vaxtı bitdi.</string>
     <!-- Stop -->
-    <string name="action_stop">Shizikunu dayandır</string>
+    <string name="action_stop">Porter-i dayandır</string>
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">Simsiz debaq qoşulur...</string>
+    <string name="notification_channel_adb_pairing">Simsiz sazlama cütləşdirməsi</string>
     <string name="notification_adb_pairing_input_paring_code">Cütləşmə kodunu daxil edin</string>
     <string name="notification_adb_pairing_searching_for_service_title">Qoşulma xidməti axtarılır</string>
     <string name="notification_adb_pairing_service_found_title">Qoşulma xidməti tapıldı</string>
@@ -164,8 +158,8 @@
     <string name="notification_adb_pairing_failed_title">Qoşulma uğursuz oldu</string>
     <string name="notification_adb_pairing_retry">Yenidən cəhd edin</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">Shizukuya daxil olun</string>
-    <string name="permission_description">Proqramın Shizukudan istifadə etməsinə icazə verin</string>
+    <string name="permission_label">Porter-ə giriş</string>
+    <string name="permission_description">Proqramın Porter-dən istifadə etməsinə icazə verin.</string>
     <string name="permission_warning_template"><![CDATA[<b>%1$s</b> - ya %2$s üçün icazə verilsin\?]]></string>
     <string name="grant_dialog_button_allow_always">Hər zaman icazə ver</string>
     <string name="grant_dialog_button_deny">"Ləğv et"</string>
@@ -174,7 +168,7 @@
     <string name="start_with_root_failed">Root icazəsi verilmədiyi və ya bu cihaz rootlu olmadığı
         üçün xidməti başlatmaq mümkün deyil.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Porter-nun başlanğıcı…</string>
+    <string name="wadb_notification_title">Porter başladılır…</string>
     <string name="wadb_notification_wifi_required">Davam etməzdən əvvəl Wi-Fi bağlantısını
         gözləyirəm</string>
     <string name="wadb_notification_retry">Yenidən cəhd gözlənilir</string>
@@ -193,10 +187,62 @@
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">Brauzeri başlatmaq mümkün deyil</string>
     <string name="toast_copied_to_clipboard">Buferə kopyalandı</string>
-    <string name="accessibility_service_description">Bildirişlərin və ya bölünmüş ekranın istifadə
-        olunmadığı cihazlar (məsələn, Android 14+ işləyən televizorlar) üçün cütləşdirmə dəstəyi
-        təmin edir.\n\nShizuku-ya simsiz debugging cütləşdirmə ekranından cütləşdirmə kodunu
-        çıxarmağa imkan verir. Cütləşdirmə kodu tapıldıqdan sonra özünü deaktiv edəcək.</string>
+    <string name="accessibility_service_description">Bildirişlərin və ya bölünmüş ekranın istifadə olunmadığı cihazlar (məsələn, Android 14+ işləyən televizorlar) üçün cütləşdirmə dəstəyi təmin edir.\n\nPorter-ə simsiz sazlamanın cütləşdirmə ekranından cütləşdirmə kodunu çıxarmağa imkan verir. Cütləşdirmə kodu tapıldıqdan sonra özünü deaktiv edəcək.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">İndi cəhd et</string>
+    <string name="home_root_description"><![CDATA[Magisk istifadə edirsinizsə, %1$s başqa bir seçimdir. Tətbiqlərin %2$s üçün açıq dəstəyi olmalıdır.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intent-lər</string>
+    <string name="home_automation_bottom_sheet_label_action">Əməliyyat</string>
+    <string name="home_automation_bottom_sheet_label_package">Paket</string>
+    <string name="home_automation_bottom_sheet_label_target">Hədəf</string>
+    <string name="home_automation_bottom_sheet_label_extras">Əlavələr</string>
+    <string name="home_automation_regenerate_token">Token yenidən yaradılsın?</string>
+    <string name="home_automation_regenerate_token_message">Intent-lərinizi yeni tokenlə yenidən konfiqurasiya etməli olacaqsınız.</string>
+    <string name="home_dialog_reboot_required_title">Yenidən başlatma tələb olunur</string>
+    <string name="home_dialog_reboot_required_message">Porter-in düzgün işləməsi üçün cihazı yenidən başlatmaq lazımdır. Davam etmək üçün cihazınızı yenidən başladın.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Dublikat tətbiq aşkarlandı</string>
+    <string name="home_dialog_duplicate_app_detected_message">Cihazınızda bu tətbiqin başqa versiyası quraşdırılıb. Davam etmək üçün bütün dublikat versiyaları silin və cihazınızı yenidən başladın.</string>
+    <string name="home_dialog_button_exit">Çıxış</string>
+    <string name="settings_alerts_blocked_title">Arxa plan xəbərdarlıqları</string>
+    <string name="settings_alerts_blocked_summary">Porter bildirişləri bloklanıb, buna görə açılışda başlatma və nəzarətçi diqqətinizi tələb etdikdə sizə xəbər verə bilmir.</string>
+    <string name="settings_alerts_blocked_message">Bu funksiya nə etdiyini və nəyin səhv getdiyini bildiriş vasitəsilə bildirir. Porter bildirişləri hazırda bloklanıb, ona görə də o sizə heç nə demədən işləyəcək.</string>
+    <string name="settings_alerts_blocked_continue">Yenə də aktiv edin</string>
+    <string name="follow_system">Sistemə uyğun</string>
+    <string name="start">Başlat</string>
+    <string name="stop">Dayandır</string>
+    <string name="notification_channel_watchdog">Nəzarətçi</string>
+    <string name="notification_channel_crash">Çökmə hesabatları</string>
+    <string name="notification_channel_auth">Doğrulama xətaları</string>
+    <string name="notification_auth_invalid_title">Yanlış doğrulama tokeni</string>
+    <string name="notification_auth_invalid_message">Intent-inizdəki tokenin Parametrlərdə “Avtomatlaşdırma proqramları ilə Porter-ə nəzarət edin” bölməsindəki tokenlə uyğun gəldiyinə əmin olun.</string>
+    <string name="porter_status_running_adb">ADB ilə işləyir</string>
+    <string name="porter_status_running_root">Root ilə işləyir</string>
+    <string name="porter_status_restart_service">İşləyən xidməti yeniləmək üçün Porter-i yenidən başladın.</string>
+    <string name="porter_status_version_unknown">Naməlum</string>
+    <string name="porter_status_versions">Quraşdırılmış Porter: %1$s\nİşləyən xidmət: %2$s\nShizuku API: %3$d · Yamaq: %4$d</string>
+    <string name="porter_acknowledgements">Təşəkkürlər</string>
+    <string name="porter_acknowledgements_summary">Mənbə layihələr, açıq mənbəli kitabxanalar və lisenziyalar.</string>
+    <string name="porter_acknowledgements_thanks">Təşəkkür edirik</string>
+    <string name="porter_licenses">Lisenziyalar</string>
+    <string name="porter_ack_shizuku">Porter-in təməli olan Shizuku-nu və onun API-lərini yaratdıqları üçün RikkaApps-ə və bütün töhfəçilərə.</string>
+    <string name="porter_ack_thedjchi">Porter-in əsaslandığı Shizuku fork-unu dəstəklədikləri üçün thedjchi-yə və töhfəçilərə.</string>
+    <string name="porter_ack_symbuzzer">Shizuku üzərində işi davam etdirdikləri və öz fork-larını paylaşdıqları üçün symbuzzer-ə və töhfəçilərə.</string>
+    <string name="porter_ack_plus">ShizukuPlus və istəyə bağlı uyğunluq tətbiqi ideyasına ilham verdikləri üçün thejaustin-ə və töhfəçilərə.</string>
+    <string name="porter_ack_maxpatchs">İkona, maskot dizaynları və banner üçün təşəkkürlər.</string>
+    <string name="porter_license_porter">Porter və orijinal Shizuku tətbiqi · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API və onun Porter fork-u · MIT License</string>
+    <string name="porter_license_notice">Müəllif hüququ və istinad bildirişləri</string>
+    <string name="porter_pairing_restart">Cütləşdirməni yenidən başladın</string>
+    <string name="porter_pairing_retry_instructions">Kod rədd edilibsə və ya bildiriş yox olubsa, cütləşdirməni burada yenidən başladın. Sonra Android-in köhnə cütləşdirmə kodu dialoqunu bağlayın və yenisini açın. Yeni koddan istifadə edin; Porter-in məlumatlarını təmizləməyiniz lazım deyil.</string>
+    <string name="porter_pairing_search_timeout">Bir dəqiqə ərzində cütləşdirmə kodu alınmadı. Cütləşdirmə dayandırıldı. “Yenidən cəhd edin” seçin, sonra “Simsiz sazlama” bölməsində yeni cütləşdirmə kodu dialoqu açın.</string>
+    <string name="porter_pairing_attempt_timeout">Cütləşdirmə bağlantısının vaxtı bitdi. “Simsiz sazlama” bölməsində yeni cütləşdirmə kodu dialoqu açın və yenidən cəhd edin.</string>
+    <string name="porter_pairing_failed_retry">Cütləşdirmə uğursuz oldu. “Simsiz sazlama” bölməsində yeni cütləşdirmə kodu dialoqu açın və yenidən cəhd edin.</string>
+    <string name="porter_pairing_notification_timeout">Bildirişin vaxtı bitdiyi üçün cütləşdirmə dayandırıldı. “Yenidən cəhd edin” seçin, sonra “Simsiz sazlama” bölməsində yeni cütləşdirmə kodu dialoqu açın.</string>
+    <string name="porter_tv_pairing_progress_title">Porter cütləşdirməsi</string>
+    <string name="porter_tv_pairing_wait">Zəhmət olmasa, cütləşdirmə kodu pəncərəsini açıq saxlayın və gözləyin.</string>
+    <string name="porter_tv_pairing_return">Cütləşdirmə əlçatımlılıq xidmətini söndürmək üçün Porter-ə qayıdılır…</string>
+    <string name="porter_tv_pairing_disabling">Cütləşdirmə əlçatımlılıq xidməti söndürülür…</string>
+    <string name="porter_tv_pairing_complete">Cütləşdirmə əlçatımlılıq xidməti söndürülüb. Bütün cütləşdirmə addımları tamamlandı. Bu pəncərəni bağlaya bilərsiniz.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Cütləşdirmə əlçatımlılıq xidməti hələ də aktivdir. Onu Əlçatımlılıq ayarlarında söndürün.</string>
+    <string name="porter_tv_pairing_open_accessibility">Əlçatımlılıq ayarlarını açın</string>
 </resources>

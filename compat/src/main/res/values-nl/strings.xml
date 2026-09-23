@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Porter gebruiken</string>
+    <string name="permission_description">Hiermee kan deze app systeem-API’s gebruiken via Porter.</string>
+    <string name="porter_missing">Installeer Porter met het bijbehorende ondertekeningscertificaat om deze begeleidende app te gebruiken.</string>
+</resources>

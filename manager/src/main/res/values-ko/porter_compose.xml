@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">뒤로 이동</string>
+    <string name="porter_local_network_permission">Porter가 Android의 무선 디버깅 서비스를 찾아 연결할 수 있도록 로컬 네트워크 접근을 허용하세요.</string>
+    <string name="porter_pairing_dialog_instructions">Android 개발자 옵션에서 \"무선 디버깅\"을 열고 \"페어링 코드로 기기 페어링\"을 선택하세요. 여기에 포트와 페어링 코드를 입력하세요.</string>
+    <string name="porter_permission_detail">Porter는 이 앱을 위해 Porter 자체와 동일한 권한으로 기기에서 명령을 실행합니다. 신뢰할 수 있는 앱만 허용하세요.</string>
+    <string name="porter_permission_waiting">Porter 대기 중…</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Sovellukset</string>
+    <string name="porter_home_subtitle">ADB-käyttöoikeus sovelluksillesi</string>
+    <string name="porter_startup">Käynnistys</string>
+    <string name="porter_version">Versio</string>
+    <string name="porter_pairing_method">Paritustapa</string>
+    <string name="porter_status_restricted">Android rajoittaa joitakin ADB-käyttöoikeuksia.</string>
+    <string name="porter_status_stop_message">Porterin pysäyttäminen katkaisee sitä käyttävien sovellusten yhteyden. Sinun on käynnistettävä Porter uudelleen manuaalisesti, mikä voi vaatia tietokoneen.</string>
+    <string name="porter_status_details_hint">Avaa palvelun tiedot ja pysäytysvaihtoehdot</string>
+    <string name="porter_status_ready">Porter on valmis. Yhteensopivat sovellukset voivat nyt muodostaa yhteyden ja pyytää käyttöoikeutta.</string>
+    <string name="porter_pairing_notification">Ilmoitus</string>
+    <string name="porter_pairing_dialog">Sovelluksen valintaikkuna</string>
+    <string name="porter_manage_apps_action">Hallitse sovelluksia</string>
+    <string name="porter_primary_user_title">Käytä Androidin ensisijaista käyttäjää</string>
+    <string name="porter_primary_user_description">Porteria ei voi käynnistää tältä Android-käyttäjältä tai -profiililta. Vaihda laitteen ensisijaiseen käyttäjään, asenna Porter sinne tarvittaessa ja käynnistä sen palvelu. Palaa sitten tänne hallitsemaan sovelluksiasi.</string>
+    <string name="porter_secondary_user_stop_message">Porterin pysäyttäminen katkaisee sovellusten yhteyden kaikilla Android-käyttäjillä. Käynnistä se uudelleen vaihtamalla laitteen ensisijaiseen käyttäjään ja avaamalla Porter siellä.</string>
+</resources>

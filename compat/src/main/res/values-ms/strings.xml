@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Gunakan Porter</string>
+    <string name="permission_description">Benarkan apl ini menggunakan API sistem melalui Porter.</string>
+    <string name="porter_missing">Pasang Porter dengan sijil tandatangan yang sepadan untuk menggunakan apl pengiring ini.</string>
+</resources>

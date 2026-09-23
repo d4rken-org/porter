@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">சேவைப் புதுப்பிப்பு கிடைக்கிறது</string>
+    <string name="porter_service_update_action">சேவையைப் புதுப்பி</string>
+    <string name="porter_service_update_summary">புதுப்பிக்கும்போது இணைந்துள்ள பயன்பாடுகளின் இணைப்பு சிறிது நேரம் துண்டிக்கப்படும். ஏற்கெனவே உள்ள அனுமதிகள் தக்கவைக்கப்படும்.</string>
+    <string name="porter_service_update_primary">சேவையைப் புதுப்பிக்க, முதன்மை Android பயனரில் Porter ஐத் திறக்கவும்.</string>
+    <string name="porter_service_update_features">இந்த அம்சங்களை இயக்க சேவையைப் புதுப்பிக்கவும்.</string>
+    <string name="porter_service_auto_update">சேவையைத் தானாகப் புதுப்பி</string>
+    <string name="porter_service_auto_update_summary">Porter பயன்பாடு புதுப்பிக்கப்பட்ட பிறகு, வேறுபட்ட பில்டுடன் இயங்கும் சேவையைப் பின்னணியில் மாற்றும். இதனால் இணைந்துள்ள பயன்பாடுகளின் இணைப்பு சிறிது நேரம் துண்டிக்கப்படும். நிறுத்தப்பட்ட சேவை நிறுத்தப்பட்டே இருக்கும்.</string>
+    <string name="porter_service_update_interrupted">முந்தைய சேவைப் புதுப்பிப்பு முடியவில்லை. சேவை இன்னும் இயங்கினால் மீண்டும் முயற்சிக்கவும், அல்லது “சேவை” திரையிலிருந்து அதை மீண்டும் தொடங்கவும்.</string>
+    <string name="porter_global_access_update">இயங்கும் சேவையில் பொது அணுகல் கட்டுப்பாடு கிடைக்கவில்லை.</string>
+    <string name="porter_discovery_update">தற்போதைய பயன்பாட்டுக் கண்டறிதல் மற்றும் இணைப்பு வரலாறு அம்சங்களை இயங்கும் சேவை ஆதரிக்கவில்லை. கிடைக்கும் பயன்பாடுகள் அதன் பழைய இடைமுகத்தைப் பயன்படுத்திக் காட்டப்படுகின்றன.</string>
+    <string name="porter_service_updating">Porter சேவையைப் புதுப்பிக்கிறது…</string>
+    <string name="porter_service_update_failed">Porter சேவையைப் புதுப்பிக்க முடியவில்லை</string>
+    <string name="porter_service_update_failed_summary">இயங்கும் சேவையை நிறுவப்பட்ட பதிப்பால் மாற்ற முடியவில்லை. அது இன்னும் இயங்கினால் மீண்டும் முயற்சிக்கலாம். இல்லையெனில், “சேவை” திரையிலிருந்து சேவையை மீண்டும் தொடங்கவும்.</string>
+    <string name="porter_service_update_retry">புதுப்பிப்பை மீண்டும் முயற்சி</string>
+</resources>

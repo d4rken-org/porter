@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Sử dụng Porter</string>
+    <string name="permission_description">Cho phép ứng dụng này sử dụng API hệ thống thông qua Porter.</string>
+    <string name="porter_missing">Hãy cài đặt Porter có chứng chỉ ký khớp để sử dụng ứng dụng đồng hành này.</string>
+</resources>

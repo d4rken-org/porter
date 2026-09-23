@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Service</string>
+    <string name="porter_view_service">Voir le service</string>
+    <string name="porter_service_starting">Démarrage du service Porter…</string>
+    <string name="porter_service_stopping">Arrêt du service Porter…</string>
+    <string name="porter_service_checking">Lecture de l\'état du service…</string>
+    <string name="porter_apps_service_unavailable">L\'accès des applications est indisponible tant que le service est arrêté ou en cours de changement.</string>
+    <string name="porter_apps_counts_unavailable">Le nombre d\'applications est indisponible.</string>
+    <string name="porter_background_operation">Fonctionnement en arrière-plan</string>
+    <string name="porter_service_failed_running">La mise à jour précédente n\'a pas abouti. Le service est toujours en cours d\'exécution. Vous pouvez relancer la mise à jour.</string>
+    <string name="porter_service_failed_stopped">La mise à jour précédente n\'a pas abouti. Le service est arrêté. Accédez au tableau de bord pour le redémarrer.</string>
+    <string name="porter_service_build_different_summary">Le service en cours d\'exécution utilise un build différent de celui de l\'application installée. Les fonctionnalités compatibles restent disponibles.</string>
+    <string name="porter_service_build_unknown_summary">Le service en cours d\'exécution ne peut pas indiquer l\'identité de son build. Mettez-le à jour pour utiliser le build installé. Les fonctionnalités compatibles restent disponibles.</string>
+    <string name="porter_service_healthy">Tout fonctionne normalement.</string>
+    <string name="porter_service_progress_background">Vous pouvez quitter cet écran. L\'opération se poursuit en arrière-plan.</string>
+    <string name="porter_build_identity_unavailable">Identité du build indisponible</string>
+    <string name="porter_installed_app">Application installée</string>
+    <string name="porter_running_service">Service en cours d\'exécution</string>
+    <string name="porter_service_api_value">Protocole Porter : %1$d</string>
+    <string name="porter_service_process_value">UID : %1$d · PID : %2$s</string>
+    <string name="porter_root_requirement">Nécessite un appareil rooté. Porter demande l\'accès root lorsque vous appuyez sur Démarrer.</string>
+    <string name="porter_version_compact">Version : %1$s (%2$d)</string>
+    <string name="porter_build_compact">Build : %1$s (%2$s)</string>
+</resources>

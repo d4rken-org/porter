@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Nazaj</string>
+    <string name="porter_local_network_permission">Dovolite dostop do lokalnega omrežja, da lahko Porter najde Androidovo storitev za brezžično odpravljanje napak in se poveže z njo.</string>
+    <string name="porter_pairing_dialog_instructions">V možnostih za razvijalce Androida odprite Brezžično odpravljanje napak in izberite Seznanitev naprave s kodo za seznanjanje. Tukaj vnesite vrata in kodo za seznanjanje.</string>
+    <string name="porter_permission_detail">Porter bo za to aplikacijo izvajal ukaze v vaši napravi z enakimi pravicami, kot jih ima sam. Dovolite samo aplikacijam, ki jim zaupate.</string>
+    <string name="porter_permission_waiting">Čakanje na Porter…</string>
+</resources>

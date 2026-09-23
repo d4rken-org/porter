@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_navigate_back">Kembali</string>
+    <string name="porter_local_network_permission">Benarkan akses kepada rangkaian setempat anda supaya Porter dapat mencari dan menyambung kepada perkhidmatan penyahpepijatan wayarles Android.</string>
+    <string name="porter_pairing_dialog_instructions">Buka Penyahpepijatan wayarles dalam Pilihan pembangun Android dan pilih Gandingkan peranti dengan kod gandingan. Masukkan port dan kod gandingan di sini.</string>
+    <string name="porter_permission_detail">Porter akan menjalankan arahan pada peranti anda untuk apl ini, dengan keistimewaan yang sama seperti Porter sendiri. Benarkan apl yang anda percayai sahaja.</string>
+    <string name="porter_permission_waiting">Menunggu Porter…</string>
+</resources>

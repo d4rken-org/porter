@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Xidmət yeniləməsi mövcuddur</string>
+    <string name="porter_service_update_action">Xidməti yeniləyin</string>
+    <string name="porter_service_update_summary">Yeniləmə qoşulmuş tətbiqlərin əlaqəsini qısa müddətə kəsir. Mövcud icazələr saxlanılır.</string>
+    <string name="porter_service_update_primary">Xidməti yeniləmək üçün Porter-i əsas Android istifadəçisində açın.</string>
+    <string name="porter_service_update_features">Bu funksiyaları aktivləşdirmək üçün xidməti yeniləyin.</string>
+    <string name="porter_service_auto_update">Xidməti avtomatik yeniləyin</string>
+    <string name="porter_service_auto_update_summary">Porter tətbiqi yeniləndikdən sonra fərqli yığımla işləyən xidmət arxa planda əvəz olunur. Bu, qoşulmuş tətbiqlərin əlaqəsini qısa müddətə kəsir. Dayandırılmış xidmət dayandırılmış qalır.</string>
+    <string name="porter_service_update_interrupted">Əvvəlki xidmət yeniləməsi başa çatmadı. Xidmət hələ işləyirsə, yenidən cəhd edin, əks halda onu Xidmət ekranından yenidən başladın.</string>
+    <string name="porter_global_access_update">Qlobal giriş idarəetməsi işləyən xidmətdə mövcud deyil.</string>
+    <string name="porter_discovery_update">İşləyən xidmət cari tətbiq aşkarlama və qoşulma tarixçəsi funksiyalarını dəstəkləmir. Mövcud tətbiqlər onun köhnə interfeysi ilə göstərilir.</string>
+    <string name="porter_service_updating">Porter xidməti yenilənir…</string>
+    <string name="porter_service_update_failed">Porter xidmətini yeniləmək mümkün olmadı</string>
+    <string name="porter_service_update_failed_summary">İşləyən xidməti quraşdırılmış versiya ilə əvəz etmək mümkün olmadı. Hələ işləyirsə, yenidən cəhd edə bilərsiniz. Əks halda xidməti Xidmət ekranından yenidən başladın.</string>
+    <string name="porter_service_update_retry">Yeniləməni təkrarlayın</string>
+</resources>

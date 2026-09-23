@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Услуга</string>
+    <string name="porter_view_service">Прикажи услугу</string>
+    <string name="porter_service_starting">Покретање Porter услуге…</string>
+    <string name="porter_service_stopping">Заустављање Porter услуге…</string>
+    <string name="porter_service_checking">Читање статуса услуге…</string>
+    <string name="porter_apps_service_unavailable">Приступ апликација није доступан док је услуга заустављена или се мења.</string>
+    <string name="porter_apps_counts_unavailable">Број апликација није доступан.</string>
+    <string name="porter_background_operation">Операција у позадини</string>
+    <string name="porter_service_failed_running">Претходно ажурирање није завршено. Услуга и даље ради. Можете поново покушати ажурирање.</string>
+    <string name="porter_service_failed_stopped">Претходно ажурирање није завршено. Услуга је заустављена. Идите на контролну таблу да бисте је поново покренули.</string>
+    <string name="porter_service_build_different_summary">Покренута услуга користи другу верзију од инсталиране апликације. Компатибилне функције остају доступне.</string>
+    <string name="porter_service_build_unknown_summary">Покренута услуга не може да пријави идентитет своје верзије. Ажурирајте је да бисте користили инсталирану верзију. Компатибилне функције остају доступне.</string>
+    <string name="porter_service_healthy">Све ради нормално.</string>
+    <string name="porter_service_progress_background">Можете да напустите овај екран. Операција се наставља у позадини.</string>
+    <string name="porter_build_identity_unavailable">Идентитет верзије није доступан</string>
+    <string name="porter_installed_app">Инсталирана апликација</string>
+    <string name="porter_running_service">Покренута услуга</string>
+    <string name="porter_service_api_value">Porter протокол: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Захтева рутован уређај. Porter тражи root приступ када притиснете „Покрени“.</string>
+    <string name="porter_version_compact">Верзија: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Билд: %1$s (%2$s)</string>
+</resources>

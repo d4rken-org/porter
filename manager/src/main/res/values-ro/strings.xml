@@ -10,64 +10,60 @@
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Există și alte considerații, mai întâi confirmă că ai citit ajutorul.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Trimitere</string>
     <!-- Home - Wireless Adb -->
-    <string name="home_wireless_adb_title"><![CDATA[Pornește prin depanare fără fir]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Pe Android 11 sau o versiune ulterioară, poți activa depanarea wireless și poți porni Porter direct de pe dispozitiv, fără a te conecta la un computer.<p>Mai întâi consultă ghidul pas cu pas.]]></string>
-    <string name="home_wireless_adb_description_pre_11"><![CDATA[Înainte de Android 11, este necesară conectarea la un computer pentru a activa depanarea fără fir.]]></string>
+    <string name="home_wireless_adb_title"><![CDATA[Pornește prin remedierea erorilor wireless]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Pe Android 11 sau o versiune ulterioară, poți activa remedierea erorilor wireless și poți porni Porter direct de pe dispozitiv, fără a te conecta la un computer.<p>Mai întâi consultă ghidul pas cu pas.]]></string>
+    <string name="home_wireless_adb_description_pre_11"><![CDATA[Înainte de Android 11, este necesară conectarea la un computer pentru a activa remedierea erorilor wireless.]]></string>
     <string name="home_wireless_adb_view_guide_button">Ghidul pas cu pas</string>
     <!-- Adb -->
-    <string name="dialog_adb_discovery">Se caută serviciul de depanare fără fir</string>
-    <string name="dialog_adb_discovery_message">Activează „Depanare wireless” în „Opțiuni
-        dezvoltator”. „Depanarea wireless” se dezactivează automat când se schimbă rețeaua.
+    <string name="dialog_adb_discovery">Se caută serviciul de remediere a erorilor wireless</string>
+    <string name="dialog_adb_discovery_message">Activează „Remedierea erorilor wireless” în „Opțiuni pentru dezvoltatori”. „Remedierea erorilor wireless” se dezactivează automat când se schimbă rețeaua.
         \n
-        \nReține, nu dezactiva „Opțiuni dezvoltator” sau „Depanare USB”, altfel Porter va fi oprit.</string>
+        \nReține, nu dezactiva „Opțiuni pentru dezvoltatori” sau „Remedierea erorilor prin USB”, altfel Porter va fi oprit.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Încearcă să dezactivezi și
-        să activezi „Depanare fără fir” dacă caută în continuare.</string>
+        să activezi „Remedierea erorilor wireless” dacă caută în continuare.</string>
     <string name="dialog_adb_port">Port</string>
     <string name="adb_pairing">Asociere</string>
     <string name="dialog_adb_pairing_title">Asociază cu dispozitivul</string>
     <string name="dialog_adb_pairing_discovery">Se caută serviciul de asociere</string>
     <string name="dialog_adb_pairing_paring_code">Cod de asociere</string>
     <string name="paring_code_is_wrong">Codul de asociere este greșit.</string>
-    <string name="cannot_connect_port">Nu mă pot conecta la serviciul de depanare wireless.\n\nTe
+    <string name="cannot_connect_port">Nu mă pot conecta la serviciul de remediere a erorilor wireless.\n\nTe
         rugăm să te asiguri că Porter este pe lista albă în toate firewall-urile, ad-block-urile,
         VPN-urile sau aplicațiile similare care pot restricționa accesul la rețea.</string>
-    <string name="dialog_wireless_adb_not_enabled">Depanarea wireless nu este activată.
-        \nReține că înainte de Android 11, pentru a activa depanarea wireless, conexiunea la
+    <string name="dialog_wireless_adb_not_enabled">Remedierea erorilor wireless nu este activată.
+        \nReține că înainte de Android 11, pentru a activa remedierea erorilor wireless, conexiunea la
         computer este o necesitate.</string>
-    <string name="dialog_usb_debugging_not_enabled">Depanarea USB nu este activată.\nVă rugăm să o
-        activați în „Opțiuni pentru dezvoltatori”.</string>
+    <string name="dialog_usb_debugging_not_enabled">Remedierea erorilor prin USB nu este activată.\nTe rugăm să o
+        activezi în „Opțiuni pentru dezvoltatori”.</string>
     <string name="dialog_adb_pairing_accessibility_permission">Pe Android 14,
         instalarea/actualizarea Porter cu ajutorul programului de instalare a pachetelor revocă
         permisiunea ^1, necesară pentru activarea serviciului de accesibilitate pentru
         asociere.\n\nPentru a o acorda, execută următoarea comandă ADB:\n\n^2\n\nDupă executarea
         comenzii, poți continua procesul de asociere.\n\nNotă: poți ocoli acest lucru
         instalând/actualizând Porter cu ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Vă rugăm să activați serviciul de
-        accesibilitate pentru a începe procesul de asociere. Acest lucru permite dispozitivului
-        Porter să detecteze codul de asociere.\n\nServiciul de accesibilitate va fi dezactivat când
-        codul este găsit sau după 1 minut pentru a economisi energie.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">Vă rugăm să începeți asocierea urmând
-        următorii pași:\n- Navigați la „Opțiuni pentru dezvoltatori”\n- Activați „Depanare USB” și
-        „Depanare wireless”\n- Atingeți partea stângă a opțiunii „Depanare wireless”\n- Atingeți
-        „Asocieți dispozitivul cu cod de asociere”. Porter va detecta automat codul de asociere.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Te rugăm să activezi serviciul de accesibilitate pentru a începe procesul de asociere. Acest lucru îi permite lui Porter să detecteze codul de asociere.\n\nServiciul de accesibilitate se va dezactiva după încercarea de asociere sau dacă nu este găsit niciun cod într-un minut. Porter va afișa rezultatul și îți va permite să încerci din nou.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">Te rugăm să începi asocierea urmând
+        următorii pași:\n- Navighează la „Opțiuni pentru dezvoltatori”\n- Activează „Remedierea erorilor prin USB” și
+        „Remedierea erorilor wireless”\n- Atinge partea stângă a opțiunii „Remedierea erorilor wireless”\n- Atinge
+        „Asociază dispozitivul folosind codul de conectare”. Porter va detecta automat codul de asociere.</string>
     <string name="adb_pairing_requires_multi_window">Intră mai întâi în modul ecran divizat
         (ferestre multiple).</string>
     <string name="adb_pairing_requires_multi_window_reason">Sistemul cere ca dialogul de împerechere
         să fie mereu vizibil. Folosirea modului split-screen este singura modalitate de a lăsa
         această aplicație și dialogul de sistem să fie vizibile în același timp.</string>
-    <string name="adb_error_key_store">Nu pot genera cheia pentru depanarea wireless.\nAcest lucru
+    <string name="adb_error_key_store">Nu pot genera cheia pentru remedierea erorilor wireless.\nAcest lucru
         poate fi cauzat de faptul că mecanismul KeyStore al acestui dispozitiv este defect.</string>
     <string name="adb_pair_required">Parcurge mai întâi procesul de asociere.</string>
     <string name="enable">Permite</string>
-    <string name="development_settings">Opțiuni dezvoltator</string>
+    <string name="development_settings">Opțiuni pentru dezvoltatori</string>
     <string name="notification_settings">Opțiuni de notificare</string>
     <string name="adb_pairing_tutorial_content_notification">O notificare de la Porter te va ajuta
         să finalizezi asocierea.</string>
-    <string name="adb_pairing_tutorial_content_steps">Navigați la „Opțiuni pentru dezvoltatori”,
-        apoi activați „Depanare USB” și „Depanare wireless”.</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">Atingeți partea stângă a opțiunii
-        „Depanare wireless”, apoi atingeți „Asocierea dispozitivului cu codul de asociere”.
-        Introduceți codul din notificare pentru a finaliza asocierea.</string>
+    <string name="adb_pairing_tutorial_content_steps">Navighează la „Opțiuni pentru dezvoltatori”,
+        apoi activează „Remedierea erorilor prin USB” și „Remedierea erorilor wireless”.</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">Atinge partea stângă a opțiunii
+        „Remedierea erorilor wireless”, apoi atinge „Asociază dispozitivul folosind codul de conectare”.
+        Introdu codul din notificare pentru a finaliza asocierea.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Procesul de asociere necesită
         să interacționarea cu o notificare de la Porter. Permite lui Porter să afișeze notificări.</string>
     <string name="adb_pairing_tutorial_content_miui">Este posibil ca utilizatorii MIUI să fie
@@ -79,8 +75,8 @@
     <string name="adb_pairing_tutorial_content_network">Porter trebuie să acceseze rețeaua locală.
         Este controlat de permisiunea rețelei.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Unele sisteme (cum
-        ar fi MIUI) interpermit accesul aplicațiilor la rețea atunci când nu sunt vizibile, chiar
-        dacă aplicația folosește un serviciu de prim-plan. Vă rugăm să dezactivați funcțiile de
+        ar fi MIUI) interzic accesul aplicațiilor la rețea atunci când nu sunt vizibile, chiar
+        dacă aplicația folosește un serviciu de prim-plan. Te rugăm să dezactivezi funcțiile de
         optimizare a bateriei pentru Porter pe astfel de sisteme.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Pornire (pentru dispozitive root-ate)]]></string>
@@ -90,7 +86,7 @@
     <plurals name="home_app_management_authorized_apps_count">
         <item quantity="one"><![CDATA[%d aplicație autorizată]]></item>
         <item quantity="few"><![CDATA[%d aplicații autorizate]]></item>
-        <item quantity="other"><![CDATA[%d aplicații autorizate]]></item>
+        <item quantity="other"><![CDATA[%d de aplicații autorizate]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Atinge pentru a gestiona aplicațiile autorizate]]></string>
     <string name="home_app_management_empty">Aplicațiile care au solicitat sau au declarat
@@ -104,31 +100,31 @@
     <string name="app_management_toggle_all">Comutare toate</string>
     <!-- Terminal -->
     <string name="home_terminal_title">Utilizează Porter în aplicații terminale</string>
-    <string name="home_terminal_description">Executați comenzi shell în aplicațiile terminale prin
+    <string name="home_terminal_description">Execută comenzi shell în aplicațiile terminale prin
         Porter</string>
     <string name="terminal_tutorial_miui">Utilizatorii au raportat că MIUI încalcă Storage Access
         Framework, care este utilizat de funcția de export.</string>
     <string name="terminal_tutorial_miui_2">Dacă folosești MIUI, este posibil să fie nevoie să
         extragi fișierul din folderul de resurse din APK-ul lui Porter.</string>
-    <string name="terminal_tutorial_1">Exportați fișierele într-un folder nou.</string>
+    <string name="terminal_tutorial_1">Exportă fișierele într-un folder nou.</string>
     <string name="terminal_tutorial_1_description">Vor fi exportate două fișiere: %1$s și %2$s. Dacă
         fișierele există deja în folderul selectat, acestea vor fi șterse.</string>
     <string name="terminal_export_files">Export fișiere</string>
     <string name="terminal_tutorial_2">Folosește aplicația de terminal pentru a copia fișierele în
         directorul său privat de fișiere.</string>
     <string name="terminal_tutorial_2_description">Sfat: Dacă directorul principal (~) al aplicației
-        terminale se află în directorul de fișiere private, plasarea fișierelor acolo vă va permite
-        să rulați %1$s fără a scrie calea.\n\nÎn caz contrar, puteți crea un alias pentru %2$s în
+        terminale se află în directorul de fișiere private, plasarea fișierelor acolo îți va permite
+        să rulezi %1$s fără a scrie calea.\n\nÎn caz contrar, poți crea un alias pentru %2$s în
         fișierul de configurare %3$s al aplicației terminale.</string>
-    <string name="terminal_tutorial_3">Deschideți un shell cu următoarea comandă:</string>
-    <string name="rish_description"><![CDATA[Cu %1$s, puteți rula comenzi shell în orice aplicație terminal.<p>Atingeți pentru a afla mai multe despre cum să o utilizați.]]></string>
+    <string name="terminal_tutorial_3">Deschide un shell cu următoarea comandă:</string>
+    <string name="rish_description"><![CDATA[Cu %1$s, poți rula comenzi shell în orice aplicație terminal.<p>Atinge pentru a afla mai multe despre cum să o utilizezi.]]></string>
     <!-- Settings -->
     <string name="settings_title">Setări</string>
     <string name="settings_start_on_boot">Pornire la pornire</string>
     <string name="settings_start_on_boot_summary">Necesită Android 11+ sau root</string>
-    <string name="settings_start_on_boot_bug">Din cauza unui bug în Android 11-12, depanarea
-        wireless nu își amintește nicio rețea autorizată.\n\nVa trebui să reautorizezi rețeaua la
-        fiecare repornire apăsând pe \"Permite\" când apare fereul de autorizare.</string>
+    <string name="settings_start_on_boot_bug">Din cauza unui bug în Android 11-12, remedierea
+        erorilor wireless nu își amintește nicio rețea autorizată.\n\nVa trebui să reautorizezi rețeaua la
+        fiecare repornire apăsând pe „Permite” când apare fereastra de autorizare.</string>
     <string name="settings_watchdog">Câine de pază</string>
     <string name="settings_watchdog_summary">Repornește automat Porter dacă se blochează</string>
     <string name="settings_restart_dialog_title">Repornire necesară</string>
@@ -142,7 +138,7 @@
     <string name="snackbar_invalid_port">Portul trebuie să fie între 1 și 65535</string>
     <string name="snackbar_battery_optimization_home">Optimizarea bateriei trebuie dezactivată
         pentru ca pornirea la pornire/funcția de supraveghere să funcționeze corect.</string>
-    <string name="snackbar_battery_optimization_settings">Dezactivați optimizarea bateriei pentru a
+    <string name="snackbar_battery_optimization_settings">Dezactivează optimizarea bateriei pentru a
         utiliza această funcție.</string>
     <string name="snackbar_action_fix">Reparare</string>
     <!-- Toast -->
@@ -152,7 +148,7 @@
     <!-- Stop -->
     <string name="action_stop">Oprire Porter</string>
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">Asociere prin depanare fără fir</string>
+    <string name="notification_channel_adb_pairing">Asociere pentru remedierea erorilor wireless</string>
     <string name="notification_adb_pairing_input_paring_code">Introdu codul de asociere</string>
     <string name="notification_adb_pairing_searching_for_service_title">Se caută serviciul de
         asociere</string>
@@ -170,7 +166,7 @@
     <string name="grant_dialog_button_allow_always">Permite tot timpul</string>
     <string name="grant_dialog_button_deny">"Refuz"</string>
     <!-- Starter -->
-    <string name="starter">Începător</string>
+    <string name="starter">Pornire</string>
     <string name="start_with_root_failed">Nu se poate porni serviciul deoarece permisiunea root nu
         este acordată sau acest dispozitiv nu este root-at.</string>
     <!-- WADB Starter -->
@@ -179,10 +175,10 @@
         continua</string>
     <string name="wadb_notification_retry">Se așteaptă o nouă încercare</string>
     <string name="wadb_error_title">Eroare la pornire la bootare</string>
-    <string name="wadb_error_notify_dev">Atingeți pentru a notifica dezvoltatorul.</string>
+    <string name="wadb_error_notify_dev">Atinge pentru a notifica dezvoltatorul.</string>
     <string name="wadb_permission_error_notification_title">Eroare de permisiune</string>
     <string name="wadb_permission_error_notification_content">Porter are nevoie de
-        WRITE_SECURE_SETTINGS pentru a porni la pornire. Atingeți pentru a afla cum să îl acordați.</string>
+        WRITE_SECURE_SETTINGS pentru a porni la pornire. Atinge pentru a afla cum să îl acorzi.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog-ul rulează</string>
     <string name="watchdog_turn_off">Opreşte</string>
@@ -196,7 +192,62 @@
     <string name="accessibility_service_description">Oferă asistență pentru asocierea dispozitivelor
         (de exemplu, televizoare cu Android 14+) unde nu se pot utiliza notificările sau ecranul
         divizat.\n\nPermite Porter să extragă codul de asociere din ecranul de asociere pentru
-        depanarea wireless. Se va dezactiva automat odată ce codul de asociere este găsit.</string>
+        remedierea erorilor wireless. Se va dezactiva automat odată ce codul de asociere este găsit.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Încearcă acum</string>
+    <string name="home_root_description"><![CDATA[Dacă folosești Magisk, %1$s este o altă opțiune. Aplicațiile au nevoie de suport explicit pentru %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intents</string>
+    <string name="home_automation_bottom_sheet_label_action">Acțiune</string>
+    <string name="home_automation_bottom_sheet_label_package">Pachet</string>
+    <string name="home_automation_bottom_sheet_label_target">Țintă</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extras</string>
+    <string name="home_automation_regenerate_token">Regenerezi tokenul?</string>
+    <string name="home_automation_regenerate_token_message">Va trebui să reconfigurezi intent-urile cu noul token.</string>
+    <string name="home_dialog_reboot_required_title">Repornire necesară</string>
+    <string name="home_dialog_reboot_required_message">Este necesară repornirea dispozitivului pentru ca Porter să funcționeze corect. Pentru a continua, repornește dispozitivul.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Aplicație duplicată detectată</string>
+    <string name="home_dialog_duplicate_app_detected_message">O altă versiune a acestei aplicații este instalată pe dispozitiv. Pentru a continua, dezinstalează toate versiunile duplicate și repornește dispozitivul.</string>
+    <string name="home_dialog_button_exit">Ieșire</string>
+    <string name="settings_alerts_blocked_title">Alerte în fundal</string>
+    <string name="settings_alerts_blocked_summary">Notificările de la Porter sunt blocate, așa că „Pornire la pornire” și „Câine de pază” nu te pot anunța când au nevoie de atenție.</string>
+    <string name="settings_alerts_blocked_message">Această funcție raportează printr-o notificare ce face și ce nu a funcționat. Notificările de la Porter sunt blocate în prezent, așa că ar rula fără să te anunțe nimic.</string>
+    <string name="settings_alerts_blocked_continue">Activează oricum</string>
+    <string name="follow_system">Urmează sistemul</string>
+    <string name="start">Pornește</string>
+    <string name="stop">Oprește</string>
+    <string name="notification_channel_watchdog">Câine de pază</string>
+    <string name="notification_channel_crash">Rapoarte de blocare</string>
+    <string name="notification_channel_auth">Erori de autentificare</string>
+    <string name="notification_auth_invalid_title">Token de autentificare nevalid</string>
+    <string name="notification_auth_invalid_message">Asigură-te că tokenul din intent corespunde celui din Setări, la „Controlează Porter cu aplicații de automatizare”.</string>
+    <string name="porter_status_running_adb">Rulează prin ADB</string>
+    <string name="porter_status_running_root">Rulează prin root</string>
+    <string name="porter_status_restart_service">Repornește Porter pentru a actualiza serviciul care rulează.</string>
+    <string name="porter_status_version_unknown">Necunoscută</string>
+    <string name="porter_status_versions">Porter instalat: %1$s\nServiciu în execuție: %2$s\nAPI Shizuku: %3$d · Patch: %4$d</string>
+    <string name="porter_acknowledgements">Mulțumiri</string>
+    <string name="porter_acknowledgements_summary">Proiecte upstream, biblioteci open source și licențe.</string>
+    <string name="porter_acknowledgements_thanks">Mulțumim</string>
+    <string name="porter_licenses">Licențe</string>
+    <string name="porter_ack_shizuku">Lui RikkaApps și tuturor contribuitorilor pentru crearea Shizuku și a API-urilor sale, fundația lui Porter.</string>
+    <string name="porter_ack_thedjchi">Lui thedjchi și contribuitorilor pentru întreținerea fork-ului Shizuku pe care se bazează Porter.</string>
+    <string name="porter_ack_symbuzzer">Lui symbuzzer și contribuitorilor pentru continuarea muncii la Shizuku și pentru partajarea fork-ului lor.</string>
+    <string name="porter_ack_plus">Lui thejaustin și contribuitorilor pentru ShizukuPlus și pentru inspirația unei aplicații de compatibilitate opționale.</string>
+    <string name="porter_ack_maxpatchs">Mulțumim pentru pictogramă, designul mascotei și banner.</string>
+    <string name="porter_license_porter">Porter și aplicația Shizuku originală · Licența Apache 2.0</string>
+    <string name="porter_license_api">API-ul Shizuku și fork-ul său Porter · Licența MIT</string>
+    <string name="porter_license_notice">Notificări privind drepturile de autor și atribuirea</string>
+    <string name="porter_pairing_restart">Repornește asocierea</string>
+    <string name="porter_pairing_retry_instructions">Dacă un cod a fost respins sau notificarea a dispărut, repornește asocierea de aici. Apoi închide vechiul dialog Android cu codul de asociere și deschide unul nou. Folosește noul cod; nu trebuie să ștergi datele Porter.</string>
+    <string name="porter_pairing_search_timeout">Nu s-a primit niciun cod de asociere într-un minut. Asocierea s-a oprit. Alege „Încearcă din nou”, apoi deschide un nou dialog cu codul de asociere în „Remedierea erorilor wireless”.</string>
+    <string name="porter_pairing_attempt_timeout">Conexiunea de asociere a expirat. Deschide un nou dialog cu codul de asociere în „Remedierea erorilor wireless” și încearcă din nou.</string>
+    <string name="porter_pairing_failed_retry">Asocierea a eșuat. Deschide un nou dialog cu codul de asociere în „Remedierea erorilor wireless” și încearcă din nou.</string>
+    <string name="porter_pairing_notification_timeout">Asocierea s-a oprit deoarece notificarea a expirat. Alege „Încearcă din nou”, apoi deschide un nou dialog cu codul de asociere în „Remedierea erorilor wireless”.</string>
+    <string name="porter_tv_pairing_progress_title">Asociere Porter</string>
+    <string name="porter_tv_pairing_wait">Lasă deschisă fereastra cu codul de asociere și așteaptă.</string>
+    <string name="porter_tv_pairing_return">Se revine la Porter pentru a dezactiva serviciul de accesibilitate pentru asociere…</string>
+    <string name="porter_tv_pairing_disabling">Se dezactivează serviciul de accesibilitate pentru asociere…</string>
+    <string name="porter_tv_pairing_complete">Serviciul de accesibilitate pentru asociere este dezactivat. Toți pașii de asociere sunt finalizați. Poți închide această fereastră.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Serviciul de accesibilitate pentru asociere este încă activat. Dezactivează-l din setările de accesibilitate.</string>
+    <string name="porter_tv_pairing_open_accessibility">Deschide setările de accesibilitate</string>
 </resources>

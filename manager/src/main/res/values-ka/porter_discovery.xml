@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_apps_counts">ავტორიზებული: %1$d · თავსებადი: %2$d</string>
+    <string name="porter_discovery_partial">ზოგიერთი პროფილის შემოწმება ვერ მოხერხდა. ეს სია შეიძლება არასრული იყოს.</string>
+    <string name="porter_discovery_legacy">გადატვირთეთ Porter, რომ მეტი აპი აღმოაჩინოთ და კავშირების ისტორია ნახოთ.</string>
+    <string name="porter_connections_explanation">აპებს შეუძლიათ ავტომატურად დაკავშირება Porter-ის გაშვებისას. კავშირის დრო არ მიუთითებს, როდის იქნა აპი ბოლოს გამოყენებული.</string>
+    <string name="porter_connection_needs_companion">საჭიროებს თავსებადობის აპს</string>
+    <string name="porter_connection_unsupported">ნებართვა გამოცხადებულია; ინტეგრაცია ვერ ამოიცნო</string>
+    <string name="porter_connection_managed">ადრე დაკავშირებული ან მართული</string>
+    <string name="porter_connection_unknown">კავშირის დეტალები მიუწვდომელია</string>
+    <string name="porter_connection_never_recorded">ბოლო კავშირი: უცნობია</string>
+    <string name="porter_connection_last">ბოლო კავშირი: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d აპს სჭირდება თავსებადობის აპი</item>
+        <item quantity="other">%d აპს სჭირდება თავსებადობის აპი</item>
+    </plurals>
+    <string name="porter_compatibility_needed">საჭიროა თავსებადობის აპი</string>
+    <string name="porter_get_compatibility">თავსებადობის აპის მიღება</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">თქვენ დაუშვით წვდომა %d აპისთვის, რომელსაც Porter-ის თავსებადობის აპი სჭირდება. მისი წვდომა ხელმისაწვდომი გახდება თავსებადობის აპის ინსტალაციის შემდეგ.</item>
+        <item quantity="other">თქვენ დაუშვით წვდომა %d აპისთვის, რომლებსაც Porter-ის თავსებადობის აპი სჭირდებათ. მათი წვდომა ხელმისაწვდომი გახდება თავსებადობის აპის ინსტალაციის შემდეგ.</item>
+    </plurals>
+    <string name="porter_access_pending_android">წვდომის გააქტიურება ვერ მოხერხდა. შეამოწმეთ ამ აპის ნებართვები Android-ის პარამეტრებში.</string>
+    <string name="porter_pause_access">წვდომის შეჩერება</string>
+    <string name="porter_pause_access_summary">ყველა აპისთვის წვდომის შეჩერება. მათი შენახული ნებართვები შენარჩუნდება.</string>
+    <string name="porter_global_access_restart">გლობალური წვდომის კონტროლის გამოსაყენებლად გადატვირთეთ Porter.</string>
+    <string name="porter_access_paused">აპების წვდომა შეჩერებულია</string>
+    <string name="porter_status_access_paused">Porter მუშაობს, მაგრამ აპების წვდომა შეჩერებულია. წვდომა აღადგინეთ აპლიკაციების განყოფილებაში.</string>
+</resources>

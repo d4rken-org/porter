@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">აპლიკაციები</string>
+    <string name="porter_home_subtitle">ADB წვდომა თქვენი აპებისთვის</string>
+    <string name="porter_startup">გაშვება</string>
+    <string name="porter_version">ვერსია</string>
+    <string name="porter_pairing_method">დაწყვილების მეთოდი</string>
+    <string name="porter_status_restricted">ADB-ის ზოგიერთი ნებართვა შეზღუდულია Android-ის მიერ.</string>
+    <string name="porter_status_stop_message">Porter-ის შეჩერება გათიშავს მის გამომყენებელ აპებს. Porter-ის ხელახლა გაშვება ხელით მოგიწევთ, რასაც შეიძლება კომპიუტერი დასჭირდეს.</string>
+    <string name="porter_status_details_hint">სერვისის დეტალებისა და შეჩერების ვარიანტების გახსნა</string>
+    <string name="porter_status_ready">Porter მზადაა. თავსებად აპებს ახლა შეუძლიათ დაკავშირება და წვდომის მოთხოვნა.</string>
+    <string name="porter_pairing_notification">შეტყობინება</string>
+    <string name="porter_pairing_dialog">აპის შიდა დიალოგი</string>
+    <string name="porter_manage_apps_action">აპების მართვა</string>
+    <string name="porter_primary_user_title">გამოიყენეთ Android-ის ძირითადი მომხმარებელი</string>
+    <string name="porter_primary_user_description">Porter-ის გაშვება ამ Android მომხმარებლიდან ან პროფილიდან შეუძლებელია. გადაერთეთ მოწყობილობის ძირითად მომხმარებელზე, საჭიროების შემთხვევაში დააინსტალირეთ იქ Porter და გაუშვით მისი სერვისი. შემდეგ დაბრუნდით აქ აპების სამართავად.</string>
+    <string name="porter_secondary_user_stop_message">Porter-ის შეჩერება გათიშავს აპებს Android-ის ყველა მომხმარებელში. ხელახლა გასაშვებად გადაერთეთ მოწყობილობის ძირითად მომხმარებელზე და იქ გახსენით Porter.</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">používat Porter</string>
+    <string name="permission_description">Povolí této aplikaci používat systémová rozhraní API prostřednictvím Porter.</string>
+    <string name="porter_missing">Chcete-li používat tuto doprovodnou aplikaci, nainstalujte Porter se stejným podpisovým certifikátem.</string>
+</resources>

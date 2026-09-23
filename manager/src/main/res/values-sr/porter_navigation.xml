@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Апликације</string>
+    <string name="porter_home_subtitle">ADB приступ за ваше апликације</string>
+    <string name="porter_startup">Покретање</string>
+    <string name="porter_version">Верзија</string>
+    <string name="porter_pairing_method">Начин упаривања</string>
+    <string name="porter_status_restricted">Android ограничава неке ADB дозволе.</string>
+    <string name="porter_status_stop_message">Заустављање Porter-а прекида везу апликација које га користе. Porter ћете морати поново да покренете ручно, за шта може бити потребан рачунар.</string>
+    <string name="porter_status_details_hint">Отвори детаље о услузи и опције заустављања</string>
+    <string name="porter_status_ready">Porter је спреман. Компатибилне апликације сада могу да се повежу и затраже приступ.</string>
+    <string name="porter_pairing_notification">Обавештење</string>
+    <string name="porter_pairing_dialog">Дијалог у апликацији</string>
+    <string name="porter_manage_apps_action">Управљај апликацијама</string>
+    <string name="porter_primary_user_title">Користите примарног Android корисника</string>
+    <string name="porter_primary_user_description">Porter не може да се покрене са овог Android корисника или профила. Пређите на примарног корисника уређаја, по потреби тамо инсталирајте Porter и покрените његову услугу. Затим се вратите овде да бисте управљали апликацијама.</string>
+    <string name="porter_secondary_user_stop_message">Заустављање Porter-а прекида везу апликација код свих Android корисника. Да бисте га поново покренули, пређите на примарног корисника уређаја и тамо отворите Porter.</string>
+</resources>

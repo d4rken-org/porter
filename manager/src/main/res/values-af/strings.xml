@@ -42,14 +42,11 @@
         die volgende ADB-opdrag uit:\n\n^2\n\nNadat u die opdrag uitgevoer het, kan u voortgaan met
         die paringsproses.\n\nLet wel: u kan dit omseil deur Porter met ADB te installeer/op te
         dateer.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Aktiveer asseblief die
-        toeganklikheidsdiens om die paringsproses te begin. Dit laat Porter toe om die paringskode
-        op te spoor.\n\nDie toeganklikheidsdiens sal afgeskakel word wanneer die kode gevind word of
-        na 1 minuut om energie te bespaar.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Aktiveer asseblief die toeganklikheidsdiens om die paringsproses te begin. Dit laat Porter toe om die paringskode op te spoor.\n\nDie toeganklikheidsdiens sal afgeskakel word ná die paringspoging, of as geen kode binne een minuut gevind word nie. Porter sal die resultaat wys en jou toelaat om weer te probeer.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Begin asseblief met paring deur die
         volgende stappe uit te voer:\n- Navigeer na \"Ontwikkelaaropsies\"\n- Aktiveer
         \"USB-ontfouting\" en \"Draadlose ontfouting\"\n- Tik die linkerkant van \"Draadlose
-        ontfouting\"\n- Tik \"Koppel toestel met paringskode.\" Porter sal outomaties die
+        ontfouting\"\n- Tik \"Gebruik saambindkode om toestel saam te bind\". Porter sal outomaties die
         paringskode opspoor.</string>
     <string name="adb_pairing_requires_multi_window">Gaan asseblief eers na die verdeelskerm-modus
         (multivenstermodus).</string>
@@ -67,7 +64,7 @@
     <string name="adb_pairing_tutorial_content_steps">Navigeer na \"Ontwikkelaaropsies\" en aktiveer
         dan \"USB-ontfouting\" en \"Draadlose ontfouting\".</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Tik aan die linkerkant van
-        \"Draadlose ontfouting\" en tik dan op \"Koppel toestel met koppelkode\". Voer die kode in
+        \"Draadlose ontfouting\" en tik dan op \"Gebruik saambindkode om toestel saam te bind\". Voer die kode in
         die kennisgewing in om die koppelproses te voltooi.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Die paringsproses vereis dat jy
         met \'n kennisgewing van Porter interaksie het. Laat asseblief Porter toe om kennisgewings
@@ -90,8 +87,8 @@
     <!-- Home - Application management -->
     <string name="home_app_management_title">Toepassingsbestuur</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="one"><![CDATA[Gemagtigde %d aansoek]]></item>
-        <item quantity="other"><![CDATA[Gemagtigde %d aansoeke]]></item>
+        <item quantity="one"><![CDATA[%d gemagtigde program]]></item>
+        <item quantity="other"><![CDATA[%d gemagtigde programme]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Tik om gemagtigde programme te bestuur]]></string>
     <string name="home_app_management_empty">Programme wat die Porter-toestemming versoek of
@@ -121,7 +118,7 @@
         sonder om die pad te skryf.\n\nAndersins kan jy \'n alias vir %2$s in jou terminaal-app se
         %3$s konfigurasielêer skep.</string>
     <string name="terminal_tutorial_3">Maak \'n dop oop met die volgende opdrag:</string>
-    <string name="rish_description"><![CDATA[Met %1$skan jy dopbevele in enige terminaaltoepassing uitvoer.<p>Tik om meer te wete te kom oor hoe om dit te gebruik.]]></string>
+    <string name="rish_description"><![CDATA[Met %1$s kan jy dopbevele in enige terminaaltoepassing uitvoer.<p>Tik om meer te wete te kom oor hoe om dit te gebruik.]]></string>
     <!-- Settings -->
     <string name="settings_title">Instellings</string>
     <string name="settings_start_on_boot">Begin met opstart</string>
@@ -165,11 +162,11 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">toegang tot Porter</string>
     <string name="permission_description">Laat die program toe om Porter te gebruik.</string>
-    <string name="permission_warning_template"><![CDATA[Laat <b>%1$s</b> tot %2$stoe?]]></string>
+    <string name="permission_warning_template"><![CDATA[Laat <b>%1$s</b> tot %2$s toe?]]></string>
     <string name="grant_dialog_button_allow_always">Laat heeltyd toe</string>
     <string name="grant_dialog_button_deny">"Weier"</string>
     <!-- Starter -->
-    <string name="starter">Voorgereg</string>
+    <string name="starter">Aansitter</string>
     <string name="start_with_root_failed">Kan nie diens begin nie, want worteltoestemming is nie
         toegestaan nie of hierdie toestel is nie gewortel nie.</string>
     <!-- WADB Starter -->
@@ -185,7 +182,7 @@
     <!-- Watchdog -->
     <string name="watchdog_running">Waghond loop</string>
     <string name="watchdog_turn_off">Skakel Af</string>
-    <string name="watchdog_shizuku_crashed_title">Porter het onlangs neergestort</string>
+    <string name="watchdog_shizuku_crashed_title">Porter het onlangs omgeval</string>
     <string name="watchdog_shizuku_crashed_text">Waghond het die diens herbegin. Tik om meer te wete
         te kom oor moontlike oplossings om toekomstige ineenstortings te voorkom.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Skakel waarskuwings af</string>
@@ -198,4 +195,59 @@
         onttrek. Dit sal homself deaktiveer sodra die paringskode gevind is.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Probeer nou</string>
+    <string name="home_root_description"><![CDATA[As jy Magisk gebruik, is %1$s nog \'n opsie. Programme het uitdruklike ondersteuning vir %2$s nodig.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Intents</string>
+    <string name="home_automation_bottom_sheet_label_action">Aksie</string>
+    <string name="home_automation_bottom_sheet_label_package">Pakket</string>
+    <string name="home_automation_bottom_sheet_label_target">Teiken</string>
+    <string name="home_automation_bottom_sheet_label_extras">Ekstras</string>
+    <string name="home_automation_regenerate_token">Hergenereer token?</string>
+    <string name="home_automation_regenerate_token_message">Jy sal jou intents met die nuwe token moet herkonfigureer.</string>
+    <string name="home_dialog_reboot_required_title">Herbegin vereis</string>
+    <string name="home_dialog_reboot_required_message">\'n Toestelherbegin is nodig sodat Porter behoorlik kan werk. Herbegin asseblief jou toestel om voort te gaan.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Duplikaatprogram bespeur</string>
+    <string name="home_dialog_duplicate_app_detected_message">\'n Ander weergawe van hierdie program is op jou toestel geïnstalleer. Deïnstalleer asseblief alle duplikaatweergawes en herbegin jou toestel om voort te gaan.</string>
+    <string name="home_dialog_button_exit">Verlaat</string>
+    <string name="settings_alerts_blocked_title">Agtergrondwaarskuwings</string>
+    <string name="settings_alerts_blocked_summary">Kennisgewings van Porter is geblokkeer, dus kan “Begin met opstart” en “Waghond” jou nie laat weet wanneer hulle aandag nodig het nie.</string>
+    <string name="settings_alerts_blocked_message">Hierdie kenmerk rapporteer deur \'n kennisgewing wat dit doen en wat verkeerd geloop het. Kennisgewings van Porter is tans geblokkeer, dus sou dit loop sonder om jou iets te laat weet.</string>
+    <string name="settings_alerts_blocked_continue">Skakel tog aan</string>
+    <string name="follow_system">Volg stelsel</string>
+    <string name="start">Begin</string>
+    <string name="stop">Stop</string>
+    <string name="notification_channel_watchdog">Waghond</string>
+    <string name="notification_channel_crash">Omvalverslae</string>
+    <string name="notification_channel_auth">Stawingsfoute</string>
+    <string name="notification_auth_invalid_title">Ongeldige stawingstoken</string>
+    <string name="notification_auth_invalid_message">Maak seker dat die token in jou intent ooreenstem met die een in Instellings onder “Beheer Porter met outomatiseringsprogramme”.</string>
+    <string name="porter_status_running_adb">Loop via ADB</string>
+    <string name="porter_status_running_root">Loop via root</string>
+    <string name="porter_status_restart_service">Herbegin Porter om die lopende diens op te dateer.</string>
+    <string name="porter_status_version_unknown">Onbekend</string>
+    <string name="porter_status_versions">Geïnstalleerde Porter: %1$s\nLopende diens: %2$s\nShizuku API: %3$d · Pleister: %4$d</string>
+    <string name="porter_acknowledgements">Erkennings</string>
+    <string name="porter_acknowledgements_summary">Stroomop-projekte, oopbronbiblioteke en lisensies.</string>
+    <string name="porter_acknowledgements_thanks">Dankie</string>
+    <string name="porter_licenses">Lisensies</string>
+    <string name="porter_ack_shizuku">Aan RikkaApps en alle bydraers vir die skep van Shizuku en sy API’s, die grondslag van Porter.</string>
+    <string name="porter_ack_thedjchi">Aan thedjchi en bydraers vir die onderhoud van die Shizuku-fork waarop Porter gebaseer is.</string>
+    <string name="porter_ack_symbuzzer">Aan symbuzzer en bydraers vir die voortgesette werk aan Shizuku en die deel van hulle fork.</string>
+    <string name="porter_ack_plus">Aan thejaustin en bydraers vir ShizukuPlus en die inspirasie vir \'n opsionele versoenbaarheidsprogram.</string>
+    <string name="porter_ack_maxpatchs">Dankie vir die ikoon, gelukbringerontwerpe en banier.</string>
+    <string name="porter_license_porter">Porter en die oorspronklike Shizuku-program · Apache-lisensie 2.0</string>
+    <string name="porter_license_api">Shizuku API en sy Porter-fork · MIT-lisensie</string>
+    <string name="porter_license_notice">Kopiereg- en erkenningskennisgewings</string>
+    <string name="porter_pairing_restart">Herbegin paring</string>
+    <string name="porter_pairing_retry_instructions">As \'n kode geweier is of die kennisgewing verdwyn het, herbegin paring hier. Maak dan Android se ou paringskode-dialoog toe en maak \'n nuwe een oop. Gebruik die nuwe kode; jy hoef nie Porter se data uit te vee nie.</string>
+    <string name="porter_pairing_search_timeout">Geen paringskode is binne een minuut ontvang nie. Paring het gestop. Kies Probeer weer en maak dan \'n nuwe paringskode-dialoog in Draadlose ontfouting oop.</string>
+    <string name="porter_pairing_attempt_timeout">Die paringsverbinding het uitgetel. Maak \'n nuwe paringskode-dialoog in Draadlose ontfouting oop en probeer weer.</string>
+    <string name="porter_pairing_failed_retry">Paring het misluk. Maak \'n nuwe paringskode-dialoog in Draadlose ontfouting oop en probeer weer.</string>
+    <string name="porter_pairing_notification_timeout">Paring het gestop omdat die kennisgewing uitgetel het. Kies Probeer weer en maak dan \'n nuwe paringskode-dialoog in Draadlose ontfouting oop.</string>
+    <string name="porter_tv_pairing_progress_title">Porter-paring</string>
+    <string name="porter_tv_pairing_wait">Laat asseblief die paringskodevenster oop en wag.</string>
+    <string name="porter_tv_pairing_return">Keer tans terug na Porter om die paring-toeganklikheidsdiens af te skakel…</string>
+    <string name="porter_tv_pairing_disabling">Skakel tans die paring-toeganklikheidsdiens af…</string>
+    <string name="porter_tv_pairing_complete">Die paring-toeganklikheidsdiens is af. Alle paringstappe is voltooi. Jy kan hierdie venster toemaak.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Die paring-toeganklikheidsdiens is steeds aan. Skakel dit af in Toeganklikheidinstellings.</string>
+    <string name="porter_tv_pairing_open_accessibility">Maak Toeganklikheidinstellings oop</string>
 </resources>

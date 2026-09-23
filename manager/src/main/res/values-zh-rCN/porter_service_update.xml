@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">有可用的服务更新</string>
+    <string name="porter_service_update_action">更新服务</string>
+    <string name="porter_service_update_summary">更新时会短暂断开已连接的应用。现有权限将保留。</string>
+    <string name="porter_service_update_primary">请在 Android 主用户中打开 Porter 以更新服务。</string>
+    <string name="porter_service_update_features">更新服务以启用这些功能。</string>
+    <string name="porter_service_auto_update">自动更新服务</string>
+    <string name="porter_service_auto_update_summary">Porter 应用更新后，在后台替换以不同构建版本运行的服务。这会短暂断开已连接的应用。已停止的服务将保持停止状态。</string>
+    <string name="porter_service_update_interrupted">上次服务更新未完成。如果服务仍在运行，请重试；否则请从“服务”界面重新启动。</string>
+    <string name="porter_global_access_update">正在运行的服务不支持全局访问控制。</string>
+    <string name="porter_discovery_update">正在运行的服务不支持当前的应用发现和连接记录功能。可用的应用将通过其旧版接口显示。</string>
+    <string name="porter_service_updating">正在更新 Porter 服务…</string>
+    <string name="porter_service_update_failed">无法更新 Porter 服务</string>
+    <string name="porter_service_update_failed_summary">无法将正在运行的服务替换为已安装的版本。如果服务仍在运行，您可以重试；否则，请从“服务”界面重新启动服务。</string>
+    <string name="porter_service_update_retry">重试更新</string>
+</resources>

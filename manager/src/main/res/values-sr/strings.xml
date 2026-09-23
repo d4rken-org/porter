@@ -24,7 +24,7 @@
         grešaka\", proces rada aplikacije Porter se prekida.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Молимо вас да покушате да
         онемогућите и омогућите „Бежично отклањање грешака“ ако се претрага настави.</string>
-    <string name="dialog_adb_port">Лука</string>
+    <string name="dialog_adb_port">Порт</string>
     <string name="adb_pairing">Упаривање</string>
     <string name="dialog_adb_pairing_title">Upari sa uređajem</string>
     <string name="dialog_adb_pairing_discovery">Traženje uređaja za uparivanje</string>
@@ -38,19 +38,9 @@
         postojanjem konekcije sa računarom.</string>
     <string name="dialog_usb_debugging_not_enabled">Отклањање грешака преко USB-а није
         омогућено.\nОмогућите га у „Опцијама за програмере“.</string>
-    <string name="dialog_adb_pairing_accessibility_permission">На Андроиду 14, инсталирање/ажурирање
-        Шизукуа помоћу инсталера пакета опозива дозволу ^1, која је потребна за омогућавање услуге
-        приступачности за упаривање.\n\nДа бисте је доделили, покрените следећу ADB
-        команду:\n\n^2\n\nНакон покретања команде, можете наставити са процесом
-        упаривања.\n\nНапомена: ово можете заобићи инсталирањем/ажурирањем Шизукуа помоћу ADB-а.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Омогућите услугу приступачности да бисте
-        започели процес упаривања. Ово омогућава Шизукуу да детектује код за упаривање.\n\nУслуга
-        приступачности ће бити искључена када се пронађе код или након 1 минута ради уштеде
-        енергије.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">Почните упаривање пратећи следеће
-        кораке:\n- Идите на „Опције за програмере“\n- Омогућите „USB отклањање грешака“ и „Бежично
-        отклањање грешака“\n- Додирните леву страну „Бежично отклањање грешака“\n- Додирните „Упари
-        уређај са кодом за упаривање“. Шизуку ће аутоматски детектовати код за упаривање.</string>
+    <string name="dialog_adb_pairing_accessibility_permission">На Android-у 14, инсталирање/ажурирање апликације Porter помоћу инсталатора пакета опозива дозволу ^1, која је потребна за омогућавање услуге приступачности за упаривање.\n\nДа бисте је доделили, покрените следећу ADB команду:\n\n^2\n\nНакон покретања команде можете да наставите са упаривањем.\n\nНапомена: ово можете да заобиђете инсталирањем/ажурирањем апликације Porter помоћу ADB-а.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Омогућите услугу приступачности да бисте започели упаривање. Тако Porter може да открије код за упаривање.\n\nУслуга приступачности ће се искључити после покушаја упаривања или ако се код не пронађе у року од једног минута. Porter ће приказати резултат и омогућити вам да покушате поново.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">Започните упаривање пратећи следеће кораке:\n- Идите у „Опције за програмере“\n- Омогућите „Отклањање USB грешака“ и „Бежично отклањање грешака“\n- Додирните леву страну ставке „Бежично отклањање грешака“\n- Додирните „Упарите уређај помоћу кода за упаривање“. Porter ће аутоматски открити код за упаривање.</string>
     <string name="adb_pairing_requires_multi_window">Molim Vas, najpre izaberite režim podeljenog
         ekrana, odnosno režim više prozora.</string>
     <string name="adb_pairing_requires_multi_window_reason">Sistem zahteva dijalog uparivanja da
@@ -60,17 +50,13 @@
         grešaka.\nTo može biti zato što je KeiStore mehanizam ovog uređaja je slomljena.</string>
     <string name="adb_pair_required">Molim Vas, najpre prođite kroz korake za uparivanje uređaja.</string>
     <string name="enable">Омогући</string>
-    <string name="development_settings">Razvojne opcije programera</string>
+    <string name="development_settings">Опције за програмере</string>
     <string name="notification_settings">Opcije obaveštenja</string>
     <string name="adb_pairing_tutorial_content_notification">Notifikacija iz Porter aplikacije će
         Vam pomoći da dovršite uparivanje.</string>
-    <string name="adb_pairing_tutorial_content_steps">Идите на „Опције за програмере“, затим
-        омогућите „USB дебаговање“ и „Бежично дебаговање“.</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">Додирните леву страну „Бежично
-        отклањање грешака“, а затим додирните „Упари уређај са кодом за упаривање“. Унесите код из
-        обавештења да бисте завршили упаривање.</string>
-    <string name="adb_pairing_tutorial_content_notification_blocked">Процес упаривања захтева вашу
-        интеракцију са обавештењем од Шизукуа. Дозволите Шизукуу да објављује обавештења.</string>
+    <string name="adb_pairing_tutorial_content_steps">Идите у „Опције за програмере“, а затим омогућите „Отклањање USB грешака“ и „Бежично отклањање грешака“.</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">Додирните леву страну ставке „Бежично отклањање грешака“, а затим додирните „Упарите уређај помоћу кода за упаривање“. Унесите код из обавештења да бисте завршили упаривање.</string>
+    <string name="adb_pairing_tutorial_content_notification_blocked">Упаривање захтева да користите обавештење апликације Porter. Дозволите апликацији Porter да шаље обавештења.</string>
     <string name="adb_pairing_tutorial_content_miui">Корисници MIUI-ја ће можда морати да промене
         стил обавештења на „Android“ из „Обавештења“ - „Тањир обавештења“ у системским подешавањима.</string>
     <string name="adb_pairing_tutorial_content_miui_2">U suprotnom, možda nećete moći da unesete kod
@@ -90,22 +76,20 @@
     <plurals name="home_app_management_authorized_apps_count">
         <item quantity="one"><![CDATA[Овлашћена %d апликација]]></item>
         <item quantity="few"><![CDATA[Овлашћене %d апликације]]></item>
-        <item quantity="other"><![CDATA[Овлашћене %d апликације]]></item>
+        <item quantity="other"><![CDATA[Овлашћено %d апликација]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Додирните да бисте управљали овлашћеним апликацијама]]></string>
-    <string name="home_app_management_empty">Апликације које су затражиле или пријавиле Шизуку
-        дозволу биће приказане овде.</string>
+    <string name="home_app_management_empty">Овде ће се приказати апликације које су затражиле или декларисале Porter дозволу.</string>
     <!-- Home - Automation -->
-    <string name="home_automation_title">Контролишите Шизуку помоћу апликација за аутоматизацију</string>
+    <string name="home_automation_title">Контролишите Porter помоћу апликација за аутоматизацију</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Дозвола adb-а је ограничена</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Врло је могуће да произвођач вашег уређаја ограничава дозволе adb-а.<p>Можда постоји решење за ваш систем у <b><a href=\"%1$s\">овом документу</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* захтева да Шизуку ради са root-ом</string>
+    <string name="app_management_item_summary_requires_root">* захтева да Porter ради са root-ом</string>
     <string name="app_management_toggle_all">Укључи/искључи све</string>
     <!-- Terminal -->
-    <string name="home_terminal_title">Користите Шизуку у терминалним апликацијама</string>
-    <string name="home_terminal_description">Покрените команде шкољке у терминалним апликацијама
-        путем Шизукуа</string>
+    <string name="home_terminal_title">Користите Porter у терминалским апликацијама</string>
+    <string name="home_terminal_description">Покрећите команде љуске у терминалским апликацијама преко апликације Porter</string>
     <string name="terminal_tutorial_miui">Корисници су пријавили да MIUI крши Storage Access
         Framework, који користи функција извоза.</string>
     <string name="terminal_tutorial_miui_2">Ако користите MIUI, можда ћете морати да извучете
@@ -125,17 +109,17 @@
     <!-- Settings -->
     <string name="settings_title">Подешавања</string>
     <string name="settings_start_on_boot">Покрени при покретању</string>
-    <string name="settings_start_on_boot_summary">Захтева Андроид 11+ или рут</string>
+    <string name="settings_start_on_boot_summary">Захтева Android 11+ или root</string>
     <string name="settings_start_on_boot_bug">Zbog greške u Androidu 11-12, bežično otklanjanje
         grešaka ne pamti nijednu ovlašćenu mrežu.\n\nMoraćete da ponovo autorizujete mrežu pri
         svakom ponovnom pokretanju tako što ćete dodirnuti \"Dozvoli\" kada se pojavi dijalog za
         autorizaciju.</string>
     <string name="settings_watchdog">Чувар</string>
-    <string name="settings_watchdog_summary">Аутоматски поново покрените Шизуку ако се сруши</string>
+    <string name="settings_watchdog_summary">Аутоматски поново покрени Porter ако се сруши</string>
     <string name="settings_restart_dialog_title">Потребно је поновно покретање</string>
     <string name="settings_restart_dialog_message">Porter treba da se ponovo pokrene da bi se
         primenila ova postavka.</string>
-    <string name="settings_tcp_port">ТЦП порт</string>
+    <string name="settings_tcp_port">TCP порт</string>
     <string name="settings_tcp_port_default">Подразумевано (5555)</string>
     <string name="settings_user_interface">Изглед</string>
     <string name="settings_support">Подршка</string>
@@ -147,11 +131,11 @@
         користили ову функцију.</string>
     <string name="snackbar_action_fix">Поправи</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Шизуку већ почиње у позадини</string>
+    <string name="toast_shizuku_already_starting">Porter се већ покреће у позадини</string>
     <string name="toast_accessibility_tv_only">Ova usluga je podržana samo na TV uređajima.</string>
     <string name="toast_pairing_timeout">Porter uparivanje servis je isteklo.</string>
     <!-- Stop -->
-    <string name="action_stop">Заустави Шизуку</string>
+    <string name="action_stop">Заустави Porter</string>
     <!-- Notification -->
     <string name="notification_channel_adb_pairing">Бежично упаривање за отклањање грешака</string>
     <string name="notification_adb_pairing_input_paring_code">Унесите код за упаривање</string>
@@ -160,13 +144,13 @@
     <string name="notification_adb_pairing_stop_searching">Престани претрагу</string>
     <string name="notification_adb_pairing_working_title">Упаривање у току</string>
     <string name="notification_adb_pairing_succeed_title">Упаривање је успешно</string>
-    <string name="notification_adb_pairing_succeed_text">Сада можете покренути Шизуку услугу.</string>
+    <string name="notification_adb_pairing_succeed_text">Сада можете да покренете Porter услугу.</string>
     <string name="notification_adb_pairing_failed_title">Упаривање није успело</string>
     <string name="notification_adb_pairing_retry">Покушај поново</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">приступ Шизуку</string>
-    <string name="permission_description">Дозволите апликацији да користи Шизуку.</string>
-    <string name="permission_warning_template"><![CDATA[Дозволити <b>%1$s</b> до %2$s?]]></string>
+    <string name="permission_label">приступ апликацији Porter</string>
+    <string name="permission_description">Дозволите апликацији да користи Porter.</string>
+    <string name="permission_warning_template"><![CDATA[Дозволити апликацији <b>%1$s</b> %2$s?]]></string>
     <string name="grant_dialog_button_allow_always">Дозволи све време</string>
     <string name="grant_dialog_button_deny">"Одбиј"</string>
     <!-- Starter -->
@@ -174,28 +158,79 @@
     <string name="start_with_root_failed">Не могу да покренем услугу јер није одобрена root дозвола
         или овај уређај није рутован.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Почетак игре Шизуку…</string>
+    <string name="wadb_notification_title">Покретање апликације Porter…</string>
     <string name="wadb_notification_wifi_required">Чека се Wi-Fi веза пре него што се настави</string>
     <string name="wadb_notification_retry">Чекање на поновни покушај</string>
     <string name="wadb_error_title">Грешка при покретању система</string>
     <string name="wadb_error_notify_dev">Додирните да бисте обавестили програмера.</string>
     <string name="wadb_permission_error_notification_title">Грешка дозволе</string>
-    <string name="wadb_permission_error_notification_content">Шизуку захтева WRITE_SECURE_SETTINGS
-        да би се покренуо при покретању система. Додирните да бисте сазнали како да га одобрите.</string>
+    <string name="wadb_permission_error_notification_content">Porter захтева WRITE_SECURE_SETTINGS да би се покренуо при покретању система. Додирните да бисте сазнали како да је одобрите.</string>
     <!-- Watchdog -->
-    <string name="watchdog_running">Чуварски орган ради</string>
+    <string name="watchdog_running">Чувар је активан</string>
     <string name="watchdog_turn_off">Ugasi</string>
-    <string name="watchdog_shizuku_crashed_title">Шизуку се недавно срушио</string>
+    <string name="watchdog_shizuku_crashed_title">Porter се недавно срушио</string>
     <string name="watchdog_shizuku_crashed_text">Watchdog је поново покренуо услугу. Додирните да
         бисте сазнали више о потенцијалним решењима за спречавање будућих падова.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Искључи упозорења</string>
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">Не могу да покренем прегледач</string>
     <string name="toast_copied_to_clipboard">Копирано у међуспремник</string>
-    <string name="accessibility_service_description">Пружа подршку за упаривање уређаја (нпр.
-        телевизора са Андроидом 14+) где обавештења или подељени екран не могу да се
-        користе.\n\nОмогућава Шизуку-у да издвоји код за упаривање са екрана за упаривање за бежично
-        отклањање грешака. Сам ће се деактивирати када се пронађе код за упаривање.</string>
+    <string name="accessibility_service_description">Пружа подршку за упаривање на уређајима (нпр. телевизорима са Android-ом 14+) на којима се обавештења или подељени екран не могу користити.\n\nОмогућава апликацији Porter да издвоји код за упаривање са екрана за упаривање у бежичном отклањању грешака. Сама ће се искључити када се пронађе код за упаривање.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Покушај сада</string>
+    <string name="home_root_description"><![CDATA[Ако користите Magisk, %1$s је још једна опција. Апликације морају изричито да подржавају %2$s.]]></string>
+    <string name="home_automation_bottom_sheet_intents">Интенти</string>
+    <string name="home_automation_bottom_sheet_label_action">Радња</string>
+    <string name="home_automation_bottom_sheet_label_package">Пакет</string>
+    <string name="home_automation_bottom_sheet_label_target">Циљ</string>
+    <string name="home_automation_bottom_sheet_label_extras">Extras</string>
+    <string name="home_automation_regenerate_token">Поново генерисати токен?</string>
+    <string name="home_automation_regenerate_token_message">Мораћете поново да конфигуришете интенте са новим токеном.</string>
+    <string name="home_dialog_reboot_required_title">Потребно је поновно покретање</string>
+    <string name="home_dialog_reboot_required_message">Да би Porter исправно радио, потребно је поново покренути уређај. Да бисте наставили, поново покрените уређај.</string>
+    <string name="home_dialog_duplicate_app_detected_title">Откривена је дупла апликација</string>
+    <string name="home_dialog_duplicate_app_detected_message">На уређају је инсталирана друга верзија ове апликације. Да бисте наставили, деинсталирајте све дупле верзије и поново покрените уређај.</string>
+    <string name="home_dialog_button_exit">Изађи</string>
+    <string name="settings_alerts_blocked_title">Упозорења у позадини</string>
+    <string name="settings_alerts_blocked_summary">Обавештења апликације Porter су блокирана, па покретање при покретању система и чувар не могу да вас обавесте када им је потребна пажња.</string>
+    <string name="settings_alerts_blocked_message">Ова функција преко обавештења јавља шта ради и шта није успело. Обавештења апликације Porter су тренутно блокирана, па би радила а да вам ништа не јави.</string>
+    <string name="settings_alerts_blocked_continue">Ипак укључи</string>
+    <string name="follow_system">Прати систем</string>
+    <string name="start">Покрени</string>
+    <string name="stop">Заустави</string>
+    <string name="notification_channel_watchdog">Чувар</string>
+    <string name="notification_channel_crash">Извештаји о отказивању</string>
+    <string name="notification_channel_auth">Грешке при потврди идентитета</string>
+    <string name="notification_auth_invalid_title">Неважећи токен за потврду идентитета</string>
+    <string name="notification_auth_invalid_message">Проверите да ли се токен у интенту подудара са токеном у подешавањима под „Контролишите Porter помоћу апликација за аутоматизацију“.</string>
+    <string name="porter_status_running_adb">Ради преко ADB-а</string>
+    <string name="porter_status_running_root">Ради преко root-а</string>
+    <string name="porter_status_restart_service">Поново покрените Porter да бисте ажурирали покренуту услугу.</string>
+    <string name="porter_status_version_unknown">Непознато</string>
+    <string name="porter_status_versions">Инсталиран Porter: %1$s\nПокренута услуга: %2$s\nShizuku API: %3$d · Закрпа: %4$d</string>
+    <string name="porter_acknowledgements">Захвалнице</string>
+    <string name="porter_acknowledgements_summary">Изворни пројекти, библиотеке отвореног кода и лиценце.</string>
+    <string name="porter_acknowledgements_thanks">Хвала</string>
+    <string name="porter_licenses">Лиценце</string>
+    <string name="porter_ack_shizuku">RikkaApps и свим сарадницима што су створили Shizuku и његове API-је, темељ апликације Porter.</string>
+    <string name="porter_ack_thedjchi">thedjchi и сарадницима што одржавају Shizuku форк на коме је заснован Porter.</string>
+    <string name="porter_ack_symbuzzer">symbuzzer и сарадницима што настављају рад на Shizuku и деле свој форк.</string>
+    <string name="porter_ack_plus">thejaustin и сарадницима за ShizukuPlus и идеју о опционој апликацији за компатибилност.</string>
+    <string name="porter_ack_maxpatchs">Хвала за иконицу, дизајн маскоте и банер.</string>
+    <string name="porter_license_porter">Porter и оригинална Shizuku апликација · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API и његов Porter форк · MIT License</string>
+    <string name="porter_license_notice">Обавештења о ауторским правима и атрибуцији</string>
+    <string name="porter_pairing_restart">Поново покрени упаривање</string>
+    <string name="porter_pairing_retry_instructions">Ако је код одбијен или је обавештење нестало, поново покрените упаривање овде. Затим затворите стари Android дијалог са кодом за упаривање и отворите нови. Користите нови код; не морате да бришете податке апликације Porter.</string>
+    <string name="porter_pairing_search_timeout">Код за упаривање није примљен у року од једног минута. Упаривање је заустављено. Изаберите „Покушај поново“, а затим отворите нови дијалог са кодом за упаривање у „Бежичном отклањању грешака“.</string>
+    <string name="porter_pairing_attempt_timeout">Веза за упаривање је истекла. Отворите нови дијалог са кодом за упаривање у „Бежичном отклањању грешака“ и покушајте поново.</string>
+    <string name="porter_pairing_failed_retry">Упаривање није успело. Отворите нови дијалог са кодом за упаривање у „Бежичном отклањању грешака“ и покушајте поново.</string>
+    <string name="porter_pairing_notification_timeout">Упаривање је заустављено јер је обавештење истекло. Изаберите „Покушај поново“, а затим отворите нови дијалог са кодом за упаривање у „Бежичном отклањању грешака“.</string>
+    <string name="porter_tv_pairing_progress_title">Porter упаривање</string>
+    <string name="porter_tv_pairing_wait">Оставите прозор са кодом за упаривање отворен и сачекајте.</string>
+    <string name="porter_tv_pairing_return">Враћање у Porter ради искључивања услуге приступачности за упаривање…</string>
+    <string name="porter_tv_pairing_disabling">Искључивање услуге приступачности за упаривање…</string>
+    <string name="porter_tv_pairing_complete">Услуга приступачности за упаривање је искључена. Сви кораци упаривања су завршени. Можете да затворите овај прозор.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Услуга приступачности за упаривање је и даље омогућена. Искључите је у подешавањима приступачности.</string>
+    <string name="porter_tv_pairing_open_accessibility">Отвори подешавања приступачности</string>
 </resources>

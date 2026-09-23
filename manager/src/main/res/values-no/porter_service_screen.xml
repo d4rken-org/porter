@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Tjeneste</string>
+    <string name="porter_view_service">Vis tjeneste</string>
+    <string name="porter_service_starting">Starter Porter-tjenesten…</string>
+    <string name="porter_service_stopping">Stopper Porter-tjenesten…</string>
+    <string name="porter_service_checking">Leser tjenestestatus…</string>
+    <string name="porter_apps_service_unavailable">Apptilgang er ikke tilgjengelig mens tjenesten er stoppet eller endres.</string>
+    <string name="porter_apps_counts_unavailable">Antall apper er ikke tilgjengelig.</string>
+    <string name="porter_background_operation">Bakgrunnsoperasjon</string>
+    <string name="porter_service_failed_running">Den forrige oppdateringen ble ikke fullført. Tjenesten kjører fortsatt. Du kan prøve oppdateringen på nytt.</string>
+    <string name="porter_service_failed_stopped">Den forrige oppdateringen ble ikke fullført. Tjenesten er stoppet. Gå til oversikten for å starte den igjen.</string>
+    <string name="porter_service_build_different_summary">Den kjørende tjenesten bruker et annet bygg enn den installerte appen. Kompatible funksjoner er fortsatt tilgjengelige.</string>
+    <string name="porter_service_build_unknown_summary">Den kjørende tjenesten kan ikke oppgi byggidentiteten sin. Oppdater den for å bruke det installerte bygget. Kompatible funksjoner er fortsatt tilgjengelige.</string>
+    <string name="porter_service_healthy">Alt fungerer som normalt.</string>
+    <string name="porter_service_progress_background">Du kan forlate denne skjermen. Operasjonen fortsetter i bakgrunnen.</string>
+    <string name="porter_build_identity_unavailable">Byggidentiteten er ikke tilgjengelig</string>
+    <string name="porter_installed_app">Installert app</string>
+    <string name="porter_running_service">Kjørende tjeneste</string>
+    <string name="porter_service_api_value">Porter-protokoll: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Krever en rootet enhet. Porter ber om root-tilgang når du trykker på Start.</string>
+    <string name="porter_version_compact">Versjon: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Bygg: %1$s (%2$s)</string>
+</resources>

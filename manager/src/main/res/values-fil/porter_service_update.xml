@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">May available na update sa serbisyo</string>
+    <string name="porter_service_update_action">I-update ang serbisyo</string>
+    <string name="porter_service_update_summary">Pansamantalang madidiskonekta ang mga nakakonektang app habang nag-a-update. Pinapanatili ang mga kasalukuyang pahintulot.</string>
+    <string name="porter_service_update_primary">Buksan ang Porter sa pangunahing user ng Android para i-update ang serbisyo.</string>
+    <string name="porter_service_update_features">I-update ang serbisyo para i-enable ang mga feature na ito.</string>
+    <string name="porter_service_auto_update">Awtomatikong i-update ang serbisyo</string>
+    <string name="porter_service_auto_update_summary">Pagkatapos ma-update ang Porter app, papalitan sa background ang tumatakbong serbisyo na may ibang build. Pansamantala nitong madidiskonekta ang mga nakakonektang app. Mananatiling nakahinto ang nakahintong serbisyo.</string>
+    <string name="porter_service_update_interrupted">Hindi natapos ang nakaraang update ng serbisyo. Subukan ulit kung tumatakbo pa ang serbisyo, o simulan ito ulit mula sa screen na Serbisyo.</string>
+    <string name="porter_global_access_update">Hindi available ang global na kontrol sa access sa tumatakbong serbisyo.</string>
+    <string name="porter_discovery_update">Hindi sinusuportahan ng tumatakbong serbisyo ang kasalukuyang mga feature sa paghahanap ng app at history ng koneksyon. Ipinapakita ang mga available na app gamit ang mas luma nitong interface.</string>
+    <string name="porter_service_updating">Ina-update ang serbisyo ng Porter…</string>
+    <string name="porter_service_update_failed">Hindi ma-update ang serbisyo ng Porter</string>
+    <string name="porter_service_update_failed_summary">Hindi mapalitan ang tumatakbong serbisyo ng naka-install na bersyon. Kung tumatakbo pa ito, puwede mong subukan ulit. Kung hindi, simulan ulit ang serbisyo mula sa screen na Serbisyo.</string>
+    <string name="porter_service_update_retry">Subukan ulit ang update</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_apps_counts">Autoryzowane: %1$d · Zgodne: %2$d</string>
+    <string name="porter_discovery_partial">Nie udało się sprawdzić niektórych profili. Ta lista może być niepełna.</string>
+    <string name="porter_discovery_legacy">Uruchom ponownie Porter, aby wykryć więcej aplikacji i zobaczyć historię połączeń.</string>
+    <string name="porter_connections_explanation">Aplikacje mogą łączyć się automatycznie po uruchomieniu Porter. Czas połączenia nie oznacza, kiedy aplikacja była ostatnio używana.</string>
+    <string name="porter_connection_needs_companion">Wymaga aplikacji zgodności</string>
+    <string name="porter_connection_unsupported">Zadeklarowano uprawnienie; nie rozpoznano integracji</string>
+    <string name="porter_connection_managed">Wcześniej połączona lub zarządzana</string>
+    <string name="porter_connection_unknown">Szczegóły połączenia niedostępne</string>
+    <string name="porter_connection_never_recorded">Ostatnie połączenie: nieznane</string>
+    <string name="porter_connection_last">Ostatnie połączenie: %1$s</string>
+    <plurals name="porter_apps_need_companion">
+        <item quantity="one">%d aplikacja wymaga aplikacji zgodności</item>
+        <item quantity="few">%d aplikacje wymagają aplikacji zgodności</item>
+        <item quantity="many">%d aplikacji wymaga aplikacji zgodności</item>
+        <item quantity="other">%d aplikacji wymaga aplikacji zgodności</item>
+    </plurals>
+    <string name="porter_compatibility_needed">Potrzebna aplikacja zgodności</string>
+    <string name="porter_get_compatibility">Pobierz aplikację zgodności</string>
+    <plurals name="porter_compatibility_pending">
+        <item quantity="one">Zezwolono na dostęp %d aplikacji, która wymaga aplikacji zgodności Porter. Jej dostęp zostanie włączony po zainstalowaniu aplikacji zgodności.</item>
+        <item quantity="few">Zezwolono na dostęp %d aplikacjom, które wymagają aplikacji zgodności Porter. Ich dostęp zostanie włączony po zainstalowaniu aplikacji zgodności.</item>
+        <item quantity="many">Zezwolono na dostęp %d aplikacjom, które wymagają aplikacji zgodności Porter. Ich dostęp zostanie włączony po zainstalowaniu aplikacji zgodności.</item>
+        <item quantity="other">Zezwolono na dostęp %d aplikacjom, które wymagają aplikacji zgodności Porter. Ich dostęp zostanie włączony po zainstalowaniu aplikacji zgodności.</item>
+    </plurals>
+    <string name="porter_access_pending_android">Nie udało się aktywować dostępu. Sprawdź uprawnienia tej aplikacji w ustawieniach Androida.</string>
+    <string name="porter_pause_access">Wstrzymaj dostęp</string>
+    <string name="porter_pause_access_summary">Wstrzymaj dostęp dla wszystkich aplikacji. Ich zapisane uprawnienia zostaną zachowane.</string>
+    <string name="porter_global_access_restart">Uruchom ponownie Porter, aby korzystać z globalnej kontroli dostępu.</string>
+    <string name="porter_access_paused">Dostęp aplikacji jest wstrzymany</string>
+    <string name="porter_status_access_paused">Usługa Porter działa, ale dostęp aplikacji jest wstrzymany. Wznów dostęp w sekcji Aplikacje.</string>
+</resources>

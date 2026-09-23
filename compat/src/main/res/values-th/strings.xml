@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">ใช้ Porter</string>
+    <string name="permission_description">อนุญาตให้แอปนี้ใช้ API ของระบบผ่าน Porter</string>
+    <string name="porter_missing">ติดตั้ง Porter ที่มีใบรับรองการลงนามตรงกันเพื่อใช้แอปเสริมนี้</string>
+</resources>

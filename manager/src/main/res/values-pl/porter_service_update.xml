@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Dostępna aktualizacja usługi</string>
+    <string name="porter_service_update_action">Aktualizuj usługę</string>
+    <string name="porter_service_update_summary">Aktualizacja na chwilę rozłączy połączone aplikacje. Istniejące uprawnienia zostaną zachowane.</string>
+    <string name="porter_service_update_primary">Otwórz Porter jako główny użytkownik Androida, aby zaktualizować usługę.</string>
+    <string name="porter_service_update_features">Zaktualizuj usługę, aby włączyć te funkcje.</string>
+    <string name="porter_service_auto_update">Aktualizuj usługę automatycznie</string>
+    <string name="porter_service_auto_update_summary">Po aktualizacji aplikacji Porter działająca usługa z inną kompilacją jest zastępowana w tle. Na chwilę rozłącza to połączone aplikacje. Zatrzymana usługa pozostaje zatrzymana.</string>
+    <string name="porter_service_update_interrupted">Poprzednia aktualizacja usługi nie została ukończona. Ponów, jeśli usługa nadal działa, lub uruchom ją ponownie z ekranu Usługa.</string>
+    <string name="porter_global_access_update">Globalna kontrola dostępu jest niedostępna w działającej usłudze.</string>
+    <string name="porter_discovery_update">Działająca usługa nie obsługuje obecnych funkcji wykrywania aplikacji i historii połączeń. Dostępne aplikacje są wyświetlane za pomocą jej starszego interfejsu.</string>
+    <string name="porter_service_updating">Aktualizowanie usługi Porter…</string>
+    <string name="porter_service_update_failed">Nie udało się zaktualizować usługi Porter</string>
+    <string name="porter_service_update_failed_summary">Nie udało się zastąpić działającej usługi zainstalowaną wersją. Jeśli usługa nadal działa, możesz spróbować ponownie. W przeciwnym razie uruchom ją ponownie z ekranu Usługa.</string>
+    <string name="porter_service_update_retry">Ponów aktualizację</string>
+</resources>

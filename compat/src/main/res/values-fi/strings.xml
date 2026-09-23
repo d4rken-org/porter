@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_label">Käytä Porteria</string>
+    <string name="permission_description">Salli tämän sovelluksen käyttää järjestelmän rajapintoja Porterin kautta.</string>
+    <string name="porter_missing">Asenna Porter, jolla on vastaava allekirjoitusvarmenne, jotta voit käyttää tätä lisäsovellusta.</string>
+</resources>

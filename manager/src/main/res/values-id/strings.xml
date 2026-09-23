@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">Proses debug nirkabel belum diaktifkan.\nCatatan: sebelum Android 11, koneksi ke komputer wajib untuk mengaktifkan proses debug nirkabel.</string>
     <string name="dialog_usb_debugging_not_enabled">Proses debug USB belum diaktifkan.\nHarap aktifkan di \"Opsi developer\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">Pada Android 14, menginstal/memperbarui Porter dengan Package Installer akan mencabut izin ^1, yang diperlukan untuk mengaktifkan layanan aksesibilitas untuk penyambungan.\n\nUntuk memberikannya, jalankan perintah ADB berikut:\n\n^2\n\nSetelah menjalankan perintah tersebut, Anda dapat melanjutkan proses penyambungan.\n\nCatatan: Anda dapat melewati ini dengan menginstal/memperbarui Porter melalui ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Harap aktifkan layanan aksesibilitas untuk memulai proses penyambungan. Ini memungkinkan Porter mendeteksi kode penyambungan.\n\nLayanan aksesibilitas akan dimatikan setelah kode ditemukan atau setelah 1 menit untuk menghemat daya.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Harap aktifkan layanan aksesibilitas untuk memulai proses penyambungan. Ini memungkinkan Porter mendeteksi kode penyambungan.\n\nLayanan aksesibilitas akan dinonaktifkan setelah upaya penyambungan, atau jika tidak ada kode yang ditemukan dalam satu menit. Porter akan menampilkan hasilnya dan memungkinkan Anda mencoba lagi.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Harap mulai penyambungan dengan melakukan langkah-langkah berikut:\n- Buka \"Opsi developer\"\n- Aktifkan \"Proses debug USB\" dan \"Proses debug nirkabel\"\n- Ketuk sisi kiri \"Proses debug nirkabel\"\n- Ketuk \"Sambungkan perangkat dengan kode penyambungan\". Porter akan mendeteksi kode penyambungan secara otomatis.</string>
     <string name="adb_pairing_requires_multi_window">Harap masuk ke mode layar terpisah (multi-jendela) terlebih dahulu.</string>
     <string name="adb_pairing_requires_multi_window_reason">Sistem mengharuskan dialog penyambungan selalu terlihat. Menggunakan mode layar terpisah adalah satu-satunya cara agar aplikasi ini dan dialog sistem terlihat secara bersamaan.</string>
@@ -198,4 +198,24 @@
     <string name="porter_license_porter">Porter dan aplikasi Shizuku asli · Lisensi Apache 2.0</string>
     <string name="porter_license_api">Shizuku API dan fork Porter-nya · Lisensi MIT</string>
     <string name="porter_license_notice">Pemberitahuan hak cipta dan atribusi</string>
+    <string name="settings_alerts_blocked_title">Peringatan latar belakang</string>
+    <string name="settings_alerts_blocked_summary">Notifikasi dari Porter diblokir, sehingga fitur mulai saat boot dan watchdog tidak dapat memberi tahu Anda saat keduanya memerlukan perhatian.</string>
+    <string name="settings_alerts_blocked_message">Fitur ini melaporkan apa yang sedang dilakukannya, dan apa yang salah, melalui notifikasi. Notifikasi dari Porter saat ini diblokir, sehingga fitur ini akan berjalan tanpa memberi tahu Anda apa pun.</string>
+    <string name="settings_alerts_blocked_continue">Tetap aktifkan</string>
+    <string name="notification_channel_watchdog">Watchdog</string>
+    <string name="notification_channel_crash">Laporan crash</string>
+    <string name="notification_channel_auth">Kesalahan autentikasi</string>
+    <string name="porter_pairing_restart">Mulai ulang penyambungan</string>
+    <string name="porter_pairing_retry_instructions">Jika kode ditolak atau notifikasi menghilang, mulai ulang penyambungan di sini. Lalu tutup dialog kode penyambungan Android yang lama dan buka yang baru. Gunakan kode yang baru; Anda tidak perlu menghapus data Porter.</string>
+    <string name="porter_pairing_search_timeout">Tidak ada kode penyambungan yang diterima dalam satu menit. Penyambungan dihentikan. Pilih Coba lagi, lalu buka dialog kode penyambungan baru di Proses debug nirkabel.</string>
+    <string name="porter_pairing_attempt_timeout">Koneksi penyambungan kehabisan waktu. Buka dialog kode penyambungan baru di Proses debug nirkabel dan coba lagi.</string>
+    <string name="porter_pairing_failed_retry">Penyambungan gagal. Buka dialog kode penyambungan baru di Proses debug nirkabel dan coba lagi.</string>
+    <string name="porter_pairing_notification_timeout">Penyambungan dihentikan karena notifikasi kehabisan waktu. Pilih Coba lagi, lalu buka dialog kode penyambungan baru di Proses debug nirkabel.</string>
+    <string name="porter_tv_pairing_progress_title">Penyambungan Porter</string>
+    <string name="porter_tv_pairing_wait">Biarkan jendela kode penyambungan tetap terbuka dan tunggu.</string>
+    <string name="porter_tv_pairing_return">Kembali ke Porter untuk menonaktifkan layanan aksesibilitas penyambungan…</string>
+    <string name="porter_tv_pairing_disabling">Menonaktifkan layanan aksesibilitas penyambungan…</string>
+    <string name="porter_tv_pairing_complete">Layanan aksesibilitas penyambungan sudah nonaktif. Semua langkah penyambungan selesai. Anda dapat menutup jendela ini.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">Layanan aksesibilitas penyambungan masih aktif. Nonaktifkan di setelan Aksesibilitas.</string>
+    <string name="porter_tv_pairing_open_accessibility">Buka setelan Aksesibilitas</string>
 </resources>

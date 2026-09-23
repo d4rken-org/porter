@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_update_available">Palvelupäivitys saatavilla</string>
+    <string name="porter_service_update_action">Päivitä palvelu</string>
+    <string name="porter_service_update_summary">Päivitys katkaisee hetkeksi yhdistettyjen sovellusten yhteyden. Nykyiset luvat säilyvät.</string>
+    <string name="porter_service_update_primary">Päivitä palvelu avaamalla Porter Androidin ensisijaisella käyttäjällä.</string>
+    <string name="porter_service_update_features">Päivitä palvelu, niin nämä ominaisuudet otetaan käyttöön.</string>
+    <string name="porter_service_auto_update">Päivitä palvelu automaattisesti</string>
+    <string name="porter_service_auto_update_summary">Kun Porter-sovellus päivitetään, taustalla käynnissä oleva palvelu korvataan, jos sen koontiversio on eri. Tämä katkaisee hetkeksi yhdistettyjen sovellusten yhteyden. Pysäytetty palvelu pysyy pysäytettynä.</string>
+    <string name="porter_service_update_interrupted">Edellinen palvelupäivitys ei valmistunut. Yritä uudelleen, jos palvelu on yhä käynnissä, tai käynnistä se uudelleen Palvelu-näytöstä.</string>
+    <string name="porter_global_access_update">Yleinen käyttöoikeuksien hallinta ei ole käytettävissä käynnissä olevassa palvelussa.</string>
+    <string name="porter_discovery_update">Käynnissä oleva palvelu ei tue nykyisiä sovellusten tunnistus- ja yhteyshistoriaominaisuuksia. Saatavilla olevat sovellukset näytetään sen vanhemman rajapinnan avulla.</string>
+    <string name="porter_service_updating">Päivitetään Porter-palvelua…</string>
+    <string name="porter_service_update_failed">Porter-palvelua ei voitu päivittää</string>
+    <string name="porter_service_update_failed_summary">Käynnissä olevaa palvelua ei voitu korvata asennetulla versiolla. Jos se on yhä käynnissä, voit yrittää uudelleen. Muussa tapauksessa käynnistä palvelu uudelleen Palvelu-näytöstä.</string>
+    <string name="porter_service_update_retry">Yritä päivitystä uudelleen</string>
+</resources>

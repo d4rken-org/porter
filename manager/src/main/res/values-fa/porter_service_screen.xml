@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">سرویس</string>
+    <string name="porter_view_service">مشاهده سرویس</string>
+    <string name="porter_service_starting">در حال راه‌اندازی سرویس Porter…</string>
+    <string name="porter_service_stopping">در حال توقف سرویس Porter…</string>
+    <string name="porter_service_checking">در حال خواندن وضعیت سرویس…</string>
+    <string name="porter_apps_service_unavailable">وقتی سرویس متوقف است یا در حال تغییر است، دسترسی برنامه‌ها در دسترس نیست.</string>
+    <string name="porter_apps_counts_unavailable">تعداد برنامه‌ها در دسترس نیست.</string>
+    <string name="porter_background_operation">عملیات پس‌زمینه</string>
+    <string name="porter_service_failed_running">به‌روزرسانی قبلی کامل نشد. سرویس هنوز در حال اجرا است. می‌توانید به‌روزرسانی را دوباره امتحان کنید.</string>
+    <string name="porter_service_failed_stopped">به‌روزرسانی قبلی کامل نشد. سرویس متوقف است. برای راه‌اندازی دوباره به داشبورد بروید.</string>
+    <string name="porter_service_build_different_summary">سرویس در حال اجرا از ساختی متفاوت با برنامه نصب‌شده استفاده می‌کند. قابلیت‌های سازگار همچنان در دسترس هستند.</string>
+    <string name="porter_service_build_unknown_summary">سرویس در حال اجرا نمی‌تواند شناسه ساخت خود را گزارش کند. آن را به‌روز کنید تا از ساخت نصب‌شده استفاده کند. قابلیت‌های سازگار همچنان در دسترس هستند.</string>
+    <string name="porter_service_healthy">همه چیز به‌طور عادی کار می‌کند.</string>
+    <string name="porter_service_progress_background">می‌توانید این صفحه را ترک کنید. عملیات در پس‌زمینه ادامه می‌یابد.</string>
+    <string name="porter_build_identity_unavailable">شناسه ساخت در دسترس نیست</string>
+    <string name="porter_installed_app">برنامه نصب‌شده</string>
+    <string name="porter_running_service">سرویس در حال اجرا</string>
+    <string name="porter_service_api_value">پروتکل Porter: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">به دستگاه دارای دسترسی root نیاز دارد. وقتی «راه‌اندازی» را فشار دهید، Porter دسترسی root را درخواست می‌کند.</string>
+    <string name="porter_version_compact">نسخه: %1$s (%2$d)</string>
+    <string name="porter_build_compact">ساخت: %1$s (%2$s)</string>
+</resources>

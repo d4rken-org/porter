@@ -5,21 +5,18 @@
     <string name="home_status_service_not_running">%1$s가 실행 중이 아닙니다</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[컴퓨터에 연결하여 시작]]></string>
-    <string name="home_adb_description"><![CDATA[루링 없이 Shizuku를 시작하기 위해 adb가 필요합니다. (컴퓨터 연결 필수) 이 작업은 다시 시작 시 마다 필요로 합니다. 자세한 정보는 <b><a href="%1$s">도움말</a></b>을 확인하세요.]]></string>
+    <string name="home_adb_description"><![CDATA[루팅되지 않은 기기에서는 adb를 사용하여 Porter를 시작해야 합니다(컴퓨터 연결 필요). 기기를 다시 시작할 때마다 이 과정을 반복해야 합니다. <b><a href=\"%1$s\">도움말</a></b>을 읽어 주세요.]]></string>
     <string name="home_adb_button_view_command">명령어 보기</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* 몇 가지 다른 참고 사항이 있으므로, 도움말을 먼저 확인하세요.]]></string>
     <string name="home_adb_dialog_view_command_button_send">보내기</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[무선 디버깅으로 시작]]></string>
-    <string name="home_wireless_adb_description"><![CDATA[Android 11 또는 그 이상 버전에서는 컴퓨터에 연결하지 않아도 무선 디버깅을 활성화하하여 기기에서 직접 Shizuku를 시작할 수 있습니다.<p>단계별 가이드를 먼저 확인하세요.]]></string>
+    <string name="home_wireless_adb_description"><![CDATA[Android 11 이상에서는 무선 디버깅을 활성화하여 컴퓨터에 연결하지 않고 기기에서 직접 Porter를 시작할 수 있습니다.<p>먼저 단계별 가이드를 확인하세요.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Android 11 이전에서는 무선 디버깅을 활성화하기 위해 컴퓨터에 연결해야 합니다.]]></string>
     <string name="home_wireless_adb_view_guide_button">단계별 가이드</string>
     <!-- Adb -->
     <string name="dialog_adb_discovery">무선 디버깅 서비스 검색 중</string>
-    <string name="dialog_adb_discovery_message">\"개발자 옵션\"에서 \"무선 디버깅\"을 사용으로 설정하세요. \"무선 디버깅\"은
-        네트워크가 변경될 때 자동으로 사용 안 함으로 변경됩니다.
-        \n
-        \n\"개발자 옵션\"이나 \"USB 디버깅\"을 사용 안 함으로 하면 Shizuku가 중지됩니다.</string>
+    <string name="dialog_adb_discovery_message">\"개발자 옵션\"에서 \"무선 디버깅\"을 활성화하세요. 네트워크가 변경되면 \"무선 디버깅\"이 자동으로 비활성화됩니다.\n\n참고: \"개발자 옵션\"이나 \"USB 디버깅\"을 비활성화하지 마세요. 비활성화하면 Porter가 중지됩니다.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">\"무선 디버깅\"이 검색중으로 유지된다면
         비활성화했다가 다시 활성화해 보세요.</string>
     <string name="dialog_adb_port">포트 번호</string>
@@ -28,43 +25,33 @@
     <string name="dialog_adb_pairing_discovery">페어링 서비스 검색 중</string>
     <string name="dialog_adb_pairing_paring_code">페어링 코드</string>
     <string name="paring_code_is_wrong">페어링 코드가 올바르지 않습니다.</string>
-    <string name="cannot_connect_port">무선 디버깅 서비스에 연결할 수 없습니다.\n\nShizuku가 모든 방화벽, 광고 차단, VPN 또는
-        네트워크 접근 제한 관련 앱에서 화이트리스트에 등록되어 있는지 꼭 확인해 주세요.</string>
+    <string name="cannot_connect_port">무선 디버깅 서비스에 연결할 수 없습니다.\n\n네트워크 접근을 제한할 수 있는 모든 방화벽, 광고 차단, VPN 또는 유사한 앱에서 Porter가 허용 목록에 등록되어 있는지 확인하세요.</string>
     <string name="dialog_wireless_adb_not_enabled">무선 디버깅을 사용하고 있지 않습니다.
         \n안드로이드 11 이전은 무선 디버깅을 사용하기 위해서 컴퓨터 연결을 필수로 해야 합니다.</string>
     <string name="dialog_usb_debugging_not_enabled">USB 디버깅이 활성화되어 있지 않습니다.\n\"개발자 옵션\"에서 활성화해 주세요.</string>
-    <string name="dialog_adb_pairing_accessibility_permission">Android 14에서 패키지 설치 관리자를 사용하여
-        Shizuku를 설치/업데이트하면 페어링을 위한 접근성 서비스를 활성화하는 데 필요한 ^1 권한이 취소됩니다.\n\n이 권한을 부여하려면 다음 ADB 명령을
-        실행하세요.\n\n^2\n\n명령을 실행한 후 페어링 프로세스를 계속 진행할 수 있습니다.\n\n참고: ADB를 사용하여 Shizuku를 설치/업데이트하면 이 문제를
-        해결할 수 있습니다.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">페어링 과정을 시작하려면 접근성 서비스를 활성화하세요. 이렇게 하면
-        Shizuku가 페어링 코드를 감지할 수 있습니다.\n\n코드를 찾거나 1분 후에 에너지 절약을 위해 접근성 서비스가 꺼집니다.</string>
-    <string name="dialog_adb_pairing_accessibility_navigate">다음 단계를 수행하여 페어링을 시작하세요.\n- \"개발자 옵션\"으로
-        이동합니다.\n- \"USB 디버깅\" 및 \"무선 디버깅\"을 활성화합니다.\n- \"무선 디버깅\"의 왼쪽을 탭합니다.\n- \"페어링 코드로 기기 페어링\"을
-        탭합니다. Shizuku가 자동으로 페어링 코드를 감지합니다.</string>
+    <string name="dialog_adb_pairing_accessibility_permission">Android 14에서 패키지 설치 프로그램으로 Porter를 설치/업데이트하면 페어링용 접근성 서비스를 활성화하는 데 필요한 ^1 권한이 취소됩니다.\n\n이 권한을 부여하려면 다음 ADB 명령을 실행하세요.\n\n^2\n\n명령을 실행한 후 페어링 과정을 계속할 수 있습니다.\n\n참고: ADB로 Porter를 설치/업데이트하면 이 문제를 피할 수 있습니다.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">페어링 과정을 시작하려면 접근성 서비스를 활성화하세요. 이렇게 하면 Porter가 페어링 코드를 감지할 수 있습니다.\n\n접근성 서비스는 페어링을 시도한 후, 또는 1분 이내에 코드를 찾지 못하면 꺼집니다. Porter가 결과를 표시하고 다시 시도할 수 있게 해 줍니다.</string>
+    <string name="dialog_adb_pairing_accessibility_navigate">다음 단계에 따라 페어링을 시작하세요.\n- \"개발자 옵션\"으로 이동합니다.\n- \"USB 디버깅\" 및 \"무선 디버깅\"을 활성화합니다.\n- \"무선 디버깅\"의 왼쪽을 탭합니다.\n- \"페어링 코드로 기기 페어링\"을 탭합니다. Porter가 자동으로 페어링 코드를 감지합니다.</string>
     <string name="adb_pairing_requires_multi_window">먼저 화면 분할 (멀티 윈도우) 모드로 진입하세요.</string>
-    <string name="adb_pairing_requires_multi_window_reason">이 시스템은 페어링 대화 대화가 항상 보이도록 요구합니다. 분할 화면
-        모드를 사용하는 것만이 이 앱과 시스템 대화 대화를 동시에 볼 수 있는 방법입니다.</string>
+    <string name="adb_pairing_requires_multi_window_reason">시스템에서는 페어링 대화상자가 항상 표시되어야 합니다. 분할 화면 모드를 사용해야만 이 앱과 시스템 대화상자를 동시에 볼 수 있습니다.</string>
     <string name="adb_error_key_store">무선 디버깅용 키를 생성할 수 없습니다.\n이는 이 장치의 KeyStore 메커니즘이 고장 났기 때문일 수
         있습니다.</string>
     <string name="adb_pair_required">페어링 단계를 먼저 진행하세요.</string>
-    <string name="enable">할 수 있게 하다</string>
+    <string name="enable">활성화</string>
     <string name="development_settings">개발자 옵션</string>
     <string name="notification_settings">알림 옵션</string>
-    <string name="adb_pairing_tutorial_content_notification">Shizuku의 알림이 페어링을 완료하는 데 도움이 될 수도 있습니다.</string>
+    <string name="adb_pairing_tutorial_content_notification">Porter의 알림이 페어링 완료를 도와줍니다.</string>
     <string name="adb_pairing_tutorial_content_steps">\"개발자 옵션\"으로 이동한 다음 \"USB 디버깅\"과 \"무선 디버깅\"을
         활성화합니다.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">\"무선 디버깅\"의 왼쪽을 탭한 다음 \"페어링 코드로
         기기 페어링\"을 탭합니다. 알림에 있는 코드를 입력하여 페어링을 완료합니다.</string>
-    <string name="adb_pairing_tutorial_content_notification_blocked">페어링 프로세스에서는 Shizuku의 알림과 상호
-        작용해야 합니다. Shizuku가 알림을 게시하도록 허용하십시오.</string>
+    <string name="adb_pairing_tutorial_content_notification_blocked">페어링 과정에서 Porter의 알림을 사용해야 합니다. Porter가 알림을 보낼 수 있도록 허용하세요.</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI 사용자는 시스템 설정의 \"알림\" - \"알림 창\"에서 알림 스타일을
         \"Android\"로 전환해야 합니다.</string>
     <string name="adb_pairing_tutorial_content_miui_2">그렇지 않으면 알림에서 페어링 코드를 입력하지 못할 수도 있습니다.</string>
-    <string name="adb_pairing_tutorial_content_finish">시즈쿠에게 돌아가서 시즈쿠를 시작해.</string>
-    <string name="adb_pairing_tutorial_content_network">시즈쿠는 로컬 네트워크에 접속해야 해. 네트워크 권한으로 제어됩니다.</string>
-    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">일부 시스템(예: MIUI)은 앱이
-        포그라운드 서비스를 사용하더라도 보이지 않으면 네트워크에 접속하지 못하게 합니다. 해당 시스템에서는 시즈쿠의 배터리 최적화 기능을 비활성화해 주세요.</string>
+    <string name="adb_pairing_tutorial_content_finish">Porter로 돌아가서 Porter를 시작하세요.</string>
+    <string name="adb_pairing_tutorial_content_network">Porter는 로컬 네트워크에 접근해야 합니다. 이는 네트워크 권한으로 제어됩니다.</string>
+    <string name="adb_pairing_tutorial_content_network_limation_not_foreground">일부 시스템(예: MIUI)은 앱이 포그라운드 서비스를 사용하더라도 화면에 보이지 않으면 네트워크 접근을 허용하지 않습니다. 이러한 시스템에서는 Porter의 배터리 최적화 기능을 비활성화하세요.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[시작 (루팅된 기기용)]]></string>
     <string name="home_root_button_start">시작</string>
@@ -84,7 +71,7 @@
     <string name="app_management_toggle_all">모두 전환</string>
     <!-- Terminal -->
     <string name="home_terminal_title">터미널에서 Porter 사용</string>
-    <string name="home_terminal_description">Shizuku를 통해 터미널 앱에서 셸 명령 실행</string>
+    <string name="home_terminal_description">Porter를 통해 터미널 앱에서 셸 명령 실행</string>
     <string name="terminal_tutorial_miui">사용자들은 MIUI가 내보내기 기능에서 사용되는 Storage Access Framework를
         손상시킨다고 보고했습니다.</string>
     <string name="terminal_tutorial_miui_2">MIUI를 사용하는 경우 Porter APK의 assets 폴더에서 파일을 추출해야 할 수도
@@ -105,23 +92,23 @@
     <string name="settings_start_on_boot_summary">Android 11 이상 또는 루트가 필요합니다.</string>
     <string name="settings_start_on_boot_bug">Android 11-12의 버그로 인해 무선 디버깅은 권한이 부여된 네트워크를 기억하지
         못합니다.\n\n재부팅할 때마다 인증 대화상자가 뜰 때 \"허용\" 버튼을 눌러 네트워크를 재승인해야 합니다.</string>
-    <string name="settings_watchdog">지키는 개</string>
-    <string name="settings_watchdog_summary">Shizuku가 충돌하면 자동으로 다시 시작합니다.</string>
+    <string name="settings_watchdog">워치독</string>
+    <string name="settings_watchdog_summary">Porter가 충돌하면 자동으로 다시 시작합니다</string>
     <string name="settings_restart_dialog_title">재시작 필요</string>
-    <string name="settings_restart_dialog_message">시즈쿠는 이 설정을 적용하려면 다시 시작해야 합니다.</string>
+    <string name="settings_restart_dialog_message">이 설정을 적용하려면 Porter를 다시 시작해야 합니다.</string>
     <string name="settings_tcp_port">TCP 포트</string>
     <string name="settings_tcp_port_default">기본값(5555)</string>
     <string name="settings_user_interface">화면</string>
-    <string name="settings_support">지원하다</string>
+    <string name="settings_support">지원</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">포트는 1~65535 사이여야 합니다.</string>
     <string name="snackbar_battery_optimization_home">부팅/워치독 시작 시 배터리 최적화를 비활성화해야 제대로 작동합니다.</string>
     <string name="snackbar_battery_optimization_settings">이 기능을 사용하려면 배터리 최적화를 비활성화하세요.</string>
-    <string name="snackbar_action_fix">고치다</string>
+    <string name="snackbar_action_fix">수정</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">시즈쿠는 이미 배경에서 시작하고 있습니다</string>
+    <string name="toast_shizuku_already_starting">Porter가 이미 백그라운드에서 시작 중입니다</string>
     <string name="toast_accessibility_tv_only">이 서비스는 TV 기기에서만 지원됩니다.</string>
-    <string name="toast_pairing_timeout">시즈쿠 페어링 서비스가 시간 초과되었다.</string>
+    <string name="toast_pairing_timeout">Porter 페어링 서비스 시간이 초과되었습니다</string>
     <!-- Stop -->
     <string name="action_stop">Porter 중지</string>
     <!-- Notification -->
@@ -136,36 +123,88 @@
     <string name="notification_adb_pairing_failed_title">페어링 실패</string>
     <string name="notification_adb_pairing_retry">재시도</string>
     <!-- Permission related, appears in system permission UI -->
-    <string name="permission_label">Shizuku에 접근</string>
-    <string name="permission_description">앱이 Shizuku를 사용하도록 허용합니다.</string>
-    <string name="permission_warning_template"><![CDATA[<b>%1$s</b>을(를) %2$s에 허용하시겠습니까\?]]></string>
+    <string name="permission_label">Porter에 접근</string>
+    <string name="permission_description">앱이 Porter를 사용하도록 허용합니다.</string>
+    <string name="permission_warning_template"><![CDATA[<b>%1$s</b>에서 %2$s하도록 허용하시겠습니까\?]]></string>
     <string name="grant_dialog_button_allow_always">항상 허용</string>
     <string name="grant_dialog_button_deny">"거부"</string>
     <!-- Starter -->
     <string name="starter">실행기</string>
     <string name="start_with_root_failed">루트 권한이 부여되지 않았거나 이 기기가 루팅되지 않아서 서비스를 시작할 수 없습니다.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">시즈쿠 시작…</string>
+    <string name="wadb_notification_title">Porter 시작 중…</string>
     <string name="wadb_notification_wifi_required">진행하기 전에 Wi-Fi 연결을 기다리는 중</string>
     <string name="wadb_notification_retry">재시도 대기 중</string>
     <string name="wadb_error_title">부팅 시 시작 중 오류 발생</string>
     <string name="wadb_error_notify_dev">개발자에게 알리려면 탭하세요.</string>
     <string name="wadb_permission_error_notification_title">권한 오류</string>
-    <string name="wadb_permission_error_notification_content">Shizuku를 부팅 시 시작하려면
-        WRITE_SECURE_SETTINGS 권한이 필요합니다. 탭하여 권한을 부여하는 방법을 알아보세요.</string>
+    <string name="wadb_permission_error_notification_content">부팅 시 시작하려면 Porter에 WRITE_SECURE_SETTINGS 권한이 필요합니다. 탭하여 권한을 부여하는 방법을 알아보세요.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">워치독이 실행 중입니다</string>
-    <string name="watchdog_turn_off">끄세요</string>
-    <string name="watchdog_shizuku_crashed_title">시즈쿠는 최근에 추락했습니다</string>
+    <string name="watchdog_turn_off">끄기</string>
+    <string name="watchdog_shizuku_crashed_title">Porter가 최근에 충돌했습니다</string>
     <string name="watchdog_shizuku_crashed_text">Watchdog이 서비스를 다시 시작했습니다. 향후 충돌을 방지하기 위한 잠재적인 수정
         사항을 알아보려면 탭하세요.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">알림 끄기</string>
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">브라우저를 실행할 수 없음</string>
     <string name="toast_copied_to_clipboard">클립보드에 복사됨</string>
-    <string name="accessibility_service_description">알림이나 분할 화면을 사용할 수 없는 기기(예: Android 14 이상을 실행하는
-        TV)에 대한 페어링 지원을 제공합니다.\n\nShizuku가 무선 디버깅 페어링 화면에서 페어링 코드를 추출할 수 있도록 합니다. 페어링 코드를 찾으면
-        Shizuku가 자동으로 비활성화됩니다.</string>
+    <string name="accessibility_service_description">알림이나 분할 화면을 사용할 수 없는 기기(예: Android 14 이상을 실행하는 TV)에 페어링 지원을 제공합니다.\n\nPorter가 무선 디버깅 페어링 화면에서 페어링 코드를 추출할 수 있게 합니다. 페어링 코드를 찾으면 자동으로 비활성화됩니다.</string>
     <!-- Messages for legacy -->
-    <string name="wadb_notification_attempt_now">지금 시도하세요</string>
+    <string name="wadb_notification_attempt_now">지금 시도</string>
+    <string name="home_root_description"><![CDATA[Magisk를 사용하는 경우 %1$s도 선택할 수 있습니다. 앱이 %2$s을(를) 명시적으로 지원해야 합니다.]]></string>
+    <string name="home_automation_bottom_sheet_intents">인텐트</string>
+    <string name="home_automation_bottom_sheet_label_action">액션</string>
+    <string name="home_automation_bottom_sheet_label_package">패키지</string>
+    <string name="home_automation_bottom_sheet_label_target">대상</string>
+    <string name="home_automation_bottom_sheet_label_extras">추가 데이터</string>
+    <string name="home_automation_regenerate_token">토큰을 다시 생성하시겠습니까?</string>
+    <string name="home_automation_regenerate_token_message">새 토큰으로 인텐트를 다시 구성해야 합니다.</string>
+    <string name="home_dialog_reboot_required_title">재부팅 필요</string>
+    <string name="home_dialog_reboot_required_message">Porter가 제대로 작동하려면 기기를 재부팅해야 합니다. 계속하려면 기기를 재부팅하세요.</string>
+    <string name="home_dialog_duplicate_app_detected_title">중복 앱 감지됨</string>
+    <string name="home_dialog_duplicate_app_detected_message">이 앱의 다른 버전이 기기에 설치되어 있습니다. 계속하려면 중복된 버전을 모두 제거하고 기기를 재부팅하세요.</string>
+    <string name="home_dialog_button_exit">종료</string>
+    <string name="settings_alerts_blocked_title">백그라운드 알림</string>
+    <string name="settings_alerts_blocked_summary">Porter 알림이 차단되어 있어 부팅 시 시작 및 워치독이 조치가 필요할 때 알려 드릴 수 없습니다.</string>
+    <string name="settings_alerts_blocked_message">이 기능은 수행 중인 작업과 발생한 문제를 알림으로 알려 줍니다. 현재 Porter 알림이 차단되어 있으므로 아무것도 알리지 않고 실행됩니다.</string>
+    <string name="settings_alerts_blocked_continue">그래도 켜기</string>
+    <string name="follow_system">시스템 설정 따르기</string>
+    <string name="start">시작</string>
+    <string name="stop">중지</string>
+    <string name="notification_channel_watchdog">워치독</string>
+    <string name="notification_channel_crash">충돌 보고서</string>
+    <string name="notification_channel_auth">인증 오류</string>
+    <string name="notification_auth_invalid_title">잘못된 인증 토큰</string>
+    <string name="notification_auth_invalid_message">인텐트의 토큰이 설정의 “자동화 앱으로 Porter 제어”에 있는 토큰과 일치하는지 확인하세요.</string>
+    <string name="porter_status_running_adb">ADB를 통해 실행 중</string>
+    <string name="porter_status_running_root">root를 통해 실행 중</string>
+    <string name="porter_status_restart_service">실행 중인 서비스를 업데이트하려면 Porter를 다시 시작하세요.</string>
+    <string name="porter_status_version_unknown">알 수 없음</string>
+    <string name="porter_status_versions">설치된 Porter: %1$s\n실행 중인 서비스: %2$s\nShizuku API: %3$d · 패치: %4$d</string>
+    <string name="porter_acknowledgements">감사의 말</string>
+    <string name="porter_acknowledgements_summary">업스트림 프로젝트, 오픈소스 라이브러리 및 라이선스.</string>
+    <string name="porter_acknowledgements_thanks">감사합니다</string>
+    <string name="porter_licenses">라이선스</string>
+    <string name="porter_ack_shizuku">Porter의 기반인 Shizuku와 그 API를 만든 RikkaApps와 모든 기여자에게.</string>
+    <string name="porter_ack_thedjchi">Porter의 기반이 된 Shizuku 포크를 유지 관리하는 thedjchi와 기여자에게.</string>
+    <string name="porter_ack_symbuzzer">Shizuku 작업을 이어 가고 포크를 공유한 symbuzzer와 기여자에게.</string>
+    <string name="porter_ack_plus">ShizukuPlus를 만들고 선택형 호환 앱이라는 아이디어를 준 thejaustin과 기여자에게.</string>
+    <string name="porter_ack_maxpatchs">아이콘, 마스코트 디자인, 배너에 감사드립니다.</string>
+    <string name="porter_license_porter">Porter 및 원본 Shizuku 애플리케이션 · Apache License 2.0</string>
+    <string name="porter_license_api">Shizuku API 및 해당 Porter 포크 · MIT License</string>
+    <string name="porter_license_notice">저작권 및 저작자 표시 고지</string>
+    <string name="porter_pairing_restart">페어링 다시 시작</string>
+    <string name="porter_pairing_retry_instructions">코드가 거부되었거나 알림이 사라진 경우 여기에서 페어링을 다시 시작하세요. 그런 다음 Android의 기존 페어링 코드 대화상자를 닫고 새로 여세요. 새 코드를 사용하세요. Porter의 데이터를 삭제할 필요는 없습니다.</string>
+    <string name="porter_pairing_search_timeout">1분 이내에 페어링 코드를 받지 못했습니다. 페어링이 중지되었습니다. \"재시도\"를 선택한 다음 \"무선 디버깅\"에서 새 페어링 코드 대화상자를 여세요.</string>
+    <string name="porter_pairing_attempt_timeout">페어링 연결 시간이 초과되었습니다. \"무선 디버깅\"에서 새 페어링 코드 대화상자를 열고 다시 시도하세요.</string>
+    <string name="porter_pairing_failed_retry">페어링에 실패했습니다. \"무선 디버깅\"에서 새 페어링 코드 대화상자를 열고 다시 시도하세요.</string>
+    <string name="porter_pairing_notification_timeout">알림 시간이 초과되어 페어링이 중지되었습니다. \"재시도\"를 선택한 다음 \"무선 디버깅\"에서 새 페어링 코드 대화상자를 여세요.</string>
+    <string name="porter_tv_pairing_progress_title">Porter 페어링</string>
+    <string name="porter_tv_pairing_wait">페어링 코드 창을 열어 둔 채로 기다려 주세요.</string>
+    <string name="porter_tv_pairing_return">페어링 접근성 서비스를 끄기 위해 Porter로 돌아가는 중…</string>
+    <string name="porter_tv_pairing_disabling">페어링 접근성 서비스를 끄는 중…</string>
+    <string name="porter_tv_pairing_complete">페어링 접근성 서비스가 꺼졌습니다. 모든 페어링 단계가 완료되었습니다. 이 창을 닫아도 됩니다.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">페어링 접근성 서비스가 아직 활성화되어 있습니다. 접근성 설정에서 끄세요.</string>
+    <string name="porter_tv_pairing_open_accessibility">접근성 설정 열기</string>
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_applications">Додатки</string>
+    <string name="porter_home_subtitle">ADB-доступ для ваших додатків</string>
+    <string name="porter_startup">Запуск</string>
+    <string name="porter_version">Версія</string>
+    <string name="porter_pairing_method">Спосіб сполучення</string>
+    <string name="porter_status_restricted">Деякі дозволи ADB обмежені Android.</string>
+    <string name="porter_status_stop_message">Зупинення Porter відключить додатки, які ним користуються. Запускати Porter знову доведеться вручну, і для цього може знадобитися комп’ютер.</string>
+    <string name="porter_status_details_hint">Відкрити відомості про службу та параметри зупинення</string>
+    <string name="porter_status_ready">Porter готовий. Сумісні додатки тепер можуть підключатися й запитувати доступ.</string>
+    <string name="porter_pairing_notification">Сповіщення</string>
+    <string name="porter_pairing_dialog">Діалог у додатку</string>
+    <string name="porter_manage_apps_action">Керувати додатками</string>
+    <string name="porter_primary_user_title">Використовуйте основного користувача Android</string>
+    <string name="porter_primary_user_description">Porter не можна запустити з цього користувача або профілю Android. Перейдіть до основного користувача пристрою, за потреби встановіть там Porter і запустіть його службу. Потім поверніться сюди, щоб керувати додатками.</string>
+    <string name="porter_secondary_user_stop_message">Зупинення Porter відключить додатки в усіх користувачів Android. Щоб запустити його знову, перейдіть до основного користувача пристрою й відкрийте там Porter.</string>
+</resources>

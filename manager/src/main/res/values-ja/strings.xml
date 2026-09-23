@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">ワイヤレスデバッグが有効になっていません。\n注意: Android 11より前では、ワイヤレスデバッグを有効にするにはコンピュータへの接続が必須です。</string>
     <string name="dialog_usb_debugging_not_enabled">USBデバッグが有効になっていません。\n「開発者向けオプション」で有効にしてください。</string>
     <string name="dialog_adb_pairing_accessibility_permission">Android 14では、パッケージインストーラーでPorterをインストール/更新すると、ペア設定用のユーザー補助サービスを有効にするために必要な ^1 権限が取り消されます。\n\nこの権限を付与するには、次のADBコマンドを実行してください。\n\n^2\n\nコマンドを実行した後、ペア設定手順を続行できます。\n\n注: ADBでPorterをインストール/更新すると、この問題を回避できます。</string>
-    <string name="dialog_adb_pairing_accessibility_enable">ペア設定手順を開始するには、ユーザー補助サービスを有効にしてください。これにより、Porterがペア設定コードを検出できるようになります。\n\nユーザー補助サービスは、コードが見つかった時点、または節電のため1分後に自動的にオフになります。</string>
+    <string name="dialog_adb_pairing_accessibility_enable">ペア設定手順を開始するには、ユーザー補助サービスを有効にしてください。これにより、Porterがペア設定コードを検出できるようになります。\n\nユーザー補助サービスは、ペア設定の試行後、または1分以内にコードが見つからなかった場合にオフになります。Porterが結果を表示し、再試行できるようにします。</string>
     <string name="dialog_adb_pairing_accessibility_navigate">次の手順でペア設定を開始してください。\n- 「開発者向けオプション」に移動します\n- 「USBデバッグ」と「ワイヤレスデバッグ」を有効にします\n- 「ワイヤレスデバッグ」の左側をタップします\n- 「ペア設定コードによるデバイスのペア設定」をタップします。Porterがペア設定コードを自動的に検出します。</string>
     <string name="adb_pairing_requires_multi_window">まず分割画面（マルチウィンドウ）モードにしてください。</string>
     <string name="adb_pairing_requires_multi_window_reason">システムはペア設定ダイアログが常に表示されていることを要求します。このアプリとシステムのダイアログを同時に表示するには、分割画面モードを使用する以外に方法がありません。</string>
@@ -198,4 +198,24 @@
     <string name="porter_license_porter">PorterおよびオリジナルのShizukuアプリケーション · Apache License 2.0</string>
     <string name="porter_license_api">Shizuku APIとそのPorterフォーク · MIT License</string>
     <string name="porter_license_notice">著作権および帰属表示</string>
+    <string name="settings_alerts_blocked_title">バックグラウンドのアラート</string>
+    <string name="settings_alerts_blocked_summary">Porterからの通知がブロックされているため、「起動時に開始」とウォッチドッグは対応が必要なときにお知らせできません。</string>
+    <string name="settings_alerts_blocked_message">この機能は、動作状況や問題の内容を通知でお知らせします。現在Porterからの通知はブロックされているため、何もお知らせせずに動作することになります。</string>
+    <string name="settings_alerts_blocked_continue">それでもオンにする</string>
+    <string name="notification_channel_watchdog">ウォッチドッグ</string>
+    <string name="notification_channel_crash">クラッシュレポート</string>
+    <string name="notification_channel_auth">認証エラー</string>
+    <string name="porter_pairing_restart">ペア設定をやり直す</string>
+    <string name="porter_pairing_retry_instructions">コードが拒否された場合や通知が消えた場合は、ここでペア設定をやり直してください。次に、Androidの古いペア設定コードのダイアログを閉じて、新しいダイアログを開きます。新しいコードを使用してください。Porterのデータを消去する必要はありません。</string>
+    <string name="porter_pairing_search_timeout">1分以内にペア設定コードを受信しませんでした。ペア設定を停止しました。「再試行」を選択してから、「ワイヤレスデバッグ」で新しいペア設定コードのダイアログを開いてください。</string>
+    <string name="porter_pairing_attempt_timeout">ペア設定の接続がタイムアウトしました。「ワイヤレスデバッグ」で新しいペア設定コードのダイアログを開いて、もう一度お試しください。</string>
+    <string name="porter_pairing_failed_retry">ペア設定に失敗しました。「ワイヤレスデバッグ」で新しいペア設定コードのダイアログを開いて、もう一度お試しください。</string>
+    <string name="porter_pairing_notification_timeout">通知がタイムアウトしたため、ペア設定を停止しました。「再試行」を選択してから、「ワイヤレスデバッグ」で新しいペア設定コードのダイアログを開いてください。</string>
+    <string name="porter_tv_pairing_progress_title">Porterのペア設定</string>
+    <string name="porter_tv_pairing_wait">ペア設定コードの画面を開いたまま、お待ちください。</string>
+    <string name="porter_tv_pairing_return">ペア設定用のユーザー補助サービスをオフにするため、Porterに戻っています…</string>
+    <string name="porter_tv_pairing_disabling">ペア設定用のユーザー補助サービスをオフにしています…</string>
+    <string name="porter_tv_pairing_complete">ペア設定用のユーザー補助サービスはオフになりました。ペア設定の手順はすべて完了しました。このウィンドウを閉じてもかまいません。</string>
+    <string name="porter_tv_pairing_cleanup_delayed">ペア設定用のユーザー補助サービスがまだ有効です。ユーザー補助の設定でオフにしてください。</string>
+    <string name="porter_tv_pairing_open_accessibility">ユーザー補助の設定を開く</string>
 </resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Hizmet</string>
+    <string name="porter_view_service">Hizmeti görüntüle</string>
+    <string name="porter_service_starting">Porter hizmeti başlatılıyor…</string>
+    <string name="porter_service_stopping">Porter hizmeti durduruluyor…</string>
+    <string name="porter_service_checking">Hizmet durumu okunuyor…</string>
+    <string name="porter_apps_service_unavailable">Hizmet durdurulmuşken veya değişirken uygulama erişimi kullanılamaz.</string>
+    <string name="porter_apps_counts_unavailable">Uygulama sayıları kullanılamıyor.</string>
+    <string name="porter_background_operation">Arka plan işlemi</string>
+    <string name="porter_service_failed_running">Önceki güncelleme tamamlanmadı. Hizmet hâlâ çalışıyor. Güncellemeyi yeniden deneyebilirsiniz.</string>
+    <string name="porter_service_failed_stopped">Önceki güncelleme tamamlanmadı. Hizmet durduruldu. Yeniden başlatmak için ana panele gidin.</string>
+    <string name="porter_service_build_different_summary">Çalışan hizmet, yüklü uygulamadan farklı bir derleme kullanıyor. Uyumlu özellikler kullanılabilir durumda kalır.</string>
+    <string name="porter_service_build_unknown_summary">Çalışan hizmet derleme kimliğini bildiremiyor. Yüklü derlemeyi kullanmak için hizmeti güncelleyin. Uyumlu özellikler kullanılabilir durumda kalır.</string>
+    <string name="porter_service_healthy">Her şey normal çalışıyor.</string>
+    <string name="porter_service_progress_background">Bu ekrandan ayrılabilirsiniz. İşlem arka planda devam eder.</string>
+    <string name="porter_build_identity_unavailable">Derleme kimliği mevcut değil</string>
+    <string name="porter_installed_app">Yüklü uygulama</string>
+    <string name="porter_running_service">Çalışan hizmet</string>
+    <string name="porter_service_api_value">Porter protokolü: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Rootlu bir cihaz gerektirir. Başlat’a bastığınızda Porter root erişimi ister.</string>
+    <string name="porter_version_compact">Sürüm: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Derleme: %1$s (%2$s)</string>
+</resources>

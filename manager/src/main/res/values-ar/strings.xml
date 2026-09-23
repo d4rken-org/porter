@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">تصحيح الأخطاء اللاسلكي غير مفعّل.\nملاحظة: قبل Android 11، يلزم الاتصال بجهاز كمبيوتر لتفعيل تصحيح الأخطاء اللاسلكي.</string>
     <string name="dialog_usb_debugging_not_enabled">تصحيح أخطاء USB غير مفعّل.\nيُرجى تفعيله في \"خيارات المطوّر\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">على Android 14، يؤدي تثبيت Porter أو تحديثه عبر مثبّت الحزم إلى إلغاء إذن ^1، وهو مطلوب لتفعيل خدمة تسهيل الاستخدام الخاصة بالإقران.\n\nلمنحه، نفّذ أمر ADB التالي:\n\n^2\n\nبعد تنفيذ الأمر، يمكنك متابعة عملية الإقران.\n\nملاحظة: يمكنك تجاوز ذلك بتثبيت Porter أو تحديثه عبر ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">يُرجى تفعيل خدمة تسهيل الاستخدام لبدء عملية الإقران. يتيح ذلك لـ Porter اكتشاف رمز الإقران.\n\nسيتم إيقاف خدمة تسهيل الاستخدام عند العثور على الرمز أو بعد دقيقة واحدة لتوفير الطاقة.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">يُرجى تفعيل خدمة تسهيل الاستخدام لبدء عملية الإقران. يتيح ذلك لـ Porter اكتشاف رمز الإقران.\n\nسيتم إيقاف خدمة تسهيل الاستخدام بعد محاولة الإقران، أو إذا لم يُعثر على رمز خلال دقيقة واحدة. سيعرض Porter النتيجة ويتيح لك إعادة المحاولة.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">يُرجى بدء الإقران بتنفيذ الخطوات التالية:\n- انتقل إلى \"خيارات المطوّر\"\n- فعّل \"تصحيح أخطاء USB\" و\"تصحيح الأخطاء اللاسلكي\"\n- انقر على نص \"تصحيح الأخطاء اللاسلكي\" (وليس مفتاح التبديل)\n- انقر على \"إقران الجهاز باستخدام رمز الإقران\". سيكتشف Porter رمز الإقران تلقائيًا.</string>
     <string name="adb_pairing_requires_multi_window">يُرجى الدخول إلى وضع تقسيم الشاشة (النوافذ المتعددة) أولًا.</string>
     <string name="adb_pairing_requires_multi_window_reason">يتطلب النظام أن يبقى مربع حوار الإقران مرئيًا دائمًا. استخدام وضع تقسيم الشاشة هو الطريقة الوحيدة لعرض هذا التطبيق ومربع حوار النظام في الوقت نفسه.</string>
@@ -203,4 +203,24 @@
     <string name="porter_license_porter">Porter وتطبيق Shizuku الأصلي · رخصة Apache 2.0</string>
     <string name="porter_license_api">Shizuku API ونسخته المشتقة في Porter · رخصة MIT</string>
     <string name="porter_license_notice">إشعارات حقوق النشر والإسناد</string>
+    <string name="settings_alerts_blocked_title">تنبيهات الخلفية</string>
+    <string name="settings_alerts_blocked_summary">إشعارات Porter محظورة، لذلك لا يمكن لميزتي البدء عند تشغيل الجهاز والمراقب إعلامك عندما تحتاجان إلى انتباهك.</string>
+    <string name="settings_alerts_blocked_message">تُبلغ هذه الميزة عبر إشعار بما تفعله وبما حدث من أخطاء. إشعارات Porter محظورة حاليًا، لذا ستعمل دون أن تُعلمك بأي شيء.</string>
+    <string name="settings_alerts_blocked_continue">التفعيل على أي حال</string>
+    <string name="notification_channel_watchdog">المراقب</string>
+    <string name="notification_channel_crash">تقارير الأعطال</string>
+    <string name="notification_channel_auth">أخطاء المصادقة</string>
+    <string name="porter_pairing_restart">إعادة بدء الإقران</string>
+    <string name="porter_pairing_retry_instructions">إذا تم رفض رمز أو اختفى الإشعار، فأعد بدء الإقران من هنا. ثم أغلق مربع حوار رمز الإقران القديم في Android وافتح مربعًا جديدًا. استخدم الرمز الجديد؛ لا حاجة إلى محو بيانات Porter.</string>
+    <string name="porter_pairing_search_timeout">لم يتم استلام أي رمز إقران خلال دقيقة واحدة. توقّف الإقران. اختر “إعادة المحاولة”، ثم افتح مربع حوار جديدًا لرمز الإقران في “تصحيح الأخطاء اللاسلكي”.</string>
+    <string name="porter_pairing_attempt_timeout">انتهت مهلة اتصال الإقران. افتح مربع حوار جديدًا لرمز الإقران في “تصحيح الأخطاء اللاسلكي” وحاول مجددًا.</string>
+    <string name="porter_pairing_failed_retry">فشل الإقران. افتح مربع حوار جديدًا لرمز الإقران في “تصحيح الأخطاء اللاسلكي” وحاول مجددًا.</string>
+    <string name="porter_pairing_notification_timeout">توقّف الإقران لانتهاء مهلة الإشعار. اختر “إعادة المحاولة”، ثم افتح مربع حوار جديدًا لرمز الإقران في “تصحيح الأخطاء اللاسلكي”.</string>
+    <string name="porter_tv_pairing_progress_title">إقران Porter</string>
+    <string name="porter_tv_pairing_wait">يُرجى إبقاء نافذة رمز الإقران مفتوحة والانتظار.</string>
+    <string name="porter_tv_pairing_return">جارٍ الرجوع إلى Porter لإيقاف خدمة تسهيل الاستخدام الخاصة بالإقران…</string>
+    <string name="porter_tv_pairing_disabling">جارٍ إيقاف خدمة تسهيل الاستخدام الخاصة بالإقران…</string>
+    <string name="porter_tv_pairing_complete">تم إيقاف خدمة تسهيل الاستخدام الخاصة بالإقران. اكتملت جميع خطوات الإقران. يمكنك إغلاق هذه النافذة.</string>
+    <string name="porter_tv_pairing_cleanup_delayed">لا تزال خدمة تسهيل الاستخدام الخاصة بالإقران مفعّلة. أوقفها من إعدادات سهولة الاستخدام.</string>
+    <string name="porter_tv_pairing_open_accessibility">فتح إعدادات سهولة الاستخدام</string>
 </resources>

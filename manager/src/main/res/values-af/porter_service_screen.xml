@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="porter_service_title">Diens</string>
+    <string name="porter_view_service">Bekyk diens</string>
+    <string name="porter_service_starting">Begin tans Porter-diens…</string>
+    <string name="porter_service_stopping">Stop tans Porter-diens…</string>
+    <string name="porter_service_checking">Lees tans diensstatus…</string>
+    <string name="porter_apps_service_unavailable">Programtoegang is onbeskikbaar terwyl die diens gestop is of verander.</string>
+    <string name="porter_apps_counts_unavailable">Programtellings is onbeskikbaar.</string>
+    <string name="porter_background_operation">Agtergrondwerking</string>
+    <string name="porter_service_failed_running">Die vorige opdatering is nie voltooi nie. Die diens loop steeds. Jy kan die opdatering weer probeer.</string>
+    <string name="porter_service_failed_stopped">Die vorige opdatering is nie voltooi nie. Die diens is gestop. Gaan na die paneelbord om dit weer te begin.</string>
+    <string name="porter_service_build_different_summary">Die lopende diens gebruik \'n ander bou as die geïnstalleerde program. Versoenbare kenmerke bly beskikbaar.</string>
+    <string name="porter_service_build_unknown_summary">Die lopende diens kan nie sy bou-identiteit rapporteer nie. Dateer dit op om die geïnstalleerde bou te gebruik. Versoenbare kenmerke bly beskikbaar.</string>
+    <string name="porter_service_healthy">Alles werk normaal.</string>
+    <string name="porter_service_progress_background">Jy kan hierdie skerm verlaat. Die bewerking gaan in die agtergrond voort.</string>
+    <string name="porter_build_identity_unavailable">Bou-identiteit onbeskikbaar</string>
+    <string name="porter_installed_app">Geïnstalleerde program</string>
+    <string name="porter_running_service">Lopende diens</string>
+    <string name="porter_service_api_value">Porter-protokol: %1$d</string>
+    <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
+    <string name="porter_root_requirement">Vereis \'n gewortelde toestel. Porter versoek root-toegang wanneer jy Begin druk.</string>
+    <string name="porter_version_compact">Weergawe: %1$s (%2$d)</string>
+    <string name="porter_build_compact">Bou: %1$s (%2$s)</string>
+</resources>
