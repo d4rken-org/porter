@@ -48,11 +48,11 @@ the shell holds and normal apps do not, so only your own app and the server can 
 
 ### The optional artifacts
 
-`sdk-extras` carries what the SDK itself leaves out: `PorterSystemServices`, which looks up a system
-service Binder inside your own process without a round trip to Porter, and typed system property
-getters (`getSystemPropertyInt`, `getSystemPropertyLong`, `getSystemPropertyBoolean`) as extension
-functions on a connection. It depends on `sdk` and brings it transitively, so add this instead of
-both:
+`sdk-extras` carries what the SDK itself leaves out: shell commands (`exec` and `startProcess`, see
+section 4), `PorterSystemServices`, which looks up a system service Binder inside your own process
+without a round trip to Porter, and typed system property getters (`getSystemPropertyInt`,
+`getSystemPropertyLong`, `getSystemPropertyBoolean`) as extension functions on a connection. It
+depends on `sdk` and brings it transitively, so add this instead of both:
 
 ```kotlin
 implementation("com.github.d4rken-org.porter-api:sdk-extras:+")
@@ -96,10 +96,19 @@ with both installed to start Porter.
 Shizuku+'s Plus flavor declares its own permission, `af.shizuku.plus.permission.API_V23`, instead of
 Shizuku's, and counts as Shizuku here.
 
-What the SDK actually probes for is `moe.shizuku.api.BinderContainer` on the classpath, which is
-what `shizuku-compat` puts there, and what `dev.rikka.shizuku:provider` would put there too. Without
-that class the SDK can unwrap no Shizuku Binder, so a Shizuku-only device reads `NotInstalled`
-rather than promising a connection it cannot take.
+The SDK considers Shizuku only where it can receive from it: `moe.shizuku.api.BinderContainer` is on
+the classpath, and your app declares `PorterShizukuApiProvider` at `${applicationId}.shizuku`.
+Without both, a Shizuku-only device reads `NotInstalled` rather than promising a connection it
+cannot take.
+
+### Next to the upstream Shizuku client
+
+An app can keep `dev.rikka.shizuku:api` and `:provider` for Shizuku, for example because a library
+such as Ackpine is built on them, and use this SDK for Porter alone. Leave out `shizuku-compat` and
+keep upstream's `ShizukuProvider` at `${applicationId}.shizuku`. Upstream's client then gets
+Shizuku's Binder and this SDK gets Porter's, so a user with both installed can pick either in your
+app while both run, with no restart. `Porter.availability(context)` only ever answers about Porter
+in this setup; ask upstream's client about Shizuku.
 
 ### What a version promises
 
@@ -212,7 +221,34 @@ trusting a recent check.
 
 ## 4. Do privileged work
 
-Two routes, with very different requirements.
+Three routes, with very different requirements.
+
+### A shell command
+
+`sdk-extras` runs a command at Porter's identity and returns its exit code and output:
+
+```kotlin
+val result = connection.exec(context, "sh", "-c", "pm list packages -3")
+if (result.exitCode == 0) show(result.output)
+```
+
+The command runs in a user service that `sdk-extras` ships, named `your.app:porter_shell`. The first
+call starts it and later calls reuse it, so there is nothing to declare or implement. It works on
+both backends.
+
+`exec` closes the command's input and reads its output as UTF-8. For a command that takes input,
+writes binary output or runs until you stop it, `connection.startProcess(context, ...)` returns a
+`java.lang.Process` whose streams are pipes to the command. Read what it writes as it comes, or it
+blocks once a pipe is full.
+
+Cancelling either call returns at once and kills the command and the processes it started, so
+`withTimeout` bounds one that hangs. A command also dies with the app process that started it. A
+command that is not found exits with 127, as in a shell. A working directory that does not exist, or
+a service that stops while the command runs, throws `PorterShellException`. A missing grant throws
+the SDK's `PorterSecurityException`, as for any user service.
+
+A shell script is text in and text out. When you need structured results or many calls in a row,
+your own service below does the same work in-process.
 
 ### Your own service, at Porter's identity
 
@@ -307,7 +343,7 @@ current Android versions, a way past the non-SDK interface restrictions.
 [AndroidHiddenApiBypass](https://github.com/LSPosed/AndroidHiddenApiBypass) cover those two.
 
 If what you need is file, process or filesystem access rather than a specific system service, prefer
-the user service above. It needs none of that.
+a shell command or your own service above. Neither needs any of that.
 
 ## 5. Tell the user why nothing happened
 
