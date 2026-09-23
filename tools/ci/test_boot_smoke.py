@@ -145,8 +145,14 @@ class CaseSelectionTest(unittest.TestCase):
             argv += ["--case", case]
         return boot.parse_args(argv)
 
-    def test_the_full_run_needs_no_selection(self):
-        self.assertIsNone(self.parse().cases)
+    def test_the_full_run_is_every_case_but_the_opt_in_ones(self):
+        cases = self.parse().cases
+        self.assertEqual(cases[0], "setup")
+        self.assertNotIn("wireless-pairing", cases)
+        self.assertEqual(set(cases) | {"wireless-pairing"}, set(boot.CASES))
+
+    def test_pairing_needs_only_setup(self):
+        self.assertEqual(self.parse("setup", "wireless-pairing").cases, ["setup", "wireless-pairing"])
 
     def test_setup_is_required(self):
         with self.assertRaises(SystemExit):

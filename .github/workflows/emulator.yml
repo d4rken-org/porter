@@ -208,7 +208,7 @@ jobs:
           if-no-files-found: warn
 
   boot:
-    name: boot (Android ${{ matrix.api }})
+    name: ${{ matrix.suite }} (Android ${{ matrix.api }})
     needs: [changes, apks]
     if: ${{ always() }}
     runs-on: ubuntu-latest
@@ -229,6 +229,7 @@ jobs:
         # after adbd restarts, and appear with no app installed. That pipe is an emulator
         # transport, so none of this describes a physical Android 11 device; one was not tested.
         api: [36]
+        suite: [boot, wireless-pairing]
     steps:
       - name: Require the test APKs
         id: require
@@ -277,10 +278,11 @@ jobs:
             --manager manager/build/outputs/apk/foss/debug/*.apk
             --native probe/build/outputs/apk/porter/debug/*.apk
             --output build/emulator-results
+            ${{ matrix.suite == 'wireless-pairing' && '--case setup --case wireless-pairing' || '' }}
       - name: Upload device test evidence
         if: always() && env.DEVICE_TESTS == 'true' && steps.require.outcome != 'failure'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
-          name: porter-boot-api-${{ matrix.api }}
+          name: porter-${{ matrix.suite }}-api-${{ matrix.api }}
           path: build/emulator-results/
           if-no-files-found: warn

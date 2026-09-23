@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 import shlex
 import time
+import xml.etree.ElementTree as ET
 
 spec = importlib.util.spec_from_file_location("porter_smoke", Path(__file__).with_name("emulator-smoke.py"))
 base = importlib.util.module_from_spec(spec)
@@ -29,13 +30,15 @@ SETTINGS_DIR = "/data/user_de/0/eu.darken.porter/shared_prefs"
 AUTOMATION_TOKEN = "porter-ci-automation-token"
 AUTOMATION_SECRETS = ('<?xml version="1.0" encoding="utf-8" standalone="yes" ?>'
                       f'<map><string name="auth_token">{AUTOMATION_TOKEN}</string></map>')
-# How long the worker is given to give up. With no port to find it waits on a wireless-debugging
-# authorization that is never coming, and what ends that is WorkManager stopping the worker at its
-# ten-minute execution limit, not anything the app decides. Bounded by that, not by a guess.
+SETTINGS = "com.android.settings"
+SYSTEMUI = "com.android.systemui"
+# Where the system keeps paired keys and the networks wireless debugging is always allowed on.
+ADB_KEYSTORE = "/data/misc/adb/adb_temp_keys.xml"
 # The order run() declares, which --case narrows without ever reordering.
-CASES = ("setup", "app-adb-start", "automation-broadcasts", "start-on-boot", "start-on-boot-off",
-         "boot-without-adb")
-# Each of these inherits what the case before it established on the device.
+CASES = ("setup", "wireless-pairing", "app-adb-start", "automation-broadcasts", "start-on-boot",
+         "start-on-boot-off", "boot-without-adb")
+# Run only when named.
+OPT_IN = ("wireless-pairing",)
 # Each of these inherits what the case before it established on the device. boot-without-adb does
 # not name start-on-boot-off: it sets the toggle it needs rather than assuming a previous case
 # left it either way.
@@ -125,14 +128,132 @@ class Boot(base.Smoke):
         return [line.strip() for line in dump.splitlines()
                 if re.match(r"\s*JOB\s", line) and re.search(rf"[ @]{re.escape(base.MANAGER)}/", line)]
 
+    def tap_notification_action(self, title, action, screenshot=None):
+        """Taps this action of the notification with this title, expanding that notification in the
+        shade where it is collapsed. Every look stays inside its own expandableNotificationRow and
+        taps what that same look found, so another notification's Expand or button of the same
+        name is never the one tapped. A screen that did not change is looked at and tapped again,
+        as base tap() does."""
+        self.shell("cmd", "statusbar", "expand-notifications")
+
+        def center(node):
+            left, top, right, bottom = map(int, re.findall(r"\d+", node.get("bounds", "")))
+            return (left + right) // 2, (top + bottom) // 2
+
+        def own_action():
+            root = self.ui()
+            rows = [row for row in root.iter("node") if row.get("resource-id") == f"{SYSTEMUI}:id/expandableNotificationRow"
+                    and any(node.get("text") == title for node in row.iter("node"))]
+            if not rows:
+                return None
+            # The innermost, where a group nests one row inside another.
+            row = rows[-1]
+            button = next((node for node in row.iter("node") if node.get("text") == action
+                           and node.get("enabled") == "true"), None)
+            if button is not None:
+                return ET.tostring(root), center(button)
+            expand = next((node for node in row.iter("node") if node.get("content-desc") == "Expand"), None)
+            if expand is not None:
+                self.shell("input", "tap", *center(expand))
+            return None
+
+        description = f"the notification '{title}' shows '{action}'"
+        for attempt in range(base.TAP_ATTEMPTS):
+            found = self.until(description, own_action) if attempt == 0 else own_action()
+            # Gone between an unanswered tap and this look: it was acted on after all.
+            if found is None:
+                return
+            before, (x, y) = found
+            if screenshot and attempt == 0:
+                self.screenshot(screenshot)
+            self.shell("input", "tap", x, y)
+            if self.heard(before):
+                return
+            print(f"NOTE the screen did not answer a tap on '{action}' in '{title}'", flush=True)
+        raise AssertionError(f"Tapped '{action}' in '{title}' {base.TAP_ATTEMPTS} times and the screen never changed")
+
     def no_server(self):
         """Absence, established by a reply rather than by a query that failed to produce one."""
         listing = self.shell("sh", "-c", "pidof porter_server || echo " + NO_PROCESS)
         assert listing in (NO_PROCESS, "") or listing.isdigit(), listing
         return listing == NO_PROCESS
 
+    def restore(self, *aspects):
+        if "wireless-debugging" in aspects:
+            self.kill_server(check=False)
+            self.until("no server is left", self.no_server)
+            self.shell("settings", "put", "global", "adb_wifi_enabled", "0")
+            self.shell("cmd", "statusbar", "collapse")
+            # A network always allowed would let the manager's start worker turn wireless
+            # debugging back on by itself, a way in for boot-without-adb.
+            assert b"wifiAP" not in self.adb("exec-out", "su", "0", "cat", ADB_KEYSTORE, binary=True), \
+                "a network stayed allowed for wireless debugging"
+            # A fresh manager process, so the next case's look at the manager's own log sees
+            # only what that case caused.
+            self.shell("am", "force-stop", base.MANAGER)
+        rest = tuple(aspect for aspect in aspects if aspect != "wireless-debugging")
+        if rest:
+            super().restore(*rest)
+
     def run(self):
         self.case("setup", self.setup)
+
+        def wireless_pairing():
+            """Pairing through Porter's notification with the code the device shows, then starting
+            over the paired connection: the way in for someone without a computer."""
+            def notified(title):
+                # Polled for many seconds, so one dump that fails is a look that answered nothing.
+                try:
+                    return any(title in record for record in self.manager_notifications())
+                except RuntimeError as e:
+                    print(f"NOTE {e}", flush=True)
+                    return False
+
+            def wireless_on():
+                return self.shell("settings", "get", "global", "adb_wifi_enabled") == "1"
+
+            self.shell("pm", "grant", base.MANAGER, "android.permission.NEARBY_WIFI_DEVICES", check=False)
+            self.home()
+            self.tap("Pairing", scroll=True, screenshot="home-pairing")
+            self.until("Porter searches for the pairing service", lambda: notified("Searching for pairing service"))
+
+            # What a user does once by tapping the build number, and the steps the tutorial names:
+            # its own button into Developer options, then Wireless debugging and its pairing code.
+            self.shell("settings", "put", "global", "development_settings_enabled", "1")
+            self.tap("Developer options", scroll=True)
+            # The button lands on the Wireless debugging page itself where Settings allows it.
+            landed = self.until("Settings opened", lambda: (
+                "page" if self.locate("Use wireless debugging", SETTINGS) else
+                "list" if self.locate("Wireless debugging", SETTINGS, scroll=True) else None))
+            if landed == "list":
+                self.tap("Wireless debugging", SETTINGS, scroll=True)
+            if not wireless_on():
+                self.tap("Use wireless debugging", SETTINGS)
+                # Allowed this once only, so the network is not remembered past this case.
+                self.tap("Allow", SYSTEMUI)
+            self.until("wireless debugging is on", wireless_on)
+            self.tap("Pair device with pairing code", SETTINGS, scroll=True, screenshot="pairing-code")
+            code = self.until("the pairing code", lambda: next(
+                (n.get("text") for n in self.ui().iter("node")
+                 if n.get("package") == SETTINGS and re.fullmatch(r"\d{6}", n.get("text", ""))), None))
+
+            # The dialog stays up while the code goes in through the notification, as it must.
+            self.until("Porter found the pairing service", lambda: notified("Pairing service found"), timeout=60)
+            self.tap_notification_action("Pairing service found", "Enter pairing code", screenshot="pairing-notification")
+            self.shell("input", "text", code)
+            self.shell("input", "keyevent", "KEYCODE_ENTER")
+            self.until("Porter reports the pairing", lambda: notified("Pairing successful"), timeout=60)
+
+            # The success notification's own Start, over the connection just paired.
+            self.tap_notification_action("Pairing successful", "Start", screenshot="pairing-start")
+            pid = self.until("a server started over wireless debugging", lambda: self.pid("porter_server"),
+                             timeout=120)
+            self.until("the manager's own ADB client did the starting",
+                       lambda: "AdbClient" in self.adb("logcat", "-d", "--pid=" + self.pid(base.MANAGER),
+                                                      "-s", "AdbClient:D", "*:S"))
+            self.until("the server sent its binders", lambda: "sent binders" in self.server_log(pid))
+            return {"server_pid": pid, "code": code}
+        self.case("wireless-pairing", wireless_pairing, restore=("wireless-debugging",))
 
         def app_adb_start():
             """The manager's own wireless start, over loopback, with its own ADB key."""
@@ -298,7 +419,8 @@ def parse_args(argv=None):
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--case", action="append", dest="cases", choices=CASES, metavar="NAME",
                         help="run only the named case, repeatable, in declared order; "
-                             "omit to run all of: " + ", ".join(CASES))
+                             "omit to run all of: " + ", ".join(c for c in CASES if c not in OPT_IN)
+                             + "; " + ", ".join(OPT_IN) + " only when named")
     args = parser.parse_args(argv)
     if args.cases and "setup" not in args.cases:
         parser.error("--case setup is required: every other case needs the installs and the "
@@ -314,6 +436,8 @@ def parse_args(argv=None):
         if missing:
             parser.error("--case " + " --case ".join(missing) + " is required: the selected cases "
                          "assert against a device those build")
+    else:
+        args.cases = [name for name in CASES if name not in OPT_IN]
     return args
 
 
