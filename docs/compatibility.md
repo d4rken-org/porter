@@ -18,7 +18,7 @@ The companion helps existing Shizuku apps find Porter. Porter still starts the s
 
 ## Switch from Shizuku
 
-For an app with direct Porter support, you can keep Shizuku installed. Start Porter, choose it in the app and approve the new request. If the app says a restart is needed, force-stop it in Android Settings and reopen it.
+For an app with direct Porter support, you can keep Shizuku installed. Start Porter, choose it in the app and approve the new request. An app that was connected to Shizuku stays on Shizuku until it restarts, so force-stop it in Android Settings and reopen it.
 
 For an app that only supports Shizuku, the FOSS build includes the matching Porter Compatibility APK:
 

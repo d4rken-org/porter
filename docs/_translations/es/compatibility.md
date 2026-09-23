@@ -21,7 +21,7 @@ El complemento ayuda a las apps existentes de Shizuku a encontrar Porter. Porter
 ## Cambiar desde Shizuku
 {: #switch-from-shizuku }
 
-Para una app con soporte directo de Porter, puedes mantener Shizuku instalado. Inicia Porter, selecciónalo en la app y aprueba la nueva solicitud. Si la app pide reiniciarse, fuerza su detención en los ajustes de Android y ábrela de nuevo.
+Para una app con soporte directo de Porter, puedes mantener Shizuku instalado. Inicia Porter, selecciónalo en la app y aprueba la nueva solicitud. Una app que estaba conectada a Shizuku sigue con Shizuku hasta que se reinicia, así que fuerza su detención en los ajustes de Android y ábrela de nuevo.
 
 Para una app que solo admite Shizuku, la versión FOSS incluye el APK de Porter Compatibility correspondiente:
 

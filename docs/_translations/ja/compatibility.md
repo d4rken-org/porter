@@ -21,7 +21,7 @@ Porter は対応アプリが使う Shizuku API をサポートしています。
 ## Shizuku から切り替える
 {: #switch-from-shizuku }
 
-Porter に直接対応するアプリでは、Shizuku を残して構いません。Porter を起動し、アプリ内で選択して新しい要求を許可します。再起動を求められた場合は Android の設定でアプリを強制停止し、開き直してください。
+Porter に直接対応するアプリでは、Shizuku を残して構いません。Porter を起動し、アプリ内で選択して新しい要求を許可します。Shizuku に接続済みのアプリは再起動するまで Shizuku を使い続けるため、Android の設定でアプリを強制停止し、開き直してください。
 
 Shizuku のみに対応するアプリ向けに、FOSS 版には対応する Porter Compatibility の APK が含まれています。
 

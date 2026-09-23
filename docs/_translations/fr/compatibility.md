@@ -21,7 +21,7 @@ Le compagnon aide les applications Shizuku existantes à trouver Porter. Porter 
 ## Passer de Shizuku à Porter
 {: #switch-from-shizuku }
 
-Pour une application qui prend directement en charge Porter, vous pouvez garder Shizuku installé. Démarrez Porter, sélectionnez-le dans l’application et acceptez la nouvelle demande. Si l’application doit redémarrer, forcez son arrêt dans les paramètres Android, puis rouvrez-la.
+Pour une application qui prend directement en charge Porter, vous pouvez garder Shizuku installé. Démarrez Porter, sélectionnez-le dans l’application et acceptez la nouvelle demande. Une application déjà connectée à Shizuku y reste jusqu’à son redémarrage : forcez son arrêt dans les paramètres Android, puis rouvrez-la.
 
 Pour une application qui ne prend en charge que Shizuku, la version FOSS inclut l’APK Porter Compatibility correspondant :
 

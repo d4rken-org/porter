@@ -21,7 +21,7 @@ Die Begleit-App hilft bestehenden Shizuku-Apps, Porter zu finden. Porter selbst 
 ## Von Shizuku wechseln
 {: #switch-from-shizuku }
 
-Für eine App mit direkter Porter-Unterstützung kannst du Shizuku installiert lassen. Starte Porter, wähle es in der App aus und bestätige die neue Anfrage. Falls die App einen Neustart verlangt, nutze **Beenden erzwingen** in den Android-Einstellungen und öffne sie erneut.
+Für eine App mit direkter Porter-Unterstützung kannst du Shizuku installiert lassen. Starte Porter, wähle es in der App aus und bestätige die neue Anfrage. Eine App, die mit Shizuku verbunden war, bleibt bis zu ihrem Neustart bei Shizuku. Nutze deshalb **Beenden erzwingen** in den Android-Einstellungen und öffne sie erneut.
 
 Für eine App, die nur Shizuku unterstützt, enthält die FOSS-Version die passende Porter-Compatibility-APK:
 
