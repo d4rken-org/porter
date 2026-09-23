@@ -15,8 +15,11 @@ HANDOFF_TIMEOUT = 90
 # From the tap to a successor that sent its binders: a native starter, an app_process start and a
 # binder push, with a margin for a software-rendered emulator.
 REPLACEMENT_TIMEOUT = 90
-# The order run() declares, which --case narrows without ever reordering.
-CASES = ("setup", "manual-update", "preflight-rejected", "handoff-failure", "root-update")
+# The order run() declares, which --case narrows without ever reordering. The automatic update
+# goes first: the manager skips one for a build it already holds a record of, and every manual
+# case writes a record for the same installed build.
+CASES = ("setup", "automatic-after-reinstall", "automatic-on-connection", "manual-update",
+         "preflight-rejected", "handoff-failure", "root-update")
 
 
 class Update(base.Smoke):
@@ -40,7 +43,7 @@ class Update(base.Smoke):
         self.shell("am", "start", "-W", "-f", "0x04000000", "-n",
                    base.MANAGER + "/eu.darken.porter.manager.MainActivity")
 
-    def start_fixture(self, mode, root=False):
+    def start_fixture(self, mode, root=False, verify=True):
         """A porter_server of another build, started the way the fixture's README describes.
 
         It loads its natives from the installed manager, as the real service does, and reaches the
@@ -56,9 +59,22 @@ class Update(base.Smoke):
         # process when its session ends.
         self.fixture_session = self.detached(*(("su", "0", "sh", "-c", command) if root else ("sh", "-c", command)))
         pid = self.until("the fixture is running", lambda: self.pid("porter_server"))
-        self.until("the fixture sent its binders", lambda: "sent binders" in self.server_log(pid))
-        assert self.classpath(pid, root) == apk, "the running porter_server is not the fixture"
+        if verify:
+            self.until("the fixture sent its binders", lambda: "sent binders" in self.server_log(pid))
+            assert self.classpath(pid, root) == apk, "the running porter_server is not the fixture"
         return pid
+
+    def opt_into_automatic_updates(self):
+        settings = f"/data/user_de/0/{base.MANAGER}/shared_prefs/settings.xml"
+        enabled = 'name="auto_update_service" value="true"'
+        if enabled in self.shell("su", "0", "cat", settings, check=False):
+            return
+        self.home()
+        self.tap("Settings", desc="Settings")
+        self.tap("Update service automatically", scroll=True, screenshot="auto-update-setting")
+        # The switch moves before the write lands, and what follows restarts the app.
+        self.until("the app saved the setting",
+                   lambda: enabled in self.shell("su", "0", "cat", settings, check=False), timeout=60)
 
     def classpath(self, pid, root=False):
         """The APK a porter_server runs from: the fixture's for the fixture, the manager's for a
@@ -117,6 +133,35 @@ class Update(base.Smoke):
 
     def run(self):
         self.case("setup", self.setup)
+
+        def automatic_after_reinstall():
+            """An app update replacing the service in the background, once the user opted in."""
+            # Started before the opt-in: with it on, the fixture's first connection would already be
+            # replaced, and this case is about the update that follows reinstalling the app.
+            old = self.start_fixture("outdated")
+            self.opt_into_automatic_updates()
+            assert self.pid("porter_server") == old, "the service was replaced before the app was updated"
+            # In the background, as an update from a store arrives.
+            self.shell("input", "keyevent", "KEYCODE_HOME")
+            self.adb("install", "-r", str(self.args.manager.resolve()))
+            new = self.successor(old)
+            assert self.uid_of(new) == "2000", "the replacement changed privileges"
+            return {"fixture": old, "successor": new}
+        self.case("automatic-after-reinstall", automatic_after_reinstall, restore=("servers",))
+
+        def automatic_on_connection():
+            """An outdated service's connection alone starts the automatic update, for an app that
+            never received MY_PACKAGE_REPLACED."""
+            self.opt_into_automatic_updates()
+            # The record of the previous case's update spends this build's automatic attempt.
+            self.shell("am", "force-stop", base.MANAGER)
+            self.shell("su", "0", "rm", "-f", f"/data/user_de/0/{base.MANAGER}/shared_prefs/service-update.xml")
+            # Not verified as the fixture: the manager may replace it before a check could run.
+            old = self.start_fixture("outdated", verify=False)
+            new = self.successor(old)
+            assert self.uid_of(new) == "2000", "the replacement changed privileges"
+            return {"fixture": old, "successor": new}
+        self.case("automatic-on-connection", automatic_on_connection, restore=("servers",))
 
         def manual_update():
             """The Service screen's update, from a shell-started service of another build."""
