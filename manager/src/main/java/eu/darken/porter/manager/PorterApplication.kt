@@ -45,6 +45,7 @@ class PorterApplication : Application() {
         // synchronously here when the binder is already up.
         PorterStateMachine.instance.attachToPorter()
         LaunchModeRecorder.attachToPorter()
+        eu.darken.porter.manager.worker.ServiceUpdateTrigger.attachToPorter(context)
         AppCompatDelegate.setDefaultNightMode(PorterSettings.nightMode)
 
         if(PorterSettings.watchdog) WatchdogService.start(context)
