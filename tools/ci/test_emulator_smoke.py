@@ -1020,7 +1020,9 @@ class UnlockTest(unittest.TestCase):
         return [call for call in self.runner.shell.call_args_list if call.args[:2] == ("wm", "dismiss-keyguard")]
 
     def test_a_lock_screen_raised_late_is_dismissed_again(self):
-        self.dumps = ["    mShowingLockscreen=true", "    mShowingLockscreen=false"]
+        # Android 11's KeyguardStateMonitor lines; its dump has no mShowingLockscreen at all.
+        self.dumps = ["    KeyguardStateMonitor\n        mIsShowing=true",
+                      "    KeyguardStateMonitor\n        mIsShowing=false"]
         self.runner.unlock()
         self.assertEqual(len(self.dismissals()), 2)
 
