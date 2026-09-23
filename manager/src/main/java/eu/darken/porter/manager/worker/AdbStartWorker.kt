@@ -1,7 +1,6 @@
 package eu.darken.porter.manager.worker
 
 import android.app.KeyguardManager
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ContentResolver
@@ -212,13 +211,9 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
     }
 
     private fun showErrorNotification(context: Context, e: Exception) {
-        val channel = NotificationChannel(
-            NotificationChannels.ADB_START,
-            context.getString(R.string.wadb_notification_title),
-            NotificationManager.IMPORTANCE_LOW
-        )
+        NotificationChannels.create(context, NotificationChannels.ADB_START,
+            context.getString(R.string.wadb_notification_title), NotificationManager.IMPORTANCE_LOW)
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.createNotificationChannel(channel)
 
         val nb = NotificationCompat.Builder(context, NotificationChannels.ADB_START)
 

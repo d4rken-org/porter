@@ -2,7 +2,6 @@ package eu.darken.porter.manager.receiver
 
 import android.Manifest.permission.WRITE_SECURE_SETTINGS
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -57,13 +56,8 @@ object PorterReceiverStarter {
     }
 
     fun buildNotification(context: Context, msg: String? = null): Notification {
-        val channel = NotificationChannel(
-            NotificationChannels.ADB_START,
-            context.getString(R.string.wadb_notification_title),
-            NotificationManager.IMPORTANCE_LOW
-        )
-        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.createNotificationChannel(channel)
+        NotificationChannels.create(context, NotificationChannels.ADB_START,
+            context.getString(R.string.wadb_notification_title), NotificationManager.IMPORTANCE_LOW)
 
         val cancelIntent = Intent(context, NotifCancelReceiver::class.java)
         val cancelPendingIntent = PendingIntent.getBroadcast(
@@ -130,13 +124,9 @@ object PorterReceiverStarter {
 
     private fun showPermissionErrorNotification(context: Context) {
 
-        val channel = NotificationChannel(
-            NotificationChannels.ADB_START,
-            context.getString(R.string.wadb_notification_title),
-            NotificationManager.IMPORTANCE_LOW
-        )
+        NotificationChannels.create(context, NotificationChannels.ADB_START,
+            context.getString(R.string.wadb_notification_title), NotificationManager.IMPORTANCE_LOW)
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.createNotificationChannel(channel)
 
         val webpageIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Helps.STARTUP))
         val pendingWebpageIntent = PendingIntent.getActivity(
