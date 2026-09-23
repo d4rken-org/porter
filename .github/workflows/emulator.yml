@@ -18,7 +18,7 @@ concurrency:
 jobs:
   changes:
     name: Decide what to test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       pull-requests: read
@@ -60,7 +60,7 @@ jobs:
     name: Build test APKs
     needs: changes
     if: needs.changes.outputs.devices == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
         with:
@@ -92,7 +92,7 @@ jobs:
     # A skipped job satisfies a required check, so these start whatever happened before them, in a
     # cancelled run too, and decide in their first steps.
     if: ${{ always() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 45
     env:
       SHIZUKU_SHA256: 6e273ab0e991c4e79bc8b1bbb9b9dd739ccac1a8712a541a214078886b7b790f
@@ -211,7 +211,7 @@ jobs:
     name: ${{ matrix.suite }} (Android ${{ matrix.api }})
     needs: [changes, apks]
     if: ${{ always() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     # Three reboots, each of which has to come all the way back up before the case can judge it.
     timeout-minutes: 60
     env:

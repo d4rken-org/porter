@@ -24,7 +24,7 @@ jobs:
   validate-tag:
     name: Validate tag
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
         with:
@@ -46,7 +46,7 @@ jobs:
     # dispatch, without keeping a signing and publishing job eligible after
     # the workflow has been cancelled.
     if: ${{ !cancelled() && (needs.validate-tag.result == 'success' || github.event_name == 'workflow_dispatch') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     environment: foss-production
     permissions:
       contents: write
