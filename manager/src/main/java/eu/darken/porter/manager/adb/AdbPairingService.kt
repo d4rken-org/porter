@@ -207,6 +207,7 @@ class AdbPairingService : Service() {
 
     private val startNotificationAction by unsafeLazy {
         val startIntent = Intent(launchIntent)
+            .setClassName(this, HomeActivity.WIRELESS_START_ALIAS)
             .putExtra(HomeActivity.EXTRA_START_SERVICE_VIA_WADB, true)
 
         val pendingIntent = PendingIntent.getActivity(

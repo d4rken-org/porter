@@ -106,6 +106,10 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity-alias
+            android:name=".home.WirelessStartAlias"
+            android:exported="false"
+            android:targetActivity=".MainActivity" />
         <activity
             android:name=".management.ApplicationManagementActivity"
             android:label="@string/home_app_management_title" />
