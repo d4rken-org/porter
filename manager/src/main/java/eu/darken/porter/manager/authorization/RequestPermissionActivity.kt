@@ -134,7 +134,7 @@ class RequestPermissionActivity : ComposeActivity() {
                 // the row that tells them apart would arrive only after the service answered.
                 val userId = UserHandleCompat.getUserId(asked.uid)
                 val known = userId != UserHandleCompat.myUserId()
-                mutableStateOf(RequestingApp(asked.label, ai.packageName, null, if (known) "$userId" else null))
+                mutableStateOf(RequestingApp(asked.label, ai.packageName, null, if (known) "$userId" else null, asked.alsoCovers))
             }
             val identity = identityState.value
             LaunchedEffect(asked) {
@@ -148,7 +148,7 @@ class RequestPermissionActivity : ComposeActivity() {
                 val icon = withContext(Dispatchers.IO) { runCatching { ai.loadIcon(packageManager).toBitmap(96, 96).asImageBitmap() }.getOrNull() }
                 val userId = UserHandleCompat.getUserId(asked.uid)
                 val ours = userId == UserHandleCompat.myUserId()
-                identityState.value = RequestingApp(asked.label, ai.packageName, icon, if (ours) null else "$userId")
+                identityState.value = RequestingApp(asked.label, ai.packageName, icon, if (ours) null else "$userId", asked.alsoCovers)
                 if (ours) return@LaunchedEffect
                 // The name comes from the service, so only it waits. No answer within the bound
                 // leaves the bare id standing, which is honest where a guessed name is not.
@@ -161,7 +161,7 @@ class RequestPermissionActivity : ComposeActivity() {
                     LOGGER.e(e, "Binder not received in 5s, requesting user not named")
                     null
                 } ?: return@LaunchedEffect
-                identityState.value = RequestingApp(asked.label, ai.packageName, icon, profile)
+                identityState.value = RequestingApp(asked.label, ai.packageName, icon, profile, asked.alsoCovers)
             }
             BackHandler(enabled = stage == "waiting" || stage == "ready") {}
             LaunchedEffect(stage) { if (stage == "finished") finish() }
@@ -206,6 +206,7 @@ class RequestPermissionActivity : ComposeActivity() {
         outState.putInt(SAVED_PID, asked.pid)
         outState.putInt(SAVED_CODE, asked.code)
         outState.putParcelable(SAVED_INFO, asked.info)
+        outState.putStringArray(SAVED_PACKAGES, asked.packages.toTypedArray())
     }
 
     /**
@@ -220,7 +221,7 @@ class RequestPermissionActivity : ComposeActivity() {
         val pid = saved.getInt(SAVED_PID, -1)
         @Suppress("DEPRECATION") val ai = saved.getParcelable<ApplicationInfo>(SAVED_INFO)
         if (uid == -1 || pid == -1 || ai == null) return null
-        return PermissionRequest(uid, pid, saved.getInt(SAVED_CODE, -1), ai, labelOf(ai))
+        return PermissionRequest(uid, pid, saved.getInt(SAVED_CODE, -1), ai, labelOf(ai), saved.getStringArray(SAVED_PACKAGES)?.toList().orEmpty())
     }
 
     private fun labelOf(ai: ApplicationInfo): String {
@@ -243,6 +244,7 @@ class RequestPermissionActivity : ComposeActivity() {
         private const val SAVED_PID = "asked.pid"
         private const val SAVED_CODE = "asked.code"
         private const val SAVED_INFO = "asked.info"
+        private const val SAVED_PACKAGES = "asked.packages"
 
         /**
          * How long after the buttons appear, or the prompt changes request, a tap is ignored for.
@@ -262,7 +264,8 @@ class RequestPermissionActivity : ComposeActivity() {
             LOGGER.w("Ignoring a request from uid %d that names %s of uid %d", uid, ai.packageName, ai.uid)
             return null
         }
-        return PermissionRequest(uid, pid, code, ai, labelOf(ai))
+        val packages = intent.getStringArrayExtra("packages")?.toList().orEmpty()
+        return PermissionRequest(uid, pid, code, ai, labelOf(ai), packages)
     }
 }
 
@@ -274,7 +277,11 @@ internal class PermissionRequest(
     val code: Int,
     val info: ApplicationInfo,
     val label: String,
-)
+    val packages: List<String> = emptyList(),
+) {
+    /** The uid's other packages, which the prompt names because a grant reaches them too. */
+    val alsoCovers get() = packages.filter { it != info.packageName }.distinct()
+}
 
 /** The requesting app as the prompt shows it; [profile] is null for the manager's own user. */
 internal data class RequestingApp(
@@ -282,6 +289,7 @@ internal data class RequestingApp(
     val packageName: String,
     val icon: ImageBitmap?,
     val profile: String?,
+    val alsoCovers: List<String> = emptyList(),
 )
 
 @Composable
@@ -315,6 +323,7 @@ internal fun PermissionDialogContent(stage: String, app: RequestingApp, onAllow:
                         Text(app.label, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
                         // The package name is the anti-spoofing anchor: it wraps rather than losing its tail.
                         Text(app.packageName, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        if (app.alsoCovers.isNotEmpty()) Text(stringResource(R.string.porter_permission_also_covers, app.alsoCovers.joinToString(", ")), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         if (app.profile != null) Text(app.profile, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
