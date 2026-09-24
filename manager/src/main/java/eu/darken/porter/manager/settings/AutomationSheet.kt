@@ -36,7 +36,8 @@ fun AutomationSheet(onDismiss: () -> Unit) {
                 R.string.home_automation_bottom_sheet_label_extras to "auth: $token"
             ).forEach { (label, value) ->
                 OutlinedTextField(value, {}, Modifier.fillMaxWidth(), readOnly = true, label = { Text(stringResource(label)) }, trailingIcon = {
-                    TextButton(onClick = { copyText(context, if (label == R.string.home_automation_bottom_sheet_label_extras) token else value) }) {
+                    val isToken = label == R.string.home_automation_bottom_sheet_label_extras
+                    TextButton(onClick = { copyText(context, if (isToken) token else value, sensitive = isToken) }) {
                         Text(stringResource(android.R.string.copy))
                     }
                 })
