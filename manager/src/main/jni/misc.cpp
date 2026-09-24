@@ -35,6 +35,25 @@ int get_proc_name(int pid, char *name, size_t size) {
     return 0;
 }
 
+int get_proc_uid(int pid, uid_t *uid) {
+    int fd;
+    char buf[4096];
+    snprintf(buf, sizeof(buf), "/proc/%d/status", pid);
+    if ((fd = open(buf, O_RDONLY)) == -1)
+        return 1;
+    ssize_t len = fdgets(buf, sizeof(buf), fd);
+    close(fd);
+    if (len <= 0)
+        return 1;
+
+    const char *line = strstr(buf, "\nUid:");
+    unsigned int real_uid;
+    if (!line || sscanf(line + 5, "%u", &real_uid) != 1)
+        return 1;
+    *uid = (uid_t) real_uid;
+    return 0;
+}
+
 int is_num(const char *s) {
     size_t len = strlen(s);
     for (size_t i = 0; i < len; ++i)
