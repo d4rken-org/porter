@@ -13,9 +13,9 @@ for path in "$BASEDIR" "$DEX" \
     "$(cd "$BASEDIR" 2>/dev/null && pwd -P)"; do
   case "$path/" in
     /sdcard/*|/storage/*|/mnt/sdcard/*|/data/media/*|/mnt/user/*|/mnt/runtime/*|/mnt/pass_through/*|/mnt/media_rw/*)
-      echo "porsh cannot run from shared storage ($path)."
-      echo "Use your terminal app to copy porsh and porsh.dex to its private files directory, e.g.:"
-      echo "  cp $BASEDIR/porsh $BASEDIR/porsh.dex /data/data/<terminal package name>/files"
+      echo "porsh cannot run from shared storage ($path)." >&2
+      echo "Use your terminal app to copy porsh and porsh.dex to its private files directory, e.g.:" >&2
+      echo "  cp $BASEDIR/porsh $BASEDIR/porsh.dex /data/data/<terminal package name>/files" >&2
       exit 1
       ;;
   esac
