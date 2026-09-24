@@ -51,7 +51,7 @@ TRANSPORT_BACKOFF = 2
 # next one.
 LOGCAT_CLEAR_ATTEMPTS = 5
 # The order run() declares, which --case narrows without ever reordering.
-CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence", "porsh",
+CASES = ("setup", "standalone", "app-list-grant", "debug-recording", "compatibility", "coexistence", "porsh",
          "server-crash-recovery", "root-server", "decisions-across-start-modes",
          "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
          "foreign-signer-peeks", "foreign-signer-binds", "foreign-signer-never-binds",
@@ -867,6 +867,20 @@ class Smoke:
         self.case("setup", self.setup)
         self.case("standalone", lambda: self.grant_and_revoke(NATIVE, PERMISSION))
 
+        def app_list_grant():
+            # The probe asks nothing after its refusal, so a grant it logs afterwards is one the
+            # server told it about.
+            self.launch_probe(NATIVE)
+            self.tap("Deny")
+            self.expect_log(NATIVE, "DENIED")
+            self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
+            self.tap("Applications")
+            self.tap(NATIVE, scroll=True, screenshot="app-list-grant")
+            self.expect_log(NATIVE, "PERMISSION granted")
+            self.tap(NATIVE, scroll=True)
+            self.until("switching the app off stops it", lambda: not self.pid(NATIVE))
+        self.case("app-list-grant", app_list_grant, restore=("grants",))
+
         def debug_recording():
             if int(self.shell("getprop", "ro.build.version.sdk")) >= 33:
                 # Otherwise the consent dialog's confirm opens the permission controller instead.
@@ -1214,7 +1228,7 @@ class Smoke:
         return "bind" if refused else "scan"
 
     def reconciliation(self):
-        # The five pre-existing cases leave grants and probe installations behind, so this block
+        # The cases before this one leave grants and probe installations behind, so this block
         # establishes its own baseline instead of inheriting whichever one ran last.
         self.restore("probes", "grants")
 

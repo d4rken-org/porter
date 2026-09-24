@@ -32,6 +32,7 @@ class ProbeActivity : Activity() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var bound = false
     private var binding: Job? = null
+    private var permissionWatch: Job? = null
 
     /** Asks for an existing service without starting one, which is the noCreate hand-over path. */
     private var peek = false
@@ -63,9 +64,20 @@ class ProbeActivity : Activity() {
                 if (connection == null) {
                     if (previous != null) report("BINDER_DEAD")
                 } else {
+                    watchPermission(connection)
                     connect(connection)
                 }
                 previous = connection
+            }
+        }
+    }
+
+    /** Logs every state [PorterConnection.permission] emits. */
+    private fun watchPermission(connection: PorterConnection) {
+        permissionWatch?.cancel()
+        permissionWatch = scope.launch {
+            connection.permission.collect { state ->
+                report(if (state is PermissionState.Denied) "PERMISSION denied permanently=${state.permanentlyDenied}" else "PERMISSION granted")
             }
         }
     }
