@@ -16,6 +16,7 @@ import android.os.Looper
 import android.os.Parcel
 import android.os.RemoteException
 import android.os.ServiceManager
+import android.os.SystemClock
 import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.common.DiscoveredApplication
 import eu.darken.porter.common.util.OsUtils
@@ -82,6 +83,9 @@ class PorterServer internal constructor(
     private val mainHandler = Handler(Looper.myLooper()!!)
     internal lateinit var reconciler: ApkReconciler
     internal val debugLogLeases = DebugLogLeases()
+
+    /** Prompts started and not answered yet, by (uid, pid, request code), to when they were started. */
+    private val openPrompts = HashMap<Triple<Int, Int, Int>, Long>()
 
     init {
         clientManager.onDeath = ::onClientDied
@@ -228,10 +232,42 @@ class PorterServer internal constructor(
             .putExtra("pid", caller.pid)
             .putExtra("requestCode", requestCode)
             .putExtra("applicationInfo", ai)
+            // Every package in the uid shares whatever is decided, not just the one asking.
+            .putExtra("packages", PackageManagerApis.getPackagesForUidNoThrow(caller.uid).toTypedArray())
+        promptOpened(caller.uid, caller.pid, requestCode)
         ActivityManagerApis.startActivityNoThrow(intent, null, MANAGER_USER_ID)
     }
 
+    private fun promptOpened(uid: Int, pid: Int, requestCode: Int) {
+        val now = SystemClock.elapsedRealtime()
+        synchronized(openPrompts) {
+            openPrompts.values.removeIf { now - it > PROMPT_ANSWER_WINDOW_MILLIS }
+            openPrompts[Triple(uid, pid, requestCode)] = now
+        }
+    }
+
+    private enum class Prompt { OPEN, EXPIRED, NONE }
+
+    /** Closes the prompt an answer is for, and says whether it was open, open too long, or never. */
+    private fun closePrompt(uid: Int, pid: Int, requestCode: Int): Prompt {
+        val openedAt = synchronized(openPrompts) { openPrompts.remove(Triple(uid, pid, requestCode)) } ?: return Prompt.NONE
+        return if (SystemClock.elapsedRealtime() - openedAt <= PROMPT_ANSWER_WINDOW_MILLIS) Prompt.OPEN else Prompt.EXPIRED
+    }
+
     override fun dispatchPermissionConfirmationResult(requestUid: Int, requestPid: Int, requestCode: Int, allowed: Boolean, onetime: Boolean) {
+        when (closePrompt(requestUid, requestPid, requestCode)) {
+            Prompt.NONE -> {
+                LOGGER.w("dispatchPermissionConfirmationResult: no open prompt for uid=%d pid=%d code=%d", requestUid, requestPid, requestCode)
+                return
+            }
+            Prompt.EXPIRED -> {
+                // Too late to decide anything, but the caller is still waiting for an answer.
+                LOGGER.w("dispatchPermissionConfirmationResult: prompt for uid=%d pid=%d code=%d expired", requestUid, requestPid, requestCode)
+                clientManager.findClient(requestUid, requestPid)?.dispatchRequestPermissionResult(requestCode, false)
+                return
+            }
+            Prompt.OPEN -> Unit
+        }
         synchronized(clientManager) {
             var allowed = allowed
             var onetime = onetime
@@ -575,6 +611,9 @@ class PorterServer internal constructor(
 
         /** The Android user the manager is the manager in. */
         const val MANAGER_USER_ID: Int = 0
+
+        /** How long an answer to a prompt the server started is accepted for. */
+        const val PROMPT_ANSWER_WINDOW_MILLIS = 5 * 60 * 1000L
 
         private val LOGGER = Logger("Service")
 
