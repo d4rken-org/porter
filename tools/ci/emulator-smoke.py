@@ -1090,6 +1090,10 @@ class Smoke:
             # The last write before exit is the one truncated when stderr is not drained.
             assert evidence("tail-stderr") == b"last", evidence("tail-stderr")
 
+            # A signal ends the shell with 128 plus its number, as a local shell reports it.
+            self.shell("sh", "-c", redirected("signal", "kill -TERM $$"))
+            assert status("signal") == 143, status("signal")
+
             # Every stream on a terminal: porsh switches it to raw mode and has to restore it.
             # Android 7 has no stty, so there both sides of the comparison are empty.
             code, output = terminal(
@@ -1106,6 +1110,39 @@ class Smoke:
             assert code == 5, (code, output[-64:])
             assert evidence("piped-stdout") == b"out", evidence("piped-stdout")
             assert output == b"\0" * PORSH_BULK + b"err", (len(output), output[-64:])
+
+            # The same shape writing more to /dev/tty than a pty buffers: it must still finish.
+            code, output = terminal(f"{invoke} -c " + shlex.quote(
+                f"dd if=/dev/zero bs=4096 count={PORSH_BULK // 4096} > /dev/tty 2>/dev/null; exit 6")
+                + f" > {PORSH_DIR}/devtty-stdout")
+            assert code == 6, (code, output[-64:])
+
+            # A client that dies takes its whole command with it, not only the shell it started.
+            # The probe's name is computed on the device, so the client's own arguments never match.
+            def probes():
+                return [row.split(None, 1)[0] for row in self.processes("PID,ARGS")
+                        if "porsh-orphan-42" in row]
+
+            pending = self.detached("sh", "-c", f"{invoke} -c " + shlex.quote(
+                "sh -c 'sleep 300; :' porsh-orphan-$((6*7)) & wait"))
+            try:
+                deadline = time.monotonic() + 20
+                while not probes():
+                    assert time.monotonic() < deadline, "the probe never started"
+                    time.sleep(0.5)
+                self.shell("kill", "-9", *self.pid("porsh").split())
+                deadline = time.monotonic() + 10
+                while survivors := probes():
+                    assert time.monotonic() < deadline, f"outlived its client: {survivors}"
+                    time.sleep(0.5)
+            finally:
+                # Whatever a failed attempt left behind would disturb the steps that follow.
+                leftovers = self.pid("porsh").split() + probes()
+                if leftovers:
+                    self.shell("kill", "-9", *leftovers, check=False)
+                if pending.poll() is None:
+                    pending.kill()
+                pending.communicate()
 
             # A stalled service must end the shell with a message instead of hanging forever.
             # SIGSTOP reproduces deterministically what a binder-buffer exhaustion does by chance.
