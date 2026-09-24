@@ -38,6 +38,17 @@ internal class FakePermissionGateway(
         replies += FakePermissionGateway.Reply(uid, pid, code, allowed, onetime)
         dispatchFailure?.let { throw it }
     }
+    /** Uids the user refused once since last allowing them, as PorterSettings keeps them. */
+    val refusedOnce = mutableSetOf<Int>()
+    override fun noteAnswer(uid: Int, allowed: Boolean): Boolean {
+        if (allowed) {
+            refusedOnce.remove(uid)
+            return false
+        }
+        if (refusedOnce.remove(uid)) return true
+        refusedOnce.add(uid)
+        return false
+    }
 }
 
 /** One request must produce exactly one reply, across duplicate taps, recreation and process death. */
@@ -56,6 +67,22 @@ class PermissionViewModelTest {
     private fun advance() = dispatcher.scheduler.advanceUntilIdle()
     private fun runPending() = dispatcher.scheduler.runCurrent()
     private fun restoredFrom(source: SavedStateHandle) = SavedStateHandle(source.keys().associateWith { source.get<Any>(it) })
+
+    @Test fun aSecondTappedRefusalIsRemembered() {
+        val first = model(SavedStateHandle()); advance(); first.reply(false)
+        val second = model(SavedStateHandle()); advance(); second.reply(false)
+
+        assertEquals(listOf(true, false), gateway.replies.map { it.onetime })
+    }
+
+    @Test fun refusalsThePromptGivesOnItsOwnDoNotCount() {
+        gateway.canGrant = false
+        model(SavedStateHandle()); advance()
+        gateway.canGrant = true
+        val tapped = model(SavedStateHandle()); advance(); tapped.reply(false)
+
+        assertEquals(listOf(true, true), gateway.replies.map { it.onetime })
+    }
 
     @Test fun runningServiceThatCanGrantBecomesReady() {
         val model = model()
