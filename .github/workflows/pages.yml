@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - 'SECURITY.md'
       - '.github/workflows/pages.yml'
   pull_request:
     paths:
       - 'docs/**'
+      - 'SECURITY.md'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -25,6 +27,8 @@ jobs:
           ruby-version: '3.4'
           bundler-cache: true
           working-directory: docs
+      - name: Add the security page
+        run: cp SECURITY.md docs/SECURITY.md
       - name: Build guide
         working-directory: docs
         run: bundle exec jekyll build --strict_front_matter --destination ../_site
