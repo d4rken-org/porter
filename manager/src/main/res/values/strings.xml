@@ -274,7 +274,7 @@
     <string name="porter_service_update_primary">Open Porter in the primary Android user to update the service.</string>
     <string name="porter_service_update_features">Update the service to enable these features.</string>
     <string name="porter_service_auto_update">Update service automatically</string>
-    <string name="porter_service_auto_update_summary">After a Porter app update, replace an running service with a different build in the background. This briefly disconnects connected apps. A stopped service stays stopped.</string>
+    <string name="porter_service_auto_update_summary">After a Porter app update, replace a running service with a different build in the background. This briefly disconnects connected apps. A stopped service stays stopped.</string>
     <string name="porter_service_update_interrupted">The previous service update did not finish. Retry if the service is still running, or start it again from the Service screen.</string>
     <string name="porter_global_access_update">Global access control is unavailable in the running service.</string>
     <string name="porter_discovery_update">The running service does not support the current app discovery and connection history features. Available apps are shown using its older interface.</string>
