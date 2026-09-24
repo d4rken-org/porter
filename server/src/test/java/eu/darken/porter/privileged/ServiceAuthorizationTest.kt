@@ -19,11 +19,13 @@ import eu.darken.porter.common.DiscoveredApplication
 import eu.darken.porter.common.GlobalAccess
 import eu.darken.porter.common.UserServiceLaunch
 import eu.darken.porter.common.util.OsUtils
+import eu.darken.porter.common.util.SignerDigests
 import eu.darken.porter.core.CallerExemption
 import eu.darken.porter.core.CallerIdentity
 import eu.darken.porter.core.ClientCallback
 import eu.darken.porter.endpoint.PorterClientCallback
 import eu.darken.porter.endpoint.PorterManagerEndpoint
+import eu.darken.porter.privileged.util.PackageIdentity
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.server.IPorterApplication
 import moe.shizuku.server.IShizukuApplication
@@ -97,7 +99,7 @@ class ServiceAuthorizationTest {
         userServices = mock(ShizukuUserServiceManager::class.java)
         history = mock(ConnectionHistory::class.java)
         service = PorterServer(
-            userServices, clients, config, MANAGER_UID, history,
+            userServices, clients, config, MANAGER_UID, { true }, history,
             Executor { it.run() }, ::ShizukuServiceEndpoint, ::PorterServiceEndpoint,
         )
         client = ClientRecord(CLIENT_UID, CLIENT_PID, mock(IShizukuApplication::class.java), "test.client", 13)
@@ -596,6 +598,34 @@ class ServiceAuthorizationTest {
     }
 
     @Test
+    fun theManagerIsItsVerifiedInstallationNotJustItsAppId() {
+        val signers = mock(SigningInfo::class.java)
+        `when`(signers.apkContentsSigners).thenReturn(arrayOf(Signature("aabb")))
+        val manager = PackageInfo()
+        manager.packageName = PorterServer.MANAGER_APPLICATION_ID
+        manager.applicationInfo = ApplicationInfo().apply {
+            uid = MANAGER_UID
+            flags = ApplicationInfo.FLAG_INSTALLED
+        }
+        manager.signingInfo = signers
+        packageInfos[PorterServer.MANAGER_APPLICATION_ID] = manager
+        packages!!.`when`<List<String>> { PackageManagerApis.getPackagesForUidNoThrow(MANAGER_UID) }
+            .thenReturn(listOf(PorterServer.MANAGER_APPLICATION_ID))
+        val baseline = PackageIdentity.Identity(PorterServer.MANAGER_APPLICATION_ID, MANAGER_UID, setOf(SignerDigests.of(Signature("aabb"))!!))
+        val check = PorterServer.managerInstallation(baseline)
+
+        assertTrue(check(MANAGER_UID))
+
+        `when`(signers.apkContentsSigners).thenReturn(arrayOf(Signature("ccdd")))
+        assertFalse(check(MANAGER_UID))
+
+        `when`(signers.apkContentsSigners).thenReturn(arrayOf(Signature("aabb")))
+        packages!!.`when`<List<String>> { PackageManagerApis.getPackagesForUidNoThrow(MANAGER_UID) }
+            .thenReturn(listOf("com.impostor"))
+        assertFalse(check(MANAGER_UID))
+    }
+
+    @Test
     fun aDenyTearsDownServicesAnEarlierOneTimeGrantStarted() {
         ShadowBinder.setCallingUid(MANAGER_UID)
         `when`(config.find(CLIENT_UID)).thenReturn(null)
@@ -662,7 +692,7 @@ class ServiceAuthorizationTest {
 
     /** A server whose only difference from [service] is which user it believes is on screen. */
     private fun serverSeeing(foreground: Int?) = PorterServer(
-        userServices, clients, config, MANAGER_UID, history,
+        userServices, clients, config, MANAGER_UID, { true }, history,
         Executor { it.run() }, ::ShizukuServiceEndpoint, ::PorterServiceEndpoint,
         { PorterManagerEndpoint(it.core, it) }, { foreground },
     )
