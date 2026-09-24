@@ -18,6 +18,8 @@ I use Shizuku in my own apps, [SD Maid SE](https://github.com/d4rken-org/sdmaid-
 2. Start Porter and follow the in-app instructions ([detailed guide](https://porter.darken.eu/setup)).
 3. Grant access to the apps that ask for it.
 
+To verify the authenticity of a downloaded APK, see [SECURITY.md](./SECURITY.md).
+
 **Requirements:** Android 7.0 or newer, plus either a computer, Android 11 or newer with wireless debugging, or a rooted device.
 
 Porter's service stops when the device restarts. Start it again afterwards.
