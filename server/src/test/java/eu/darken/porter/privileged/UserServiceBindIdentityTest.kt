@@ -8,6 +8,8 @@ import android.content.pm.SigningInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
+import eu.darken.porter.common.util.SignerDigests
+import eu.darken.porter.privileged.util.PackageIdentity
 import moe.shizuku.server.IShizukuServiceConnection
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -26,8 +28,8 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.MockedStatic
 import org.mockito.Mockito
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowBinder
@@ -54,8 +56,13 @@ class UserServiceBindIdentityTest {
         HandlerUtil.mainHandler = mock(Handler::class.java)
         packages = Mockito.mockStatic(PackageManagerApis::class.java)
         ShadowBinder.setCallingUid(UID)
-        manager = ShizukuUserServiceManager()
-        manager.setReconciler(mock(ApkReconciler::class.java))
+        // Static mocks do not reach the start executor's thread, so the manager APK is handed in.
+        manager = ShizukuUserServiceManager { "/data/app/manager/base.apk" }
+        val reconciler = mock(ApkReconciler::class.java)
+        `when`(reconciler.managerBaseline).thenReturn(
+            PackageIdentity.Identity(PorterServer.MANAGER_APPLICATION_ID, MANAGER_UID, setOf(SignerDigests.of(ORIGINAL)!!)),
+        )
+        manager.setReconciler(reconciler)
         installedWith(ORIGINAL)
     }
 
@@ -191,6 +198,7 @@ class UserServiceBindIdentityTest {
         const val PACKAGE = "eu.darken.porter.probe"
         const val CLASS = "ProbeService"
         const val UID = 10123
+        const val MANAGER_UID = 10100
 
         val ORIGINAL = Signature("0a0b")
         val FOREIGN = Signature("0e0f")

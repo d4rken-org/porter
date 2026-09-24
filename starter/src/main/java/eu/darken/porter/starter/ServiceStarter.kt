@@ -10,10 +10,12 @@ import android.os.RemoteException
 import android.os.SystemClock
 import android.util.Log
 import eu.darken.porter.common.UserServiceLaunch
+import eu.darken.porter.common.util.SignerDigests
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.starter.util.IContentProviderCompat
 import java.util.Locale
 import rikka.hidden.compat.ActivityManagerApis
+import rikka.hidden.compat.PackageManagerApis
 import rikka.shizuku.server.UserService
 
 class ServiceStarter {
@@ -101,14 +103,20 @@ class ServiceStarter {
             }
         }
 
-        private const val USER_SERVICE_CMD_FORMAT = "(CLASSPATH='%s' %s%s /system/bin " +
-            "--nice-name='%s' eu.darken.porter.starter.ServiceStarter " +
-            "--manager='%s' --token='%s' --package='%s' --class='%s' --uid=%d%s)&"
+        private const val USER_SERVICE_CMD_FORMAT = "(CLASSPATH=%s %s%s /system/bin " +
+            "--nice-name=%s eu.darken.porter.starter.ServiceStarter " +
+            "--manager=%s --token=%s --package=%s --class=%s --uid=%d --signers=%s%s)&"
 
         // DeathRecipient will automatically be unlinked when all references to the
         // binder is dropped, so we hold the reference here.
         @Suppress("unused")
         private var shizukuBinder: IBinder? = null
+
+        /**
+         * One shell word holding [value] verbatim: `it's` becomes `'it'\''s'`. The class name and the
+         * process name suffix are the calling app's own strings.
+         */
+        fun shellQuote(value: String): String = "'" + value.replace("'", "'\\''") + "'"
 
         fun commandForUserService(
             appProcess: String,
@@ -119,14 +127,17 @@ class ServiceStarter {
             classname: String,
             processNameSuffix: String?,
             callingUid: Int,
+            signerDigests: Set<String>,
             debug: Boolean,
         ): String {
             val processName = String.format("%s:%s", packageName, processNameSuffix)
             return String.format(
                 Locale.ENGLISH, USER_SERVICE_CMD_FORMAT,
-                managerApkPath, appProcess, if (debug) " $DEBUG_ARGS" else "",
-                processName,
-                managerPackageName, token, packageName, classname, callingUid, if (debug) " --debug-name=$processName" else "",
+                shellQuote(managerApkPath), shellQuote(appProcess), if (debug) " $DEBUG_ARGS" else "",
+                shellQuote(processName),
+                shellQuote(managerPackageName), shellQuote(token), shellQuote(packageName), shellQuote(classname), callingUid,
+                shellQuote(signerDigests.joinToString(",")),
+                if (debug) " " + shellQuote("--debug-name=$processName") else "",
             )
         }
 
@@ -158,6 +169,14 @@ class ServiceStarter {
                 return
             }
 
+            // create() resolves the package by name again. Between the bind and now, the approved
+            // installation may have been replaced by another signer's under the same name.
+            if (!isExpectedInstallation(args)) {
+                Log.w(TAG, "installation is not the one the service was bound for, exiting")
+                System.exit(1)
+                return
+            }
+
             UserService.setTag(TAG)
             val result = UserService.create(args)
 
@@ -177,6 +196,24 @@ class ServiceStarter {
             System.exit(0)
 
             Log.i(TAG, "service exited")
+        }
+
+        private fun isExpectedInstallation(args: Array<String>): Boolean {
+            var packageName: String? = null
+            var uid = -1
+            var signers: Set<String>? = null
+            for (arg in args) {
+                when {
+                    arg.startsWith("--package=") -> packageName = arg.substring("--package=".length)
+                    arg.startsWith("--uid=") -> uid = arg.substring("--uid=".length).toIntOrNull() ?: -1
+                    arg.startsWith("--signers=") ->
+                        signers = arg.substring("--signers=".length).split(',').filter { it.isNotEmpty() }.toSet()
+                }
+            }
+            if (packageName == null || uid < 0 || signers.isNullOrEmpty()) return false
+            val info = PackageManagerApis.getPackageInfoNoThrow(packageName, SignerDigests.lookupFlags(), uid / 100000)
+                ?: return false
+            return info.applicationInfo?.uid == uid && SignerDigests.of(info) == signers
         }
 
         private val SYSTEM_PACER: Pacer = object : Pacer {
