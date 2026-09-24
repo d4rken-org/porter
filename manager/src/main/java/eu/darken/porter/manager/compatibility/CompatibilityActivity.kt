@@ -27,6 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
@@ -42,8 +48,10 @@ import eu.darken.porter.manager.Helps
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.home.HomeCard
 import eu.darken.porter.manager.home.HomeCardActions
+import eu.darken.porter.manager.home.compatibilityUsageKnown
 import eu.darken.porter.manager.home.compatibilityUsageText
 import eu.darken.porter.manager.home.compatibilityVersionText
+import eu.darken.porter.manager.management.ApplicationManagementActivity
 import eu.darken.porter.manager.management.AppsViewModel
 import eu.darken.porter.manager.ui.ComposeActivity
 import eu.darken.porter.manager.ui.PorterScaffold
@@ -149,7 +157,9 @@ class CompatibilityActivity : ComposeActivity() {
                                 }
                             }
                         }
-                        Text(compatibilityUsageText(state.running, apps), style = MaterialTheme.typography.bodyMedium)
+                        CompatibilityUsage(state.running, apps) {
+                            startActivity(Intent(this@CompatibilityActivity, ApplicationManagementActivity::class.java))
+                        }
                         if (state.running) Text(stringResource(R.string.compat_usage_explanation), style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
@@ -320,6 +330,18 @@ class CompatibilityActivity : ComposeActivity() {
             }
         }
     }
+}
+
+@Composable
+internal fun CompatibilityUsage(running: Boolean, apps: AppsViewModel.State, onOpenApps: () -> Unit) {
+    val text = compatibilityUsageText(running, apps)
+    if (!compatibilityUsageKnown(running, apps)) {
+        Text(text, style = MaterialTheme.typography.bodyMedium)
+        return
+    }
+    val link = LinkAnnotation.Clickable("apps", TextLinkStyles(SpanStyle(color = MaterialTheme.colorScheme.primary,
+        textDecoration = TextDecoration.Underline))) { onOpenApps() }
+    Text(buildAnnotatedString { withLink(link) { append(text) } }, style = MaterialTheme.typography.bodyMedium)
 }
 
 @Composable

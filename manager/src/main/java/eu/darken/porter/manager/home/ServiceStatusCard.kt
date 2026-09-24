@@ -137,10 +137,13 @@ internal fun CompatibilityCard(description: String, affectedApps: String? = null
     }
 }
 
+internal fun compatibilityUsageKnown(running: Boolean, apps: AppsViewModel.State) =
+    running && !apps.loading && apps.error == null && apps.failedUsers.isEmpty() && !apps.legacy
+
 @Composable
 internal fun compatibilityUsageText(running: Boolean, apps: AppsViewModel.State): String = when {
     !running -> stringResource(R.string.compat_usage_stopped)
-    apps.loading || apps.error != null || apps.failedUsers.isNotEmpty() || apps.legacy -> stringResource(R.string.compat_usage_unknown)
+    !compatibilityUsageKnown(running, apps) -> stringResource(R.string.compat_usage_unknown)
     else -> LocalContext.current.resources.getQuantityString(R.plurals.compat_usage_count, apps.companionCount, apps.companionCount)
 }
 
