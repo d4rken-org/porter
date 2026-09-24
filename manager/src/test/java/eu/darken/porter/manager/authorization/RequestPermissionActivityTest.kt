@@ -48,8 +48,10 @@ class RequestPermissionActivityTest {
     private fun launch(uid: Int = 10123): ActivityScenario<RequestPermissionActivity> = ActivityScenario.launch<RequestPermissionActivity>(
         Intent(context, RequestPermissionActivity::class.java)
             .putExtra("uid", uid).putExtra("pid", 4242).putExtra("requestCode", 7)
-            .putExtra("applicationInfo", context.applicationInfo)
+            .putExtra("applicationInfo", appInfo(uid))
     ).also { scenario = it }
+    /** The platform's ApplicationInfo carries the uid of the user it was read for. */
+    private fun appInfo(uid: Int) = ApplicationInfo(context.applicationInfo).apply { this.uid = uid }
     private fun awaitText(text: String) = compose.waitUntil(5_000) { compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty() }
     /** Lets the grace run out that follows the buttons appearing or the prompt changing app. */
     private fun pastGrace() = ShadowSystemClock.advanceBy(Duration.ofMillis(RequestPermissionActivity.SUPERSEDE_GRACE))
@@ -146,7 +148,7 @@ class RequestPermissionActivityTest {
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 8)
-                .putExtra("applicationInfo", context.applicationInfo))
+                .putExtra("applicationInfo", appInfo(10123)))
         }
         assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)),
                      gateway.replies)
@@ -163,6 +165,7 @@ class RequestPermissionActivityTest {
         // drawn, so a tap already on its way would answer for an app the user never looked at.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val scenario = launch()
@@ -189,7 +192,7 @@ class RequestPermissionActivityTest {
 
     /** An app whose icon decode blocks, which is the wait the prompt used to keep the old name for. */
     private class SlowIconApp(pkg: String, val gate: CountDownLatch) : ApplicationInfo() {
-        init { packageName = pkg; nonLocalizedLabel = "Shizuku API probe" }
+        init { packageName = pkg; uid = 10999; nonLocalizedLabel = "Shizuku API probe" }
         override fun loadIcon(pm: android.content.pm.PackageManager?): Drawable {
             gate.await(10, TimeUnit.SECONDS)
             return ColorDrawable(0xFF00FF00.toInt())
@@ -228,6 +231,7 @@ class RequestPermissionActivityTest {
         // timer and would pass with the invariant deleted.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val scenario = launch()
@@ -256,6 +260,7 @@ class RequestPermissionActivityTest {
         // writes into that bundle is pinned by onSaveInstanceStateCarriesTheAdoptedRequest.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val saved = Bundle().apply {
@@ -283,6 +288,7 @@ class RequestPermissionActivityTest {
         // process death, so what it wrote is what decides which caller is answered.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val scenario = launch()
@@ -310,7 +316,7 @@ class RequestPermissionActivityTest {
             scenario.onActivity {
                 it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                     .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 8 + round)
-                    .putExtra("applicationInfo", context.applicationInfo))
+                    .putExtra("applicationInfo", appInfo(10123)))
             }
         }
         awaitText(allow)
@@ -325,6 +331,7 @@ class RequestPermissionActivityTest {
         // Answering for one app while naming another is the spoof this prompt exists to prevent.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val scenario = launch()
@@ -347,7 +354,7 @@ class RequestPermissionActivityTest {
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 8)
-                .putExtra("applicationInfo", context.applicationInfo))
+                .putExtra("applicationInfo", appInfo(10123)))
         }
         scenario.onActivity { assertEquals(8, it.intent.getIntExtra("requestCode", -1)) }
         scenario.recreate()
@@ -367,7 +374,7 @@ class RequestPermissionActivityTest {
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
-                .putExtra("applicationInfo", context.applicationInfo))
+                .putExtra("applicationInfo", appInfo(10999)))
             assertEquals(7, it.intent.getIntExtra("requestCode", -1))
         }
     }
@@ -378,6 +385,31 @@ class RequestPermissionActivityTest {
         scenario.onActivity { it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)) }
         compose.onNodeWithText(context.packageName).assertIsDisplayed()
         assertTrue(gateway.replies.isEmpty())
+    }
+
+    @Test fun aRequestWhoseAppIsNotTheCallerClosesWithoutReply() {
+        val scenario = ActivityScenario.launch<RequestPermissionActivity>(
+            Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 7)
+                .putExtra("applicationInfo", appInfo(10999))
+        ).also { this.scenario = it }
+        awaitDestroyed(scenario)
+        assertTrue(gateway.replies.isEmpty())
+    }
+
+    @Test fun theLabelIsShownAsItsFirstLineWithoutDirectionControls() {
+        // A second line or a right-to-left override lets a label pass for another app's name. The
+        // entity is one the platform's HTML pass would turn back into an override.
+        val spoof = ApplicationInfo(appInfo(10123)).apply { nonLocalizedLabel = "\u202EGood&#x202E; app\nis Porter itself" }
+        ActivityScenario.launch<RequestPermissionActivity>(
+            Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 7)
+                .putExtra("applicationInfo", spoof)
+        ).also { scenario = it }
+        awaitText(allow)
+        compose.onNodeWithText("Good app").assertIsDisplayed()
+        compose.onAllNodesWithText("is Porter itself", substring = true).assertCountEquals(0)
+        compose.onAllNodesWithText("\u202E", substring = true).assertCountEquals(0)
     }
 
     @Test fun requestWithoutCallerIdentityClosesWithoutReply() {

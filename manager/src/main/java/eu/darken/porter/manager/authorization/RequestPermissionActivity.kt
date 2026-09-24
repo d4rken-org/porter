@@ -2,6 +2,7 @@ package eu.darken.porter.manager.authorization
 
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.text.TextUtils
@@ -222,8 +223,20 @@ class RequestPermissionActivity : ComposeActivity() {
         return PermissionRequest(uid, pid, saved.getInt(SAVED_CODE, -1), ai, labelOf(ai))
     }
 
-    private fun labelOf(ai: ApplicationInfo) =
-        runCatching { ai.loadLabel(packageManager).toString() }.getOrDefault(ai.packageName)
+    private fun labelOf(ai: ApplicationInfo): String {
+        val label = runCatching {
+            val line = safeLabel(ai.loadLabel(packageManager))
+            // The platform's pass reads the label as HTML, which joins lines rather than cutting at
+            // the first and turns entities such as &#x202E; back into direction controls, so
+            // safeLabel runs on both sides of it.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                safeLabel(TextUtils.makeSafeForPresentation(line, MAX_LABEL_LENGTH, 0f, TextUtils.SAFE_STRING_FLAG_TRIM or TextUtils.SAFE_STRING_FLAG_FIRST_LINE))
+            } else {
+                line
+            }
+        }.getOrNull()
+        return if (label.isNullOrEmpty()) ai.packageName else label
+    }
 
     internal companion object {
         private const val SAVED_UID = "asked.uid"
@@ -245,6 +258,10 @@ class RequestPermissionActivity : ComposeActivity() {
         val code = intent.getIntExtra("requestCode", -1)
         val ai = intent.getParcelableExtra<ApplicationInfo>("applicationInfo")
         if (uid == -1 || pid == -1 || ai == null) return null
+        if (ai.uid != uid) {
+            LOGGER.w("Ignoring a request from uid %d that names %s of uid %d", uid, ai.packageName, ai.uid)
+            return null
+        }
         return PermissionRequest(uid, pid, code, ai, labelOf(ai))
     }
 }
