@@ -45,7 +45,7 @@ class PorterManagerProvider : PorterApiProvider() {
                                     reply.putBinder(PorterProtocol.DELIVERY_EXTRA_BINDER, ServerBinder.require())
                                     reply
                                 } catch (e: Throwable) {
-                                    LOGGER.e(e, "attachUserService $token")
+                                    LOGGER.e(e, "attachUserService")
                                     null
                                 }
                             }
