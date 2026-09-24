@@ -2,6 +2,7 @@ package eu.darken.porter.privileged
 
 import android.content.pm.PackageInfo
 import android.util.ArrayMap
+import eu.darken.porter.privileged.util.Android17Compat
 import eu.darken.porter.privileged.util.PackageIdentity
 import eu.darken.porter.starter.ServiceStarter
 import java.io.File
@@ -9,7 +10,10 @@ import rikka.shizuku.server.UserServiceManager
 import rikka.shizuku.server.UserServiceRecord
 import rikka.shizuku.server.util.UserHandleCompat
 
-class ShizukuUserServiceManager : UserServiceManager() {
+class ShizukuUserServiceManager(
+    /** The manager APK a host is started from, given the installation the server started with. */
+    private val managerApk: (baseline: PackageIdentity.Identity) -> String = { verifiedManagerApk(it) },
+) : UserServiceManager() {
 
     /**
      * The identity each live record was created for. Membership is the liveness test, and nothing is
@@ -51,15 +55,17 @@ class ShizukuUserServiceManager : UserServiceManager() {
         debug: Boolean,
     ): String {
         if (accessPaused) throw SecurityException("App access is paused")
+        val identity = synchronized(this) { hostIdentities[record] }
+            ?: throw SecurityException("No recorded identity for " + packageName)
         var appProcess = "/system/bin/app_process"
         if (use32Bits && File("/system/bin/app_process32").exists()) {
             appProcess = "/system/bin/app_process32"
         }
         return ServiceStarter.commandForUserService(
             appProcess,
-            PorterServer.getManagerApplicationInfo()!!.sourceDir,
+            managerApk(reconciler.managerBaseline),
             PorterServer.MANAGER_APPLICATION_ID,
-            token, packageName, classname, processNameSuffix, callingUid, debug,
+            token, packageName, classname, processNameSuffix, callingUid, identity.signerDigests, debug,
         )
     }
 
@@ -124,5 +130,23 @@ class ShizukuUserServiceManager : UserServiceManager() {
         if (!hostIdentities.containsKey(record)) return false
         record.removeSelf()
         return true
+    }
+
+    companion object {
+
+        /**
+         * The manager's APK, checked against [baseline] first. The reconciler notices a replaced
+         * manager only on its next scan, and the host runs this APK's code as the server's uid.
+         */
+        internal fun verifiedManagerApk(baseline: PackageIdentity.Identity): String {
+            val info = Android17Compat.getPackageInfoOrThrow(
+                PorterServer.MANAGER_APPLICATION_ID, PackageIdentity.lookupFlags(), PorterServer.MANAGER_USER_ID,
+            )
+            val current = PackageIdentity.classify(info, PorterServer.MANAGER_USER_ID).observed
+            if (!baseline.matches(current)) {
+                throw SecurityException("The manager is not the installation the server started with")
+            }
+            return info!!.applicationInfo!!.sourceDir
+        }
     }
 }
