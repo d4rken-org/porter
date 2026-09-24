@@ -122,7 +122,7 @@ internal fun HomeCard(title: String, icon: Painter, onClick: (() -> Unit)? = nul
                 if (onClick != null) Icon(Icons.AutoMirrored.TwoTone.KeyboardArrowRight, null,
                     Modifier.size(18.dp).align(Alignment.Top), MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            content()
+            ProvideTextStyle(MaterialTheme.typography.bodyMedium) { content() }
         }
     }
 }
