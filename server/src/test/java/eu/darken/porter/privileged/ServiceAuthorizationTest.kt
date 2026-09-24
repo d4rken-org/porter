@@ -812,7 +812,7 @@ class ServiceAuthorizationTest {
                     assertEquals(0L, logging.readLong())
                     logging.recycle()
 
-                    `when`(userServices.isUserServiceTokenLive("token")).thenReturn(true)
+                    `when`(userServices.claimUserServiceLaunch(eq("token"), anyInt(), anyInt())).thenReturn(true)
                     val launch = porterTransact(UserServiceLaunch.TRANSACTION) { it.writeString("token") }
                     assertEquals(1, launch.readInt())
                     launch.recycle()
