@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Indietro</string>
-    <string name="porter_local_network_permission">Consenti l’accesso alla rete locale affinché Porter possa trovare il servizio di debug wireless di Android e connettersi.</string>
-    <string name="porter_pairing_dialog_instructions">Apri Debug wireless nelle Opzioni sviluppatore di Android e scegli Accoppia dispositivo con codice di accoppiamento. Inserisci qui la porta e il codice di accoppiamento.</string>
-    <string name="porter_permission_detail">Porter eseguirà comandi sul tuo dispositivo per questa app, con gli stessi privilegi di Porter. Consenti solo le app di cui ti fidi.</string>
-    <string name="porter_permission_waiting">In attesa di Porter…</string>
-</resources>

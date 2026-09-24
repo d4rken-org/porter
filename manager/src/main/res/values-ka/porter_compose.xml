@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">უკან დაბრუნება</string>
-    <string name="porter_local_network_permission">დაუშვით წვდომა თქვენს ლოკალურ ქსელზე, რომ Porter-მა შეძლოს Android-ის უსადენო გამართვის სერვისის პოვნა და მასთან დაკავშირება.</string>
-    <string name="porter_pairing_dialog_instructions">Android-ის „დეველოპერთა პარამეტრებში“ გახსენით „უსადენო გამართვა“ და აირჩიეთ „მოწყობილობის დაწყვილება დაწყვილების კოდით“. აქ შეიყვანეთ პორტი და დაწყვილების კოდი.</string>
-    <string name="porter_permission_detail">Porter ამ აპისთვის თქვენს მოწყობილობაზე ბრძანებებს შეასრულებს იმავე პრივილეგიებით, რაც თავად Porter-ს აქვს. დაუშვით მხოლოდ სანდო აპები.</string>
-    <string name="porter_permission_waiting">Porter-ის მოლოდინი…</string>
-</resources>

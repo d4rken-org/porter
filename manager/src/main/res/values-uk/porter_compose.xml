@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Назад</string>
-    <string name="porter_local_network_permission">Дозвольте доступ до локальної мережі, щоб Porter міг знайти службу бездротового налагодження Android і підключитися до неї.</string>
-    <string name="porter_pairing_dialog_instructions">Відкрийте «Налагодження через Wi-Fi» у параметрах розробника Android і виберіть «Підключати пристрій за допомогою коду підключення». Введіть тут порт і код сполучення.</string>
-    <string name="porter_permission_detail">Porter виконуватиме команди на вашому пристрої для цього додатка з тими самими правами, що й сам Porter. Дозволяйте доступ лише додаткам, яким довіряєте.</string>
-    <string name="porter_permission_waiting">Очікування Porter…</string>
-</resources>

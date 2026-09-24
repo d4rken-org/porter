@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">返回</string>
-    <string name="porter_local_network_permission">允許存取您的區域網路，讓 Porter 能尋找並連線至 Android 的無線偵錯服務。</string>
-    <string name="porter_pairing_dialog_instructions">在 Android 的開發人員選項中開啟「無線偵錯」，然後選擇「使用配對碼配對裝置」。在此輸入通訊埠和配對碼。</string>
-    <string name="porter_permission_detail">Porter 將以與自身相同的權限，為此應用程式在您的裝置上執行指令。請只允許您信任的應用程式。</string>
-    <string name="porter_permission_waiting">正在等待 Porter…</string>
-</resources>

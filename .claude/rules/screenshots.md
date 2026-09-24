@@ -84,7 +84,7 @@ load-bearing.
 `PorterTheme(dark = true)` selects the Material colour scheme and nothing else. `colorResource`
 lookups still resolve against the render **configuration**: `ServiceStatusCard` tints the status
 icon through `colorResource(R.color.porter_status_running)`, which is `#146C2E` in
-`values/porter_status.xml` and `#8DDAA2` in `values-night/porter_status.xml`. Without
+`values/colors.xml` and `#8DDAA2` in `values-night/colors.xml`. Without
 `UI_MODE_NIGHT_YES` a dark shot paints the light-surface green on a dark card, a combination the app
 never produces, because `PorterApplication` flips the resource configuration and the theme together
 through `AppCompatDelegate.setDefaultNightMode`.

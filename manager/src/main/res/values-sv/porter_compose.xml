@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Navigera tillbaka</string>
-    <string name="porter_local_network_permission">Tillåt åtkomst till ditt lokala nätverk så att Porter kan hitta och ansluta till Androids tjänst för trådlös felsökning.</string>
-    <string name="porter_pairing_dialog_instructions">Öppna Trådlös felsökning i Androids utvecklaralternativ och välj Parkoppla enhet med parkopplingskod. Ange porten och parkopplingskoden här.</string>
-    <string name="porter_permission_detail">Porter kör kommandon på din enhet åt den här appen, med samma behörigheter som Porter själv har. Tillåt bara appar som du litar på.</string>
-    <string name="porter_permission_waiting">Väntar på Porter…</string>
-</resources>

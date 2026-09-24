@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Geri qayıdın</string>
-    <string name="porter_local_network_permission">Porter-in Android-in simsiz sazlama xidmətini tapıb ona qoşula bilməsi üçün yerli şəbəkənizə girişə icazə verin.</string>
-    <string name="porter_pairing_dialog_instructions">Android-in Tərtibatçı seçimlərində “Simsiz sazlama”nı açın və “Cihazı cütləşdirmə kodu ilə cütləşdirin” seçin. Portu və cütləşdirmə kodunu burada daxil edin.</string>
-    <string name="porter_permission_detail">Porter bu tətbiq üçün cihazınızda Porter-in özü ilə eyni imtiyazlarla əmrlər işlədəcək. Yalnız etibar etdiyiniz tətbiqlərə icazə verin.</string>
-    <string name="porter_permission_waiting">Porter gözlənilir…</string>
-</resources>

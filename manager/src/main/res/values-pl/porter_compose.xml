@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Wstecz</string>
-    <string name="porter_local_network_permission">Zezwól na dostęp do sieci lokalnej, aby umożliwić aplikacji Porter znalezienie usługi debugowania bezprzewodowego Androida i połączenie się z nią.</string>
-    <string name="porter_pairing_dialog_instructions">Otwórz Debugowanie bezprzewodowe w opcjach programistycznych Androida i wybierz Sparuj urządzenie przy użyciu kodu parowania. Wpisz tutaj port i kod parowania.</string>
-    <string name="porter_permission_detail">Porter będzie wykonywać polecenia na urządzeniu dla tej aplikacji z własnymi uprawnieniami. Zezwalaj tylko zaufanym aplikacjom.</string>
-    <string name="porter_permission_waiting">Oczekiwanie na Porter…</string>
-</resources>

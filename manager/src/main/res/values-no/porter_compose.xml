@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Gå tilbake</string>
-    <string name="porter_local_network_permission">Tillat tilgang til det lokale nettverket ditt slik at Porter kan finne og koble til Androids tjeneste for trådløs feilsøking.</string>
-    <string name="porter_pairing_dialog_instructions">Åpne Trådløs feilsøking i Androids utvikleralternativer og velg Koble til enheten med tilkoblingskode. Skriv inn porten og paringskoden her.</string>
-    <string name="porter_permission_detail">Porter kjører kommandoer på enheten din for denne appen, med de samme rettighetene som Porter selv har. Tillat bare apper du stoler på.</string>
-    <string name="porter_permission_waiting">Venter på Porter…</string>
-</resources>

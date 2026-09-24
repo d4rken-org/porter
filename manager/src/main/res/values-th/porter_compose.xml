@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">ย้อนกลับ</string>
-    <string name="porter_local_network_permission">อนุญาตให้เข้าถึงเครือข่ายภายใน เพื่อให้ Porter ค้นหาและเชื่อมต่อกับบริการการแก้ไขข้อบกพร่องผ่าน Wi-Fi ของ Android ได้</string>
-    <string name="porter_pairing_dialog_instructions">เปิด “การแก้ไขข้อบกพร่องผ่าน Wi-Fi” ใน “ตัวเลือกสำหรับนักพัฒนาแอป” ของ Android แล้วเลือก “จับคู่อุปกรณ์ด้วยรหัสการจับคู่” จากนั้นป้อนพอร์ตและรหัสการจับคู่ที่นี่</string>
-    <string name="porter_permission_detail">Porter จะเรียกใช้คำสั่งบนอุปกรณ์ของคุณให้แอปนี้ ด้วยสิทธิ์ระดับเดียวกับที่ Porter มี โปรดอนุญาตเฉพาะแอปที่คุณเชื่อถือเท่านั้น</string>
-    <string name="porter_permission_waiting">กำลังรอ Porter…</string>
-</resources>
