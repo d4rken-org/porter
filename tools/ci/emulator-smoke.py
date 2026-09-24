@@ -55,7 +55,7 @@ CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence
          "server-crash-recovery", "root-server", "decisions-across-start-modes",
          "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
          "foreign-signer-peeks", "foreign-signer-binds", "foreign-signer-never-binds",
-         "non-daemon-control",
+         "non-daemon-control", "daemon-revoked-in-settings",
          "manager-stopped-then-uninstalled", "manager-upgraded-then-uninstalled",
          # Last: it creates and destroys an Android user, and the framework finishes tearing that
          # down after the case has returned.
@@ -64,6 +64,9 @@ CASES = ("setup", "standalone", "debug-recording", "compatibility", "coexistence
 # plus the confirmation grace. The manager lane never backs off.
 HOST_SCAN_TIMEOUT = 360
 MANAGER_SCAN_TIMEOUT = 60
+# Without a permission observer the server re-checks granted apps every 15s, and a removed
+# user-service record is killed 3s after that.
+PERMISSION_POLL_TIMEOUT = 45
 # Removing an Android user returns before the user list reflects it.
 USER_REMOVAL_TIMEOUT = 120
 # am reports the target user as soon as a switch is queued, so a wait on that report returning is
@@ -1374,6 +1377,18 @@ class Smoke:
                        lambda: not self.pid(NATIVE + ":porter-probe"))
             return {"service_pid": service_pid}
         self.case("non-daemon-control", non_daemon_control, restore=("grants",))
+
+        def daemon_revoked_in_settings():
+            daemon_pid = self.authorized_daemon()
+            # What revoking the permission in Android's settings does. Killing the app leaves a
+            # daemon running as shell; only the server's own reconciliation ends it, pushed by the
+            # permission observer where the platform lets the shell register one and by the
+            # server's polling where it does not.
+            self.shell("pm", "revoke", NATIVE, PERMISSION)
+            self.until("a settings revocation terminates the daemon",
+                       lambda: not self.pid(NATIVE + ":porter-probe"), timeout=PERMISSION_POLL_TIMEOUT)
+            return {"daemon_pid": daemon_pid}
+        self.case("daemon-revoked-in-settings", daemon_revoked_in_settings, restore=("grants",))
 
         def manager_stopped_then_uninstalled():
             server_pid = self.pid("porter_server")

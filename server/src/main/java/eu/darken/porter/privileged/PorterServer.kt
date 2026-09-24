@@ -313,6 +313,20 @@ class PorterServer internal constructor(
         }
     }
 
+    /**
+     * Where the platform will not tell the shell about permission changes (a platform that denies it
+     * OBSERVE_GRANT_REVOKE_PERMISSIONS), the server looks for them itself, so a revocation in
+     * Android's settings still ends the user services a grant allowed, daemons included.
+     */
+    internal fun pollRuntimePermissions(intervalMillis: Long = PERMISSION_POLL_MILLIS) {
+        mainHandler.postDelayed(object : Runnable {
+            override fun run() {
+                for (uid in configManager.allowedUids()) reconcileRuntimePermission(uid)
+                mainHandler.postDelayed(this, intervalMillis)
+            }
+        }, intervalMillis)
+    }
+
     private fun setRuntimePermissionsForUid(uid: Int, allowed: Boolean) {
         val userId = UserHandleCompat.getUserId(uid)
         val legacy = Compatibility.isAvailable()
@@ -612,6 +626,9 @@ class PorterServer internal constructor(
         /** The Android user the manager is the manager in. */
         const val MANAGER_USER_ID: Int = 0
 
+        /** How often granted apps are re-checked where no permission observer can be registered. */
+        const val PERMISSION_POLL_MILLIS = 15_000L
+
         /** How long an answer to a prompt the server started is accepted for. */
         const val PROMPT_ANSWER_WINDOW_MILLIS = 5 * 60 * 1000L
 
@@ -725,9 +742,11 @@ class PorterServer internal constructor(
             try {
                 PermissionObserver.register { uid -> service.mainHandler.post { service.reconcileRuntimePermission(uid) } }
             } catch (e: ReflectiveOperationException) {
-                LOGGER.w(e, "Permission observer unavailable; reconciling at startup and client attach")
+                LOGGER.w(e, "Permission observer unavailable; polling granted apps every %d s", PERMISSION_POLL_MILLIS / 1000)
+                service.pollRuntimePermissions()
             } catch (e: RuntimeException) {
-                LOGGER.w(e, "Permission observer unavailable; reconciling at startup and client attach")
+                LOGGER.w(e, "Permission observer unavailable; polling granted apps every %d s", PERMISSION_POLL_MILLIS / 1000)
+                service.pollRuntimePermissions()
             }
 
             service.mainHandler.post {
