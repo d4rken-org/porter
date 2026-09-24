@@ -51,6 +51,8 @@ class RequestPermissionActivityTest {
             .putExtra("applicationInfo", context.applicationInfo)
     ).also { scenario = it }
     private fun awaitText(text: String) = compose.waitUntil(5_000) { compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty() }
+    /** Lets the grace run out that follows the buttons appearing or the prompt changing app. */
+    private fun pastGrace() = ShadowSystemClock.advanceBy(Duration.ofMillis(RequestPermissionActivity.SUPERSEDE_GRACE))
     /** Robolectric retires a finished activity on the next idle; accept either the finishing flag or the destroyed state. */
     private fun awaitDestroyed(scenario: ActivityScenario<*>) = compose.waitUntil(5_000) {
         scenario.state == Lifecycle.State.DESTROYED || runCatching {
@@ -69,12 +71,27 @@ class RequestPermissionActivityTest {
         compose.onNodeWithText(allow).assertIsDisplayed()
     }
 
+    @Test fun aTapAsTheButtonsAppearDecidesNothing() {
+        // Another app can start the prompt just under a finger that is already coming down.
+        val scenario = launch()
+        awaitText(allow)
+        compose.onNodeWithText(allow).performClick()
+        assertTrue(gateway.replies.isEmpty())
+        assertEquals(Lifecycle.State.RESUMED, scenario.state)
+
+        pastGrace()
+        compose.onNodeWithText(allow).performClick()
+        awaitDestroyed(scenario)
+        assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = true, onetime = false)), gateway.replies)
+    }
+
     @Test fun promptSurvivesRecreationAndAllowRepliesOnceThenCloses() {
         val scenario = launch()
         awaitText(allow)
         scenario.recreate()
         awaitText(allow)
         assertTrue(gateway.replies.isEmpty())
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = true, onetime = false)), gateway.replies)
@@ -83,6 +100,7 @@ class RequestPermissionActivityTest {
     @Test fun denyRepliesOneTimeAndCloses() {
         val scenario = launch()
         awaitText(deny)
+        pastGrace()
         compose.onNodeWithText(deny).performClick()
         awaitDestroyed(scenario)
         assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)), gateway.replies)
@@ -133,6 +151,7 @@ class RequestPermissionActivityTest {
         assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)),
                      gateway.replies)
         awaitText(allow)
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(FakePermissionGateway.Reply(10123, 4242, 8, allowed = true, onetime = false),
@@ -148,6 +167,7 @@ class RequestPermissionActivityTest {
         }
         val scenario = launch()
         awaitText(allow)
+        pastGrace()
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
@@ -160,7 +180,7 @@ class RequestPermissionActivityTest {
                      gateway.replies)
         assertEquals(Lifecycle.State.RESUMED, scenario.state)
 
-        ShadowSystemClock.advanceBy(Duration.ofMillis(RequestPermissionActivity.SUPERSEDE_GRACE))
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(FakePermissionGateway.Reply(10999, 5151, 8, allowed = true, onetime = false),
@@ -212,6 +232,7 @@ class RequestPermissionActivityTest {
         }
         val scenario = launch()
         awaitText(allow)
+        pastGrace()
         scenario.onActivity {
             assertTrue("a prompt that never changed app answers normally", it.userIsAnswering())
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
@@ -293,6 +314,7 @@ class RequestPermissionActivityTest {
             }
         }
         awaitText(allow)
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(FakePermissionGateway.Reply(10123, 4242, 10, allowed = true, onetime = false),
@@ -330,6 +352,7 @@ class RequestPermissionActivityTest {
         scenario.onActivity { assertEquals(8, it.intent.getIntExtra("requestCode", -1)) }
         scenario.recreate()
         awaitText(allow)
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(FakePermissionGateway.Reply(10123, 4242, 8, allowed = true, onetime = false),
@@ -339,6 +362,7 @@ class RequestPermissionActivityTest {
     @Test fun aRefusedNewcomerIsNotWhatARecreationRestores() {
         val scenario = launch()
         awaitText(allow)
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
