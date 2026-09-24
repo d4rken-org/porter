@@ -6,8 +6,7 @@ import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.content.pm.SigningInfo
 import android.os.Build
-import java.security.MessageDigest
-import java.util.Collections
+import eu.darken.porter.common.util.SignerDigests
 import rikka.shizuku.server.util.UserHandleCompat
 
 /**
@@ -19,9 +18,6 @@ import rikka.shizuku.server.util.UserHandleCompat
  * privileged service on that reading kills it on the first transient failure.
  */
 object PackageIdentity {
-
-    private const val DIGEST = "SHA-256"
-    private val HEX = "0123456789abcdef".toCharArray()
 
     enum class State { PRESENT, ABSENT, LOOKUP_FAILED }
 
@@ -80,7 +76,7 @@ object PackageIdentity {
             val history = observed.signingHistory
             if (observed.multipleSigners || history == null) return false
             for (past in history) {
-                if (signerDigests.contains(digestOf(past))) return true
+                if (signerDigests.contains(SignerDigests.of(past))) return true
             }
             return false
         }
@@ -94,14 +90,7 @@ object PackageIdentity {
      * by the per-user installed bit, which a hidden package keeps and an `uninstall -k`
      * residue does not.
      */
-    @Suppress("DEPRECATION")
-    fun lookupFlags(): Long {
-        val flags = PackageManager.MATCH_UNINSTALLED_PACKAGES.toLong()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            return flags or PackageManager.GET_SIGNING_CERTIFICATES.toLong()
-        }
-        return flags or PackageManager.GET_SIGNATURES.toLong()
-    }
+    fun lookupFlags(): Long = PackageManager.MATCH_UNINSTALLED_PACKAGES.toLong() or SignerDigests.lookupFlags()
 
     fun of(packageName: String, userId: Int): Result {
         val packageInfo: PackageInfo?
@@ -132,21 +121,6 @@ object PackageIdentity {
         return Result.present(observed)
     }
 
-    /**
-     * The signers of a [PackageInfo] already fetched with [lookupFlags], or null when
-     * the answer carries none. Both readers share it, so neither has to supply a user id to learn
-     * who signed an APK.
-     */
-    @Suppress("DEPRECATION")
-    private fun signerDigestsOf(packageInfo: PackageInfo): Set<String>? {
-        val signingInfo = signingInfoOf(packageInfo)
-        val digests = if (signingInfo != null)
-            digestsOf(signingInfo.apkContentsSigners)
-        else
-            digestsOf(packageInfo.signatures)
-        return if (digests.isEmpty()) null else digests
-    }
-
     /** Null below API 28, where the lineage this carries does not exist. */
     private fun signingInfoOf(packageInfo: PackageInfo): SigningInfo? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) packageInfo.signingInfo else null
@@ -154,7 +128,7 @@ object PackageIdentity {
     /** Reads an identity out of a [PackageInfo] already fetched with [lookupFlags]. */
     fun observe(packageInfo: PackageInfo?, userId: Int): Observed? {
         val applicationInfo = packageInfo?.applicationInfo ?: return null
-        val digests = signerDigestsOf(packageInfo) ?: return null
+        val digests = SignerDigests.of(packageInfo) ?: return null
         val appId = UserHandleCompat.getAppId(applicationInfo.uid)
 
         val signingInfo = signingInfoOf(packageInfo)
@@ -175,33 +149,8 @@ object PackageIdentity {
      */
     fun identityOf(packageInfo: PackageInfo?): Identity? {
         val applicationInfo = packageInfo?.applicationInfo ?: return null
-        val digests = signerDigestsOf(packageInfo) ?: return null
+        val digests = SignerDigests.of(packageInfo) ?: return null
         return Identity(packageInfo.packageName, UserHandleCompat.getAppId(applicationInfo.uid), digests)
-    }
-
-    private fun digestsOf(signatures: Array<Signature>?): Set<String> {
-        if (signatures == null || signatures.isEmpty()) return emptySet()
-        val digests = LinkedHashSet<String>(signatures.size)
-        for (signature in signatures) {
-            val digest = digestOf(signature)
-            if (digest != null) digests.add(digest)
-        }
-        return Collections.unmodifiableSet(digests)
-    }
-
-    private fun digestOf(signature: Signature?): String? {
-        if (signature == null) return null
-        try {
-            val hash = MessageDigest.getInstance(DIGEST).digest(signature.toByteArray())
-            val out = CharArray(hash.size * 2)
-            for (i in hash.indices) {
-                out[i * 2] = HEX[(hash[i].toInt() shr 4) and 0xf]
-                out[i * 2 + 1] = HEX[hash[i].toInt() and 0xf]
-            }
-            return String(out)
-        } catch (tr: Throwable) {
-            return null
-        }
     }
 
     /** Whether two users answered with the same installation, which they must for a stable scan. */
