@@ -90,14 +90,12 @@ object PorterShellLoader {
             System.err.println("broadcastIntent fails on Android 8.0 or 8.1, fallback to startActivity")
             System.err.flush()
 
-            val activityIntent = Intent.createChooser(
-                Intent("eu.darken.porter.intent.action.REQUEST_BINDER")
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
-                    .putExtra("data", data),
-                "Request binder from Porter",
-            )
+            val activityIntent = Intent("eu.darken.porter.intent.action.REQUEST_BINDER")
+                .setPackage(managerApplicationId)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
+                .putExtra("data", data)
 
             am.startActivityAsUser(null, callingPackage, activityIntent, null, null, null, 0, 0, null, null, Os.getuid() / 100000)
         }
