@@ -31,6 +31,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import eu.darken.porter.manager.Helps
+import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.ui.*
@@ -349,6 +350,9 @@ internal interface PermissionGateway {
     fun serviceStates(): Flow<PorterStateMachine.State>
     suspend fun canGrantPermissions(): Boolean
     fun dispatch(uid: Int, pid: Int, code: Int, allowed: Boolean, onetime: Boolean)
+
+    /** Records the user's own answer for [uid]; true when a refusal repeats an earlier one. */
+    fun noteAnswer(uid: Int, allowed: Boolean): Boolean
 }
 
 internal object PorterPermissionGateway : PermissionGateway {
@@ -359,6 +363,7 @@ internal object PorterPermissionGateway : PermissionGateway {
     }
     override fun dispatch(uid: Int, pid: Int, code: Int, allowed: Boolean, onetime: Boolean) =
         ServerBinder.manager().dispatchPermissionConfirmationResult(uid, pid, code, allowed, onetime)
+    override fun noteAnswer(uid: Int, allowed: Boolean) = PorterSettings.noteAnswer(uid, allowed)
 }
 
 class PermissionViewModel internal constructor(private val savedState: SavedStateHandle, private val gateway: PermissionGateway) : ViewModel() {
@@ -380,7 +385,7 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
                 val grantable = gateway.canGrantPermissions()
                 // A restored prompt is answerable before this check completes; a decision must not be undone by it.
                 if (grantable) { if (!gate.replied) savedState["stage"] = "ready" }
-                else reply(false, limited = true)
+                else reply(false, limited = true, byUser = false)
             } catch (e: TimeoutCancellationException) {
                 LOGGER.e(e, "Binder not received in 5s")
                 giveUp()
@@ -424,7 +429,7 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
      * process. The request owed an answer is whichever one [supersede] last adopted, which is why
      * this refuses rather than only finishing. One-time, because nothing here is the user deciding.
      */
-    private fun giveUp() = reply(false)
+    private fun giveUp() = reply(false, byUser = false)
 
     /** Dispatches for a request the user was never shown, so outside [gate] and its one decision. */
     private fun answer(uid: Int, pid: Int, code: Int, allowed: Boolean) {
@@ -432,16 +437,18 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
         catch (e: Exception) { LOGGER.e(e, "dispatchPermissionConfirmationResult") }
     }
 
-    fun reply(allowed: Boolean, limited: Boolean = false) {
+    /** [byUser] is false for the refusals the prompt gives on its own, which never count as the user's. */
+    fun reply(allowed: Boolean, limited: Boolean = false, byUser: Boolean = true) {
         gate.reply {
             savedState["replied"] = true
             // Kept because it outlives the prompt: a request from the same uid arriving after
             // this is covered by it, and a refusal instead would undo it.
             savedState["allowed"] = allowed
             savedState["stage"] = if (limited) "limited" else "finished"
-            // A denial is one-time: the user is asked again next time, "don't ask again" is
-            // Porter's own screen.
-            try { gateway.dispatch(uid, pid, code, allowed = allowed, onetime = !allowed) }
+            // A first denial is one-time, so the user is asked again next time; a repeated one is
+            // remembered, so an app cannot keep asking until a tap lands on Allow.
+            val repeated = byUser && gateway.noteAnswer(uid, allowed)
+            try { gateway.dispatch(uid, pid, code, allowed = allowed, onetime = !allowed && !repeated) }
             catch (e: Exception) { LOGGER.e(e, "dispatchPermissionConfirmationResult") }
         }
     }

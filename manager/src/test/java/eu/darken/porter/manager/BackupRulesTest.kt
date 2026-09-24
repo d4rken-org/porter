@@ -65,6 +65,10 @@ class BackupRulesTest {
     }
 
     /** What keeps the auth token off the wire is the file it lives in, not a per-key exclusion. */
+    @Test fun theRefusalsFileIsNeverBackedUp() {
+        assertTrue(allIncludes().none { it.endsWith("/${PorterSettings.REFUSALS_NAME}.xml") })
+    }
+
     @Test fun theSecretsFileIsNeverBackedUp() {
         assertTrue(allIncludes().none { it.endsWith("/${PorterSettings.SECRETS_NAME}.xml") })
     }
