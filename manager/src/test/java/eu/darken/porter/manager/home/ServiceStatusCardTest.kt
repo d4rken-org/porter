@@ -1,6 +1,7 @@
 package eu.darken.porter.manager.home
 
 import android.content.Context
+import androidx.compose.material.icons.twotone.Info
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.*
@@ -77,6 +78,18 @@ class ServiceStatusCardTest : ComposeTest() {
         composeTestRule.onNodeWithText(string(R.string.compat_setup_title), substring = true).performClick()
         assertEquals(1, opens)
         composeTestRule.onNodeWithText(string(R.string.compat_manage)).assertDoesNotExist()
+    }
+
+    @Test fun cardBodyTextDefaultsToBodyMedium() {
+        var expected = androidx.compose.ui.unit.TextUnit.Unspecified
+        composeTestRule.setContent { PorterTheme {
+            expected = androidx.compose.material3.MaterialTheme.typography.bodyMedium.fontSize
+            HomeCard("Title", androidx.compose.material.icons.Icons.TwoTone.Info) { androidx.compose.material3.Text("Body") }
+        } }
+        val layouts = mutableListOf<androidx.compose.ui.text.TextLayoutResult>()
+        composeTestRule.onNodeWithText("Body").fetchSemanticsNode()
+            .config[androidx.compose.ui.semantics.SemanticsActions.GetTextLayoutResult].action!!(layouts)
+        assertEquals(expected, layouts.single().layoutInput.style.fontSize)
     }
 
     @Test fun unavailableDiscoveryNeverClaimsZeroCompatibilityUsage() {
