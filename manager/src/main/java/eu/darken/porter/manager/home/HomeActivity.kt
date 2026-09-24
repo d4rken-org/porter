@@ -118,7 +118,8 @@ abstract class HomeActivity : ComposeActivity() {
         }
         HomeScreenContent(
             HomeUiState(statusUi, appsState, compatState, buildBadge, battery,
-                canStart = snapshot.canStart, primaryUser = snapshot.primaryUser, busy = snapshot.busy,
+                canStart = snapshot.canStart, primaryUser = snapshot.primaryUser, integratedCompatibility = BuildConfig.IS_FOSS,
+                busy = snapshot.busy,
                 wirelessAdbAvailable = wirelessAdbAvailable, tlsSupported = tlsSupported),
             HomeActions(
                 onOpenSettings = { startActivity(Intent(this@HomeActivity, SettingsActivity::class.java)) },

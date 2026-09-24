@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Verbindingsbesonderhede onbeskikbaar</string>
     <string name="porter_connection_never_recorded">Laas gekoppel: onbekend</string>
     <string name="porter_connection_last">Laas gekoppel: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d program vereis die versoenbaarheidsprogram</item>
-        <item quantity="other">%d programme vereis die versoenbaarheidsprogram</item>
-    </plurals>
     <string name="porter_compatibility_needed">Versoenbaarheidsprogram nodig</string>
     <string name="porter_get_compatibility">Kry versoenbaarheidsprogram</string>
     <plurals name="porter_compatibility_pending">

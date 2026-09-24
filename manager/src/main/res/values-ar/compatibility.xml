@@ -76,4 +76,17 @@
     <string name="compat_import_applied">تم الاستيراد: %1$d</string>
     <string name="compat_import_skipped">تم التخطي: %1$d</string>
     <string name="compat_import_skipped_explanation">يتم تخطي الاختيارات عندما يكون لدى Porter اختيار بالفعل أو عندما يكون التطبيق قد تغيّر.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">مثبّت</string>
+    <string name="compat_summary_missing">غير مثبّت</string>
+    <string name="compat_summary_conflict">تطبيق Shizuku آخر مثبّت</string>
+    <string name="compat_usage_none">غير مستخدم</string>
+    <plurals name="compat_needed_count">
+        <item quantity="zero">لا يحتاجه أي تطبيق (%d)</item>
+        <item quantity="one">يحتاجه تطبيق واحد (%d)</item>
+        <item quantity="two">يحتاجه تطبيقان (%d)</item>
+        <item quantity="few">يحتاجه %d تطبيقات</item>
+        <item quantity="many">يحتاجه %d تطبيقًا</item>
+        <item quantity="other">يحتاجه %d تطبيق</item>
+    </plurals>
 </resources>

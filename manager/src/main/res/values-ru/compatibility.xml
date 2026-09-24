@@ -74,4 +74,15 @@
     <string name="compat_import_applied">Импортировано: %1$d</string>
     <string name="compat_import_skipped">Пропущено: %1$d</string>
     <string name="compat_import_skipped_explanation">Настройки пропускаются, если в Porter уже есть настройка для приложения или приложение изменилось.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Установлено</string>
+    <string name="compat_summary_missing">Не установлено</string>
+    <string name="compat_summary_conflict">Установлено другое приложение Shizuku</string>
+    <string name="compat_usage_none">Не используется</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">Требуется %d приложению</item>
+        <item quantity="few">Требуется %d приложениям</item>
+        <item quantity="many">Требуется %d приложениям</item>
+        <item quantity="other">Требуется %d приложения</item>
+    </plurals>
 </resources>

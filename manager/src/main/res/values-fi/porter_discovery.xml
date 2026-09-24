@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Yhteyden tietoja ei ole saatavilla</string>
     <string name="porter_connection_never_recorded">Viimeksi yhdistetty: Tuntematon</string>
     <string name="porter_connection_last">Viimeksi yhdistetty: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d sovellus vaatii yhteensopivuussovelluksen</item>
-        <item quantity="other">%d sovellusta vaatii yhteensopivuussovelluksen</item>
-    </plurals>
     <string name="porter_compatibility_needed">Yhteensopivuussovellus tarvitaan</string>
     <string name="porter_get_compatibility">Hanki yhteensopivuussovellus</string>
     <plurals name="porter_compatibility_pending">

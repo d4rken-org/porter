@@ -72,4 +72,13 @@
     <string name="compat_import_applied">Importálva: %1$d</string>
     <string name="compat_import_skipped">Kihagyva: %1$d</string>
     <string name="compat_import_skipped_explanation">Egy döntés kimarad, ha a Porterben már van döntés az alkalmazáshoz, vagy ha az alkalmazás megváltozott.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Telepítve</string>
+    <string name="compat_summary_missing">Nincs telepítve</string>
+    <string name="compat_summary_conflict">Másik Shizuku-alkalmazás telepítve</string>
+    <string name="compat_usage_none">Nincs használatban</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">%d alkalmazás igényli</item>
+        <item quantity="other">%d alkalmazás igényli</item>
+    </plurals>
 </resources>

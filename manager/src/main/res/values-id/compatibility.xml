@@ -71,4 +71,12 @@
     <string name="compat_import_applied">Diimpor: %1$d</string>
     <string name="compat_import_skipped">Dilewati: %1$d</string>
     <string name="compat_import_skipped_explanation">Pilihan dilewati jika Porter sudah memiliki pilihan atau aplikasinya telah berubah.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Sudah diinstal</string>
+    <string name="compat_summary_missing">Belum diinstal</string>
+    <string name="compat_summary_conflict">Aplikasi Shizuku lain terinstal</string>
+    <string name="compat_usage_none">Tidak digunakan</string>
+    <plurals name="compat_needed_count">
+        <item quantity="other">Diperlukan oleh %d aplikasi</item>
+    </plurals>
 </resources>

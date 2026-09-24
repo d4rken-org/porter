@@ -73,4 +73,14 @@
     <string name="compat_import_applied">Importate: %1$d</string>
     <string name="compat_import_skipped">Omise: %1$d</string>
     <string name="compat_import_skipped_explanation">Opțiunile sunt omise când Porter are deja o opțiune sau aplicația s-a schimbat.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Instalată</string>
+    <string name="compat_summary_missing">Neinstalată</string>
+    <string name="compat_summary_conflict">Altă aplicație Shizuku instalată</string>
+    <string name="compat_usage_none">Nefolosită</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">Necesară pentru %d aplicație</item>
+        <item quantity="few">Necesară pentru %d aplicații</item>
+        <item quantity="other">Necesară pentru %d de aplicații</item>
+    </plurals>
 </resources>

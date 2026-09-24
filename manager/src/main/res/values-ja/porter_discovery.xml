@@ -10,9 +10,6 @@
     <string name="porter_connection_unknown">接続の詳細は利用できません</string>
     <string name="porter_connection_never_recorded">最終接続: 不明</string>
     <string name="porter_connection_last">最終接続: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="other">%d 個のアプリが互換アプリを必要としています</item>
-    </plurals>
     <string name="porter_compatibility_needed">互換アプリが必要です</string>
     <string name="porter_get_compatibility">互換アプリを入手</string>
     <plurals name="porter_compatibility_pending">

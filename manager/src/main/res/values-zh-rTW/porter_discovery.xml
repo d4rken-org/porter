@@ -10,9 +10,6 @@
     <string name="porter_connection_unknown">無法取得連線詳細資料</string>
     <string name="porter_connection_never_recorded">上次連線：不明</string>
     <string name="porter_connection_last">上次連線：%1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="other">%d 個應用程式需要相容應用程式</item>
-    </plurals>
     <string name="porter_compatibility_needed">需要相容應用程式</string>
     <string name="porter_get_compatibility">取得相容應用程式</string>
     <plurals name="porter_compatibility_pending">

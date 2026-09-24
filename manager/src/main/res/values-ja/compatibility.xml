@@ -71,4 +71,12 @@
     <string name="compat_import_applied">インポート済み: %1$d</string>
     <string name="compat_import_skipped">スキップ: %1$d</string>
     <string name="compat_import_skipped_explanation">Porterに既に設定がある場合や、アプリが変更されている場合はスキップされます。</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">インストール済み</string>
+    <string name="compat_summary_missing">未インストール</string>
+    <string name="compat_summary_conflict">別のShizukuアプリがインストール済み</string>
+    <string name="compat_usage_none">未使用</string>
+    <plurals name="compat_needed_count">
+        <item quantity="other">%d 個のアプリで必要</item>
+    </plurals>
 </resources>

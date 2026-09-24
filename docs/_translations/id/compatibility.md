@@ -37,7 +37,7 @@ Penggantian terintegrasi tersedia dari pengguna Android utama. Jika Shizuku terp
 
 APK pendamping tetap tersedia sebagai unduhan terpisah dari rilis yang sama. Untuk pemasangan manual, hentikan dan hapus Shizuku, pasang Porter Compatibility, lalu jalankan Porter. Gunakan penggantian terintegrasi Porter untuk memindahkan keputusan akses yang memenuhi syarat; membuka dialog penggantian saja tidak menyimpan impor. Pembatasan pemasangan perangkat juga dapat berlaku pada pemasang terintegrasi; tindakan **Manual** membuka pemasang Android.
 
-Setelah terpasang, layar beranda menampilkan versi aplikasi kompatibilitas dan berapa banyak aplikasi terpasang yang terhubung melaluinya. Ketuk kartunya untuk melihat detail, memasang ulang salinan yang disertakan, atau menghapusnya. Porter mencoba menghapus melalui layanannya terlebih dahulu, dan membuka pelepas pemasangan Android jika gagal. Menghapusnya mengganggu aplikasi yang membutuhkan dukungan kompatibilitas; aplikasi dengan dukungan Porter langsung tetap berjalan. Layar kompatibilitas memeriksa perubahan secara otomatis selama terbuka.
+Setelah terpasang, layar beranda menampilkan berapa banyak aplikasi terpasang yang terhubung melaluinya. Ketuk kartunya untuk melihat versinya, memasang ulang salinan yang disertakan, atau menghapusnya. Porter mencoba menghapus melalui layanannya terlebih dahulu, dan membuka pelepas pemasangan Android jika gagal. Menghapusnya mengganggu aplikasi yang membutuhkan dukungan kompatibilitas; aplikasi dengan dukungan Porter langsung tetap berjalan. Layar kompatibilitas memeriksa perubahan secara otomatis selama terbuka.
 ## Bisakah Porter dan Shizuku berjalan bersama?
 {: #can-porter-and-shizuku-run-together }
 

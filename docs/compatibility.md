@@ -34,7 +34,7 @@ Integrated replacement is available from the primary Android user. If Shizuku is
 
 The companion APK remains available as a separate download from the same release. For manual installation, stop and uninstall Shizuku, install Porter Compatibility, and start Porter. Use Porter's integrated replacement to transfer eligible access decisions; opening the replacement dialog alone does not save an import. Device installation restrictions can also apply to the integrated installer; the **Manual** action opens the Android installer.
 
-Once installed, the home screen shows the compatibility app version and how many installed apps connect through it. Tap its card to see details, reinstall the included copy, or uninstall it. Porter tries to uninstall through its service first and opens the Android uninstaller if that fails. Removing it interrupts apps that need compatibility support; direct Porter apps keep working. The compatibility screen checks for changes automatically while open.
+Once installed, the home screen shows how many installed apps connect through it. Tap its card to see its version, reinstall the included copy, or uninstall it. Porter tries to uninstall through its service first and opens the Android uninstaller if that fails. Removing it interrupts apps that need compatibility support; direct Porter apps keep working. The compatibility screen checks for changes automatically while open.
 
 ## Can Porter and Shizuku run together?
 

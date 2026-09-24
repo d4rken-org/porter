@@ -72,4 +72,13 @@
     <string name="compat_import_applied">İdxal edildi: %1$d</string>
     <string name="compat_import_skipped">Ötürüldü: %1$d</string>
     <string name="compat_import_skipped_explanation">Porter-də artıq seçim olduqda və ya tətbiq dəyişdikdə seçimlər ötürülür.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Quraşdırılıb</string>
+    <string name="compat_summary_missing">Quraşdırılmayıb</string>
+    <string name="compat_summary_conflict">Başqa Shizuku tətbiqi quraşdırılıb</string>
+    <string name="compat_usage_none">İstifadə olunmur</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">%d tətbiqə lazımdır</item>
+        <item quantity="other">%d tətbiqə lazımdır</item>
+    </plurals>
 </resources>

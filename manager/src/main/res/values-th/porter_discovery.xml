@@ -10,9 +10,6 @@
     <string name="porter_connection_unknown">ไม่มีรายละเอียดการเชื่อมต่อ</string>
     <string name="porter_connection_never_recorded">เชื่อมต่อล่าสุด: ไม่ทราบ</string>
     <string name="porter_connection_last">เชื่อมต่อล่าสุด: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="other">%d แอปต้องใช้แอปความเข้ากันได้</item>
-    </plurals>
     <string name="porter_compatibility_needed">ต้องใช้แอปความเข้ากันได้</string>
     <string name="porter_get_compatibility">รับแอปความเข้ากันได้</string>
     <plurals name="porter_compatibility_pending">

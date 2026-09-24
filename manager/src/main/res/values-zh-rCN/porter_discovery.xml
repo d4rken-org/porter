@@ -10,9 +10,6 @@
     <string name="porter_connection_unknown">连接详情不可用</string>
     <string name="porter_connection_never_recorded">上次连接：未知</string>
     <string name="porter_connection_last">上次连接：%1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="other">%d 个应用需要兼容应用</item>
-    </plurals>
     <string name="porter_compatibility_needed">需要兼容应用</string>
     <string name="porter_get_compatibility">获取兼容应用</string>
     <plurals name="porter_compatibility_pending">

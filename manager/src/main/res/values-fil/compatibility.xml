@@ -72,4 +72,13 @@
     <string name="compat_import_applied">Na-import: %1$d</string>
     <string name="compat_import_skipped">Nilaktawan: %1$d</string>
     <string name="compat_import_skipped_explanation">Nilalaktawan ang mga pinili kapag may pinili na ang Porter o nagbago na ang app.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Naka-install</string>
+    <string name="compat_summary_missing">Hindi naka-install</string>
+    <string name="compat_summary_conflict">May ibang Shizuku app na naka-install</string>
+    <string name="compat_usage_none">Hindi ginagamit</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">Kailangan ng %d app</item>
+        <item quantity="other">Kailangan ng %d na app</item>
+    </plurals>
 </resources>

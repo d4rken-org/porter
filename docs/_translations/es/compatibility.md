@@ -37,7 +37,7 @@ El reemplazo integrado está disponible desde el usuario principal de Android. S
 
 El APK del complemento sigue disponible como descarga independiente de la misma versión. Para la instalación manual, detén y desinstala Shizuku, instala Porter Compatibility e inicia Porter. Usa el reemplazo integrado de Porter para transferir las decisiones de acceso aptas; abrir el diálogo de reemplazo por sí solo no guarda ninguna importación. Las restricciones de instalación del dispositivo también pueden afectar al instalador integrado; la acción **Manual** abre el instalador de Android.
 
-Una vez instalado, la pantalla de inicio muestra la versión de la app de compatibilidad y cuántas apps instaladas se conectan a través de ella. Toca su tarjeta para ver detalles, reinstalar la copia incluida o desinstalarla. Porter intenta desinstalar primero mediante su servicio y abre el desinstalador de Android si eso falla. Quitarla interrumpe las apps que necesitan compatibilidad; las apps con soporte directo de Porter siguen funcionando. La pantalla de compatibilidad comprueba los cambios automáticamente mientras está abierta.
+Una vez instalado, la pantalla de inicio muestra cuántas apps instaladas se conectan a través de ella. Toca su tarjeta para ver su versión, reinstalar la copia incluida o desinstalarla. Porter intenta desinstalar primero mediante su servicio y abre el desinstalador de Android si eso falla. Quitarla interrumpe las apps que necesitan compatibilidad; las apps con soporte directo de Porter siguen funcionando. La pantalla de compatibilidad comprueba los cambios automáticamente mientras está abierta.
 ## ¿Pueden ejecutarse Porter y Shizuku a la vez?
 {: #can-porter-and-shizuku-run-together }
 

@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">இணைப்பு விவரங்கள் கிடைக்கவில்லை</string>
     <string name="porter_connection_never_recorded">கடைசி இணைப்பு: தெரியவில்லை</string>
     <string name="porter_connection_last">கடைசி இணைப்பு: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d பயன்பாட்டுக்கு இணக்கத்தன்மை பயன்பாடு தேவை</item>
-        <item quantity="other">%d பயன்பாடுகளுக்கு இணக்கத்தன்மை பயன்பாடு தேவை</item>
-    </plurals>
     <string name="porter_compatibility_needed">இணக்கத்தன்மை பயன்பாடு தேவை</string>
     <string name="porter_get_compatibility">இணக்கத்தன்மை பயன்பாட்டைப் பெறு</string>
     <plurals name="porter_compatibility_pending">

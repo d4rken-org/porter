@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">جزئیات اتصال در دسترس نیست</string>
     <string name="porter_connection_never_recorded">آخرین اتصال: نامشخص</string>
     <string name="porter_connection_last">آخرین اتصال: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d برنامه به برنامه سازگاری نیاز دارد</item>
-        <item quantity="other">%d برنامه به برنامه سازگاری نیاز دارند</item>
-    </plurals>
     <string name="porter_compatibility_needed">برنامه سازگاری لازم است</string>
     <string name="porter_get_compatibility">دریافت برنامه سازگاری</string>
     <plurals name="porter_compatibility_pending">

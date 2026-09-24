@@ -74,4 +74,15 @@
     <string name="compat_import_applied">Імпортовано: %1$d</string>
     <string name="compat_import_skipped">Пропущено: %1$d</string>
     <string name="compat_import_skipped_explanation">Налаштування пропускаються, якщо в Porter уже є налаштування для додатка або додаток змінився.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Встановлено</string>
+    <string name="compat_summary_missing">Не встановлено</string>
+    <string name="compat_summary_conflict">Встановлено інший додаток Shizuku</string>
+    <string name="compat_usage_none">Не використовується</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">Потрібен %d додатку</item>
+        <item quantity="few">Потрібен %d додаткам</item>
+        <item quantity="many">Потрібен %d додаткам</item>
+        <item quantity="other">Потрібен %d додатка</item>
+    </plurals>
 </resources>

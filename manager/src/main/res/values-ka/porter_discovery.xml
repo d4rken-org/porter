@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">კავშირის დეტალები მიუწვდომელია</string>
     <string name="porter_connection_never_recorded">ბოლო კავშირი: უცნობია</string>
     <string name="porter_connection_last">ბოლო კავშირი: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d აპს სჭირდება თავსებადობის აპი</item>
-        <item quantity="other">%d აპს სჭირდება თავსებადობის აპი</item>
-    </plurals>
     <string name="porter_compatibility_needed">საჭიროა თავსებადობის აპი</string>
     <string name="porter_get_compatibility">თავსებადობის აპის მიღება</string>
     <plurals name="porter_compatibility_pending">

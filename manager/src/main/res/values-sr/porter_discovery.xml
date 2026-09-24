@@ -10,11 +10,6 @@
     <string name="porter_connection_unknown">Детаљи о повезивању нису доступни</string>
     <string name="porter_connection_never_recorded">Последње повезивање: непознато</string>
     <string name="porter_connection_last">Последње повезивање: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d апликација захтева апликацију за компатибилност</item>
-        <item quantity="few">%d апликације захтевају апликацију за компатибилност</item>
-        <item quantity="other">%d апликација захтева апликацију за компатибилност</item>
-    </plurals>
     <string name="porter_compatibility_needed">Потребна је апликација за компатибилност</string>
     <string name="porter_get_compatibility">Преузми апликацију за компатибилност</string>
     <plurals name="porter_compatibility_pending">

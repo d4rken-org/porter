@@ -71,4 +71,12 @@
     <string name="compat_import_applied">นำเข้าแล้ว: %1$d</string>
     <string name="compat_import_skipped">ข้าม: %1$d</string>
     <string name="compat_import_skipped_explanation">ระบบจะข้ามตัวเลือกเมื่อ Porter มีตัวเลือกอยู่แล้ว หรือเมื่อแอปมีการเปลี่ยนแปลง</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">ติดตั้งแล้ว</string>
+    <string name="compat_summary_missing">ยังไม่ได้ติดตั้ง</string>
+    <string name="compat_summary_conflict">มีแอป Shizuku อื่นติดตั้งอยู่</string>
+    <string name="compat_usage_none">ไม่ได้ใช้งาน</string>
+    <plurals name="compat_needed_count">
+        <item quantity="other">จำเป็นสำหรับ %d แอป</item>
+    </plurals>
 </resources>

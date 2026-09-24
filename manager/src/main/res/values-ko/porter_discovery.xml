@@ -10,9 +10,6 @@
     <string name="porter_connection_unknown">연결 세부정보를 사용할 수 없음</string>
     <string name="porter_connection_never_recorded">마지막 연결: 알 수 없음</string>
     <string name="porter_connection_last">마지막 연결: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="other">%d개 앱에 호환 앱이 필요합니다</item>
-    </plurals>
     <string name="porter_compatibility_needed">호환 앱 필요</string>
     <string name="porter_get_compatibility">호환 앱 받기</string>
     <plurals name="porter_compatibility_pending">

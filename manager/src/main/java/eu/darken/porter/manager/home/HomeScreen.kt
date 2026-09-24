@@ -32,6 +32,7 @@ internal data class HomeUiState(
     val showBatteryCard: Boolean,
     val canStart: Boolean = false,
     val primaryUser: Boolean = true,
+    val integratedCompatibility: Boolean = true,
     val busy: Boolean = false,
     val wirelessAdbAvailable: Boolean = false,
     val tlsSupported: Boolean = false,
@@ -109,22 +110,31 @@ internal fun HomeScreenContent(state: HomeUiState, actions: HomeActions, modifie
                 }
             }
             if (compat.isCompanion) item {
-                InstalledCompatibilityCard(
-                    compatibilityVersionText(compat.installedVersionName, compat.installedVersionCode),
-                    compatibilityUsageText(running, apps),
-                    notice = when (compat.status) {
-                        CompatibilityRepository.Status.UPDATE -> stringResource(R.string.compat_status_update)
-                        CompatibilityRepository.Status.INVALID -> stringResource(R.string.compat_status_invalid)
-                        else -> null
-                    }, onDetails = actions.onOpenCompatibility)
-            } else if (countsAvailable && (apps.companionRequiredCount > 0 || apps.pendingCompanionCount > 0)) item {
-                CompatibilityCard(stringResource(when (compat.status) {
+                val usage = when {
+                    !discoveryAvailable -> null
+                    apps.companionCount == 0 -> stringResource(R.string.compat_usage_none)
+                    else -> resources.getQuantityString(R.plurals.compat_usage_count, apps.companionCount, apps.companionCount)
+                }
+                InstalledCompatibilityCard(compatibilitySummary(stringResource(when (compat.status) {
                     CompatibilityRepository.Status.UPDATE -> R.string.compat_status_update
-                    CompatibilityRepository.Status.CONFLICT -> R.string.compat_status_conflict
                     CompatibilityRepository.Status.INVALID -> R.string.compat_status_invalid
-                    else -> R.string.compat_card_description
-                }), onDownload = actions.onOpenCompatibility, affectedApps = resources.getQuantityString(
-                    R.plurals.porter_apps_need_companion, apps.companionRequiredCount, apps.companionRequiredCount))
+                    else -> R.string.compat_summary_installed
+                }), usage), attention = compat.status != CompatibilityRepository.Status.INSTALLED,
+                    onDetails = actions.onOpenCompatibility)
+            } else if (countsAvailable && (apps.companionRequiredCount > 0 || apps.pendingCompanionCount > 0)) item {
+                val conflict = compat.status == CompatibilityRepository.Status.CONFLICT
+                CompatibilityCard(compatibilitySummary(
+                    stringResource(if (conflict) R.string.compat_summary_conflict else R.string.compat_summary_missing),
+                    if (discoveryAvailable) resources.getQuantityString(R.plurals.compat_needed_count,
+                        apps.companionRequiredCount, apps.companionRequiredCount) else null),
+                    stringResource(when {
+                        !conflict -> R.string.compat_card_description
+                        !state.integratedCompatibility -> R.string.compat_other_build
+                        !state.primaryUser -> R.string.compat_primary_user
+                        compat.otherUsers -> R.string.compat_other_users
+                        else -> R.string.compat_conflict_description
+                    }),
+                    onDownload = actions.onOpenCompatibility)
             }
             if (state.showBatteryCard) item {
                 HomeCard(stringResource(R.string.porter_background_operation), Icons.TwoTone.Info,

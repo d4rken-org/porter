@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Hindi available ang mga detalye ng koneksyon</string>
     <string name="porter_connection_never_recorded">Huling nakakonekta: Hindi alam</string>
     <string name="porter_connection_last">Huling nakakonekta: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d app ang nangangailangan ng compatibility app</item>
-        <item quantity="other">%d na app ang nangangailangan ng compatibility app</item>
-    </plurals>
     <string name="porter_compatibility_needed">Kailangan ang compatibility app</string>
     <string name="porter_get_compatibility">Kunin ang compatibility app</string>
     <plurals name="porter_compatibility_pending">

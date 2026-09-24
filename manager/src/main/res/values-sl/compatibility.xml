@@ -74,4 +74,15 @@
     <string name="compat_import_applied">Uvoženo: %1$d</string>
     <string name="compat_import_skipped">Preskočeno: %1$d</string>
     <string name="compat_import_skipped_explanation">Izbire so preskočene, če ima Porter za aplikacijo že izbiro ali če se je aplikacija spremenila.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Nameščena</string>
+    <string name="compat_summary_missing">Ni nameščena</string>
+    <string name="compat_summary_conflict">Nameščena je druga aplikacija Shizuku</string>
+    <string name="compat_usage_none">Ni v uporabi</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">Potrebuje jo %d aplikacija</item>
+        <item quantity="two">Potrebujeta jo %d aplikaciji</item>
+        <item quantity="few">Potrebujejo jo %d aplikacije</item>
+        <item quantity="other">Potrebuje jo %d aplikacij</item>
+    </plurals>
 </resources>

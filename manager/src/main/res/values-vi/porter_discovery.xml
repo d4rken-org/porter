@@ -10,9 +10,6 @@
     <string name="porter_connection_unknown">Không có thông tin kết nối</string>
     <string name="porter_connection_never_recorded">Kết nối lần cuối: Không rõ</string>
     <string name="porter_connection_last">Kết nối lần cuối: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="other">%d ứng dụng cần ứng dụng tương thích</item>
-    </plurals>
     <string name="porter_compatibility_needed">Cần ứng dụng tương thích</string>
     <string name="porter_get_compatibility">Tải ứng dụng tương thích</string>
     <plurals name="porter_compatibility_pending">

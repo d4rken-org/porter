@@ -74,4 +74,15 @@
     <string name="compat_import_applied">Importováno: %1$d</string>
     <string name="compat_import_skipped">Přeskočeno: %1$d</string>
     <string name="compat_import_skipped_explanation">Volby se přeskakují, pokud už Porter volbu má nebo se aplikace změnila.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Nainstalována</string>
+    <string name="compat_summary_missing">Nenainstalována</string>
+    <string name="compat_summary_conflict">Nainstalována jiná aplikace Shizuku</string>
+    <string name="compat_usage_none">Nepoužívá se</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">Potřebuje ji %d aplikace</item>
+        <item quantity="few">Potřebují ji %d aplikace</item>
+        <item quantity="many">Potřebuje ji %d aplikace</item>
+        <item quantity="other">Potřebuje ji %d aplikací</item>
+    </plurals>
 </resources>

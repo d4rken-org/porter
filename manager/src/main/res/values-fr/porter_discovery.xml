@@ -10,11 +10,6 @@
     <string name="porter_connection_unknown">Détails de connexion indisponibles</string>
     <string name="porter_connection_never_recorded">Dernière connexion : inconnue</string>
     <string name="porter_connection_last">Dernière connexion : %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d application nécessite l\'application de compatibilité</item>
-        <item quantity="many">%d d\'applications nécessitent l\'application de compatibilité</item>
-        <item quantity="other">%d applications nécessitent l\'application de compatibilité</item>
-    </plurals>
     <string name="porter_compatibility_needed">Application de compatibilité requise</string>
     <string name="porter_get_compatibility">Obtenir l\'application de compatibilité</string>
     <plurals name="porter_compatibility_pending">

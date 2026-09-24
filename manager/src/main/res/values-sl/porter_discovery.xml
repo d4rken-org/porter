@@ -10,12 +10,6 @@
     <string name="porter_connection_unknown">Podrobnosti povezave niso na voljo</string>
     <string name="porter_connection_never_recorded">Zadnja povezava: neznano</string>
     <string name="porter_connection_last">Zadnja povezava: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d aplikacija zahteva aplikacijo za združljivost</item>
-        <item quantity="two">%d aplikaciji zahtevata aplikacijo za združljivost</item>
-        <item quantity="few">%d aplikacije zahtevajo aplikacijo za združljivost</item>
-        <item quantity="other">%d aplikacij zahteva aplikacijo za združljivost</item>
-    </plurals>
     <string name="porter_compatibility_needed">Potrebna je aplikacija za združljivost</string>
     <string name="porter_get_compatibility">Pridobi aplikacijo za združljivost</string>
     <plurals name="porter_compatibility_pending">

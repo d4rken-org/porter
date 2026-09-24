@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Qoşulma təfərrüatları mövcud deyil</string>
     <string name="porter_connection_never_recorded">Son qoşulma: Naməlum</string>
     <string name="porter_connection_last">Son qoşulma: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d tətbiq uyğunluq tətbiqi tələb edir</item>
-        <item quantity="other">%d tətbiq uyğunluq tətbiqi tələb edir</item>
-    </plurals>
     <string name="porter_compatibility_needed">Uyğunluq tətbiqi lazımdır</string>
     <string name="porter_get_compatibility">Uyğunluq tətbiqini əldə edin</string>
     <plurals name="porter_compatibility_pending">

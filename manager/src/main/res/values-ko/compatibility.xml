@@ -71,4 +71,12 @@
     <string name="compat_import_applied">가져옴: %1$d</string>
     <string name="compat_import_skipped">건너뜀: %1$d</string>
     <string name="compat_import_skipped_explanation">Porter에 이미 선택 사항이 있거나 앱이 변경된 경우 해당 선택 사항은 건너뜁니다.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">설치됨</string>
+    <string name="compat_summary_missing">설치되지 않음</string>
+    <string name="compat_summary_conflict">다른 Shizuku 앱이 설치됨</string>
+    <string name="compat_usage_none">사용되지 않음</string>
+    <plurals name="compat_needed_count">
+        <item quantity="other">%d개 앱에서 필요</item>
+    </plurals>
 </resources>

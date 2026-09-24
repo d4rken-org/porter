@@ -10,12 +10,6 @@
     <string name="porter_connection_unknown">Сведения о подключении недоступны</string>
     <string name="porter_connection_never_recorded">Последнее подключение: неизвестно</string>
     <string name="porter_connection_last">Последнее подключение: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d приложению требуется приложение совместимости</item>
-        <item quantity="few">%d приложениям требуется приложение совместимости</item>
-        <item quantity="many">%d приложениям требуется приложение совместимости</item>
-        <item quantity="other">%d приложениям требуется приложение совместимости</item>
-    </plurals>
     <string name="porter_compatibility_needed">Требуется приложение совместимости</string>
     <string name="porter_get_compatibility">Установить приложение совместимости</string>
     <plurals name="porter_compatibility_pending">

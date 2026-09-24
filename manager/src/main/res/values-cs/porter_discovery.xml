@@ -10,12 +10,6 @@
     <string name="porter_connection_unknown">Podrobnosti o připojení nejsou k dispozici</string>
     <string name="porter_connection_never_recorded">Naposledy připojeno: neznámo</string>
     <string name="porter_connection_last">Naposledy připojeno: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d aplikace vyžaduje aplikaci pro kompatibilitu</item>
-        <item quantity="few">%d aplikace vyžadují aplikaci pro kompatibilitu</item>
-        <item quantity="many">%d aplikace vyžaduje aplikaci pro kompatibilitu</item>
-        <item quantity="other">%d aplikací vyžaduje aplikaci pro kompatibilitu</item>
-    </plurals>
     <string name="porter_compatibility_needed">Je potřeba aplikace pro kompatibilitu</string>
     <string name="porter_get_compatibility">Získat aplikaci pro kompatibilitu</string>
     <plurals name="porter_compatibility_pending">

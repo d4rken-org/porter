@@ -63,18 +63,18 @@ class ServiceStatusCardTest : ComposeTest() {
     @Test fun compatibilityCardOpensItsScreenInBothVariants() {
         var opens = 0
         val description = "Access is waiting for the compatibility app"
-        composeTestRule.setContent { PorterTheme { CompatibilityCard(description) { opens++ } } }
+        composeTestRule.setContent { PorterTheme { CompatibilityCard("Not installed · Needed by 1 app", description) { opens++ } } }
+        composeTestRule.onNodeWithText("Not installed · Needed by 1 app").assertIsDisplayed()
         composeTestRule.onNodeWithText(description).assertIsDisplayed()
         val button = composeTestRule.onNodeWithText(string(R.string.compat_setup_title), substring = true)
         button.assertIsDisplayed().performClick()
         assertEquals(1, opens)
     }
 
-    @Test fun installedCompatibilityCardShowsUsageVersionAndOpensManagement() {
+    @Test fun installedCompatibilityCardShowsItsSummaryAndOpensManagement() {
         var opens = 0
-        composeTestRule.setContent { PorterTheme { InstalledCompatibilityCard("Version 1.1 (101010)", "Used by 2 apps") { opens++ } } }
-        composeTestRule.onNodeWithText("Used by 2 apps", substring = true).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Version 1.1 (101010)", substring = true).assertIsDisplayed()
+        composeTestRule.setContent { PorterTheme { InstalledCompatibilityCard("Installed · Used by 2 apps") { opens++ } } }
+        composeTestRule.onNodeWithText("Installed · Used by 2 apps").assertIsDisplayed()
         composeTestRule.onNodeWithText(string(R.string.compat_setup_title), substring = true).performClick()
         assertEquals(1, opens)
         composeTestRule.onNodeWithText(string(R.string.compat_manage)).assertDoesNotExist()

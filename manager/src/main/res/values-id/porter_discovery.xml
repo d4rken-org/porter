@@ -10,9 +10,6 @@
     <string name="porter_connection_unknown">Detail koneksi tidak tersedia</string>
     <string name="porter_connection_never_recorded">Terakhir terhubung: Tidak diketahui</string>
     <string name="porter_connection_last">Terakhir terhubung: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="other">%d aplikasi memerlukan aplikasi kompatibilitas</item>
-    </plurals>
     <string name="porter_compatibility_needed">Aplikasi kompatibilitas diperlukan</string>
     <string name="porter_get_compatibility">Dapatkan aplikasi kompatibilitas</string>
     <plurals name="porter_compatibility_pending">
