@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.darken.porter.common.DiscoveredApplication
@@ -81,22 +82,25 @@ internal fun ApplicationManagementList(
     val paused = state.effectiveAccessEnabled == false
     LazyColumn(modifier) {
         item {
-            SettingsSwitch(stringResource(R.string.porter_pause_access), Icons.TwoTone.Apps,
-                state.effectiveAccessEnabled == false, enabled = !state.loading && state.accessEnabled != null,
-                summary = stringResource(R.string.porter_pause_access_summary),
-                onCheckedChange = { paused -> onGlobalAccess(!paused) })
-        }
-        if (!state.loading && state.error == null && (state.accessEnabled == null || state.legacy)) item {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(listOfNotNull(
-                    if (state.accessEnabled == null) stringResource(R.string.porter_global_access_update) else null,
-                    if (state.legacy) stringResource(R.string.porter_discovery_update) else null,
-                ).joinToString("\n\n"))
-                TextButton(onClick = onViewService) { Text(stringResource(R.string.porter_view_service)) }
+            Card(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
+                SettingsSwitch(stringResource(R.string.porter_pause_access), Icons.TwoTone.Apps,
+                    state.effectiveAccessEnabled == false, enabled = !state.loading && state.accessEnabled != null,
+                    summary = stringResource(R.string.porter_pause_access_summary),
+                    onCheckedChange = { paused -> onGlobalAccess(!paused) })
+                val serviceNotice = !state.loading && state.error == null && (state.accessEnabled == null || state.legacy)
+                val notices = listOfNotNull(
+                    if (serviceNotice && state.accessEnabled == null) stringResource(R.string.porter_global_access_update) else null,
+                    if (serviceNotice && state.legacy) stringResource(R.string.porter_discovery_update) else null,
+                )
+                if (notices.isNotEmpty()) Column(Modifier.fillMaxWidth().padding(start = 56.dp, end = 16.dp, bottom = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(notices.joinToString("\n\n"), style = MaterialTheme.typography.bodyMedium)
+                    TextButton(onClick = onViewService, Modifier.align(Alignment.End)) { Text(stringResource(R.string.porter_view_service)) }
+                }
             }
         }
         if (state.failedUsers.isNotEmpty()) item { Text(stringResource(R.string.porter_discovery_partial), Modifier.padding(16.dp)) }
-        if (state.apps.isNotEmpty()) item { Text(stringResource(R.string.porter_connections_explanation), Modifier.padding(16.dp), style = MaterialTheme.typography.bodySmall) }
         if (state.loading) item { LinearProgressIndicator(Modifier.fillMaxWidth()) }
         if (!state.loading && state.apps.isEmpty()) item { Text(stringResource(R.string.home_app_management_empty), Modifier.padding(24.dp)) }
         items(state.apps, key = { "${it.uid}:${it.packageName}" }) { app ->
@@ -142,6 +146,10 @@ internal fun ApplicationManagementList(
                 }
                 Switch(state.isGranted(app), null, enabled = !state.loading && !paused && app.canToggle)
             }
+        }
+        if (state.apps.isNotEmpty()) item {
+            Text(stringResource(R.string.porter_connections_explanation), Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 16.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
