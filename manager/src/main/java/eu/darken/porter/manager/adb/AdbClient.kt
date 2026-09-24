@@ -5,6 +5,7 @@ import eu.darken.porter.common.util.BuildUtils
 import eu.darken.porter.manager.adb.AdbProtocol.ADB_AUTH_RSAPUBLICKEY
 import eu.darken.porter.manager.adb.AdbProtocol.ADB_AUTH_SIGNATURE
 import eu.darken.porter.manager.adb.AdbProtocol.ADB_AUTH_TOKEN
+import eu.darken.porter.manager.adb.AdbProtocol.ADB_AUTH_TOKEN_SIZE
 import eu.darken.porter.manager.adb.AdbProtocol.A_AUTH
 import eu.darken.porter.manager.adb.AdbProtocol.A_CLSE
 import eu.darken.porter.manager.adb.AdbProtocol.A_CNXN
@@ -28,7 +29,16 @@ import javax.net.ssl.SSLSocket
 
 private const val TAG = "AdbClient"
 
-class AdbClient(private val host: String, private val port: Int, private val key: AdbKey) : Closeable {
+/**
+ * @param requireTls set for a port found through wireless debugging's TLS service, whose adbd
+ * always upgrades to TLS. A plain challenge on such a port comes from something else.
+ */
+class AdbClient(
+    private val host: String,
+    private val port: Int,
+    private val key: AdbKey,
+    private val requireTls: Boolean,
+) : Closeable {
 
     private lateinit var socket: Socket
     private lateinit var plainInputStream: DataInputStream
@@ -80,7 +90,8 @@ class AdbClient(private val host: String, private val port: Int, private val key
                 throw AdbPairingRequiredException(e)
             }
         } else if (message.command == A_AUTH) {
-            if (message.command != A_AUTH && message.arg0 != ADB_AUTH_TOKEN) error("not A_AUTH ADB_AUTH_TOKEN")
+            if (requireTls) error("A_AUTH instead of A_STLS on a wireless debugging port")
+            if (message.arg0 != ADB_AUTH_TOKEN || message.data?.size != ADB_AUTH_TOKEN_SIZE) error("not A_AUTH ADB_AUTH_TOKEN")
             write(A_AUTH, ADB_AUTH_SIGNATURE, 0, key.sign(message.data))
 
             message = read()

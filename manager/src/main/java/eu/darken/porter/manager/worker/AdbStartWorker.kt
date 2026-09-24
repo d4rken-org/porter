@@ -63,7 +63,8 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
             Settings.Global.putInt(cr, Settings.Global.ADB_ENABLED, 1)
 
             // An adbd already listening on TCP (e.g. set up by a computer or another manager) is used as-is.
-            val port = EnvironmentUtils.getAdbTcpPort().takeIf { it > 0 } ?: callbackFlow {
+            val tcpPort = EnvironmentUtils.getAdbTcpPort().takeIf { it > 0 }
+            val port = tcpPort ?: callbackFlow {
                 // The TLS service this discovers is wireless debugging's, which arrived in Android 11.
                 // Earlier, discovery can only run into its timeout, so the attempt ends here the same way,
                 // after the same request to turn wireless debugging on.
@@ -169,7 +170,7 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
                 }
             }.first()
             
-            AdbStarter.startAdb(applicationContext, port)
+            AdbStarter.startAdb(applicationContext, port, requireTls = tcpPort == null)
             Starter.waitForBinder()
 
             val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

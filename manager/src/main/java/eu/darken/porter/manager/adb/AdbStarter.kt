@@ -14,7 +14,8 @@ import eu.darken.porter.manager.utils.PorterStateMachine
 private const val TAG = "AdbStarter"
 
 object AdbStarter {
-    suspend fun startAdb(context: Context, port: Int, log: ((String) -> Unit)? = null) {
+    /** [requireTls] is for a [port] found through wireless debugging's TLS service rather than `adb tcpip`. */
+    suspend fun startAdb(context: Context, port: Int, requireTls: Boolean, log: ((String) -> Unit)? = null) {
         suspend fun AdbClient.runCommand(cmd: String) {
             command(cmd) { log?.invoke(String(it)) }
         }
@@ -31,19 +32,19 @@ object AdbStarter {
 
             log?.invoke("Connecting on port $port...")
 
-            connectWithRetry(port, key).use { client ->
+            connectWithRetry(port, key, requireTls).use { client ->
                 log?.invoke("Successfully connected on port $port...\n")
                 client.runCommand("shell:${Starter.internalCommand}")
             }
         }
     }
 
-    private suspend fun connectWithRetry(port: Int, key: AdbKey): AdbClient {
+    private suspend fun connectWithRetry(port: Int, key: AdbKey, requireTls: Boolean): AdbClient {
         var delayTime = 0L
         val maxAttempts = 5
         for (attempt in 1..maxAttempts) {
             delay(delayTime)
-            val client = AdbClient("127.0.0.1", port, key)
+            val client = AdbClient("127.0.0.1", port, key, requireTls)
             try {
                 client.connect()
                 return client

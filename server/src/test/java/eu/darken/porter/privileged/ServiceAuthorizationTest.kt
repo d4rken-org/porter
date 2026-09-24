@@ -1,6 +1,7 @@
 package eu.darken.porter.privileged
 
 import android.app.Application
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -19,11 +20,13 @@ import eu.darken.porter.common.DiscoveredApplication
 import eu.darken.porter.common.GlobalAccess
 import eu.darken.porter.common.UserServiceLaunch
 import eu.darken.porter.common.util.OsUtils
+import eu.darken.porter.common.util.SignerDigests
 import eu.darken.porter.core.CallerExemption
 import eu.darken.porter.core.CallerIdentity
 import eu.darken.porter.core.ClientCallback
 import eu.darken.porter.endpoint.PorterClientCallback
 import eu.darken.porter.endpoint.PorterManagerEndpoint
+import eu.darken.porter.privileged.util.PackageIdentity
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.server.IPorterApplication
 import moe.shizuku.server.IShizukuApplication
@@ -45,6 +48,7 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.argThat
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.MockedStatic
 import org.mockito.Mockito.doAnswer
@@ -60,6 +64,7 @@ import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowBinder
+import org.robolectric.shadows.ShadowSystemClock
 import org.robolectric.util.ReflectionHelpers
 import rikka.hidden.compat.ActivityManagerApis
 import rikka.hidden.compat.PackageManagerApis
@@ -70,6 +75,7 @@ import rikka.shizuku.ShizukuApiConstants
 import rikka.shizuku.server.ClientRecord
 import rikka.shizuku.server.ConfigManager
 import rikka.shizuku.server.legacy.LegacyClientCallback
+import java.time.Duration
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -97,7 +103,7 @@ class ServiceAuthorizationTest {
         userServices = mock(ShizukuUserServiceManager::class.java)
         history = mock(ConnectionHistory::class.java)
         service = PorterServer(
-            userServices, clients, config, MANAGER_UID, history,
+            userServices, clients, config, MANAGER_UID, { true }, history,
             Executor { it.run() }, ::ShizukuServiceEndpoint, ::PorterServiceEndpoint,
         )
         client = ClientRecord(CLIENT_UID, CLIENT_PID, mock(IShizukuApplication::class.java), "test.client", 13)
@@ -105,6 +111,8 @@ class ServiceAuthorizationTest {
         `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(client))
         `when`(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(client)
         `when`(config.find(CLIENT_UID)).thenReturn(ShizukuConfig.PackageEntry(CLIENT_UID, ConfigManager.FLAG_ALLOWED))
+        // The installation a decision was made for; GrantInstallationTest covers the check itself.
+        `when`(config.verifiedForAttach(anyInt(), anyString())).thenReturn(true)
         installed = PackageInfo()
         installed.packageName = client.packageName
         installed.requestedPermissions = arrayOf(ServerConstants.PERMISSION)
@@ -273,7 +281,7 @@ class ServiceAuthorizationTest {
         service.reconcileRuntimePermission(CLIENT_UID)
         assertFalse(client.allowed)
         verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION or ShizukuConfig.FLAG_PENDING_COMPANION, 0)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
         assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("client operation", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None) }
     }
 
@@ -293,7 +301,7 @@ class ServiceAuthorizationTest {
         checkPermission(ServerConstants.LEGACY_PERMISSION, PackageManager.PERMISSION_GRANTED)
         service.reconcileRuntimePermission(CLIENT_UID)
         assertFalse(client.allowed)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
     }
 
     @Test
@@ -314,7 +322,7 @@ class ServiceAuthorizationTest {
         checkPermission(ServerConstants.LEGACY_PERMISSION, PackageManager.PERMISSION_GRANTED)
         service.reconcileRuntimePermission(CLIENT_UID)
         assertFalse(client.allowed)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
     }
 
     @Test
@@ -342,7 +350,7 @@ class ServiceAuthorizationTest {
         assertFalse(client.allowed)
         activityMocks.verify { ActivityManagerApis.forceStopPackageNoThrow(client.packageName, 0) }
         revokedRuntimePermission(ServerConstants.PERMISSION)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
         verify(config).update(CLIENT_UID, listOf(client.packageName), ConfigManager.MASK_PERMISSION or ShizukuConfig.FLAG_PENDING_COMPANION, 0)
     }
 
@@ -351,7 +359,7 @@ class ServiceAuthorizationTest {
         ShadowBinder.setCallingUid(MANAGER_UID)
         `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf())
         service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, 0)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
         revokedRuntimePermission(ServerConstants.PERMISSION)
     }
 
@@ -532,7 +540,7 @@ class ServiceAuthorizationTest {
             CLIENT_UID, listOf(client.packageName),
             ConfigManager.MASK_PERMISSION or ShizukuConfig.FLAG_PENDING_COMPANION, ShizukuConfig.FLAG_PENDING_COMPANION,
         )
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
         assertFalse(client.allowed)
     }
 
@@ -583,16 +591,128 @@ class ServiceAuthorizationTest {
 
     @Test
     fun unresolvedConsentRouteCompletesRequestWithoutSavingDenial() {
+        val server = serverSeeing(0)
+        openPrompt(server, 42)
         ShadowBinder.setCallingUid(MANAGER_UID)
         clientPackageMissing()
         val record = spy(client)
         `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(record))
         val result = Bundle()
         result.putBoolean(ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED, true)
-        service.endpoint.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, result)
+        server.endpoint.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, result)
         verify(record).dispatchRequestPermissionResult(42, false)
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt())
         assertFalse(record.allowed)
+    }
+
+    @Test
+    fun theManagerIsItsVerifiedInstallationNotJustItsAppId() {
+        val signers = mock(SigningInfo::class.java)
+        `when`(signers.apkContentsSigners).thenReturn(arrayOf(Signature("aabb")))
+        val manager = PackageInfo()
+        manager.packageName = PorterServer.MANAGER_APPLICATION_ID
+        manager.applicationInfo = ApplicationInfo().apply {
+            uid = MANAGER_UID
+            flags = ApplicationInfo.FLAG_INSTALLED
+        }
+        manager.signingInfo = signers
+        packageInfos[PorterServer.MANAGER_APPLICATION_ID] = manager
+        packages!!.`when`<List<String>> { PackageManagerApis.getPackagesForUidNoThrow(MANAGER_UID) }
+            .thenReturn(listOf(PorterServer.MANAGER_APPLICATION_ID))
+        val baseline = PackageIdentity.Identity(PorterServer.MANAGER_APPLICATION_ID, MANAGER_UID, setOf(SignerDigests.of(Signature("aabb"))!!))
+        val check = PorterServer.managerInstallation(baseline)
+
+        assertTrue(check(MANAGER_UID))
+
+        `when`(signers.apkContentsSigners).thenReturn(arrayOf(Signature("ccdd")))
+        assertFalse(check(MANAGER_UID))
+
+        `when`(signers.apkContentsSigners).thenReturn(arrayOf(Signature("aabb")))
+        packages!!.`when`<List<String>> { PackageManagerApis.getPackagesForUidNoThrow(MANAGER_UID) }
+            .thenReturn(listOf("com.impostor"))
+        assertFalse(check(MANAGER_UID))
+    }
+
+    @Test
+    fun aDenyTearsDownServicesAnEarlierOneTimeGrantStarted() {
+        val server = serverSeeing(0)
+        openPrompt(server, 42)
+        ShadowBinder.setCallingUid(MANAGER_UID)
+        `when`(config.find(CLIENT_UID)).thenReturn(null)
+
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, false, true)
+
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
+    }
+
+    @Test
+    fun anAnswerToAPromptTheServerNeverStartedChangesNothing() {
+        val record = spy(client)
+        record.allowed = false
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(record))
+
+        service.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, true, false)
+
+        assertFalse(record.allowed)
+        verify(record, never()).dispatchRequestPermissionResult(anyInt(), anyBoolean())
+        verify(config, never()).update(anyInt(), any(), anyInt(), anyInt())
+    }
+
+    @Test
+    fun aPromptIsAnsweredOnceAndNotAfterItsWindow() {
+        val server = serverSeeing(0)
+        openPrompt(server, 42)
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, true, false)
+        verify(config, times(1)).update(anyInt(), any(), anyInt(), anyInt())
+
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, true, false)
+        verify(config, times(1)).update(anyInt(), any(), anyInt(), anyInt())
+
+        val record = spy(client)
+        `when`(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(record)
+        openPrompt(server, 43)
+        ShadowSystemClock.advanceBy(Duration.ofMillis(PorterServer.PROMPT_ANSWER_WINDOW_MILLIS + 1))
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 43, true, false)
+        verify(config, times(1)).update(anyInt(), any(), anyInt(), anyInt())
+        // Too late to decide, but the caller still gets its answer.
+        verify(record).dispatchRequestPermissionResult(43, false)
+    }
+
+    @Test
+    fun thePromptNamesEveryPackageInTheUid() {
+        packages!!.`when`<List<String>> { PackageManagerApis.getPackagesForUidNoThrow(CLIENT_UID) }
+            .thenReturn(listOf(client.packageName, "test.sibling"))
+
+        openPrompt(serverSeeing(0), 7)
+
+        activityMocks.verify {
+            ActivityManagerApis.startActivityNoThrow(
+                argThat { intent: Intent -> intent.getStringArrayExtra("packages")!!.toList() == listOf(client.packageName, "test.sibling") },
+                any(), eq(0),
+            )
+        }
+    }
+
+    @Test
+    fun theLastProcessOfAOneTimeGrantTakesItsServicesAlong() {
+        `when`(config.find(CLIENT_UID)).thenReturn(null)
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(client))
+
+        service.onClientDied(client)
+        verify(userServices, never()).removeUserServicesForUid(anyInt())
+
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(emptyList())
+        service.onClientDied(client)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
+    }
+
+    @Test
+    fun aPersistentGrantKeepsItsServicesWhenTheAppExits() {
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(emptyList())
+
+        service.onClientDied(client)
+
+        verify(userServices, never()).removeUserServicesForUid(anyInt())
     }
 
     @Test
@@ -626,9 +746,23 @@ class ServiceAuthorizationTest {
         verify(client.client!!, times(2)).bindApplication(any(Bundle::class.java))
     }
 
+    @Test
+    fun resumingAccessDoesNotAllowAnInstallationTheDecisionWasNotMadeFor() {
+        val paused = AtomicBoolean(false)
+        `when`(config.isAccessPaused).thenAnswer { paused.get() }
+        doAnswer { paused.set(it.getArgument(0)); null }.`when`(config).setAccessPaused(anyBoolean())
+        `when`(clients.attachedClients()).thenReturn(listOf(client))
+        service.setGlobalAccess(false)
+
+        `when`(config.verifiedForAttach(CLIENT_UID, client.packageName)).thenReturn(false)
+        service.setGlobalAccess(true)
+
+        assertFalse(client.allowed)
+    }
+
     /** A server whose only difference from [service] is which user it believes is on screen. */
     private fun serverSeeing(foreground: Int?) = PorterServer(
-        userServices, clients, config, MANAGER_UID, history,
+        userServices, clients, config, MANAGER_UID, { true }, history,
         Executor { it.run() }, ::ShizukuServiceEndpoint, ::PorterServiceEndpoint,
         { PorterManagerEndpoint(it.core, it) }, { foreground },
     )
@@ -638,6 +772,12 @@ class ServiceAuthorizationTest {
         packages!!.`when`<ApplicationInfo?> { PackageManagerApis.getApplicationInfo(anyString(), anyLong(), anyInt()) }
             .thenReturn(ApplicationInfo())
         packageInfos[PorterServer.MANAGER_APPLICATION_ID] = PackageInfo()
+    }
+
+    /** Starts a prompt on [server] for the client, as its request does, so an answer to it is taken. */
+    private fun openPrompt(server: PorterServer, requestCode: Int) {
+        promptableInstall()
+        server.showPermissionConfirmation(requestCode, client, CallerIdentity(CLIENT_UID, CLIENT_PID), 0)
     }
 
     @Test
@@ -812,7 +952,7 @@ class ServiceAuthorizationTest {
                     assertEquals(0L, logging.readLong())
                     logging.recycle()
 
-                    `when`(userServices.isUserServiceTokenLive("token")).thenReturn(true)
+                    `when`(userServices.claimUserServiceLaunch(eq("token"), anyInt(), anyInt())).thenReturn(true)
                     val launch = porterTransact(UserServiceLaunch.TRANSACTION) { it.writeString("token") }
                     assertEquals(1, launch.readInt())
                     launch.recycle()

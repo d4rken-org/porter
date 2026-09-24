@@ -323,6 +323,13 @@ int main(int argc, char *argv[]) {
             if (strcmp(SERVER_NAME, name) != 0)
                 return;
 
+            uid_t uid;
+            if (get_proc_uid(pid, &uid) != 0) return;
+            if (uid != 0 && uid != 2000) {
+                printf("info: skipping %d (%s), it runs as uid %u\n", pid, name, (unsigned int) uid);
+                return;
+            }
+
             if (kill(pid, SIGKILL) == 0)
                 printf("info: killed %d (%s)\n", pid, name);
             else if (errno == EPERM) {

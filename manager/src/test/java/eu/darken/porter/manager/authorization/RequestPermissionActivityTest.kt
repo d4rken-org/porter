@@ -48,9 +48,13 @@ class RequestPermissionActivityTest {
     private fun launch(uid: Int = 10123): ActivityScenario<RequestPermissionActivity> = ActivityScenario.launch<RequestPermissionActivity>(
         Intent(context, RequestPermissionActivity::class.java)
             .putExtra("uid", uid).putExtra("pid", 4242).putExtra("requestCode", 7)
-            .putExtra("applicationInfo", context.applicationInfo)
+            .putExtra("applicationInfo", appInfo(uid))
     ).also { scenario = it }
+    /** The platform's ApplicationInfo carries the uid of the user it was read for. */
+    private fun appInfo(uid: Int) = ApplicationInfo(context.applicationInfo).apply { this.uid = uid }
     private fun awaitText(text: String) = compose.waitUntil(5_000) { compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty() }
+    /** Lets the grace run out that follows the buttons appearing or the prompt changing app. */
+    private fun pastGrace() = ShadowSystemClock.advanceBy(Duration.ofMillis(RequestPermissionActivity.SUPERSEDE_GRACE))
     /** Robolectric retires a finished activity on the next idle; accept either the finishing flag or the destroyed state. */
     private fun awaitDestroyed(scenario: ActivityScenario<*>) = compose.waitUntil(5_000) {
         scenario.state == Lifecycle.State.DESTROYED || runCatching {
@@ -69,12 +73,27 @@ class RequestPermissionActivityTest {
         compose.onNodeWithText(allow).assertIsDisplayed()
     }
 
+    @Test fun aTapAsTheButtonsAppearDecidesNothing() {
+        // Another app can start the prompt just under a finger that is already coming down.
+        val scenario = launch()
+        awaitText(allow)
+        compose.onNodeWithText(allow).performClick()
+        assertTrue(gateway.replies.isEmpty())
+        assertEquals(Lifecycle.State.RESUMED, scenario.state)
+
+        pastGrace()
+        compose.onNodeWithText(allow).performClick()
+        awaitDestroyed(scenario)
+        assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = true, onetime = false)), gateway.replies)
+    }
+
     @Test fun promptSurvivesRecreationAndAllowRepliesOnceThenCloses() {
         val scenario = launch()
         awaitText(allow)
         scenario.recreate()
         awaitText(allow)
         assertTrue(gateway.replies.isEmpty())
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = true, onetime = false)), gateway.replies)
@@ -83,6 +102,7 @@ class RequestPermissionActivityTest {
     @Test fun denyRepliesOneTimeAndCloses() {
         val scenario = launch()
         awaitText(deny)
+        pastGrace()
         compose.onNodeWithText(deny).performClick()
         awaitDestroyed(scenario)
         assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)), gateway.replies)
@@ -128,11 +148,12 @@ class RequestPermissionActivityTest {
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 8)
-                .putExtra("applicationInfo", context.applicationInfo))
+                .putExtra("applicationInfo", appInfo(10123)))
         }
         assertEquals(listOf(FakePermissionGateway.Reply(10123, 4242, 7, allowed = false, onetime = true)),
                      gateway.replies)
         awaitText(allow)
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(FakePermissionGateway.Reply(10123, 4242, 8, allowed = true, onetime = false),
@@ -144,10 +165,12 @@ class RequestPermissionActivityTest {
         // drawn, so a tap already on its way would answer for an app the user never looked at.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val scenario = launch()
         awaitText(allow)
+        pastGrace()
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
@@ -160,7 +183,7 @@ class RequestPermissionActivityTest {
                      gateway.replies)
         assertEquals(Lifecycle.State.RESUMED, scenario.state)
 
-        ShadowSystemClock.advanceBy(Duration.ofMillis(RequestPermissionActivity.SUPERSEDE_GRACE))
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(FakePermissionGateway.Reply(10999, 5151, 8, allowed = true, onetime = false),
@@ -169,7 +192,7 @@ class RequestPermissionActivityTest {
 
     /** An app whose icon decode blocks, which is the wait the prompt used to keep the old name for. */
     private class SlowIconApp(pkg: String, val gate: CountDownLatch) : ApplicationInfo() {
-        init { packageName = pkg; nonLocalizedLabel = "Shizuku API probe" }
+        init { packageName = pkg; uid = 10999; nonLocalizedLabel = "Shizuku API probe" }
         override fun loadIcon(pm: android.content.pm.PackageManager?): Drawable {
             gate.await(10, TimeUnit.SECONDS)
             return ColorDrawable(0xFF00FF00.toInt())
@@ -208,10 +231,12 @@ class RequestPermissionActivityTest {
         // timer and would pass with the invariant deleted.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val scenario = launch()
         awaitText(allow)
+        pastGrace()
         scenario.onActivity {
             assertTrue("a prompt that never changed app answers normally", it.userIsAnswering())
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
@@ -235,6 +260,7 @@ class RequestPermissionActivityTest {
         // writes into that bundle is pinned by onSaveInstanceStateCarriesTheAdoptedRequest.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val saved = Bundle().apply {
@@ -242,6 +268,7 @@ class RequestPermissionActivityTest {
             putInt("asked.pid", 5151)
             putInt("asked.code", 8)
             putParcelable("asked.info", other)
+            putStringArray("asked.packages", arrayOf(other.packageName, "eu.darken.porter.probe.shared"))
         }
         val scenario = launch()
         awaitText(allow)
@@ -251,6 +278,7 @@ class RequestPermissionActivityTest {
             assertEquals(5151, adopted?.pid)
             assertEquals(8, adopted?.code)
             assertEquals(other.packageName, adopted?.info?.packageName)
+            assertEquals(listOf("eu.darken.porter.probe.shared"), adopted?.alsoCovers)
             // A process starting fresh has no saved copy and falls through to its intent.
             assertNull(it.restored(null))
             assertNull("a bundle naming no caller is not a request", it.restored(Bundle()))
@@ -262,6 +290,7 @@ class RequestPermissionActivityTest {
         // process death, so what it wrote is what decides which caller is answered.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val scenario = launch()
@@ -269,7 +298,8 @@ class RequestPermissionActivityTest {
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
-                .putExtra("applicationInfo", other))
+                .putExtra("applicationInfo", other)
+                .putExtra("packages", arrayOf(other.packageName, "eu.darken.porter.probe.shared")))
         }
         val saved = Bundle()
         scenario.onActivity { it.onSaveInstanceState(saved) }
@@ -278,6 +308,7 @@ class RequestPermissionActivityTest {
         assertEquals(8, saved.getInt("asked.code", -1))
         @Suppress("DEPRECATION")
         assertEquals(other.packageName, saved.getParcelable<ApplicationInfo>("asked.info")?.packageName)
+        assertArrayEquals(arrayOf(other.packageName, "eu.darken.porter.probe.shared"), saved.getStringArray("asked.packages"))
     }
 
     @Test fun oneAppAskingAgainCannotKeepThePromptFromBeingAnswered() {
@@ -289,10 +320,11 @@ class RequestPermissionActivityTest {
             scenario.onActivity {
                 it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                     .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 8 + round)
-                    .putExtra("applicationInfo", context.applicationInfo))
+                    .putExtra("applicationInfo", appInfo(10123)))
             }
         }
         awaitText(allow)
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(FakePermissionGateway.Reply(10123, 4242, 10, allowed = true, onetime = false),
@@ -303,6 +335,7 @@ class RequestPermissionActivityTest {
         // Answering for one app while naming another is the spoof this prompt exists to prevent.
         val other = ApplicationInfo().apply {
             packageName = "eu.darken.porter.probe.legacy"
+            uid = 10999
             nonLocalizedLabel = "Shizuku API probe"
         }
         val scenario = launch()
@@ -325,11 +358,12 @@ class RequestPermissionActivityTest {
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 8)
-                .putExtra("applicationInfo", context.applicationInfo))
+                .putExtra("applicationInfo", appInfo(10123)))
         }
         scenario.onActivity { assertEquals(8, it.intent.getIntExtra("requestCode", -1)) }
         scenario.recreate()
         awaitText(allow)
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         awaitDestroyed(scenario)
         assertEquals(FakePermissionGateway.Reply(10123, 4242, 8, allowed = true, onetime = false),
@@ -339,11 +373,12 @@ class RequestPermissionActivityTest {
     @Test fun aRefusedNewcomerIsNotWhatARecreationRestores() {
         val scenario = launch()
         awaitText(allow)
+        pastGrace()
         compose.onNodeWithText(allow).performClick()
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
-                .putExtra("applicationInfo", context.applicationInfo))
+                .putExtra("applicationInfo", appInfo(10999)))
             assertEquals(7, it.intent.getIntExtra("requestCode", -1))
         }
     }
@@ -354,6 +389,54 @@ class RequestPermissionActivityTest {
         scenario.onActivity { it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)) }
         compose.onNodeWithText(context.packageName).assertIsDisplayed()
         assertTrue(gateway.replies.isEmpty())
+    }
+
+    @Test fun aRequestWhoseAppIsNotTheCallerClosesWithoutReply() {
+        val scenario = ActivityScenario.launch<RequestPermissionActivity>(
+            Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 7)
+                .putExtra("applicationInfo", appInfo(10999))
+        ).also { this.scenario = it }
+        awaitDestroyed(scenario)
+        assertTrue(gateway.replies.isEmpty())
+    }
+
+    @Test fun theLabelIsShownAsItsFirstLineWithoutDirectionControls() {
+        // A second line or a right-to-left override lets a label pass for another app's name. The
+        // entity is one the platform's HTML pass would turn back into an override.
+        val spoof = ApplicationInfo(appInfo(10123)).apply { nonLocalizedLabel = "\u202EGood&#x202E; app\nis Porter itself" }
+        ActivityScenario.launch<RequestPermissionActivity>(
+            Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 7)
+                .putExtra("applicationInfo", spoof)
+        ).also { scenario = it }
+        awaitText(allow)
+        compose.onNodeWithText("Good app").assertIsDisplayed()
+        compose.onAllNodesWithText("is Porter itself", substring = true).assertCountEquals(0)
+        compose.onAllNodesWithText("\u202E", substring = true).assertCountEquals(0)
+    }
+
+    @Test fun theOtherPackagesOfASharedUidAreNamed() {
+        // A grant is to the uid, so it reaches every package in it, not only the one that asked.
+        ActivityScenario.launch<RequestPermissionActivity>(
+            Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 7)
+                .putExtra("applicationInfo", appInfo(10123))
+                .putExtra("packages", arrayOf(context.packageName, "com.example.one", "com.example.two"))
+        ).also { scenario = it }
+        awaitText(allow)
+        compose.onNodeWithText(context.getString(R.string.porter_permission_also_covers, "com.example.one, com.example.two")).assertIsDisplayed()
+    }
+
+    @Test fun aUidWithOnePackageNamesNoOthers() {
+        ActivityScenario.launch<RequestPermissionActivity>(
+            Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 7)
+                .putExtra("applicationInfo", appInfo(10123))
+                .putExtra("packages", arrayOf(context.packageName))
+        ).also { scenario = it }
+        awaitText(allow)
+        compose.onAllNodesWithText(context.getString(R.string.porter_permission_also_covers, ""), substring = true).assertCountEquals(0)
     }
 
     @Test fun requestWithoutCallerIdentityClosesWithoutReply() {

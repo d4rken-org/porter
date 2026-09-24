@@ -16,6 +16,7 @@ import android.os.Looper
 import android.os.Parcel
 import android.os.RemoteException
 import android.os.ServiceManager
+import android.os.SystemClock
 import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.common.DiscoveredApplication
 import eu.darken.porter.common.util.OsUtils
@@ -61,6 +62,8 @@ class PorterServer internal constructor(
     val clientManager: ShizukuClientManager,
     val configManager: ShizukuConfigManager,
     private val managerAppId: Int,
+    /** Whether a uid holds the manager installation the server started with; see [managerInstallation]. */
+    private val isManagerInstallation: (Int) -> Boolean,
     private val connectionHistory: ConnectionHistory,
     private val historyWriter: Executor,
     endpointFactory: (PorterServer) -> ShizukuServiceEndpoint,
@@ -81,13 +84,32 @@ class PorterServer internal constructor(
     internal lateinit var reconciler: ApkReconciler
     internal val debugLogLeases = DebugLogLeases()
 
+    /** Prompts started and not answered yet, by (uid, pid, request code), to when they were started. */
+    private val openPrompts = HashMap<Triple<Int, Int, Int>, Long>()
+
+    init {
+        clientManager.onDeath = ::onClientDied
+    }
+
+    /**
+     * A grant allowed only once belongs to the processes it was given to: once the app's last one is
+     * gone, so are the user services it started, daemons included.
+     */
+    internal fun onClientDied(record: ClientRecord) {
+        synchronized(clientManager) {
+            if (clientManager.findClients(record.uid).isNotEmpty()) return
+            if (configManager.find(record.uid)?.isAllowed() == true) return
+            userServiceManager.removeUserServicesForUid(record.uid)
+        }
+    }
+
     /**
      * The manager is the installation in Android user 0, the one whose provider the server and
      * the starters deliver to and whose activity every permission prompt is started in. The same
      * package in another user is an ordinary app.
      */
     internal fun isManager(caller: CallerIdentity): Boolean =
-        caller.appId() == managerAppId && caller.userId() == MANAGER_USER_ID
+        caller.appId() == managerAppId && caller.userId() == MANAGER_USER_ID && isManagerInstallation(caller.uid)
 
     private fun isManager(record: ClientRecord): Boolean = isManager(CallerIdentity(record.uid, record.pid))
 
@@ -210,10 +232,42 @@ class PorterServer internal constructor(
             .putExtra("pid", caller.pid)
             .putExtra("requestCode", requestCode)
             .putExtra("applicationInfo", ai)
+            // Every package in the uid shares whatever is decided, not just the one asking.
+            .putExtra("packages", PackageManagerApis.getPackagesForUidNoThrow(caller.uid).toTypedArray())
+        promptOpened(caller.uid, caller.pid, requestCode)
         ActivityManagerApis.startActivityNoThrow(intent, null, MANAGER_USER_ID)
     }
 
+    private fun promptOpened(uid: Int, pid: Int, requestCode: Int) {
+        val now = SystemClock.elapsedRealtime()
+        synchronized(openPrompts) {
+            openPrompts.values.removeIf { now - it > PROMPT_ANSWER_WINDOW_MILLIS }
+            openPrompts[Triple(uid, pid, requestCode)] = now
+        }
+    }
+
+    private enum class Prompt { OPEN, EXPIRED, NONE }
+
+    /** Closes the prompt an answer is for, and says whether it was open, open too long, or never. */
+    private fun closePrompt(uid: Int, pid: Int, requestCode: Int): Prompt {
+        val openedAt = synchronized(openPrompts) { openPrompts.remove(Triple(uid, pid, requestCode)) } ?: return Prompt.NONE
+        return if (SystemClock.elapsedRealtime() - openedAt <= PROMPT_ANSWER_WINDOW_MILLIS) Prompt.OPEN else Prompt.EXPIRED
+    }
+
     override fun dispatchPermissionConfirmationResult(requestUid: Int, requestPid: Int, requestCode: Int, allowed: Boolean, onetime: Boolean) {
+        when (closePrompt(requestUid, requestPid, requestCode)) {
+            Prompt.NONE -> {
+                LOGGER.w("dispatchPermissionConfirmationResult: no open prompt for uid=%d pid=%d code=%d", requestUid, requestPid, requestCode)
+                return
+            }
+            Prompt.EXPIRED -> {
+                // Too late to decide anything, but the caller is still waiting for an answer.
+                LOGGER.w("dispatchPermissionConfirmationResult: prompt for uid=%d pid=%d code=%d expired", requestUid, requestPid, requestCode)
+                clientManager.findClient(requestUid, requestPid)?.dispatchRequestPermissionResult(requestCode, false)
+                return
+            }
+            Prompt.OPEN -> Unit
+        }
         synchronized(clientManager) {
             var allowed = allowed
             var onetime = onetime
@@ -241,6 +295,9 @@ class PorterServer internal constructor(
                     }
                 }
             }
+
+            // A service an earlier one-time grant started is not covered by this answer.
+            if (!allowed && !pending) userServiceManager.removeUserServicesForUid(requestUid)
 
             if (!onetime) {
                 configManager.update(
@@ -296,7 +353,7 @@ class PorterServer internal constructor(
 
     private fun suspendUid(uid: Int) {
         for (record in clientManager.findClients(uid)) record.allowed = false
-        for (name in PackageManagerApis.getPackagesForUidNoThrow(uid)) onPermissionRevoked(name)
+        userServiceManager.removeUserServicesForUid(uid)
     }
 
     internal fun reconcileRuntimePermission(uid: Int) {
@@ -345,7 +402,9 @@ class PorterServer internal constructor(
             }
             if (pending) {
                 configManager.update(uid, null, mask, ConfigManager.FLAG_ALLOWED)
-                for (record in clientManager.findClients(uid)) record.allowed = !configManager.isAccessPaused
+                for (record in clientManager.findClients(uid)) {
+                    record.allowed = !configManager.isAccessPaused && configManager.verifiedForAttach(uid, record.packageName)
+                }
             }
         }
     }
@@ -362,7 +421,7 @@ class PorterServer internal constructor(
             for (record in clientManager.attachedClients()) {
                 if (isManager(record)) continue
                 val entry = configManager.find(record.uid)
-                record.allowed = !paused && entry != null && entry.isAllowed()
+                record.allowed = !paused && entry != null && entry.isAllowed() && configManager.verifiedForAttach(record.uid, record.packageName)
                 val reply = Bundle()
                 reply.putInt(BIND_APPLICATION_SERVER_UID, OsUtils.uid)
                 reply.putInt(BIND_APPLICATION_SERVER_VERSION, if (record.apiVersion == -1) 12 else ShizukuApiConstants.SERVER_VERSION)
@@ -423,10 +482,9 @@ class PorterServer internal constructor(
                     }
                 }
                 if (!allowed) {
-                    // Daemon user services outlive the client process, so tear down by package, not by attached record.
-                    for (packageName in PackageManagerApis.getPackagesForUidNoThrow(uid)) {
-                        onPermissionRevoked(packageName)
-                    }
+                    // Daemon user services outlive the client process, so tear down by uid, not by
+                    // attached record, and not by package: the same package in another user keeps its own.
+                    userServiceManager.removeUserServicesForUid(uid)
                 }
 
                 setRuntimePermissionsForUid(uid, allowed)
@@ -434,10 +492,6 @@ class PorterServer internal constructor(
 
             configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, value)
         }
-    }
-
-    private fun onPermissionRevoked(packageName: String) {
-        userServiceManager.removeUserServicesForPackage(packageName)
     }
 
     internal fun getApplications(userId: Int): ParcelableListSlice<PackageInfo> {
@@ -558,6 +612,9 @@ class PorterServer internal constructor(
         /** The Android user the manager is the manager in. */
         const val MANAGER_USER_ID: Int = 0
 
+        /** How long an answer to a prompt the server started is accepted for. */
+        const val PROMPT_ANSWER_WINDOW_MILLIS = 5 * 60 * 1000L
+
         private val LOGGER = Logger("Service")
 
         @JvmStatic
@@ -593,6 +650,16 @@ class PorterServer internal constructor(
         internal fun managerStartupExitCode(result: PackageIdentity.Result): Int =
             if (result.state == PackageIdentity.State.PRESENT) 0 else ServerConstants.MANAGER_APP_NOT_FOUND
 
+        /**
+         * Asked on every call from the manager's app id. The reconciler only exits on a replaced or
+         * removed manager at its next scan, and until then the app id alone would authorise whoever
+         * holds it.
+         */
+        internal fun managerInstallation(baseline: PackageIdentity.Identity): (Int) -> Boolean = { uid ->
+            PackageManagerApis.getPackagesForUidNoThrow(uid).contains(MANAGER_APPLICATION_ID) &&
+                baseline.matches(PackageIdentity.of(MANAGER_APPLICATION_ID, MANAGER_USER_ID).observed)
+        }
+
         fun bootstrap(
             endpointFactory: (PorterServer) -> ShizukuServiceEndpoint,
             porterEndpointFactory: (PorterServer) -> PorterServiceEndpoint,
@@ -616,6 +683,7 @@ class PorterServer internal constructor(
             }
 
             val observed = manager.observed ?: throw AssertionError("manager observed is null")
+            val managerBaseline = PackageIdentity.Identity(MANAGER_APPLICATION_ID, observed.appId, observed.signerDigests)
 
             val configManager = ShizukuConfigManager()
             val clientManager = ShizukuClientManager(configManager)
@@ -626,6 +694,7 @@ class PorterServer internal constructor(
                 clientManager,
                 configManager,
                 observed.appId,
+                managerInstallation(managerBaseline),
                 ConnectionHistory(File("/data/user_de/0/com.android.shell/porter-connections.json")),
                 Executors.newSingleThreadExecutor(),
                 endpointFactory,
@@ -643,7 +712,7 @@ class PorterServer internal constructor(
 
             val reconciler = ApkReconciler(
                 MANAGER_APPLICATION_ID,
-                PackageIdentity.Identity(MANAGER_APPLICATION_ID, observed.appId, observed.signerDigests),
+                managerBaseline,
                 userServiceManager,
                 ApkReconciler.SystemPackageOracle(),
                 ApkReconciler.ExecutorScheduler(),

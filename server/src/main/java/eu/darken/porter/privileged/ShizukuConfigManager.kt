@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import eu.darken.porter.privileged.util.PackageIdentity
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -17,6 +18,7 @@ import java.io.Reader
 import rikka.hidden.compat.PackageManagerApis
 import rikka.shizuku.server.ConfigManager
 import rikka.shizuku.server.util.Logger
+import rikka.shizuku.server.util.UserHandleCompat
 
 open class ShizukuConfigManager : ConfigManager() {
 
@@ -66,6 +68,14 @@ open class ShizukuConfigManager : ConfigManager() {
                 LOGGER.i("remove config for uid %d since the packages for it changed", entry.uid)
                 packagesLocked().remove(entry)
                 changed = true
+            } else if (entry.signers == null) {
+                // A decision from before signers were recorded learns them now, from the installation
+                // it has been kept for, rather than from whichever process attaches first.
+                val signers = signersOf(entry.uid, entryPackages.filter { it in packages })
+                if (signers != null) {
+                    entry.signers = signers.toMutableList()
+                    changed = true
+                }
             }
         }
 
@@ -147,8 +157,55 @@ open class ShizukuConfigManager : ConfigManager() {
                 }
                 entryPackages.add(packageName)
             }
+            if (entry.signers == null) entry.signers = signersOf(uid, packages)?.toMutableList()
         }
         if (!persistLocked()) LOGGER.w("failed to save config for uid %d", uid)
+    }
+
+    /**
+     * Whether the decision stored for [uid] was made for the installation [packageName] attaches from.
+     * A uid outlives its installation: once a package leaves it, a later install can be handed the same
+     * uid. An entry whose uid holds none of its packages any more, or whose signers changed, is dropped;
+     * an installation that cannot be read is not trusted, but its entry is kept.
+     */
+    fun verifiedForAttach(uid: Int, packageName: String): Boolean {
+        val entry = find(uid) ?: return false
+        val recorded = synchronized(this) { ArrayList(entry.packages.orEmpty()) }
+        if (PackageManagerApis.getPackagesForUidNoThrow(uid).none { it in recorded }) {
+            forget(entry, "uid %d no longer holds %s", uid, recorded)
+            return false
+        }
+        val current = PackageIdentity.of(packageName, UserHandleCompat.getUserId(uid))
+        val observed = current.observed ?: return false
+        synchronized(this) {
+            if (findLocked(uid) !== entry) return false
+            val signers = entry.signers
+            if (signers == null) {
+                entry.signers = observed.signerDigests.toMutableList()
+                if (!persistLocked()) LOGGER.w("failed to save signers for uid %d", uid)
+                return true
+            }
+            if (PackageIdentity.Identity(packageName, UserHandleCompat.getAppId(uid), signers.toSet()).matches(observed)) return true
+        }
+        forget(entry, "%s in uid %d is signed by someone else", packageName, uid)
+        return false
+    }
+
+    private fun forget(entry: ShizukuConfig.PackageEntry, fmt: String, vararg args: Any?) {
+        synchronized(this) {
+            if (!packagesLocked().remove(entry)) return
+            LOGGER.w("forgetting a decision: $fmt", *args)
+            if (!persistLocked()) LOGGER.w("failed to save config after forgetting uid %d", entry.uid)
+        }
+    }
+
+    private fun signersOf(uid: Int, packages: List<String>): Set<String>? {
+        val userId = UserHandleCompat.getUserId(uid)
+        for (packageName in packages) {
+            val observed = PackageIdentity.of(packageName, userId).observed ?: continue
+            if (observed.appId == UserHandleCompat.getAppId(uid)) return observed.signerDigests
+        }
+        return null
     }
 
     override fun update(uid: Int, packages: List<String>?, mask: Int, values: Int) {

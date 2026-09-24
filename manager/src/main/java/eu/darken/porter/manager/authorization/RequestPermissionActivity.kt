@@ -2,6 +2,7 @@ package eu.darken.porter.manager.authorization
 
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.text.TextUtils
@@ -30,6 +31,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import eu.darken.porter.manager.Helps
+import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.ui.*
@@ -67,9 +69,17 @@ class RequestPermissionActivity : ComposeActivity() {
     private var drawnUid: Int? = null
 
     /**
+     * When the composition that put the buttons on screen was applied; null while they are not.
+     *
+     * A prompt that answers its first tap lets another app start it just under a finger that is
+     * already coming down.
+     */
+    private var answerableAt: Long? = null
+
+    /**
      * Whether a tap now decides the request the user was shown, rather than one that just arrived.
      *
-     * Two conditions, because the timer alone cannot cover its own start:
+     * A change of app takes two conditions, because the timer alone cannot cover its own start:
      * [PermissionViewModel.supersede] repoints the model the moment the intent lands, so a tap
      * already queued would answer for an app no frame has named yet. Comparing what is pointed at
      * with what was drawn rules that out, and it holds however many requests arrive between two
@@ -82,6 +92,16 @@ class RequestPermissionActivity : ComposeActivity() {
         val asked = request
         if (asked != null && asked.uid != drawnUid) {
             LOGGER.w("Ignoring a tap: repointed to ${'$'}{asked.uid}, screen still shows ${'$'}drawnUid")
+            return false
+        }
+        val shown = answerableAt
+        if (shown == null) {
+            LOGGER.w("Ignoring a tap before the buttons were drawn")
+            return false
+        }
+        val sinceShown = SystemClock.elapsedRealtime() - shown
+        if (sinceShown < SUPERSEDE_GRACE) {
+            LOGGER.w("Ignoring a tap $sinceShown ms after the buttons appeared")
             return false
         }
         val changed = supersededAt ?: return true
@@ -104,6 +124,8 @@ class RequestPermissionActivity : ComposeActivity() {
             val asked = request ?: return@porterContent
             val ai = asked.info
             val stage by model.stage.collectAsStateWithLifecycle()
+            // Applied before the frame that draws the buttons, so no tap can reach them unstamped.
+            SideEffect { answerableAt = if (stage == "ready") answerableAt ?: SystemClock.elapsedRealtime() else null }
             // Keyed on the request, so the name and icon reset in the composition a replacement
             // causes rather than when the coroutine below has decoded the new icon. An icon is as
             // big as the app that ships it, so that wait is not ours to bound.
@@ -113,7 +135,7 @@ class RequestPermissionActivity : ComposeActivity() {
                 // the row that tells them apart would arrive only after the service answered.
                 val userId = UserHandleCompat.getUserId(asked.uid)
                 val known = userId != UserHandleCompat.myUserId()
-                mutableStateOf(RequestingApp(asked.label, ai.packageName, null, if (known) "$userId" else null))
+                mutableStateOf(RequestingApp(asked.label, ai.packageName, null, if (known) "$userId" else null, asked.alsoCovers))
             }
             val identity = identityState.value
             LaunchedEffect(asked) {
@@ -127,7 +149,7 @@ class RequestPermissionActivity : ComposeActivity() {
                 val icon = withContext(Dispatchers.IO) { runCatching { ai.loadIcon(packageManager).toBitmap(96, 96).asImageBitmap() }.getOrNull() }
                 val userId = UserHandleCompat.getUserId(asked.uid)
                 val ours = userId == UserHandleCompat.myUserId()
-                identityState.value = RequestingApp(asked.label, ai.packageName, icon, if (ours) null else "$userId")
+                identityState.value = RequestingApp(asked.label, ai.packageName, icon, if (ours) null else "$userId", asked.alsoCovers)
                 if (ours) return@LaunchedEffect
                 // The name comes from the service, so only it waits. No answer within the bound
                 // leaves the bare id standing, which is honest where a guessed name is not.
@@ -140,7 +162,7 @@ class RequestPermissionActivity : ComposeActivity() {
                     LOGGER.e(e, "Binder not received in 5s, requesting user not named")
                     null
                 } ?: return@LaunchedEffect
-                identityState.value = RequestingApp(asked.label, ai.packageName, icon, profile)
+                identityState.value = RequestingApp(asked.label, ai.packageName, icon, profile, asked.alsoCovers)
             }
             BackHandler(enabled = stage == "waiting" || stage == "ready") {}
             LaunchedEffect(stage) { if (stage == "finished") finish() }
@@ -185,6 +207,7 @@ class RequestPermissionActivity : ComposeActivity() {
         outState.putInt(SAVED_PID, asked.pid)
         outState.putInt(SAVED_CODE, asked.code)
         outState.putParcelable(SAVED_INFO, asked.info)
+        outState.putStringArray(SAVED_PACKAGES, asked.packages.toTypedArray())
     }
 
     /**
@@ -199,21 +222,34 @@ class RequestPermissionActivity : ComposeActivity() {
         val pid = saved.getInt(SAVED_PID, -1)
         @Suppress("DEPRECATION") val ai = saved.getParcelable<ApplicationInfo>(SAVED_INFO)
         if (uid == -1 || pid == -1 || ai == null) return null
-        return PermissionRequest(uid, pid, saved.getInt(SAVED_CODE, -1), ai, labelOf(ai))
+        return PermissionRequest(uid, pid, saved.getInt(SAVED_CODE, -1), ai, labelOf(ai), saved.getStringArray(SAVED_PACKAGES)?.toList().orEmpty())
     }
 
-    private fun labelOf(ai: ApplicationInfo) =
-        runCatching { ai.loadLabel(packageManager).toString() }.getOrDefault(ai.packageName)
+    private fun labelOf(ai: ApplicationInfo): String {
+        val label = runCatching {
+            val line = safeLabel(ai.loadLabel(packageManager))
+            // The platform's pass reads the label as HTML, which joins lines rather than cutting at
+            // the first and turns entities such as &#x202E; back into direction controls, so
+            // safeLabel runs on both sides of it.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                safeLabel(TextUtils.makeSafeForPresentation(line, MAX_LABEL_LENGTH, 0f, TextUtils.SAFE_STRING_FLAG_TRIM or TextUtils.SAFE_STRING_FLAG_FIRST_LINE))
+            } else {
+                line
+            }
+        }.getOrNull()
+        return if (label.isNullOrEmpty()) ai.packageName else label
+    }
 
     internal companion object {
         private const val SAVED_UID = "asked.uid"
         private const val SAVED_PID = "asked.pid"
         private const val SAVED_CODE = "asked.code"
         private const val SAVED_INFO = "asked.info"
+        private const val SAVED_PACKAGES = "asked.packages"
 
         /**
-         * How long after the prompt changes request a tap is ignored for. Matches what the platform
-         * permission dialog allows itself for the same reason.
+         * How long after the buttons appear, or the prompt changes request, a tap is ignored for.
+         * Matches what the platform permission dialog allows itself for the same reason.
          */
         const val SUPERSEDE_GRACE = 500L
     }
@@ -225,7 +261,12 @@ class RequestPermissionActivity : ComposeActivity() {
         val code = intent.getIntExtra("requestCode", -1)
         val ai = intent.getParcelableExtra<ApplicationInfo>("applicationInfo")
         if (uid == -1 || pid == -1 || ai == null) return null
-        return PermissionRequest(uid, pid, code, ai, labelOf(ai))
+        if (ai.uid != uid) {
+            LOGGER.w("Ignoring a request from uid %d that names %s of uid %d", uid, ai.packageName, ai.uid)
+            return null
+        }
+        val packages = intent.getStringArrayExtra("packages")?.toList().orEmpty()
+        return PermissionRequest(uid, pid, code, ai, labelOf(ai), packages)
     }
 }
 
@@ -237,7 +278,11 @@ internal class PermissionRequest(
     val code: Int,
     val info: ApplicationInfo,
     val label: String,
-)
+    val packages: List<String> = emptyList(),
+) {
+    /** The uid's other packages, which the prompt names because a grant reaches them too. */
+    val alsoCovers get() = packages.filter { it != info.packageName }.distinct()
+}
 
 /** The requesting app as the prompt shows it; [profile] is null for the manager's own user. */
 internal data class RequestingApp(
@@ -245,6 +290,7 @@ internal data class RequestingApp(
     val packageName: String,
     val icon: ImageBitmap?,
     val profile: String?,
+    val alsoCovers: List<String> = emptyList(),
 )
 
 @Composable
@@ -278,6 +324,7 @@ internal fun PermissionDialogContent(stage: String, app: RequestingApp, onAllow:
                         Text(app.label, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
                         // The package name is the anti-spoofing anchor: it wraps rather than losing its tail.
                         Text(app.packageName, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        if (app.alsoCovers.isNotEmpty()) Text(stringResource(R.string.porter_permission_also_covers, app.alsoCovers.joinToString(", ")), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         if (app.profile != null) Text(app.profile, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
@@ -303,6 +350,9 @@ internal interface PermissionGateway {
     fun serviceStates(): Flow<PorterStateMachine.State>
     suspend fun canGrantPermissions(): Boolean
     fun dispatch(uid: Int, pid: Int, code: Int, allowed: Boolean, onetime: Boolean)
+
+    /** Records the user's own answer for [uid]; true when a refusal repeats an earlier one. */
+    fun noteAnswer(uid: Int, allowed: Boolean): Boolean
 }
 
 internal object PorterPermissionGateway : PermissionGateway {
@@ -313,6 +363,7 @@ internal object PorterPermissionGateway : PermissionGateway {
     }
     override fun dispatch(uid: Int, pid: Int, code: Int, allowed: Boolean, onetime: Boolean) =
         ServerBinder.manager().dispatchPermissionConfirmationResult(uid, pid, code, allowed, onetime)
+    override fun noteAnswer(uid: Int, allowed: Boolean) = PorterSettings.noteAnswer(uid, allowed)
 }
 
 class PermissionViewModel internal constructor(private val savedState: SavedStateHandle, private val gateway: PermissionGateway) : ViewModel() {
@@ -334,7 +385,7 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
                 val grantable = gateway.canGrantPermissions()
                 // A restored prompt is answerable before this check completes; a decision must not be undone by it.
                 if (grantable) { if (!gate.replied) savedState["stage"] = "ready" }
-                else reply(false, limited = true)
+                else reply(false, limited = true, byUser = false)
             } catch (e: TimeoutCancellationException) {
                 LOGGER.e(e, "Binder not received in 5s")
                 giveUp()
@@ -378,7 +429,7 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
      * process. The request owed an answer is whichever one [supersede] last adopted, which is why
      * this refuses rather than only finishing. One-time, because nothing here is the user deciding.
      */
-    private fun giveUp() = reply(false)
+    private fun giveUp() = reply(false, byUser = false)
 
     /** Dispatches for a request the user was never shown, so outside [gate] and its one decision. */
     private fun answer(uid: Int, pid: Int, code: Int, allowed: Boolean) {
@@ -386,16 +437,18 @@ class PermissionViewModel internal constructor(private val savedState: SavedStat
         catch (e: Exception) { LOGGER.e(e, "dispatchPermissionConfirmationResult") }
     }
 
-    fun reply(allowed: Boolean, limited: Boolean = false) {
+    /** [byUser] is false for the refusals the prompt gives on its own, which never count as the user's. */
+    fun reply(allowed: Boolean, limited: Boolean = false, byUser: Boolean = true) {
         gate.reply {
             savedState["replied"] = true
             // Kept because it outlives the prompt: a request from the same uid arriving after
             // this is covered by it, and a refusal instead would undo it.
             savedState["allowed"] = allowed
             savedState["stage"] = if (limited) "limited" else "finished"
-            // A denial is one-time: the user is asked again next time, "don't ask again" is
-            // Porter's own screen.
-            try { gateway.dispatch(uid, pid, code, allowed = allowed, onetime = !allowed) }
+            // A first denial is one-time, so the user is asked again next time; a repeated one is
+            // remembered, so an app cannot keep asking until a tap lands on Allow.
+            val repeated = byUser && gateway.noteAnswer(uid, allowed)
+            try { gateway.dispatch(uid, pid, code, allowed = allowed, onetime = !allowed && !repeated) }
             catch (e: Exception) { LOGGER.e(e, "dispatchPermissionConfirmationResult") }
         }
     }

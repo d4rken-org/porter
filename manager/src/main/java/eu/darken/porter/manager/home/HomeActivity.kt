@@ -61,8 +61,14 @@ abstract class HomeActivity : ComposeActivity() {
             intent.removeExtra(EXTRA_START_PAIRING)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && EnvironmentUtils.isTlsSupported()) WirelessStart.pair(this)
         }
-        if (intent.getBooleanExtra(EXTRA_START_SERVICE_VIA_WADB, false)) {
-            intent.removeExtra(EXTRA_START_SERVICE_VIA_WADB)
+        if (!intent.hasExtra(EXTRA_START_SERVICE_VIA_WADB)) return
+        val start = intent.getBooleanExtra(EXTRA_START_SERVICE_VIA_WADB, false)
+        intent.removeExtra(EXTRA_START_SERVICE_VIA_WADB)
+        if (intent.component?.className != WIRELESS_START_ALIAS) {
+            LOGGER.w("Ignoring a wireless debugging start that did not come through %s", WIRELESS_START_ALIAS)
+            return
+        }
+        if (start) {
             getSystemService(NotificationManager::class.java).cancel(AdbPairingService.RESULT_NOTIFICATION_ID)
             if (UserHandleCompat.myUserId() == 0 && !ServiceReplacement.get(this).state.value.running && !PorterStateMachine.instance.isRunning()) {
                 WirelessStart.start(this, lifecycleScope)
@@ -156,5 +162,8 @@ abstract class HomeActivity : ComposeActivity() {
             .setAction("${BuildConfig.APPLICATION_ID}.action.START_PAIRING")
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             .putExtra(EXTRA_START_PAIRING, true)
+
+        /** The non-exported alias of the launcher activity, the only way [EXTRA_START_SERVICE_VIA_WADB] is honoured. */
+        const val WIRELESS_START_ALIAS = "eu.darken.porter.manager.home.WirelessStartAlias"
     }
 }

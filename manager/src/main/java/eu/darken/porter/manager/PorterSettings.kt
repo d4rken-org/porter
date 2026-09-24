@@ -25,6 +25,9 @@ object PorterSettings {
      */
     const val SECRETS_NAME = "secrets"
 
+    /** Refusals from the permission prompt, by uid; device-specific, so outside [NAME] too. */
+    const val REFUSALS_NAME = "refusals"
+
     const val SCHEMA_VERSION = 1
 
     object Keys {
@@ -43,6 +46,7 @@ object PorterSettings {
 
     private var storage: SharedPreferences? = null
     private var secretStorage: SharedPreferences? = null
+    private var refusalStorage: SharedPreferences? = null
 
     val preferences: SharedPreferences
         get() = checkNotNull(storage) { "PorterSettings.initialize was not called" }
@@ -73,6 +77,7 @@ object PorterSettings {
         val preferences = storageContext.getSharedPreferences(NAME, Context.MODE_PRIVATE)
         storage = preferences
         secretStorage = storageContext.getSharedPreferences(SECRETS_NAME, Context.MODE_PRIVATE)
+        refusalStorage = storageContext.getSharedPreferences(REFUSALS_NAME, Context.MODE_PRIVATE)
         migrate(preferences)
     }
 
@@ -92,6 +97,24 @@ object PorterSettings {
     internal fun resetForTest() {
         storage = null
         secretStorage = null
+        refusalStorage = null
+    }
+
+    /**
+     * Records the user's answer to a prompt for [uid], and reports whether a refusal repeats one
+     * given since the uid was last allowed. The repeat is the one that is remembered, as Android does
+     * for its own runtime permissions, and it starts the count over.
+     */
+    fun noteAnswer(uid: Int, allowed: Boolean): Boolean {
+        val refusals = checkNotNull(refusalStorage) { "PorterSettings.initialize was not called" }
+        val key = uid.toString()
+        if (allowed) {
+            refusals.edit().remove(key).apply()
+            return false
+        }
+        val repeated = refusals.getBoolean(key, false)
+        refusals.edit().putBoolean(key, !repeated).apply()
+        return repeated
     }
 
     /** How the service was last started, stored as the code the Java constants used. */

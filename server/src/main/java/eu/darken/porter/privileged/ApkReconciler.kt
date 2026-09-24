@@ -23,7 +23,8 @@ import rikka.shizuku.server.util.Logger
  */
 class ApkReconciler(
     private val managerPackageName: String,
-    private val managerBaseline: PackageIdentity.Identity,
+    /** The manager installation the server started with; never updated. */
+    val managerBaseline: PackageIdentity.Identity,
     private val userServices: ShizukuUserServiceManager,
     private val oracle: PackageOracle,
     private val scheduler: Scheduler,
