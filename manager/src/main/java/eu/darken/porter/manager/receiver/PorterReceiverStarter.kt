@@ -19,6 +19,7 @@ import eu.darken.porter.manager.AppConstants
 import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.PorterSettings.LaunchMethod
+import eu.darken.porter.manager.ServerBinder
 import eu.darken.porter.manager.starter.Starter
 import eu.darken.porter.manager.utils.EnvironmentUtils
 import eu.darken.porter.manager.utils.SettingsPage
@@ -38,7 +39,10 @@ object PorterReceiverStarter {
     }
 
     fun start(context: Context, forceStart: Boolean = false) {
-        if ((UserHandleCompat.myUserId() > 0 || PorterStateMachine.instance.isRunning()) && !forceStart) return
+        // A delivered binder can be held while the state machine still reports STOPPED, as in a
+        // process the server's own delivery just started. Pinned by
+        // PorterReceiverStarterTest.aDeliveredServerIsNotReplacedBeforeTheStateMachineHearsOfIt.
+        if (!forceStart && (UserHandleCompat.myUserId() > 0 || PorterStateMachine.instance.isRunning() || ServerBinder.isAlive)) return
 
         if (PorterSettings.lastLaunchMode == LaunchMethod.ROOT) {
             rootStart(context)

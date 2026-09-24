@@ -28,6 +28,9 @@ object PorterSettings {
     /** Refusals from the permission prompt, by uid; device-specific, so outside [NAME] too. */
     const val REFUSALS_NAME = "refusals"
 
+    /** The boot that needs no start-on-boot any more; device-specific, so outside [NAME] too. */
+    const val BOOT_NAME = "boot"
+
     const val SCHEMA_VERSION = 1
 
     object Keys {
@@ -42,11 +45,13 @@ object PorterSettings {
         const val KEY_LEGACY_PAIRING = "legacy_pairing"
         const val KEY_LAUNCH_MODE = "mode"
         const val KEY_AUTH_TOKEN = "auth_token"
+        const val KEY_STARTED_BOOT = "started_boot"
     }
 
     private var storage: SharedPreferences? = null
     private var secretStorage: SharedPreferences? = null
     private var refusalStorage: SharedPreferences? = null
+    private var bootStorage: SharedPreferences? = null
 
     val preferences: SharedPreferences
         get() = checkNotNull(storage) { "PorterSettings.initialize was not called" }
@@ -78,6 +83,7 @@ object PorterSettings {
         storage = preferences
         secretStorage = storageContext.getSharedPreferences(SECRETS_NAME, Context.MODE_PRIVATE)
         refusalStorage = storageContext.getSharedPreferences(REFUSALS_NAME, Context.MODE_PRIVATE)
+        bootStorage = storageContext.getSharedPreferences(BOOT_NAME, Context.MODE_PRIVATE)
         migrate(preferences)
     }
 
@@ -98,6 +104,7 @@ object PorterSettings {
         storage = null
         secretStorage = null
         refusalStorage = null
+        bootStorage = null
     }
 
     /**
@@ -115,6 +122,19 @@ object PorterSettings {
         val repeated = refusals.getBoolean(key, false)
         refusals.edit().putBoolean(key, !repeated).apply()
         return repeated
+    }
+
+    /**
+     * Marks [bootCount] as needing no start-on-boot, and reports whether it did until now.
+     * Committed rather than applied: a process killed before the write lands would start that
+     * boot a second time.
+     */
+    @Synchronized
+    fun claimBoot(bootCount: Int): Boolean {
+        val boots = checkNotNull(bootStorage) { "PorterSettings.initialize was not called" }
+        if (boots.contains(Keys.KEY_STARTED_BOOT) && boots.getInt(Keys.KEY_STARTED_BOOT, 0) == bootCount) return false
+        boots.edit().putInt(Keys.KEY_STARTED_BOOT, bootCount).commit()
+        return true
     }
 
     /** How the service was last started, stored as the code the Java constants used. */
