@@ -116,6 +116,9 @@ jobs:
           - api: 24
             suite: emulator
             features: -feature -GLDMA,-GLDMA2
+          # Android 9 stands in for 9 and 10, which read the bundled companion's signers differently from 11 and later.
+          - api: 28
+            suite: compat-install
           - api: 34
             suite: compat-install
             target: android-tv

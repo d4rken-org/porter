@@ -84,6 +84,10 @@ def main():
         # Reset only this test's Porter decisions so the next case can exercise an import.
         smoke.shell("rm", "-f", "/data/user_de/0/com.android.shell/porter.json", "/data/user_de/0/com.android.shell/porter.json.bak")
         smoke.adb("install", str(args.shizuku.resolve()))
+        # Android 9 keeps the client's grant of the companion's permission once Shizuku redefines it,
+        # so Shizuku would never ask.
+        if f"{base.LEGACY_PERMISSION}: granted=true" in smoke.shell("dumpsys", "package", base.LEGACY):
+            smoke.shell("pm", "revoke", base.LEGACY, base.LEGACY_PERMISSION)
         smoke.start_service(base.COMPAT)
         smoke.launch_probe(base.LEGACY)
         smoke.tap("Allow all the time", base.COMPAT)
