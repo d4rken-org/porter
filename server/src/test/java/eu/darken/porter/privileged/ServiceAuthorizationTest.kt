@@ -273,7 +273,7 @@ class ServiceAuthorizationTest {
         service.reconcileRuntimePermission(CLIENT_UID)
         assertFalse(client.allowed)
         verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION or ShizukuConfig.FLAG_PENDING_COMPANION, 0)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
         assertThrows(SecurityException::class.java) { service.core.enforceCallingPermission("client operation", CallerIdentity(CLIENT_UID, CLIENT_PID), CallerExemption.None) }
     }
 
@@ -293,7 +293,7 @@ class ServiceAuthorizationTest {
         checkPermission(ServerConstants.LEGACY_PERMISSION, PackageManager.PERMISSION_GRANTED)
         service.reconcileRuntimePermission(CLIENT_UID)
         assertFalse(client.allowed)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
     }
 
     @Test
@@ -314,7 +314,7 @@ class ServiceAuthorizationTest {
         checkPermission(ServerConstants.LEGACY_PERMISSION, PackageManager.PERMISSION_GRANTED)
         service.reconcileRuntimePermission(CLIENT_UID)
         assertFalse(client.allowed)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
     }
 
     @Test
@@ -342,7 +342,7 @@ class ServiceAuthorizationTest {
         assertFalse(client.allowed)
         activityMocks.verify { ActivityManagerApis.forceStopPackageNoThrow(client.packageName, 0) }
         revokedRuntimePermission(ServerConstants.PERMISSION)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
         verify(config).update(CLIENT_UID, listOf(client.packageName), ConfigManager.MASK_PERMISSION or ShizukuConfig.FLAG_PENDING_COMPANION, 0)
     }
 
@@ -351,7 +351,7 @@ class ServiceAuthorizationTest {
         ShadowBinder.setCallingUid(MANAGER_UID)
         `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf())
         service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, 0)
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
         revokedRuntimePermission(ServerConstants.PERMISSION)
     }
 
@@ -532,7 +532,7 @@ class ServiceAuthorizationTest {
             CLIENT_UID, listOf(client.packageName),
             ConfigManager.MASK_PERMISSION or ShizukuConfig.FLAG_PENDING_COMPANION, ShizukuConfig.FLAG_PENDING_COMPANION,
         )
-        verify(userServices).removeUserServicesForPackage(client.packageName)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
         assertFalse(client.allowed)
     }
 
@@ -593,6 +593,40 @@ class ServiceAuthorizationTest {
         verify(record).dispatchRequestPermissionResult(42, false)
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt())
         assertFalse(record.allowed)
+    }
+
+    @Test
+    fun aDenyTearsDownServicesAnEarlierOneTimeGrantStarted() {
+        ShadowBinder.setCallingUid(MANAGER_UID)
+        `when`(config.find(CLIENT_UID)).thenReturn(null)
+        val result = Bundle()
+        result.putBoolean(ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED, false)
+
+        service.endpoint.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, result)
+
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
+    }
+
+    @Test
+    fun theLastProcessOfAOneTimeGrantTakesItsServicesAlong() {
+        `when`(config.find(CLIENT_UID)).thenReturn(null)
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(client))
+
+        service.onClientDied(client)
+        verify(userServices, never()).removeUserServicesForUid(anyInt())
+
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(emptyList())
+        service.onClientDied(client)
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
+    }
+
+    @Test
+    fun aPersistentGrantKeepsItsServicesWhenTheAppExits() {
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(emptyList())
+
+        service.onClientDied(client)
+
+        verify(userServices, never()).removeUserServicesForUid(anyInt())
     }
 
     @Test

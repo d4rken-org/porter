@@ -20,6 +20,14 @@ class ShizukuClientManager(configManager: ShizukuConfigManager) : ClientManager<
         return record
     }
 
+    /** Told about every client whose process died; set once by the server that owns this manager. */
+    @Volatile
+    var onDeath: ((ClientRecord) -> Unit)? = null
+
+    override fun onClientDied(record: ClientRecord) {
+        onDeath?.invoke(record)
+    }
+
     @Synchronized
     fun attachedClients(): List<ClientRecord> {
         attached.removeIf { record -> findClient(record.uid, record.pid) !== record }
