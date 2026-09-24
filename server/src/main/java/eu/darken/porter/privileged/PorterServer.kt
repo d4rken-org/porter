@@ -284,21 +284,8 @@ class PorterServer internal constructor(
                 requestUid, requestPid, requestCode, allowed.toString(), onetime.toString(),
             )
 
-            val records = clientManager.findClients(requestUid)
-            if (records.isEmpty()) {
-                LOGGER.w("dispatchPermissionConfirmationResult: no client for uid %d was found", requestUid)
-            } else {
-                for (record in records) {
-                    record.allowed = allowed && !configManager.isAccessPaused
-                    if (record.pid == requestPid) {
-                        record.dispatchRequestPermissionResult(requestCode, record.allowed)
-                    }
-                }
-            }
-
-            // A service an earlier one-time grant started is not covered by this answer.
-            if (!allowed && !pending) userServiceManager.removeUserServicesForUid(requestUid)
-
+            // Saved before anyone is answered, so a question the answer prompts is answered from it.
+            val deniedBefore = configManager.find(requestUid)?.isDenied() == true
             if (!onetime) {
                 configManager.update(
                     requestUid, PackageManagerApis.getPackagesForUidNoThrow(requestUid),
@@ -306,6 +293,25 @@ class PorterServer internal constructor(
                     if (pending) ShizukuConfig.FLAG_PENDING_COMPANION else if (allowed) ConfigManager.FLAG_ALLOWED else ConfigManager.FLAG_DENIED,
                 )
             }
+            val denied = configManager.find(requestUid)?.isDenied() == true
+
+            val records = clientManager.findClients(requestUid)
+            if (records.isEmpty()) {
+                LOGGER.w("dispatchPermissionConfirmationResult: no client for uid %d was found", requestUid)
+            } else {
+                for (record in records) {
+                    val was = record.allowed
+                    record.allowed = allowed && !configManager.isAccessPaused
+                    if (record.pid == requestPid) {
+                        record.dispatchRequestPermissionResult(requestCode, record.allowed)
+                    } else {
+                        pushPermissionState(record, denied, (was != record.allowed) || (deniedBefore != denied))
+                    }
+                }
+            }
+
+            // A service an earlier one-time grant started is not covered by this answer.
+            if (!allowed && !pending) userServiceManager.removeUserServicesForUid(requestUid)
 
             if (!onetime && !pending) {
                 setRuntimePermissionsForUid(requestUid, allowed)
@@ -365,8 +371,15 @@ class PorterServer internal constructor(
         return if (unresolved) null else legacy
     }
 
-    private fun suspendUid(uid: Int) {
-        for (record in clientManager.findClients(uid)) record.allowed = false
+    /** [liftedDenial] also tells clients already refused, whose refusal is no longer permanent. */
+    private fun suspendUid(uid: Int, liftedDenial: Boolean = false) {
+        for (record in clientManager.findClients(uid)) {
+            val was = record.allowed
+            // Polling suspends the same uid again every round, and a client already told is not told again.
+            if (!was && !liftedDenial) continue
+            record.allowed = false
+            pushPermissionState(record, false, true)
+        }
         userServiceManager.removeUserServicesForUid(uid)
     }
 
@@ -417,7 +430,9 @@ class PorterServer internal constructor(
             if (pending) {
                 configManager.update(uid, null, mask, ConfigManager.FLAG_ALLOWED)
                 for (record in clientManager.findClients(uid)) {
+                    val was = record.allowed
                     record.allowed = !configManager.isAccessPaused && configManager.verifiedForAttach(uid, record.packageName)
+                    pushPermissionState(record, false, was != record.allowed)
                 }
             }
         }
@@ -435,25 +450,35 @@ class PorterServer internal constructor(
             for (record in clientManager.attachedClients()) {
                 if (isManager(record)) continue
                 val entry = configManager.find(record.uid)
+                val was = record.allowed
                 record.allowed = !paused && entry != null && entry.isAllowed() && configManager.verifiedForAttach(record.uid, record.packageName)
+                pushPermissionState(record, entry != null && entry.isDenied(), was != record.allowed)
+            }
+        }
+    }
+
+    /**
+     * Sends [record]'s process its current access: the state callback on the Porter wire, its attach
+     * reply again on the Shizuku wire, which is only re-sent for a [changed] state.
+     */
+    private fun pushPermissionState(record: ClientRecord, shouldShowRationale: Boolean, changed: Boolean) {
+        try {
+            val client = record.client
+            if (client != null) {
+                if (!changed) return
                 val reply = Bundle()
                 reply.putInt(BIND_APPLICATION_SERVER_UID, OsUtils.uid)
                 reply.putInt(BIND_APPLICATION_SERVER_VERSION, if (record.apiVersion == -1) 12 else ShizukuApiConstants.SERVER_VERSION)
                 reply.putInt(BIND_APPLICATION_SERVER_PATCH_VERSION, ShizukuApiConstants.SERVER_PATCH_VERSION)
                 reply.putString(BIND_APPLICATION_SERVER_SECONTEXT, OsUtils.seLinuxContext)
                 reply.putBoolean(BIND_APPLICATION_PERMISSION_GRANTED, record.allowed)
-                reply.putBoolean(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, entry != null && entry.isDenied())
-                try {
-                    val client = record.client
-                    if (client != null) {
-                        client.bindApplication(reply)
-                    } else {
-                        record.callback.onPermissionStateChanged(record.allowed, entry != null && entry.isDenied())
-                    }
-                } catch (e: Throwable) {
-                    LOGGER.w(e, "Cannot notify client of global access change")
-                }
+                reply.putBoolean(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, shouldShowRationale)
+                client.bindApplication(reply)
+            } else {
+                record.callback.onPermissionStateChanged(record.allowed, shouldShowRationale)
             }
+        } catch (e: Throwable) {
+            LOGGER.w(e, "Cannot notify client (uid=%d, pid=%d) of its permission state", record.uid, record.pid)
         }
     }
 
@@ -474,13 +499,14 @@ class PorterServer internal constructor(
                 mask = mask or ShizukuConfig.FLAG_PENDING_COMPANION
                 value = value and ShizukuConfig.FLAG_PENDING_COMPANION.inv()
                 val legacyOnly = uidUsesLegacyOnly(uid)
+                val deniedBefore = configManager.find(uid)?.isDenied() == true
                 if ((value and ConfigManager.FLAG_ALLOWED) != 0 && legacyOnly == null) {
                     throw IllegalStateException("Cannot read application permissions. Try again.")
                 }
                 if ((value and ConfigManager.FLAG_ALLOWED) != 0 && legacyOnly == true && !Compatibility.isAvailable()) {
                     value = (value and ConfigManager.MASK_PERMISSION.inv()) or ShizukuConfig.FLAG_PENDING_COMPANION
                     configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, value)
-                    suspendUid(uid)
+                    suspendUid(uid, liftedDenial = deniedBefore)
                     return
                 }
                 val allowed = (value and ConfigManager.FLAG_ALLOWED) != 0
@@ -488,10 +514,14 @@ class PorterServer internal constructor(
 
                 val records = clientManager.findClients(uid)
                 for (record in records) {
+                    val was = record.allowed
                     if (allowed) {
                         record.allowed = !configManager.isAccessPaused
+                        pushPermissionState(record, false, (was != record.allowed) || deniedBefore)
                     } else {
                         record.allowed = false
+                        // Ahead of the force-stop, for a client whose process outlives it.
+                        pushPermissionState(record, denied, was || (deniedBefore != denied))
                         ActivityManagerApis.forceStopPackageNoThrow(record.packageName, UserHandleCompat.getUserId(record.uid))
                     }
                 }

@@ -357,6 +357,97 @@ class ServiceAuthorizationTest {
     }
 
     @Test
+    fun aGrantFromTheAppListReachesTheConnectedApp() {
+        val application = mock(IPorterApplication::class.java)
+        val record = porterClient(application)
+        record.allowed = false
+        ShadowBinder.setCallingUid(MANAGER_UID)
+
+        service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED)
+
+        assertTrue(record.allowed)
+        val state = ArgumentCaptor.forClass(Bundle::class.java)
+        verify(application).dispatchPermissionStateChanged(state.capture())
+        assertTrue(state.value.getBoolean(PorterProtocol.REPLY_PERMISSION_GRANTED))
+        assertFalse(state.value.getBoolean(PorterProtocol.REPLY_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE))
+    }
+
+    @Test
+    fun aGrantFromTheAppListIsResentToAShizukuWireClient() {
+        client.allowed = false
+        ShadowBinder.setCallingUid(MANAGER_UID)
+
+        service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED)
+
+        val reply = ArgumentCaptor.forClass(Bundle::class.java)
+        verify(client.client!!).bindApplication(reply.capture())
+        assertTrue(reply.value.getBoolean(ShizukuApiConstants.BIND_APPLICATION_PERMISSION_GRANTED))
+    }
+
+    @Test
+    fun aGrantThatChangesNothingIsNotResentToAShizukuWireClient() {
+        ShadowBinder.setCallingUid(MANAGER_UID)
+
+        service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED)
+
+        assertTrue(client.allowed)
+        verify(client.client!!, never()).bindApplication(any())
+    }
+
+    @Test
+    fun switchingOnADeniedAppStillWaitingForTheCompanionLiftsItsPermanentRefusal() {
+        savedDecision(ConfigManager.FLAG_DENIED)
+        installed.requestedPermissions = arrayOf(ServerConstants.LEGACY_PERMISSION)
+        client.allowed = false
+        ShadowBinder.setCallingUid(MANAGER_UID)
+
+        service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, ConfigManager.FLAG_ALLOWED)
+
+        assertFalse(client.allowed)
+        val reply = ArgumentCaptor.forClass(Bundle::class.java)
+        verify(client.client!!).bindApplication(reply.capture())
+        assertFalse(reply.value.getBoolean(ShizukuApiConstants.BIND_APPLICATION_PERMISSION_GRANTED))
+        assertFalse(reply.value.getBoolean(ShizukuApiConstants.BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE))
+    }
+
+    @Test
+    fun anAppListRevocationIsPushedBeforeTheAppIsStopped() {
+        val application = mock(IPorterApplication::class.java)
+        porterClient(application)
+        var stopped = false
+        var pushedBeforeStop = false
+        activityMocks.`when`<Unit> { ActivityManagerApis.forceStopPackageNoThrow(client.packageName, 0) }.thenAnswer { stopped = true; null }
+        doAnswer { pushedBeforeStop = !stopped; null }.`when`(application).dispatchPermissionStateChanged(any())
+        ShadowBinder.setCallingUid(MANAGER_UID)
+
+        service.updateFlagsForUid(CLIENT_UID, ConfigManager.MASK_PERMISSION, 0)
+
+        val state = ArgumentCaptor.forClass(Bundle::class.java)
+        verify(application).dispatchPermissionStateChanged(state.capture())
+        assertFalse(state.value.getBoolean(PorterProtocol.REPLY_PERMISSION_GRANTED))
+        // Switching an app off is not a refusal it has to be told is permanent.
+        assertFalse(state.value.getBoolean(PorterProtocol.REPLY_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE))
+        assertTrue(stopped)
+        assertTrue(pushedBeforeStop)
+    }
+
+    @Test
+    fun aSuspensionIsPushedOnceRatherThanOnEveryPoll() {
+        val application = mock(IPorterApplication::class.java)
+        val record = porterClient(application)
+        // Legacy-only with no companion, which every reconciliation suspends again.
+        installed.requestedPermissions = arrayOf(ServerConstants.LEGACY_PERMISSION)
+
+        service.reconcileRuntimePermission(CLIENT_UID)
+        service.reconcileRuntimePermission(CLIENT_UID)
+
+        assertFalse(record.allowed)
+        val state = ArgumentCaptor.forClass(Bundle::class.java)
+        verify(application, times(1)).dispatchPermissionStateChanged(state.capture())
+        assertFalse(state.value.getBoolean(PorterProtocol.REPLY_PERMISSION_GRANTED))
+    }
+
+    @Test
     fun explicitRevocationAlsoStopsDaemonWithoutAttachedClient() {
         ShadowBinder.setCallingUid(MANAGER_UID)
         `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf())
@@ -485,6 +576,18 @@ class ServiceAuthorizationTest {
         }
     }
 
+    /** A saved decision for the client that [ShizukuConfigManager.update] changes the way the real one does. */
+    private fun savedDecision(flags: Int): ShizukuConfig.PackageEntry {
+        val entry = ShizukuConfig.PackageEntry(CLIENT_UID, flags)
+        `when`(config.find(CLIENT_UID)).thenReturn(entry)
+        doAnswer {
+            val mask = it.getArgument<Int>(2)
+            entry.flags = (entry.flags and mask.inv()) or (mask and it.getArgument<Int>(3))
+            null
+        }.`when`(config).update(eq(CLIENT_UID), any(), anyInt(), anyInt())
+        return entry
+    }
+
     private fun pendingLegacy(): ShizukuConfig.PackageEntry {
         installed.requestedPermissions = arrayOf(ServerConstants.LEGACY_PERMISSION)
         val entry = ShizukuConfig.PackageEntry(CLIENT_UID, ShizukuConfig.FLAG_PENDING_COMPANION)
@@ -522,6 +625,19 @@ class ServiceAuthorizationTest {
         grantedRuntimePermission(ServerConstants.LEGACY_PERMISSION)
         verify(config).update(CLIENT_UID, null, ConfigManager.MASK_PERMISSION or ShizukuConfig.FLAG_PENDING_COMPANION, ConfigManager.FLAG_ALLOWED)
         assertTrue(client.allowed)
+    }
+
+    @Test
+    fun anActivatedPendingGrantReachesTheConnectedApp() {
+        pendingLegacy()
+        companionAvailable()
+        checkPermission(ServerConstants.LEGACY_PERMISSION, PackageManager.PERMISSION_GRANTED)
+
+        service.reconcileRuntimePermission(CLIENT_UID)
+
+        val reply = ArgumentCaptor.forClass(Bundle::class.java)
+        verify(client.client!!).bindApplication(reply.capture())
+        assertTrue(reply.value.getBoolean(ShizukuApiConstants.BIND_APPLICATION_PERMISSION_GRANTED))
     }
 
     @Test
@@ -645,6 +761,60 @@ class ServiceAuthorizationTest {
         server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, false, true)
 
         verify(userServices).removeUserServicesForUid(CLIENT_UID)
+    }
+
+    @Test
+    fun aPromptAnswerReachesTheAppsOtherProcesses() {
+        val entry = savedDecision(0)
+        val server = serverSeeing(0)
+        openPrompt(server, 42)
+        val requester = spy(client)
+        val application = mock(IPorterApplication::class.java)
+        var deniedWhenTold = false
+        doAnswer { deniedWhenTold = entry.isDenied(); null }.`when`(application).dispatchPermissionStateChanged(any())
+        val other = ClientRecord(CallerIdentity(CLIENT_UID, CLIENT_PID + 1), PorterClientCallback(application), client.packageName, 13)
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(requester, other))
+
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, false, false)
+
+        // The asking process learns from its answer alone.
+        verify(requester).dispatchRequestPermissionResult(42, false)
+        verify(requester.client!!, never()).bindApplication(any())
+        val state = ArgumentCaptor.forClass(Bundle::class.java)
+        verify(application).dispatchPermissionStateChanged(state.capture())
+        assertFalse(state.value.getBoolean(PorterProtocol.REPLY_PERMISSION_GRANTED))
+        assertTrue(state.value.getBoolean(PorterProtocol.REPLY_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE))
+        assertTrue(deniedWhenTold)
+    }
+
+    @Test
+    fun aRefusalIsSavedBeforeTheAskingProcessIsAnswered() {
+        val entry = savedDecision(0)
+        val server = serverSeeing(0)
+        openPrompt(server, 42)
+        val requester = spy(client)
+        var deniedWhenAnswered = false
+        doAnswer { deniedWhenAnswered = entry.isDenied(); null }.`when`(requester).dispatchRequestPermissionResult(anyInt(), anyBoolean())
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(requester))
+
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, false, false)
+
+        verify(requester).dispatchRequestPermissionResult(42, false)
+        assertTrue(deniedWhenAnswered)
+    }
+
+    @Test
+    fun aOneTimeRefusalIsNotResentToAnAlreadyRefusedShizukuWireSibling() {
+        savedDecision(0)
+        val server = serverSeeing(0)
+        openPrompt(server, 42)
+        val requester = spy(client)
+        val sibling = ClientRecord(CLIENT_UID, CLIENT_PID + 1, mock(IShizukuApplication::class.java), client.packageName, 13)
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(requester, sibling))
+
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, false, true)
+
+        verify(sibling.client!!, never()).bindApplication(any())
     }
 
     @Test
