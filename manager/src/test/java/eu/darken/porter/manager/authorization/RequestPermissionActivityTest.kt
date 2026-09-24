@@ -268,6 +268,7 @@ class RequestPermissionActivityTest {
             putInt("asked.pid", 5151)
             putInt("asked.code", 8)
             putParcelable("asked.info", other)
+            putStringArray("asked.packages", arrayOf(other.packageName, "eu.darken.porter.probe.shared"))
         }
         val scenario = launch()
         awaitText(allow)
@@ -277,6 +278,7 @@ class RequestPermissionActivityTest {
             assertEquals(5151, adopted?.pid)
             assertEquals(8, adopted?.code)
             assertEquals(other.packageName, adopted?.info?.packageName)
+            assertEquals(listOf("eu.darken.porter.probe.shared"), adopted?.alsoCovers)
             // A process starting fresh has no saved copy and falls through to its intent.
             assertNull(it.restored(null))
             assertNull("a bundle naming no caller is not a request", it.restored(Bundle()))
@@ -296,7 +298,8 @@ class RequestPermissionActivityTest {
         scenario.onActivity {
             it.onNewIntent(Intent(context, RequestPermissionActivity::class.java)
                 .putExtra("uid", 10999).putExtra("pid", 5151).putExtra("requestCode", 8)
-                .putExtra("applicationInfo", other))
+                .putExtra("applicationInfo", other)
+                .putExtra("packages", arrayOf(other.packageName, "eu.darken.porter.probe.shared")))
         }
         val saved = Bundle()
         scenario.onActivity { it.onSaveInstanceState(saved) }
@@ -305,6 +308,7 @@ class RequestPermissionActivityTest {
         assertEquals(8, saved.getInt("asked.code", -1))
         @Suppress("DEPRECATION")
         assertEquals(other.packageName, saved.getParcelable<ApplicationInfo>("asked.info")?.packageName)
+        assertArrayEquals(arrayOf(other.packageName, "eu.darken.porter.probe.shared"), saved.getStringArray("asked.packages"))
     }
 
     @Test fun oneAppAskingAgainCannotKeepThePromptFromBeingAnswered() {
@@ -410,6 +414,29 @@ class RequestPermissionActivityTest {
         compose.onNodeWithText("Good app").assertIsDisplayed()
         compose.onAllNodesWithText("is Porter itself", substring = true).assertCountEquals(0)
         compose.onAllNodesWithText("\u202E", substring = true).assertCountEquals(0)
+    }
+
+    @Test fun theOtherPackagesOfASharedUidAreNamed() {
+        // A grant is to the uid, so it reaches every package in it, not only the one that asked.
+        ActivityScenario.launch<RequestPermissionActivity>(
+            Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 7)
+                .putExtra("applicationInfo", appInfo(10123))
+                .putExtra("packages", arrayOf(context.packageName, "com.example.one", "com.example.two"))
+        ).also { scenario = it }
+        awaitText(allow)
+        compose.onNodeWithText(context.getString(R.string.porter_permission_also_covers, "com.example.one, com.example.two")).assertIsDisplayed()
+    }
+
+    @Test fun aUidWithOnePackageNamesNoOthers() {
+        ActivityScenario.launch<RequestPermissionActivity>(
+            Intent(context, RequestPermissionActivity::class.java)
+                .putExtra("uid", 10123).putExtra("pid", 4242).putExtra("requestCode", 7)
+                .putExtra("applicationInfo", appInfo(10123))
+                .putExtra("packages", arrayOf(context.packageName))
+        ).also { scenario = it }
+        awaitText(allow)
+        compose.onAllNodesWithText(context.getString(R.string.porter_permission_also_covers, ""), substring = true).assertCountEquals(0)
     }
 
     @Test fun requestWithoutCallerIdentityClosesWithoutReply() {
