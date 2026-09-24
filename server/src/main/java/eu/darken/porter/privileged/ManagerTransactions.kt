@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Process
+import android.system.Os
 import eu.darken.porter.common.GlobalAccess
 import eu.darken.porter.common.PorterBuildIdentity
 import eu.darken.porter.common.util.OsUtils
@@ -109,8 +110,10 @@ internal object ManagerTransactions {
         if (!isUserServiceHostBootstrap(CallerIdentity.fromBinder())) {
             throw SecurityException("Permission Denial: validateUserServiceToken from uid " + Binder.getCallingUid())
         }
-        val live = service.userServiceManager.isUserServiceTokenLive(data.readString())
+        // The calling process is the host itself, asking before it loads the app's code: admitting it
+        // records the pid the record's removal will kill.
+        val admitted = service.userServiceManager.claimUserServiceLaunch(data.readString(), Binder.getCallingPid(), Os.getuid())
         out.writeNoException()
-        out.writeInt(if (live) 1 else 0)
+        out.writeInt(if (admitted) 1 else 0)
     }
 }
