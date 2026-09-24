@@ -20,8 +20,11 @@ import rikka.shizuku.server.ConfigManager
 internal object ApplicationDiscovery {
     fun describe(info: PackageInfo, flags: Int, companion: Boolean, lastConnected: Long): DiscoveredApplication? {
         val source = info.applicationInfo ?: return null
+        // Manager apps stay off the list, but only while they have nothing to show there: anything
+        // can define a permission by that name, and a decision the user cannot see is one they
+        // cannot revoke.
         val permissions = info.permissions
-        if (permissions != null) {
+        if (permissions != null && flags == 0 && lastConnected == 0L) {
             for (permission in permissions) {
                 val name = permission.name
                 if (name != null && name.endsWith(".permission.MANAGER")) return null

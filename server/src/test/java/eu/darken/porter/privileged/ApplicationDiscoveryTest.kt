@@ -2,6 +2,7 @@ package eu.darken.porter.privileged
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
+import android.content.pm.PermissionInfo
 import android.os.Bundle
 import android.os.Parcel
 import eu.darken.porter.common.DiscoveredApplication
@@ -75,6 +76,17 @@ class ApplicationDiscoveryTest {
         assertNull(ApplicationDiscovery.describe(info, 0, false, 0))
         assertEquals(MANAGED_ONLY, ApplicationDiscovery.describe(info, 0, false, 123)!!.connectionStatus)
         assertEquals(ALLOWED, ApplicationDiscovery.describe(info, ConfigManager.FLAG_ALLOWED, false, 0)!!.authorization)
+    }
+
+    @Test
+    fun aManagerPermissionHidesOnlyAnAppWithNothingToShow() {
+        val info = app("impostor", 10123, ServerConstants.PERMISSION)
+        info.permissions = arrayOf(PermissionInfo().apply { name = "com.impostor.permission.MANAGER" })
+
+        assertNull(ApplicationDiscovery.describe(info, 0, false, 0))
+        assertEquals(ALLOWED, ApplicationDiscovery.describe(info, ConfigManager.FLAG_ALLOWED, false, 0)!!.authorization)
+        assertEquals(DENIED, ApplicationDiscovery.describe(info, ConfigManager.FLAG_DENIED, false, 0)!!.authorization)
+        assertEquals(123456, ApplicationDiscovery.describe(info, 0, false, 123456)!!.lastConnectedAt)
     }
 
     @Test
