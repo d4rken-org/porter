@@ -27,6 +27,13 @@ class ShizukuConfig {
         @SerializedName("packages")
         var packages: MutableList<String>? = ArrayList()
 
+        /**
+         * SHA-256 digests of the signers of the installation the decision was made for. Null in an
+         * entry written before they were recorded; filled from the installation the next attach finds.
+         */
+        @SerializedName("signers")
+        var signers: MutableList<String>? = null
+
         override fun isAllowed(): Boolean = (flags and ConfigManager.FLAG_ALLOWED) != 0
 
         fun isPendingCompanion(): Boolean = (flags and FLAG_PENDING_COMPANION) != 0

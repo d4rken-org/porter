@@ -13,12 +13,20 @@ class ShizukuClientManager(configManager: ShizukuConfigManager) : ClientManager<
     override fun attach(identity: CallerIdentity, callback: ClientCallback, packageName: String, apiVersion: Int): ClientRecord? {
         val record = super.attach(identity, callback, packageName, apiVersion)
         if (record != null) {
-            if (configManager.isAccessPaused) record.allowed = false
             attached.removeIf { old -> findClient(old.uid, old.pid) !== old }
             attached.add(record)
         }
         return record
     }
+
+    /**
+     * A stored decision reaches a new process only while access is not paused, and only for the
+     * installation it was made for.
+     */
+    override fun startsAllowed(identity: CallerIdentity, packageName: String): Boolean =
+        !configManager.isAccessPaused &&
+            super.startsAllowed(identity, packageName) &&
+            configManager.verifiedForAttach(identity.uid, packageName)
 
     /** Told about every client whose process died; set once by the server that owns this manager. */
     @Volatile
