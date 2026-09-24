@@ -366,7 +366,9 @@ class PorterServer internal constructor(
             }
             if (pending) {
                 configManager.update(uid, null, mask, ConfigManager.FLAG_ALLOWED)
-                for (record in clientManager.findClients(uid)) record.allowed = !configManager.isAccessPaused
+                for (record in clientManager.findClients(uid)) {
+                    record.allowed = !configManager.isAccessPaused && configManager.verifiedForAttach(uid, record.packageName)
+                }
             }
         }
     }
@@ -383,7 +385,7 @@ class PorterServer internal constructor(
             for (record in clientManager.attachedClients()) {
                 if (isManager(record)) continue
                 val entry = configManager.find(record.uid)
-                record.allowed = !paused && entry != null && entry.isAllowed()
+                record.allowed = !paused && entry != null && entry.isAllowed() && configManager.verifiedForAttach(record.uid, record.packageName)
                 val reply = Bundle()
                 reply.putInt(BIND_APPLICATION_SERVER_UID, OsUtils.uid)
                 reply.putInt(BIND_APPLICATION_SERVER_VERSION, if (record.apiVersion == -1) 12 else ShizukuApiConstants.SERVER_VERSION)

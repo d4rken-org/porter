@@ -107,6 +107,8 @@ class ServiceAuthorizationTest {
         `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(client))
         `when`(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(client)
         `when`(config.find(CLIENT_UID)).thenReturn(ShizukuConfig.PackageEntry(CLIENT_UID, ConfigManager.FLAG_ALLOWED))
+        // The installation a decision was made for; GrantInstallationTest covers the check itself.
+        `when`(config.verifiedForAttach(anyInt(), anyString())).thenReturn(true)
         installed = PackageInfo()
         installed.packageName = client.packageName
         installed.requestedPermissions = arrayOf(ServerConstants.PERMISSION)
@@ -688,6 +690,20 @@ class ServiceAuthorizationTest {
         assertEquals(before, entry.flags)
         verify(userServices).setAccessPaused(false)
         verify(client.client!!, times(2)).bindApplication(any(Bundle::class.java))
+    }
+
+    @Test
+    fun resumingAccessDoesNotAllowAnInstallationTheDecisionWasNotMadeFor() {
+        val paused = AtomicBoolean(false)
+        `when`(config.isAccessPaused).thenAnswer { paused.get() }
+        doAnswer { paused.set(it.getArgument(0)); null }.`when`(config).setAccessPaused(anyBoolean())
+        `when`(clients.attachedClients()).thenReturn(listOf(client))
+        service.setGlobalAccess(false)
+
+        `when`(config.verifiedForAttach(CLIENT_UID, client.packageName)).thenReturn(false)
+        service.setGlobalAccess(true)
+
+        assertFalse(client.allowed)
     }
 
     /** A server whose only difference from [service] is which user it believes is on screen. */
