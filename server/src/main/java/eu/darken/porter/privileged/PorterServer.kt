@@ -61,6 +61,8 @@ class PorterServer internal constructor(
     val clientManager: ShizukuClientManager,
     val configManager: ShizukuConfigManager,
     private val managerAppId: Int,
+    /** Whether a uid holds the manager installation the server started with; see [managerInstallation]. */
+    private val isManagerInstallation: (Int) -> Boolean,
     private val connectionHistory: ConnectionHistory,
     private val historyWriter: Executor,
     endpointFactory: (PorterServer) -> ShizukuServiceEndpoint,
@@ -103,7 +105,7 @@ class PorterServer internal constructor(
      * package in another user is an ordinary app.
      */
     internal fun isManager(caller: CallerIdentity): Boolean =
-        caller.appId() == managerAppId && caller.userId() == MANAGER_USER_ID
+        caller.appId() == managerAppId && caller.userId() == MANAGER_USER_ID && isManagerInstallation(caller.uid)
 
     private fun isManager(record: ClientRecord): Boolean = isManager(CallerIdentity(record.uid, record.pid))
 
@@ -607,6 +609,16 @@ class PorterServer internal constructor(
         internal fun managerStartupExitCode(result: PackageIdentity.Result): Int =
             if (result.state == PackageIdentity.State.PRESENT) 0 else ServerConstants.MANAGER_APP_NOT_FOUND
 
+        /**
+         * Asked on every call from the manager's app id. The reconciler only exits on a replaced or
+         * removed manager at its next scan, and until then the app id alone would authorise whoever
+         * holds it.
+         */
+        internal fun managerInstallation(baseline: PackageIdentity.Identity): (Int) -> Boolean = { uid ->
+            PackageManagerApis.getPackagesForUidNoThrow(uid).contains(MANAGER_APPLICATION_ID) &&
+                baseline.matches(PackageIdentity.of(MANAGER_APPLICATION_ID, MANAGER_USER_ID).observed)
+        }
+
         fun bootstrap(
             endpointFactory: (PorterServer) -> ShizukuServiceEndpoint,
             porterEndpointFactory: (PorterServer) -> PorterServiceEndpoint,
@@ -630,6 +642,7 @@ class PorterServer internal constructor(
             }
 
             val observed = manager.observed ?: throw AssertionError("manager observed is null")
+            val managerBaseline = PackageIdentity.Identity(MANAGER_APPLICATION_ID, observed.appId, observed.signerDigests)
 
             val configManager = ShizukuConfigManager()
             val clientManager = ShizukuClientManager(configManager)
@@ -640,6 +653,7 @@ class PorterServer internal constructor(
                 clientManager,
                 configManager,
                 observed.appId,
+                managerInstallation(managerBaseline),
                 ConnectionHistory(File("/data/user_de/0/com.android.shell/porter-connections.json")),
                 Executors.newSingleThreadExecutor(),
                 endpointFactory,
@@ -657,7 +671,7 @@ class PorterServer internal constructor(
 
             val reconciler = ApkReconciler(
                 MANAGER_APPLICATION_ID,
-                PackageIdentity.Identity(MANAGER_APPLICATION_ID, observed.appId, observed.signerDigests),
+                managerBaseline,
                 userServiceManager,
                 ApkReconciler.SystemPackageOracle(),
                 ApkReconciler.ExecutorScheduler(),
