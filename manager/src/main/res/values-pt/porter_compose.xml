@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Voltar</string>
-    <string name="porter_local_network_permission">Permita o acesso à sua rede local para que o Porter possa encontrar o serviço de depuração sem fios do Android e ligar-se a ele.</string>
-    <string name="porter_pairing_dialog_instructions">Abra “Depuração sem fios” nas “Opções de programador” do Android e escolha “Sincronize dispositivo com código de sincronização”. Introduza aqui a porta e o código de emparelhamento.</string>
-    <string name="porter_permission_detail">O Porter vai executar comandos no seu dispositivo para esta aplicação, com os mesmos privilégios que o próprio Porter tem. Permita apenas aplicações em que confia.</string>
-    <string name="porter_permission_waiting">A aguardar o Porter…</string>
-</resources>

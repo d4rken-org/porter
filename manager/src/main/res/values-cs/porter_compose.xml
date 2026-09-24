@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Zpět</string>
-    <string name="porter_local_network_permission">Povolte přístup k místní síti, aby Porter mohl najít službu bezdrátového ladění Androidu a připojit se k ní.</string>
-    <string name="porter_pairing_dialog_instructions">V nastavení Androidu v sekci „Pro vývojáře“ otevřete „Bezdrátové ladění“ a zvolte „Párovat zařízení pomocí párovacího kódu“. Sem zadejte port a párovací kód.</string>
-    <string name="porter_permission_detail">Porter bude pro tuto aplikaci spouštět příkazy na vašem zařízení se stejnými oprávněními, jaká má samotný Porter. Povolujte pouze aplikace, kterým důvěřujete.</string>
-    <string name="porter_permission_waiting">Čekání na Porter…</string>
-</resources>

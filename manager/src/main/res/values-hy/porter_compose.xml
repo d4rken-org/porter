@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Հետ գնալ</string>
-    <string name="porter_local_network_permission">Թույլատրեք մուտք ձեր տեղային ցանց, որպեսզի Porter-ը կարողանա գտնել Android-ի անլար վրիպազերծման ծառայությունը և միանալ դրան։</string>
-    <string name="porter_pairing_dialog_instructions">Android-ի «Մշակողի ընտրանքներ» բաժնում բացեք «Անլար վրիպազերծում»-ը և ընտրեք «Զուգակցել սարքը զուգակցման կոդով»։ Մուտքագրեք պորտը և զուգակցման կոդն այստեղ։</string>
-    <string name="porter_permission_detail">Porter-ն այս հավելվածի համար ձեր սարքում հրամաններ կկատարի նույն արտոնություններով, որոնք ունի ինքը՝ Porter-ը։ Թույլատրեք միայն այն հավելվածներին, որոնց վստահում եք։</string>
-    <string name="porter_permission_waiting">Սպասում ենք Porter-ին…</string>
-</resources>

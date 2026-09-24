@@ -1,7 +1,0 @@
-<resources>
-    <string name="porter_navigate_back">Zurück</string>
-    <string name="porter_local_network_permission">Erlaube den Zugriff auf dein lokales Netzwerk, damit Porter den Dienst für Debugging über WLAN von Android finden und sich mit ihm verbinden kann.</string>
-    <string name="porter_pairing_dialog_instructions">Öffne in den Android-Entwickleroptionen Debugging über WLAN und wähle Gerät mit Kopplungscode koppeln. Gib hier den Port und den Kopplungscode ein.</string>
-    <string name="porter_permission_detail">Porter führt für diese App Befehle auf deinem Gerät aus, mit denselben Rechten, die Porter selbst hat. Erlaube nur Apps, denen du vertraust.</string>
-    <string name="porter_permission_waiting">Warte auf Porter…</string>
-</resources>

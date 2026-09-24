@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">பின்செல்</string>
-    <string name="porter_local_network_permission">Android இன் வயர்லெஸ் பிழைத்திருத்தச் சேவையை Porter கண்டறிந்து இணைக்க, உங்கள் உள்ளூர் நெட்வொர்க்கை அணுக அனுமதிக்கவும்.</string>
-    <string name="porter_pairing_dialog_instructions">Android இன் டெவலப்பர் விருப்பங்களில் “வயர்லெஸ் பிழைத்திருத்தம்” என்பதைத் திறந்து “இணைப்பு குறியீட்டுடன் சாதனத்தை இணை” என்பதைத் தேர்ந்தெடுக்கவும். போர்ட்டையும் இணைத்தல் குறியீட்டையும் இங்கே உள்ளிடவும்.</string>
-    <string name="porter_permission_detail">இந்தப் பயன்பாட்டுக்காக, Porter க்கு உள்ள அதே சிறப்புரிமைகளுடன் உங்கள் சாதனத்தில் Porter கட்டளைகளை இயக்கும். நீங்கள் நம்பும் பயன்பாடுகளை மட்டும் அனுமதிக்கவும்.</string>
-    <string name="porter_permission_waiting">Porter க்காகக் காத்திருக்கிறது…</string>
-</resources>

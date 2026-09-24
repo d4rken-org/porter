@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Siirry takaisin</string>
-    <string name="porter_local_network_permission">Salli lähiverkon käyttö, jotta Porter voi löytää Androidin langattoman virheenkorjauksen palvelun ja muodostaa siihen yhteyden.</string>
-    <string name="porter_pairing_dialog_instructions">Avaa Langaton virheenkorjaus Androidin kehittäjäasetuksista ja valitse Muodosta laitepari laiteparikoodilla. Syötä portti ja parituskoodi tähän.</string>
-    <string name="porter_permission_detail">Porter suorittaa komentoja laitteellasi tämän sovelluksen puolesta samoilla oikeuksilla kuin Porterilla itsellään on. Salli vain sovellukset, joihin luotat.</string>
-    <string name="porter_permission_waiting">Odotetaan Porteria…</string>
-</resources>

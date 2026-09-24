@@ -91,10 +91,6 @@
 Translation:
   - changed-files:
       - any-glob-to-any-file:
-          # Every XML in a locale-qualified values dir, not just strings.xml:
-          # Porter splits its strings across compatibility.xml, porter_support.xml
-          # and others, all of which are translated.
-          #
           # The two-letter class is what keeps configuration qualifiers out:
           # values-night, values-sw600dp and values-v4 do not match it.
           - "manager/src/*/res/values-[a-z][a-z]/*.xml"

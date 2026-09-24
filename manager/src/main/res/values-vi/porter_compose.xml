@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Quay lại</string>
-    <string name="porter_local_network_permission">Hãy cho phép truy cập mạng cục bộ để Porter có thể tìm và kết nối với dịch vụ gỡ lỗi không dây của Android.</string>
-    <string name="porter_pairing_dialog_instructions">Mở Gỡ lỗi không dây trong Tùy chọn cho nhà phát triển của Android và chọn Ghép nối thiết bị bằng mã ghép nối. Nhập cổng và mã ghép nối tại đây.</string>
-    <string name="porter_permission_detail">Porter sẽ chạy lệnh trên thiết bị của bạn cho ứng dụng này, với cùng đặc quyền mà Porter có. Chỉ cho phép những ứng dụng bạn tin tưởng.</string>
-    <string name="porter_permission_waiting">Đang chờ Porter…</string>
-</resources>

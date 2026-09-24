@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">بازگشت</string>
-    <string name="porter_local_network_permission">اجازه دسترسی به شبکه محلی را بدهید تا Porter بتواند سرویس اشکال‌زدایی بی‌سیم Android را پیدا کند و به آن وصل شود.</string>
-    <string name="porter_pairing_dialog_instructions">در گزینه‌های توسعه‌دهنده Android، «اشکال‌زدایی بی‌سیم» را باز کنید و «مرتبط کردن دستگاه با کد مرتبط‌سازی» را انتخاب کنید. درگاه و کد مرتبط‌سازی را اینجا وارد کنید.</string>
-    <string name="porter_permission_detail">Porter برای این برنامه، با همان امتیازهایی که خود Porter دارد، روی دستگاه شما فرمان اجرا می‌کند. فقط به برنامه‌هایی اجازه دهید که به آن‌ها اعتماد دارید.</string>
-    <string name="porter_permission_waiting">در انتظار Porter…</string>
-</resources>

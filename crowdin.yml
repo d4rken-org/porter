@@ -1,5 +1,56 @@
-files:
-  - source: /manager/src/main/res/values/strings.xml
-    translation: /manager/src/main/res/values-%two_letters_code%/%original_file_name%
-    translate_attributes: 0
-    content_segmentation: 0
+"api_token_env": "CROWDIN_PERSONAL_TOKEN"
+"project_id": "TBD"
+"preserve_hierarchy": true
+
+"files": [
+  {
+    "source": "/manager/src/main/res/values/strings.xml",
+    "dest": "/strings-manager.xml",
+    "translation": "/manager/src/main/res/values-%android_code%/strings.xml",
+    "languages_mapping": &stringmapping {
+      "android_code": {
+        "af": "af",
+        "ar": "ar",
+        "az": "az",
+        "cs": "cs",
+        "de": "de",
+        "el": "el",
+        "es-ES": "es",
+        "fa": "fa",
+        "fi": "fi",
+        "fil": "fil",
+        "fr": "fr",
+        "hu": "hu",
+        "hy-AM": "hy",
+        "id": "id",
+        "it": "it",
+        "ja": "ja",
+        "ka": "ka",
+        "ko": "ko",
+        "ms": "ms",
+        "nl": "nl",
+        "no": "no",
+        "pl": "pl",
+        "pt-PT": "pt",
+        "pt-BR": "pt-rBR",
+        "ro": "ro",
+        "ru": "ru",
+        "sl": "sl",
+        "sr": "sr",
+        "sv-SE": "sv",
+        "ta": "ta",
+        "th": "th",
+        "tr": "tr",
+        "uk": "uk",
+        "vi": "vi",
+        "zh-CN": "zh-rCN",
+        "zh-TW": "zh-rTW"
+      }
+    }
+  }, {
+    "source": "/compat/src/main/res/values/strings.xml",
+    "dest": "/strings-compat.xml",
+    "translation": "/compat/src/main/res/values-%android_code%/strings.xml",
+    "languages_mapping": *stringmapping
+  }
+]

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Kembali</string>
-    <string name="porter_local_network_permission">Izinkan akses ke jaringan lokal Anda agar Porter dapat menemukan dan terhubung ke layanan proses debug nirkabel Android.</string>
-    <string name="porter_pairing_dialog_instructions">Buka Proses debug nirkabel di Opsi developer Android dan pilih Sambungkan perangkat dengan kode penyambungan. Masukkan port dan kode penyambungan di sini.</string>
-    <string name="porter_permission_detail">Porter akan menjalankan perintah di perangkat Anda untuk aplikasi ini, dengan hak istimewa yang sama seperti Porter sendiri. Hanya izinkan aplikasi yang Anda percayai.</string>
-    <string name="porter_permission_waiting">Menunggu Porter…</string>
-</resources>

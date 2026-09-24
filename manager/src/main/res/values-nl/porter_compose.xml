@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Terug</string>
-    <string name="porter_local_network_permission">Sta toegang tot je lokale netwerk toe zodat Porter de service voor draadloze foutopsporing van Android kan vinden en er verbinding mee kan maken.</string>
-    <string name="porter_pairing_dialog_instructions">Open Draadloze foutopsporing in de ontwikkelaarsopties van Android en kies Apparaat koppelen met koppelingscode. Voer hier de poort en de koppelingscode in.</string>
-    <string name="porter_permission_detail">Porter voert voor deze app opdrachten uit op je apparaat, met dezelfde rechten als Porter zelf. Sta alleen apps toe die je vertrouwt.</string>
-    <string name="porter_permission_waiting">Wachten op Porter…</string>
-</resources>

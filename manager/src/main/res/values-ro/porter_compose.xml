@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Înapoi</string>
-    <string name="porter_local_network_permission">Permite accesul la rețeaua locală pentru ca Porter să poată găsi serviciul de remediere a erorilor wireless al Android și să se conecteze la el.</string>
-    <string name="porter_pairing_dialog_instructions">Deschide „Remedierea erorilor wireless” din opțiunile pentru dezvoltatori Android și alege „Asociază dispozitivul folosind codul de conectare”. Introdu aici portul și codul de asociere.</string>
-    <string name="porter_permission_detail">Porter va rula comenzi pe dispozitiv pentru această aplicație, cu aceleași privilegii pe care le are Porter. Permite doar aplicațiile în care ai încredere.</string>
-    <string name="porter_permission_waiting">Se așteaptă Porter…</string>
-</resources>

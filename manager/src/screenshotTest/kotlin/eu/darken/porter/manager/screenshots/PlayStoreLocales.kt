@@ -29,7 +29,7 @@ annotation class PlayStoreLocales
  * The `uiMode` is not cosmetic. PorterTheme(dark = true) selects the Material colour scheme only;
  * ServiceStatusCard tints the status icon through colorResource(R.color.porter_status_running),
  * which resolves against the render configuration. Without UI_MODE_NIGHT_YES a dark shot paints
- * values/porter_status.xml's light-surface green on a dark card, a combination the app never
+ * values/colors.xml's light-surface green on a dark card, a combination the app never
  * produces because PorterApplication flips the resource configuration and the theme together
  * through AppCompatDelegate.setDefaultNightMode.
  */

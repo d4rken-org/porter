@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="porter_navigate_back">Geri git</string>
-    <string name="porter_local_network_permission">Porter’ın Android’in kablosuz hata ayıklama hizmetini bulup ona bağlanabilmesi için yerel ağınıza erişime izin verin.</string>
-    <string name="porter_pairing_dialog_instructions">Android’in Geliştirici seçeneklerinde “Kablosuz hata ayıklama”yı açın ve “Cihazı eşleme kodu ile eşle”yi seçin. Bağlantı noktasını ve eşleştirme kodunu buraya girin.</string>
-    <string name="porter_permission_detail">Porter, bu uygulama için cihazınızda Porter’ın kendisiyle aynı yetkilerle komut çalıştıracak. Yalnızca güvendiğiniz uygulamalara izin verin.</string>
-    <string name="porter_permission_waiting">Porter bekleniyor…</string>
-</resources>
