@@ -1037,6 +1037,28 @@ class Smoke:
                     if pending.poll() is None:
                         pending.kill()
 
+            def terminal(script):
+                # -tt gives the device side a pty although this side has none. That pty carries
+                # stdout and stderr together, with \n turned into \r\n.
+                command = ["adb", "-s", self.args.serial, "shell", "-tt", script]
+                for attempt in range(TRANSPORT_ATTEMPTS):
+                    try:
+                        result = subprocess.run(command, stdin=subprocess.DEVNULL,
+                                                capture_output=True, timeout=ADB_TIMEOUT)
+                    except subprocess.TimeoutExpired:
+                        with (self.output / "commands.log").open("a") as log:
+                            log.write(f"{shlex.join(command)}\ntimed out\n")
+                        raise
+                    # adb's own errors stay on stderr; the device's streams arrive on stdout.
+                    stderr = result.stderr.decode(errors="replace")
+                    with (self.output / "commands.log").open("a") as log:
+                        log.write(f"{shlex.join(command)}\nexit {result.returncode}\n{stderr}")
+                    if not (result.returncode and TRANSPORT_FAILURE.search(stderr)):
+                        break
+                    if attempt < TRANSPORT_ATTEMPTS - 1:
+                        time.sleep(TRANSPORT_BACKOFF)
+                return result.returncode, result.stdout
+
             # A refusal is one-time, so the same prompt comes back for the grant that follows.
             prompted("denied", "printf hello", "Deny")
             assert status("denied") == 1, status("denied")
@@ -1067,6 +1089,23 @@ class Smoke:
             assert evidence("tail-stdout") == b"out", evidence("tail-stdout")
             # The last write before exit is the one truncated when stderr is not drained.
             assert evidence("tail-stderr") == b"last", evidence("tail-stderr")
+
+            # Every stream on a terminal: porsh switches it to raw mode and has to restore it.
+            # Android 7 has no stty, so there both sides of the comparison are empty.
+            code, output = terminal(
+                f"before=$(stty -g 2>/dev/null); {invoke} -c 'tty; printf err >&2; exit 7'; status=$?;"
+                f" [ \"$(stty -g 2>/dev/null)\" = \"$before\" ] || printf ' still raw'; exit $status")
+            assert code == 7, (code, output)
+            assert re.fullmatch(rb"/dev/pts/\d+\r\nerr", output), output
+
+            # `porsh -c cmd > file` from a terminal: stderr still has to reach the terminal, and
+            # more of it than a pty buffers must not block the command.
+            code, output = terminal(f"{invoke} -c " + shlex.quote(
+                f"printf out; dd if=/dev/zero bs=4096 count={PORSH_BULK // 4096} >&2 2>/dev/null;"
+                f" printf err >&2; exit 5") + f" > {PORSH_DIR}/piped-stdout")
+            assert code == 5, (code, output[-64:])
+            assert evidence("piped-stdout") == b"out", evidence("piped-stdout")
+            assert output == b"\0" * PORSH_BULK + b"err", (len(output), output[-64:])
 
             # A stalled service must end the shell with a message instead of hanging forever.
             # SIGSTOP reproduces deterministically what a binder-buffer exhaustion does by chance.
