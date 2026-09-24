@@ -80,11 +80,13 @@ class StarterActivity : ComposeActivity() {
     }
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) model.start(intent.getBooleanExtra(EXTRA_IS_ROOT, false), intent.getIntExtra(EXTRA_PORT, 0))
+        if (hasFocus) model.start(intent.getBooleanExtra(EXTRA_IS_ROOT, false), intent.getIntExtra(EXTRA_PORT, 0), intent.getBooleanExtra(EXTRA_REQUIRE_TLS, false))
     }
     companion object {
         const val EXTRA_IS_ROOT = "$EXTRA.IS_ROOT"
         const val EXTRA_PORT = "$EXTRA.PORT"
+        /** Set with an [EXTRA_PORT] that wireless debugging's TLS service announced. */
+        const val EXTRA_REQUIRE_TLS = "$EXTRA.REQUIRE_TLS"
     }
 }
 
@@ -104,13 +106,13 @@ class StarterViewModel(application: Application) : AndroidViewModel(application)
 
     private var started = false
 
-    fun start(root: Boolean, port: Int) {
+    fun start(root: Boolean, port: Int, requireTls: Boolean) {
         if (started) return
         started = true
 
         viewModelScope.launch(handler) {
             if (root) startRoot()
-            else AdbStarter.startAdb(appContext, port, { log(it) })
+            else AdbStarter.startAdb(appContext, port, requireTls, { log(it) })
             Starter.waitForBinder({ log(it) })
         }
     }

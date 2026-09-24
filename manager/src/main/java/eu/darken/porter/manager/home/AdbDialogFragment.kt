@@ -37,7 +37,9 @@ class AdbDialogFragment : ComposeDialogFragment() {
         val port by model.port.collectAsStateWithLifecycle()
         LaunchedEffect(port) {
             if (port in 1..65535 && model.consume()) {
-                startActivity(Intent(requireContext(), StarterActivity::class.java).putExtra(StarterActivity.EXTRA_PORT, port))
+                startActivity(Intent(requireContext(), StarterActivity::class.java)
+                    .putExtra(StarterActivity.EXTRA_PORT, port)
+                    .putExtra(StarterActivity.EXTRA_REQUIRE_TLS, true))
                 dismissAllowingStateLoss()
             }
         }
