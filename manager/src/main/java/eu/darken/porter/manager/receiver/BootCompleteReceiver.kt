@@ -17,7 +17,7 @@ class BootCompleteReceiver : BroadcastReceiver() {
         val result = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                PorterReceiverStarter.start(context)
+                if (BootStart.claim(context)) PorterReceiverStarter.start(context)
                 if (PorterSettings.watchdog) WatchdogService.start(context)
             } finally {
                 result.finish()

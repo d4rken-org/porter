@@ -69,6 +69,11 @@ class BackupRulesTest {
         assertTrue(allIncludes().none { it.endsWith("/${PorterSettings.REFUSALS_NAME}.xml") })
     }
 
+    /** A boot count restored onto another device could match a boot there and suppress its start. */
+    @Test fun theBootFileIsNeverBackedUp() {
+        assertTrue(allIncludes().none { it.endsWith("/${PorterSettings.BOOT_NAME}.xml") })
+    }
+
     @Test fun theSecretsFileIsNeverBackedUp() {
         assertTrue(allIncludes().none { it.endsWith("/${PorterSettings.SECRETS_NAME}.xml") })
     }

@@ -26,6 +26,10 @@ WORKER_STARTED = "Starting work for eu.darken.porter.manager.worker.AdbStartWork
 # How long the no-port case waits before calling the absence of a server a result. The worker
 # retries with backoff, so this only has to outlive the first attempt.
 NO_START_SETTLE = 60
+# What the manager logs when it turns down a BOOT_COMPLETED for a boot that needs no start.
+BOOT_IGNORED = "needs no start; ignoring BOOT_COMPLETED"
+# Android 15, which sends BOOT_COMPLETED to an app leaving the stopped state.
+UNSTOP_BOOT_SDK = 35
 SETTINGS_DIR = "/data/user_de/0/eu.darken.porter/shared_prefs"
 AUTOMATION_TOKEN = "porter-ci-automation-token"
 AUTOMATION_SECRETS = ('<?xml version="1.0" encoding="utf-8" standalone="yes" ?>'
@@ -35,8 +39,8 @@ SYSTEMUI = "com.android.systemui"
 # Where the system keeps paired keys and the networks wireless debugging is always allowed on.
 ADB_KEYSTORE = "/data/misc/adb/adb_temp_keys.xml"
 # The order run() declares, which --case narrows without ever reordering.
-CASES = ("setup", "wireless-pairing", "app-adb-start", "automation-broadcasts", "start-on-boot",
-         "start-on-boot-off", "boot-without-adb")
+CASES = ("setup", "wireless-pairing", "app-adb-start", "automation-broadcasts", "force-stop-before-boot",
+         "start-on-boot", "force-stop-after-boot", "start-on-boot-off", "boot-without-adb")
 # Run only when named.
 OPT_IN = ("wireless-pairing",)
 # Each of these inherits what the case before it established on the device. boot-without-adb does
@@ -44,7 +48,9 @@ OPT_IN = ("wireless-pairing",)
 # left it either way.
 REQUIRES = {
     "automation-broadcasts": ("app-adb-start",),
+    "force-stop-before-boot": ("app-adb-start",),
     "start-on-boot": ("app-adb-start",),
+    "force-stop-after-boot": ("app-adb-start", "start-on-boot"),
     "start-on-boot-off": ("app-adb-start", "start-on-boot"),
     "boot-without-adb": ("app-adb-start", "start-on-boot"),
 }
@@ -348,6 +354,47 @@ class Boot(base.Smoke):
                            check=False),
                        timeout=60)
 
+        def relaunch_keeps_server():
+            """Force-stops the manager and opens it again. From Android 15 the relaunch delivers
+            BOOT_COMPLETED, to a process that has not yet been handed the running server's binder."""
+            sdk = int(self.shell("getprop", "ro.build.version.sdk"))
+            if sdk < UNSTOP_BOOT_SDK:
+                print(f"NOTE Android API {sdk} sends no BOOT_COMPLETED on leaving the stopped state", flush=True)
+                return {"sdk": sdk}
+            server = self.pid("porter_server")
+            assert server, "no server running to keep"
+            # Unfinished start work comes back when the manager next starts after a force-stop.
+            self.until("the manager's start work finished", lambda: not self.manager_jobs(), timeout=60)
+            self.launch_probe(base.NATIVE, daemon=True)
+            self.authorized(base.NATIVE)
+            daemons = self.until("the probe's daemon service", lambda: self.service_pids(base.NATIVE))
+
+            self.shell("am", "force-stop", base.MANAGER)
+            self.clear_logcat()
+            self.home()
+            # The manager's own word that the delivery arrived and was turned down: a server that
+            # merely survived could also have won a race against a start that was attempted.
+            self.until("the manager turned down the repeated BOOT_COMPLETED",
+                       lambda: BOOT_IGNORED in self.adb("logcat", "-d", "-s", "PorterManager:I", "*:S"))
+            # A start that did go ahead replaces the server within a second.
+            time.sleep(10)
+            assert self.pid("porter_server") == server, "the relaunch replaced the running server"
+            assert WORKER_STARTED not in self.adb("logcat", "-d", "-s", "WM-WorkerWrapper:D", "*:S"), \
+                "the relaunch ran the start worker"
+            assert self.service_pids(base.NATIVE) == daemons, "the daemon service did not survive"
+            return {"sdk": sdk, "server_pid": server}
+
+        def force_stop_before_boot():
+            """Start on boot turned on while a server runs, then a force-stop and a relaunch in that
+            same boot. No boot broadcast has been handled yet, so the server the manager saw is
+            what marks the boot as needing no start."""
+            toggle_start_on_boot(True)
+            result = relaunch_keeps_server()
+            # Off again, so start-on-boot turns it on itself and the reboot there follows the write.
+            toggle_start_on_boot(False)
+            return result
+        self.case("force-stop-before-boot", force_stop_before_boot)
+
         def start_on_boot():
             """Nothing on the host starts anything: the device has to do it by itself."""
             toggle_start_on_boot(True)
@@ -370,6 +417,11 @@ class Boot(base.Smoke):
             self.authorized(base.NATIVE)
             return {"server_pid": pid}
         self.case("start-on-boot", start_on_boot)
+
+        def force_stop_after_boot():
+            """A force-stop and a relaunch in the boot start-on-boot already served."""
+            return relaunch_keeps_server()
+        self.case("force-stop-after-boot", force_stop_after_boot)
 
         def start_on_boot_off():
             """The same device with the same way in, and the setting the only difference."""
