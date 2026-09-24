@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window">まず分割画面（マルチウィンドウ）モードにしてください。</string>
     <string name="adb_pairing_requires_multi_window_reason">システムはペア設定ダイアログが常に表示されていることを要求します。このアプリとシステムのダイアログを同時に表示するには、分割画面モードを使用する以外に方法がありません。</string>
     <string name="adb_error_key_store">ワイヤレスデバッグ用のキーを生成できません。\nこのデバイスのKeyStore機構が壊れている可能性があります。</string>
-    <string name="adb_pair_required">まずペア設定の手順を完了してください。</string>
+    <string name="adb_pair_required_title">ペア設定が必要です</string>
+    <string name="adb_pair_required">ワイヤレスデバッグはオンですが、Porterを認識していません。この方法でPorterを起動するには、このデバイスでPorterをワイヤレスデバッグとペア設定する必要があります。これは最初に一度必要で、ペア設定が失われたとき（Porterのアプリデータを消去した場合や、ペア設定済みのデバイスのリストからPorterを削除した場合など）にも再度必要です。\n\n「ペア設定」を選んで手順に従い、Porterをもう一度起動してください。</string>
     <string name="enable">有効にする</string>
     <string name="development_settings">開発者向けオプション</string>
     <string name="notification_settings">通知オプション</string>
@@ -163,6 +164,7 @@
     <string name="wadb_notification_retry">再試行を待機中</string>
     <string name="wadb_error_title">起動時の自動開始でエラーが発生しました</string>
     <string name="wadb_error_notify_dev">タップして開発者に報告します。</string>
+    <string name="wadb_pair_required_notification">ワイヤレスデバッグがPorterを認識しないため、Porterをバックグラウンドで起動できませんでした。タップしてPorterを再度ペア設定してください。</string>
     <string name="wadb_permission_error_notification_title">権限エラー</string>
     <string name="wadb_permission_error_notification_content">起動時に開始するには、PorterにWRITE_SECURE_SETTINGSが必要です。タップして付与方法を確認してください。</string>
 
@@ -380,6 +382,7 @@
     <string name="porter_pairing_dialog_instructions">Androidの開発者向けオプションで「ワイヤレスデバッグ」を開き、「ペア設定コードによるデバイスのペア設定」を選択します。表示されたポートとペア設定コードをここに入力してください。</string>
     <string name="porter_permission_detail">Porterは、このアプリのために、Porter自身と同じ権限でデバイス上のコマンドを実行します。信頼できるアプリのみを許可してください。</string>
     <string name="porter_permission_waiting">Porterを待機中…</string>
+    <string name="porter_permission_also_covers">次にも適用されます: %1$s</string>
 
     <string name="porter_theme_mode">テーマモード</string>
     <string name="porter_theme_style">テーマスタイル</string>

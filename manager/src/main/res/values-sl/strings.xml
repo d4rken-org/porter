@@ -59,7 +59,8 @@
         sistemsko okno hkrati vidna.</string>
     <string name="adb_error_key_store">Ni mogoče generirati ključa za brezžično odpravljanje napak.\nTo
         je morda zato, ker je mehanizem KeyStore na tej napravi pokvarjen.</string>
-    <string name="adb_pair_required">Najprej sledite koraku seznanjanja.</string>
+    <string name="adb_pair_required_title">Potrebno je seznanjanje</string>
+    <string name="adb_pair_required">Brezžično odpravljanje napak je vklopljeno, vendar ne prepozna aplikacije Porter. Porter mora biti v tej napravi seznanjen z brezžičnim odpravljanjem napak, preden se lahko zažene na ta način. To je potrebno enkrat in znova vsakič, ko se seznanitev izgubi, na primer po izbrisu podatkov aplikacije Porter ali po odstranitvi aplikacije Porter s seznama seznanjenih naprav.\n\nIzberite Seznanjanje, sledite korakom in nato znova zaženite Porter.</string>
     <string name="enable">Omogoči</string>
     <string name="development_settings">Možnosti za razvijalce</string>
     <string name="notification_settings">Možnosti obveščanja</string>
@@ -181,6 +182,7 @@
     <string name="wadb_notification_retry">Čakanje na ponovni poskus</string>
     <string name="wadb_error_title">Napaka pri zagonu ob vklopu naprave</string>
     <string name="wadb_error_notify_dev">Tapnite, da obvestite razvijalca.</string>
+    <string name="wadb_pair_required_notification">Brezžično odpravljanje napak ne prepozna aplikacije Porter, zato se Porter ni mogel zagnati v ozadju. Dotaknite se, da Porter znova seznanite.</string>
     <string name="wadb_permission_error_notification_title">Napaka pri dovoljenju</string>
     <string name="wadb_permission_error_notification_content">Porter potrebuje
         WRITE_SECURE_SETTINGS, da začne na začetku. Tapnite, da izveste, kako ga odobriti.</string>
@@ -426,6 +428,7 @@
     <string name="porter_pairing_dialog_instructions">V možnostih za razvijalce Androida odprite Brezžično odpravljanje napak in izberite Seznanitev naprave s kodo za seznanjanje. Tukaj vnesite vrata in kodo za seznanjanje.</string>
     <string name="porter_permission_detail">Porter bo za to aplikacijo izvajal ukaze v vaši napravi z enakimi pravicami, kot jih ima sam. Dovolite samo aplikacijam, ki jim zaupate.</string>
     <string name="porter_permission_waiting">Čakanje na Porter…</string>
+    <string name="porter_permission_also_covers">Velja tudi za: %1$s</string>
 
     <string name="porter_theme_mode">Način teme</string>
     <string name="porter_theme_style">Slog teme</string>

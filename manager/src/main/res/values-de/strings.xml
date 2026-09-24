@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window">Bitte wechsle zuerst in den Splitscreen-Modus (Mehrfenstermodus).</string>
     <string name="adb_pairing_requires_multi_window_reason">Das System verlangt, dass der Kopplungsdialog immer sichtbar ist. Nur im Splitscreen-Modus können diese App und der Systemdialog gleichzeitig sichtbar sein.</string>
     <string name="adb_error_key_store">Es konnte kein Schlüssel für Debugging über WLAN erzeugt werden.\nMöglicherweise ist der KeyStore-Mechanismus dieses Geräts defekt.</string>
-    <string name="adb_pair_required">Bitte führe zuerst die Kopplung durch.</string>
+    <string name="adb_pair_required_title">Kopplung erforderlich</string>
+    <string name="adb_pair_required">Debugging über WLAN ist aktiviert, erkennt Porter aber nicht. Porter muss auf diesem Gerät mit Debugging über WLAN gekoppelt werden, bevor es auf diese Weise starten kann. Das ist einmal nötig und erneut, wenn die Kopplung verloren geht, zum Beispiel nachdem die App-Daten von Porter gelöscht wurden oder Porter aus der Liste der gekoppelten Geräte entfernt wurde.\n\nWähle „Kopplung“, folge den Schritten und starte Porter dann erneut.</string>
     <string name="enable">Aktivieren</string>
     <string name="development_settings">Entwickleroptionen</string>
     <string name="notification_settings">Benachrichtigungseinstellungen</string>
@@ -164,6 +165,7 @@
     <string name="wadb_notification_retry">Warte auf erneuten Versuch</string>
     <string name="wadb_error_title">Fehler beim Starten beim Systemstart</string>
     <string name="wadb_error_notify_dev">Tippen, um den Entwickler zu benachrichtigen.</string>
+    <string name="wadb_pair_required_notification">Debugging über WLAN erkennt Porter nicht, deshalb konnte Porter nicht im Hintergrund starten. Tippe, um Porter erneut zu koppeln.</string>
     <string name="wadb_permission_error_notification_title">Berechtigungsfehler</string>
     <string name="wadb_permission_error_notification_content">Porter benötigt WRITE_SECURE_SETTINGS, um beim Systemstart zu starten. Tippen, um zu erfahren, wie du die Berechtigung erteilst.</string>
 
@@ -388,6 +390,7 @@
     <string name="porter_pairing_dialog_instructions">Öffne in den Android-Entwickleroptionen Debugging über WLAN und wähle Gerät mit Kopplungscode koppeln. Gib hier den Port und den Kopplungscode ein.</string>
     <string name="porter_permission_detail">Porter führt für diese App Befehle auf deinem Gerät aus, mit denselben Rechten, die Porter selbst hat. Erlaube nur Apps, denen du vertraust.</string>
     <string name="porter_permission_waiting">Warte auf Porter…</string>
+    <string name="porter_permission_also_covers">Gilt auch für: %1$s</string>
 
     <string name="porter_theme_mode">Darstellung</string>
     <string name="porter_theme_style">Designstil</string>

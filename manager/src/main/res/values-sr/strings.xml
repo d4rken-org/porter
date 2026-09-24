@@ -48,7 +48,8 @@
         sistemski dijalog budu vidljivi u isto vreme.</string>
     <string name="adb_error_key_store">Nije moguće generisati ključ za bežično otklanjanje
         grešaka.\nTo može biti zato što je KeiStore mehanizam ovog uređaja je slomljena.</string>
-    <string name="adb_pair_required">Molim Vas, najpre prođite kroz korake za uparivanje uređaja.</string>
+    <string name="adb_pair_required_title">Потребно је упаривање</string>
+    <string name="adb_pair_required">Бежично отклањање грешака је укључено, али не препознаје Porter. Porter мора да се упари са бежичним отклањањем грешака на овом уређају пре него што може да се покрене на овај начин. То је потребно једном, и поново кад год се упаривање изгуби, на пример након брисања података Porter-а или уклањања Porter-а са листе упарених уређаја.\n\nИзаберите „Упаривање“, пратите кораке, па поново покрените Porter.</string>
     <string name="enable">Омогући</string>
     <string name="development_settings">Опције за програмере</string>
     <string name="notification_settings">Opcije obaveštenja</string>
@@ -163,6 +164,7 @@
     <string name="wadb_notification_retry">Чекање на поновни покушај</string>
     <string name="wadb_error_title">Грешка при покретању система</string>
     <string name="wadb_error_notify_dev">Додирните да бисте обавестили програмера.</string>
+    <string name="wadb_pair_required_notification">Бежично отклањање грешака не препознаје Porter, па Porter није могао да се покрене у позадини. Додирните да бисте поново упарили Porter.</string>
     <string name="wadb_permission_error_notification_title">Грешка дозволе</string>
     <string name="wadb_permission_error_notification_content">Porter захтева WRITE_SECURE_SETTINGS да би се покренуо при покретању система. Додирните да бисте сазнали како да је одобрите.</string>
     <!-- Watchdog -->
@@ -401,6 +403,7 @@
     <string name="porter_pairing_dialog_instructions">Отворите „Бежично отклањање грешака“ у Android опцијама за програмере и изаберите „Упарите уређај помоћу кода за упаривање“. Овде унесите порт и код за упаривање.</string>
     <string name="porter_permission_detail">Porter ће за ову апликацију извршавати команде на вашем уређају са истим привилегијама које има и сам Porter. Дозволите само апликације којима верујете.</string>
     <string name="porter_permission_waiting">Чека се Porter…</string>
+    <string name="porter_permission_also_covers">Важи и за: %1$s</string>
 
     <string name="porter_theme_mode">Режим теме</string>
     <string name="porter_theme_style">Стил теме</string>

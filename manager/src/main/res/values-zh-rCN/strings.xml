@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window">请先进入分屏（多窗口）模式。</string>
     <string name="adb_pairing_requires_multi_window_reason">系统要求配对对话框始终可见。只有使用分屏模式才能让此应用和系统对话框同时可见。</string>
     <string name="adb_error_key_store">无法生成无线调试密钥。\n这可能是因为此设备的密钥库机制已损坏。</string>
-    <string name="adb_pair_required">请先完成配对步骤。</string>
+    <string name="adb_pair_required_title">需要配对</string>
+    <string name="adb_pair_required">无线调试已开启，但无法识别 Porter。Porter 必须先在此设备上与无线调试配对，才能以这种方式启动。这只需进行一次，但每当配对丢失时都需要重新配对，例如清除 Porter 的应用数据后，或将 Porter 从已配对设备列表中移除后。\n\n请选择“配对”并按步骤操作，然后重新启动 Porter。</string>
     <string name="enable">启用</string>
     <string name="development_settings">开发者选项</string>
     <string name="notification_settings">通知设置</string>
@@ -163,6 +164,7 @@
     <string name="wadb_notification_retry">等待重试</string>
     <string name="wadb_error_title">开机启动时出错</string>
     <string name="wadb_error_notify_dev">点按以通知开发者。</string>
+    <string name="wadb_pair_required_notification">无线调试无法识别 Porter，因此 Porter 无法在后台启动。点按即可重新配对 Porter。</string>
     <string name="wadb_permission_error_notification_title">权限错误</string>
     <string name="wadb_permission_error_notification_content">Porter 需要 WRITE_SECURE_SETTINGS 权限才能开机启动。点按了解如何授予该权限。</string>
 
@@ -380,6 +382,7 @@
     <string name="porter_pairing_dialog_instructions">在 Android 开发者选项中打开“无线调试”，然后选择“使用配对码配对设备”。在此处输入端口和配对码。</string>
     <string name="porter_permission_detail">Porter 将以与自身相同的权限，为此应用在您的设备上执行命令。请仅允许您信任的应用。</string>
     <string name="porter_permission_waiting">正在等待 Porter…</string>
+    <string name="porter_permission_also_covers">同时适用于：%1$s</string>
 
     <string name="porter_theme_mode">主题模式</string>
     <string name="porter_theme_style">主题样式</string>

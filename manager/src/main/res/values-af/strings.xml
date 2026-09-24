@@ -55,7 +55,8 @@
         manier om hierdie toepassing en die stelseldialoog gelyktydig sigbaar te laat wees.</string>
     <string name="adb_error_key_store">Kan nie sleutel vir draadlose ontfouting genereer nie.\nDit
         mag wees omdat die KeyStore-meganisme van hierdie toestel gebreek is.</string>
-    <string name="adb_pair_required">Gaan asseblief eers deur die paringsstap.</string>
+    <string name="adb_pair_required_title">Paring vereis</string>
+    <string name="adb_pair_required">Draadlose ontfouting is aan, maar dit herken nie Porter nie. Porter moet op hierdie toestel met draadlose ontfouting gepaar word voordat dit so kan begin. Dit is een keer nodig, en weer wanneer die paring verlore gaan, byvoorbeeld nadat Porter se programdata uitgevee is of Porter uit die lys van gepaarde toestelle verwyder is.\n\nKies Paring en volg die stappe, en begin dan Porter weer.</string>
     <string name="enable">Aktiveer</string>
     <string name="development_settings">Ontwikkelaaropsies</string>
     <string name="notification_settings">Kennisgewingopsies</string>
@@ -176,6 +177,7 @@
     <string name="wadb_notification_retry">Wag om weer te probeer</string>
     <string name="wadb_error_title">Fout tydens opstart</string>
     <string name="wadb_error_notify_dev">Tik om die ontwikkelaar in kennis te stel.</string>
+    <string name="wadb_pair_required_notification">Draadlose ontfouting herken nie Porter nie, daarom kon Porter nie in die agtergrond begin nie. Tik om Porter weer te paar.</string>
     <string name="wadb_permission_error_notification_title">Toestemmingsfout</string>
     <string name="wadb_permission_error_notification_content">Porter benodig WRITE_SECURE_SETTINGS
         om met selflaai te begin. Tik om te leer hoe om dit toe te staan.</string>
@@ -415,6 +417,7 @@
     <string name="porter_pairing_dialog_instructions">Maak Draadlose ontfouting in Android se ontwikkelaaropsies oop en kies “Gebruik saambindkode om toestel saam te bind”. Voer die poort en paringskode hier in.</string>
     <string name="porter_permission_detail">Porter sal namens hierdie program opdragte op jou toestel uitvoer, met dieselfde regte as Porter self. Laat net programme toe wat jy vertrou.</string>
     <string name="porter_permission_waiting">Wag tans vir Porter…</string>
+    <string name="porter_permission_also_covers">Geld ook vir: %1$s</string>
 
     <string name="porter_theme_mode">Temamodus</string>
     <string name="porter_theme_style">Temastyl</string>

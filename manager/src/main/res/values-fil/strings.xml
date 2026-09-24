@@ -57,7 +57,8 @@
         upang hayaan ang app na ito at ang dialog ng system na makita sa parehong oras.</string>
     <string name="adb_error_key_store">Hindi makabuo ng key para sa wireless debugging.\nIto ay
         maaaring dahil ang mekanismo ng KeyStore ng device na ito ay sira.</string>
-    <string name="adb_pair_required">Sundin muna ang mga hakbang sa pagpapares.</string>
+    <string name="adb_pair_required_title">Kailangan ang pagpapares</string>
+    <string name="adb_pair_required">Naka-on ang wireless na pag-debug, pero hindi nito nakikilala ang Porter. Kailangang ipares ang Porter sa wireless na pag-debug sa device na ito bago ito makapagsimula sa ganitong paraan. Kailangan ito nang isang beses, at muli tuwing mawawala ang pagpapares, halimbawa pagkatapos i-clear ang data ng app ng Porter o alisin ang Porter sa listahan ng mga nakapares na device.\n\nPiliin ang Pagpapares at sundin ang mga hakbang, pagkatapos ay simulan muli ang Porter.</string>
     <string name="enable">Paganahin</string>
     <string name="development_settings">Mga opsyon ng developer</string>
     <string name="notification_settings">Mga opsyon sa notipikasyon</string>
@@ -183,6 +184,7 @@
     <string name="wadb_notification_retry">Naghihintay na subukan muli</string>
     <string name="wadb_error_title">Error habang nagsisimula sa boot</string>
     <string name="wadb_error_notify_dev">I-tap upang ipaalam sa developer.</string>
+    <string name="wadb_pair_required_notification">Hindi nakikilala ng wireless na pag-debug ang Porter, kaya hindi makapagsimula ang Porter sa background. I-tap para ipares muli ang Porter.</string>
     <string name="wadb_permission_error_notification_title">Error sa Pahintulot</string>
     <string name="wadb_permission_error_notification_content">Kailangan ni Porter ng
         WRITE_SECURE_SETTINGS para makapagsimula sa boot. Mag-tap upang malaman kung paano ito
@@ -425,6 +427,7 @@
     <string name="porter_pairing_dialog_instructions">Buksan ang Wireless na pag-debug sa Mga opsyon ng developer ng Android at piliin ang Ipares ang device gamit ang code ng pagpapares. Ilagay dito ang port at ang code ng pagpapares.</string>
     <string name="porter_permission_detail">Magpapatakbo ang Porter ng mga command sa iyong device para sa app na ito, na may parehong pribilehiyo ng Porter mismo. Payagan lang ang mga app na pinagkakatiwalaan mo.</string>
     <string name="porter_permission_waiting">Hinihintay ang Porter…</string>
+    <string name="porter_permission_also_covers">Saklaw rin ang: %1$s</string>
 
     <string name="porter_theme_mode">Mode ng tema</string>
     <string name="porter_theme_style">Estilo ng tema</string>

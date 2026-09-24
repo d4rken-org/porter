@@ -53,7 +53,8 @@
         această aplicație și dialogul de sistem să fie vizibile în același timp.</string>
     <string name="adb_error_key_store">Nu pot genera cheia pentru remedierea erorilor wireless.\nAcest lucru
         poate fi cauzat de faptul că mecanismul KeyStore al acestui dispozitiv este defect.</string>
-    <string name="adb_pair_required">Parcurge mai întâi procesul de asociere.</string>
+    <string name="adb_pair_required_title">Asociere necesară</string>
+    <string name="adb_pair_required">Remedierea erorilor wireless este activată, dar nu recunoaște Porter. Porter trebuie asociat cu remedierea erorilor wireless pe acest dispozitiv înainte de a putea porni astfel. Este necesar o dată și din nou de fiecare dată când asocierea se pierde, de exemplu după ștergerea datelor aplicației Porter sau după eliminarea lui Porter din lista dispozitivelor asociate.\n\nAlege Asociere, urmează pașii, apoi pornește din nou Porter.</string>
     <string name="enable">Permite</string>
     <string name="development_settings">Opțiuni pentru dezvoltatori</string>
     <string name="notification_settings">Opțiuni de notificare</string>
@@ -176,6 +177,7 @@
     <string name="wadb_notification_retry">Se așteaptă o nouă încercare</string>
     <string name="wadb_error_title">Eroare la pornire la bootare</string>
     <string name="wadb_error_notify_dev">Atinge pentru a notifica dezvoltatorul.</string>
+    <string name="wadb_pair_required_notification">Remedierea erorilor wireless nu recunoaște Porter, așa că Porter nu a putut porni în fundal. Atinge pentru a asocia din nou Porter.</string>
     <string name="wadb_permission_error_notification_title">Eroare de permisiune</string>
     <string name="wadb_permission_error_notification_content">Porter are nevoie de
         WRITE_SECURE_SETTINGS pentru a porni la pornire. Atinge pentru a afla cum să îl acorzi.</string>
@@ -418,6 +420,7 @@
     <string name="porter_pairing_dialog_instructions">Deschide „Remedierea erorilor wireless” din opțiunile pentru dezvoltatori Android și alege „Asociază dispozitivul folosind codul de conectare”. Introdu aici portul și codul de asociere.</string>
     <string name="porter_permission_detail">Porter va rula comenzi pe dispozitiv pentru această aplicație, cu aceleași privilegii pe care le are Porter. Permite doar aplicațiile în care ai încredere.</string>
     <string name="porter_permission_waiting">Se așteaptă Porter…</string>
+    <string name="porter_permission_also_covers">Se aplică și pentru: %1$s</string>
 
     <string name="porter_theme_mode">Mod temă</string>
     <string name="porter_theme_style">Stil temă</string>

@@ -25,7 +25,7 @@
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Eğer sürekli arıyorsa
         lütfen \"Wireless Debugging\" ayarını kapatıp açmayı deneyin.</string>
     <string name="dialog_adb_port">Port</string>
-    <string name="adb_pairing">Eşleştiriliyor</string>
+    <string name="adb_pairing">Eşleştirme</string>
     <string name="dialog_adb_pairing_title">Cihazla eşleş</string>
     <string name="dialog_adb_pairing_discovery">Eşleştirme hizmeti aranıyor</string>
     <string name="dialog_adb_pairing_paring_code">Eşleşme kodu</string>
@@ -56,7 +56,8 @@
         diyalogunun aynı anda görünmesini sağlamanın tek yoludur.</string>
     <string name="adb_error_key_store">Kablosuz hata ayıklama için anahtar oluşturulamıyor.\nBunun
         nedeni, bu cihazın KeyStore mekanizmasının bozulmuş olmasından kaynaklanıyor olabilir.</string>
-    <string name="adb_pair_required">Lütfen önce eşleştirme adımını uygulayın.</string>
+    <string name="adb_pair_required_title">Eşleştirme gerekli</string>
+    <string name="adb_pair_required">Kablosuz hata ayıklama açık, ancak Porter’ı tanımıyor. Porter’ın bu şekilde başlayabilmesi için bu cihazda kablosuz hata ayıklama ile eşleştirilmesi gerekir. Bu bir kez gereklidir ve eşleştirme her kaybolduğunda yeniden gerekir; örneğin Porter’ın uygulama verileri temizlendikten veya Porter eşleştirilmiş cihazlar listesinden kaldırıldıktan sonra.\n\n“Eşleştirme”yi seçip adımları izleyin, ardından Porter’ı yeniden başlatın.</string>
     <string name="enable">Etkinleştir</string>
     <string name="development_settings">Geliştirici seçenekleri</string>
     <string name="notification_settings">Bildirim seçenekleri</string>
@@ -178,6 +179,7 @@
     <string name="wadb_notification_retry">Yeniden denemeyi bekliyor.</string>
     <string name="wadb_error_title">Önyükleme sırasında hata oluştu</string>
     <string name="wadb_error_notify_dev">Geliştiriciyi bilgilendirmek için dokunun.</string>
+    <string name="wadb_pair_required_notification">Kablosuz hata ayıklama Porter’ı tanımıyor, bu nedenle Porter arka planda başlatılamadı. Porter’ı yeniden eşleştirmek için dokunun.</string>
     <string name="wadb_permission_error_notification_title">İzin Hatası</string>
     <string name="wadb_permission_error_notification_content">Porter\'ın önyükleme sırasında
         WRITE_SECURE_SETTINGS ayarına ihtiyacı var. Nasıl izin vereceğinizi öğrenmek için dokunun.</string>
@@ -417,6 +419,7 @@
     <string name="porter_pairing_dialog_instructions">Android’in Geliştirici seçeneklerinde “Kablosuz hata ayıklama”yı açın ve “Cihazı eşleme kodu ile eşle”yi seçin. Bağlantı noktasını ve eşleştirme kodunu buraya girin.</string>
     <string name="porter_permission_detail">Porter, bu uygulama için cihazınızda Porter’ın kendisiyle aynı yetkilerle komut çalıştıracak. Yalnızca güvendiğiniz uygulamalara izin verin.</string>
     <string name="porter_permission_waiting">Porter bekleniyor…</string>
+    <string name="porter_permission_also_covers">Şunları da kapsar: %1$s</string>
 
     <string name="porter_theme_mode">Tema modu</string>
     <string name="porter_theme_style">Tema stili</string>

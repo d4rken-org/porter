@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window">يُرجى الدخول إلى وضع تقسيم الشاشة (النوافذ المتعددة) أولًا.</string>
     <string name="adb_pairing_requires_multi_window_reason">يتطلب النظام أن يبقى مربع حوار الإقران مرئيًا دائمًا. استخدام وضع تقسيم الشاشة هو الطريقة الوحيدة لعرض هذا التطبيق ومربع حوار النظام في الوقت نفسه.</string>
     <string name="adb_error_key_store">تعذّر إنشاء مفتاح لتصحيح الأخطاء اللاسلكي.\nقد يكون السبب أن آلية KeyStore في هذا الجهاز معطّلة.</string>
-    <string name="adb_pair_required">يُرجى إكمال خطوة الإقران أولًا.</string>
+    <string name="adb_pair_required_title">الإقران مطلوب</string>
+    <string name="adb_pair_required">تصحيح الأخطاء اللاسلكي مفعّل، لكنه لا يتعرّف على Porter. يجب إقران Porter مع تصحيح الأخطاء اللاسلكي على هذا الجهاز قبل أن يتمكّن من البدء بهذه الطريقة. يلزم ذلك مرة واحدة، ومرة أخرى كلما فُقد الإقران، مثلًا بعد مسح بيانات تطبيق Porter أو إزالة Porter من قائمة الأجهزة المقترنة.\n\nاختر “الإقران” واتبع الخطوات، ثم ابدأ Porter مجددًا.</string>
     <string name="enable">تفعيل</string>
     <string name="development_settings">خيارات المطوّر</string>
     <string name="notification_settings">خيارات الإشعارات</string>
@@ -168,6 +169,7 @@
     <string name="wadb_notification_retry">في انتظار إعادة المحاولة</string>
     <string name="wadb_error_title">حدث خطأ أثناء البدء عند تشغيل الجهاز</string>
     <string name="wadb_error_notify_dev">انقر لإبلاغ المطوّر.</string>
+    <string name="wadb_pair_required_notification">لا يتعرّف تصحيح الأخطاء اللاسلكي على Porter، لذا تعذّر بدء Porter في الخلفية. انقر لإقران Porter مجددًا.</string>
     <string name="wadb_permission_error_notification_title">خطأ في الإذن</string>
     <string name="wadb_permission_error_notification_content">يحتاج Porter إلى إذن WRITE_SECURE_SETTINGS للبدء عند تشغيل الجهاز. انقر لمعرفة كيفية منحه.</string>
 
@@ -400,6 +402,7 @@
     <string name="porter_pairing_dialog_instructions">افتح تصحيح الأخطاء اللاسلكي في خيارات المطوّر في Android واختر إقران الجهاز باستخدام رمز الإقران. أدخل المنفذ ورمز الإقران هنا.</string>
     <string name="porter_permission_detail">سينفّذ Porter أوامر على جهازك لصالح هذا التطبيق، بالصلاحيات نفسها التي يملكها Porter. لا تسمح إلا للتطبيقات التي تثق بها.</string>
     <string name="porter_permission_waiting">في انتظار Porter…</string>
+    <string name="porter_permission_also_covers">يشمل أيضًا: %1$s</string>
 
     <string name="porter_theme_mode">وضع المظهر</string>
     <string name="porter_theme_style">نمط المظهر</string>

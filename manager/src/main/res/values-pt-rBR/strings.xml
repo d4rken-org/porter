@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window">Ative o modo de tela dividida (multijanela) primeiro.</string>
     <string name="adb_pairing_requires_multi_window_reason">O sistema exige que a caixa de diálogo de pareamento fique sempre visível. Usar o modo de tela dividida é a única forma de manter este app e a caixa de diálogo do sistema visíveis ao mesmo tempo.</string>
     <string name="adb_error_key_store">Não foi possível gerar a chave para a depuração por Wi-Fi.\nIsso pode acontecer porque o mecanismo KeyStore deste dispositivo está com defeito.</string>
-    <string name="adb_pair_required">Conclua a etapa de pareamento primeiro.</string>
+    <string name="adb_pair_required_title">Pareamento necessário</string>
+    <string name="adb_pair_required">A Depuração por Wi-Fi está ativada, mas não reconhece o Porter. O Porter precisa ser pareado com a Depuração por Wi-Fi neste dispositivo antes de poder iniciar dessa forma. Isso é necessário uma vez e novamente sempre que o pareamento for perdido, por exemplo, depois que os dados do app Porter forem apagados ou o Porter for removido da lista de dispositivos pareados.\n\nEscolha Pareamento, siga as etapas e inicie o Porter novamente.</string>
     <string name="enable">Ativar</string>
     <string name="development_settings">Opções do desenvolvedor</string>
     <string name="notification_settings">Opções de notificação</string>
@@ -165,6 +166,7 @@
     <string name="wadb_notification_retry">Aguardando para tentar novamente</string>
     <string name="wadb_error_title">Erro ao iniciar na inicialização</string>
     <string name="wadb_error_notify_dev">Toque para notificar o desenvolvedor.</string>
+    <string name="wadb_pair_required_notification">A Depuração por Wi-Fi não reconhece o Porter, então o Porter não conseguiu iniciar em segundo plano. Toque para parear o Porter novamente.</string>
     <string name="wadb_permission_error_notification_title">Erro de permissão</string>
     <string name="wadb_permission_error_notification_content">O Porter precisa da permissão WRITE_SECURE_SETTINGS para iniciar na inicialização. Toque para saber como concedê-la.</string>
 
@@ -388,6 +390,7 @@
     <string name="porter_pairing_dialog_instructions">Abra Depuração por Wi-Fi nas opções do desenvolvedor do Android e escolha Parear dispositivo com código de pareamento. Digite a porta e o código de pareamento aqui.</string>
     <string name="porter_permission_detail">O Porter vai executar comandos no seu dispositivo para este app, com os mesmos privilégios que o próprio Porter tem. Permita apenas apps em que você confia.</string>
     <string name="porter_permission_waiting">Aguardando o Porter…</string>
+    <string name="porter_permission_also_covers">Também se aplica a: %1$s</string>
 
     <string name="porter_theme_mode">Modo do tema</string>
     <string name="porter_theme_style">Estilo do tema</string>

@@ -54,7 +54,8 @@
         რომ ეს აპლიკაცია და სისტემის დიალოგური ფანჯარა ერთდროულად იყოს ხილული.</string>
     <string name="adb_error_key_store">უკაბელო გამართვის გასაღების გენერირება
         შეუძლებელია.\nშესაძლოა, ეს გამოწვეულია ამ მოწყობილობის KeyStore მექანიზმის გაუმართაობით.</string>
-    <string name="adb_pair_required">გთხოვთ, ჯერ გაიაროთ დაწყვილების ნაბიჯი.</string>
+    <string name="adb_pair_required_title">საჭიროა დაწყვილება</string>
+    <string name="adb_pair_required">უსადენო გამართვა ჩართულია, მაგრამ Porter-ს ვერ ცნობს. ამ გზით გასაშვებად Porter ამ მოწყობილობაზე უსადენო გამართვასთან უნდა დაწყვილდეს. ეს საჭიროა ერთხელ და ხელახლა ყოველ ჯერზე, როცა დაწყვილება იკარგება, მაგალითად, Porter-ის აპის მონაცემების წაშლის ან Porter-ის დაწყვილებული მოწყობილობების სიიდან ამოშლის შემდეგ.\n\nაირჩიეთ „დაწყვილება“, მიჰყევით ნაბიჯებს და შემდეგ ხელახლა გაუშვით Porter.</string>
     <string name="enable">ჩართვა</string>
     <string name="development_settings">დეველოპერის პარამეტრები</string>
     <string name="notification_settings">შეტყობინებების პარამეტრები</string>
@@ -178,6 +179,7 @@
     <string name="wadb_notification_retry">ველოდები ხელახლა ცდას</string>
     <string name="wadb_error_title">შეცდომა ჩატვირთვისას</string>
     <string name="wadb_error_notify_dev">შეეხეთ დეველოპერის შესატყობინებლად.</string>
+    <string name="wadb_pair_required_notification">უსადენო გამართვა Porter-ს ვერ ცნობს, ამიტომ Porter ფონურ რეჟიმში ვერ გაეშვა. შეეხეთ Porter-ის ხელახლა დასაწყვილებლად.</string>
     <string name="wadb_permission_error_notification_title">ნებართვის შეცდომა</string>
     <string name="wadb_permission_error_notification_content">ჩატვირთვისას გასაშვებად Porter-ს WRITE_SECURE_SETTINGS სჭირდება. შეეხეთ, რომ გაიგოთ, როგორ მიანიჭოთ ის.</string>
     <!-- Watchdog -->
@@ -417,6 +419,7 @@
     <string name="porter_pairing_dialog_instructions">Android-ის „დეველოპერთა პარამეტრებში“ გახსენით „უსადენო გამართვა“ და აირჩიეთ „მოწყობილობის დაწყვილება დაწყვილების კოდით“. აქ შეიყვანეთ პორტი და დაწყვილების კოდი.</string>
     <string name="porter_permission_detail">Porter ამ აპისთვის თქვენს მოწყობილობაზე ბრძანებებს შეასრულებს იმავე პრივილეგიებით, რაც თავად Porter-ს აქვს. დაუშვით მხოლოდ სანდო აპები.</string>
     <string name="porter_permission_waiting">Porter-ის მოლოდინი…</string>
+    <string name="porter_permission_also_covers">ასევე ვრცელდება: %1$s</string>
 
     <string name="porter_theme_mode">თემის რეჟიმი</string>
     <string name="porter_theme_style">თემის სტილი</string>

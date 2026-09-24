@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window">Veuillez d\'abord passer en mode écran partagé (multifenêtre).</string>
     <string name="adb_pairing_requires_multi_window_reason">Le système exige que la boîte de dialogue d\'association reste toujours visible. Le mode écran partagé est le seul moyen d\'afficher simultanément cette application et la boîte de dialogue du système.</string>
     <string name="adb_error_key_store">Impossible de générer une clé pour le débogage sans fil.\nCela peut être dû à un dysfonctionnement du mécanisme KeyStore de cet appareil.</string>
-    <string name="adb_pair_required">Veuillez d\'abord effectuer l\'étape d\'association.</string>
+    <string name="adb_pair_required_title">Association requise</string>
+    <string name="adb_pair_required">Le débogage sans fil est activé, mais il ne reconnaît pas Porter. Porter doit être associé au débogage sans fil sur cet appareil avant de pouvoir démarrer de cette façon. C\'est nécessaire une fois, puis à chaque perte de l\'association, par exemple après l\'effacement des données de Porter ou le retrait de Porter de la liste des appareils associés.\n\nChoisissez Association, suivez les étapes, puis démarrez de nouveau Porter.</string>
     <string name="enable">Activer</string>
     <string name="development_settings">Options pour les développeurs</string>
     <string name="notification_settings">Options de notification</string>
@@ -165,6 +166,7 @@
     <string name="wadb_notification_retry">En attente d\'une nouvelle tentative</string>
     <string name="wadb_error_title">Erreur lors du lancement au démarrage</string>
     <string name="wadb_error_notify_dev">Appuyez pour prévenir le développeur.</string>
+    <string name="wadb_pair_required_notification">Le débogage sans fil ne reconnaît pas Porter, Porter n\'a donc pas pu démarrer en arrière-plan. Appuyez pour associer de nouveau Porter.</string>
     <string name="wadb_permission_error_notification_title">Erreur d\'autorisation</string>
     <string name="wadb_permission_error_notification_content">Porter a besoin de WRITE_SECURE_SETTINGS pour se lancer au démarrage. Appuyez pour savoir comment l\'accorder.</string>
 
@@ -389,6 +391,7 @@
     <string name="porter_pairing_dialog_instructions">Ouvrez Débogage sans fil dans les options pour les développeurs d\'Android et choisissez Associer l\'appareil avec un code d\'association. Saisissez ici le port et le code d\'association.</string>
     <string name="porter_permission_detail">Porter exécutera des commandes sur votre appareil pour cette application, avec les mêmes privilèges que Porter lui-même. N\'autorisez que les applications de confiance.</string>
     <string name="porter_permission_waiting">En attente de Porter…</string>
+    <string name="porter_permission_also_covers">S\'applique aussi à : %1$s</string>
 
     <string name="porter_theme_mode">Mode du thème</string>
     <string name="porter_theme_style">Style du thème</string>

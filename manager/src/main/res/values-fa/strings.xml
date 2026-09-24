@@ -47,7 +47,8 @@
         همزمان قابل مشاهده باشند.</string>
     <string name="adb_error_key_store">امکان تولید کلید برای اشکال زدایی بی سیم وجود ندارد.\nاین
         ممکن است به این دلیل باشد که مکانیزم KeyStore این دستگاه خراب شده است.</string>
-    <string name="adb_pair_required">لطفاً ابتدا مرحله مرتبط کردن را طی کنید.</string>
+    <string name="adb_pair_required_title">مرتبط کردن لازم است</string>
+    <string name="adb_pair_required">اشکال‌زدایی بی‌سیم روشن است، اما Porter را نمی‌شناسد. Porter باید پیش از اینکه بتواند از این راه راه‌اندازی شود، روی این دستگاه با اشکال‌زدایی بی‌سیم مرتبط شود. این کار یک بار لازم است و هر بار که مرتبط‌سازی از بین برود دوباره لازم می‌شود، برای مثال پس از پاک شدن داده‌های برنامه Porter یا حذف Porter از فهرست دستگاه‌های مرتبط‌شده.\n\n«مرتبط کردن» را انتخاب کنید و مراحل را دنبال کنید، سپس Porter را دوباره راه‌اندازی کنید.</string>
     <string name="enable">فعال کردن</string>
     <string name="development_settings">گزینه های توسعه دهنده</string>
     <string name="notification_settings">گزینه های اعلان</string>
@@ -162,6 +163,7 @@
     <string name="wadb_notification_retry">منتظر تلاش مجدد هستم</string>
     <string name="wadb_error_title">خطا هنگام شروع بوت</string>
     <string name="wadb_error_notify_dev">برای اطلاع به توسعه‌دهنده، ضربه بزنید.</string>
+    <string name="wadb_pair_required_notification">اشکال‌زدایی بی‌سیم Porter را نمی‌شناسد، به همین دلیل Porter نتوانست در پس‌زمینه راه‌اندازی شود. برای مرتبط کردن دوباره Porter ضربه بزنید.</string>
     <string name="wadb_permission_error_notification_title">خطای مجوز</string>
     <string name="wadb_permission_error_notification_content">Porter برای شروع در بوت به WRITE_SECURE_SETTINGS نیاز دارد. برای آشنایی با نحوه اعطای آن ضربه بزنید.</string>
     <!-- Watchdog -->
@@ -400,6 +402,7 @@
     <string name="porter_pairing_dialog_instructions">در گزینه‌های توسعه‌دهنده Android، «اشکال‌زدایی بی‌سیم» را باز کنید و «مرتبط کردن دستگاه با کد مرتبط‌سازی» را انتخاب کنید. درگاه و کد مرتبط‌سازی را اینجا وارد کنید.</string>
     <string name="porter_permission_detail">Porter برای این برنامه، با همان امتیازهایی که خود Porter دارد، روی دستگاه شما فرمان اجرا می‌کند. فقط به برنامه‌هایی اجازه دهید که به آن‌ها اعتماد دارید.</string>
     <string name="porter_permission_waiting">در انتظار Porter…</string>
+    <string name="porter_permission_also_covers">همچنین شامل: %1$s</string>
 
     <string name="porter_theme_mode">حالت زمینه</string>
     <string name="porter_theme_style">سبک زمینه</string>

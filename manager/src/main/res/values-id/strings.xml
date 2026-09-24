@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window">Harap masuk ke mode layar terpisah (multi-jendela) terlebih dahulu.</string>
     <string name="adb_pairing_requires_multi_window_reason">Sistem mengharuskan dialog penyambungan selalu terlihat. Menggunakan mode layar terpisah adalah satu-satunya cara agar aplikasi ini dan dialog sistem terlihat secara bersamaan.</string>
     <string name="adb_error_key_store">Tidak dapat membuat kunci untuk proses debug nirkabel.\nIni mungkin karena mekanisme KeyStore perangkat ini rusak.</string>
-    <string name="adb_pair_required">Harap selesaikan langkah penyambungan terlebih dahulu.</string>
+    <string name="adb_pair_required_title">Penyambungan diperlukan</string>
+    <string name="adb_pair_required">Proses debug nirkabel aktif, tetapi tidak mengenali Porter. Porter harus disambungkan dengan proses debug nirkabel di perangkat ini sebelum dapat dimulai dengan cara ini. Hal ini diperlukan sekali, dan lagi setiap kali penyambungan hilang, misalnya setelah data aplikasi Porter dihapus atau Porter dihapus dari daftar perangkat yang disambungkan.\n\nPilih Penyambungan dan ikuti langkah-langkahnya, lalu mulai Porter lagi.</string>
     <string name="enable">Aktifkan</string>
     <string name="development_settings">Opsi developer</string>
     <string name="notification_settings">Opsi notifikasi</string>
@@ -163,6 +164,7 @@
     <string name="wadb_notification_retry">Menunggu untuk mencoba lagi</string>
     <string name="wadb_error_title">Kesalahan saat memulai saat boot</string>
     <string name="wadb_error_notify_dev">Ketuk untuk memberi tahu developer.</string>
+    <string name="wadb_pair_required_notification">Proses debug nirkabel tidak mengenali Porter, sehingga Porter tidak dapat dimulai di latar belakang. Ketuk untuk menyambungkan Porter lagi.</string>
     <string name="wadb_permission_error_notification_title">Kesalahan Izin</string>
     <string name="wadb_permission_error_notification_content">Porter memerlukan WRITE_SECURE_SETTINGS untuk mulai saat boot. Ketuk untuk mempelajari cara memberikannya.</string>
 
@@ -380,6 +382,7 @@
     <string name="porter_pairing_dialog_instructions">Buka Proses debug nirkabel di Opsi developer Android dan pilih Sambungkan perangkat dengan kode penyambungan. Masukkan port dan kode penyambungan di sini.</string>
     <string name="porter_permission_detail">Porter akan menjalankan perintah di perangkat Anda untuk aplikasi ini, dengan hak istimewa yang sama seperti Porter sendiri. Hanya izinkan aplikasi yang Anda percayai.</string>
     <string name="porter_permission_waiting">Menunggu Porter…</string>
+    <string name="porter_permission_also_covers">Juga mencakup: %1$s</string>
 
     <string name="porter_theme_mode">Mode tema</string>
     <string name="porter_theme_style">Gaya tema</string>

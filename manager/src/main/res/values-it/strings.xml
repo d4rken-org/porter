@@ -55,7 +55,8 @@
         rendere visibile sia questa app che la finestra di dialogo di sistema contemporaneamente.</string>
     <string name="adb_error_key_store">Impossibile generare la chiave per il debug wireless.\nQuesto
         potrebbe essere dovuto al fatto che il meccanismo KeyStore di questo dispositivo è rotto.</string>
-    <string name="adb_pair_required">Esegui prima la fase di accoppiamento.</string>
+    <string name="adb_pair_required_title">Accoppiamento necessario</string>
+    <string name="adb_pair_required">Il debug wireless è attivo, ma non riconosce Porter. Porter deve essere accoppiato con il debug wireless su questo dispositivo prima di potersi avviare in questo modo. Serve una volta, e di nuovo ogni volta che l\'accoppiamento va perso, ad esempio dopo aver cancellato i dati dell\'app Porter o rimosso Porter dall\'elenco dei dispositivi accoppiati.\n\nScegli Accoppiamento, segui i passaggi e poi avvia di nuovo Porter.</string>
     <string name="enable">Abilitare</string>
     <string name="development_settings">Modalitá sviluppatore</string>
     <string name="notification_settings">Opzioni di notifica</string>
@@ -179,6 +180,7 @@
     <string name="wadb_notification_retry">In attesa di riprovare</string>
     <string name="wadb_error_title">Errore durante l\'avvio all\'avvio</string>
     <string name="wadb_error_notify_dev">Tocca per avvisare lo sviluppatore.</string>
+    <string name="wadb_pair_required_notification">Il debug wireless non riconosce Porter, quindi Porter non è riuscito ad avviarsi in background. Tocca per accoppiare di nuovo Porter.</string>
     <string name="wadb_permission_error_notification_title">Errore di autorizzazione</string>
     <string name="wadb_permission_error_notification_content">Porter necessita di
         WRITE_SECURE_SETTINGS per avviarsi all\'avvio. Tocca per scoprire come concederlo.</string>
@@ -422,6 +424,7 @@
     <string name="porter_pairing_dialog_instructions">Apri Debug wireless nelle Opzioni sviluppatore di Android e scegli Accoppia dispositivo con codice di accoppiamento. Inserisci qui la porta e il codice di accoppiamento.</string>
     <string name="porter_permission_detail">Porter eseguirà comandi sul tuo dispositivo per questa app, con gli stessi privilegi di Porter. Consenti solo le app di cui ti fidi.</string>
     <string name="porter_permission_waiting">In attesa di Porter…</string>
+    <string name="porter_permission_also_covers">Vale anche per: %1$s</string>
 
     <string name="porter_theme_mode">Modalità tema</string>
     <string name="porter_theme_style">Stile tema</string>

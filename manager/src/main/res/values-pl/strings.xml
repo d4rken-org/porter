@@ -53,7 +53,8 @@
         systemu były widoczne jednocześnie.</string>
     <string name="adb_error_key_store">Nie mogę wygenerować klucza do bezprzewodowego
         debugowania.\nMoże to wynikać z awarii mechanizmu KeyStore tego urządzenia.</string>
-    <string name="adb_pair_required">Najpierw przeprowadź parowanie.</string>
+    <string name="adb_pair_required_title">Wymagane parowanie</string>
+    <string name="adb_pair_required">Debugowanie bezprzewodowe jest włączone, ale nie rozpoznaje aplikacji Porter. Aby Porter mógł uruchamiać się w ten sposób, musi zostać sparowany z debugowaniem bezprzewodowym na tym urządzeniu. Jest to potrzebne raz i ponownie za każdym razem, gdy parowanie zostanie utracone, na przykład po wyczyszczeniu danych aplikacji Porter lub usunięciu jej z listy sparowanych urządzeń.\n\nWybierz Parowanie, wykonaj kroki, a następnie ponownie uruchom aplikację Porter.</string>
     <string name="enable">Włącz</string>
     <string name="development_settings">Opcje programisty</string>
     <string name="notification_settings">Opcje powiadomień</string>
@@ -177,6 +178,7 @@
     <string name="wadb_notification_retry">Czekam na ponowną próbę</string>
     <string name="wadb_error_title">Błąd podczas uruchamiania przy starcie systemu</string>
     <string name="wadb_error_notify_dev">Dotknij, aby powiadomić programistę.</string>
+    <string name="wadb_pair_required_notification">Debugowanie bezprzewodowe nie rozpoznaje aplikacji Porter, więc nie mogła się ona uruchomić w tle. Dotknij, aby ponownie sparować aplikację Porter.</string>
     <string name="wadb_permission_error_notification_title">Błąd uprawnień</string>
     <string name="wadb_permission_error_notification_content">Porter wymaga uprawnienia
         WRITE_SECURE_SETTINGS, aby uruchamiać się przy starcie. Dotknij, aby dowiedzieć się, jak je
@@ -423,6 +425,7 @@
     <string name="porter_pairing_dialog_instructions">Otwórz Debugowanie bezprzewodowe w opcjach programistycznych Androida i wybierz Sparuj urządzenie przy użyciu kodu parowania. Wpisz tutaj port i kod parowania.</string>
     <string name="porter_permission_detail">Porter będzie wykonywać polecenia na urządzeniu dla tej aplikacji z własnymi uprawnieniami. Zezwalaj tylko zaufanym aplikacjom.</string>
     <string name="porter_permission_waiting">Oczekiwanie na Porter…</string>
+    <string name="porter_permission_also_covers">Dotyczy też: %1$s</string>
 
     <string name="porter_theme_mode">Tryb motywu</string>
     <string name="porter_theme_style">Styl motywu</string>

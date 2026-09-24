@@ -59,7 +59,8 @@
     <string name="adb_error_key_store">Δεν είναι δυνατή η δημιουργία κλειδιού για τον ασύρματο
         εντοπισμό σφαλμάτων.\nΑυτό μπορεί να οφείλεται στο ότι ο μηχανισμός KeyStore αυτής της
         συσκευής είναι κατεστραμμένος.</string>
-    <string name="adb_pair_required">Παρακαλούμε ακολουθήστε πρώτα το βήμα σύζευξης.</string>
+    <string name="adb_pair_required_title">Απαιτείται σύζευξη</string>
+    <string name="adb_pair_required">Ο ασύρματος εντοπισμός σφαλμάτων είναι ενεργός, αλλά δεν αναγνωρίζει το Porter. Το Porter πρέπει να συζευχθεί με τον ασύρματο εντοπισμό σφαλμάτων σε αυτήν τη συσκευή για να μπορεί να ξεκινά με αυτόν τον τρόπο. Αυτό χρειάζεται μία φορά, και ξανά όποτε χαθεί η σύζευξη, για παράδειγμα αφού διαγραφούν τα δεδομένα εφαρμογής του Porter ή αφού αφαιρεθεί το Porter από τη λίστα συζευγμένων συσκευών.\n\nΕπιλέξτε «Σύζευξη», ακολουθήστε τα βήματα και έπειτα ξεκινήστε ξανά το Porter.</string>
     <string name="enable">Ενεργοποίηση</string>
     <string name="development_settings">Επιλογές προγραμματιστή</string>
     <string name="notification_settings">Επιλογές ειδοποιήσεων</string>
@@ -188,6 +189,7 @@
     <string name="wadb_notification_retry">Αναμονή για επανάληψη</string>
     <string name="wadb_error_title">Σφάλμα κατά την αυτόματη εκκίνηση</string>
     <string name="wadb_error_notify_dev">Πατήστε για να ειδοποιήσετε τον προγραμματιστή.</string>
+    <string name="wadb_pair_required_notification">Ο ασύρματος εντοπισμός σφαλμάτων δεν αναγνωρίζει το Porter, οπότε το Porter δεν μπόρεσε να ξεκινήσει στο παρασκήνιο. Πατήστε για νέα σύζευξη του Porter.</string>
     <string name="wadb_permission_error_notification_title">Σφάλμα άδειας</string>
     <string name="wadb_permission_error_notification_content">Το Porter χρειάζεται
         WRITE_SECURE_SETTINGS για να ξεκινά με την ενεργοποίηση της συσκευής. Πατήστε για να
@@ -429,6 +431,7 @@
     <string name="porter_pairing_dialog_instructions">Ανοίξτε τον Ασύρματο εντοπισμό σφαλμάτων στις Επιλογές για προγραμματιστές του Android και επιλέξτε Σύζευξη συσκευής με κωδικό σύζευξης. Εισαγάγετε εδώ τη θύρα και τον κωδικό σύζευξης.</string>
     <string name="porter_permission_detail">Το Porter θα εκτελεί εντολές στη συσκευή σας για αυτήν την εφαρμογή, με τα ίδια προνόμια που έχει το ίδιο το Porter. Επιτρέψτε μόνο εφαρμογές που εμπιστεύεστε.</string>
     <string name="porter_permission_waiting">Αναμονή για το Porter…</string>
+    <string name="porter_permission_also_covers">Ισχύει επίσης για: %1$s</string>
 
     <string name="porter_theme_mode">Λειτουργία θέματος</string>
     <string name="porter_theme_style">Στυλ θέματος</string>
