@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Bağlantı ayrıntıları mevcut değil</string>
     <string name="porter_connection_never_recorded">Son bağlantı: Bilinmiyor</string>
     <string name="porter_connection_last">Son bağlantı: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d uygulama uyumluluk uygulamasını gerektiriyor</item>
-        <item quantity="other">%d uygulama uyumluluk uygulamasını gerektiriyor</item>
-    </plurals>
     <string name="porter_compatibility_needed">Uyumluluk uygulaması gerekli</string>
     <string name="porter_get_compatibility">Uyumluluk uygulamasını edinin</string>
     <plurals name="porter_compatibility_pending">

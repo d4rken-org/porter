@@ -10,9 +10,6 @@
     <string name="porter_connection_unknown">Butiran sambungan tidak tersedia</string>
     <string name="porter_connection_never_recorded">Sambungan terakhir: Tidak diketahui</string>
     <string name="porter_connection_last">Sambungan terakhir: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="other">%d apl memerlukan apl keserasian</item>
-    </plurals>
     <string name="porter_compatibility_needed">Apl keserasian diperlukan</string>
     <string name="porter_get_compatibility">Dapatkan apl keserasian</string>
     <plurals name="porter_compatibility_pending">

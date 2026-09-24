@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Verbindingsgegevens niet beschikbaar</string>
     <string name="porter_connection_never_recorded">Laatst verbonden: onbekend</string>
     <string name="porter_connection_last">Laatst verbonden: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d app vereist de compatibiliteitsapp</item>
-        <item quantity="other">%d apps vereisen de compatibiliteitsapp</item>
-    </plurals>
     <string name="porter_compatibility_needed">Compatibiliteitsapp nodig</string>
     <string name="porter_get_compatibility">Compatibiliteitsapp ophalen</string>
     <plurals name="porter_compatibility_pending">

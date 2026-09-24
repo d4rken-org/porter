@@ -9,10 +9,6 @@
     <string name="porter_connection_unknown">Verbindungsdetails nicht verfügbar</string>
     <string name="porter_connection_never_recorded">Zuletzt verbunden: Unbekannt</string>
     <string name="porter_connection_last">Zuletzt verbunden: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d App benötigt die Kompatibilitäts-App</item>
-        <item quantity="other">%d Apps benötigen die Kompatibilitäts-App</item>
-    </plurals>
     <string name="porter_compatibility_needed">Kompatibilitäts-App benötigt</string>
     <string name="porter_get_compatibility">Kompatibilitäts-App herunterladen</string>
     <plurals name="porter_compatibility_pending">

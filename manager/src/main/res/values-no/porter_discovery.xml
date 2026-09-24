@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Tilkoblingsdetaljer er ikke tilgjengelige</string>
     <string name="porter_connection_never_recorded">Sist tilkoblet: Ukjent</string>
     <string name="porter_connection_last">Sist tilkoblet: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d app krever kompatibilitetsappen</item>
-        <item quantity="other">%d apper krever kompatibilitetsappen</item>
-    </plurals>
     <string name="porter_compatibility_needed">Kompatibilitetsappen trengs</string>
     <string name="porter_get_compatibility">Hent kompatibilitetsappen</string>
     <plurals name="porter_compatibility_pending">

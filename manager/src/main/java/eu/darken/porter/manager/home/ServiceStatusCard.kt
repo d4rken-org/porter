@@ -128,17 +128,20 @@ internal fun HomeCard(title: String, icon: Painter, onClick: (() -> Unit)? = nul
 }
 
 @Composable
-internal fun CompatibilityCard(description: String, affectedApps: String? = null, onDownload: () -> Unit) {
+internal fun CompatibilityCard(summary: String, description: String, onDownload: () -> Unit) {
     HomeCard(stringResource(R.string.compat_setup_title), painterResource(R.drawable.ic_shizuku),
-        onClick = onDownload, tint = Color.Unspecified,
+        onClick = onDownload, tint = Color.Unspecified, subtitle = summary,
         containerColor = MaterialTheme.colorScheme.tertiaryContainer, actionLabel = stringResource(R.string.compat_setup_hint)) {
         Text(description, style = MaterialTheme.typography.bodyMedium)
-        affectedApps?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
     }
 }
 
 internal fun compatibilityUsageKnown(running: Boolean, apps: AppsViewModel.State) =
     running && !apps.loading && apps.error == null && apps.failedUsers.isEmpty() && !apps.legacy
+
+@Composable
+internal fun compatibilitySummary(status: String, usage: String?): String =
+    if (usage == null) status else stringResource(R.string.compat_summary, status, usage)
 
 @Composable
 internal fun compatibilityUsageText(running: Boolean, apps: AppsViewModel.State): String = when {
@@ -148,15 +151,11 @@ internal fun compatibilityUsageText(running: Boolean, apps: AppsViewModel.State)
 }
 
 @Composable
-internal fun InstalledCompatibilityCard(version: String, usage: String, notice: String? = null, onDetails: () -> Unit) {
+internal fun InstalledCompatibilityCard(summary: String, attention: Boolean = false, onDetails: () -> Unit) {
     HomeCard(stringResource(R.string.compat_setup_title), painterResource(R.drawable.ic_shizuku), onDetails, tint = Color.Unspecified,
-        subtitle = stringResource(R.string.compat_status_installed),
-        containerColor = if (notice != null) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceContainerLow,
-        actionLabel = stringResource(R.string.compat_details_hint)) {
-        notice?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
-        Text(usage, style = MaterialTheme.typography.bodyMedium)
-        Text(version, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-    }
+        subtitle = summary,
+        containerColor = if (attention) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceContainerLow,
+        actionLabel = stringResource(R.string.compat_details_hint)) {}
 }
 
 @Composable

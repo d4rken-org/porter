@@ -72,4 +72,13 @@
     <string name="compat_import_applied">وارد شده: %1$d</string>
     <string name="compat_import_skipped">رد شده: %1$d</string>
     <string name="compat_import_skipped_explanation">وقتی Porter از قبل انتخابی داشته باشد یا برنامه تغییر کرده باشد، انتخاب‌ها رد می‌شوند.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">نصب شده</string>
+    <string name="compat_summary_missing">نصب نشده</string>
+    <string name="compat_summary_conflict">برنامه Shizuku دیگری نصب شده</string>
+    <string name="compat_usage_none">استفاده نمی‌شود</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">مورد نیاز %d برنامه</item>
+        <item quantity="other">مورد نیاز %d برنامه</item>
+    </plurals>
 </resources>

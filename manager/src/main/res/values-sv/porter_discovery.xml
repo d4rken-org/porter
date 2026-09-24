@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Anslutningsdetaljer är inte tillgängliga</string>
     <string name="porter_connection_never_recorded">Senast ansluten: Okänt</string>
     <string name="porter_connection_last">Senast ansluten: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d app kräver kompatibilitetsappen</item>
-        <item quantity="other">%d appar kräver kompatibilitetsappen</item>
-    </plurals>
     <string name="porter_compatibility_needed">Kompatibilitetsappen behövs</string>
     <string name="porter_get_compatibility">Hämta kompatibilitetsappen</string>
     <plurals name="porter_compatibility_pending">

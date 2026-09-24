@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">A kapcsolat részletei nem érhetők el</string>
     <string name="porter_connection_never_recorded">Utolsó csatlakozás: ismeretlen</string>
     <string name="porter_connection_last">Utolsó csatlakozás: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d alkalmazásnak kompatibilitási alkalmazás szükséges</item>
-        <item quantity="other">%d alkalmazásnak kompatibilitási alkalmazás szükséges</item>
-    </plurals>
     <string name="porter_compatibility_needed">Kompatibilitási alkalmazás szükséges</string>
     <string name="porter_get_compatibility">Kompatibilitási alkalmazás beszerzése</string>
     <plurals name="porter_compatibility_pending">

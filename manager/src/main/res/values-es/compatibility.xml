@@ -73,4 +73,14 @@
     <string name="compat_import_applied">Importadas: %1$d</string>
     <string name="compat_import_skipped">Omitidas: %1$d</string>
     <string name="compat_import_skipped_explanation">Se omiten las decisiones cuando Porter ya tiene una decisión o la app ha cambiado.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Instalada</string>
+    <string name="compat_summary_missing">No instalada</string>
+    <string name="compat_summary_conflict">Otra app de Shizuku instalada</string>
+    <string name="compat_usage_none">Sin uso</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">Necesaria para %d app</item>
+        <item quantity="many">Necesaria para %d de apps</item>
+        <item quantity="other">Necesaria para %d apps</item>
+    </plurals>
 </resources>

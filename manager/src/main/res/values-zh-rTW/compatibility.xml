@@ -71,4 +71,12 @@
     <string name="compat_import_applied">已匯入：%1$d</string>
     <string name="compat_import_skipped">已略過：%1$d</string>
     <string name="compat_import_skipped_explanation">若 Porter 中已有選擇或應用程式已變更，則會略過該選擇。</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">已安裝</string>
+    <string name="compat_summary_missing">未安裝</string>
+    <string name="compat_summary_conflict">已安裝其他 Shizuku 應用程式</string>
+    <string name="compat_usage_none">未使用</string>
+    <plurals name="compat_needed_count">
+        <item quantity="other">%d 個應用程式需要</item>
+    </plurals>
 </resources>

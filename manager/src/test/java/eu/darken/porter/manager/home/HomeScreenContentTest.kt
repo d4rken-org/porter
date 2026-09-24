@@ -24,6 +24,9 @@ class HomeScreenContentTest : ComposeTest() {
         DiscoveredApplication.ALLOWED, DiscoveredApplication.NEEDS_COMPANION,
         DiscoveredApplication.API_SHIZUKU, false, null)
 
+    private val installedCompanion = CompatibilityRepository.State(status = CompatibilityRepository.Status.INSTALLED,
+        isCompanion = true, installedVersionName = "1.1", installedVersionCode = 101010)
+
     private fun statusUi(running: Boolean) = ServiceStatusUi(
         running = running, restricted = false, updateAvailable = false,
         title = if (running) "Porter is running" else "Porter is not running",
@@ -34,10 +37,11 @@ class HomeScreenContentTest : ComposeTest() {
         running: Boolean = true,
         permitted: Boolean = true,
         apps: List<AppsViewModel.App> = emptyList(),
+        compat: CompatibilityRepository.State = CompatibilityRepository.State(),
     ) = HomeUiState(
         statusUi = statusUi(running),
         appsState = AppsViewModel.State(apps, loading = false, accessEnabled = true),
-        compatState = CompatibilityRepository.State(),
+        compatState = compat,
         buildBadge = null,
         showBatteryCard = false,
         canStart = !running, wirelessAdbAvailable = true, tlsSupported = true,
@@ -112,6 +116,76 @@ class HomeScreenContentTest : ComposeTest() {
     @Test fun grantedAppsWaitingOnTheCompanionRaiseTheCompatibilityCard() {
         render(state(running = true, permitted = true, apps = listOf(companionApp)))
         composeTestRule.onNodeWithText(string(R.string.compat_card_description)).assertIsDisplayed()
+    }
+
+    @Test fun missingCompanionSummarizesHowManyAppsNeedIt() {
+        render(state(running = true, apps = listOf(companionApp)))
+        composeTestRule.onNodeWithText(string(R.string.compat_summary, string(R.string.compat_summary_missing),
+            context.resources.getQuantityString(R.plurals.compat_needed_count, 1, 1))).assertIsDisplayed()
+    }
+
+    @Test fun partialDiscoveryLeavesTheNeededCountOut() {
+        val partial = state(running = true, apps = listOf(companionApp))
+        render(partial.copy(appsState = partial.appsState.copy(failedUsers = listOf(10))))
+        composeTestRule.onNodeWithText(string(R.string.compat_summary_missing)).assertIsDisplayed()
+        assertNotShown(context.resources.getQuantityString(R.plurals.compat_needed_count, 1, 1))
+    }
+
+    @Test fun anotherShizukuAppExplainsTheReplacement() {
+        render(state(running = true, apps = listOf(companionApp),
+            compat = CompatibilityRepository.State(status = CompatibilityRepository.Status.CONFLICT)))
+        composeTestRule.onNodeWithText(string(R.string.compat_summary_conflict), substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText(string(R.string.compat_conflict_description)).assertIsDisplayed()
+        assertNotShown(string(R.string.compat_card_description))
+    }
+
+    @Test fun conflictWithoutIntegratedReplacementSaysWhatTheDetailsScreenSays() {
+        val conflict = state(running = true, apps = listOf(companionApp),
+            compat = CompatibilityRepository.State(status = CompatibilityRepository.Status.CONFLICT))
+        render(conflict.copy(integratedCompatibility = false))
+        composeTestRule.onNodeWithText(string(R.string.compat_other_build)).assertIsDisplayed()
+        assertNotShown(string(R.string.compat_conflict_description))
+    }
+
+    @Test fun conflictOnASecondaryUserPointsToThePrimaryUser() {
+        val conflict = state(running = true, apps = listOf(companionApp),
+            compat = CompatibilityRepository.State(status = CompatibilityRepository.Status.CONFLICT))
+        render(conflict.copy(primaryUser = false))
+        composeTestRule.onNodeWithText(string(R.string.compat_primary_user)).assertIsDisplayed()
+        assertNotShown(string(R.string.compat_conflict_description))
+    }
+
+    @Test fun conflictWithShizukuForAnotherUserExplainsTheLimit() {
+        render(state(running = true, apps = listOf(companionApp),
+            compat = CompatibilityRepository.State(status = CompatibilityRepository.Status.CONFLICT, otherUsers = true)))
+        composeTestRule.onNodeWithText(string(R.string.compat_other_users)).assertIsDisplayed()
+        assertNotShown(string(R.string.compat_conflict_description))
+    }
+
+    @Test fun installedCompanionFoldsUsageIntoItsSummary() {
+        render(state(running = true, apps = listOf(companionApp.copy(connectionStatus = DiscoveredApplication.COMPANION)),
+            compat = installedCompanion))
+        composeTestRule.onNodeWithText(string(R.string.compat_summary, string(R.string.compat_summary_installed),
+            context.resources.getQuantityString(R.plurals.compat_usage_count, 1, 1))).assertIsDisplayed()
+        assertNotShown("101010")
+    }
+
+    @Test fun installedCompanionWithoutUsageSaysSo() {
+        render(state(running = true, compat = installedCompanion))
+        composeTestRule.onNodeWithText(string(R.string.compat_summary, string(R.string.compat_summary_installed),
+            string(R.string.compat_usage_none))).assertIsDisplayed()
+    }
+
+    @Test fun stoppedServiceLeavesOnlyTheInstallState() {
+        render(state(running = false, compat = installedCompanion))
+        composeTestRule.onNodeWithText(string(R.string.compat_summary_installed)).assertIsDisplayed()
+        assertNotShown(string(R.string.compat_usage_stopped))
+    }
+
+    @Test fun updateTintsTheInstalledCardAndKeepsUsage() {
+        render(state(running = true, compat = installedCompanion.copy(status = CompatibilityRepository.Status.UPDATE)))
+        composeTestRule.onNodeWithText(string(R.string.compat_summary, string(R.string.compat_status_update),
+            string(R.string.compat_usage_none))).assertIsDisplayed()
     }
 
     @Test fun noAppWaitingOnTheCompanionLeavesTheCompatibilityCardOff() {

@@ -10,11 +10,6 @@
     <string name="porter_connection_unknown">Detaliile conexiunii nu sunt disponibile</string>
     <string name="porter_connection_never_recorded">Ultima conectare: necunoscută</string>
     <string name="porter_connection_last">Ultima conectare: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d aplicație necesită aplicația de compatibilitate</item>
-        <item quantity="few">%d aplicații necesită aplicația de compatibilitate</item>
-        <item quantity="other">%d de aplicații necesită aplicația de compatibilitate</item>
-    </plurals>
     <string name="porter_compatibility_needed">Este necesară aplicația de compatibilitate</string>
     <string name="porter_get_compatibility">Obține aplicația de compatibilitate</string>
     <plurals name="porter_compatibility_pending">

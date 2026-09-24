@@ -72,4 +72,13 @@
     <string name="compat_import_applied">Importert: %1$d</string>
     <string name="compat_import_skipped">Hoppet over: %1$d</string>
     <string name="compat_import_skipped_explanation">Valg hoppes over når Porter allerede har et valg, eller når appen er endret.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Installert</string>
+    <string name="compat_summary_missing">Ikke installert</string>
+    <string name="compat_summary_conflict">Annen Shizuku-app installert</string>
+    <string name="compat_usage_none">Ikke i bruk</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">Trengs av %d app</item>
+        <item quantity="other">Trengs av %d apper</item>
+    </plurals>
 </resources>

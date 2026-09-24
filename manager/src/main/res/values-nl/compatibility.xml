@@ -72,4 +72,13 @@
     <string name="compat_import_applied">Geïmporteerd: %1$d</string>
     <string name="compat_import_skipped">Overgeslagen: %1$d</string>
     <string name="compat_import_skipped_explanation">Keuzes worden overgeslagen als Porter al een keuze heeft of de app is gewijzigd.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Geïnstalleerd</string>
+    <string name="compat_summary_missing">Niet geïnstalleerd</string>
+    <string name="compat_summary_conflict">Andere Shizuku-app geïnstalleerd</string>
+    <string name="compat_usage_none">Niet in gebruik</string>
+    <plurals name="compat_needed_count">
+        <item quantity="one">Nodig voor %d app</item>
+        <item quantity="other">Nodig voor %d apps</item>
+    </plurals>
 </resources>

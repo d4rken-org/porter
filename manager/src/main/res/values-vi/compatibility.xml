@@ -71,4 +71,12 @@
     <string name="compat_import_applied">Đã nhập: %1$d</string>
     <string name="compat_import_skipped">Đã bỏ qua: %1$d</string>
     <string name="compat_import_skipped_explanation">Lựa chọn sẽ bị bỏ qua khi Porter đã có lựa chọn hoặc ứng dụng đã thay đổi.</string>
+    <string name="compat_summary">%1$s · %2$s</string>
+    <string name="compat_summary_installed">Đã cài đặt</string>
+    <string name="compat_summary_missing">Chưa cài đặt</string>
+    <string name="compat_summary_conflict">Đã cài đặt ứng dụng Shizuku khác</string>
+    <string name="compat_usage_none">Không được sử dụng</string>
+    <plurals name="compat_needed_count">
+        <item quantity="other">Cần cho %d ứng dụng</item>
+    </plurals>
 </resources>

@@ -10,14 +10,6 @@
     <string name="porter_connection_unknown">تفاصيل الاتصال غير متاحة</string>
     <string name="porter_connection_never_recorded">آخر اتصال: غير معروف</string>
     <string name="porter_connection_last">آخر اتصال: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="zero">لا توجد تطبيقات تتطلب تطبيق التوافق (%d)</item>
-        <item quantity="one">تطبيق واحد (%d) يتطلب تطبيق التوافق</item>
-        <item quantity="two">تطبيقان (%d) يتطلبان تطبيق التوافق</item>
-        <item quantity="few">%d تطبيقات تتطلب تطبيق التوافق</item>
-        <item quantity="many">%d تطبيقًا تتطلب تطبيق التوافق</item>
-        <item quantity="other">%d تطبيق يتطلب تطبيق التوافق</item>
-    </plurals>
     <string name="porter_compatibility_needed">يلزم تطبيق التوافق</string>
     <string name="porter_get_compatibility">الحصول على تطبيق التوافق</string>
     <plurals name="porter_compatibility_pending">

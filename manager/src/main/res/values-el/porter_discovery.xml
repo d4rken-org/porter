@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Οι λεπτομέρειες σύνδεσης δεν είναι διαθέσιμες</string>
     <string name="porter_connection_never_recorded">Τελευταία σύνδεση: Άγνωστη</string>
     <string name="porter_connection_last">Τελευταία σύνδεση: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d εφαρμογή απαιτεί την εφαρμογή συμβατότητας</item>
-        <item quantity="other">%d εφαρμογές απαιτούν την εφαρμογή συμβατότητας</item>
-    </plurals>
     <string name="porter_compatibility_needed">Απαιτείται εφαρμογή συμβατότητας</string>
     <string name="porter_get_compatibility">Λήψη εφαρμογής συμβατότητας</string>
     <plurals name="porter_compatibility_pending">

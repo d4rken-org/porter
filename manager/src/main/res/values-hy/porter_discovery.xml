@@ -10,10 +10,6 @@
     <string name="porter_connection_unknown">Միացման մանրամասները հասանելի չեն</string>
     <string name="porter_connection_never_recorded">Վերջին միացումը՝ անհայտ</string>
     <string name="porter_connection_last">Վերջին միացումը՝ %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d հավելված պահանջում է համատեղելիության հավելվածը</item>
-        <item quantity="other">%d հավելված պահանջում է համատեղելիության հավելվածը</item>
-    </plurals>
     <string name="porter_compatibility_needed">Անհրաժեշտ է համատեղելիության հավելված</string>
     <string name="porter_get_compatibility">Ստանալ համատեղելիության հավելվածը</string>
     <plurals name="porter_compatibility_pending">

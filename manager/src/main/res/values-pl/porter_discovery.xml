@@ -10,12 +10,6 @@
     <string name="porter_connection_unknown">Szczegóły połączenia niedostępne</string>
     <string name="porter_connection_never_recorded">Ostatnie połączenie: nieznane</string>
     <string name="porter_connection_last">Ostatnie połączenie: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d aplikacja wymaga aplikacji zgodności</item>
-        <item quantity="few">%d aplikacje wymagają aplikacji zgodności</item>
-        <item quantity="many">%d aplikacji wymaga aplikacji zgodności</item>
-        <item quantity="other">%d aplikacji wymaga aplikacji zgodności</item>
-    </plurals>
     <string name="porter_compatibility_needed">Potrzebna aplikacja zgodności</string>
     <string name="porter_get_compatibility">Pobierz aplikację zgodności</string>
     <plurals name="porter_compatibility_pending">

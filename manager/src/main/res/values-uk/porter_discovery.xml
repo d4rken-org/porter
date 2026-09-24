@@ -10,12 +10,6 @@
     <string name="porter_connection_unknown">Відомості про підключення недоступні</string>
     <string name="porter_connection_never_recorded">Останнє підключення: невідомо</string>
     <string name="porter_connection_last">Останнє підключення: %1$s</string>
-    <plurals name="porter_apps_need_companion">
-        <item quantity="one">%d додатку потрібен додаток сумісності</item>
-        <item quantity="few">%d додаткам потрібен додаток сумісності</item>
-        <item quantity="many">%d додаткам потрібен додаток сумісності</item>
-        <item quantity="other">%d додаткам потрібен додаток сумісності</item>
-    </plurals>
     <string name="porter_compatibility_needed">Потрібен додаток сумісності</string>
     <string name="porter_get_compatibility">Отримати додаток сумісності</string>
     <plurals name="porter_compatibility_pending">
