@@ -81,6 +81,22 @@ class PorterServer internal constructor(
     internal lateinit var reconciler: ApkReconciler
     internal val debugLogLeases = DebugLogLeases()
 
+    init {
+        clientManager.onDeath = ::onClientDied
+    }
+
+    /**
+     * A grant allowed only once belongs to the processes it was given to: once the app's last one is
+     * gone, so are the user services it started, daemons included.
+     */
+    internal fun onClientDied(record: ClientRecord) {
+        synchronized(clientManager) {
+            if (clientManager.findClients(record.uid).isNotEmpty()) return
+            if (configManager.find(record.uid)?.isAllowed() == true) return
+            userServiceManager.removeUserServicesForUid(record.uid)
+        }
+    }
+
     /**
      * The manager is the installation in Android user 0, the one whose provider the server and
      * the starters deliver to and whose activity every permission prompt is started in. The same
@@ -242,6 +258,9 @@ class PorterServer internal constructor(
                 }
             }
 
+            // A service an earlier one-time grant started is not covered by this answer.
+            if (!allowed && !pending) userServiceManager.removeUserServicesForUid(requestUid)
+
             if (!onetime) {
                 configManager.update(
                     requestUid, PackageManagerApis.getPackagesForUidNoThrow(requestUid),
@@ -296,7 +315,7 @@ class PorterServer internal constructor(
 
     private fun suspendUid(uid: Int) {
         for (record in clientManager.findClients(uid)) record.allowed = false
-        for (name in PackageManagerApis.getPackagesForUidNoThrow(uid)) onPermissionRevoked(name)
+        userServiceManager.removeUserServicesForUid(uid)
     }
 
     internal fun reconcileRuntimePermission(uid: Int) {
@@ -423,10 +442,9 @@ class PorterServer internal constructor(
                     }
                 }
                 if (!allowed) {
-                    // Daemon user services outlive the client process, so tear down by package, not by attached record.
-                    for (packageName in PackageManagerApis.getPackagesForUidNoThrow(uid)) {
-                        onPermissionRevoked(packageName)
-                    }
+                    // Daemon user services outlive the client process, so tear down by uid, not by
+                    // attached record, and not by package: the same package in another user keeps its own.
+                    userServiceManager.removeUserServicesForUid(uid)
                 }
 
                 setRuntimePermissionsForUid(uid, allowed)
@@ -434,10 +452,6 @@ class PorterServer internal constructor(
 
             configManager.update(uid, PackageManagerApis.getPackagesForUidNoThrow(uid), mask, value)
         }
-    }
-
-    private fun onPermissionRevoked(packageName: String) {
-        userServiceManager.removeUserServicesForPackage(packageName)
     }
 
     internal fun getApplications(userId: Int): ParcelableListSlice<PackageInfo> {
