@@ -10,6 +10,7 @@ import android.content.pm.Signature
 import android.content.pm.SigningInfo
 import android.os.Binder
 import android.os.Bundle
+import android.os.Looper
 import android.os.Parcel
 import android.os.Process
 import android.os.RemoteException
@@ -62,6 +63,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowBinder
 import org.robolectric.shadows.ShadowSystemClock
@@ -758,6 +760,22 @@ class ServiceAuthorizationTest {
         service.setGlobalAccess(true)
 
         assertFalse(client.allowed)
+    }
+
+    @Test
+    fun withoutAnObserverASettingsRevocationIsFoundByPolling() {
+        `when`(config.allowedUids()).thenReturn(listOf(CLIENT_UID))
+        checkPermission(ServerConstants.PERMISSION, PackageManager.PERMISSION_DENIED)
+
+        service.pollRuntimePermissions(1000)
+        verify(userServices, never()).removeUserServicesForUid(anyInt())
+
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(1000))
+        verify(userServices).removeUserServicesForUid(CLIENT_UID)
+        assertFalse(client.allowed)
+
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(2000))
+        verify(config, times(3)).allowedUids()
     }
 
     /** A server whose only difference from [service] is which user it believes is on screen. */
