@@ -1,6 +1,7 @@
 package eu.darken.porter.privileged
 
 import android.app.Application
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -47,6 +48,7 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.argThat
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.MockedStatic
 import org.mockito.Mockito.doAnswer
@@ -62,6 +64,7 @@ import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowBinder
+import org.robolectric.shadows.ShadowSystemClock
 import org.robolectric.util.ReflectionHelpers
 import rikka.hidden.compat.ActivityManagerApis
 import rikka.hidden.compat.PackageManagerApis
@@ -72,6 +75,7 @@ import rikka.shizuku.ShizukuApiConstants
 import rikka.shizuku.server.ClientRecord
 import rikka.shizuku.server.ConfigManager
 import rikka.shizuku.server.legacy.LegacyClientCallback
+import java.time.Duration
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -587,13 +591,15 @@ class ServiceAuthorizationTest {
 
     @Test
     fun unresolvedConsentRouteCompletesRequestWithoutSavingDenial() {
+        val server = serverSeeing(0)
+        openPrompt(server, 42)
         ShadowBinder.setCallingUid(MANAGER_UID)
         clientPackageMissing()
         val record = spy(client)
         `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(record))
         val result = Bundle()
         result.putBoolean(ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED, true)
-        service.endpoint.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, result)
+        server.endpoint.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, result)
         verify(record).dispatchRequestPermissionResult(42, false)
         verify(config, never()).update(anyInt(), any(), anyInt(), anyInt())
         assertFalse(record.allowed)
@@ -629,14 +635,62 @@ class ServiceAuthorizationTest {
 
     @Test
     fun aDenyTearsDownServicesAnEarlierOneTimeGrantStarted() {
+        val server = serverSeeing(0)
+        openPrompt(server, 42)
         ShadowBinder.setCallingUid(MANAGER_UID)
         `when`(config.find(CLIENT_UID)).thenReturn(null)
-        val result = Bundle()
-        result.putBoolean(ShizukuApiConstants.REQUEST_PERMISSION_REPLY_ALLOWED, false)
 
-        service.endpoint.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, result)
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, false, true)
 
         verify(userServices).removeUserServicesForUid(CLIENT_UID)
+    }
+
+    @Test
+    fun anAnswerToAPromptTheServerNeverStartedChangesNothing() {
+        val record = spy(client)
+        record.allowed = false
+        `when`(clients.findClients(CLIENT_UID)).thenReturn(listOf(record))
+
+        service.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, true, false)
+
+        assertFalse(record.allowed)
+        verify(record, never()).dispatchRequestPermissionResult(anyInt(), anyBoolean())
+        verify(config, never()).update(anyInt(), any(), anyInt(), anyInt())
+    }
+
+    @Test
+    fun aPromptIsAnsweredOnceAndNotAfterItsWindow() {
+        val server = serverSeeing(0)
+        openPrompt(server, 42)
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, true, false)
+        verify(config, times(1)).update(anyInt(), any(), anyInt(), anyInt())
+
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 42, true, false)
+        verify(config, times(1)).update(anyInt(), any(), anyInt(), anyInt())
+
+        val record = spy(client)
+        `when`(clients.findClient(CLIENT_UID, CLIENT_PID)).thenReturn(record)
+        openPrompt(server, 43)
+        ShadowSystemClock.advanceBy(Duration.ofMillis(PorterServer.PROMPT_ANSWER_WINDOW_MILLIS + 1))
+        server.dispatchPermissionConfirmationResult(CLIENT_UID, CLIENT_PID, 43, true, false)
+        verify(config, times(1)).update(anyInt(), any(), anyInt(), anyInt())
+        // Too late to decide, but the caller still gets its answer.
+        verify(record).dispatchRequestPermissionResult(43, false)
+    }
+
+    @Test
+    fun thePromptNamesEveryPackageInTheUid() {
+        packages!!.`when`<List<String>> { PackageManagerApis.getPackagesForUidNoThrow(CLIENT_UID) }
+            .thenReturn(listOf(client.packageName, "test.sibling"))
+
+        openPrompt(serverSeeing(0), 7)
+
+        activityMocks.verify {
+            ActivityManagerApis.startActivityNoThrow(
+                argThat { intent: Intent -> intent.getStringArrayExtra("packages")!!.toList() == listOf(client.packageName, "test.sibling") },
+                any(), eq(0),
+            )
+        }
     }
 
     @Test
@@ -718,6 +772,12 @@ class ServiceAuthorizationTest {
         packages!!.`when`<ApplicationInfo?> { PackageManagerApis.getApplicationInfo(anyString(), anyLong(), anyInt()) }
             .thenReturn(ApplicationInfo())
         packageInfos[PorterServer.MANAGER_APPLICATION_ID] = PackageInfo()
+    }
+
+    /** Starts a prompt on [server] for the client, as its request does, so an answer to it is taken. */
+    private fun openPrompt(server: PorterServer, requestCode: Int) {
+        promptableInstall()
+        server.showPermissionConfirmation(requestCode, client, CallerIdentity(CLIENT_UID, CLIENT_PID), 0)
     }
 
     @Test
