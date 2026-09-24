@@ -52,7 +52,8 @@
         systemdialogen være synlige samtidig.</string>
     <string name="adb_error_key_store">Kan ikke generere nøkkel for trådløs feilsøking.\nDette kan
         skyldes at KeyStore-mekanismen til denne enheten er ødelagt.</string>
-    <string name="adb_pair_required">Gå gjennom paringstrinnet først.</string>
+    <string name="adb_pair_required_title">Paring kreves</string>
+    <string name="adb_pair_required">Trådløs feilsøking er på, men gjenkjenner ikke Porter. Porter må pares med trådløs feilsøking på denne enheten før den kan starte på denne måten. Det trengs én gang, og igjen hver gang paringen går tapt, for eksempel etter at appdataene til Porter er tømt eller Porter er fjernet fra listen over parede enheter.\n\nVelg Paring og følg trinnene, og start deretter Porter på nytt.</string>
     <string name="enable">Aktivere</string>
     <string name="development_settings">Utvikleralternativer</string>
     <string name="notification_settings">Varslingsalternativer</string>
@@ -169,6 +170,7 @@
     <string name="wadb_notification_retry">Venter på å prøve på nytt</string>
     <string name="wadb_error_title">Feil under start ved oppstart</string>
     <string name="wadb_error_notify_dev">Trykk for å varsle utvikleren.</string>
+    <string name="wadb_pair_required_notification">Trådløs feilsøking gjenkjenner ikke Porter, så Porter kunne ikke starte i bakgrunnen. Trykk for å pare Porter på nytt.</string>
     <string name="wadb_permission_error_notification_title">Tillatelsesfeil</string>
     <string name="wadb_permission_error_notification_content">Porter trenger WRITE_SECURE_SETTINGS
         for å starte ved oppstart. Trykk for å lære hvordan du gir det.</string>
@@ -408,6 +410,7 @@
     <string name="porter_pairing_dialog_instructions">Åpne Trådløs feilsøking i Androids utvikleralternativer og velg Koble til enheten med tilkoblingskode. Skriv inn porten og paringskoden her.</string>
     <string name="porter_permission_detail">Porter kjører kommandoer på enheten din for denne appen, med de samme rettighetene som Porter selv har. Tillat bare apper du stoler på.</string>
     <string name="porter_permission_waiting">Venter på Porter…</string>
+    <string name="porter_permission_also_covers">Gjelder også: %1$s</string>
 
     <string name="porter_theme_mode">Temamodus</string>
     <string name="porter_theme_style">Temastil</string>

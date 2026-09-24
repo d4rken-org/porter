@@ -53,7 +53,8 @@
         systemdialogen synliga samtidigt.</string>
     <string name="adb_error_key_store">Kan inte generera nyckeln för trådlös felsökning.\nDetta kan
         bero på att KeyStore-mekanismen i denna enhet är trasig.</string>
-    <string name="adb_pair_required">Gå igenom parkopplingssteget först.</string>
+    <string name="adb_pair_required_title">Parkoppling krävs</string>
+    <string name="adb_pair_required">Trådlös felsökning är på, men känner inte igen Porter. Porter måste parkopplas med trådlös felsökning på den här enheten innan den kan starta på det här sättet. Det behövs en gång, och igen när parkopplingen går förlorad, till exempel efter att Porters appdata har rensats eller Porter har tagits bort från listan över parkopplade enheter.\n\nVälj Parkoppling och följ stegen, och starta sedan Porter igen.</string>
     <string name="enable">Aktivera</string>
     <string name="development_settings">Utvecklaralternativ</string>
     <string name="notification_settings">Aviseringsalternativ</string>
@@ -173,6 +174,7 @@
     <string name="wadb_notification_retry">Väntar på att försöka igen</string>
     <string name="wadb_error_title">Fel vid uppstart</string>
     <string name="wadb_error_notify_dev">Tryck för att meddela utvecklaren.</string>
+    <string name="wadb_pair_required_notification">Trådlös felsökning känner inte igen Porter, så Porter kunde inte starta i bakgrunden. Tryck för att parkoppla Porter igen.</string>
     <string name="wadb_permission_error_notification_title">Behörighetsfel</string>
     <string name="wadb_permission_error_notification_content">Porter behöver WRITE_SECURE_SETTINGS
         för att starta vid uppstart. Tryck för att lära dig hur du beviljar det.</string>
@@ -412,6 +414,7 @@
     <string name="porter_pairing_dialog_instructions">Öppna Trådlös felsökning i Androids utvecklaralternativ och välj Parkoppla enhet med parkopplingskod. Ange porten och parkopplingskoden här.</string>
     <string name="porter_permission_detail">Porter kör kommandon på din enhet åt den här appen, med samma behörigheter som Porter själv har. Tillåt bara appar som du litar på.</string>
     <string name="porter_permission_waiting">Väntar på Porter…</string>
+    <string name="porter_permission_also_covers">Gäller även: %1$s</string>
 
     <string name="porter_theme_mode">Temaläge</string>
     <string name="porter_theme_style">Temastil</string>

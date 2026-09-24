@@ -55,7 +55,8 @@
         deze app en het systeemvenster tegelijkertijd zichtbaar te maken.</string>
     <string name="adb_error_key_store">Kan geen sleutel genereren voor draadloos debuggen.\nDit kan
         komen doordat het KeyStore-mechanisme van dit apparaat kapot is.</string>
-    <string name="adb_pair_required">Ga eerst door de koppelingsstap.</string>
+    <string name="adb_pair_required_title">Koppelen vereist</string>
+    <string name="adb_pair_required">Draadloze foutopsporing staat aan, maar herkent Porter niet. Porter moet op dit apparaat met draadloze foutopsporing worden gekoppeld voordat het op deze manier kan starten. Dat is één keer nodig, en opnieuw wanneer de koppeling verloren gaat, bijvoorbeeld nadat de app-gegevens van Porter zijn gewist of Porter uit de lijst met gekoppelde apparaten is verwijderd.\n\nKies Koppelen, volg de stappen en start Porter daarna opnieuw.</string>
     <string name="enable">Inschakelen</string>
     <string name="development_settings">Ontwikkelaarsopties</string>
     <string name="notification_settings">Meldingsopties</string>
@@ -178,6 +179,7 @@
     <string name="wadb_notification_retry">Wachten op een nieuwe poging</string>
     <string name="wadb_error_title">Fout bij het opstarten bij het opstarten</string>
     <string name="wadb_error_notify_dev">Klik om de ontwikkelaar te informeren.</string>
+    <string name="wadb_pair_required_notification">Draadloze foutopsporing herkent Porter niet, waardoor Porter niet op de achtergrond kon starten. Tik om Porter opnieuw te koppelen.</string>
     <string name="wadb_permission_error_notification_title">Toestemmingsfout</string>
     <string name="wadb_permission_error_notification_content">Porter heeft WRITE_SECURE_SETTINGS
         nodig om bij het opstarten te starten. Klik om te leren hoe je het kunt toestaan.</string>
@@ -418,6 +420,7 @@
     <string name="porter_pairing_dialog_instructions">Open Draadloze foutopsporing in de ontwikkelaarsopties van Android en kies Apparaat koppelen met koppelingscode. Voer hier de poort en de koppelingscode in.</string>
     <string name="porter_permission_detail">Porter voert voor deze app opdrachten uit op je apparaat, met dezelfde rechten als Porter zelf. Sta alleen apps toe die je vertrouwt.</string>
     <string name="porter_permission_waiting">Wachten op Porter…</string>
+    <string name="porter_permission_also_covers">Geldt ook voor: %1$s</string>
 
     <string name="porter_theme_mode">Themamodus</string>
     <string name="porter_theme_style">Themastijl</string>

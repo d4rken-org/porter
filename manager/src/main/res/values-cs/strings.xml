@@ -33,7 +33,8 @@
     <string name="adb_pairing_requires_multi_window">Nejprve prosím přejděte do režimu rozdělené obrazovky (více oken).</string>
     <string name="adb_pairing_requires_multi_window_reason">Systém vyžaduje, aby byl dialog pro párování vždy viditelný. Použití režimu rozdělené obrazovky je jediný způsob, jak zajistit, aby tato aplikace a dialogové okno systému byly viditelné současně.</string>
     <string name="adb_error_key_store">Nelze vygenerovat klíč pro bezdrátové ladění.\nMůže to být způsobeno chybou mechanismu úložiště klíčů v tomto zařízení.</string>
-    <string name="adb_pair_required">Nejprve projděte krok párování.</string>
+    <string name="adb_pair_required_title">Vyžadováno párování</string>
+    <string name="adb_pair_required">Bezdrátové ladění je zapnuté, ale aplikaci Porter nerozpoznává. Aby se Porter mohl spustit tímto způsobem, musí být na tomto zařízení spárován s bezdrátovým laděním. Je to potřeba jednou a znovu pokaždé, když se párování ztratí, například po vymazání dat aplikace Porter nebo po odebrání aplikace Porter ze seznamu spárovaných zařízení.\n\nZvolte Párování, postupujte podle kroků a poté Porter spusťte znovu.</string>
     <string name="enable">Zapnout</string>
     <string name="development_settings">Pro vývojáře</string>
     <string name="notification_settings">Nastavení oznámení</string>
@@ -128,6 +129,7 @@
     <string name="wadb_notification_retry">Čekání na opakování</string>
     <string name="wadb_error_title">Chyba při spouštění po startu</string>
     <string name="wadb_error_notify_dev">Klepněte pro upozornění vývojáře.</string>
+    <string name="wadb_pair_required_notification">Bezdrátové ladění nerozpoznává aplikaci Porter, proto se Porter nemohl spustit na pozadí. Klepnutím Porter znovu spárujete.</string>
     <string name="wadb_permission_error_notification_title">Chyba oprávnění</string>
     <string name="wadb_permission_error_notification_content">Porter potřebuje WRITE_SECURE_SETTINGS začít na startu. Klepněte a zjistěte, jak ji udělit.</string>
     <!-- Watchdog -->
@@ -368,6 +370,7 @@
     <string name="porter_pairing_dialog_instructions">V nastavení Androidu v sekci „Pro vývojáře“ otevřete „Bezdrátové ladění“ a zvolte „Párovat zařízení pomocí párovacího kódu“. Sem zadejte port a párovací kód.</string>
     <string name="porter_permission_detail">Porter bude pro tuto aplikaci spouštět příkazy na vašem zařízení se stejnými oprávněními, jaká má samotný Porter. Povolujte pouze aplikace, kterým důvěřujete.</string>
     <string name="porter_permission_waiting">Čekání na Porter…</string>
+    <string name="porter_permission_also_covers">Platí také pro: %1$s</string>
 
     <string name="porter_theme_mode">Režim motivu</string>
     <string name="porter_theme_style">Styl motivu</string>

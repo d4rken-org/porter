@@ -54,7 +54,8 @@
         thoại hệ thống cùng một lúc.</string>
     <string name="adb_error_key_store">Không thể tạo khóa để gỡ lỗi không dây.\nĐiều này có thể là
         do cơ chế KeyStore của thiết bị này bị hỏng.</string>
-    <string name="adb_pair_required">Vui lòng thực hiện bước ghép nối trước.</string>
+    <string name="adb_pair_required_title">Cần ghép nối</string>
+    <string name="adb_pair_required">Gỡ lỗi không dây đang bật nhưng không nhận ra Porter. Porter cần được ghép nối với gỡ lỗi không dây trên thiết bị này trước khi có thể khởi động theo cách này. Việc này cần làm một lần và làm lại mỗi khi mất ghép nối, chẳng hạn sau khi xóa dữ liệu ứng dụng của Porter hoặc xóa Porter khỏi danh sách thiết bị đã ghép nối.\n\nChọn Ghép nối và làm theo các bước, sau đó khởi động lại Porter.</string>
     <string name="enable">Cho phép</string>
     <string name="development_settings">Tùy chọn cho nhà phát triển</string>
     <string name="notification_settings">Tùy chọn thông báo</string>
@@ -173,6 +174,7 @@
     <string name="wadb_notification_retry">Đang chờ để thử lại</string>
     <string name="wadb_error_title">Lỗi khi khởi động</string>
     <string name="wadb_error_notify_dev">Nhấn để thông báo cho nhà phát triển.</string>
+    <string name="wadb_pair_required_notification">Gỡ lỗi không dây không nhận ra Porter nên Porter không thể khởi động trong nền. Nhấn để ghép nối lại Porter.</string>
     <string name="wadb_permission_error_notification_title">Lỗi quyền</string>
     <string name="wadb_permission_error_notification_content">Porter cần WRITE_SECURE_SETTINGS để
         bắt đầu khởi động. Nhấn để tìm hiểu cách cấp nó.</string>
@@ -409,6 +411,7 @@
     <string name="porter_pairing_dialog_instructions">Mở Gỡ lỗi không dây trong Tùy chọn cho nhà phát triển của Android và chọn Ghép nối thiết bị bằng mã ghép nối. Nhập cổng và mã ghép nối tại đây.</string>
     <string name="porter_permission_detail">Porter sẽ chạy lệnh trên thiết bị của bạn cho ứng dụng này, với cùng đặc quyền mà Porter có. Chỉ cho phép những ứng dụng bạn tin tưởng.</string>
     <string name="porter_permission_waiting">Đang chờ Porter…</string>
+    <string name="porter_permission_also_covers">Cũng áp dụng cho: %1$s</string>
 
     <string name="porter_theme_mode">Chế độ giao diện</string>
     <string name="porter_theme_style">Kiểu giao diện</string>

@@ -48,7 +48,8 @@
         நேரத்தில் காண அனுமதிக்கும் ஒரே வழியாகும்.</string>
     <string name="adb_error_key_store">கம்பியில்லா பிழைத்திருத்தத்திற்கான விசையை உருவாக்க
         இயலவில்லை.\nஇந்த சாதனத்தின் கீஸ்டோர் பொறிமுறை உடைந்துவிட்டதால் இது இருக்கலாம்.</string>
-    <string name="adb_pair_required">முதலில் இணைத்தல் படிக்குச் செல்லவும்.</string>
+    <string name="adb_pair_required_title">இணைத்தல் தேவை</string>
+    <string name="adb_pair_required">வயர்லெஸ் பிழைத்திருத்தம் இயக்கத்தில் உள்ளது, ஆனால் அது Porter ஐ அடையாளம் காணவில்லை. இந்த வழியில் தொடங்குவதற்கு முன், Porter இந்தச் சாதனத்தில் வயர்லெஸ் பிழைத்திருத்தத்துடன் இணைக்கப்பட வேண்டும். இது ஒரு முறை தேவைப்படும், மேலும் இணைத்தல் இழக்கப்படும் ஒவ்வொரு முறையும் மீண்டும் தேவைப்படும், எடுத்துக்காட்டாக Porter இன் பயன்பாட்டுத் தரவு அழிக்கப்பட்ட பிறகு அல்லது இணைக்கப்பட்ட சாதனங்களின் பட்டியலிலிருந்து Porter அகற்றப்பட்ட பிறகு.\n\n“இணைத்தல்” என்பதைத் தேர்ந்தெடுத்து படிகளைப் பின்பற்றவும், பின்னர் Porter ஐ மீண்டும் தொடங்கவும்.</string>
     <string name="enable">இயக்கு</string>
     <string name="development_settings">டெவலப்பர் விருப்பங்கள்</string>
     <string name="notification_settings">அறிவிப்பு விருப்பங்கள்</string>
@@ -164,6 +165,7 @@
     <string name="wadb_notification_retry">மீண்டும் முயற்சிக்கக் காத்திருக்கிறது</string>
     <string name="wadb_error_title">துவக்கத்தில் தொடங்கும் போது பிழை</string>
     <string name="wadb_error_notify_dev">டெவலப்பருக்குத் தெரிவிக்க தட்டவும்.</string>
+    <string name="wadb_pair_required_notification">வயர்லெஸ் பிழைத்திருத்தம் Porter ஐ அடையாளம் காணவில்லை, எனவே Porter பின்னணியில் தொடங்க முடியவில்லை. Porter ஐ மீண்டும் இணைக்கத் தட்டவும்.</string>
     <string name="wadb_permission_error_notification_title">அனுமதி பிழை</string>
     <string name="wadb_permission_error_notification_content">துவக்கத்தில் தொடங்க Porter க்கு WRITE_SECURE_SETTINGS தேவை. அதை எப்படி வழங்குவது என்பதை அறிய தட்டவும்.</string>
     <!-- Watchdog -->
@@ -402,6 +404,7 @@
     <string name="porter_pairing_dialog_instructions">Android இன் டெவலப்பர் விருப்பங்களில் “வயர்லெஸ் பிழைத்திருத்தம்” என்பதைத் திறந்து “இணைப்பு குறியீட்டுடன் சாதனத்தை இணை” என்பதைத் தேர்ந்தெடுக்கவும். போர்ட்டையும் இணைத்தல் குறியீட்டையும் இங்கே உள்ளிடவும்.</string>
     <string name="porter_permission_detail">இந்தப் பயன்பாட்டுக்காக, Porter க்கு உள்ள அதே சிறப்புரிமைகளுடன் உங்கள் சாதனத்தில் Porter கட்டளைகளை இயக்கும். நீங்கள் நம்பும் பயன்பாடுகளை மட்டும் அனுமதிக்கவும்.</string>
     <string name="porter_permission_waiting">Porter க்காகக் காத்திருக்கிறது…</string>
+    <string name="porter_permission_also_covers">இதற்கும் பொருந்தும்: %1$s</string>
 
     <string name="porter_theme_mode">தீம் பயன்முறை</string>
     <string name="porter_theme_style">தீம் பாணி</string>

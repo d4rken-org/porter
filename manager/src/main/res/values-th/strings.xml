@@ -54,7 +54,8 @@
         การใช้โหมดแบ่งหน้าจอเป็นวิธีเดียวที่จะทําให้แอปนี้และกล่องโต้ตอบระบบมองเห็นได้พร้อมกัน</string>
     <string name="adb_error_key_store">ไม่สามารถสร้างคีย์สําหรับการแก้ไขข้อบกพร่องผ่าน Wi-Fi\nอาจเป็นเพราะกลไก
         KeyStore ของอุปกรณ์นี้เสีย</string>
-    <string name="adb_pair_required">โปรดทำขั้นตอนการจับคู่ก่อน</string>
+    <string name="adb_pair_required_title">ต้องจับคู่</string>
+    <string name="adb_pair_required">การแก้ไขข้อบกพร่องผ่าน Wi-Fi เปิดอยู่ แต่ไม่รู้จัก Porter ต้องจับคู่ Porter กับการแก้ไขข้อบกพร่องผ่าน Wi-Fi ในอุปกรณ์นี้ก่อน Porter จึงจะเริ่มด้วยวิธีนี้ได้ ต้องทำครั้งเดียว และต้องทำอีกครั้งเมื่อการจับคู่หายไป เช่น หลังจากล้างข้อมูลแอปของ Porter หรือนำ Porter ออกจากรายการอุปกรณ์ที่จับคู่ไว้\n\nเลือก “จับคู่” แล้วทำตามขั้นตอน จากนั้นเริ่ม Porter อีกครั้ง</string>
     <string name="enable">เปิดใช้งาน</string>
     <string name="development_settings">ตัวเลือกสำหรับนักพัฒนาแอป</string>
     <string name="notification_settings">ตัวเลือกการแจ้งเตือน</string>
@@ -169,6 +170,7 @@
     <string name="wadb_notification_retry">กำลังรอเพื่อลองใหม่อีกครั้ง</string>
     <string name="wadb_error_title">เกิดข้อผิดพลาดขณะเริ่มต้นระบบ</string>
     <string name="wadb_error_notify_dev">แตะเพื่อแจ้งให้ผู้พัฒนาทราบ</string>
+    <string name="wadb_pair_required_notification">การแก้ไขข้อบกพร่องผ่าน Wi-Fi ไม่รู้จัก Porter จึงเริ่ม Porter ในเบื้องหลังไม่ได้ แตะเพื่อจับคู่ Porter อีกครั้ง</string>
     <string name="wadb_permission_error_notification_title">ข้อผิดพลาดในการอนุญาต</string>
     <string name="wadb_permission_error_notification_content">Porter ต้องใช้ WRITE_SECURE_SETTINGS เพื่อเริ่มทำงานเมื่อบูตเครื่อง แตะเพื่อดูวิธีให้สิทธิ์</string>
     <!-- Watchdog -->
@@ -404,6 +406,7 @@
     <string name="porter_pairing_dialog_instructions">เปิด “การแก้ไขข้อบกพร่องผ่าน Wi-Fi” ใน “ตัวเลือกสำหรับนักพัฒนาแอป” ของ Android แล้วเลือก “จับคู่อุปกรณ์ด้วยรหัสการจับคู่” จากนั้นป้อนพอร์ตและรหัสการจับคู่ที่นี่</string>
     <string name="porter_permission_detail">Porter จะเรียกใช้คำสั่งบนอุปกรณ์ของคุณให้แอปนี้ ด้วยสิทธิ์ระดับเดียวกับที่ Porter มี โปรดอนุญาตเฉพาะแอปที่คุณเชื่อถือเท่านั้น</string>
     <string name="porter_permission_waiting">กำลังรอ Porter…</string>
+    <string name="porter_permission_also_covers">ครอบคลุมถึง: %1$s</string>
 
     <string name="porter_theme_mode">โหมดธีม</string>
     <string name="porter_theme_style">สไตล์ธีม</string>

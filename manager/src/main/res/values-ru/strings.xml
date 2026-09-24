@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window">Сначала включите режим разделённого экрана (многооконный режим).</string>
     <string name="adb_pairing_requires_multi_window_reason">Система требует, чтобы диалог сопряжения всегда оставался видимым. Только режим разделённого экрана позволяет одновременно видеть это приложение и системный диалог.</string>
     <string name="adb_error_key_store">Не удалось создать ключ для отладки по Wi-Fi.\nВозможно, механизм KeyStore на этом устройстве неисправен.</string>
-    <string name="adb_pair_required">Сначала выполните сопряжение.</string>
+    <string name="adb_pair_required_title">Требуется сопряжение</string>
+    <string name="adb_pair_required">Отладка по Wi-Fi включена, но не распознаёт Porter. Чтобы Porter мог запускаться таким способом, на этом устройстве нужно выполнить сопряжение Porter с отладкой по Wi-Fi. Это нужно сделать один раз и повторять каждый раз, когда сопряжение теряется, например после очистки данных приложения Porter или удаления Porter из списка сопряжённых устройств.\n\nВыберите «Сопряжение», выполните шаги и снова запустите Porter.</string>
     <string name="enable">Включить</string>
     <string name="development_settings">Для разработчиков</string>
     <string name="notification_settings">Настройки уведомлений</string>
@@ -166,6 +167,7 @@
     <string name="wadb_notification_retry">Ожидание повторной попытки</string>
     <string name="wadb_error_title">Ошибка при запуске во время загрузки</string>
     <string name="wadb_error_notify_dev">Нажмите, чтобы сообщить разработчику.</string>
+    <string name="wadb_pair_required_notification">Отладка по Wi-Fi не распознаёт Porter, поэтому Porter не удалось запустить в фоновом режиме. Нажмите, чтобы снова выполнить сопряжение Porter.</string>
     <string name="wadb_permission_error_notification_title">Ошибка разрешения</string>
     <string name="wadb_permission_error_notification_content">Для запуска Porter при загрузке требуется разрешение WRITE_SECURE_SETTINGS. Нажмите, чтобы узнать, как его предоставить.</string>
 
@@ -392,6 +394,7 @@
     <string name="porter_pairing_dialog_instructions">Откройте «Отладку по Wi-Fi» в разделе «Для разработчиков» Android и выберите «Подключить устройство с помощью кода подключения». Введите здесь порт и код сопряжения.</string>
     <string name="porter_permission_detail">Porter будет выполнять команды на вашем устройстве для этого приложения с теми же правами, что и у самого Porter. Разрешайте доступ только тем приложениям, которым доверяете.</string>
     <string name="porter_permission_waiting">Ожидание Porter…</string>
+    <string name="porter_permission_also_covers">Также распространяется на: %1$s</string>
 
     <string name="porter_theme_mode">Режим темы</string>
     <string name="porter_theme_style">Стиль темы</string>

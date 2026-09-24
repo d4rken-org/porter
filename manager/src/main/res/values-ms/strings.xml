@@ -59,7 +59,8 @@
         membolehkan apl ini dan dialog sistem kelihatan pada masa yang sama.</string>
     <string name="adb_error_key_store">Tidak dapat menjana kunci untuk penyahpepijatan
         wayarles.\nIni mungkin kerana mekanisme KeyStore peranti ini rosak.</string>
-    <string name="adb_pair_required">Sila lalui langkah gandingan terlebih dahulu.</string>
+    <string name="adb_pair_required_title">Gandingan diperlukan</string>
+    <string name="adb_pair_required">Penyahpepijatan wayarles dihidupkan, tetapi ia tidak mengenali Porter. Porter perlu digandingkan dengan penyahpepijatan wayarles pada peranti ini sebelum ia boleh bermula dengan cara ini. Ini diperlukan sekali, dan sekali lagi setiap kali gandingan hilang, contohnya selepas data apl Porter dikosongkan atau Porter dialih keluar daripada senarai peranti yang digandingkan.\n\nPilih Gandingan dan ikut langkah-langkahnya, kemudian mulakan Porter semula.</string>
     <string name="enable">Dayakan</string>
     <string name="development_settings">Pilihan pembangun</string>
     <string name="notification_settings">Pilihan pemberitahuan</string>
@@ -183,6 +184,7 @@
     <string name="wadb_notification_retry">Menunggu untuk mencuba semula</string>
     <string name="wadb_error_title">Ralat semasa memulakan but</string>
     <string name="wadb_error_notify_dev">Ketik untuk memberitahu pembangun.</string>
+    <string name="wadb_pair_required_notification">Penyahpepijatan wayarles tidak mengenali Porter, jadi Porter tidak dapat bermula di latar belakang. Ketik untuk menggandingkan Porter semula.</string>
     <string name="wadb_permission_error_notification_title">Ralat Kebenaran</string>
     <string name="wadb_permission_error_notification_content">Porter memerlukan
         WRITE_SECURE_SETTINGS untuk bermula semasa but. Ketik untuk mengetahui cara memberikannya.</string>
@@ -419,6 +421,7 @@
     <string name="porter_pairing_dialog_instructions">Buka Penyahpepijatan wayarles dalam Pilihan pembangun Android dan pilih Gandingkan peranti dengan kod gandingan. Masukkan port dan kod gandingan di sini.</string>
     <string name="porter_permission_detail">Porter akan menjalankan arahan pada peranti anda untuk apl ini, dengan keistimewaan yang sama seperti Porter sendiri. Benarkan apl yang anda percayai sahaja.</string>
     <string name="porter_permission_waiting">Menunggu Porter…</string>
+    <string name="porter_permission_also_covers">Turut meliputi: %1$s</string>
 
     <string name="porter_theme_mode">Mod tema</string>
     <string name="porter_theme_style">Gaya tema</string>

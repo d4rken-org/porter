@@ -47,7 +47,8 @@
         է, որպեսզի այս հավելվածը և համակարգի երկխոսության պատուհանը միաժամանակ տեսանելի լինեն:</string>
     <string name="adb_error_key_store">Անհնար է ստեղծել բանալի անլար վրիպազերծման համար։\nՍա կարող է
         պայմանավորված լինել այս սարքի KeyStore մեխանիզմի խափանումով։</string>
-    <string name="adb_pair_required">Խնդրում ենք սկզբում կատարել զուգակցման քայլերը։</string>
+    <string name="adb_pair_required_title">Անհրաժեշտ է զուգակցում</string>
+    <string name="adb_pair_required">Անլար վրիպազերծումը միացված է, բայց չի ճանաչում Porter-ը։ Porter-ը պետք է զուգակցվի այս սարքի անլար վրիպազերծման հետ, որպեսզի կարողանա գործարկվել այս եղանակով։ Դա անհրաժեշտ է մեկ անգամ և կրկին՝ ամեն անգամ, երբ զուգակցումը կորչում է, օրինակ՝ Porter-ի հավելվածի տվյալները ջնջելուց կամ Porter-ը զուգակցված սարքերի ցանկից հեռացնելուց հետո։\n\nԸնտրեք «Զուգակցում», հետևեք քայլերին, ապա կրկին գործարկեք Porter-ը։</string>
     <string name="enable">Թույլատրել</string>
     <string name="development_settings">Մշակողի ընտրանքներ</string>
     <string name="notification_settings">Ծանուցման տարբերակներ</string>
@@ -173,6 +174,7 @@
     <string name="wadb_notification_retry">Սպասում եմ կրկնության</string>
     <string name="wadb_error_title">Սխալ boot-ից սկսելիս</string>
     <string name="wadb_error_notify_dev">Սեղմեք մշակողին ծանուցելու համար:</string>
+    <string name="wadb_pair_required_notification">Անլար վրիպազերծումը չի ճանաչում Porter-ը, ուստի Porter-ը չկարողացավ գործարկվել ֆոնում։ Հպեք՝ Porter-ը կրկին զուգակցելու համար։</string>
     <string name="wadb_permission_error_notification_title">Թույլտվության սխալ</string>
     <string name="wadb_permission_error_notification_content">Porter-ին անհրաժեշտ է WRITE_SECURE_SETTINGS թույլտվությունը boot-ից գործարկվելու համար։ Հպեք՝ իմանալու, թե ինչպես այն տրամադրել։</string>
     <!-- Watchdog -->
@@ -411,6 +413,7 @@
     <string name="porter_pairing_dialog_instructions">Android-ի «Մշակողի ընտրանքներ» բաժնում բացեք «Անլար վրիպազերծում»-ը և ընտրեք «Զուգակցել սարքը զուգակցման կոդով»։ Մուտքագրեք պորտը և զուգակցման կոդն այստեղ։</string>
     <string name="porter_permission_detail">Porter-ն այս հավելվածի համար ձեր սարքում հրամաններ կկատարի նույն արտոնություններով, որոնք ունի ինքը՝ Porter-ը։ Թույլատրեք միայն այն հավելվածներին, որոնց վստահում եք։</string>
     <string name="porter_permission_waiting">Սպասում ենք Porter-ին…</string>
+    <string name="porter_permission_also_covers">Կիրառվում է նաև՝ %1$s</string>
 
     <string name="porter_theme_mode">Թեմայի ռեժիմ</string>
     <string name="porter_theme_style">Թեմայի ոճ</string>

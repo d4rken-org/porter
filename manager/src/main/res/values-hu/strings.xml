@@ -57,7 +57,8 @@
         legyen.</string>
     <string name="adb_error_key_store">Nem sikerült kulcsot generálni a vezeték nélküli
         hibakereséshez.\nEnnek oka lehet, hogy az eszköz KeyStore mechanizmusa hibás.</string>
-    <string name="adb_pair_required">Kérjük először végezze el a párosítási lépést.</string>
+    <string name="adb_pair_required_title">Párosítás szükséges</string>
+    <string name="adb_pair_required">A vezeték nélküli hibakeresés be van kapcsolva, de nem ismeri fel a Portert. A Portert párosítani kell a vezeték nélküli hibakereséssel ezen az eszközön, mielőtt így elindulhatna. Erre egyszer van szükség, majd újra, ha a párosítás elvész, például ha a Porter alkalmazásadatait törölték, vagy a Portert eltávolították a párosított eszközök listájáról.\n\nVálassza a Párosítás lehetőséget, kövesse a lépéseket, majd indítsa el újra a Portert.</string>
     <string name="enable">Engedélyezés</string>
     <string name="development_settings">Fejlesztői lehetőségek</string>
     <string name="notification_settings">Értesítési lehetőségek</string>
@@ -181,6 +182,7 @@
     <string name="wadb_notification_retry">Várakozás az újrapróbálkozásra</string>
     <string name="wadb_error_title">Hiba a rendszerindításkor</string>
     <string name="wadb_error_notify_dev">Koppintson a fejlesztő értesítéséhez.</string>
+    <string name="wadb_pair_required_notification">A vezeték nélküli hibakeresés nem ismeri fel a Portert, ezért a Porter nem tudott elindulni a háttérben. Koppintson a Porter újbóli párosításához.</string>
     <string name="wadb_permission_error_notification_title">Engedélyezési hiba</string>
     <string name="wadb_permission_error_notification_content">A Porter rendszerindításkor
         WRITE_SECURE_SETTINGS jogosultságra szorul. Koppintson ide, ha szeretné megtudni, hogyan
@@ -422,6 +424,7 @@
     <string name="porter_pairing_dialog_instructions">Nyissa meg a Vezeték nélküli hibakeresést az Android fejlesztői beállításaiban, és válassza az Eszköz párosítása párosítókóddal lehetőséget. Itt adja meg a portot és a párosítókódot.</string>
     <string name="porter_permission_detail">A Porter ennek az alkalmazásnak a nevében parancsokat futtat az eszközén, ugyanazokkal a jogosultságokkal, amelyekkel maga a Porter is rendelkezik. Csak megbízható alkalmazásoknak adjon engedélyt.</string>
     <string name="porter_permission_waiting">Várakozás a Porterre…</string>
+    <string name="porter_permission_also_covers">Erre is vonatkozik: %1$s</string>
 
     <string name="porter_theme_mode">Témamód</string>
     <string name="porter_theme_style">Témastílus</string>

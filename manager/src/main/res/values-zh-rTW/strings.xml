@@ -40,7 +40,8 @@
     <string name="adb_pairing_requires_multi_window_reason">
         系統要求配對對話框必須一直顯示。只有使用分割畫面模式才能讓此應用程式和系統對話方塊同時可見。</string>
     <string name="adb_error_key_store">無法產生無線偵錯金鑰。\n這可能是因為此裝置的金鑰庫機制已損壞。</string>
-    <string name="adb_pair_required">請先進行配對步驟。</string>
+    <string name="adb_pair_required_title">需要配對</string>
+    <string name="adb_pair_required">無線偵錯已開啟，但無法辨識 Porter。Porter 必須先在這部裝置上與無線偵錯配對，才能以這種方式啟動。這只需進行一次，但每當配對遺失時就需要重新配對，例如清除 Porter 的應用程式資料後，或將 Porter 從已配對裝置清單中移除後。\n\n請選擇「配對」並依照步驟操作，然後再次啟動 Porter。</string>
     <string name="enable">啟用</string>
     <string name="development_settings">開發人員選項</string>
     <string name="notification_settings">通知設定</string>
@@ -139,6 +140,7 @@
     <string name="wadb_notification_retry">等待重試</string>
     <string name="wadb_error_title">開機時出現錯誤</string>
     <string name="wadb_error_notify_dev">點擊即可通知開發者。</string>
+    <string name="wadb_pair_required_notification">無線偵錯無法辨識 Porter，因此 Porter 無法在背景啟動。輕觸即可重新配對 Porter。</string>
     <string name="wadb_permission_error_notification_title">權限錯誤</string>
     <string name="wadb_permission_error_notification_content">Porter
         需要WRITE_SECURE_SETTINGS才能於開機時啟動。點擊了解如何授予此權限。</string>
@@ -372,6 +374,7 @@
     <string name="porter_pairing_dialog_instructions">在 Android 的開發人員選項中開啟「無線偵錯」，然後選擇「使用配對碼配對裝置」。在此輸入通訊埠和配對碼。</string>
     <string name="porter_permission_detail">Porter 將以與自身相同的權限，為此應用程式在您的裝置上執行指令。請只允許您信任的應用程式。</string>
     <string name="porter_permission_waiting">正在等待 Porter…</string>
+    <string name="porter_permission_also_covers">同時適用於：%1$s</string>
 
     <string name="porter_theme_mode">主題模式</string>
     <string name="porter_theme_style">主題樣式</string>

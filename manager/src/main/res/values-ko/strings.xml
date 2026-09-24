@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window_reason">시스템에서는 페어링 대화상자가 항상 표시되어야 합니다. 분할 화면 모드를 사용해야만 이 앱과 시스템 대화상자를 동시에 볼 수 있습니다.</string>
     <string name="adb_error_key_store">무선 디버깅용 키를 생성할 수 없습니다.\n이는 이 장치의 KeyStore 메커니즘이 고장 났기 때문일 수
         있습니다.</string>
-    <string name="adb_pair_required">페어링 단계를 먼저 진행하세요.</string>
+    <string name="adb_pair_required_title">페어링 필요</string>
+    <string name="adb_pair_required">무선 디버깅이 켜져 있지만 Porter를 인식하지 못합니다. 이 방법으로 시작하려면 먼저 이 기기에서 Porter를 무선 디버깅과 페어링해야 합니다. 이 작업은 한 번 필요하며, Porter의 앱 데이터를 삭제하거나 페어링된 기기 목록에서 Porter를 제거하는 등 페어링이 해제될 때마다 다시 필요합니다.\n\n페어링을 선택하고 단계를 따른 다음 Porter를 다시 시작하세요.</string>
     <string name="enable">활성화</string>
     <string name="development_settings">개발자 옵션</string>
     <string name="notification_settings">알림 옵션</string>
@@ -137,6 +138,7 @@
     <string name="wadb_notification_retry">재시도 대기 중</string>
     <string name="wadb_error_title">부팅 시 시작 중 오류 발생</string>
     <string name="wadb_error_notify_dev">개발자에게 알리려면 탭하세요.</string>
+    <string name="wadb_pair_required_notification">무선 디버깅이 Porter를 인식하지 못해 Porter를 백그라운드에서 시작할 수 없었습니다. 탭하여 Porter를 다시 페어링하세요.</string>
     <string name="wadb_permission_error_notification_title">권한 오류</string>
     <string name="wadb_permission_error_notification_content">부팅 시 시작하려면 Porter에 WRITE_SECURE_SETTINGS 권한이 필요합니다. 탭하여 권한을 부여하는 방법을 알아보세요.</string>
     <!-- Watchdog -->
@@ -369,6 +371,7 @@
     <string name="porter_pairing_dialog_instructions">Android 개발자 옵션에서 \"무선 디버깅\"을 열고 \"페어링 코드로 기기 페어링\"을 선택하세요. 여기에 포트와 페어링 코드를 입력하세요.</string>
     <string name="porter_permission_detail">Porter는 이 앱을 위해 Porter 자체와 동일한 권한으로 기기에서 명령을 실행합니다. 신뢰할 수 있는 앱만 허용하세요.</string>
     <string name="porter_permission_waiting">Porter 대기 중…</string>
+    <string name="porter_permission_also_covers">함께 적용: %1$s</string>
 
     <string name="porter_theme_mode">테마 모드</string>
     <string name="porter_theme_style">테마 스타일</string>

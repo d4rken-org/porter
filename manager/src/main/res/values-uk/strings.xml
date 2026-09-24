@@ -53,7 +53,8 @@
         додаток і системний діалог видимими одночасно.</string>
     <string name="adb_error_key_store">Не вдається згенерувати ключ для бездротового
         налагодження.\nМожливо, це пов\'язано з тим, що механізм KeyStore цього пристрою зламаний.</string>
-    <string name="adb_pair_required">Будь ласка, спочатку пройдіть етап сполучення.</string>
+    <string name="adb_pair_required_title">Потрібне сполучення</string>
+    <string name="adb_pair_required">Налагодження через Wi-Fi увімкнено, але воно не розпізнає Porter. Щоб Porter міг запускатися таким способом, його потрібно сполучити з налагодженням через Wi-Fi на цьому пристрої. Це потрібно зробити один раз і знову щоразу, коли сполучення втрачено, наприклад після очищення даних додатка Porter або видалення Porter зі списку сполучених пристроїв.\n\nВиберіть «Сполучення», виконайте кроки, а потім знову запустіть Porter.</string>
     <string name="enable">Увімкнути</string>
     <string name="development_settings">Параметри розробника</string>
     <string name="notification_settings">Налаштування повідомлень</string>
@@ -174,6 +175,7 @@
     <string name="wadb_notification_retry">Очікування повторної спроби</string>
     <string name="wadb_error_title">Помилка під час запуску при завантаженні</string>
     <string name="wadb_error_notify_dev">Натисніть, щоб повідомити розробника.</string>
+    <string name="wadb_pair_required_notification">Налагодження через Wi-Fi не розпізнає Porter, тому Porter не вдалося запустити у фоновому режимі. Торкніться, щоб знову сполучити Porter.</string>
     <string name="wadb_permission_error_notification_title">Помилка дозволу</string>
     <string name="wadb_permission_error_notification_content">Для запуску Porter під час
         завантаження системи потрібні налаштування WRITE_SECURE_SETTINGS. Натисніть, щоб дізнатися,
@@ -419,6 +421,7 @@
     <string name="porter_pairing_dialog_instructions">Відкрийте «Налагодження через Wi-Fi» у параметрах розробника Android і виберіть «Підключати пристрій за допомогою коду підключення». Введіть тут порт і код сполучення.</string>
     <string name="porter_permission_detail">Porter виконуватиме команди на вашому пристрої для цього додатка з тими самими правами, що й сам Porter. Дозволяйте доступ лише додаткам, яким довіряєте.</string>
     <string name="porter_permission_waiting">Очікування Porter…</string>
+    <string name="porter_permission_also_covers">Також поширюється на: %1$s</string>
 
     <string name="porter_theme_mode">Режим теми</string>
     <string name="porter_theme_style">Стиль теми</string>

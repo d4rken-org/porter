@@ -49,7 +49,8 @@
         tämä sovellus ja järjestelmävalintaikkuna voivat olla näkyvissä samanaikaisesti.</string>
     <string name="adb_error_key_store">Langattoman virheenkorjauksen avaimen luominen
         epäonnistui.\nTämä voi johtua siitä, että laitteen KeyStore-mekanismi on rikki.</string>
-    <string name="adb_pair_required">Käy ensin läpi paritusvaihe.</string>
+    <string name="adb_pair_required_title">Paritus vaaditaan</string>
+    <string name="adb_pair_required">Langaton virheenkorjaus on päällä, mutta se ei tunnista Porteria. Porter on paritettava langattoman virheenkorjauksen kanssa tällä laitteella, ennen kuin se voi käynnistyä tällä tavalla. Tämä tarvitaan kerran ja uudelleen aina, kun paritus katoaa, esimerkiksi kun Porterin sovellustiedot on tyhjennetty tai Porter on poistettu paritettujen laitteiden luettelosta.\n\nValitse Paritus, seuraa ohjeita ja käynnistä sitten Porter uudelleen.</string>
     <string name="enable">Ota käyttöön</string>
     <string name="development_settings">Kehittäjäasetukset</string>
     <string name="notification_settings">Ilmoitusasetukset</string>
@@ -163,6 +164,7 @@
     <string name="wadb_notification_retry">Odotetaan uudelleenyritystä</string>
     <string name="wadb_error_title">Virhe käynnistyksen yhteydessä</string>
     <string name="wadb_error_notify_dev">Napauta ilmoittaaksesi kehittäjälle.</string>
+    <string name="wadb_pair_required_notification">Langaton virheenkorjaus ei tunnista Porteria, joten Porter ei voinut käynnistyä taustalla. Napauta ja parita Porter uudelleen.</string>
     <string name="wadb_permission_error_notification_title">Lupavirhe</string>
     <string name="wadb_permission_error_notification_content">Porter tarvitsee WRITE_SECURE_SETTINGS-luvan käynnistyäkseen laitteen käynnistyessä. Napauta ja katso, miten se myönnetään.</string>
     <!-- Watchdog -->
@@ -398,6 +400,7 @@
     <string name="porter_pairing_dialog_instructions">Avaa Langaton virheenkorjaus Androidin kehittäjäasetuksista ja valitse Muodosta laitepari laiteparikoodilla. Syötä portti ja parituskoodi tähän.</string>
     <string name="porter_permission_detail">Porter suorittaa komentoja laitteellasi tämän sovelluksen puolesta samoilla oikeuksilla kuin Porterilla itsellään on. Salli vain sovellukset, joihin luotat.</string>
     <string name="porter_permission_waiting">Odotetaan Porteria…</string>
+    <string name="porter_permission_also_covers">Koskee myös: %1$s</string>
 
     <string name="porter_theme_mode">Teematila</string>
     <string name="porter_theme_style">Teematyyli</string>

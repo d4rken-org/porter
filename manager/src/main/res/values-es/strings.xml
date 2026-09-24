@@ -36,7 +36,8 @@
     <string name="adb_pairing_requires_multi_window">Primero entra en el modo de pantalla dividida (multiventana).</string>
     <string name="adb_pairing_requires_multi_window_reason">El sistema requiere que el diálogo de vinculación esté siempre visible. Usar el modo de pantalla dividida es la única forma de que esta app y el diálogo del sistema sean visibles al mismo tiempo.</string>
     <string name="adb_error_key_store">No se puede generar la clave para la depuración inalámbrica.\nEsto puede deberse a que el mecanismo KeyStore de este dispositivo está dañado.</string>
-    <string name="adb_pair_required">Primero completa el paso de vinculación.</string>
+    <string name="adb_pair_required_title">Vinculación necesaria</string>
+    <string name="adb_pair_required">La depuración inalámbrica está activada, pero no reconoce Porter. Porter debe vincularse con la depuración inalámbrica en este dispositivo antes de poder iniciarse de esta forma. Es necesario una vez, y de nuevo cada vez que se pierda la vinculación, por ejemplo, después de borrar los datos de la app de Porter o de quitar Porter de la lista de dispositivos vinculados.\n\nElige Vinculación, sigue los pasos y vuelve a iniciar Porter.</string>
     <string name="enable">Activar</string>
     <string name="development_settings">Opciones para desarrolladores</string>
     <string name="notification_settings">Opciones de notificaciones</string>
@@ -165,6 +166,7 @@
     <string name="wadb_notification_retry">Esperando para reintentar</string>
     <string name="wadb_error_title">Error al iniciar al arrancar</string>
     <string name="wadb_error_notify_dev">Toca para notificar al desarrollador.</string>
+    <string name="wadb_pair_required_notification">La depuración inalámbrica no reconoce Porter, por lo que Porter no pudo iniciarse en segundo plano. Toca para volver a vincular Porter.</string>
     <string name="wadb_permission_error_notification_title">Error de permiso</string>
     <string name="wadb_permission_error_notification_content">Porter necesita WRITE_SECURE_SETTINGS para iniciarse al arrancar. Toca para saber cómo concederlo.</string>
 
@@ -388,6 +390,7 @@
     <string name="porter_pairing_dialog_instructions">Abre Depuración inalámbrica en las opciones para desarrolladores de Android y elige Emparejar dispositivo con código de sincronización. Introduce aquí el puerto y el código de vinculación.</string>
     <string name="porter_permission_detail">Porter ejecutará comandos en tu dispositivo para esta app, con los mismos privilegios que tiene Porter. Permite solo apps de confianza.</string>
     <string name="porter_permission_waiting">Esperando a Porter…</string>
+    <string name="porter_permission_also_covers">También se aplica a: %1$s</string>
 
     <string name="porter_theme_mode">Modo del tema</string>
     <string name="porter_theme_style">Estilo del tema</string>
