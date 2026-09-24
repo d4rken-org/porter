@@ -210,7 +210,9 @@ the SDK's README shows a shared flow that does both.
 
 Implement `destroy` to clean up and exit: `stopUserService(args)` calls it, and Porter kills a
 process still running a few seconds later. Cancelling the collection does not stop the process. A
-service ends with the app process that bound it, unless you set `daemon = true`.
+service ends with the last app process still collecting it, unless you set `daemon = true`. One you
+stopped collecting runs on until you stop it, your app loses its permission or is uninstalled, or
+Porter stops.
 
 Bump `version` whenever the service code changes, so Porter replaces a running instance. Porter
 identifies a service by its `tag`, or its class name when no tag is set, so set a stable tag if the
