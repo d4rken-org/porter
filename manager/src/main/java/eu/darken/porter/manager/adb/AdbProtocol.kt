@@ -19,4 +19,6 @@ object AdbProtocol {
     const val ADB_AUTH_TOKEN = 1
     const val ADB_AUTH_SIGNATURE = 2
     const val ADB_AUTH_RSAPUBLICKEY = 3
+
+    const val ADB_AUTH_TOKEN_SIZE = 20
 }
