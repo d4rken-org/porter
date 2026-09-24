@@ -62,6 +62,9 @@ internal class CompatibilityRepository private constructor(private val context: 
     private var cachedIconKey: String? = null
     private var cachedIcon: Bitmap? = null
     private val flags = PackageManager.GET_PERMISSIONS or if (Build.VERSION.SDK_INT >= 28) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES
+    // Android 9 and 10 read an archive's signers only for GET_SIGNATURES and otherwise return it without signingInfo.
+    @Suppress("DEPRECATION")
+    private val archiveFlags = if (Build.VERSION.SDK_INT < 30) flags or PackageManager.GET_SIGNATURES else flags
     private val pm get() = context.packageManager
     val primaryUser get() = Process.myUid() / 100000 == 0
 
@@ -255,7 +258,7 @@ internal class CompatibilityRepository private constructor(private val context: 
             context.assets.open("compat/porter-compat.apk").use { it.copyTo(output) }
             atomic.finishWrite(output)
         } catch (e: Exception) { atomic.failWrite(output); throw e }
-        val archive = pm.getPackageArchiveInfo(file.path, flags) ?: error("Invalid bundled APK")
+        val archive = pm.getPackageArchiveInfo(file.path, archiveFlags) ?: error("Invalid bundled APK")
         check(archive.packageName == PACKAGE && version(archive) == BuildConfig.COMPAT_VERSION_CODE.toLong() && ownsPermission(archive)
             && certificate(archive) == certificate(pm.getPackageInfo(context.packageName, flags))) { "Bundled APK identity does not match Porter" }
         return file
