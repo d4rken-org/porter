@@ -7,6 +7,20 @@ if [ ! -f "$DEX" ]; then
   exit 1
 fi
 
+# Any app with storage access can replace files in shared storage.
+for path in "$BASEDIR" "$DEX" \
+    "$(readlink -f "$BASEDIR" 2>/dev/null)" "$(readlink -f "$DEX" 2>/dev/null)" \
+    "$(cd "$BASEDIR" 2>/dev/null && pwd -P)"; do
+  case "$path/" in
+    /sdcard/*|/storage/*|/mnt/sdcard/*|/data/media/*|/mnt/user/*|/mnt/runtime/*|/mnt/pass_through/*|/mnt/media_rw/*)
+      echo "porsh cannot run from shared storage ($path)."
+      echo "Use your terminal app to copy porsh and porsh.dex to its private files directory, e.g.:"
+      echo "  cp $BASEDIR/porsh $BASEDIR/porsh.dex /data/data/<terminal package name>/files"
+      exit 1
+      ;;
+  esac
+done
+
 if [ $(getprop ro.build.version.sdk) -ge 34 ]; then
   if [ -w $DEX ]; then
     echo "On Android 14+, app_process cannot load writable dex."
