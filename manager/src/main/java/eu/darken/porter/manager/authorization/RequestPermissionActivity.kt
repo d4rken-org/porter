@@ -67,9 +67,17 @@ class RequestPermissionActivity : ComposeActivity() {
     private var drawnUid: Int? = null
 
     /**
+     * When the composition that put the buttons on screen was applied; null while they are not.
+     *
+     * A prompt that answers its first tap lets another app start it just under a finger that is
+     * already coming down.
+     */
+    private var answerableAt: Long? = null
+
+    /**
      * Whether a tap now decides the request the user was shown, rather than one that just arrived.
      *
-     * Two conditions, because the timer alone cannot cover its own start:
+     * A change of app takes two conditions, because the timer alone cannot cover its own start:
      * [PermissionViewModel.supersede] repoints the model the moment the intent lands, so a tap
      * already queued would answer for an app no frame has named yet. Comparing what is pointed at
      * with what was drawn rules that out, and it holds however many requests arrive between two
@@ -82,6 +90,16 @@ class RequestPermissionActivity : ComposeActivity() {
         val asked = request
         if (asked != null && asked.uid != drawnUid) {
             LOGGER.w("Ignoring a tap: repointed to ${'$'}{asked.uid}, screen still shows ${'$'}drawnUid")
+            return false
+        }
+        val shown = answerableAt
+        if (shown == null) {
+            LOGGER.w("Ignoring a tap before the buttons were drawn")
+            return false
+        }
+        val sinceShown = SystemClock.elapsedRealtime() - shown
+        if (sinceShown < SUPERSEDE_GRACE) {
+            LOGGER.w("Ignoring a tap $sinceShown ms after the buttons appeared")
             return false
         }
         val changed = supersededAt ?: return true
@@ -104,6 +122,8 @@ class RequestPermissionActivity : ComposeActivity() {
             val asked = request ?: return@porterContent
             val ai = asked.info
             val stage by model.stage.collectAsStateWithLifecycle()
+            // Applied before the frame that draws the buttons, so no tap can reach them unstamped.
+            SideEffect { answerableAt = if (stage == "ready") answerableAt ?: SystemClock.elapsedRealtime() else null }
             // Keyed on the request, so the name and icon reset in the composition a replacement
             // causes rather than when the coroutine below has decoded the new icon. An icon is as
             // big as the app that ships it, so that wait is not ours to bound.
@@ -212,8 +232,8 @@ class RequestPermissionActivity : ComposeActivity() {
         private const val SAVED_INFO = "asked.info"
 
         /**
-         * How long after the prompt changes request a tap is ignored for. Matches what the platform
-         * permission dialog allows itself for the same reason.
+         * How long after the buttons appear, or the prompt changes request, a tap is ignored for.
+         * Matches what the platform permission dialog allows itself for the same reason.
          */
         const val SUPERSEDE_GRACE = 500L
     }
