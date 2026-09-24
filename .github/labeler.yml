@@ -26,6 +26,7 @@
           - "manager/src/**/eu/darken/porter/manager/worker/AdbStartWorker*"
           - "manager/src/**/eu/darken/porter/manager/worker/ServiceUpdateWorker*"
           - "manager/src/**/eu/darken/porter/manager/receiver/BootCompleteReceiver*"
+          - "manager/src/**/eu/darken/porter/manager/receiver/BootStart*"
           - "manager/src/**/eu/darken/porter/manager/receiver/ManualStartReceiver*"
           - "manager/src/**/eu/darken/porter/manager/receiver/PorterReceiverStarter*"
           - "manager/src/**/eu/darken/porter/manager/receiver/NotifAttemptReceiver*"
