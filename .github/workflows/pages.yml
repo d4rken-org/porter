@@ -6,11 +6,13 @@ on:
     paths:
       - 'docs/**'
       - 'SECURITY.md'
+      - 'PRIVACY_POLICY.md'
       - '.github/workflows/pages.yml'
   pull_request:
     paths:
       - 'docs/**'
       - 'SECURITY.md'
+      - 'PRIVACY_POLICY.md'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -29,6 +31,8 @@ jobs:
           working-directory: docs
       - name: Add the security page
         run: cp SECURITY.md docs/SECURITY.md
+      - name: Add the privacy page
+        run: cp PRIVACY_POLICY.md docs/PRIVACY_POLICY.md
       - name: Build guide
         working-directory: docs
         run: bundle exec jekyll build --strict_front_matter --destination ../_site
