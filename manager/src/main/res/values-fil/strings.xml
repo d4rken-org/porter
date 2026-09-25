@@ -296,7 +296,7 @@
     <string name="porter_build_identity_unavailable">Hindi available ang pagkakakilanlan ng build</string>
     <string name="porter_installed_app">Naka-install na app</string>
     <string name="porter_running_service">Tumatakbong serbisyo</string>
-    <string name="porter_service_api_value">Porter protocol: %1$d</string>
+    <string name="porter_service_api_value">Protocol ng Porter: %1$d</string>
     <string name="porter_service_process_value">UID: %1$d · PID: %2$s</string>
     <string name="porter_root_requirement">Kailangan ng device na may root. Hihingi ang Porter ng root access kapag pinindot mo ang Simulan.</string>
     <string name="porter_version_compact">Bersyon: %1$s (%2$d)</string>

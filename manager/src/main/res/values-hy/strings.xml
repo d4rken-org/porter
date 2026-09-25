@@ -93,7 +93,7 @@
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Շատ հնարավոր է, որ Ձեր սարքի արտադրողը սահմանափակել է adb-ի թույլտվությունները։ <p>Հնարավոր լուծումները գտեք <b><a href="%1$s">այստեղ</a></b>։]]></string>
     <string name="app_management_item_summary_requires_root">* Porter-ը root թույլտվություն պետք է
         ունենա</string>
-    <string name="app_management_toggle_all">Toggle all</string>
+    <string name="app_management_toggle_all">Փոխարկել բոլորը</string>
     <!-- Terminal -->
     <string name="home_terminal_title">Օգտագործեք Porter-ը տերմինալային հավելվածներում</string>
     <string name="home_terminal_description">Գործարկեք shell հրամանները տերմինալային հավելվածներում
