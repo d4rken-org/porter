@@ -121,7 +121,7 @@
     <string name="rish_description"><![CDATA[Cu %1$s, poți rula comenzi shell în orice aplicație terminal.<p>Atinge pentru a afla mai multe despre cum să o utilizezi.]]></string>
     <!-- Settings -->
     <string name="settings_title">Setări</string>
-    <string name="settings_start_on_boot">Pornire la pornire</string>
+    <string name="settings_start_on_boot">Pornire la bootare</string>
     <string name="settings_start_on_boot_summary">Necesită Android 11+ sau root</string>
     <string name="settings_start_on_boot_bug">Din cauza unui bug în Android 11-12, remedierea
         erorilor wireless nu își amintește nicio rețea autorizată.\n\nVa trebui să reautorizezi rețeaua la
@@ -138,7 +138,7 @@
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Portul trebuie să fie între 1 și 65535</string>
     <string name="snackbar_battery_optimization_home">Optimizarea bateriei trebuie dezactivată
-        pentru ca pornirea la pornire/funcția de supraveghere să funcționeze corect.</string>
+        pentru ca pornirea la bootare/funcția de supraveghere să funcționeze corect.</string>
     <string name="snackbar_battery_optimization_settings">Dezactivează optimizarea bateriei pentru a
         utiliza această funcție.</string>
     <string name="snackbar_action_fix">Reparare</string>
@@ -180,7 +180,7 @@
     <string name="wadb_pair_required_notification">Remedierea erorilor wireless nu recunoaște Porter, așa că Porter nu a putut porni în fundal. Atinge pentru a asocia din nou Porter.</string>
     <string name="wadb_permission_error_notification_title">Eroare de permisiune</string>
     <string name="wadb_permission_error_notification_content">Porter are nevoie de
-        WRITE_SECURE_SETTINGS pentru a porni la pornire. Atinge pentru a afla cum să îl acorzi.</string>
+        WRITE_SECURE_SETTINGS pentru a porni la bootare. Atinge pentru a afla cum să îl acorzi.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog-ul rulează</string>
     <string name="watchdog_turn_off">Opreşte</string>
@@ -211,7 +211,7 @@
     <string name="home_dialog_duplicate_app_detected_message">O altă versiune a acestei aplicații este instalată pe dispozitiv. Pentru a continua, dezinstalează toate versiunile duplicate și repornește dispozitivul.</string>
     <string name="home_dialog_button_exit">Ieșire</string>
     <string name="settings_alerts_blocked_title">Alerte în fundal</string>
-    <string name="settings_alerts_blocked_summary">Notificările de la Porter sunt blocate, așa că „Pornire la pornire” și „Câine de pază” nu te pot anunța când au nevoie de atenție.</string>
+    <string name="settings_alerts_blocked_summary">Notificările de la Porter sunt blocate, așa că „Pornire la bootare” și „Câine de pază” nu te pot anunța când au nevoie de atenție.</string>
     <string name="settings_alerts_blocked_message">Această funcție raportează printr-o notificare ce face și ce nu a funcționat. Notificările de la Porter sunt blocate în prezent, așa că ar rula fără să te anunțe nimic.</string>
     <string name="settings_alerts_blocked_continue">Activează oricum</string>
     <string name="follow_system">Urmează sistemul</string>
