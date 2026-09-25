@@ -6,7 +6,7 @@ language_name: English
 ---
 # ADB access for your apps
 
-Porter is a minimal, maintained fork of [Shizuku](https://github.com/thedjchi/Shizuku) that gives Android apps ADB access through the Shizuku APIs, with optional root support.
+Porter is a minimal, maintained fork of [Shizuku](https://github.com/RikkaApps/Shizuku) that gives Android apps ADB access through the Shizuku APIs, with optional root support.
 
 You choose which apps are allowed to use it.
 

@@ -8,7 +8,7 @@ description: Porter 是 Shizuku 的精简分支，持续维护，通过 Shizuku 
 # 为你的应用提供 ADB 访问权限
 {: #adb-access-for-your-apps }
 
-Porter 是 [Shizuku](https://github.com/thedjchi/Shizuku) 的精简分支，持续维护，通过 Shizuku API 为 Android 应用提供 ADB 访问权限，也可选用 root。
+Porter 是 [Shizuku](https://github.com/RikkaApps/Shizuku) 的精简分支，持续维护，通过 Shizuku API 为 Android 应用提供 ADB 访问权限，也可选用 root。
 
 由你决定哪些应用可以使用它。
 

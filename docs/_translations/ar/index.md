@@ -8,7 +8,7 @@ description: Porter هو فرع بسيط ومستمر الصيانة من Shizuk
 # وصول ADB لتطبيقاتك
 {: #adb-access-for-your-apps }
 
-Porter هو فرع بسيط ومستمر الصيانة من [Shizuku](https://github.com/thedjchi/Shizuku)، يتيح لتطبيقات Android الوصول عبر ADB باستخدام واجهات Shizuku البرمجية، مع دعم اختياري لصلاحيات الروت.
+Porter هو فرع بسيط ومستمر الصيانة من [Shizuku](https://github.com/RikkaApps/Shizuku)، يتيح لتطبيقات Android الوصول عبر ADB باستخدام واجهات Shizuku البرمجية، مع دعم اختياري لصلاحيات الروت.
 
 أنت تختار التطبيقات المسموح لها باستخدامه.
 
