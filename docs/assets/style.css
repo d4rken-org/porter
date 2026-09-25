@@ -53,6 +53,7 @@ nav.guide-nav h2 { margin: 1.2rem .7rem .3rem; font-size: .85rem; letter-spacing
 nav.guide-nav h2:first-child { margin-top: 0; }
 @media (max-width: 720px) {
   nav.guide-nav h2 { flex-basis: 100%; margin-top: 1rem; }
+  header { gap: .5rem; }
 }
 
 .language-switcher[hidden] { display: none; }
@@ -62,6 +63,9 @@ nav.guide-nav h2:first-child { margin-top: 0; }
 
 .brand { display: inline-flex; align-items: center; gap: .5rem; }
 .brand img { border-radius: .5rem; }
+.github { display: inline-flex; padding: .5rem; border-radius: .4rem; }
+.github:hover { background: var(--tint); }
+.github:focus-visible { outline-offset: 1px; }
 .home-banner { display: block; width: 100%; height: auto; margin: 0 0 1.5rem; border-radius: .6rem; }
 
 /* Keep commands and identifiers readable inside right-to-left prose. */
