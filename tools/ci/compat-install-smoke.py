@@ -18,6 +18,7 @@ def main():
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--serial", required=True)
     parser.add_argument("--dpad", action="store_true")
+    base.add_release_argument(parser)
     args = parser.parse_args()
     smoke = base.Smoke(args)
 
@@ -107,16 +108,16 @@ def main():
         smoke.screenshot("replacement-preview")
         original_pid = smoke.pid("shizuku_server")
         assert original_pid
-        smoke.shell("run-as", base.MANAGER, "chmod", "500", "cache/compat")
+        smoke.shell(*smoke.in_manager_data("chmod 500 cache/compat"))
         activate("Switch to Porter")
         smoke.until("original service stopped by Porter", lambda: not smoke.pid("shizuku_server"))
         smoke.until("replacement retains reviewed import on install failure", lambda: any(n.get("text") == "Setup did not finish. You can retry." for n in smoke.ui().iter("node")), timeout=90)
         assert not smoke.shell("pm", "path", base.COMPAT, check=False).startswith("package:")
-        saved = smoke.shell("run-as", base.MANAGER, "cat", "no_backup/compatibility-import.json")
+        saved = smoke.shell(*smoke.in_manager_data("cat no_backup/compatibility-import.json"))
         assert json.loads(saved)["decisions"][0]["uid"] == original_uid
         smoke.screenshot("replacement-install-blocked")
         smoke.shell("am", "force-stop", base.MANAGER)
-        smoke.shell("run-as", base.MANAGER, "chmod", "700", "cache/compat")
+        smoke.shell(*smoke.in_manager_data("chmod 700 cache/compat"))
         setup_screen()
         activate("Install automatically", scroll=True)
         smoke.until("replacement and import complete", lambda: any(n.get("text") == "Import complete" for n in smoke.ui().iter("node")), timeout=90)
@@ -130,7 +131,7 @@ def main():
         setup_screen()
         smoke.until("dismissal survives restart", lambda: {"Compatibility app is installed", base.COMPAT}.issubset(n.get("text") for n in smoke.ui().iter("node")))
         assert not any(n.get("text") == "Import complete" for n in smoke.ui().iter("node"))
-        result = json.loads(smoke.shell("run-as", base.MANAGER, "cat", "no_backup/compatibility-result.json"))
+        result = json.loads(smoke.shell(*smoke.in_manager_data("cat no_backup/compatibility-result.json")))
         assert not result["completed"] and result["applied"] == 0 and result["skipped"] == 0
         smoke.launch_probe(base.LEGACY)
         smoke.authorized(base.LEGACY)

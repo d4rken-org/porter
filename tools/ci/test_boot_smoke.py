@@ -135,6 +135,24 @@ class ManagerJobsTest(unittest.TestCase):
         self.assertEqual(len(runner.manager_jobs()), 2)
 
 
+class StartedByManagerTest(unittest.TestCase):
+    def setUp(self):
+        self.smoke, directory = runner()
+        self.addCleanup(directory.cleanup)
+        self.smoke.pid = Mock(return_value="4711")
+
+    def test_a_debug_build_is_read_from_its_adb_client_log(self):
+        self.smoke.adb = Mock(return_value="D AdbClient: Handshake succeeded.")
+        self.smoke.started_by_manager()
+        self.smoke.adb.assert_called_once_with("logcat", "-d", "--pid=4711", "-s", "AdbClient:D", "*:S")
+
+    def test_a_release_build_is_not_asked_for_a_log_it_cannot_write(self):
+        self.smoke.args.release = True
+        self.smoke.adb = Mock(return_value="")
+        self.smoke.started_by_manager()
+        self.smoke.adb.assert_not_called()
+
+
 class CaseSelectionTest(unittest.TestCase):
     """A narrowed run must not assert against a device the cases it dropped would have built."""
 
@@ -150,6 +168,12 @@ class CaseSelectionTest(unittest.TestCase):
         self.assertEqual(cases[0], "setup")
         self.assertNotIn("wireless-pairing", cases)
         self.assertEqual(set(cases) | {"wireless-pairing"}, set(boot.CASES))
+
+    def test_the_release_flag_is_accepted(self):
+        self.assertFalse(self.parse().release)
+        argv = ["--serial", "emulator-5554", "--manager", "m.apk", "--native", "n.apk",
+                "--output", "out", "--release"]
+        self.assertTrue(boot.parse_args(argv).release)
 
     def test_pairing_needs_only_setup(self):
         self.assertEqual(self.parse("setup", "wireless-pairing").cases, ["setup", "wireless-pairing"])

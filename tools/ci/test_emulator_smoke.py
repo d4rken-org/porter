@@ -644,12 +644,58 @@ class CaseSelectionTest(unittest.TestCase):
         self.assertEqual([case.get("name") for case in suite], ["setup", "porsh"])
         self.assertEqual((suite.get("tests"), suite.get("failures")), ("2", "0"))
 
+    def test_a_release_build_skips_a_debuggable_case_and_runs_the_rest(self):
+        self.runner.args = argparse.Namespace(cases=None, release=True)
+        self.runner.case("setup", lambda: self.ran.append("setup"))
+        self.runner.case("debug-recording", lambda: self.ran.append("debug-recording"), debuggable=True)
+        self.assertEqual(self.ran, ["setup"])
+        self.assertEqual(self.recorded(), ["setup"])
+
+    def test_a_debug_build_runs_a_debuggable_case(self):
+        self.runner.args = argparse.Namespace(cases=None, release=False)
+        self.runner.case("debug-recording", lambda: self.ran.append("debug-recording"), debuggable=True)
+        self.assertEqual(self.ran, ["debug-recording"])
+
     def test_a_namespace_without_case_support_still_runs_every_case(self):
         # compat-install-smoke.py builds its own parser, which has no --case flag at all.
         self.runner.args = argparse.Namespace()
         self.runner.case("setup", lambda: self.ran.append("setup"))
         self.assertEqual(self.ran, ["setup"])
         self.assertEqual(self.recorded(), ["setup"])
+
+
+class ManagerDataTest(unittest.TestCase):
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock(return_value="0")
+
+    def test_a_debug_build_is_reached_through_run_as(self):
+        self.runner.args = argparse.Namespace(release=False)
+        self.assertEqual(self.runner.in_manager_data("cat a"), ("run-as", smoke.MANAGER, "sh", "-c", "cat a"))
+        self.runner.shell.assert_not_called()
+
+    def test_a_release_build_is_reached_as_root_by_path(self):
+        self.runner.args = argparse.Namespace(release=True)
+        self.assertEqual(self.runner.in_manager_data("cat a"),
+                         ("su", "0", "sh", "-c", f"cd {smoke.MANAGER_DATA} && cat a"))
+
+    def test_root_is_asked_for_once(self):
+        self.runner.args = argparse.Namespace(release=True)
+        self.runner.in_manager_data("cat a")
+        self.runner.in_manager_data("cat b")
+        self.runner.shell.assert_called_once_with("su", "0", "id", "-u", check=False)
+
+    def test_an_image_without_root_fails_on_a_release_build(self):
+        self.runner.args = argparse.Namespace(release=True)
+        self.runner.shell = Mock(return_value="")
+        with self.assertRaises(AssertionError):
+            self.runner.in_manager_data("cat a")
+
+    def test_a_recording_read_goes_through_the_same_door(self):
+        self.runner.args = argparse.Namespace(release=True)
+        self.runner.recording("cat no_backup/debug-logs/active")
+        self.runner.shell.assert_called_with(
+            "su", "0", "sh", "-c", f"cd {smoke.MANAGER_DATA} && cat no_backup/debug-logs/active", check=False)
 
 
 class CaseArgumentTest(unittest.TestCase):
@@ -668,6 +714,10 @@ class CaseArgumentTest(unittest.TestCase):
 
     def test_an_omitted_flag_leaves_the_suite_unfiltered(self):
         self.assertIsNone(self.parse().cases)
+
+    def test_the_manager_is_a_debug_build_unless_named_a_release_one(self):
+        self.assertFalse(self.parse().release)
+        self.assertTrue(self.parse("--release").release)
 
     def test_the_flag_repeats_into_one_selection(self):
         self.assertEqual(self.parse("--case", "setup", "--case", "porsh").cases, ["setup", "porsh"])

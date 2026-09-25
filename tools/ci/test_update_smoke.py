@@ -22,6 +22,11 @@ class CaseSelectionTest(unittest.TestCase):
     def test_the_workflow_arguments_are_accepted(self):
         self.assertIsNone(self.parse().cases)
 
+    def test_the_release_flag_is_accepted(self):
+        self.assertFalse(self.parse().release)
+        self.assertTrue(update.parse_args(["--serial", "emulator-5554", "--output", "out", *APKS,
+                                           "--release"]).release)
+
     def test_setup_is_required(self):
         with self.assertRaises(SystemExit):
             self.parse("manual-update")

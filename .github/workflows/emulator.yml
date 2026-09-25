@@ -68,8 +68,10 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/sdk-branch
       - uses: ./.github/actions/android-setup
+      # The release manager is the minified build that ships, signed with the debug key like
+      # everything else here.
       - name: Build test APKs
-        run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :probe:assemblePorterDebug :probe:assembleLegacyDebug :probe:assembleBridgeRelease :unlisted-manager-fixture:assembleDebug :service-update-fixture:assembleDebug
+        run: ./gradlew :manager:assembleFossDebug :compat:assembleDebug :manager:assembleFossRelease :compat:assembleRelease :probe:assemblePorterDebug :probe:assembleLegacyDebug :probe:assembleBridgeRelease :unlisted-manager-fixture:assembleDebug :service-update-fixture:assembleDebug -Pporter.developmentSigning=true
       # Several roots, so the artifact is rooted at the workspace and every job downloads each APK to
       # the path it was built at.
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
@@ -78,6 +80,10 @@ jobs:
           path: |
             manager/build/outputs/apk/foss/debug/*.apk
             compat/build/outputs/apk/debug/*.apk
+            manager/build/outputs/apk/foss/release/*.apk
+            manager/build/outputs/mapping/fossRelease/mapping.txt
+            shell/build/outputs/mapping/release/mapping.txt
+            compat/build/outputs/apk/release/*.apk
             probe/build/outputs/apk/porter/debug/*.apk
             probe/build/outputs/apk/legacy/debug/*.apk
             probe/build/outputs/apk/bridge/release/*.apk
@@ -87,7 +93,7 @@ jobs:
           if-no-files-found: error
 
   smoke:
-    name: ${{ matrix.suite }} (Android ${{ matrix.api }})
+    name: ${{ matrix.suite }} (Android ${{ matrix.api }}${{ matrix.build == 'release' && ', release' || '' }})
     needs: [changes, apks]
     # A skipped job satisfies a required check, so these start whatever happened before them, in a
     # cancelled run too, and decide in their first steps.
@@ -102,6 +108,9 @@ jobs:
       matrix:
         api: [30, 36]
         suite: [emulator, compat-install, dualwire, update]
+        # A dimension of one, so that the release entries below differ from every combination in a
+        # value and are added as combinations of their own rather than merged into these.
+        build: [debug]
         include:
           # Keyed on the suite alone, so this augments the two dualwire combinations rather than
           # creating new ones. A top-level extra: list would multiply every combination and hand
@@ -125,6 +134,23 @@ jobs:
             arch: x86
             profile: tv_1080p
             input: --dpad
+          # The minified manager, for what R8 can break: entry points started by name, JNI
+          # registration, reflection. Combinations of their own, which the suite-keyed entries
+          # above do not reach, so each carries its own extra.
+          - api: 36
+            suite: emulator
+            build: release
+          - api: 36
+            suite: compat-install
+            build: release
+          - api: 36
+            suite: dualwire
+            build: release
+            extra: --bridge probe/build/outputs/apk/bridge/release/*.apk --unlisted test-fixtures/unlisted-manager/build/outputs/apk/debug/*.apk
+          - api: 36
+            suite: update
+            build: release
+            extra: --fixture test-fixtures/service-update/build/outputs/apk/debug/*.apk
     steps:
       - name: Require the test APKs
         id: require
@@ -194,8 +220,9 @@ jobs:
           disable-animations: true
           script: >-
             python3 tools/ci/${{ matrix.suite }}-smoke.py --serial emulator-5554 ${{ matrix.input }}
-            --manager manager/build/outputs/apk/foss/debug/*.apk
-            --compat compat/build/outputs/apk/debug/*.apk
+            --manager manager/build/outputs/apk/foss/${{ matrix.build || 'debug' }}/*.apk
+            --compat compat/build/outputs/apk/${{ matrix.build || 'debug' }}/*.apk
+            ${{ matrix.build == 'release' && '--release' || '' }}
             --native probe/build/outputs/apk/porter/debug/*.apk
             --legacy probe/build/outputs/apk/legacy/debug/*.apk
             --shizuku "$RUNNER_TEMP/shizuku.apk"
@@ -204,14 +231,16 @@ jobs:
         if: always() && env.DEVICE_TESTS == 'true' && steps.require.outcome != 'failure'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
-          name: porter-${{ matrix.suite }}-api-${{ matrix.api }}
+          name: porter-${{ matrix.suite }}-api-${{ matrix.api }}${{ matrix.build == 'release' && '-release' || '' }}
           path: |
             build/emulator-results/
             probe/build/outputs/mapping/bridgeRelease/mapping.txt
+            ${{ matrix.build == 'release' && 'manager/build/outputs/mapping/fossRelease/mapping.txt' || '' }}
+            ${{ matrix.build == 'release' && 'shell/build/outputs/mapping/release/mapping.txt' || '' }}
           if-no-files-found: warn
 
   boot:
-    name: ${{ matrix.suite }} (Android ${{ matrix.api }})
+    name: ${{ matrix.suite }} (Android ${{ matrix.api }}${{ matrix.build == 'release' && ', release' || '' }})
     needs: [changes, apks]
     if: ${{ always() }}
     runs-on: ubuntu-26.04
@@ -233,6 +262,17 @@ jobs:
         # transport, so none of this describes a physical Android 11 device; one was not tested.
         api: [36]
         suite: [boot, wireless-pairing]
+        build: [debug]
+        include:
+          - suite: wireless-pairing
+            cases: --case setup --case wireless-pairing
+          - api: 36
+            suite: boot
+            build: release
+          - api: 36
+            suite: wireless-pairing
+            build: release
+            cases: --case setup --case wireless-pairing
     steps:
       - name: Require the test APKs
         id: require
@@ -278,14 +318,17 @@ jobs:
           disable-animations: true
           script: >-
             python3 tools/ci/boot-smoke.py --serial emulator-5554
-            --manager manager/build/outputs/apk/foss/debug/*.apk
+            --manager manager/build/outputs/apk/foss/${{ matrix.build || 'debug' }}/*.apk
             --native probe/build/outputs/apk/porter/debug/*.apk
             --output build/emulator-results
-            ${{ matrix.suite == 'wireless-pairing' && '--case setup --case wireless-pairing' || '' }}
+            ${{ matrix.build == 'release' && '--release' || '' }} ${{ matrix.cases }}
       - name: Upload device test evidence
         if: always() && env.DEVICE_TESTS == 'true' && steps.require.outcome != 'failure'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
-          name: porter-${{ matrix.suite }}-api-${{ matrix.api }}
-          path: build/emulator-results/
+          name: porter-${{ matrix.suite }}-api-${{ matrix.api }}${{ matrix.build == 'release' && '-release' || '' }}
+          path: |
+            build/emulator-results/
+            ${{ matrix.build == 'release' && 'manager/build/outputs/mapping/fossRelease/mapping.txt' || '' }}
+            ${{ matrix.build == 'release' && 'shell/build/outputs/mapping/release/mapping.txt' || '' }}
           if-no-files-found: warn
