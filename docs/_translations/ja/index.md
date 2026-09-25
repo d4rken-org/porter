@@ -8,7 +8,7 @@ description: Porter は Shizuku をもとにした、シンプルで継続的に
 # アプリに ADB アクセスを
 {: #adb-access-for-your-apps }
 
-Porter は [Shizuku](https://github.com/thedjchi/Shizuku) をもとにした、シンプルで継続的にメンテナンスされているフォークです。Shizuku API を通じて Android アプリに ADB アクセスを提供し、必要に応じて root にも対応します。
+Porter は [Shizuku](https://github.com/RikkaApps/Shizuku) をもとにした、シンプルで継続的にメンテナンスされているフォークです。Shizuku API を通じて Android アプリに ADB アクセスを提供し、必要に応じて root にも対応します。
 
 アクセスを許可するアプリは、あなたが選びます。
 

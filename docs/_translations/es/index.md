@@ -8,7 +8,7 @@ description: Porter es una bifurcación minimalista y mantenida de Shizuku que p
 # Acceso ADB para tus apps
 {: #adb-access-for-your-apps }
 
-Porter es una bifurcación minimalista y mantenida de [Shizuku](https://github.com/thedjchi/Shizuku) que proporciona acceso ADB a las apps de Android mediante las API de Shizuku, con soporte opcional para root.
+Porter es una bifurcación minimalista y mantenida de [Shizuku](https://github.com/RikkaApps/Shizuku) que proporciona acceso ADB a las apps de Android mediante las API de Shizuku, con soporte opcional para root.
 
 Tú eliges qué apps pueden usarlo.
 

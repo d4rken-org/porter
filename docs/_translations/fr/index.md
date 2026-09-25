@@ -8,7 +8,7 @@ description: Porter est un fork minimaliste et maintenu de Shizuku qui donne aux
 # L’accès ADB pour vos applications
 {: #adb-access-for-your-apps }
 
-Porter est un fork minimaliste et maintenu de [Shizuku](https://github.com/thedjchi/Shizuku) qui donne aux applications Android un accès ADB via les API de Shizuku, avec une prise en charge facultative du root.
+Porter est un fork minimaliste et maintenu de [Shizuku](https://github.com/RikkaApps/Shizuku) qui donne aux applications Android un accès ADB via les API de Shizuku, avec une prise en charge facultative du root.
 
 Vous choisissez quelles applications peuvent l’utiliser.
 
