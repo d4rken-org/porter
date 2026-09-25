@@ -37,6 +37,8 @@ PAYLOAD = "porter-ci-shell-access"
 # app cannot change this one either.
 NOTIFICATION_CHANNEL_ADB_START = "porter.adb_start"
 PORSH_DIR = "/data/local/tmp"
+# Where run-as starts, which a release build refuses; a root shell reaches the same files by path.
+MANAGER_DATA = "/data/user/0/" + MANAGER
 # Comfortably past a 64 KiB pipe buffer, so a reader that never drains blocks the writer.
 PORSH_BULK = 4096 * 64
 # adb reports these itself before dispatching anything to the device, so repeating is safe. Stream
@@ -574,9 +576,19 @@ class Smoke:
                 shells[ppid].append(name)
         return shells
 
+    def in_manager_data(self, command):
+        """argv running a shell command from inside the manager's data directory."""
+        if not self.release_build():
+            return ("run-as", MANAGER, "sh", "-c", command)
+        # Once, so that a missing su fails here rather than as whatever the command was waiting for.
+        if not getattr(self, "manager_data_root", False):
+            assert self.root_available(), "a release build refuses run-as, and this image's su does not give the ADB shell root"
+            self.manager_data_root = True
+        return ("su", "0", "sh", "-c", f"cd {MANAGER_DATA} && {command}")
+
     def recording(self, command):
-        # run-as starts in the manager's data directory, where debug sessions live.
-        return self.shell("run-as", MANAGER, "sh", "-c", command, check=False)
+        # Debug sessions live in the manager's data directory.
+        return self.shell(*self.in_manager_data(command), check=False)
 
     def recording_size(self, path):
         return int(self.recording(f"stat -c %s {path} 2>/dev/null || echo 0") or 0)
@@ -816,13 +828,22 @@ class Smoke:
         self.tap("Stop Porter", occurrence=1, screenshot="running-service-dialog")
         self.until("Porter stopped", lambda: not self.pid("porter_server"))
 
-    def case(self, name, action, restore=()):
-        """run() calls setup() once, so a destructive scenario must undo itself for the next one."""
+    def release_build(self):
+        # Compared with True: a Mock standing in for the arguments answers every name truthily.
+        return getattr(self.args, "release", False) is True
+
+    def case(self, name, action, restore=(), debuggable=False):
+        """run() calls setup() once, so a destructive scenario must undo itself for the next one.
+
+        A debuggable case waits on logging only a debug build of the manager writes."""
         cases = getattr(self.args, "cases", None)
         if cases and name not in cases:
             # Left out of self.results entirely: a case the run never reached has no verdict.
             # It restores nothing either, having broken nothing.
             print(f"SKIP {name}", flush=True)
+            return
+        if debuggable and self.release_build():
+            print(f"SKIP {name}, which needs a debuggable manager", flush=True)
             return
         started = time.monotonic()
         result = {"name": name}
@@ -937,7 +958,8 @@ class Smoke:
             for name in ("server-start.txt", "server-stop.txt"):
                 assert self.recording_size(f"{path}/{name}"), name
             (self.output / f"debug-recording-{session}.tar").write_bytes(
-                self.adb("exec-out", "run-as", MANAGER, "tar", "-c", "-C", "no_backup/debug-logs", session, binary=True))
+                self.adb("exec-out", shlex.join(self.in_manager_data(
+                    f"tar -c -C no_backup/debug-logs {shlex.quote(session)}")), binary=True))
 
             # A second recording, for the half the first cannot show: the service destroys what it
             # spawned for a client that dies without closing anything. The stop above is the client
@@ -1254,8 +1276,10 @@ class Smoke:
             assert self.pid(NATIVE) == client_pid, "the client died with the server"
             self.until("the user service follows the server that hosted it",
                        lambda: not self.pid(NATIVE + ":porter-probe"))
-            self.until("the manager calls it a crash",
-                       lambda: "PorterStateMachine: CRASHED" in manager_log()[manager_boundary:])
+            # Only a debug build logs the state it moved to.
+            if not self.release_build():
+                self.until("the manager calls it a crash",
+                           lambda: "PorterStateMachine: CRASHED" in manager_log()[manager_boundary:])
 
             self.start_service()
             # The same process, reconnected: a privileged call working again is the assertion, not
@@ -1523,12 +1547,18 @@ class Smoke:
         ET.ElementTree(suite).write(self.output / "junit.xml", encoding="utf-8", xml_declaration=True)
 
 
+def add_release_argument(parser):
+    parser.add_argument("--release", action="store_true",
+                        help="the manager is a release build: skip the cases that need a debuggable one")
+
+
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--serial", required=True)
     for name in ("manager", "compat", "native", "legacy", "shizuku"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    add_release_argument(parser)
     parser.add_argument("--case", action="append", dest="cases", choices=CASES, metavar="NAME",
                         help="run only the named case, repeatable, in declared order; "
                              "omit to run all of: " + ", ".join(CASES))

@@ -412,6 +412,7 @@ def parse_args(argv=None):
     for name in ("manager", "compat", "native", "legacy", "shizuku", "bridge", "unlisted"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    base.add_release_argument(parser)
     parser.add_argument("--case", action="append", dest="cases", choices=CASES, metavar="NAME",
                         help="run only the named case, repeatable, in declared order; "
                              "omit to run all of: " + ", ".join(CASES))

@@ -34,6 +34,10 @@ class ArgumentTest(unittest.TestCase):
         self.assertEqual((args.bridge, args.unlisted), (Path("bridge.apk"), Path("unlisted.apk")))
         self.assertIsNone(args.cases)
 
+    def test_the_release_flag_is_accepted(self):
+        self.assertFalse(self.parse().release)
+        self.assertTrue(self.parse("--release").release)
+
     def test_an_omitted_apk_is_rejected(self):
         stderr = io.StringIO()
         with self.assertRaises(SystemExit), contextlib.redirect_stderr(stderr):

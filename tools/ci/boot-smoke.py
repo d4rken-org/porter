@@ -178,6 +178,16 @@ class Boot(base.Smoke):
             print(f"NOTE the screen did not answer a tap on '{action}' in '{title}'", flush=True)
         raise AssertionError(f"Tapped '{action}' in '{title}' {base.TAP_ATTEMPTS} times and the screen never changed")
 
+    def started_by_manager(self):
+        """Evidence that the manager's own ADB client made the connection, read from its debug
+        logging. A release build has none, which leaves the server appearing after the tap as the
+        only sign."""
+        if self.release_build():
+            return
+        self.until("the manager's own ADB client did the starting",
+                   lambda: "AdbClient" in self.adb("logcat", "-d", "--pid=" + self.pid(base.MANAGER),
+                                                  "-s", "AdbClient:D", "*:S"))
+
     def no_server(self):
         """Absence, established by a reply rather than by a query that failed to produce one."""
         listing = self.shell("sh", "-c", "pidof porter_server || echo " + NO_PROCESS)
@@ -254,9 +264,7 @@ class Boot(base.Smoke):
             self.tap_notification_action("Pairing successful", "Start", screenshot="pairing-start")
             pid = self.until("a server started over wireless debugging", lambda: self.pid("porter_server"),
                              timeout=120)
-            self.until("the manager's own ADB client did the starting",
-                       lambda: "AdbClient" in self.adb("logcat", "-d", "--pid=" + self.pid(base.MANAGER),
-                                                      "-s", "AdbClient:D", "*:S"))
+            self.started_by_manager()
             self.until("the server sent its binders", lambda: "sent binders" in self.server_log(pid))
             return {"server_pid": pid, "code": code}
         self.case("wireless-pairing", wireless_pairing, restore=("wireless-debugging",))
@@ -270,9 +278,7 @@ class Boot(base.Smoke):
             assert self.locate("Start via Wireless debugging"), "the wireless start card is gone"
             self.tap("Start", screenshot="app-adb-start")
             pid = self.until("a server the app started", lambda: self.pid("porter_server"), timeout=120)
-            self.until("the manager's own ADB client did the starting",
-                       lambda: "AdbClient" in self.adb("logcat", "-d", "--pid=" + self.pid(base.MANAGER),
-                                                      "-s", "AdbClient:D", "*:S"))
+            self.started_by_manager()
             self.until("the server sent its binders", lambda: "sent binders" in self.server_log(pid))
             self.home()
             assert self.locate("Running via ADB", prefix=True), "the manager does not report an ADB start"
@@ -288,9 +294,17 @@ class Boot(base.Smoke):
             # Only the token lives in these preferences. Written while the manager is stopped, so no
             # process holds a copy to write back over it; the server outlives that stop.
             self.shell("am", "force-stop", base.MANAGER)
-            self.shell("run-as", base.MANAGER, "sh", "-c",
-                       f"mkdir -p {SETTINGS_DIR} && printf %s {shlex.quote(AUTOMATION_SECRETS)}"
-                       f" > {SETTINGS_DIR}/secrets.xml")
+            write = (f"mkdir -p {SETTINGS_DIR} && printf %s {shlex.quote(AUTOMATION_SECRETS)}"
+                     f" > {SETTINGS_DIR}/secrets.xml")
+            if self.release_build():
+                # run-as refuses a release build. Root writes as itself, so what it wrote is handed
+                # the owner and label of the package's own directory.
+                package = SETTINGS_DIR.rsplit("/", 1)[0]
+                self.shell("su", "0", "sh", "-c",
+                           f"{write} && chown $(stat -c %u:%g {package}) {SETTINGS_DIR} {SETTINGS_DIR}/secrets.xml"
+                           f" && chcon $(stat -c %C {package}) {SETTINGS_DIR} {SETTINGS_DIR}/secrets.xml")
+            else:
+                self.shell("run-as", base.MANAGER, "sh", "-c", write)
             # A force-stopped package receives no broadcast that names only its package, and a
             # device whose automation fires has the manager in its ordinary state.
             self.home()
@@ -379,8 +393,10 @@ class Boot(base.Smoke):
             # A start that did go ahead replaces the server within a second.
             time.sleep(10)
             assert self.pid("porter_server") == server, "the relaunch replaced the running server"
-            assert WORKER_STARTED not in self.adb("logcat", "-d", "-s", "WM-WorkerWrapper:D", "*:S"), \
-                "the relaunch ran the start worker"
+            # A release build logs nothing at debug level, so there the absence would prove nothing.
+            if not self.release_build():
+                assert WORKER_STARTED not in self.adb("logcat", "-d", "-s", "WM-WorkerWrapper:D", "*:S"), \
+                    "the relaunch ran the start worker"
             assert self.service_pids(base.NATIVE) == daemons, "the daemon service did not survive"
             return {"sdk": sdk, "server_pid": server}
 
@@ -460,7 +476,7 @@ class Boot(base.Smoke):
             assert self.no_server(), "a server started with no ADB port to start it through"
             self.screenshot("boot-without-adb")
             return {}
-        self.case("boot-without-adb", boot_without_adb)
+        self.case("boot-without-adb", boot_without_adb, debuggable=True)
 
 
 def parse_args(argv=None):
@@ -469,6 +485,7 @@ def parse_args(argv=None):
     for name in ("manager", "native"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    base.add_release_argument(parser)
     parser.add_argument("--case", action="append", dest="cases", choices=CASES, metavar="NAME",
                         help="run only the named case, repeatable, in declared order; "
                              "omit to run all of: " + ", ".join(c for c in CASES if c not in OPT_IN)
