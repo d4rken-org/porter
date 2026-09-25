@@ -205,8 +205,30 @@ connection.userService(args).collect { binder ->
 
 `userService(args)` is a cold `Flow<IBinder>`: collecting it starts the service if needed and emits
 its Binder. The flow completes when the service dies, and when its connection is replaced or dies.
-Collect it again on the same connection after the service died, or on the next one after a restart;
-the SDK's README shows a shared flow that does both.
+Collect it again on the same connection after the service died, or on the next one after a restart.
+To keep one service for the whole app:
+
+```kotlin
+val myService: StateFlow<IMyService?> = Porter.connection
+    .flatMapLatest { connection ->
+        if (connection == null) return@flatMapLatest flowOf(null)
+        connection.permission.flatMapLatest { permission ->
+            if (permission !is PermissionState.Granted) return@flatMapLatest flowOf(null)
+            flow {
+                while (true) {
+                    emitAll(
+                        connection.userService(args)
+                            .map { IMyService.Stub.asInterface(it) }
+                            .catch { e -> if (e !is PorterException) throw e },
+                    )
+                    emit(null) // the service died or could not be bound; try again
+                    delay(1_000)
+                }
+            }
+        }
+    }
+    .stateIn(appScope, SharingStarted.WhileSubscribed(30_000), null)
+```
 
 Implement `destroy` to clean up and exit: `stopUserService(args)` calls it, and Porter kills a
 process still running a few seconds later. Cancelling the collection does not stop the process. A
@@ -321,5 +343,5 @@ SDK release numbers are independent of Porter's own app version. While the SDK i
 Link users to the [setup guide](/setup). Keep instructions for your app's own settings, and which of
 your app versions support Porter, in your own documentation.
 
-For the full Kotlin surface, and the upstream Shizuku-API changelog if you are migrating from that
-SDK, see the [API reference](https://github.com/d4rken-org/porter-api/blob/main/docs/api-reference.md).
+For the full Kotlin surface, see the
+[API reference](https://github.com/d4rken-org/porter-api/blob/main/docs/api-reference.md).
