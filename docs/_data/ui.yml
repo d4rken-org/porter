@@ -15,6 +15,7 @@ en:
   credits: Credits & licenses
   help: Get help
   security: Verify downloads
+  privacy: Privacy
   tagline: An independent continuation of Shizuku
 de:
   name: Deutsch
@@ -33,6 +34,7 @@ de:
   credits: Mitwirkende & Lizenzen
   help: Hilfe
   security: Downloads überprüfen
+  privacy: Datenschutz
   tagline: Eine unabhängige Weiterführung von Shizuku
 es:
   name: Español
@@ -51,6 +53,7 @@ es:
   credits: Créditos y licencias
   help: Obtener ayuda
   security: Verificar descargas
+  privacy: Privacidad
   tagline: Una continuación independiente de Shizuku
 pt-BR:
   name: Português (Brasil)
@@ -69,6 +72,7 @@ pt-BR:
   credits: Créditos e licenças
   help: Obter ajuda
   security: Verificar downloads
+  privacy: Privacidade
   tagline: Uma continuação independente do Shizuku
 zh-Hans:
   name: 简体中文
@@ -87,6 +91,7 @@ zh-Hans:
   credits: 致谢与许可证
   help: 获取帮助
   security: 验证下载
+  privacy: 隐私
   tagline: Shizuku 的独立延续
 fr:
   name: Français
@@ -105,6 +110,7 @@ fr:
   credits: Crédits et licences
   help: Obtenir de l’aide
   security: Vérifier les téléchargements
+  privacy: Confidentialité
   tagline: Une continuation indépendante de Shizuku
 ru:
   name: Русский
@@ -123,6 +129,7 @@ ru:
   credits: Благодарности и лицензии
   help: Получить помощь
   security: Проверка загрузок
+  privacy: Конфиденциальность
   tagline: Независимое продолжение Shizuku
 id:
   name: Bahasa Indonesia
@@ -141,6 +148,7 @@ id:
   credits: Kredit & lisensi
   help: Dapatkan bantuan
   security: Verifikasi unduhan
+  privacy: Privasi
   tagline: Kelanjutan independen Shizuku
 ja:
   name: 日本語
@@ -159,6 +167,7 @@ ja:
   credits: 謝辞とライセンス
   help: ヘルプ
   security: ダウンロードの検証
+  privacy: プライバシー
   tagline: Shizuku を独立して継承
 ar:
   name: العربية
@@ -177,5 +186,6 @@ ar:
   credits: المساهمون والتراخيص
   help: الحصول على مساعدة
   security: التحقق من التنزيلات
+  privacy: الخصوصية
   tagline: امتداد مستقل لمشروع Shizuku
   dir: rtl
