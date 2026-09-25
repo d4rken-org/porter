@@ -1,0 +1,1 @@
+Gi appene dine ADB-tilgang, med eller uten root. Du velger hvilke som får det.

@@ -1,0 +1,1 @@
+Tətbiqlərinizə root ilə və ya onsuz ADB girişi verin. Seçim sizindir.

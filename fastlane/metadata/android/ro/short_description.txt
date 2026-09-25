@@ -1,0 +1,1 @@
+Oferă aplicațiilor tale acces ADB, cu sau fără root. Tu decizi care îl primesc.

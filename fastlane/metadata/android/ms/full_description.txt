@@ -1,0 +1,32 @@
+<i>Porter</i> memberikan akses ADB kepada apl anda, supaya apl boleh melakukan perkara yang biasanya memerlukan komputer. Anda tentukan apl mana yang mendapatnya.
+
+Dengan akses ADB, apl boleh mengurus apl lain, mengosongkan cache tersembunyi atau mencapai fail yang biasanya dikunci oleh Android. Lazimnya ini bermakna menyambungkan komputer dan menaip arahan. Porter memulakan satu perkhidmatan kecil sekali sahaja, dan apl yang anda benarkan menggunakannya terus pada peranti anda.
+
+Porter ialah fork Shizuku yang diselenggara, dikekalkan kecil dan stabil untuk apl yang bergantung padanya.
+
+<b>Mulakan mengikut cara anda</b>
+- Penyahpepijatan wayarles pada Android 11 atau lebih baharu, tanpa komputer
+- Penyahpepijatan USB dengan komputer, pada Android 7.0 atau lebih baharu
+- Root, jika peranti anda sudah di-root
+- Mulakan semasa but, dan pengawas yang memulakan semula Porter jika ia ranap (Android 11+ atau root)
+- Sokongan Android TV, dengan gandingan yang boleh anda selesaikan menggunakan alat kawalan jauh
+
+<b>Kekal dalam kawalan</b>
+- Apl perlu meminta dahulu, dan anda membenarkan atau menolak setiap satu
+- Lihat apl terpasang yang menyokong Porter dan apl yang sedang bersambung
+- Tarik balik akses pada bila-bila masa, atau jeda akses untuk semua apl sekali gus
+- Kawal Porter daripada apl automasi menggunakan intent
+
+<b>Apl yang dibina untuk Shizuku</b>
+Apl dengan sokongan Porter secara langsung hanya memerlukan Porter. Apl yang hanya menyokong Shizuku memerlukan satu langkah tambahan, yang diterangkan di https://porter.darken.eu/compatibility
+
+<b>Untuk pembangun apl</b>
+Tambahkan sokongan Porter secara langsung pada apl anda: https://porter.darken.eu/developers
+
+<b>Privasi</b>
+Tiada iklan, tiada penjejakan, tiada akaun. Hanya apl yang anda benarkan mendapat akses. Porter ialah sumber terbuka.
+
+<b>Perkhidmatan kebolehaksesan</b>
+Porter menyertakan perkhidmatan kebolehaksesan pilihan yang hanya digunakan pada Android TV untuk gandingan penyahpepijatan wayarles. Ia membaca kod gandingan daripada skrin gandingan Android dan mematikan dirinya sendiri sebaik sahaja gandingan selesai. Ia tidak mengumpul atau berkongsi sebarang maklumat lain.
+
+Porter dibina berdasarkan Shizuku oleh RikkaApps dan kerja penyelenggaraan seterusnya oleh thedjchi serta penyumbang lain. Porter tidak bergabung dengan pembangun Shizuku.

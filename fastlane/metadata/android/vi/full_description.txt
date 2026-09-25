@@ -1,0 +1,32 @@
+<i>Porter</i> cấp quyền truy cập ADB cho các ứng dụng của bạn, để chúng làm được những việc thường cần đến máy tính. Bạn quyết định ứng dụng nào được cấp quyền.
+
+Với quyền truy cập ADB, ứng dụng có thể quản lý các ứng dụng khác, xóa bộ nhớ đệm ẩn hoặc truy cập các tệp mà Android thường khóa lại. Thông thường, việc này đòi hỏi phải kết nối máy tính và gõ lệnh. Porter khởi động một dịch vụ nhỏ một lần, sau đó các ứng dụng bạn cho phép sẽ dùng dịch vụ đó trực tiếp trên thiết bị của bạn.
+
+Porter là một bản fork của Shizuku vẫn đang được duy trì, được giữ gọn nhẹ và ổn định cho các ứng dụng phụ thuộc vào nó.
+
+<b>Khởi động theo cách của bạn</b>
+- Gỡ lỗi không dây trên Android 11 trở lên, không cần máy tính
+- Gỡ lỗi USB với máy tính, trên Android 7.0 trở lên
+- Root, nếu thiết bị của bạn đã được root
+- "Bắt đầu khi khởi động" và "Chó canh gác" tự động khởi động lại Porter nếu nó bị sập (Android 11+ hoặc root)
+- Hỗ trợ Android TV, có thể hoàn tất ghép nối bằng điều khiển từ xa
+
+<b>Luôn nắm quyền kiểm soát</b>
+- Ứng dụng phải hỏi trước, và bạn cho phép hoặc từ chối từng ứng dụng
+- Xem ứng dụng đã cài đặt nào hỗ trợ Porter và ứng dụng nào đang kết nối
+- Thu hồi quyền truy cập bất cứ lúc nào, hoặc tạm dừng quyền truy cập của tất cả ứng dụng cùng lúc
+- Kiểm soát Porter từ ứng dụng tự động hóa bằng intent
+
+<b>Ứng dụng được xây dựng cho Shizuku</b>
+Ứng dụng hỗ trợ Porter trực tiếp chỉ cần Porter. Ứng dụng chỉ hỗ trợ Shizuku cần thêm một bước, được giải thích tại https://porter.darken.eu/compatibility
+
+<b>Dành cho nhà phát triển ứng dụng</b>
+Thêm hỗ trợ Porter trực tiếp vào ứng dụng của bạn: https://porter.darken.eu/developers
+
+<b>Quyền riêng tư</b>
+Không quảng cáo, không theo dõi, không cần tài khoản. Chỉ những ứng dụng bạn cho phép mới được cấp quyền truy cập. Porter là phần mềm mã nguồn mở.
+
+<b>Dịch vụ trợ năng</b>
+Porter có một dịch vụ trợ năng tùy chọn, chỉ được dùng trên Android TV để ghép nối Gỡ lỗi không dây. Dịch vụ này đọc mã ghép nối từ màn hình ghép nối của Android và tự tắt khi ghép nối xong. Dịch vụ không thu thập hay chia sẻ bất kỳ thông tin nào khác.
+
+Porter được xây dựng dựa trên Shizuku của RikkaApps và công việc duy trì sau này của thedjchi cùng những người đóng góp. Porter không liên kết với các nhà phát triển Shizuku.

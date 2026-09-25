@@ -1,0 +1,32 @@
+O <i>Porter</i> dá acesso ADB aos seus apps, para que eles façam coisas que normalmente exigem um computador. Você decide quais apps recebem esse acesso.
+
+Com acesso ADB, os apps podem gerenciar outros apps, limpar caches ocultos ou acessar arquivos que o Android normalmente mantém bloqueados. Em geral, isso significa conectar um computador e digitar comandos. O Porter inicia um pequeno serviço uma vez, e os apps que você aprovar o usam diretamente no seu dispositivo.
+
+O Porter é um fork mantido do Shizuku, que continua pequeno e estável para os apps que dependem dele.
+
+<b>Inicie do seu jeito</b>
+- Depuração por Wi-Fi no Android 11 ou mais recente, sem precisar de computador
+- Depuração USB com um computador, no Android 7.0 ou mais recente
+- Root, se o seu dispositivo já tiver root
+- Iniciar na inicialização e um watchdog que reinicia o Porter se ele travar (Android 11+ ou root)
+- Suporte a Android TV, com pareamento que você conclui usando o controle remoto
+
+<b>Mantenha o controle</b>
+- Os apps precisam pedir primeiro, e você permite ou nega cada um
+- Veja quais apps instalados têm suporte ao Porter e quais estão conectados
+- Revogue o acesso a qualquer momento ou pause o acesso de todos os apps de uma vez
+- Controle o Porter com apps de automação usando intents
+
+<b>Apps criados para o Shizuku</b>
+Apps com suporte direto ao Porter só precisam do Porter. Apps que só têm suporte ao Shizuku precisam de uma etapa extra, explicada em https://porter.darken.eu/compatibility
+
+<b>Para desenvolvedores de apps</b>
+Adicione suporte direto ao Porter no seu app: https://porter.darken.eu/developers
+
+<b>Privacidade</b>
+Sem anúncios, sem rastreamento, sem conta. Só os apps que você aprovar recebem acesso. O Porter é de código aberto.
+
+<b>Serviço de acessibilidade</b>
+O Porter inclui um serviço de acessibilidade opcional, usado apenas no Android TV para o pareamento da Depuração por Wi-Fi. Ele lê o código de pareamento na tela de pareamento do Android e se desativa assim que o pareamento é concluído. Ele não coleta nem compartilha nenhuma outra informação.
+
+O Porter é baseado no Shizuku, da RikkaApps, e no trabalho de manutenção posterior de thedjchi e colaboradores. Ele não tem afiliação com os desenvolvedores do Shizuku.

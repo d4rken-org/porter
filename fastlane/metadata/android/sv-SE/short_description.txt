@@ -1,0 +1,1 @@
+Ge dina appar ADB-åtkomst, med eller utan root. Du väljer vilka som får den.

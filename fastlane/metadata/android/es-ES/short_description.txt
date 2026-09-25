@@ -1,0 +1,1 @@
+Da acceso ADB a tus apps, con o sin root. Tú decides qué apps lo reciben.

@@ -1,0 +1,32 @@
+<i>Porter</i> da acceso ADB a tus apps para que puedan hacer cosas que normalmente requieren un ordenador. Tú decides qué apps lo reciben.
+
+Con acceso ADB, las apps pueden gestionar otras apps, borrar cachés ocultas o acceder a archivos que Android normalmente mantiene bloqueados. Para eso suele hacer falta conectar un ordenador y escribir comandos. Porter inicia un pequeño servicio una vez, y las apps que apruebes lo usan directamente en tu dispositivo.
+
+Porter es un fork mantenido de Shizuku, pequeño y estable para las apps que dependen de él.
+
+<b>Inícialo a tu manera</b>
+- Depuración inalámbrica en Android 11 o superior, sin ordenador
+- Depuración por USB con un ordenador, en Android 7.0 o superior
+- Root, si tu dispositivo ya está rooteado
+- «Iniciar al arrancar» y un watchdog que reinicia Porter si falla (Android 11 o superior, o root)
+- Compatibilidad con Android TV, con una vinculación que puedes completar con el mando a distancia
+
+<b>Tú tienes el control</b>
+- Las apps tienen que pedir permiso primero, y tú apruebas o rechazas cada una
+- Consulta qué apps instaladas son compatibles con Porter y cuáles están conectadas
+- Revoca el acceso cuando quieras o páusalo para todas las apps a la vez
+- Controla Porter desde apps de automatización mediante intents
+
+<b>Apps creadas para Shizuku</b>
+Las apps compatibles directamente con Porter solo necesitan Porter. Las apps que solo son compatibles con Shizuku necesitan un paso adicional, explicado en https://porter.darken.eu/compatibility
+
+<b>Para desarrolladores de apps</b>
+Añade compatibilidad directa con Porter a tu app: https://porter.darken.eu/developers
+
+<b>Privacidad</b>
+Sin anuncios, sin rastreo, sin cuenta. Solo las apps que apruebes obtienen acceso. Porter es de código abierto.
+
+<b>Servicio de accesibilidad</b>
+Porter incluye un servicio de accesibilidad opcional que solo se usa en Android TV para vincular la depuración inalámbrica. Lee el código de vinculación de la pantalla de vinculación de Android y se desactiva automáticamente en cuanto termina la vinculación. No recopila ni comparte ninguna otra información.
+
+Porter se basa en Shizuku de RikkaApps y en el mantenimiento posterior de thedjchi y otros colaboradores. No está afiliado a los desarrolladores de Shizuku.

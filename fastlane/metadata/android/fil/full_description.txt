@@ -1,0 +1,32 @@
+Binibigyan ng <i>Porter</i> ng ADB access ang iyong mga app, para magawa nila ang mga bagay na karaniwang nangangailangan ng kompyuter. Ikaw ang magpapasya kung aling mga app ang makakakuha nito.
+
+Sa ADB access, kaya ng mga app na mamahala ng ibang app, mag-clear ng mga nakatagong cache, o magbukas ng mga file na karaniwang naka-lock ng Android. Kadalasan, kailangan pa para dito na magkonekta ng kompyuter at mag-type ng mga command. Isang beses sinisimulan ng Porter ang isang maliit na serbisyo, at direkta itong ginagamit ng mga app na inaprubahan mo sa iyong device.
+
+Ang Porter ay isang minementinang fork ng Shizuku, pinananatiling maliit at stable para sa mga app na umaasa rito.
+
+<b>Simulan ito sa paraang gusto mo</b>
+- Wireless na pag-debug sa Android 11 o mas bago, hindi kailangan ng kompyuter
+- Pag-debug ng USB gamit ang kompyuter, sa Android 7.0 o mas bago
+- Root, kung naka-root na ang iyong device
+- Magsimula sa boot, at isang tagapagbantay na nagre-restart sa Porter kapag nag-crash ito (Android 11+ o root)
+- Suporta sa Android TV, na may pagpapares na matatapos mo gamit ang remote
+
+<b>Manatiling may kontrol</b>
+- Kailangan munang humingi ng pahintulot ang mga app, at ikaw ang mag-aapruba o tatanggi sa bawat isa
+- Tingnan kung aling mga naka-install na app ang sumusuporta sa Porter at alin ang nakakonekta
+- Bawiin ang access anumang oras, o i-pause ito para sa lahat ng app nang sabay-sabay
+- Kontrolin ang Porter mula sa mga automation app gamit ang mga intent
+
+<b>Mga app na ginawa para sa Shizuku</b>
+Porter lang ang kailangan ng mga app na may direktang suporta sa Porter. May dagdag na hakbang para sa mga app na Shizuku lang ang sinusuportahan, na ipinaliwanag sa https://porter.darken.eu/compatibility
+
+<b>Para sa mga developer ng app</b>
+Magdagdag ng direktang suporta sa Porter sa iyong app: https://porter.darken.eu/developers
+
+<b>Privacy</b>
+Walang ads, walang tracking, walang account. Ang mga app na inaprubahan mo lang ang may access. Open source ang Porter.
+
+<b>Serbisyo ng accessibility</b>
+May kasamang opsyonal na serbisyo ng accessibility ang Porter na ginagamit lang sa Android TV para sa pagpapares ng Wireless na pag-debug. Binabasa nito ang code ng pagpapares mula sa screen ng pagpapares ng Android at kusa itong nag-o-off kapag tapos na ang pagpapares. Wala itong kinokolekta o ibinabahaging iba pang impormasyon.
+
+Nakabatay ang Porter sa Shizuku ng RikkaApps at sa sumunod na maintenance na ginawa ni thedjchi at ng iba pang contributor. Hindi ito kaakibat ng mga developer ng Shizuku.

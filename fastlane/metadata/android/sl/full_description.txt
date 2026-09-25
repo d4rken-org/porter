@@ -1,0 +1,32 @@
+<i>Porter</i> vašim aplikacijam omogoči dostop ADB, da lahko počnejo stvari, za katere sicer potrebujete računalnik. Sami izberete, katere aplikacije ga dobijo.
+
+Z dostopom ADB lahko aplikacije upravljajo druge aplikacije, praznijo skrite predpomnilnike ali dostopajo do datotek, ki jih Android običajno zaklene. Navadno je za to treba priključiti računalnik in vnašati ukaze. Porter enkrat zažene majhno storitev, aplikacije, ki jih odobrite, pa jo uporabljajo neposredno v vaši napravi.
+
+Porter je vzdrževana razvejitev projekta Shizuku, ki ostaja majhna in stabilna za aplikacije, ki so odvisne od nje.
+
+<b>Zaženite na svoj način</b>
+- Brezžično odpravljanje napak v Androidu 11 ali novejšem, brez računalnika
+- Odpravljanje napak prek USB-ja z računalnikom, v Androidu 7.0 ali novejšem
+- Root, če ima vaša naprava že dostop root
+- »Zaženi ob zagonu« in »Nadzorni pes«, ki ponovno zažene Porter, če se sesuje (Android 11+ ali root)
+- Podpora za Android TV s seznanjanjem, ki ga lahko dokončate z daljinskim upravljalnikom
+
+<b>Ohranite nadzor</b>
+- Aplikacije morajo najprej vprašati, vi pa vsako dovolite ali zavrnete
+- Oglejte si, katere nameščene aplikacije podpirajo Porter in katere so povezane
+- Kadar koli prekličite dostop ali ga začasno ustavite za vse aplikacije hkrati
+- Upravljajte Porter iz aplikacij za avtomatizacijo z namerami
+
+<b>Aplikacije za Shizuku</b>
+Aplikacije z neposredno podporo za Porter potrebujejo samo Porter. Aplikacije, ki podpirajo samo Shizuku, potrebujejo še en korak, ki je opisan na https://porter.darken.eu/compatibility
+
+<b>Za razvijalce aplikacij</b>
+Dodajte neposredno podporo za Porter v svojo aplikacijo: https://porter.darken.eu/developers
+
+<b>Zasebnost</b>
+Brez oglasov, brez sledenja, brez računa. Dostop dobijo samo aplikacije, ki jih odobrite. Porter je odprtokoden.
+
+<b>Storitev dostopnosti</b>
+Porter vključuje izbirno storitev dostopnosti, ki se uporablja samo v sistemu Android TV za seznanjanje brezžičnega odpravljanja napak. Kodo za seznanjanje prebere z Androidovega zaslona za seznanjanje in se sama izklopi, ko je seznanjanje končano. Drugih podatkov ne zbira in ne deli.
+
+Porter temelji na Shizuku, ki ga je razvil RikkaApps, ter na poznejšem vzdrževanju, ki so ga opravili thedjchi in sodelavci. Porter ni povezan z razvijalci aplikacije Shizuku.

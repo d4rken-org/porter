@@ -1,0 +1,32 @@
+<i>Porter</i> antaa sovelluksillesi ADB-käyttöoikeuden, joten ne voivat tehdä asioita, joihin tavallisesti tarvitaan tietokone. Sinä päätät, mitkä sovellukset sen saavat.
+
+ADB-käyttöoikeudella sovellukset voivat hallita muita sovelluksia, tyhjentää piilotettuja välimuisteja tai käsitellä tiedostoja, jotka Android yleensä pitää lukittuina. Normaalisti se vaatii tietokoneen liittämistä ja komentojen kirjoittamista. Porter käynnistää kerran pienen palvelun, ja hyväksymäsi sovellukset käyttävät sitä suoraan laitteellasi.
+
+Porter on Shizukun ylläpidetty fork, joka pidetään pienenä ja vakaana sovelluksille, jotka ovat siitä riippuvaisia.
+
+<b>Käynnistä omalla tavallasi</b>
+- Langaton virheenkorjaus Android 11:ssä tai uudemmassa, ilman tietokonetta
+- USB-virheenkorjaus tietokoneen kanssa, Android 7.0:ssa tai uudemmassa
+- Root, jos laitteesi on jo rootattu
+- ”Käynnistä laitteen käynnistyessä” -asetus sekä vahtikoira, joka käynnistää Porterin uudelleen, jos se kaatuu (Android 11+ tai root)
+- Android TV -tuki ja paritus, jonka voit viedä loppuun kaukosäätimellä
+
+<b>Pidä kaikki hallinnassasi</b>
+- Sovellusten on pyydettävä ensin, ja sinä hyväksyt tai hylkäät jokaisen erikseen
+- Näe, mitkä asennetut sovellukset tukevat Porteria ja mitkä ovat yhteydessä
+- Peru käyttöoikeus milloin tahansa tai keskeytä se kaikilta sovelluksilta kerralla
+- Ohjaa Porteria automaatiosovelluksilla intentien avulla
+
+<b>Shizukulle tehdyt sovellukset</b>
+Sovellukset, jotka tukevat Porteria suoraan, tarvitsevat vain Porterin. Vain Shizukua tukevat sovellukset tarvitsevat yhden lisävaiheen, joka selitetään osoitteessa https://porter.darken.eu/compatibility
+
+<b>Sovelluskehittäjille</b>
+Lisää suora Porter-tuki sovellukseesi: https://porter.darken.eu/developers
+
+<b>Tietosuoja</b>
+Ei mainoksia, ei seurantaa, ei tiliä. Vain hyväksymäsi sovellukset saavat käyttöoikeuden. Porter on avointa lähdekoodia.
+
+<b>Saavutettavuuspalvelu</b>
+Porter sisältää valinnaisen saavutettavuuspalvelun, jota käytetään vain Android TV:ssä langattoman virheenkorjauksen paritukseen. Se lukee parituskoodin Androidin paritusnäytöltä ja poistuu käytöstä itsestään, kun paritus on valmis. Se ei kerää eikä jaa mitään muita tietoja.
+
+Porter perustuu RikkaAppsin Shizukuun sekä thedjchin ja muiden osallistujien myöhempään ylläpitotyöhön. Se ei ole sidoksissa Shizukun kehittäjiin.

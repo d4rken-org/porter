@@ -1,0 +1,32 @@
+<i>Porter</i> geeft je apps ADB-toegang, zodat ze dingen kunnen doen waarvoor je normaal een computer nodig hebt. Jij bepaalt welke apps die toegang krijgen.
+
+Met ADB-toegang kunnen apps andere apps beheren, verborgen caches wissen of bij bestanden komen die Android normaal afschermt. Meestal moet je daarvoor een computer aansluiten en opdrachten typen. Porter start één keer een kleine service, en de apps die je toestaat gebruiken die rechtstreeks op je apparaat.
+
+Porter is een onderhouden fork van Shizuku, klein en stabiel gehouden voor de apps die ervan afhankelijk zijn.
+
+<b>Start het op jouw manier</b>
+- Draadloze foutopsporing op Android 11 of nieuwer, zonder computer
+- USB-foutopsporing met een computer, op Android 7.0 of nieuwer
+- Root, als je apparaat al geroot is
+- Starten bij het opstarten, en een bewaker die Porter opnieuw opstart als het vastloopt (Android 11+ of root)
+- Ondersteuning voor Android TV, met koppelen dat je met de afstandsbediening kunt afronden
+
+<b>Houd zelf de controle</b>
+- Apps moeten eerst om toegang vragen, en jij staat elke app toe of weigert hem
+- Zie welke geïnstalleerde apps Porter ondersteunen en welke verbonden zijn
+- Trek toegang op elk moment in, of pauzeer de toegang voor alle apps tegelijk
+- Bestuur Porter vanuit automatiseringsapps met intents
+
+<b>Apps gemaakt voor Shizuku</b>
+Apps met directe ondersteuning voor Porter hebben alleen Porter nodig. Apps die alleen Shizuku ondersteunen, hebben een extra stap nodig, uitgelegd op https://porter.darken.eu/compatibility
+
+<b>Voor app-ontwikkelaars</b>
+Voeg directe ondersteuning voor Porter toe aan je app: https://porter.darken.eu/developers
+
+<b>Privacy</b>
+Geen advertenties, geen tracking, geen account. Alleen apps die je toestaat krijgen toegang. Porter is open source.
+
+<b>Toegankelijkheidsservice</b>
+Porter bevat een optionele toegankelijkheidsservice die alleen op Android TV wordt gebruikt om te koppelen met draadloze foutopsporing. Die leest de koppelingscode van het koppelscherm van Android en schakelt zichzelf uit zodra het koppelen klaar is. De service verzamelt of deelt geen andere informatie.
+
+Porter bouwt voort op Shizuku van RikkaApps en later onderhoudswerk van thedjchi en bijdragers. Porter is niet verbonden aan de ontwikkelaars van Shizuku.

@@ -1,0 +1,32 @@
+<i>Porter</i> donne à vos applications un accès ADB, pour qu'elles puissent faire ce qui demande normalement un ordinateur. Vous choisissez quelles applications y ont droit.
+
+Avec un accès ADB, les applications peuvent gérer d'autres applications, vider des caches masqués ou accéder à des fichiers qu'Android garde normalement verrouillés. D'habitude, il faut pour cela brancher un ordinateur et taper des commandes. Porter démarre une fois un petit service, et les applications que vous autorisez l'utilisent directement sur votre appareil.
+
+Porter est un fork maintenu de Shizuku, qui reste léger et stable pour les applications qui en dépendent.
+
+<b>Démarrez-le à votre façon</b>
+- Débogage sans fil sur Android 11 ou version ultérieure, sans ordinateur
+- Débogage USB avec un ordinateur, sur Android 7.0 ou version ultérieure
+- Root, si votre appareil est déjà rooté
+- Lancer au démarrage, et un chien de garde qui redémarre Porter en cas de plantage (Android 11+ ou root)
+- Prise en charge d'Android TV, avec une association que vous pouvez terminer à la télécommande
+
+<b>Gardez le contrôle</b>
+- Les applications doivent d'abord demander, et vous autorisez ou refusez chacune d'elles
+- Voyez quelles applications installées prennent en charge Porter et lesquelles sont connectées
+- Révoquez l'accès à tout moment, ou suspendez-le pour toutes les applications d'un coup
+- Contrôlez Porter depuis des applications d'automatisation à l'aide d'intents
+
+<b>Applications conçues pour Shizuku</b>
+Les applications qui prennent directement en charge Porter n'ont besoin que de Porter. Celles qui ne prennent en charge que Shizuku nécessitent une étape supplémentaire, expliquée ici : https://porter.darken.eu/compatibility
+
+<b>Pour les développeurs d'applications</b>
+Ajoutez la prise en charge directe de Porter à votre application : https://porter.darken.eu/developers
+
+<b>Confidentialité</b>
+Pas de publicité, pas de pistage, pas de compte. Seules les applications que vous autorisez obtiennent l'accès. Porter est open source.
+
+<b>Service d'accessibilité</b>
+Porter inclut un service d'accessibilité facultatif, utilisé uniquement sur Android TV pour l'association du débogage sans fil. Il lit le code d'association sur l'écran d'association d'Android et se désactive une fois l'association terminée. Il ne collecte ni ne partage aucune autre information.
+
+Porter s'appuie sur Shizuku de RikkaApps et sur le travail de maintenance mené ensuite par thedjchi et d'autres contributeurs. Il n'est pas affilié aux développeurs de Shizuku.

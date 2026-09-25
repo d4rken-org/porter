@@ -1,0 +1,32 @@
+<i>Porter</i> tətbiqlərinizə ADB girişi verir ki, onlar adətən kompüter tələb edən işləri görə bilsinlər. Hansı tətbiqlərin bu girişi alacağına siz qərar verirsiniz.
+
+ADB girişi ilə tətbiqlər digər tətbiqləri idarə edə, gizli keşləri təmizləyə və ya Android-in normalda kilidli saxladığı fayllara daxil ola bilər. Bunun üçün adətən kompüter qoşmaq və əmrlər yazmaq lazımdır. Porter bir dəfə kiçik bir xidmət başladır və təsdiq etdiyiniz tətbiqlər ondan birbaşa cihazınızda istifadə edir.
+
+Porter Shizuku-nun baxımı davam etdirilən fork-udur və ondan asılı olan tətbiqlər üçün kiçik və stabil saxlanılır.
+
+<b>Özünüzə uyğun şəkildə başladın</b>
+- Android 11 və ya daha yeni versiyada simsiz sazlama, kompüter lazım deyil
+- Android 7.0 və ya daha yeni versiyada kompüterlə USB sazlaması
+- Root, əgər cihazınız artıq root edilibsə
+- "Bootda başla" funksiyası və Porter qəzaya uğradıqda onu yenidən başladan nəzarətçi (Android 11+ və ya root)
+- Android TV dəstəyi, cütləşdirməni pult ilə tamamlaya bilərsiniz
+
+<b>Nəzarət sizdədir</b>
+- Tətbiqlər əvvəlcə icazə istəməlidir, siz isə hər birini təsdiqləyir və ya rədd edirsiniz
+- Hansı quraşdırılmış tətbiqlərin Porter-i dəstəklədiyini və hansılarının qoşulduğunu görün
+- Girişi istənilən vaxt ləğv edin və ya bütün tətbiqlər üçün girişə birdən fasilə verin
+- Avtomatlaşdırma proqramları ilə intent-lər vasitəsilə Porter-ə nəzarət edin
+
+<b>Shizuku üçün hazırlanmış tətbiqlər</b>
+Porter-i birbaşa dəstəkləyən tətbiqlərə yalnız Porter lazımdır. Yalnız Shizuku-nu dəstəkləyən tətbiqlər üçün əlavə bir addım lazımdır, izahı burada: https://porter.darken.eu/compatibility
+
+<b>Tətbiq tərtibatçıları üçün</b>
+Tətbiqinizə birbaşa Porter dəstəyi əlavə edin: https://porter.darken.eu/developers
+
+<b>Məxfilik</b>
+Reklam yoxdur, izləmə yoxdur, hesab yoxdur. Yalnız təsdiq etdiyiniz tətbiqlər giriş əldə edir. Porter açıq mənbəlidir.
+
+<b>Əlçatımlılıq xidməti</b>
+Porter-də yalnız Android TV-də simsiz sazlamanı cütləşdirmək üçün istifadə olunan istəyə bağlı əlçatımlılıq xidməti var. O, cütləşdirmə kodunu Android-in cütləşdirmə ekranından oxuyur və cütləşdirmə başa çatdıqdan sonra özünü söndürür. Başqa heç bir məlumat toplamır və paylaşmır.
+
+Porter RikkaApps-in yaratdığı Shizuku və thedjchi ilə töhfəçilərin sonrakı baxım işi üzərində qurulub. Onun Shizuku tərtibatçıları ilə heç bir əlaqəsi yoxdur.
