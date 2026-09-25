@@ -1,0 +1,32 @@
+<i>Porter</i> dà alle tue app l'accesso ADB, così possono fare cose che normalmente richiedono un computer. Sei tu a decidere quali app lo ottengono.
+
+Con l'accesso ADB, le app possono gestire altre app, svuotare cache nascoste o raggiungere file che Android normalmente tiene bloccati. Di solito serve collegare un computer e digitare comandi. Porter avvia una volta un piccolo servizio e le app che approvi lo usano direttamente sul tuo dispositivo.
+
+Porter è un fork mantenuto di Shizuku, che resta piccolo e stabile per le app che ne dipendono.
+
+<b>Avvialo come preferisci</b>
+- Debug wireless su Android 11 o versioni successive, senza computer
+- Debug USB con un computer, su Android 7.0 o versioni successive
+- Root, se il tuo dispositivo è già rootato
+- Avvia all'avvio, e un cane da guardia che riavvia Porter se si blocca (Android 11+ o root)
+- Supporto per Android TV, con un accoppiamento che puoi completare con il telecomando
+
+<b>Mantieni il controllo</b>
+- Le app devono prima chiedere, e tu approvi o neghi ciascuna
+- Vedi quali app installate supportano Porter e quali sono connesse
+- Revoca l'accesso in qualsiasi momento, o sospendilo per tutte le app in una volta
+- Controlla Porter dalle app di automazione tramite intent
+
+<b>App create per Shizuku</b>
+Le app con supporto diretto per Porter hanno bisogno solo di Porter. Le app che supportano solo Shizuku richiedono un passaggio in più, spiegato su https://porter.darken.eu/compatibility
+
+<b>Per gli sviluppatori di app</b>
+Aggiungi il supporto diretto per Porter alla tua app: https://porter.darken.eu/developers
+
+<b>Privacy</b>
+Niente pubblicità, niente tracciamento, nessun account. Solo le app che approvi ottengono l'accesso. Porter è open source.
+
+<b>Servizio di accessibilità</b>
+Porter include un servizio di accessibilità opzionale, usato solo su Android TV per l'accoppiamento del debug wireless. Legge il codice di accoppiamento dalla schermata di accoppiamento di Android e si disattiva al termine dell'accoppiamento. Non raccoglie né condivide nessun'altra informazione.
+
+Porter si basa su Shizuku di RikkaApps e sul successivo lavoro di manutenzione di thedjchi e di altri collaboratori. Non è affiliato agli sviluppatori di Shizuku.

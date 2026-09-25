@@ -1,0 +1,32 @@
+A <i>Porter</i> ADB-hozzáférést ad az alkalmazásainak, így olyasmire is képesek, amihez általában számítógép kell. Ön dönti el, melyik alkalmazás kapja meg.
+
+ADB-hozzáféréssel az alkalmazások kezelhetnek más alkalmazásokat, törölhetnek rejtett gyorsítótárakat, vagy elérhetnek olyan fájlokat, amelyeket az Android általában zárolva tart. Ehhez rendszerint számítógépet kell csatlakoztatni és parancsokat begépelni. A Porter egyszer elindít egy kis szolgáltatást, és az Ön által jóváhagyott alkalmazások közvetlenül az eszközén használják.
+
+A Porter a Shizuku karbantartott forkja, amely kicsi és stabil marad a rá épülő alkalmazások számára.
+
+<b>Indítsa úgy, ahogy Önnek kényelmes</b>
+- Vezeték nélküli hibakeresés Android 11 vagy újabb rendszeren, számítógép nélkül
+- USB hibakeresés számítógéppel, Android 7.0 vagy újabb rendszeren
+- Root, ha az eszköze már rootolva van
+- Indítás rendszerindításkor, valamint egy őrzőkutya, amely összeomlás esetén újraindítja a Portert (Android 11+ vagy root)
+- Android TV-támogatás, a párosítás a távirányítóval is befejezhető
+
+<b>Az irányítás az Öné</b>
+- Az alkalmazásoknak előbb kérniük kell, és Ön mindegyiket jóváhagyja vagy elutasítja
+- Láthatja, mely telepített alkalmazások támogatják a Portert, és melyek csatlakoztak
+- A hozzáférést bármikor visszavonhatja, vagy egyszerre az összes alkalmazásnál szüneteltetheti
+- A Porter vezérelhető automatizálási alkalmazásokból intentek segítségével
+
+<b>Shizukuhoz készült alkalmazások</b>
+A Portert közvetlenül támogató alkalmazásoknak csak a Porterre van szükségük. A csak Shizukut támogató alkalmazásokhoz egy további lépés kell, ennek leírása: https://porter.darken.eu/compatibility
+
+<b>Alkalmazásfejlesztőknek</b>
+Adjon közvetlen Porter-támogatást az alkalmazásához: https://porter.darken.eu/developers
+
+<b>Adatvédelem</b>
+Nincs reklám, nincs követés, nincs fiók. Csak az Ön által jóváhagyott alkalmazások kapnak hozzáférést. A Porter nyílt forráskódú.
+
+<b>Kisegítő szolgáltatás</b>
+A Porter tartalmaz egy opcionális kisegítő szolgáltatást, amelyet csak Android TV-n használ a vezeték nélküli hibakeresés párosításához. Leolvassa a párosítási kódot az Android párosítási képernyőjéről, és a párosítás végeztével kikapcsolja magát. Semmilyen más információt nem gyűjt és nem oszt meg.
+
+A Porter a RikkaApps által készített Shizukura, valamint thedjchi és további közreműködők későbbi karbantartási munkájára épül. Nem áll kapcsolatban a Shizuku fejlesztőivel.

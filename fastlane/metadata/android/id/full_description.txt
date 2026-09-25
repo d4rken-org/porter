@@ -1,0 +1,32 @@
+<i>Porter</i> memberi aplikasi Anda akses ADB, sehingga aplikasi bisa melakukan hal yang biasanya memerlukan komputer. Anda yang menentukan aplikasi mana yang mendapatkannya.
+
+Dengan akses ADB, aplikasi dapat mengelola aplikasi lain, menghapus cache tersembunyi, atau menjangkau file yang biasanya dikunci Android. Umumnya, hal ini berarti menghubungkan komputer dan mengetik perintah. Porter memulai sebuah layanan kecil satu kali, lalu aplikasi yang Anda setujui menggunakannya langsung di perangkat Anda.
+
+Porter adalah fork Shizuku yang terus dikelola, dijaga tetap kecil dan stabil untuk aplikasi yang mengandalkannya.
+
+<b>Mulai dengan cara Anda</b>
+- Proses debug nirkabel di Android 11 atau yang lebih baru, tanpa komputer
+- Proses debug USB dengan komputer, di Android 7.0 atau yang lebih baru
+- Root, jika perangkat Anda sudah di-root
+- Mulai saat boot, dan watchdog yang memulai ulang Porter jika mengalami crash (Android 11+ atau root)
+- Dukungan Android TV, dengan penyambungan yang bisa diselesaikan menggunakan remote
+
+<b>Tetap memegang kendali</b>
+- Aplikasi harus meminta terlebih dahulu, lalu Anda menyetujui atau menolak masing-masing
+- Lihat aplikasi terinstal mana yang mendukung Porter dan mana yang terhubung
+- Cabut akses kapan saja, atau jeda akses untuk semua aplikasi sekaligus
+- Kontrol Porter dari aplikasi otomatisasi menggunakan intent
+
+<b>Aplikasi yang dibuat untuk Shizuku</b>
+Aplikasi dengan dukungan Porter langsung hanya memerlukan Porter. Aplikasi yang hanya mendukung Shizuku memerlukan satu langkah tambahan, yang dijelaskan di https://porter.darken.eu/compatibility
+
+<b>Untuk developer aplikasi</b>
+Tambahkan dukungan Porter langsung ke aplikasi Anda: https://porter.darken.eu/developers
+
+<b>Privasi</b>
+Tanpa iklan, tanpa pelacakan, tanpa akun. Hanya aplikasi yang Anda setujui yang mendapatkan akses. Porter bersifat open source.
+
+<b>Layanan aksesibilitas</b>
+Porter menyertakan layanan aksesibilitas opsional yang hanya digunakan di Android TV untuk penyambungan proses debug nirkabel. Layanan ini membaca kode penyambungan dari layar penyambungan Android dan menonaktifkan dirinya sendiri setelah penyambungan selesai. Layanan ini tidak mengumpulkan atau membagikan informasi lain apa pun.
+
+Porter dibangun di atas Shizuku oleh RikkaApps dan pekerjaan pemeliharaan selanjutnya oleh thedjchi serta para kontributor. Porter tidak berafiliasi dengan developer Shizuku.

@@ -1,0 +1,32 @@
+<i>Porter</i> ger dina appar ADB-åtkomst, så att de kan göra saker som normalt kräver en dator. Du väljer vilka appar som får den.
+
+Med ADB-åtkomst kan appar hantera andra appar, rensa dolda cacheminnen eller nå filer som Android normalt håller låsta. Vanligtvis innebär det att ansluta en dator och skriva kommandon. Porter startar en liten tjänst en gång, och apparna du godkänner använder den direkt på din enhet.
+
+Porter är en underhållen fork av Shizuku, som hålls liten och stabil för apparna som är beroende av den.
+
+<b>Starta på ditt sätt</b>
+- Trådlös felsökning på Android 11 eller senare, ingen dator behövs
+- USB-felsökning med en dator, på Android 7.0 eller senare
+- Root, om din enhet redan är rootad
+- ”Starta vid uppstart” och en vakthund som startar om Porter om den kraschar (Android 11+ eller root)
+- Stöd för Android TV, med parkoppling som du kan slutföra med fjärrkontrollen
+
+<b>Behåll kontrollen</b>
+- Appar måste fråga först, och du godkänner eller nekar var och en
+- Se vilka installerade appar som stöder Porter och vilka som är anslutna
+- Återkalla åtkomsten när som helst, eller pausa den för alla appar på en gång
+- Styr Porter från automatiseringsappar med hjälp av intents
+
+<b>Appar byggda för Shizuku</b>
+Appar med direkt stöd för Porter behöver bara Porter. Appar som bara stöder Shizuku behöver ett extra steg, som förklaras på https://porter.darken.eu/compatibility
+
+<b>För apputvecklare</b>
+Lägg till direkt stöd för Porter i din app: https://porter.darken.eu/developers
+
+<b>Integritet</b>
+Inga annonser, ingen spårning, inget konto. Bara appar som du godkänner får åtkomst. Porter är öppen källkod.
+
+<b>Tillgänglighetstjänst</b>
+Porter innehåller en valfri tillgänglighetstjänst som bara används på Android TV för att parkoppla trådlös felsökning. Den läser parkopplingskoden från Androids parkopplingsskärm och stänger av sig själv när parkopplingen är klar. Den samlar inte in eller delar någon annan information.
+
+Porter bygger på Shizuku av RikkaApps och senare underhållsarbete av thedjchi och bidragsgivare. Porter har ingen anknytning till Shizuku-utvecklarna.

@@ -1,0 +1,32 @@
+<i>Porter</i> daje Twoim aplikacjom dostęp ADB, dzięki czemu mogą robić rzeczy, które zwykle wymagają komputera. Ty decydujesz, które aplikacje go dostaną.
+
+Z dostępem ADB aplikacje mogą zarządzać innymi aplikacjami, czyścić ukryte pamięci podręczne lub sięgać do plików, które Android normalnie blokuje. Zwykle wymaga to podłączenia komputera i wpisywania poleceń. Porter raz uruchamia małą usługę, a zatwierdzone przez Ciebie aplikacje korzystają z niej bezpośrednio na urządzeniu.
+
+Porter to utrzymywany fork Shizuku, który pozostaje mały i stabilny z myślą o aplikacjach, które na nim polegają.
+
+<b>Uruchom po swojemu</b>
+- Debugowanie bezprzewodowe na Androidzie 11 lub nowszym, bez komputera
+- Debugowanie USB z komputerem, na Androidzie 7.0 lub nowszym
+- Root, jeśli urządzenie jest już zrootowane
+- Uruchamianie przy starcie oraz nadzorowanie, które ponownie uruchamia Porter po awarii (Android 11+ lub root)
+- Obsługa Android TV z parowaniem, które dokończysz pilotem
+
+<b>Zachowaj kontrolę</b>
+- Aplikacje muszą najpierw poprosić o dostęp, a Ty zezwalasz lub odmawiasz każdej z osobna
+- Zobacz, które zainstalowane aplikacje obsługują Porter, a które są połączone
+- Cofnij dostęp w dowolnej chwili lub wstrzymaj dostęp dla wszystkich aplikacji naraz
+- Kontroluj Porter z aplikacji automatyzacyjnych za pomocą intencji
+
+<b>Aplikacje stworzone dla Shizuku</b>
+Aplikacje, które bezpośrednio obsługują Porter, potrzebują tylko aplikacji Porter. Aplikacje obsługujące tylko Shizuku wymagają dodatkowego kroku, opisanego na https://porter.darken.eu/compatibility
+
+<b>Dla twórców aplikacji</b>
+Dodaj do swojej aplikacji bezpośrednią obsługę Porter: https://porter.darken.eu/developers
+
+<b>Prywatność</b>
+Bez reklam, bez śledzenia, bez konta. Dostęp dostają tylko aplikacje, które zatwierdzisz. Porter ma otwarty kod źródłowy.
+
+<b>Usługa ułatwień dostępu</b>
+Porter zawiera opcjonalną usługę ułatwień dostępu, używaną wyłącznie na Android TV do parowania debugowania bezprzewodowego. Odczytuje ona kod parowania z ekranu parowania Androida i sama się wyłącza po zakończeniu parowania. Nie zbiera ani nie udostępnia żadnych innych informacji.
+
+Porter bazuje na Shizuku od RikkaApps oraz na późniejszych pracach konserwacyjnych thedjchi i innych współtwórców. Porter nie jest powiązany z twórcami Shizuku.

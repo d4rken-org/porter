@@ -1,0 +1,1 @@
+Cấp quyền ADB cho ứng dụng, có root hay không. Bạn chọn ứng dụng được cấp.

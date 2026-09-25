@@ -1,0 +1,32 @@
+<i>Porter</i> oferă aplicațiilor tale acces ADB, ca să poată face lucruri care de obicei necesită un computer. Tu decizi care aplicații îl primesc.
+
+Cu acces ADB, aplicațiile pot gestiona alte aplicații, pot șterge cache-uri ascunse sau pot ajunge la fișiere pe care Android le ține de obicei blocate. În mod normal, asta înseamnă să conectezi un computer și să tastezi comenzi. Porter pornește o singură dată un mic serviciu, iar aplicațiile pe care le aprobi îl folosesc direct pe dispozitiv.
+
+Porter este un fork întreținut al Shizuku, păstrat mic și stabil pentru aplicațiile care depind de el.
+
+<b>Pornește-l cum vrei</b>
+- Remedierea erorilor wireless pe Android 11 sau mai nou, fără computer
+- Remedierea erorilor prin USB cu un computer, pe Android 7.0 sau mai nou
+- Root, dacă dispozitivul tău are deja root
+- „Pornire la bootare” și un „Câine de pază” care repornește Porter dacă se blochează (Android 11+ sau root)
+- Suport pentru Android TV, cu asociere pe care o poți finaliza cu telecomanda
+
+<b>Păstrează controlul</b>
+- Aplicațiile trebuie să ceară mai întâi, iar tu permiți sau refuzi fiecare cerere
+- Vezi ce aplicații instalate acceptă Porter și care sunt conectate
+- Revocă accesul oricând sau întrerupe accesul pentru toate aplicațiile deodată
+- Controlează Porter din aplicații de automatizare folosind intents
+
+<b>Aplicații create pentru Shizuku</b>
+Aplicațiile care acceptă direct Porter au nevoie doar de Porter. Aplicațiile care acceptă doar Shizuku au nevoie de un pas în plus, explicat la https://porter.darken.eu/compatibility
+
+<b>Pentru dezvoltatorii de aplicații</b>
+Adaugă în aplicația ta suport direct pentru Porter: https://porter.darken.eu/developers
+
+<b>Confidențialitate</b>
+Fără reclame, fără urmărire, fără cont. Doar aplicațiile pe care le aprobi primesc acces. Porter are cod sursă deschis.
+
+<b>Serviciul de accesibilitate</b>
+Porter include un serviciu de accesibilitate opțional, folosit doar pe Android TV pentru asocierea prin remedierea erorilor wireless. Citește codul de asociere de pe ecranul de asociere al Android și se dezactivează singur după ce asocierea s-a încheiat. Nu colectează și nu partajează alte informații.
+
+Porter se bazează pe Shizuku de la RikkaApps și pe munca ulterioară de întreținere a lui thedjchi și a altor contribuitori. Porter nu este afiliat cu dezvoltatorii Shizuku.

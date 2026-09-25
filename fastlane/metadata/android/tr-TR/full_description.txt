@@ -1,0 +1,32 @@
+<i>Porter</i>, uygulamalarınıza ADB erişimi verir. Böylece normalde bilgisayar gerektiren işleri yapabilirler. Hangi uygulamaların bu erişimi alacağına siz karar verirsiniz.
+
+ADB erişimiyle uygulamalar diğer uygulamaları yönetebilir, gizli önbellekleri temizleyebilir veya Android’in normalde kilitli tuttuğu dosyalara ulaşabilir. Bu genellikle bir bilgisayar bağlayıp komut yazmak demektir. Porter küçük bir hizmeti bir kez başlatır ve onayladığınız uygulamalar bu hizmeti doğrudan cihazınızda kullanır.
+
+Porter, Shizuku’nun bakımı süren bir fork’udur ve ona güvenen uygulamalar için küçük ve kararlı tutulur.
+
+<b>Kendi yönteminizle başlatın</b>
+- Android 11 veya üzeri sürümlerde Kablosuz hata ayıklama, bilgisayar gerekmez
+- Bilgisayarla USB hata ayıklama, Android 7.0 veya üzeri sürümlerde
+- Root, cihazınız zaten rootluysa
+- “Önyüklemede başla” ve Porter çökerse onu yeniden başlatan bekçi köpeği (Android 11+ veya root)
+- Uzaktan kumandayla tamamlayabileceğiniz eşleştirme ile Android TV desteği
+
+<b>Kontrol sizde</b>
+- Uygulamalar önce izin istemek zorundadır, her birini siz onaylar veya reddedersiniz
+- Yüklü uygulamalardan hangilerinin Porter’ı desteklediğini ve hangilerinin bağlı olduğunu görün
+- Erişimi istediğiniz zaman iptal edin veya tüm uygulamalar için tek seferde duraklatın
+- Porter’ı otomasyon uygulamalarından intent’lerle kontrol edin
+
+<b>Shizuku için geliştirilmiş uygulamalar</b>
+Doğrudan Porter desteği olan uygulamalar için yalnızca Porter yeterlidir. Yalnızca Shizuku’yu destekleyen uygulamalar ek bir adım gerektirir. Açıklaması şurada: https://porter.darken.eu/compatibility
+
+<b>Uygulama geliştiricileri için</b>
+Uygulamanıza doğrudan Porter desteği ekleyin: https://porter.darken.eu/developers
+
+<b>Gizlilik</b>
+Reklam yok, izleme yok, hesap yok. Yalnızca onayladığınız uygulamalar erişim alır. Porter açık kaynaklıdır.
+
+<b>Erişilebilirlik hizmeti</b>
+Porter, yalnızca Android TV’de kablosuz hata ayıklamayı eşleştirmek için kullanılan isteğe bağlı bir erişilebilirlik hizmeti içerir. Bu hizmet, eşleştirme kodunu Android’in eşleştirme ekranından okur ve eşleştirme tamamlanınca kendini kapatır. Başka hiçbir bilgi toplamaz veya paylaşmaz.
+
+Porter, RikkaApps tarafından geliştirilen Shizuku’yu ve daha sonra thedjchi ile katkıda bulunanların yürüttüğü bakım çalışmalarını temel alır. Porter’ın Shizuku geliştiricileriyle bir bağlantısı yoktur.

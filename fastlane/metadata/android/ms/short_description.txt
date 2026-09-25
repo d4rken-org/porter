@@ -1,0 +1,1 @@
+Beri apl akses ADB, dengan atau tanpa root. Anda pilih apl yang mendapatnya.

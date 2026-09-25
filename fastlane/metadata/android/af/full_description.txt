@@ -1,0 +1,32 @@
+<i>Porter</i> gee jou programme ADB-toegang, sodat hulle dinge kan doen waarvoor jy gewoonlik 'n rekenaar nodig het. Jy besluit watter programme dit kry.
+
+Met ADB-toegang kan programme ander programme bestuur, versteekte kasgeheue skoonmaak of by lêers uitkom wat Android normaalweg gesluit hou. Daarvoor moet jy gewoonlik 'n rekenaar koppel en opdragte intik. Porter begin een keer 'n klein diens, en die programme wat jy goedkeur, gebruik dit direk op jou toestel.
+
+Porter is 'n fork van Shizuku wat steeds onderhou word, klein en stabiel gehou vir die programme wat daarop staatmaak.
+
+<b>Begin dit soos jy wil</b>
+- Draadlose ontfouting op Android 11 of nuwer, geen rekenaar nodig nie
+- USB-ontfouting met 'n rekenaar, op Android 7.0 of nuwer
+- Root, as jou toestel reeds gewortel is
+- Begin met opstart, en 'n waghond wat Porter herbegin as dit vasval (Android 11+ of root)
+- Ondersteuning vir Android TV, met paring wat jy met die afstandbeheer kan voltooi
+
+<b>Bly in beheer</b>
+- Programme moet eers vra, en jy keur elkeen goed of weier dit
+- Sien watter geïnstalleerde programme Porter ondersteun en watter gekoppel is
+- Trek toegang enige tyd terug, of onderbreek dit vir alle programme tegelyk
+- Beheer Porter met outomatiseringsprogramme via intents
+
+<b>Programme gebou vir Shizuku</b>
+Programme met direkte Porter-ondersteuning het net Porter nodig. Programme wat net Shizuku ondersteun, het 'n ekstra stap nodig, soos verduidelik by https://porter.darken.eu/compatibility
+
+<b>Vir programontwikkelaars</b>
+Voeg direkte Porter-ondersteuning by jou program: https://porter.darken.eu/developers
+
+<b>Privaatheid</b>
+Geen advertensies, geen opsporing, geen rekening nie. Net programme wat jy goedkeur, kry toegang. Porter is oopbron.
+
+<b>Toeganklikheidsdiens</b>
+Porter bevat 'n opsionele toeganklikheidsdiens wat net op Android TV gebruik word vir die paring van draadlose ontfouting. Dit lees die paringskode van Android se paringskerm af en skakel homself af sodra die paring voltooi is. Dit versamel of deel geen ander inligting nie.
+
+Porter bou voort op Shizuku deur RikkaApps en latere onderhoudswerk deur thedjchi en bydraers. Dit is nie aan die Shizuku-ontwikkelaars verbonde nie.

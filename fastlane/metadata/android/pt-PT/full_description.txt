@@ -1,0 +1,32 @@
+O <i>Porter</i> dá acesso ADB às suas aplicações, para que possam fazer coisas que normalmente exigem um computador. Decide quais as aplicações que o recebem.
+
+Com acesso ADB, as aplicações podem gerir outras aplicações, limpar caches ocultas ou aceder a ficheiros que o Android normalmente mantém bloqueados. Habitualmente, isso implica ligar um computador e escrever comandos. O Porter inicia um pequeno serviço uma vez, e as aplicações que aprovar usam-no diretamente no seu dispositivo.
+
+O Porter é um fork mantido do Shizuku, que se mantém pequeno e estável para as aplicações que dependem dele.
+
+<b>Inicie à sua maneira</b>
+- Depuração sem fios no Android 11 ou superior, sem necessidade de computador
+- Depuração USB com um computador, no Android 7.0 ou superior
+- Root, se o seu dispositivo já tiver root
+- Iniciar no arranque e um cão de guarda que reinicia o Porter se este bloquear (Android 11+ ou root)
+- Suporte para Android TV, com emparelhamento que pode concluir com o comando
+
+<b>Mantenha o controlo</b>
+- As aplicações têm de pedir primeiro, e cabe-lhe permitir ou negar cada uma
+- Veja que aplicações instaladas suportam o Porter e quais estão ligadas
+- Revogue o acesso a qualquer momento, ou pause o acesso de todas as aplicações de uma só vez
+- Controle o Porter a partir de aplicações de automação através de intents
+
+<b>Aplicações feitas para o Shizuku</b>
+As aplicações com suporte direto para o Porter só precisam do Porter. As aplicações que só suportam o Shizuku precisam de um passo extra, explicado em https://porter.darken.eu/compatibility
+
+<b>Para programadores de aplicações</b>
+Adicione suporte direto para o Porter à sua aplicação: https://porter.darken.eu/developers
+
+<b>Privacidade</b>
+Sem anúncios, sem rastreio, sem conta. Só as aplicações que aprovar têm acesso. O Porter é de código aberto.
+
+<b>Serviço de acessibilidade</b>
+O Porter inclui um serviço de acessibilidade opcional que só é usado no Android TV para o emparelhamento da depuração sem fios. Lê o código de emparelhamento no ecrã de emparelhamento do Android e desativa-se sozinho quando o emparelhamento termina. Não recolhe nem partilha qualquer outra informação.
+
+O Porter baseia-se no Shizuku da RikkaApps e no trabalho de manutenção posterior de thedjchi e de outros contribuidores. Não tem qualquer afiliação com os programadores do Shizuku.

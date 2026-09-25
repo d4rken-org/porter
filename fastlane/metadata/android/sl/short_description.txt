@@ -1,0 +1,1 @@
+Dajte aplikacijam dostop ADB, z rootom ali brez. Vi izberete, katere ga dobijo.

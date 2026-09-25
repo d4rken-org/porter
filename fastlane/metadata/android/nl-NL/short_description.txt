@@ -1,0 +1,1 @@
+Geef je apps ADB-toegang, met of zonder root. Jij kiest welke apps het krijgen.

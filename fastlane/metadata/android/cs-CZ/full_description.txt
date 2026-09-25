@@ -1,0 +1,32 @@
+<i>Porter</i> dává vašim aplikacím přístup ADB, takže mohou dělat věci, na které je jinak potřeba počítač. Vy rozhodujete, které aplikace ho dostanou.
+
+S přístupem ADB mohou aplikace spravovat jiné aplikace, mazat skrytou mezipaměť nebo se dostat k souborům, které má Android normálně uzamčené. Obvykle to znamená připojit počítač a psát příkazy. Porter jednou spustí malou službu a aplikace, které schválíte, ji používají přímo ve vašem zařízení.
+
+Porter je udržovaný fork Shizuku, který zůstává malý a stabilní pro aplikace, jež na něm závisí.
+
+<b>Spusťte ho po svém</b>
+- Bezdrátové ladění na Androidu 11 nebo novějším, bez počítače
+- Ladění přes USB s počítačem, na Androidu 7.0 nebo novějším
+- Root, pokud je vaše zařízení už rootované
+- Volba „Spustit po startu“ a watchdog, který Porter po pádu znovu spustí (Android 11+ nebo root)
+- Podpora Android TV s párováním, které dokončíte dálkovým ovladačem
+
+<b>Máte vše pod kontrolou</b>
+- Aplikace musí nejdřív požádat a vy každou schválíte, nebo zamítnete
+- Podívejte se, které nainstalované aplikace podporují Porter a které jsou připojené
+- Kdykoli odeberte přístup, nebo ho pozastavte všem aplikacím najednou
+- Ovládejte Porter z automatizačních aplikací pomocí intentů
+
+<b>Aplikace pro Shizuku</b>
+Aplikacím, které přímo podporují Porter, stačí Porter. Aplikace, které podporují jen Shizuku, potřebují jeden krok navíc, popsaný na https://porter.darken.eu/compatibility
+
+<b>Pro vývojáře aplikací</b>
+Přidejte do své aplikace přímou podporu pro Porter: https://porter.darken.eu/developers
+
+<b>Soukromí</b>
+Žádné reklamy, žádné sledování, žádný účet. Přístup dostanou jen aplikace, které schválíte. Porter má otevřený zdrojový kód.
+
+<b>Služba přístupnosti</b>
+Porter obsahuje volitelnou službu přístupnosti, která se používá pouze na Android TV ke spárování bezdrátového ladění. Přečte párovací kód z obrazovky párování v Androidu a po dokončení párování se sama vypne. Žádné jiné informace neshromažďuje ani nesdílí.
+
+Porter staví na Shizuku od RikkaApps a na pozdější údržbě od thedjchi a dalších přispěvatelů. Není nijak spojen s vývojáři Shizuku.

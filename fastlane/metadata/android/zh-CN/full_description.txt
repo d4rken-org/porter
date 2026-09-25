@@ -1,0 +1,32 @@
+<i>Porter</i> 为您的应用提供 ADB 访问权限，让它们能够完成通常需要电脑才能做到的事情。哪些应用可以获得权限，由您决定。
+
+有了 ADB 访问权限，应用可以管理其他应用、清除隐藏的缓存，或访问 Android 通常锁定的文件。这通常需要连接电脑并输入命令。Porter 只需启动一次小型服务，您批准的应用即可直接在您的设备上使用它。
+
+Porter 是 Shizuku 的一个持续维护的分支，为依赖它的应用保持小巧和稳定。
+
+<b>按您的方式启动</b>
+- 在 Android 11 或更高版本上使用无线调试，无需电脑
+- 在 Android 7.0 或更高版本上配合电脑使用 USB 调试
+- 如果您的设备已 root，可使用 root
+- “开机启动”，以及在 Porter 崩溃时自动重启它的看门狗（Android 11+ 或 root）
+- 支持 Android TV，可用遥控器完成配对
+
+<b>一切由您掌控</b>
+- 应用必须先请求，由您逐一批准或拒绝
+- 查看哪些已安装的应用支持 Porter，以及哪些已连接
+- 随时撤销访问权限，或一次性暂停所有应用的访问
+- 通过 Intent 从自动化应用控制 Porter
+
+<b>为 Shizuku 开发的应用</b>
+直接支持 Porter 的应用只需要 Porter。仅支持 Shizuku 的应用需要额外一步，说明见 https://porter.darken.eu/compatibility
+
+<b>面向应用开发者</b>
+为您的应用添加 Porter 直接支持：https://porter.darken.eu/developers
+
+<b>隐私</b>
+无广告，无跟踪，无需账号。只有您批准的应用才能获得访问权限。Porter 是开源软件。
+
+<b>无障碍服务</b>
+Porter 包含一项可选的无障碍服务，仅在 Android TV 上用于无线调试配对。它会从 Android 的配对界面读取配对码，并在配对完成后自动关闭。它不会收集或分享任何其他信息。
+
+Porter 基于 RikkaApps 开发的 Shizuku，以及 thedjchi 和贡献者后来的维护工作。Porter 与 Shizuku 开发者没有任何关联。

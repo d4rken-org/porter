@@ -1,0 +1,32 @@
+<i>Porter</i> gibt deinen Apps ADB-Zugriff, damit sie Dinge tun können, für die man sonst einen Computer braucht. Du entscheidest, welche Apps ihn bekommen.
+
+Mit ADB-Zugriff können Apps andere Apps verwalten, versteckte Caches leeren oder auf Dateien zugreifen, die Android normalerweise sperrt. Dafür muss man üblicherweise einen Computer anschließen und Befehle eintippen. Porter startet einmal einen kleinen Dienst, und die Apps, die du freigibst, nutzen ihn direkt auf deinem Gerät.
+
+Porter ist ein gepflegter Fork von Shizuku, klein und stabil gehalten für die Apps, die darauf angewiesen sind.
+
+<b>Starte Porter, wie es dir passt</b>
+- Debugging über WLAN ab Android 11, ohne Computer
+- USB-Debugging mit einem Computer, ab Android 7.0
+- Root, wenn dein Gerät bereits gerootet ist
+- „Beim Systemstart starten“ und ein Watchdog, der Porter nach einem Absturz neu startet (Android 11+ oder Root)
+- Unterstützung für Android TV, die Kopplung lässt sich mit der Fernbedienung abschließen
+
+<b>Du behältst die Kontrolle</b>
+- Apps müssen zuerst fragen, und du erlaubst oder verweigerst jede einzeln
+- Sieh, welche installierten Apps Porter unterstützen und welche verbunden sind
+- Entziehe den Zugriff jederzeit oder pausiere ihn für alle Apps auf einmal
+- Steuere Porter aus Automatisierungs-Apps über Intents
+
+<b>Apps für Shizuku</b>
+Apps mit direkter Porter-Unterstützung brauchen nur Porter. Apps, die nur Shizuku unterstützen, brauchen einen zusätzlichen Schritt, erklärt unter https://porter.darken.eu/compatibility
+
+<b>Für App-Entwickler</b>
+Füge deiner App direkte Porter-Unterstützung hinzu: https://porter.darken.eu/developers
+
+<b>Datenschutz</b>
+Keine Werbung, kein Tracking, kein Konto. Nur Apps, die du freigibst, erhalten Zugriff. Porter ist Open Source.
+
+<b>Bedienungshilfen-Dienst</b>
+Porter enthält einen optionalen Bedienungshilfen-Dienst, der nur auf Android TV zum Koppeln von Debugging über WLAN verwendet wird. Er liest den Kopplungscode aus dem Kopplungsbildschirm von Android aus und schaltet sich ab, sobald die Kopplung abgeschlossen ist. Er erfasst oder teilt keine anderen Informationen.
+
+Porter baut auf Shizuku von RikkaApps und der späteren Wartung durch thedjchi und weitere Mitwirkende auf. Es steht in keiner Verbindung zu den Shizuku-Entwicklern.
