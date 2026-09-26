@@ -291,7 +291,10 @@ class DebugRecorder internal constructor(
         private const val CHANNEL = "debug_recording"
         private const val NOTIFICATION_ID = 920
 
-        fun deviceDetails(context: Context): String {
+        fun deviceDetails(context: Context): String =
+            deviceDetails(context, EnvironmentUtils.getAdbTcpPort(), EnvironmentUtils.isTlsSupported())
+
+        internal fun deviceDetails(context: Context, adbTcpPort: Int, tlsSupported: Boolean): String {
             val resolver = context.contentResolver
             val lines = mutableListOf(
                 "Porter ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
@@ -308,8 +311,8 @@ class DebugRecorder internal constructor(
             for (name in listOf(Settings.Global.ADB_ENABLED, "adb_wifi_enabled", Settings.Global.DEVELOPMENT_SETTINGS_ENABLED)) {
                 lines += "$name: ${Settings.Global.getInt(resolver, name, -1)}"
             }
-            lines += "ADB TCP port: ${EnvironmentUtils.getAdbTcpPort()}"
-            lines += "TLS supported: ${EnvironmentUtils.isTlsSupported()}"
+            lines += "ADB TCP port: $adbTcpPort"
+            lines += "TLS supported: $tlsSupported"
             return lines.joinToString("\n")
         }
 
