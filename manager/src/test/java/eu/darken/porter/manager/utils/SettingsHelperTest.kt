@@ -34,4 +34,14 @@ class SettingsHelperTest {
         assertTrue(SettingsHelper.tryPutGlobalInt(cr, "adb_wifi_enabled", 1))
         assertEquals(1, Settings.Global.getInt(cr, "adb_wifi_enabled", -1))
     }
+
+    @Test fun `a trusted disabled setting highlights wireless debugging`() {
+        assertEquals(SettingsPage.Developer.HighlightWirelessDebugging, SettingsHelper.wirelessDebuggingPage(0, true))
+    }
+
+    @Test fun `an enabled or untrusted setting opens wireless debugging`() {
+        assertEquals(SettingsPage.Developer.WirelessDebugging, SettingsHelper.wirelessDebuggingPage(1, true))
+        assertEquals(SettingsPage.Developer.WirelessDebugging, SettingsHelper.wirelessDebuggingPage(1, false))
+        assertEquals(SettingsPage.Developer.WirelessDebugging, SettingsHelper.wirelessDebuggingPage(0, false))
+    }
 }
