@@ -55,8 +55,7 @@ object WirelessStart {
             }
 
             val adbEnabled = Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED, 0)
-            // Android 17 can report ADB_ENABLED as 0 to apps while USB debugging is on.
-            val adbEnabledTrusted = Build.VERSION.SDK_INT < 37
+            val adbEnabledTrusted = SettingsHelper.isAdbEnabledSettingTrusted()
             val tcpPort = EnvironmentUtils.getAdbTcpPort()
             val tlsSupported = EnvironmentUtils.isTlsSupported()
             val route = startRoute(adbEnabled, adbEnabledTrusted, tcpPort, tlsSupported)
