@@ -164,8 +164,9 @@ withContext(Dispatchers.IO) {
 
 A started command is yours to stop. `destroy()` sends SIGKILL, which gives it no chance to clean up;
 a command that has to finish something, such as `screenrecord`, gets a `signal(OsConstants.SIGINT)`
-once it is running, and you wait for it to exit before cleaning up. Commands also die with the app
-process that started them.
+once it is running, and you wait for it to exit before cleaning up. A running command also dies with
+the app process that started it. Once it has exited, neither `destroy()` nor the app's death reaches
+what it left running, so stop those yourself.
 
 For structured results or many calls in a row, run your own service instead.
 
