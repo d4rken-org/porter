@@ -21,6 +21,7 @@ import eu.darken.porter.manager.starter.StarterActivity
 import eu.darken.porter.manager.utils.CustomTabsHelper
 import eu.darken.porter.manager.utils.EnvironmentUtils
 import eu.darken.porter.manager.utils.PorterStateMachine
+import eu.darken.porter.manager.utils.SettingsHelper
 
 internal enum class StartRoute { USB_DEBUGGING_OFF, WIRELESS_DEBUGGING_UNAVAILABLE, DISCOVER, DIRECT_PORT }
 
@@ -45,7 +46,7 @@ object WirelessStart {
 
             val cr = context.contentResolver
             if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
-                Settings.Global.putInt(cr, Settings.Global.ADB_ENABLED, 1)
+                SettingsHelper.tryPutGlobalInt(cr, Settings.Global.ADB_ENABLED, 1)
             }
 
             val adbEnabled = Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED, 0)
