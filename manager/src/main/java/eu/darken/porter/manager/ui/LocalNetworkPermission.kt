@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import eu.darken.porter.manager.R
+import eu.darken.porter.manager.utils.LOGGER
 
 @Composable
 fun LocalNetworkPermission(onReady: () -> Unit): Boolean {
@@ -30,7 +31,10 @@ fun LocalNetworkPermission(onReady: () -> Unit): Boolean {
     }
     var requested by rememberSaveable { mutableStateOf(false) }
     val ready by rememberUpdatedState(onReady)
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted = it }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        LOGGER.i("Local network permission %s: %s", permission, if (it) "granted" else "denied")
+        granted = it
+    }
     LaunchedEffect(granted) { if (granted) ready() }
     LaunchedEffect(Unit) {
         if (!granted && !requested && permission != null) { requested = true; launcher.launch(permission) }
