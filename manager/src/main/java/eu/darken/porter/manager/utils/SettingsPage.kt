@@ -27,8 +27,9 @@ sealed class SettingsPage(
 
         object WirelessDebugging : Developer() {
             override fun buildIntent(context: Context): Intent {
-                if (Build.BRAND in setOf("xiaomi", "redmi", "poco")) {
-                    HighlightWirelessDebugging.buildIntent(context)
+                // Avoids the Settings crash reported on MIUI/HyperOS for this tile's preferences screen (keymapperorg/KeyMapper#1898).
+                if (DeviceCompatibility.isXiaomiRom()) {
+                    return HighlightWirelessDebugging.buildIntent(context)
                 }
 
                 return Intent(TileService.ACTION_QS_TILE_PREFERENCES).apply {
