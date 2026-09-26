@@ -70,10 +70,22 @@ abstract class HomeActivity : ComposeActivity() {
         }
         if (start) {
             getSystemService(NotificationManager::class.java).cancel(AdbPairingService.RESULT_NOTIFICATION_ID)
-            if (UserHandleCompat.myUserId() == 0 && !ServiceReplacement.get(this).state.value.running && !PorterStateMachine.instance.isRunning()) {
-                WirelessStart.start(this, lifecycleScope)
+            val blocker = when {
+                UserHandleCompat.myUserId() != 0 -> "notPrimaryUser"
+                ServiceReplacement.get(this).state.value.running -> "replacementRunning"
+                PorterStateMachine.instance.isRunning() -> "porterRunning"
+                else -> null
             }
+            if (blocker == null) WirelessStart.start(this, lifecycleScope)
+            else LOGGER.i("Wireless start alias ignored: %s", blocker)
         }
+    }
+
+    private fun canStart(action: String): Boolean {
+        val snapshot = service.state.value
+        if (!snapshot.canStart) LOGGER.i("%s tap ignored: serviceState=%s busy=%b primaryUser=%b",
+            action, snapshot.serviceState, snapshot.busy, snapshot.primaryUser)
+        return snapshot.canStart
     }
 
     override fun onResume() {
@@ -132,11 +144,11 @@ abstract class HomeActivity : ComposeActivity() {
                 onOpenApps = { startActivity(Intent(this@HomeActivity, ApplicationManagementActivity::class.java)) },
                 onOpenCompatibility = { startActivity(Intent(this@HomeActivity, eu.darken.porter.manager.compatibility.CompatibilityActivity::class.java)) },
                 onOpenService = { startActivity(Intent(this@HomeActivity, eu.darken.porter.manager.service.ServiceActivity::class.java)) },
-                onStartRoot = { if (service.state.value.canStart) startActivity(Intent(this@HomeActivity, StarterActivity::class.java).putExtra(StarterActivity.EXTRA_IS_ROOT, true)) },
-                onPairWireless = { if (service.state.value.canStart && EnvironmentUtils.isTlsSupported()) WirelessStart.pair(this@HomeActivity) },
-                onStartWireless = { if (service.state.value.canStart) WirelessStart.start(this@HomeActivity, lifecycleScope) },
+                onStartRoot = { if (canStart("Root start")) startActivity(Intent(this@HomeActivity, StarterActivity::class.java).putExtra(StarterActivity.EXTRA_IS_ROOT, true)) },
+                onPairWireless = { if (canStart("Wireless pair") && EnvironmentUtils.isTlsSupported()) WirelessStart.pair(this@HomeActivity) },
+                onStartWireless = { if (canStart("Wireless start")) WirelessStart.start(this@HomeActivity, lifecycleScope) },
                 onViewWirelessGuide = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) },
-                onShowAdbCommand = { if (service.state.value.canStart) dialog = "command" },
+                onShowAdbCommand = { if (canStart("ADB command")) dialog = "command" },
             ),
         )
         if (dialog == "command") AlertDialog(onDismissRequest = { dialog = null },

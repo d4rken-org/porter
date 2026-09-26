@@ -34,6 +34,7 @@ class AdbMdns(
         if (listener != null) return
         val next = DiscoveryListener()
         listener = next
+        Log.i(TAG, "Discovery start: type=$serviceType")
         try {
             nsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, next)
         } catch (e: Exception) {
@@ -119,6 +120,7 @@ class AdbMdns(
                                     }
                                     if (available && active && found[info.serviceName] === info) {
                                         serviceName = info.serviceName
+                                        Log.i(TAG, "Service accepted: type=$serviceType port=${resolved.port}")
                                         observer.onChanged(host to resolved.port)
                                     }
                                 }

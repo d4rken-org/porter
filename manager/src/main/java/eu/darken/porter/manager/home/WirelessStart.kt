@@ -20,6 +20,7 @@ import eu.darken.porter.manager.receiver.NotifCancelReceiver
 import eu.darken.porter.manager.starter.StarterActivity
 import eu.darken.porter.manager.utils.CustomTabsHelper
 import eu.darken.porter.manager.utils.EnvironmentUtils
+import eu.darken.porter.manager.utils.LOGGER
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.SettingsHelper
 
@@ -38,6 +39,7 @@ internal fun startRoute(adbEnabled: Int, adbEnabledTrusted: Boolean, tcpPort: In
 object WirelessStart {
         fun start (context: Context, scope: CoroutineScope) {
             if (PorterStateMachine.instance.get() == PorterStateMachine.State.STARTING) {
+                LOGGER.i("Wireless start: ignored, already starting")
                 Toast.makeText(context, context.getString(R.string.toast_shizuku_already_starting), Toast.LENGTH_SHORT).show()
                 return
             }
@@ -45,16 +47,23 @@ object WirelessStart {
             context.sendBroadcast(Intent(context, NotifCancelReceiver::class.java))
 
             val cr = context.contentResolver
-            if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
-                SettingsHelper.tryPutGlobalInt(cr, Settings.Global.ADB_ENABLED, 1)
+            val wss = context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED
+            val write = when {
+                !wss -> "skipped"
+                SettingsHelper.tryPutGlobalInt(cr, Settings.Global.ADB_ENABLED, 1) -> "ok"
+                else -> "failed"
             }
 
             val adbEnabled = Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED, 0)
             // Android 17 can report ADB_ENABLED as 0 to apps while USB debugging is on.
             val adbEnabledTrusted = Build.VERSION.SDK_INT < 37
             val tcpPort = EnvironmentUtils.getAdbTcpPort()
+            val tlsSupported = EnvironmentUtils.isTlsSupported()
+            val route = startRoute(adbEnabled, adbEnabledTrusted, tcpPort, tlsSupported)
+            LOGGER.i("Wireless start: route=%s adbEnabled=%d trusted=%b wss=%b write=%s tcpPort=%d tls=%b",
+                route, adbEnabled, adbEnabledTrusted, wss, write, tcpPort, tlsSupported)
 
-            when (startRoute(adbEnabled, adbEnabledTrusted, tcpPort, EnvironmentUtils.isTlsSupported())) {
+            when (route) {
                 StartRoute.USB_DEBUGGING_OFF ->
                     WadbEnableUsbDebuggingDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
                 StartRoute.WIRELESS_DEBUGGING_UNAVAILABLE ->
