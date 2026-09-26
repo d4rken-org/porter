@@ -20,7 +20,7 @@ internal fun contactIntent(context: Context, category: String, description: Stri
                     putExtra(Intent.EXTRA_TEXT, buildString {
                         appendLine(description)
                         if (bug) appendLine("\nExpected behavior:\n$expected")
-                        appendLine("\n${DebugRecorder.deviceDetails()}")
+                        appendLine("\n${DebugRecorder.deviceDetails(context)}")
                     })
                 }
                 val mailtoApps = context.packageManager.queryIntentActivities(

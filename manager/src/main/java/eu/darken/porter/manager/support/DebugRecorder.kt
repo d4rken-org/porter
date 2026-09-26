@@ -1,5 +1,6 @@
 package eu.darken.porter.manager.support
 
+import android.Manifest
 import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,11 +10,13 @@ import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.os.Process
 import android.os.UserManager
+import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.*
@@ -25,6 +28,7 @@ import kotlinx.coroutines.sync.withLock
 import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.model.PorterServiceVersion
+import eu.darken.porter.manager.utils.EnvironmentUtils
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.ServerBinder
 import java.io.File
@@ -99,7 +103,7 @@ class DebugRecorder internal constructor(
             store.finish()
             return
         }
-        File(directory, "device.txt").writeText(deviceDetails())
+        File(directory, "device.txt").writeText(deviceDetails(appContext))
         if (Build.VERSION.SDK_INT >= 30) {
             runCatching {
                 val exits = appContext.getSystemService(ActivityManager::class.java).getHistoricalProcessExitReasons(null, 0, 5)
@@ -287,14 +291,27 @@ class DebugRecorder internal constructor(
         private const val CHANNEL = "debug_recording"
         private const val NOTIFICATION_ID = 920
 
-        fun deviceDetails() = """
-            Porter ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})
-            Installed build: ${PorterServiceVersion.installed.buildId}
-            Device: ${Build.MANUFACTURER} ${Build.MODEL}
-            Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
-            Build: ${Build.DISPLAY}
-            ABIs: ${Build.SUPPORTED_ABIS.joinToString()}
-        """.trimIndent()
+        fun deviceDetails(context: Context): String {
+            val resolver = context.contentResolver
+            val lines = mutableListOf(
+                "Porter ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+                "Installed build: ${PorterServiceVersion.installed.buildId}",
+                "Device: ${Build.MANUFACTURER} ${Build.MODEL}",
+                "Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})",
+                "Build: ${Build.DISPLAY}",
+                "ABIs: ${Build.SUPPORTED_ABIS.joinToString()}",
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) lines += "SDK_INT_FULL: ${Build.VERSION.SDK_INT_FULL}"
+            val secureSettings = context.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED
+            lines += "WRITE_SECURE_SETTINGS: ${if (secureSettings) "granted" else "denied"}"
+            // -1 means the setting is absent.
+            for (name in listOf(Settings.Global.ADB_ENABLED, "adb_wifi_enabled", Settings.Global.DEVELOPMENT_SETTINGS_ENABLED)) {
+                lines += "$name: ${Settings.Global.getInt(resolver, name, -1)}"
+            }
+            lines += "ADB TCP port: ${EnvironmentUtils.getAdbTcpPort()}"
+            lines += "TLS supported: ${EnvironmentUtils.isTlsSupported()}"
+            return lines.joinToString("\n")
+        }
 
         @Volatile private var instance: DebugRecorder? = null
         fun get(context: Context): DebugRecorder = instance ?: synchronized(this) {
