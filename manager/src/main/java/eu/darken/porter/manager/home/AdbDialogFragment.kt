@@ -5,7 +5,6 @@ import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -23,6 +22,7 @@ import eu.darken.porter.manager.adb.AdbMdns
 import eu.darken.porter.manager.starter.StarterActivity
 import eu.darken.porter.manager.ui.ComposeDialogFragment
 import eu.darken.porter.manager.ui.LocalNetworkPermission
+import eu.darken.porter.manager.utils.SettingsHelper
 import eu.darken.porter.manager.utils.SettingsPage
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -69,7 +69,7 @@ class DiscoveryViewModel(application: Application) : AndroidViewModel(applicatio
         if (discovering) return
         discovering = true
         val application = getApplication<Application>()
-        if (application.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) Settings.Global.putInt(application.contentResolver, "adb_wifi_enabled", 1)
+        if (application.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) SettingsHelper.tryPutGlobalInt(application.contentResolver, "adb_wifi_enabled", 1)
         mdns.start()
     }
     fun consume(): Boolean { if (consumed) return false; consumed = true; return true }
