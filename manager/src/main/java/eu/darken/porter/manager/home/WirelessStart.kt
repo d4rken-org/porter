@@ -22,6 +22,18 @@ import eu.darken.porter.manager.utils.CustomTabsHelper
 import eu.darken.porter.manager.utils.EnvironmentUtils
 import eu.darken.porter.manager.utils.PorterStateMachine
 
+internal enum class StartRoute { USB_DEBUGGING_OFF, WIRELESS_DEBUGGING_UNAVAILABLE, DISCOVER, DIRECT_PORT }
+
+internal fun startRoute(adbEnabled: Int, adbEnabledTrusted: Boolean, tcpPort: Int, tlsSupported: Boolean): StartRoute = when {
+    adbEnabled == 0 && adbEnabledTrusted -> StartRoute.USB_DEBUGGING_OFF
+    // ADB is not listening on a TCP port and the device can't do TLS: wireless debugging is unavailable
+    tcpPort <= 0 && !tlsSupported -> StartRoute.WIRELESS_DEBUGGING_UNAVAILABLE
+    // ADB is not listening on a TCP port but TLS is supported: discover the port over mDNS
+    tcpPort <= 0 -> StartRoute.DISCOVER
+    // ADB is already listening on a TCP port: use it as-is
+    else -> StartRoute.DIRECT_PORT
+}
+
 object WirelessStart {
         fun start (context: Context, scope: CoroutineScope) {
             if (PorterStateMachine.instance.get() == PorterStateMachine.State.STARTING) {
@@ -37,25 +49,25 @@ object WirelessStart {
             }
 
             val adbEnabled = Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED, 0)
-            if (adbEnabled == 0) {
-                WadbEnableUsbDebuggingDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
-                return
-            }
-
+            // Android 17 can report ADB_ENABLED as 0 to apps while USB debugging is on.
+            val adbEnabledTrusted = Build.VERSION.SDK_INT < 37
             val tcpPort = EnvironmentUtils.getAdbTcpPort()
 
-            // If ADB is NOT listening to a TCP port and the device doesn't support TLS, inform the user
-            if (tcpPort <= 0 && !EnvironmentUtils.isTlsSupported()) {
-                WadbNotEnabledDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
-            // If ADB IS NOT listening to a TCP port but the device supports TLS, start mDns discovery
-            } else if (tcpPort <= 0 && EnvironmentUtils.isTlsSupported()) {
-                AdbDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
-            // Otherwise ADB IS already listening to a TCP port. Use it as-is.
-            } else {
-                val intent = Intent(context, StarterActivity::class.java).apply {
-                    putExtra(StarterActivity.EXTRA_PORT, tcpPort)
+            when (startRoute(adbEnabled, adbEnabledTrusted, tcpPort, EnvironmentUtils.isTlsSupported())) {
+                StartRoute.USB_DEBUGGING_OFF ->
+                    WadbEnableUsbDebuggingDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
+                StartRoute.WIRELESS_DEBUGGING_UNAVAILABLE ->
+                    WadbNotEnabledDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
+                StartRoute.DISCOVER ->
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        AdbDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
+                    }
+                StartRoute.DIRECT_PORT -> {
+                    val intent = Intent(context, StarterActivity::class.java).apply {
+                        putExtra(StarterActivity.EXTRA_PORT, tcpPort)
+                    }
+                    context.startActivity(intent)
                 }
-                context.startActivity(intent)
             }
         }
     @RequiresApi(Build.VERSION_CODES.R)
