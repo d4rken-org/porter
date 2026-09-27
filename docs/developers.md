@@ -317,6 +317,35 @@ built on them, can use this SDK for Porter alone. Leave out `shizuku-compat` and
 keep upstream's `ShizukuProvider`. Each client then gets its own server's Binder, and
 `Porter.availability(context)` answers only about Porter.
 
+### Code written against Shizuku-API
+
+Code written against upstream's `dev.rikka.shizuku:api`, including libraries built on it, can run on
+Porter unchanged through `shizuku-bridge`. It brings `sdk`, `sdk-extras` and
+`dev.rikka.shizuku:api`:
+
+```kotlin
+implementation("com.github.d4rken-org.porter-api:shizuku-bridge:+")
+```
+
+Start it once per process, with a scope that lives as long as the process:
+
+```kotlin
+class App : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        PorterShizukuBridge.start(appScope)
+    }
+}
+```
+
+From then on each Porter connection reaches `rikka.shizuku.Shizuku` as its server: permission
+requests go through Porter's dialog, and Binder forwarding, system properties and shell processes
+run at Porter's identity. Upstream's user services do not work through the bridge; use Porter's own.
+A Porter connection takes the place of a Shizuku server's Binder, so an app that wants the Shizuku
+server instead does not start the bridge. The
+[API reference](https://github.com/d4rken-org/porter-api/blob/main/docs/api-reference.md#shizuku-api-bridge)
+lists what the bridge answers and its limits.
+
 ## Versions
 
 SDK release numbers are independent of Porter's own app version. While the SDK is `0.x`:
