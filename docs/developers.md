@@ -323,8 +323,9 @@ SDK release numbers are independent of Porter's own app version. While the SDK i
 
 - A minor release can add API and change behaviour this guide documents. Read the release notes
   before bumping.
-- An app built against an earlier `0.x` keeps working with a newer Porter, and a newer SDK does not
-  require a newer Porter unless a release note says so.
+- An app built against SDK 0.7.0 or a later `0.x` keeps working with a newer Porter, and a newer SDK
+  does not require a newer Porter unless a release note says so. An app built against 0.1.0 does not
+  connect to Porter 0.7.0 or newer; move it to the current SDK.
 - Compatibility is at source level only: a library compiled against an earlier `0.x` has to be
   recompiled against the new SDK.
 

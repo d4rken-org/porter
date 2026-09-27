@@ -5,18 +5,24 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
+import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import eu.darken.porter.manager.utils.SettingsPage
 
 object SettingsHelper {
 
+    /** Android 17 can report ADB_ENABLED as 0 to apps while USB debugging is on. */
+    fun isAdbEnabledSettingTrusted(): Boolean = Build.VERSION.SDK_INT < 37
+
     fun launchOrHighlightWirelessDebugging(context: Context) {
         val adbEnabled = Settings.Global.getInt(context.contentResolver, Settings.Global.ADB_ENABLED, 0)
-        if (adbEnabled > 0) {
-            SettingsPage.Developer.WirelessDebugging.launch(context)
-        } else SettingsPage.Developer.HighlightWirelessDebugging.launch(context)
+        wirelessDebuggingPage(adbEnabled, isAdbEnabledSettingTrusted()).launch(context)
     }
+
+    internal fun wirelessDebuggingPage(adbEnabled: Int, adbEnabledTrusted: Boolean): SettingsPage.Developer =
+        if (adbEnabled > 0 || !adbEnabledTrusted) SettingsPage.Developer.WirelessDebugging
+        else SettingsPage.Developer.HighlightWirelessDebugging
 
     /** Returns false instead of throwing when the system denies the write. */
     fun tryPutGlobalInt(cr: ContentResolver, name: String, value: Int): Boolean =

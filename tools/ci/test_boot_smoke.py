@@ -4,6 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
+import xml.etree.ElementTree as ET
 
 
 spec = importlib.util.spec_from_file_location("boot_smoke", Path(__file__).with_name("boot-smoke.py"))
@@ -151,6 +152,30 @@ class StartedByManagerTest(unittest.TestCase):
         self.smoke.adb = Mock(return_value="")
         self.smoke.started_by_manager()
         self.smoke.adb.assert_not_called()
+
+
+class NotificationTapTest(unittest.TestCase):
+    def setUp(self):
+        self.smoke, directory = runner()
+        self.addCleanup(directory.cleanup)
+        self.smoke.shell = Mock()
+        self.shade = ET.fromstring(f'''<hierarchy><node package="{boot.SYSTEMUI}"
+            resource-id="{boot.SYSTEMUI}:id/expandableNotificationRow">
+            <node text="Porter" package="{boot.SYSTEMUI}" />
+            <node text="Start" package="{boot.SYSTEMUI}" enabled="true" bounds="[100,500][300,600]" />
+            </node></hierarchy>''')
+        patcher = patch.object(boot.base, "TAP_SETTLE", 0)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    @patch.object(boot.base.subprocess, "run", return_value=boot.base.subprocess.CompletedProcess(["adb"], 0, b"", b""))
+    def test_an_unanswered_action_leaves_evidence_for_every_attempt(self, run):
+        self.smoke.ui = Mock(return_value=self.shade)
+        with self.assertRaisesRegex(AssertionError, "'Start' in 'Porter' 3 times.*unanswered-tap-3.txt"):
+            self.smoke.tap_notification_action("Porter", "Start")
+        self.assertEqual(run.call_count, boot.base.TAP_ATTEMPTS)
+        self.assertIn("'Start' in 'Porter' at 200,550: screen unchanged",
+                      (self.smoke.output / "unanswered-tap-1.txt").read_text())
 
 
 class CaseSelectionTest(unittest.TestCase):
