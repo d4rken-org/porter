@@ -173,10 +173,14 @@ class Boot(base.Smoke):
             if screenshot and attempt == 0:
                 self.screenshot(screenshot)
             self.shell("input", "tap", x, y)
-            if self.heard(before):
+            reason = self.unanswered(before)
+            if reason is None:
                 return
-            print(f"NOTE the screen did not answer a tap on '{action}' in '{title}'", flush=True)
-        raise AssertionError(f"Tapped '{action}' in '{title}' {base.TAP_ATTEMPTS} times and the screen never changed")
+            evidence = self.unanswered_tap_evidence(f"'{action}' in '{title}'", x, y, reason, before)
+            print(f"NOTE the screen did not answer a tap on '{action}' in '{title}' ({reason}); see {evidence}",
+                  flush=True)
+        raise AssertionError(f"Tapped '{action}' in '{title}' {base.TAP_ATTEMPTS} times and the screen never "
+                             f"answered; see {evidence}")
 
     def started_by_manager(self):
         """Evidence that the manager's own ADB client made the connection, read from its debug
