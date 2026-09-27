@@ -5,6 +5,14 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      image:
+        # Pushes and pull requests always run google_apis. Android 7 and 9 have no ATD image, so
+        # they keep google_apis whatever is picked here, and the TV entry keeps its own.
+        description: System image for the smoke suites
+        type: choice
+        options: [google_apis, google_atd, aosp_atd]
+        default: google_apis
 
 permissions:
   contents: read
@@ -103,6 +111,7 @@ jobs:
     env:
       SHIZUKU_SHA256: 6e273ab0e991c4e79bc8b1bbb9b9dd739ccac1a8712a541a214078886b7b790f
       DEVICE_TESTS: ${{ needs.changes.outputs.devices }}
+      EMULATOR_IMAGE: ${{ matrix.target || ((matrix.api == 24 || matrix.api == 28) && 'google_apis') || inputs.image || 'google_apis' }}
     strategy:
       fail-fast: false
       matrix:
@@ -203,15 +212,14 @@ jobs:
         if: env.DEVICE_TESTS == 'true'
         env:
           EMULATOR_API: ${{ matrix.api }}
-          EMULATOR_TARGET: ${{ matrix.target || 'google_apis' }}
           EMULATOR_ARCH: ${{ matrix.arch || 'x86_64' }}
-        run: python3 tools/ci/install-sdk.py platform-tools "build-tools;37.0.0" "platforms;android-$EMULATOR_API" emulator "system-images;android-$EMULATOR_API;$EMULATOR_TARGET;$EMULATOR_ARCH"
+        run: python3 tools/ci/install-sdk.py platform-tools "build-tools;37.0.0" "platforms;android-$EMULATOR_API" emulator "system-images;android-$EMULATOR_API;$EMULATOR_IMAGE;$EMULATOR_ARCH"
       - name: Run real Binder and permission scenarios
         if: env.DEVICE_TESTS == 'true'
         uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d #v2.38.0
         with:
           api-level: ${{ matrix.api }}
-          target: ${{ matrix.target || 'google_apis' }}
+          target: ${{ env.EMULATOR_IMAGE }}
           arch: ${{ matrix.arch || 'x86_64' }}
           profile: ${{ matrix.profile || 'pixel_2' }}
           avd-name: porter-ci
