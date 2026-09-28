@@ -115,6 +115,12 @@
     <string name="settings_tcp_port_default">Default (5555)</string>
     <string name="settings_user_interface">Appearance</string>
     <string name="settings_support">Support</string>
+    <string name="settings_general">General</string>
+    <string name="settings_general_summary">Theme and update check</string>
+    <string name="settings_general_summary_theme">Theme</string>
+    <string name="settings_startup_summary">Start on boot, watchdog and service updates</string>
+    <string name="settings_startup_attention">Background operation or alerts need attention</string>
+    <string name="settings_updates">Updates</string>
 
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Port must be between 1 and 65535</string>

@@ -132,6 +132,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".settings.GeneralSettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_general" />
+        <activity
+            android:name=".settings.StartupSettingsActivity"
+            android:exported="false"
+            android:label="@string/porter_startup" />
+        <activity
             android:name=".starter.StarterActivity"
             android:label="@string/starter" />
         <activity android:name=".settings.AcknowledgementsActivity" android:exported="false" />

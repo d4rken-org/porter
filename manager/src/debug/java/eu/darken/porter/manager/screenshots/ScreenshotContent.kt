@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import eu.darken.porter.common.DiscoveredApplication
@@ -155,7 +154,7 @@ private fun runningStatusUi(): ServiceStatusUi = serviceStatusUi(ServiceSnapshot
 
 private val noHomeActions = HomeActions({}, {}, {}, {}, {}, {}, {}, {}, {})
 
-private val noSettingsActions = SettingsActions({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+private val noSettingsActions = SettingsActions({}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 
 private fun homeState(
     statusUi: ServiceStatusUi,
@@ -171,23 +170,7 @@ private fun homeState(
     canStart = !running, wirelessAdbAvailable = true, tlsSupported = true,
 )
 
-/** Row values come from the real arrays, so a localized render shows the localized choice. */
-@Composable
 private fun settingsState() = SettingsUiState(
-    startOnBoot = true,
-    startOnBootEnabled = true,
-    watchdog = true,
-    autoUpdateService = false,
-    autoUpdateServiceEnabled = true,
-    showPairingMethod = true,
-    pairingMethodLabel = stringArrayResource(R.array.porter_pairing_methods)[0],
-    showTcpPort = false,
-    tcpPortLabel = stringResource(R.string.settings_tcp_port_default),
-    tcpPortNeedsRestart = false,
-    themeModeLabel = stringArrayResource(R.array.night_mode)[2],
-    themeStyleLabel = stringArrayResource(R.array.porter_theme_styles)[0],
-    themeColorLabel = stringArrayResource(R.array.porter_theme_colors)[0],
-    themeColorEnabled = true,
     versionName = BuildConfig.VERSION_NAME,
 )
 
