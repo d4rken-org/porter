@@ -172,6 +172,8 @@ private fun homeState(
 
 private fun settingsState() = SettingsUiState(
     versionName = BuildConfig.VERSION_NAME,
+    updateCheckSupported = false,
+    startupNeedsAttention = false,
 )
 
 // --- Shots -------------------------------------------------------------------------------------
