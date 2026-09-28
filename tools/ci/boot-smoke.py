@@ -76,12 +76,8 @@ class Boot(base.Smoke):
         self.shell("pm", "grant", base.MANAGER, "android.permission.WRITE_SECURE_SETTINGS")
         self.shell("pm", "grant", base.MANAGER, "android.permission.POST_NOTIFICATIONS", check=False)
         self.shell("dumpsys", "deviceidle", "whitelist", "+" + base.MANAGER)
-        self.home()
+        self.open_home()
         assert not self.pid("porter_server"), "a server was already running before the app started one"
-
-    def home(self):
-        self.shell("am", "start", "-W", "-f", "0x04000000", "-n",
-                   base.MANAGER + "/eu.darken.porter.manager.MainActivity")
 
     def offer_tcp_adb(self):
         """Puts adbd on TCP, which is what a user enabling wireless debugging leaves behind."""
@@ -233,7 +229,7 @@ class Boot(base.Smoke):
                 return self.shell("settings", "get", "global", "adb_wifi_enabled") == "1"
 
             self.shell("pm", "grant", base.MANAGER, "android.permission.NEARBY_WIFI_DEVICES", check=False)
-            self.home()
+            self.open_home()
             self.tap("Pairing", scroll=True, screenshot="home-pairing")
             self.until("Porter searches for the pairing service", lambda: notified("Searching for pairing service"))
 
@@ -276,7 +272,7 @@ class Boot(base.Smoke):
         def app_adb_start():
             """The manager's own wireless start, over loopback, with its own ADB key."""
             self.offer_tcp_adb()
-            self.home()
+            self.open_home()
             # The wireless-debugging card's own Start button. Asserting the card first means a
             # layout change fails here rather than silently tapping a different Start.
             assert self.locate("Start via Wireless debugging"), "the wireless start card is gone"
@@ -284,7 +280,7 @@ class Boot(base.Smoke):
             pid = self.until("a server the app started", lambda: self.pid("porter_server"), timeout=120)
             self.started_by_manager()
             self.until("the server sent its binders", lambda: "sent binders" in self.server_log(pid))
-            self.home()
+            self.open_home()
             assert self.locate("Running via ADB", prefix=True), "the manager does not report an ADB start"
 
             self.launch_probe(base.NATIVE)
@@ -311,7 +307,7 @@ class Boot(base.Smoke):
                 self.shell("run-as", base.MANAGER, "sh", "-c", write)
             # A force-stopped package receives no broadcast that names only its package, and a
             # device whose automation fires has the manager in its ordinary state.
-            self.home()
+            self.open_home()
             server = self.pid("porter_server")
             assert server, "app-adb-start left no server running"
             # A STOP that reaches a manager still waiting for its binder is dropped, not deferred.
@@ -346,7 +342,7 @@ class Boot(base.Smoke):
 
         def toggle_start_on_boot(enable):
             """Leaves the setting in the asked-for state, whatever it was before."""
-            self.home()
+            self.open_home()
             self.tap("Settings", desc="Settings")
             if start_on_boot_is(enable):
                 return
@@ -389,7 +385,7 @@ class Boot(base.Smoke):
 
             self.shell("am", "force-stop", base.MANAGER)
             self.clear_logcat()
-            self.home()
+            self.open_home()
             # The manager's own word that the delivery arrived and was turned down: a server that
             # merely survived could also have won a race against a start that was attempted.
             self.until("the manager turned down the repeated BOOT_COMPLETED",

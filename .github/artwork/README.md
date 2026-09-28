@@ -40,6 +40,7 @@ between Cairo versions. Review generated images before committing them.
 
 Adaptive layers use a 108dp canvas with the artwork inside the central 66dp
 safe circle. The generator also produces legacy launcher icons, notification
-artwork, the three 44dp home-screen mascots, and an Android TV banner. The GitHub
+artwork, the three 44dp home-screen mascots, 640px neutral and happy mascots for
+onboarding, and an Android TV banner. The GitHub
 README and website share `docs/assets/porter-banner.png` at its original size
 and aspect ratio.

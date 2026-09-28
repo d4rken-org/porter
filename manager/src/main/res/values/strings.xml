@@ -452,6 +452,20 @@
     <string name="porter_contact_description_error">Please add some details (at least 20 characters).</string>
     <string name="porter_contact_expected_error">Please describe what you expected.</string>
     <string name="porter_contact_no_email">Install or enable an email app to open this draft. You can also share saved logs or contact us through GitHub or Discord.</string>
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_welcome_title">Welcome to Porter</string>
+    <string name="onboarding_welcome_body">Porter gives your apps ADB access, so they can do things that normally need a computer. You decide which apps get it.</string>
+    <string name="onboarding_welcome_service">Porter starts a small service once, and the apps you approve use it directly on your device.</string>
+    <string name="onboarding_welcome_beta">This is a beta (testing) build. Proceed with a sense of humor and a backup plan. Please report issues you encounter.</string>
+    <string name="onboarding_shizuku_title">Shizuku is installed</string>
+    <string name="onboarding_shizuku_body">Porter is a maintained fork of Shizuku, and the two can run side by side. Apps that support Porter can use Porter, while other apps keep using Shizuku.</string>
+    <string name="onboarding_shizuku_replace">You can also let Porter replace Shizuku, so apps built only for Shizuku use Porter instead. It\'s up to you. You can decide later under Settings → Shizuku compatibility, and the compatibility guide explains which options your installation supports.</string>
+    <string name="onboarding_shizuku_guide">Compatibility guide</string>
+    <string name="onboarding_privacy_title">Privacy</string>
+    <string name="onboarding_privacy_body">Porter does not collect, track or sell your information. It has no ads, no analytics and no account.</string>
+    <string name="onboarding_privacy_policy">Privacy policy</string>
+    <string name="onboarding_get_started">Get started</string>
+    <string name="onboarding_save_failed">Couldn\'t save. Try again.</string>
 
     <!-- Updater -->
     <string name="updater_card_title">Update available</string>

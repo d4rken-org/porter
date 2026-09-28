@@ -365,6 +365,8 @@ class MockedDevice:
         runner.until = Mock(side_effect=self.until)
         runner.start_service = Mock(side_effect=self.start_service)
         runner.launch_bridge = Mock(side_effect=self.launch_bridge)
+        # No screen to complete onboarding on, so Home opens as a start and nothing else.
+        runner.open_home = Mock()
         runner.case = lambda name, action, restore=(): self.bodies.__setitem__(name, action)
         self.runner = runner
         runner.run()

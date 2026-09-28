@@ -133,16 +133,19 @@ small = ImageOps.contain(manager_monochrome, (88, 88), RESAMPLE)
 notification.alpha_composite(small, ((96 - small.width) // 2, (96 - small.height) // 2))
 save(notification, ROOT / 'manager/src/main/res/drawable-xxxhdpi/ic_system_icon.png')
 
-def mascot(name):
-    canvas = Image.new('RGBA', (176, 176))
+def mascot(name, size=176):
+    canvas = Image.new('RGBA', (size, size))
     body = ImageOps.contain(silhouette(name), canvas.size, RESAMPLE)
-    canvas.alpha_composite(body, ((176 - body.width) // 2, (176 - body.height) // 2))
+    canvas.alpha_composite(body, ((size - body.width) // 2, (size - body.height) // 2))
     return canvas
 
 
 save(mascot('mascot'), ROOT / 'manager/src/main/res/drawable-xxxhdpi/porter_mascot.png')
 save(mascot('mascot-happy'), ROOT / 'manager/src/main/res/drawable-xxxhdpi/porter_mascot_happy.png')
 save(mascot('mascot-unhappy'), ROOT / 'manager/src/main/res/drawable-xxxhdpi/porter_mascot_unhappy.png')
+save(mascot('mascot', 640), ROOT / 'manager/src/main/res/drawable-nodpi/porter_mascot_large.png')
+save(mascot('mascot-happy', 640),
+     ROOT / 'manager/src/main/res/drawable-nodpi/porter_mascot_happy_large.png')
 
 banner = Image.open(SOURCE / 'banner.png').convert('RGB')
 def padded_banner(size):
@@ -157,4 +160,5 @@ save(banner, assets / 'porter-banner.png')
 save(manager_legacy, assets / 'porter-icon.png')
 save(manager_legacy.resize((32, 32), RESAMPLE), assets / 'favicon.png')
 print('Updated launcher icons on the mint and companion plates, adaptive, monochrome, '
-      'notification, neutral, happy and unhappy mascots, TV and website artwork.')
+      'notification, neutral, happy and unhappy mascots, large neutral and happy mascots, TV and '
+      'website artwork.')

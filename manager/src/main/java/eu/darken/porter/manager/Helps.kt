@@ -8,6 +8,7 @@ object Helps {
     const val SOURCE = "https://github.com/d4rken-org/porter"
     const val STOPPING = WEBSITE + "troubleshooting#porter-keeps-stopping"
     const val STARTUP = WEBSITE + "troubleshooting#automatic-start-does-not-work"
+    const val PRIVACY = WEBSITE + "privacy"
 
     val ADB = MultiLocaleEntity().apply { put("en", WEBSITE + "setup#with-a-computer") }
     val ADB_ANDROID11 = MultiLocaleEntity().apply { put("en", WEBSITE + "setup#wireless-debugging") }
