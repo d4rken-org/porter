@@ -22,6 +22,7 @@ LEGACY = "eu.darken.porter.probe.legacy"
 # not something standing in front of it; the derived suites add their own.
 UNDER_TEST = {MANAGER, COMPAT, NATIVE, LEGACY}
 PERMISSION = "eu.darken.porter.permission.API"
+FORCE_PM_FALLBACK = "debug.porter.pm_fallback"
 LEGACY_PERMISSION = "moe.shizuku.manager.permission.API_V23"
 # What each probe reports on its BINDER line: the Porter protocol version from the porter
 # flavour, the Shizuku API level from the legacy one. Different numbers, different meanings.
@@ -53,8 +54,8 @@ TRANSPORT_BACKOFF = 2
 # next one.
 LOGCAT_CLEAR_ATTEMPTS = 5
 # The order run() declares, which --case narrows without ever reordering.
-CASES = ("setup", "standalone", "app-list-grant", "debug-recording", "compatibility", "coexistence", "porsh",
-         "server-crash-recovery", "root-server", "decisions-across-start-modes",
+CASES = ("setup", "standalone", "app-list-grant", "app-list-fallback", "debug-recording", "compatibility",
+         "coexistence", "porsh", "server-crash-recovery", "root-server", "decisions-across-start-modes",
          "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
          "foreign-signer-peeks", "foreign-signer-binds", "foreign-signer-never-binds",
          "non-daemon-control", "daemon-revoked-in-settings",
@@ -837,6 +838,9 @@ class Smoke:
             for package, apk in ((NATIVE, self.args.native), (LEGACY, self.args.legacy)):
                 self.adb("uninstall", package, check=False)
                 self.adb("install", str(apk.resolve()))
+        if "pm-fallback" in aspects:
+            self.shell("setprop", FORCE_PM_FALLBACK, "0")
+            assert self.shell("getprop", FORCE_PM_FALLBACK) == "0", "the forced fallback is still set"
         if "grants" in aspects:
             for package, permission in ((NATIVE, PERMISSION), (LEGACY, LEGACY_PERMISSION)):
                 self.shell("pm", "revoke", package, permission, check=False)
@@ -1006,6 +1010,17 @@ class Smoke:
             self.tap(NATIVE, scroll=True)
             self.until("switching the app off stops it", lambda: not self.pid(NATIVE))
         self.case("app-list-grant", app_list_grant, restore=("grants",))
+
+        def app_list_fallback():
+            # CI's emulators answer the context lookup, so only this reaches the hidden-API path.
+            self.shell("setprop", FORCE_PM_FALLBACK, "1")
+            server = self.pid("porter_server")
+            self.open_home()
+            self.tap("Applications")
+            self.until(f"{NATIVE} in the app list", lambda: self.locate(NATIVE, scroll=True))
+            forced = self.adb("logcat", "-d", "--pid=" + server, "-s", "InstalledPackagesCompat:I", "*:S")
+            assert "Hidden API lookup forced" in forced, "The server never took the hidden-API path"
+        self.case("app-list-fallback", app_list_fallback, restore=("pm-fallback",))
 
         def debug_recording():
             if int(self.shell("getprop", "ro.build.version.sdk")) >= 33:
