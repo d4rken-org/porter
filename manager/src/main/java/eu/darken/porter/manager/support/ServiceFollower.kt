@@ -29,6 +29,8 @@ internal class ServiceFollower(
     private val operations: Operations,
     private val directory: File,
     private val deadlineElapsed: Long,
+    private val recordingStart: Long,
+    private val session: ClockAnchors.Reading,
     private val anchors: ClockAnchors,
     private val scope: CoroutineScope,
 ) {
@@ -36,7 +38,7 @@ internal class ServiceFollower(
         fun readInfo(binder: IBinder): ServerDiagnostics.Info?
         fun requestLease(binder: IBinder, token: IBinder, durationMs: Long): Long?
         fun releaseLease(binder: IBinder, token: IBinder)
-        fun openStream(binder: IBinder, pid: Int, directory: File, since: String): ServerDiagnostics.ServerStream?
+        fun openStream(binder: IBinder, pid: Int, directory: File, since: String?): ServerDiagnostics.ServerStream?
         suspend fun captureMetadata(binder: IBinder, file: File)
     }
 
@@ -47,7 +49,7 @@ internal class ServiceFollower(
         override fun releaseLease(binder: IBinder, token: IBinder) {
             ServerDiagnostics.requestDebugLogging(binder, token, 0)
         }
-        override fun openStream(binder: IBinder, pid: Int, directory: File, since: String) =
+        override fun openStream(binder: IBinder, pid: Int, directory: File, since: String?) =
             ServerDiagnostics.openStream(binder, pid, directory, since)
         override suspend fun captureMetadata(binder: IBinder, file: File) =
             ServerDiagnostics.captureMetadata(context, binder, file, anchors)
@@ -132,7 +134,8 @@ internal class ServiceFollower(
             null
         }
         note("Service binder arrived attach=$attach pid=${pid ?: "unknown"}")
-        anchors.append(events, "attach $attach")
+        val reading = anchors.read()
+        anchors.append(events, "attach $attach", reading)
         val metadata = File(directory, "server-attach-$attach-${if (pid != null) "pid$pid" else "unknown"}.txt")
         try {
             operations.captureMetadata(binder, metadata)
@@ -143,23 +146,24 @@ internal class ServiceFollower(
         }
         acquireLease(instance)
         currentCoroutineContext().ensureActive()
+        val replay = pid?.let { chooseServerReplay(it, recordingStart, session, reading, directory) }
+        replay?.note?.let(::note)
         val handle = pid?.let {
             try {
-                // -T 1 follows without replaying the retained backlog, which -t would charge against the cap.
-                operations.openStream(binder, it, directory, "1")
+                operations.openStream(binder, it, directory, replay?.since)
             } catch (e: Exception) {
                 Log.w(TAG, "Opening the server stream failed", e)
                 null
             }
         }
-        if (handle == null) {
+        if (pid == null || handle == null) {
             note("Server stream unavailable")
             return
         }
         instance.stream = handle
         // A cancel that landed while the stream was opening is honoured before a reader exists.
         currentCoroutineContext().ensureActive()
-        note("Server stream attached pid=$pid attach=$attach")
+        note(attachedNote(pid, reading.bootCount, attach, replay?.since))
         instance.reader = scope.launch { readServerStream(handle, directory, SERVER_MAX_LOG_BYTES) }
     }
 

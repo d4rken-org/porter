@@ -53,7 +53,7 @@ internal class FakeProcess : Process() {
 internal class FakeOperations : ServiceFollower.Operations {
     data class Call(val operation: String, val binder: IBinder)
     data class Lease(val binder: IBinder, val token: IBinder, val durationMs: Long)
-    class Opened(val binder: IBinder, val pid: Int, val since: String, val input: BlockingInput, val remote: FakeRemote) {
+    class Opened(val binder: IBinder, val pid: Int, val since: String?, val input: BlockingInput, val remote: FakeRemote) {
         val stream = ServerDiagnostics.ServerStream(pid, input, ByteArrayInputStream(ByteArray(0)), Job().apply { complete() }, remote)
         val isClosed get() = input.isClosed && remote.destroyed
     }
@@ -90,7 +90,7 @@ internal class FakeOperations : ServiceFollower.Operations {
         releases += Lease(binder, token, 0)
     }
 
-    override fun openStream(binder: IBinder, pid: Int, directory: File, since: String): ServerDiagnostics.ServerStream? {
+    override fun openStream(binder: IBinder, pid: Int, directory: File, since: String?): ServerDiagnostics.ServerStream? {
         calls += Call("openStream", binder)
         if (!open(binder)) return null
         val opened = Opened(binder, pid, since, BlockingInput(), FakeRemote())

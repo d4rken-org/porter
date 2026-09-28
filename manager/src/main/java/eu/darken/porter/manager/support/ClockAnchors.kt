@@ -61,8 +61,8 @@ internal class ClockAnchors(private val clocks: Clocks) {
     }
 
     /** Never throws, because the follower may not. */
-    fun append(events: File, label: String) {
-        runCatching { events.appendText(line(label) + "\n") }
+    fun append(events: File, label: String, reading: Reading? = null) {
+        runCatching { events.appendText(line(label, reading ?: read()) + "\n") }
     }
 
     fun metadata(reading: Reading = read()) = with(reading) {

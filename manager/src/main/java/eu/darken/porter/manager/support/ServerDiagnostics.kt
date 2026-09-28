@@ -164,8 +164,11 @@ internal object ServerDiagnostics {
         }
     }
 
-    /** Streams the log of [pid] from [binder]'s service, passing [since] to logcat's -T. */
-    fun openStream(binder: IBinder, pid: Int, directory: File, since: String): ServerStream? {
+    /**
+     * Streams the log of [pid] from [binder]'s service, passing [since] to logcat's -T, or from
+     * everything logcat still retains for [pid] when that is null.
+     */
+    fun openStream(binder: IBinder, pid: Int, directory: File, since: String?): ServerStream? {
         val notes = File(directory, "server-stream.txt")
         var remote: IPorterRemoteProcess? = null
         var input: InputStream? = null
@@ -193,11 +196,11 @@ internal object ServerDiagnostics {
     // nothing destroys it once the server is gone. This supervisor is that missing reaper: the trap
     // precedes the spawn (with `pending` for a TERM in between) so an immediate teardown cannot
     // orphan the child, and the poll is 2s because a trap does not interrupt sleep.
-    private fun supervisor(pid: Int, since: String) = listOf(
+    internal fun supervisor(pid: Int, since: String?) = listOf(
         "pending=0",
         "c=",
         "trap 'if [ -n \"\$c\" ]; then kill \$c 2>/dev/null; exit 0; else pending=1; fi' TERM INT",
-        "logcat -v threadtime --pid=$pid -T $since &",
+        "logcat -v threadtime --pid=$pid${since?.let { " -T $it" }.orEmpty()} &",
         "c=\$!",
         "[ \"\$pending\" = 1 ] && { kill \$c 2>/dev/null; exit 0; }",
         "while kill -0 \$c 2>/dev/null && kill -0 $pid 2>/dev/null; do sleep 2; done",

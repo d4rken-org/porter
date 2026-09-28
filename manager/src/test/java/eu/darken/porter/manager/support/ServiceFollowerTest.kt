@@ -36,6 +36,7 @@ class ServiceFollowerTest {
     private val directory by lazy { temporary.newFolder() }
     private val binders = MutableStateFlow<IBinder?>(null)
     private val anchors = ClockAnchors(FixedClocks(elapsedMs = 1_000L))
+    private val recordingStart = 1_790_607_900_000L
 
     @After fun cancelEverything() {
         scope.cancel()
@@ -44,7 +45,7 @@ class ServiceFollowerTest {
     private fun service(pid: Int?) = Binder().also { binder -> pid?.let { synchronized(operations.pids) { operations.pids[binder] = it } } }
 
     private fun follower(flow: Flow<IBinder?> = binders, deadline: Long = 601_000L) =
-        ServiceFollower(flow, operations, directory, deadline, anchors, scope).also { it.start() }
+        ServiceFollower(flow, operations, directory, deadline, recordingStart, anchors.read(), anchors, scope).also { it.start() }
 
     private fun events() = File(directory, "events.txt").takeIf { it.isFile }?.readText().orEmpty()
     private fun awaitEvent(line: String) = eventually(message = { "missing \"$line\" in:\n${events()}" }) { events().contains(line) }
@@ -57,7 +58,7 @@ class ServiceFollowerTest {
         val service = service(4321)
 
         binders.value = service
-        awaitEvent("Server stream attached pid=4321 attach=1 at ")
+        awaitEvent("Server stream attached pid=4321 boot=7 attach=1 replay=1790607900.000 at ")
 
         assertTrue(events().contains("Service binder arrived attach=1 pid=4321 at "))
         assertEquals(listOf(File(directory, "server-attach-1-pid4321.txt")), operations.metadata)
@@ -67,8 +68,23 @@ class ServiceFollowerTest {
         assertTrue(events().contains("Debug logging granted for 600000ms at "))
         val stream = operations.streams.single()
         assertSame(service, stream.binder)
-        assertEquals("1", stream.since)
+        assertEquals("1790607900.000", stream.since)
         assertEquals(1, count("Waiting for Porter service"))
+    }
+
+    @Test fun aReturningInstanceReplaysFromWhereItsLogStopped() {
+        follower()
+        binders.value = service(1)
+        awaitEvent("Server stream attached pid=1 boot=7 attach=1")
+        val log = File(directory, "server.log")
+        eventually { log.isFile }
+        binders.value = null
+        awaitEvent("Server stream ended pid=1")
+        assertTrue(log.setLastModified(1_790_607_950_000L))
+
+        binders.value = service(1)
+        awaitEvent("Server stream attached pid=1 boot=7 attach=2 replay=1790607950.000 at ")
+        assertEquals("1790607950.000", operations.streams[1].since)
     }
 
     @Test fun aReplacementMovesTheLeaseAndTheStream() {
@@ -76,11 +92,11 @@ class ServiceFollowerTest {
         val old = service(1)
         val new = service(2)
         binders.value = old
-        awaitEvent("Server stream attached pid=1 attach=1")
+        awaitEvent("Server stream attached pid=1 boot=7 attach=1")
         val oldLease = operations.leases.single()
 
         binders.value = new
-        awaitEvent("Server stream attached pid=2 attach=2")
+        awaitEvent("Server stream attached pid=2 boot=7 attach=2")
 
         assertEquals(listOf(FakeOperations.Lease(old, oldLease.token, 0)), operations.releases.toList())
         assertTrue(operations.streams[0].isClosed)
@@ -115,7 +131,7 @@ class ServiceFollowerTest {
         awaitEvent("Service binder lost")
 
         binders.value = service(2)
-        awaitEvent("Server stream attached pid=2 attach=2")
+        awaitEvent("Server stream attached pid=2 boot=7 attach=2")
 
         assertEquals(0, count("Service replaced"))
     }
@@ -148,7 +164,7 @@ class ServiceFollowerTest {
         assertTrue(events().contains("Debug logging failed at "))
 
         binders.value = service(2)
-        awaitEvent("Server stream attached pid=2 attach=2")
+        awaitEvent("Server stream attached pid=2 boot=7 attach=2")
         assertTrue(events().contains("Debug logging granted for "))
     }
 
@@ -198,7 +214,7 @@ class ServiceFollowerTest {
         operations.onReadInfo = { if (it === first) binders.value = second }
 
         binders.value = first
-        awaitEvent("Server stream attached pid=2 attach=2")
+        awaitEvent("Server stream attached pid=2 boot=7 attach=2")
 
         val attach = operations.calls.takeWhile { it.operation != "releaseLease" }
         assertEquals(listOf("readInfo", "captureMetadata", "requestLease", "openStream"), attach.map { it.operation })
@@ -256,14 +272,14 @@ class ServiceFollowerTest {
         follower()
 
         binders.value = service(10)
-        awaitEvent("Server stream attached pid=10 attach=4")
+        awaitEvent("Server stream attached pid=10 boot=7 attach=4")
         assertTrue(File(directory, "server-attach-4-pid10.txt").isFile)
     }
 
     @Test fun anAttachIsAnchoredRightAfterItsArrival() {
         follower()
         binders.value = service(4321)
-        awaitEvent("Server stream attached pid=4321 attach=1")
+        awaitEvent("Server stream attached pid=4321 boot=7 attach=1")
 
         assertEquals(anchors.line("attach 1"), lineAfter("Service binder arrived attach=1 pid=4321 at "))
     }
@@ -285,7 +301,7 @@ class ServiceFollowerTest {
         awaitEvent("Server stream attached pid=1")
 
         binders.value = service(2)
-        awaitEvent("Server stream attached pid=2 attach=2")
+        awaitEvent("Server stream attached pid=2 boot=7 attach=2")
 
         assertEquals(anchors.line("replaced"), lineAfter("Service replaced at "))
         assertEquals(anchors.line("attach 2"), lineAfter("Service binder arrived attach=2 pid=2 at "))

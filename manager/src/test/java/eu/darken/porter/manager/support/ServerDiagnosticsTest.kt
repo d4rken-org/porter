@@ -143,6 +143,17 @@ class ServerDiagnosticsTest {
         assertEquals(0L, requested)
     }
 
+    @Test fun aCutoffIsPassedToLogcat() {
+        assertTrue(ServerDiagnostics.supervisor(4321, "1790607903.123").lines()
+            .contains("logcat -v threadtime --pid=4321 -T 1790607903.123 &"))
+    }
+
+    @Test fun noCutoffReplaysTheRetainedBacklog() {
+        val script = ServerDiagnostics.supervisor(4321, null)
+        assertTrue(script.lines().contains("logcat -v threadtime --pid=4321 &"))
+        assertFalse(script.contains("-T"))
+    }
+
     @Test fun serviceWithoutDiagnosticsTransactionYieldsNothing() {
         assertNull(ServerDiagnostics.readInfo(Binder()))
     }

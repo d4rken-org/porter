@@ -124,7 +124,8 @@ class DebugRecorder internal constructor(
         val deadline = anchors.elapsedNow() + remaining
         val events = File(directory, "events.txt")
         events.appendText("Recording manager pid=${Process.myPid()} at ${wallClock()}\n")
-        anchors.append(events, if (fresh) "start" else "resume")
+        val session = anchors.read()
+        anchors.append(events, if (fresh) "start" else "resume", session)
         val child = managerLog(Process.myPid())
         try {
             process = child
@@ -143,7 +144,7 @@ class DebugRecorder internal constructor(
             }
             timer = scope.launch { delay(remaining); scope.launch { stop(child) } }
             ServerDiagnostics.captureMetadata(appContext, directory, "start", anchors)
-            follower = ServiceFollower(binders, serviceOperations, directory, deadline, anchors, scope).also { it.start() }
+            follower = ServiceFollower(binders, serviceOperations, directory, deadline, started, session, anchors, scope).also { it.start() }
             watchServiceState(directory)
         } catch (e: Exception) {
             process = null
