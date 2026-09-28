@@ -37,6 +37,7 @@ import eu.darken.porter.manager.management.AppsViewModel
 import eu.darken.porter.manager.onboarding.OnboardingActivity
 import eu.darken.porter.manager.management.ApplicationManagementActivity
 import eu.darken.porter.manager.settings.SettingsActivity
+import eu.darken.porter.manager.settings.StartupSettingsActivity
 import eu.darken.porter.manager.ui.*
 import eu.darken.porter.manager.updater.Asset
 import eu.darken.porter.manager.updater.UpdateInstaller
@@ -263,6 +264,7 @@ abstract class HomeActivity : ComposeActivity() {
                 onUpdateIgnore = { updates.dismiss() },
                 onUpdateChangelog = { update?.let { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, it.release.changelogUrl) } },
                 onUpdateDownload = { updateDialog = true },
+                onOpenStartupSettings = { startActivity(Intent(this@HomeActivity, StartupSettingsActivity::class.java)) },
             ),
         )
         if (updateDialog && update != null && updateApk != null) UpdateDownloadDialog(updateApk.fileName, snapshot.canInstallUpdate,

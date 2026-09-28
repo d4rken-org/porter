@@ -52,6 +52,7 @@ internal data class HomeActions(
     val onUpdateIgnore: () -> Unit = {},
     val onUpdateChangelog: () -> Unit = {},
     val onUpdateDownload: () -> Unit = {},
+    val onOpenStartupSettings: () -> Unit = {},
 )
 
 @Composable
@@ -145,7 +146,7 @@ internal fun HomeScreenContent(state: HomeUiState, actions: HomeActions, modifie
             }
             if (state.showBatteryCard) item {
                 HomeCard(stringResource(R.string.porter_background_operation), Icons.TwoTone.Info,
-                    actions.onOpenSettings, actionLabel = stringResource(R.string.settings_title)) {
+                    actions.onOpenStartupSettings, actionLabel = stringResource(R.string.settings_title)) {
                     Text(stringResource(R.string.snackbar_battery_optimization_home), style = MaterialTheme.typography.bodyMedium)
                 }
             }

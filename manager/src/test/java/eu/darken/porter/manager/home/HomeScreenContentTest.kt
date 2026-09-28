@@ -253,4 +253,13 @@ class HomeScreenContentTest : ComposeTest() {
         assertEquals(1, apps)
         assertEquals(1, settings)
     }
+
+    @Test fun batteryCardOpensStartupRatherThanTheSettingsIndex() {
+        var settings = 0
+        var startup = 0
+        render(state().copy(showBatteryCard = true), actions({ settings++ }).copy(onOpenStartupSettings = { startup++ }))
+        composeTestRule.onNodeWithText(string(R.string.porter_background_operation)).performClick()
+        assertEquals(1, startup)
+        assertEquals(0, settings)
+    }
 }
