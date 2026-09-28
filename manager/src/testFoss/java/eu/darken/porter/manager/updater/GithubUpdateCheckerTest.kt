@@ -96,6 +96,8 @@ class GithubUpdateCheckerTest {
     @Test fun storesThatUpdateAppsThemselvesTurnTheCheckOffByDefault() {
         assertFalse(checker(installer = "dev.imranr.obtainium").isEnabledByDefault())
         assertFalse(checker(installer = "org.fdroid.fdroid.privileged").isEnabledByDefault())
+        assertFalse(checker(installer = "org.fdroid.basic").isEnabledByDefault())
+        assertFalse(checker(installer = "org.fdroid.nightly").isEnabledByDefault())
         assertTrue(checker(installer = null).isEnabledByDefault())
         assertTrue(checker(installer = "com.android.shell").isEnabledByDefault())
     }
