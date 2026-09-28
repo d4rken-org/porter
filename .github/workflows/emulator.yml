@@ -145,6 +145,14 @@ jobs:
             arch: x86
             profile: tv_1080p
             input: --dpad
+          # Android 17 QPR1, debug and release. It has no google_atd image.
+          - api: '37.1'
+            suite: emulator
+            target: google_apis_ps16k
+          - api: '37.1'
+            suite: emulator
+            target: google_apis_ps16k
+            build: release
           # The minified manager, for what R8 can break: entry points started by name, JNI
           # registration, reflection. Combinations of their own, which the suite-keyed entries
           # above do not reach, so each carries its own extra.
