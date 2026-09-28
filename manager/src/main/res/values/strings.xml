@@ -466,10 +466,25 @@
     <string name="updater_channel_beta">Beta</string>
     <string name="updater_channel_production_choice">Production: full releases only</string>
     <string name="updater_channel_beta_choice">Beta: newest release, including betas and pre-releases</string>
+    <string name="updater_dialog_title">Download update</string>
+    <string name="updater_download_summary">Choose where to save the APK.</string>
+    <string name="updater_install_manual">Install manually</string>
+    <string name="updater_install_manual_summary">Android\'s installer asks you to confirm.</string>
+    <string name="updater_install_automatic">Install automatically</string>
+    <string name="updater_install_automatic_summary">Uses Porter\'s ADB or root access. Porter closes while the update installs.</string>
+    <string name="updater_install_automatic_requirement">Needs Porter\'s service running on this device\'s main user.</string>
+    <string name="updater_continue">Continue</string>
+    <string name="updater_downloading">Downloading…</string>
+    <string name="updater_installing">Installing…</string>
+    <string name="updater_saved">Saved %1$s.</string>
     <string name="updater_download_failed">Download failed: %1$s</string>
     <string name="updater_download_failed_partial">Download failed: %1$s. The partially saved file may remain.</string>
     <string name="updater_not_porter">The downloaded file is not a Porter APK.</string>
     <string name="updater_not_newer">The downloaded APK is not newer than the installed Porter.</string>
     <string name="updater_automatic_unavailable">Porter\'s service is no longer available on this device\'s main user, so the update was not installed.</string>
     <string name="updater_install_failed">Install failed: %1$s</string>
+    <string name="updater_install_permission_denied">Allow Porter to install unknown apps to install the update manually.</string>
+    <string name="updater_install_permission_unavailable">This device has no screen for allowing app installation. Save the APK and install it with another installer.</string>
+    <string name="updater_installer_unavailable">Android\'s installer could not be opened.</string>
+    <string name="updater_save_unavailable">No app is available to choose where to save the APK.</string>
 </resources>
