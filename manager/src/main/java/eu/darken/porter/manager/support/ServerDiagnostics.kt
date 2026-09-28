@@ -104,11 +104,14 @@ internal object ServerDiagnostics {
         }
     }
 
-    suspend fun captureMetadata(context: Context, directory: File, phase: String) {
-        val details = File(directory, "server-$phase.txt")
+    suspend fun captureMetadata(context: Context, directory: File, phase: String, anchors: ClockAnchors) =
+        captureMetadata(context, ServerBinder.binder.value, File(directory, "server-$phase.txt"), anchors)
+
+    /** Describes [service] and nothing else, so a replacement arriving meanwhile cannot mix in. */
+    suspend fun captureMetadata(context: Context, service: IBinder?, details: File, anchors: ClockAnchors) {
         try {
-            details.writeText("Time: ${System.currentTimeMillis()}\nBoot start: ${PorterSettings.preferences.getBoolean("start_on_boot", false)}\nWatchdog: ${PorterSettings.watchdog}\n")
-            val binder = ServerBinder.binder.value?.takeIf { it.pingBinder() }
+            details.writeText("${anchors.metadata()}Boot start: ${PorterSettings.preferences.getBoolean("start_on_boot", false)}\nWatchdog: ${PorterSettings.watchdog}\n")
+            val binder = service?.takeIf { it.pingBinder() }
             if (binder == null) {
                 details.appendText("Porter service unavailable\n")
                 return
@@ -117,8 +120,10 @@ internal object ServerDiagnostics {
             if (connection != null) {
                 details.appendText("UID: ${connection.uid}\nProtocol: ${connection.serverInfo.version}\nSELinux: ${connection.seLinuxContext}\n")
             } else {
+                details.appendText("SDK connection: none for this binder\n")
                 val refused = (Porter.availability(context) as? PorterAvailability.Incompatible)?.incompatibility
-                details.appendText("SDK connection: none (${refused ?: "not attached"})\n")
+                // The SDK does not say which binder it refused; with instances replacing each other it may be another one.
+                if (refused != null) details.appendText("SDK last refused a binder, possibly another instance: $refused\n")
             }
             val info = readInfo(binder) ?: error("Service diagnostics unsupported")
             details.appendText("PID: ${info.pid}\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nInstalled build: ${PorterServiceVersion.installed.buildId}\nService build: ${info.version?.buildId ?: "unknown"}\n")
@@ -161,25 +166,19 @@ internal object ServerDiagnostics {
         }
     }
 
-    fun openStream(directory: File): ServerStream? {
+    /**
+     * Streams the log of [pid] from [binder]'s service, passing [since] to logcat's -T, or from
+     * everything logcat still retains for [pid] when that is null.
+     */
+    fun openStream(binder: IBinder, pid: Int, directory: File, since: String?): ServerStream? {
         val notes = File(directory, "server-stream.txt")
         var remote: IPorterRemoteProcess? = null
         var input: InputStream? = null
         var error: InputStream? = null
         var drain: Job? = null
         try {
-            val binder = ServerBinder.binder.value?.takeIf { it.pingBinder() }
-            if (binder == null) {
-                runCatching { notes.appendText("Porter service unavailable\n") }
-                return null
-            }
-            val pid = readInfo(binder)?.pid
-            if (pid == null) {
-                runCatching { notes.appendText("Service diagnostics unsupported\n") }
-                return null
-            }
             val process = ServerBinder.managerOf(binder)
-                .newProcess(arrayOf("sh", "-c", supervisor(pid)), null, null).also { remote = it }
+                .newProcess(arrayOf("sh", "-c", supervisor(pid, since)), null, null).also { remote = it }
             val output = ParcelFileDescriptor.AutoCloseInputStream(process.inputStream).also { input = it }
             val errors = ParcelFileDescriptor.AutoCloseInputStream(process.errorStream).also { error = it }
             val started = drains.launch { drainServerErrors(errors, notes, STREAM_NOTES_BYTES) }.also { drain = it }
@@ -199,12 +198,11 @@ internal object ServerDiagnostics {
     // nothing destroys it once the server is gone. This supervisor is that missing reaper: the trap
     // precedes the spawn (with `pending` for a TERM in between) so an immediate teardown cannot
     // orphan the child, and the poll is 2s because a trap does not interrupt sleep.
-    private fun supervisor(pid: Int) = listOf(
+    internal fun supervisor(pid: Int, since: String?) = listOf(
         "pending=0",
         "c=",
         "trap 'if [ -n \"\$c\" ]; then kill \$c 2>/dev/null; exit 0; else pending=1; fi' TERM INT",
-        // -T 1 follows without replaying the retained backlog, which -t would charge against the cap.
-        "logcat -v threadtime --pid=$pid -T 1 &",
+        "logcat -v threadtime --pid=$pid${since?.let { " -T $it" }.orEmpty()} &",
         "c=\$!",
         "[ \"\$pending\" = 1 ] && { kill \$c 2>/dev/null; exit 0; }",
         "while kill -0 \$c 2>/dev/null && kill -0 $pid 2>/dev/null; do sleep 2; done",

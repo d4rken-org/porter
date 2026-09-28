@@ -1,22 +1,29 @@
 package eu.darken.porter.manager.support
 
+import android.app.Application
 import android.os.Binder
 import android.os.Bundle
 import android.os.Parcel
+import androidx.test.core.app.ApplicationProvider
 import eu.darken.porter.manager.model.PorterServiceVersion
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.common.AppTransactions
 import eu.darken.porter.privileged.ServerConstants
+import java.io.File
 
 /** Parses the manager-only diagnostics reply from current, older and misbehaving services. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class ServerDiagnosticsTest {
+    @get:Rule val temporary = TemporaryFolder()
     private val descriptor = PorterProtocol.DESCRIPTOR
 
     /** A service whose diagnostics transaction writes [reply]; every other code is unsupported. */
@@ -141,6 +148,32 @@ class ServerDiagnosticsTest {
     @Test fun releasingPassesZeroSoTheServiceClosesItsGate() {
         ServerDiagnostics.requestDebugLogging(leasing(0L), Binder(), 0L)
         assertEquals(0L, requested)
+    }
+
+    @Test fun aCutoffIsPassedToLogcat() {
+        assertTrue(ServerDiagnostics.supervisor(4321, "1790607903.123").lines()
+            .contains("logcat -v threadtime --pid=4321 -T 1790607903.123 &"))
+    }
+
+    @Test fun noCutoffReplaysTheRetainedBacklog() {
+        val script = ServerDiagnostics.supervisor(4321, null)
+        assertTrue(script.lines().contains("logcat -v threadtime --pid=4321 &"))
+        assertFalse(script.contains("-T"))
+    }
+
+    @Test fun metadataForABinderWithoutSdkConnectionDoesNotBorrowTheSdkRefusal() = runBlocking {
+        val file = File(temporary.newFolder(), "server-attach-1-pid4321.txt")
+
+        ServerDiagnostics.captureMetadata(
+            ApplicationProvider.getApplicationContext<Application>(),
+            service { writeNoException(); writeInt(4321); versionBundle("1.2.0-beta3", 1200030) },
+            file,
+            ClockAnchors(FixedClocks()),
+        )
+
+        val lines = file.readLines()
+        assertTrue(lines.toString(), lines.contains("SDK connection: none for this binder"))
+        assertFalse(lines.toString(), lines.any { it.startsWith("SDK connection: none (") })
     }
 
     @Test fun serviceWithoutDiagnosticsTransactionYieldsNothing() {

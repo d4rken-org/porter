@@ -140,6 +140,68 @@ ONBOARDING_TITLES = ("Welcome to Porter", "Shizuku is installed", "Privacy")
 HOME_RECORD = MANAGER + "/.manager.MainActivity"
 ONBOARDING_RECORD = MANAGER + "/.manager.onboarding.OnboardingActivity"
 RESUMED_ACTIVITY = re.compile(r"^\s*(topResumedActivity|mResumedActivity|ResumedActivity)\s*[=:]")
+# What a debug recording's events.txt says about each service instance it follows, in this order:
+#   Service binder arrived attach=2 pid=4242 at 1790607903123
+#   Debug logging granted for 1795000ms at 1790607903180
+#   Server stream attached pid=4242 boot=7 attach=2 replay=1790607901.000 at 1790607903200
+BINDER_ARRIVED = re.compile(r"Service binder arrived attach=\d+ pid=(\d+|unknown) at \d+")
+LEASE_GRANTED = re.compile(r"Debug logging granted for \d+ms at \d+")
+STREAM_ATTACHED = re.compile(r"Server stream attached pid=(\d+) boot=-?\d+ attach=(\d+) replay=\S+ at \d+")
+#   Clock attach 1 wall=2026-09-28T17:05:03.123+0200 epochMs=1790607903123 elapsedMs=5000123 uptimeMs=4000456 bootCount=7
+CLOCK_ANCHOR = re.compile(r"Clock (.+?) wall=\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4} "
+                          r"epochMs=\d+ elapsedMs=\d+ uptimeMs=\d+ bootCount=-?\d+")
+# The head of a threadtime line, which is how both adb and the recording's server.log print:
+#   09-28 17:05:03.123  4242  4250 I Service : starting server...
+THREADTIME = re.compile(r"\d\d-\d\d \d\d:\d\d:\d\d\.\d{3}\s+(\d+)\s+\d+\s+[VDIWEFA]\s")
+
+
+def stream_attaches(events):
+    """(pid, attach number) for every server stream a recording attached, oldest first."""
+    return [(found.group(1), int(found.group(2))) for line in events.splitlines()
+            if (found := STREAM_ATTACHED.fullmatch(line.strip()))]
+
+
+def lease_granted(events, pid):
+    """Whether the newest arrival of service [pid] was granted a debug lease before anything else
+    arrived. A grant belongs to the arrival before it, not to whichever instance is newest."""
+    granted = False
+    listening = False
+    for line in events.splitlines():
+        line = line.strip()
+        arrived = BINDER_ARRIVED.fullmatch(line)
+        if arrived:
+            listening = arrived.group(1) == pid
+            if listening:
+                granted = False
+        elif listening and LEASE_GRANTED.fullmatch(line):
+            granted = True
+    return granted
+
+
+def clock_anchors(events):
+    """The labels of a recording's well-formed clock anchors, oldest first: "start", "attach 1"."""
+    return [found.group(1) for line in events.splitlines()
+            if (found := CLOCK_ANCHOR.fullmatch(line.strip()))]
+
+
+def in_order(items, expected):
+    """Whether [expected] appears in [items] in that order, with anything else in between."""
+    remaining = iter(items)
+    return all(item in remaining for item in expected)
+
+
+def logged_by(log, pid, message):
+    """The threadtime lines of [log] that process [pid] wrote and that contain [message]."""
+    return [line.strip() for line in log.splitlines()
+            if (found := THREADTIME.match(line.strip())) and found.group(1) == pid and message in line]
+
+
+def resumed_elsewhere(activities, package):
+    """Whether dumpsys activity activities shows some activity resumed and none of [package]'s.
+    Nothing resumed is a transition still under way, not [package] having left the foreground."""
+    resumed = [line for line in activities.splitlines()
+               if RESUMED_ACTIVITY.match(line) and "ActivityRecord{" in line]
+    return bool(resumed) and not any(f" {package}/" in line for line in resumed)
 
 
 class PushTracker:
@@ -1032,26 +1094,64 @@ class Smoke:
                 self.open_home()
                 self.tap(desc="Settings")
                 self.tap("Help & support", scroll=True)
+
+            def stop_recording():
+                # Navigated every time: the probe may be in front, and tap only sees the visible window.
+                open_support()
+                self.tap("Stop recording")
+                self.tap("Stop recording", occurrence=1)
+                self.until("stopped recording", lambda: any(node.get("text") == "Record debug log"
+                                                            for node in self.ui().iter("node")))
+
+            def events_of(path):
+                return self.recording(f"cat {path}/events.txt 2>/dev/null")
+
+            def in_server_log(path, pid, message):
+                # Narrowed on the device: under the lease the whole file is too much to pull per poll.
+                return logged_by(self.recording(f"grep -F {shlex.quote(message)} {path}/server.log 2>/dev/null"),
+                                 pid, message)
+
+            def stream_supervisor(server_pid):
+                return self.until("the service spawned the stream's supervisor",
+                                  lambda: [pid for pid, started in self.spawned(server_pid).items()
+                                           if "logcat" in started])
+
+            def followed_from_its_start(path, description):
+                """Starts a service under a running recording, and its pid once the recording has it."""
+                self.start_service()
+                server_pid = self.pid("porter_server")
+                self.until(f"{description}: a stream attached to {server_pid}",
+                           lambda: any(pid == server_pid for pid, _ in stream_attaches(events_of(path))),
+                           timeout=60)
+                # Read after the wait: the lease outcome is written before the attached line.
+                events = events_of(path)
+                assert lease_granted(events, server_pid), events
+                # An INFO line, so it is there without the lease. Only a replay from the recording's
+                # start reaches it: the stream is opened after the service logged it.
+                self.until(f"{description}: server.log carries {server_pid} starting",
+                           lambda: in_server_log(path, server_pid, "starting server..."))
+                return server_pid
+
+            # No service when the recording starts, so it has to pick up the one started next.
+            self.kill_server()
+            self.until("the server is gone", lambda: not self.pid("porter_server"))
             open_support()
             self.tap("Record debug log")
             self.tap("Record debug log", occurrence=1, screenshot="debug-recording-consent")
-            # The active marker is written before the stream is attached, so both are waited on.
             session = self.until("recording session", lambda: self.recording("cat no_backup/debug-logs/active 2>/dev/null"))
             path = "no_backup/debug-logs/" + session
-            self.until("attached server stream",
-                       lambda: "Server stream attached pid=" in self.recording(f"cat {path}/events.txt 2>/dev/null"))
-            server_pid = self.pid("porter_server")
-            supervisor = self.until("the service spawned the stream's supervisor",
-                                    lambda: [pid for pid, started in self.spawned(server_pid).items()
-                                             if "logcat" in started])
-            assert len(supervisor) == 1, supervisor
+            self.until("the recording waits for the service", lambda: "Waiting for Porter service" in events_of(path))
+            first_pid = followed_from_its_start(path, "service started after the recording")
+            server_pid = first_pid
+            first_supervisor = stream_supervisor(server_pid)
+            assert len(first_supervisor) == 1, first_supervisor
             # Size growth is a valid liveness signal only below the rotation segment, which a run
             # this short never reaches. Past it the pair shrinks too, so watch for new content.
             baseline = self.recording_size(f"{path}/server.log")
             self.launch_probe(NATIVE)
             self.tap("Allow all the time")
             self.authorized(NATIVE)
-            # -T 1 supplies a first line on attach, so only the bytes after the baseline count.
+            # The replay supplies lines on attach, so only the bytes after the baseline count.
             self.until("service log carries the probe attaching", lambda: f"attachApplication: {NATIVE}"
                        in self.recording(f"tail -c +{baseline + 1} {path}/server.log 2>/dev/null"))
             followed = self.recording_size(f"{path}/server.log")
@@ -1059,23 +1159,35 @@ class Smoke:
             self.launch_probe(NATIVE)
             self.until("service log keeps following", lambda: self.recording_size(f"{path}/server.log") > followed)
             streamed = self.recording_size(f"{path}/server.log")
-            # The probe is in the foreground and tap only sees the visible window.
-            open_support()
-            self.tap("Stop recording")
-            self.tap("Stop recording", occurrence=1)
-            self.until("stopped recording", lambda: any(node.get("text") == "Record debug log"
-                                                        for node in self.ui().iter("node")))
+
+            # A service restarted mid-recording gets a stream and a lease of its own.
+            lost = events_of(path).count("Service binder lost")
+            self.kill_server()
+            self.until("the recording saw the service go",
+                       lambda: events_of(path).count("Service binder lost") > lost)
+            server_pid = followed_from_its_start(path, "service restarted during the recording")
+            assert server_pid != first_pid, server_pid
+            events = events_of(path)
+            grants = [line for line in events.splitlines() if LEASE_GRANTED.fullmatch(line.strip())]
+            assert len(grants) >= 2, events
+            supervisor = stream_supervisor(server_pid)
+            assert len(supervisor) == 1, supervisor
+
+            stop_recording()
             # Closing the stream destroys what the service spawned for it, so the supervisor going
             # away is what says the stop reached the service rather than only the screen.
             self.until("the stopped stream's supervisor was destroyed",
                        lambda: supervisor[0] not in self.spawned(server_pid))
-            events = self.recording(f"cat {path}/events.txt 2>/dev/null")
-            attached = re.search(r"Server stream attached pid=(\d+)", events)
-            assert attached, events
+            events = events_of(path)
+            attaches = stream_attaches(events)
+            assert attaches and attaches[0] == (first_pid, 1) and attaches[-1] == (server_pid, 2), events
             # Read again rather than reused: a service replaced mid-case would take its spawned
             # processes with it and pass the teardown wait above for the wrong reason.
-            assert attached.group(1) == self.pid("porter_server") == server_pid, events
-            for name in ("server-start.txt", "server-stop.txt"):
+            assert attaches[-1][0] == self.pid("porter_server") == server_pid, events
+            anchors = clock_anchors(events)
+            assert in_order(anchors, ("start", "attach 1", "lost", "attach 2", "stop")), events
+            for name in ("server-start.txt", "server-stop.txt",
+                         f"server-attach-1-pid{first_pid}.txt", f"server-attach-2-pid{server_pid}.txt"):
                 assert self.recording_size(f"{path}/{name}"), name
             (self.output / f"debug-recording-{session}.tar").write_bytes(
                 self.adb("exec-out", shlex.join(self.in_manager_data(
@@ -1089,13 +1201,19 @@ class Smoke:
             self.tap("Record debug log", occurrence=1)
             abandoned = self.until("second recording session",
                                    lambda: self.recording("cat no_backup/debug-logs/active 2>/dev/null"))
-            self.until("attached server stream", lambda: "Server stream attached pid=" in
-                       self.recording(f"cat no_backup/debug-logs/{abandoned}/events.txt 2>/dev/null"))
+            abandoned_path = "no_backup/debug-logs/" + abandoned
+            self.until("attached server stream", lambda: "Server stream attached pid=" in events_of(abandoned_path))
             bereaved = self.until("the second stream's supervisor",
                                   lambda: [pid for pid, started in self.spawned(server_pid).items()
                                            if "logcat" in started])
             assert len(bereaved) == 1 and bereaved != supervisor, (bereaved, supervisor)
+            # Home first: Android 7.0 restarts an app force-stopped in front for the activity below.
+            self.shell("input", "keyevent", "KEYCODE_HOME")
+            self.until("the manager out of the foreground", lambda: resumed_elsewhere(
+                self.shell("dumpsys", "activity", "activities", check=False), MANAGER))
             self.shell("am", "force-stop", MANAGER)
+            self.until("the manager to stay stopped; it came back after its force-stop",
+                       lambda: not self.pid(MANAGER))
             self.until("the dead client's spawned process was destroyed",
                        lambda: bereaved[0] not in self.spawned(server_pid))
             # After the wait, not before it: a service that went away with its manager has no
@@ -1105,17 +1223,47 @@ class Smoke:
             # what destroy() sends is not something this suite gets to choose; a logcat listed here
             # is one that outlived the supervisor that started it.
             orphans = self.remote_logcat(server_pid)
-            # While the manager is stopped: this recording was ended by its client dying, so its
-            # active marker is still there, and a manager the system revives would resume it and
-            # attach a stream to the session this is removing.
+
+            # The recording's active marker outlives its dead client, so the next manager process
+            # resumes it. What the service logs in between reaches server.log only through that
+            # resume's replay. The push is logged at INFO, so it needs no lease; attachApplication
+            # is DEBUG and could not stand in for it.
+            push = f"send binder to user app {NATIVE} in user 0"
+
+            def pushes():
+                return logged_by(self.adb("logcat", "-d", "-v", "threadtime", "--pid=" + server_pid,
+                                          "-s", "Service:V", "*:S"), server_pid, push)
+            earlier = set(pushes())
+            self.launch_probe(NATIVE)
+            gap = self.until("the service pushed the probe its binder",
+                             lambda: [line for line in pushes() if line not in earlier])[-1]
+            assert not self.pid(MANAGER), "launching the probe started the manager, which could read the push live"
+            events = events_of(abandoned_path)
+            assert "Clock resume" not in events, events
+            self.open_home()
+            self.until("the relaunched manager resumed the recording",
+                       lambda: "Clock resume" in events_of(abandoned_path), timeout=60)
+            self.until("the resumed recording attached the same service again",
+                       lambda: [pid for pid, _ in stream_attaches(events_of(abandoned_path))].count(server_pid) >= 2,
+                       timeout=60)
+            self.until("server.log carries the push logged while no manager ran",
+                       lambda: gap in in_server_log(abandoned_path, server_pid, push))
+            resumed = stream_attaches(events_of(abandoned_path))
+            stop_recording()
+            # The stop writes this last, after the screen has changed; removing the session before
+            # then would race that write.
+            self.until("the resumed recording finished",
+                       lambda: self.recording_size(f"{abandoned_path}/server-stop.txt"))
             self.recording("rm -rf no_backup/debug-logs")
 
             self.shell("pm", "revoke", NATIVE, PERMISSION)
             self.shell("am", "force-stop", NATIVE)
             self.until("revocation terminates user service", lambda: not self.pid(NATIVE + ":porter-probe"))
-            return {"session": session, "baseline": baseline, "followed": followed,
-                    "streamed": streamed, "supervisor": supervisor[0], "abandoned": abandoned,
-                    "bereaved": bereaved[0], "orphaned_logcats": orphans}
+            return {"session": session, "first_server": first_pid, "restarted_server": server_pid,
+                    "attaches": attaches, "clock_anchors": anchors, "baseline": baseline,
+                    "followed": followed, "streamed": streamed, "first_supervisor": first_supervisor[0],
+                    "supervisor": supervisor[0], "abandoned": abandoned, "bereaved": bereaved[0],
+                    "orphaned_logcats": orphans, "resumed_attaches": resumed, "replayed_push": gap}
         self.case("debug-recording", debug_recording)
 
         def companion():

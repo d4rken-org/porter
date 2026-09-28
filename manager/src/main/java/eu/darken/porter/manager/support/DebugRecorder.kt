@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.os.Process
@@ -20,7 +19,9 @@ import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.sync.Mutex
@@ -41,6 +42,17 @@ class DebugRecorder internal constructor(
     private val appContext: Context,
     storeOverride: DebugLogStore? = null,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
+    private val managerLog: (pid: Int) -> java.lang.Process = { pid ->
+        // Replays what is logged between the launch and logcat attaching.
+        val since = SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US).format(Date())
+        ProcessBuilder("logcat", "-v", "threadtime", "--pid=$pid", "-T", since).redirectErrorStream(true).start()
+    },
+    private val binders: StateFlow<IBinder?> = ServerBinder.binder,
+    private val anchors: ClockAnchors = ClockAnchors(appContext),
+    private val serviceOperations: ServiceFollower.Operations = ServiceFollower.ServiceOperations(appContext, anchors),
+    private val serviceStates: () -> Flow<PorterStateMachine.State> = { PorterStateMachine.instance.asFlow() },
+    private val describeDevice: () -> String = { deviceDetails(appContext) },
+    private val wallClock: () -> Long = System::currentTimeMillis,
 ) {
     data class State(val active: Boolean = false, val started: Long = 0, val error: String? = null)
     private val store: DebugLogStore by lazy {
@@ -52,10 +64,8 @@ class DebugRecorder internal constructor(
     private var process: java.lang.Process? = null
     private var reader: Job? = null
     private var timer: Job? = null
-    private var serverStream: ServerDiagnostics.ServerStream? = null
-    private var serverReader: Job? = null
+    private var follower: ServiceFollower? = null
     private var serverWatcher: Job? = null
-    private var debugLease: DebugLease? = null
 
     fun attach() {
         val userManager = appContext.getSystemService(UserManager::class.java)
@@ -79,7 +89,7 @@ class DebugRecorder internal constructor(
         scope.launch {
             try {
                 mutex.withLock {
-                    if (process == null) store.activeId()?.let { resume(it) }
+                    if (process == null) store.activeId()?.let { resume(it, fresh = false) }
                     store.prune()
                 }
             } catch (e: Exception) { report(e) }
@@ -90,7 +100,7 @@ class DebugRecorder internal constructor(
         mutex.withLock {
             if (state.value.active) return@withLock
             val id = store.create()
-            try { resume(id) }
+            try { resume(id, fresh = true) }
             catch (e: Exception) {
                 store.finish()
                 report(e)
@@ -99,7 +109,8 @@ class DebugRecorder internal constructor(
         }
     }
 
-    private suspend fun resume(id: String) {
+    /** [fresh] tells a new session from one continued by a manager process that came back. */
+    private suspend fun resume(id: String, fresh: Boolean) {
         val directory = store.directory(id)
         val started = id.substringBefore('-').toLong()
         val remaining = MAX_DURATION - (System.currentTimeMillis() - started).coerceAtLeast(0)
@@ -107,7 +118,7 @@ class DebugRecorder internal constructor(
             store.finish()
             return
         }
-        File(directory, "device.txt").writeText(deviceDetails(appContext))
+        File(directory, "device.txt").writeText(describeDevice())
         if (Build.VERSION.SDK_INT >= 30) {
             runCatching {
                 val exits = appContext.getSystemService(ActivityManager::class.java).getHistoricalProcessExitReasons(null, 0, 5)
@@ -116,11 +127,12 @@ class DebugRecorder internal constructor(
                 })
             }
         }
-        File(directory, "events.txt").appendText("Recording manager pid=${Process.myPid()} at ${System.currentTimeMillis()}\n")
-        // Replays what is logged between the launch and logcat attaching.
-        val since = SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US).format(Date())
-        val child = ProcessBuilder("logcat", "-v", "threadtime", "--pid=${Process.myPid()}", "-T", since)
-            .redirectErrorStream(true).start()
+        val deadline = anchors.elapsedNow() + remaining
+        val events = File(directory, "events.txt")
+        events.appendText("Recording manager pid=${Process.myPid()} at ${wallClock()}\n")
+        val session = anchors.read()
+        anchors.append(events, if (fresh) "start" else "resume", session)
+        val child = managerLog(Process.myPid())
         try {
             process = child
             Logger.recording = true
@@ -138,8 +150,9 @@ class DebugRecorder internal constructor(
                 scope.launch { stop(child) }
             }
             timer = scope.launch { delay(remaining); scope.launch { stop(child) } }
-            ServerDiagnostics.captureMetadata(appContext, directory, "start")
-            attachServerStream(directory, remaining)
+            ServerDiagnostics.captureMetadata(appContext, directory, "start", anchors)
+            follower = ServiceFollower(binders, serviceOperations, directory, deadline, started, session, anchors, scope).also { it.start() }
+            watchServiceState(directory)
         } catch (e: Exception) {
             Logger.recording = false
             process = null
@@ -148,7 +161,7 @@ class DebugRecorder internal constructor(
             reader?.join()
             reader = null
             timer?.cancel()
-            detachServerStream()
+            detachService()
             store.finish()
             mutableState.value = State()
             appContext.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
@@ -157,83 +170,25 @@ class DebugRecorder internal constructor(
     }
 
     /**
-     * Runs with [mutex] held. The coroutines it launches never take the lock and never touch these
-     * fields, because [stop] joins them while holding it.
+     * Runs with [mutex] held. The coroutine it launches never takes the lock and never touches
+     * these fields, because [stop] joins it while holding it.
      */
-    private fun attachServerStream(directory: File, remaining: Long) {
+    private fun watchServiceState(directory: File) {
         val events = File(directory, "events.txt")
+        val states = serviceStates()
         serverWatcher = scope.launch {
-            PorterStateMachine.instance.asFlow().collect {
-                runCatching { events.appendText("Service $it at ${System.currentTimeMillis()}\n") }
-            }
-        }
-        acquireDebugLease(events, remaining)
-        val handle = ServerDiagnostics.openStream(directory)
-        if (handle == null) {
-            events.appendText("Server stream unavailable at ${System.currentTimeMillis()}\n")
-            return
-        }
-        serverStream = handle
-        events.appendText("Server stream attached pid=${handle.pid} at ${System.currentTimeMillis()}\n")
-        serverReader = scope.launch { readServerStream(handle, directory, SERVER_MAX_LOG_BYTES) }
-    }
-
-    private class DebugLease(val binder: IBinder, val token: IBinder)
-
-    /**
-     * Runs with [mutex] held, like [attachServerStream]. Every outcome of the request is recorded,
-     * because a recording that silently lacks service debug detail looks identical to one where
-     * nothing happened. A recording without the lease is still worth having, so no outcome here
-     * stops one.
-     */
-    private fun acquireDebugLease(events: File, remaining: Long) {
-        fun note(what: String) = runCatching { events.appendText("$what at ${System.currentTimeMillis()}\n") }
-        val binder = ServerBinder.binder.value?.takeIf { it.pingBinder() }
-        if (binder == null) {
-            note("Debug logging unavailable")
-            return
-        }
-        val token = Binder()
-        val granted = try {
-            ServerDiagnostics.requestDebugLogging(binder, token, remaining)
-        } catch (e: SecurityException) {
-            // The service answered and said no, which is a different thing from the call breaking.
-            note("Debug logging refused")
-            return
-        } catch (e: Exception) {
-            Log.w("PorterRecorder", "Debug logging request failed", e)
-            note("Debug logging failed")
-            return
-        }
-        when {
-            granted == null -> note("Debug logging unsupported by this service")
-            granted <= 0 -> note("Debug logging granted nothing")
-            else -> {
-                debugLease = DebugLease(binder, token)
-                note("Debug logging granted for ${granted}ms")
-                // The service clamps what it grants, so a long recording can outlive its own gate.
-                if (granted < remaining) note("Debug logging expires ${remaining - granted}ms early")
+            states.collect {
+                runCatching { events.appendText("Service $it at ${wallClock()}\n") }
             }
         }
     }
 
-    /** Released against the binder that granted it, which a replaced service no longer answers. */
-    private fun releaseDebugLease() {
-        val lease = debugLease ?: return
-        debugLease = null
-        runCatching { ServerDiagnostics.requestDebugLogging(lease.binder, lease.token, 0) }
-    }
-
-    private suspend fun detachServerStream() {
-        serverWatcher?.cancel()
+    /** Runs with [mutex] held, like [watchServiceState]. */
+    private suspend fun detachService() {
+        serverWatcher?.cancelAndJoin()
         serverWatcher = null
-        // Released before the stream closes: stop producing the detail first, then stop capturing
-        // it. The other order leaves the service briefly logging what nothing is reading.
-        releaseDebugLease()
-        serverStream?.close()
-        serverStream = null
-        serverReader?.join()
-        serverReader = null
+        follower?.cancelAndJoin()
+        follower = null
     }
 
     suspend fun stop() = stop(null)
@@ -251,12 +206,13 @@ class DebugRecorder internal constructor(
             runCatching { child?.inputStream?.close() }
             reader?.join()
             reader = null
-            detachServerStream()
+            detachService()
             val directory = store.directory(id)
+            anchors.append(File(directory, "events.txt"), "stop")
             store.finish()
             mutableState.value = State()
             appContext.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
-            ServerDiagnostics.captureMetadata(appContext, directory, "stop")
+            ServerDiagnostics.captureMetadata(appContext, directory, "stop", anchors)
             store.prune()
         }
     }
@@ -297,7 +253,6 @@ class DebugRecorder internal constructor(
 
     companion object {
         private const val MAX_DURATION = 30 * 60 * 1000L
-        private const val SERVER_MAX_LOG_BYTES = 8L * 1024 * 1024
         private const val CHANNEL = "debug_recording"
         private const val NOTIFICATION_ID = 920
 
