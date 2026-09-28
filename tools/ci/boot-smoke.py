@@ -134,8 +134,8 @@ class Boot(base.Smoke):
         """Taps this action of the notification with this title, expanding that notification in the
         shade where it is collapsed. Every look stays inside its own expandableNotificationRow and
         taps what that same look found, so another notification's Expand or button of the same
-        name is never the one tapped. A screen that did not change is looked at and tapped again,
-        as base tap() does."""
+        name is never the one tapped. A screen that did not change, or only moved, is looked at and
+        tapped again, as base tap() does."""
         self.shell("cmd", "statusbar", "expand-notifications")
 
         def center(node):

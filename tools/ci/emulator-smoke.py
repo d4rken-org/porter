@@ -196,6 +196,11 @@ def apksigner():
     return Path(located)
 
 
+def without_bounds(screen):
+    """A dump as ET.tostring() wrote it, with every node's position left out."""
+    return re.sub(rb' bounds="[^"]*"', b"", screen)
+
+
 class Smoke:
     # How open_home() presses onboarding's buttons, called with the label; None taps them.
     onboarding_activate = None
@@ -452,7 +457,8 @@ class Smoke:
 
     def unanswered(self, before):
         """None once the screen stops being [before] within [TAP_SETTLE], or why it did not:
-        "unchanged" when a dump read the tapped screen again, "unreadable" when no dump could be read.
+        "unchanged" when a dump read the tapped screen again, "moved" when it read the tapped screen
+        with only positions changed, "unreadable" when no dump could be read.
 
         A dump that fails inside the window answers neither way, so it is polled past rather than
         counted. What follows a window that ends undecided is another look at the button on its
@@ -462,9 +468,15 @@ class Smoke:
         reason = "unreadable"
         while True:
             try:
-                if ET.tostring(self.ui(UI_POLL_TIMEOUT)) != before:
+                screen = ET.tostring(self.ui(UI_POLL_TIMEOUT))
+                if screen == before:
+                    reason = "unchanged"
+                # A system bar coming or going can shift the window's nodes without changing them,
+                # and a tap aimed at the bounds read before the shift can land beside the button.
+                elif without_bounds(screen) == without_bounds(before):
+                    reason = "moved"
+                else:
                     return None
-                reason = "unchanged"
             except RuntimeError:
                 pass
             if time.monotonic() >= deadline:
@@ -507,11 +519,13 @@ class Smoke:
         An injected gesture can be dropped before it reaches the window it was aimed at, and a
         dropped one leaves nothing behind: the case carries on and fails later, somewhere that
         says nothing about the tap. So the screen is read again afterwards, and a screen that is
-        byte for byte the one that was tapped is a tap that never landed.
+        the one that was tapped, byte for byte or with only its positions shifted, is taken for a
+        tap that never landed.
 
-        Only an unchanged screen is tapped a second time, and only while the button is still
-        there. Anything else - the dialog gone, the button gone, a different screen - is the tap
-        having been acted on, however little of it has finished.
+        Only an unchanged or moved screen is tapped a second time, at the button's bounds as read
+        again, and only while the button is still there. Anything else - the dialog gone, the
+        button gone, a different screen - is the tap having been acted on, however little of it
+        has finished.
         """
         wanted = repr(text) if desc is None else f"content-desc {desc!r}"
         ordinal = f" #{occurrence}" if occurrence else ""
