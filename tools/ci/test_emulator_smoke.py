@@ -1532,6 +1532,43 @@ class RecordingEventsTest(unittest.TestCase):
         self.assertEqual(smoke.logged_by("starting server... 3120", "3120", "starting server..."), [])
 
 
+class ResumedElsewhereTest(unittest.TestCase):
+    """Whether the manager has left the foreground before the debug-recording case force-stops it."""
+    LAUNCHER = "ActivityRecord{2c1e3b1 u0 com.android.launcher3/.Launcher t1}"
+    SUPPORT = "ActivityRecord{7f0a2c4 u0 eu.darken.porter/.manager.support.SupportActivity t5}"
+    PROBE = "ActivityRecord{9d8e7f6 u0 eu.darken.porter.probe.native/.ProbeActivity t9}"
+
+    def activities(self, resumed, history=SUPPORT):
+        return ("ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)\n"
+                f"    * Hist #0: {history}\n"
+                f"{resumed}")
+
+    def test_android_7_names_the_launcher_resumed(self):
+        self.assertTrue(smoke.resumed_elsewhere(
+            self.activities(f"  mResumedActivity: {self.LAUNCHER}\n"), "eu.darken.porter"))
+
+    def test_later_releases_name_it_as_top_resumed(self):
+        self.assertTrue(smoke.resumed_elsewhere(
+            self.activities(f"  topResumedActivity={self.LAUNCHER}\n"), "eu.darken.porter"))
+
+    def test_the_manager_resumed_is_still_in_front(self):
+        self.assertFalse(smoke.resumed_elsewhere(
+            self.activities(f"  mResumedActivity: {self.SUPPORT}\n"), "eu.darken.porter"))
+
+    def test_any_resumed_line_naming_the_manager_keeps_it_in_front(self):
+        self.assertFalse(smoke.resumed_elsewhere(
+            self.activities(f"    ResumedActivity: {self.SUPPORT}\n  topResumedActivity={self.LAUNCHER}\n"),
+            "eu.darken.porter"))
+
+    def test_a_package_that_only_starts_with_the_managers_is_not_it(self):
+        self.assertTrue(smoke.resumed_elsewhere(
+            self.activities(f"  mResumedActivity: {self.PROBE}\n"), "eu.darken.porter"))
+
+    def test_nothing_resumed_is_not_left(self):
+        self.assertFalse(smoke.resumed_elsewhere(self.activities("  mResumedActivity: null\n"), "eu.darken.porter"))
+        self.assertFalse(smoke.resumed_elsewhere(self.activities(""), "eu.darken.porter"))
+
+
 class LaunchProbeAsTest(unittest.TestCase):
     """Which process the secondary-user case reads its log from."""
 

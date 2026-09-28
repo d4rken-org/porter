@@ -195,6 +195,14 @@ def logged_by(log, pid, message):
             if (found := THREADTIME.match(line.strip())) and found.group(1) == pid and message in line]
 
 
+def resumed_elsewhere(activities, package):
+    """Whether dumpsys activity activities shows some activity resumed and none of [package]'s.
+    Nothing resumed is a transition still under way, not [package] having left the foreground."""
+    resumed = [line for line in activities.splitlines()
+               if RESUMED_ACTIVITY.match(line) and "ActivityRecord{" in line]
+    return bool(resumed) and not any(f" {package}/" in line for line in resumed)
+
+
 class PushTracker:
     """The server's binder pushes that have been opened and not yet closed.
 
@@ -1184,7 +1192,13 @@ class Smoke:
                                   lambda: [pid for pid, started in self.spawned(server_pid).items()
                                            if "logcat" in started])
             assert len(bereaved) == 1 and bereaved != supervisor, (bereaved, supervisor)
+            # Home first: Android 7.0 restarts an app force-stopped in front for the activity below.
+            self.shell("input", "keyevent", "KEYCODE_HOME")
+            self.until("the manager out of the foreground", lambda: resumed_elsewhere(
+                self.shell("dumpsys", "activity", "activities", check=False), MANAGER))
             self.shell("am", "force-stop", MANAGER)
+            self.until("the manager to stay stopped; it came back after its force-stop",
+                       lambda: not self.pid(MANAGER))
             self.until("the dead client's spawned process was destroyed",
                        lambda: bereaved[0] not in self.spawned(server_pid))
             # After the wait, not before it: a service that went away with its manager has no
