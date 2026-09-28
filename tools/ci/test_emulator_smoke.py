@@ -1440,6 +1440,98 @@ class SpawnedProcessReadingTest(unittest.TestCase):
         self.assertEqual(self.runner.remote_logcat("3120"), [])
 
 
+class RecordingEventsTest(unittest.TestCase):
+    """How the debug-recording case reads a session's events.txt and server.log."""
+    EVENTS = "\n".join((
+        "Recording manager pid=900 at 1790607900000",
+        "Clock start wall=2026-09-28T17:05:00.000+0200 epochMs=1790607900000 elapsedMs=5000000 uptimeMs=4000000 bootCount=7",
+        "Waiting for Porter service at 1790607900010",
+        "Service binder arrived attach=1 pid=3120 at 1790607903123",
+        "Clock attach 1 wall=2026-09-28T17:05:03.123+0200 epochMs=1790607903123 elapsedMs=5003123 uptimeMs=4003123 bootCount=7",
+        "Debug logging granted for 1795000ms at 1790607903180",
+        "Server stream attached pid=3120 boot=7 attach=1 replay=1790607900.000 at 1790607903200",
+        "Service binder lost at 1790607910000",
+        "Clock lost wall=2026-09-28T17:05:10.000+0200 epochMs=1790607910000 elapsedMs=5010000 uptimeMs=4010000 bootCount=7",
+        "Server stream ended pid=3120 at 1790607910005",
+        "Service binder arrived attach=2 pid=4242 at 1790607915000",
+        "Clock attach 2 wall=2026-09-28T17:05:15.000-0130 epochMs=1790607915000 elapsedMs=5015000 uptimeMs=4015000 bootCount=-1",
+        "Debug logging refused at 1790607915050",
+        "Server stream attached pid=4242 boot=-1 attach=2 replay=all at 1790607915100",
+        "Clock stop wall=2026-09-28T17:05:20.000+0200 epochMs=1790607920000 elapsedMs=5020000 uptimeMs=4020000 bootCount=7",
+    ))
+
+    def test_attaches_are_read_in_order_with_their_numbers(self):
+        self.assertEqual(smoke.stream_attaches(self.EVENTS), [("3120", 1), ("4242", 2)])
+
+    def test_an_attach_line_needs_its_time(self):
+        self.assertEqual(smoke.stream_attaches("Server stream attached pid=3120 boot=7 attach=1 replay=all"), [])
+
+    def test_a_line_read_through_adb_may_end_in_a_carriage_return(self):
+        self.assertEqual(smoke.stream_attaches(
+            "Server stream attached pid=3120 boot=7 attach=1 replay=all at 1\r\n"), [("3120", 1)])
+
+    def test_a_lease_belongs_to_the_arrival_before_it(self):
+        self.assertTrue(smoke.lease_granted(self.EVENTS, "3120"))
+        # Refused for the second instance: the first one's grant is not carried over to it.
+        self.assertFalse(smoke.lease_granted(self.EVENTS, "4242"))
+
+    def test_an_instance_that_never_arrived_has_no_lease(self):
+        self.assertFalse(smoke.lease_granted(self.EVENTS, "5555"))
+
+    def test_a_grant_that_lands_after_the_next_arrival_is_not_the_earlier_instances(self):
+        events = "\n".join((
+            "Service binder arrived attach=1 pid=3120 at 1",
+            "Service binder arrived attach=2 pid=4242 at 2",
+            "Debug logging granted for 5ms at 3",
+        ))
+        self.assertFalse(smoke.lease_granted(events, "3120"))
+        self.assertTrue(smoke.lease_granted(events, "4242"))
+
+    def test_the_newest_arrival_of_a_pid_decides(self):
+        events = "\n".join((
+            "Service binder arrived attach=1 pid=3120 at 1",
+            "Debug logging granted for 5ms at 2",
+            "Service binder arrived attach=2 pid=3120 at 3",
+            "Debug logging granted nothing at 4",
+        ))
+        self.assertFalse(smoke.lease_granted(events, "3120"))
+
+    def test_clock_anchors_are_read_by_label_in_order(self):
+        self.assertEqual(smoke.clock_anchors(self.EVENTS), ["start", "attach 1", "lost", "attach 2", "stop"])
+
+    def test_a_malformed_anchor_is_not_one(self):
+        for line in (
+                # No zone offset on the wall time.
+                "Clock start wall=2026-09-28T17:05:00.000 epochMs=1 elapsedMs=2 uptimeMs=3 bootCount=7",
+                # A field missing.
+                "Clock start wall=2026-09-28T17:05:00.000+0200 epochMs=1 elapsedMs=2 bootCount=7",
+                # Something after the last field.
+                "Clock start wall=2026-09-28T17:05:00.000+0200 epochMs=1 elapsedMs=2 uptimeMs=3 bootCount=7 at 1"):
+            self.assertEqual(smoke.clock_anchors(line), [], line)
+
+    def test_in_order_allows_anything_between(self):
+        self.assertTrue(smoke.in_order(["start", "resume", "attach 1", "stop"], ("start", "attach 1", "stop")))
+
+    def test_in_order_refuses_a_reordering_or_a_gap(self):
+        self.assertFalse(smoke.in_order(["attach 1", "start", "stop"], ("start", "attach 1", "stop")))
+        self.assertFalse(smoke.in_order(["start", "stop"], ("start", "attach 1", "stop")))
+
+    def test_logged_by_keeps_only_that_pids_lines_with_the_message(self):
+        log = "\n".join((
+            "--------- beginning of main",
+            "09-28 17:05:03.123  3120  3130 I Service : starting server...",
+            "09-28 17:05:04.000  4242  4250 I Service : starting server...",
+            "09-28 17:05:05.000  3120  3130 I Service : sent binders",
+            # A pid that only starts with this one.
+            "09-28 17:05:06.000 31200 31210 I Service : starting server...",
+        ))
+        self.assertEqual(smoke.logged_by(log, "3120", "starting server..."),
+                         ["09-28 17:05:03.123  3120  3130 I Service : starting server..."])
+
+    def test_logged_by_does_not_read_the_message_as_the_pid(self):
+        self.assertEqual(smoke.logged_by("starting server... 3120", "3120", "starting server..."), [])
+
+
 class LaunchProbeAsTest(unittest.TestCase):
     """Which process the secondary-user case reads its log from."""
 
