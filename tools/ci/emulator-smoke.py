@@ -163,15 +163,18 @@ def stream_attaches(events):
 def lease_granted(events, pid):
     """Whether the newest arrival of service [pid] was granted a debug lease before anything else
     arrived. A grant belongs to the arrival before it, not to whichever instance is newest."""
-    granted = None
+    granted = False
+    listening = False
     for line in events.splitlines():
         line = line.strip()
         arrived = BINDER_ARRIVED.fullmatch(line)
         if arrived:
-            granted = False if arrived.group(1) == pid else None
-        elif granted is False and LEASE_GRANTED.fullmatch(line):
+            listening = arrived.group(1) == pid
+            if listening:
+                granted = False
+        elif listening and LEASE_GRANTED.fullmatch(line):
             granted = True
-    return bool(granted)
+    return granted
 
 
 def clock_anchors(events):
