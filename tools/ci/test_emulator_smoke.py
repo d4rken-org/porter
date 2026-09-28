@@ -424,7 +424,8 @@ class TapConfirmationTest(unittest.TestCase):
         self.assertIn("=== evidence query: adb exit status 0", first)
         self.assertEqual(self.evidence_run.call_count, smoke.TAP_ATTEMPTS)
         script = self.evidence_run.call_args.args[0][-1]
-        for query in ("dumpsys input", "dumpsys window windows", "dumpsys activity activities"):
+        for query in ("dumpsys input", "dumpsys window windows", "dumpsys activity activities",
+                      "dumpsys SurfaceFlinger"):
             self.assertIn(f'{query} 2>&1; echo "=== {query} exit status $?"', script)
 
     def test_the_evidence_is_one_attempt_on_its_own_budget(self):

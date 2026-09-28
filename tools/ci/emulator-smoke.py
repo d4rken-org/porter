@@ -100,7 +100,9 @@ UI_STABLE_POLLS = 2
 TAP_SETTLE = 3
 TAP_ATTEMPTS = 3
 # What is asked of the device when a tap goes unanswered, and how long all of it may take.
-TAP_EVIDENCE_QUERIES = ("input", "window windows", "activity activities")
+# SurfaceFlinger comes last, being the largest; it says whether a window the window manager counts
+# as shown ever became a visible layer, which is where the input dispatcher's windows come from.
+TAP_EVIDENCE_QUERIES = ("input", "window windows", "activity activities", "SurfaceFlinger")
 TAP_EVIDENCE_TIMEOUT = 20
 # The framework's own crash and ANR dialogs, which belong to no app under test and sit in front of
 # whatever the case was about. Both offer this button; the message is phrased around the crashed
