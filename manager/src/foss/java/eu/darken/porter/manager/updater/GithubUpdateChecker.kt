@@ -34,7 +34,7 @@ class GithubUpdateChecker @VisibleForTesting internal constructor(
     /** Stores that deliver updates themselves get no second prompt. */
     override fun isEnabledByDefault(): Boolean {
         val store = installer() ?: return true
-        return !store.startsWith("org.fdroid.fdroid") && store !in UPDATING_STORES
+        return store != "org.fdroid" && !store.startsWith("org.fdroid.") && store !in UPDATING_STORES
     }
 
     /** With prereleases, the highest version among the 20 most recently created releases. */
