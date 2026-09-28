@@ -25,9 +25,11 @@ import eu.darken.porter.manager.starter.StarterActivity
 import eu.darken.porter.manager.compatibility.CompatibilityRepository
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.PorterSettings
+import eu.darken.porter.manager.isBetaVersion
 import eu.darken.porter.manager.adb.TvPairingResultStore
 import eu.darken.porter.manager.adb.AdbPairingService
 import eu.darken.porter.manager.management.AppsViewModel
+import eu.darken.porter.manager.onboarding.OnboardingActivity
 import eu.darken.porter.manager.management.ApplicationManagementActivity
 import eu.darken.porter.manager.settings.SettingsActivity
 import eu.darken.porter.manager.ui.*
@@ -42,6 +44,7 @@ abstract class HomeActivity : ComposeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (redirectToOnboarding()) return
         porterContent { HomeScreen() }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -53,7 +56,16 @@ abstract class HomeActivity : ComposeActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        if (redirectToOnboarding()) return
         intent?.let { setIntent(it); consumeIntent(it) }
+    }
+
+    /** Every entry into Home, whatever its intent, goes through onboarding until it is completed. */
+    private fun redirectToOnboarding(): Boolean {
+        if (PorterSettings.onboardingCompleted) return false
+        startActivity(Intent(this, OnboardingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
+        finish()
+        return true
     }
 
     private fun consumeIntent(intent: Intent) {
@@ -131,7 +143,7 @@ abstract class HomeActivity : ComposeActivity() {
         }
         val buildBadge = when {
             BuildConfig.DEBUG -> stringResource(R.string.porter_build_dev)
-            BuildConfig.VERSION_NAME.contains("-beta") -> stringResource(R.string.porter_build_beta)
+            isBetaVersion(BuildConfig.VERSION_NAME) -> stringResource(R.string.porter_build_beta)
             else -> null
         }
         HomeScreenContent(

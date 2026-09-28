@@ -36,12 +36,8 @@ class Update(base.Smoke):
         assert not installed.intersection("package:" + p for p in (base.MANAGER, FIXTURE)), "Use a fresh emulator"
         for apk in (self.args.manager, self.args.fixture):
             self.adb("install", str(apk.resolve()))
-        self.home()
+        self.open_home()
         assert not self.pid("porter_server"), "a server was running before the fixture was started"
-
-    def home(self):
-        self.shell("am", "start", "-W", "-f", "0x04000000", "-n",
-                   base.MANAGER + "/eu.darken.porter.manager.MainActivity")
 
     def start_fixture(self, mode, root=False, verify=True):
         """A porter_server of another build, started the way the fixture's README describes.
@@ -69,7 +65,7 @@ class Update(base.Smoke):
         enabled = 'name="auto_update_service" value="true"'
         if enabled in self.shell("su", "0", "cat", settings, check=False):
             return
-        self.home()
+        self.open_home()
         self.tap("Settings", desc="Settings")
         self.tap("Update service automatically", scroll=True, screenshot="auto-update-setting")
         # The switch moves before the write lands, and what follows restarts the app.
@@ -89,7 +85,7 @@ class Update(base.Smoke):
         return self.shell("pm", "path", base.MANAGER).removeprefix("package:").splitlines()[0]
 
     def service_screen(self):
-        self.home()
+        self.open_home()
         # The status card opens it; stop_porter() reaches the same screen the same way.
         self.tap("Porter is running", prefix=True)
 

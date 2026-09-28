@@ -46,6 +46,7 @@ object PorterSettings {
         const val KEY_LAUNCH_MODE = "mode"
         const val KEY_AUTH_TOKEN = "auth_token"
         const val KEY_STARTED_BOOT = "started_boot"
+        const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
     }
 
     private var storage: SharedPreferences? = null
@@ -224,6 +225,15 @@ object PorterSettings {
 
     val legacyPairing: Boolean
         get() = preferences.getBoolean(Keys.KEY_LEGACY_PAIRING, false)
+
+    val onboardingCompleted: Boolean
+        get() = preferences.getBoolean(Keys.KEY_ONBOARDING_COMPLETED, false)
+
+    fun markOnboardingCompleted(): Boolean {
+        val saved = preferences.edit().putBoolean(Keys.KEY_ONBOARDING_COMPLETED, true).commit()
+        if (!saved) preferences.edit().remove(Keys.KEY_ONBOARDING_COMPLETED).apply()
+        return saved
+    }
 
     @get:AppCompatDelegate.NightMode
     val nightMode: Int

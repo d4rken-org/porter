@@ -70,6 +70,9 @@
             <data android:scheme="mailto" />
         </intent>
         <package android:name="moe.shizuku.privileged.api" />
+        <intent>
+            <action android:name="rikka.shizuku.intent.action.REQUEST_BINDER" />
+        </intent>
     </queries>
 
     <application
@@ -91,6 +94,7 @@
 
         <activity android:name=".service.ServiceActivity" android:exported="false" />
         <activity android:name=".compatibility.CompatibilityActivity" android:exported="false" />
+        <activity android:name=".onboarding.OnboardingActivity" android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:banner="@drawable/porter_banner"

@@ -286,8 +286,7 @@ class Dualwire(base.Smoke):
             shizuku_pid = self.pid("shizuku_server")
             assert shizuku_pid, "no Shizuku server for Porter to be preferred over"
             self.adb("install", str(self.args.manager.resolve()))
-            self.shell("am", "start", "-W", "-f", "0x04000000", "-n",
-                       base.MANAGER + "/eu.darken.porter.manager.MainActivity")
+            self.open_home()
             self.start_service()
             assert self.pid("shizuku_server") == shizuku_pid, "starting Porter replaced Shizuku"
             self.launch_bridge()

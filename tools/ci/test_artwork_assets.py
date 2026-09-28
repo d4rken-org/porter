@@ -7,6 +7,7 @@ import zlib
 
 ROOT = Path(__file__).resolve().parents[2]
 MANAGER = ROOT / "manager/src/main/res/drawable-xxxhdpi"
+MANAGER_NODPI = ROOT / "manager/src/main/res/drawable-nodpi"
 COMPAT = ROOT / "compat/src/main/res/drawable-xxxhdpi"
 ASSETS = ROOT / "docs/assets"
 MINT = (0xDC, 0xFF, 0xEE)
@@ -57,6 +58,8 @@ class ArtworkAssetsTest(unittest.TestCase):
         "manager mascot": MANAGER / "porter_mascot.png",
         "manager happy mascot": MANAGER / "porter_mascot_happy.png",
         "manager unhappy mascot": MANAGER / "porter_mascot_unhappy.png",
+        "manager large mascot": MANAGER_NODPI / "porter_mascot_large.png",
+        "manager large happy mascot": MANAGER_NODPI / "porter_mascot_happy_large.png",
         "compat launcher": COMPAT / "ic_porter.png",
         "compat background": COMPAT / "porter_background.png",
         "compat foreground": COMPAT / "porter_foreground.png",
@@ -83,6 +86,12 @@ class ArtworkAssetsTest(unittest.TestCase):
     def test_mascot_expressions_are_distinct(self):
         names = ("porter_mascot.png", "porter_mascot_happy.png", "porter_mascot_unhappy.png")
         self.assertEqual(3, len({digest(MANAGER / name) for name in names}))
+
+    def test_large_mascots_are_distinct_and_640px(self):
+        names = ("porter_mascot_large.png", "porter_mascot_happy_large.png")
+        self.assertEqual(2, len({digest(MANAGER_NODPI / name) for name in names}))
+        for name in names:
+            self.assertEqual((640, 640), header(MANAGER_NODPI / name)[:2], name)
 
     def test_plates_keep_their_assigned_colours(self):
         self.assertEqual(MINT, first_pixel(MANAGER / "porter_background.png"))

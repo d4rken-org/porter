@@ -123,6 +123,11 @@ LAUNCH_TIMEOUT = 20
 LAUNCH_ATTEMPTS = 3
 FOREIGN_PASSWORD = "porterci"
 USER_ID = re.compile(r"UserInfo\{(\d+):")
+HOME = MANAGER + "/eu.darken.porter.manager.MainActivity"
+# The titles of first-run onboarding's pages, in the order they appear. The middle one only shows
+# while another app owns the Shizuku permission. A page in transition shows two titles, and the
+# earlier one names it until it has gone.
+ONBOARDING_TITLES = ("Welcome to Porter", "Shizuku is installed", "Privacy")
 
 
 class PushTracker:
@@ -180,6 +185,9 @@ def apksigner():
 
 
 class Smoke:
+    # How open_home() presses onboarding's buttons, called with the label; None taps them.
+    onboarding_activate = None
+
     def __init__(self, args):
         self.args = args
         self.output = args.output.resolve()
@@ -784,14 +792,14 @@ class Smoke:
                 self.shell("pm", "revoke", package, permission, check=False)
                 self.shell("am", "force-stop", package)
         if "service" in aspects and not self.pid("porter_server"):
-            self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
+            self.open_home()
             self.start_service()
         if "shell-service" in aspects:
             # A root server left running would become the fixture for every case after this one,
             # so this replaces whatever is there rather than only filling a gap.
             self.kill_server(check=False)
             self.until("the server is gone", lambda: not self.pid("porter_server"))
-            self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
+            self.open_home()
             self.start_service()
 
     def authorized(self, package, require_manager_guard=True, server_uid="2000"):
@@ -819,8 +827,47 @@ class Smoke:
         self.shell("am", "force-stop", package)
         return {"revoked_user_service_pid": service_pid}
 
+    def open_home(self):
+        """Starts Home, and completes first-run onboarding when the start opened that instead.
+
+        Home hands every start to onboarding until it has been completed once, which a fresh
+        installation, or one after an uninstall, has not.
+        """
+        self.shell("am", "start", "-W", "-f", "0x04000000", "-n", HOME)
+        activate = self.onboarding_activate or self.tap
+
+        def manager_screen():
+            nodes = self.settled_screen()
+            return nodes if any(node.get("package") == MANAGER for node in nodes) else None
+
+        def page(nodes):
+            return next((title for title in ONBOARDING_TITLES if self.find(nodes, title) is not None), None)
+
+        # Waited for rather than read once: am can return while Home is still handing over to
+        # onboarding, and the window in front until then would answer "no onboarding".
+        nodes = self.until("the manager's window", manager_screen)
+        current = page(nodes)
+        if current != ONBOARDING_TITLES[0]:
+            return
+        for _ in ONBOARDING_TITLES:
+            if self.find(nodes, "Get started") is not None:
+                activate("Get started")
+                break
+            activate("Continue")
+            previous = current
+            nodes = self.until(f"the onboarding page after {previous!r}",
+                               lambda: (n := manager_screen()) and page(n) != previous and n)
+            current = page(nodes)
+            # A press that reached the last page's button as well has already completed it.
+            if current is None:
+                break
+        else:
+            raise AssertionError("onboarding never offered 'Get started'")
+        self.until("onboarding completed and Home in front",
+                   lambda: (n := manager_screen()) and page(n) is None and self.find(n, "Get started") is None)
+
     def stop_porter(self):
-        self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
+        self.open_home()
         self.tap("Porter is running", prefix=True)
         self.tap("Stop Porter")
         # The dialog repeats "Stop Porter" as its title, so the second match is the confirm button
@@ -881,7 +928,7 @@ class Smoke:
             self.adb("install", str(apk.resolve()))
         # The app sandbox cannot read this file; the user service must run as the ADB shell.
         self.shell("sh", "-c", f"printf %s {shlex.quote(PAYLOAD)} > /data/local/tmp/porter-probe.txt; chmod 600 /data/local/tmp/porter-probe.txt")
-        self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
+        self.open_home()
         self.start_service()
 
     def run(self):
@@ -894,7 +941,7 @@ class Smoke:
             self.launch_probe(NATIVE)
             self.tap("Deny")
             self.expect_log(NATIVE, "DENIED")
-            self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
+            self.open_home()
             self.tap("Applications")
             self.tap(NATIVE, scroll=True, screenshot="app-list-grant")
             self.expect_log(NATIVE, "PERMISSION granted")
@@ -909,7 +956,7 @@ class Smoke:
 
             def open_support():
                 # CLEAR_TOP destroys the support screen opened earlier, so it is navigated again.
-                self.shell("am", "start", "-W", "-f", "0x04000000", "-n", MANAGER + "/eu.darken.porter.manager.MainActivity")
+                self.open_home()
                 self.tap(desc="Settings")
                 self.tap("Help & support", scroll=True)
             open_support()

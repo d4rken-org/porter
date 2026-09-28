@@ -61,7 +61,7 @@ internal class CompatibilityRepository private constructor(private val context: 
     private var previewCertificate: String? = null
     private var cachedIconKey: String? = null
     private var cachedIcon: Bitmap? = null
-    private val flags = PackageManager.GET_PERMISSIONS or if (Build.VERSION.SDK_INT >= 28) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES
+    private val flags = PACKAGE_FLAGS
     // Android 9 and 10 read an archive's signers only for GET_SIGNATURES and otherwise return it without signingInfo.
     @Suppress("DEPRECATION")
     private val archiveFlags = if (Build.VERSION.SDK_INT < 30) flags or PackageManager.GET_SIGNATURES else flags
@@ -332,6 +332,7 @@ internal class CompatibilityRepository private constructor(private val context: 
     companion object {
         const val PACKAGE = "moe.shizuku.privileged.api"
         const val PERMISSION = "moe.shizuku.manager.permission.API_V23"
+        val PACKAGE_FLAGS = PackageManager.GET_PERMISSIONS or if (Build.VERSION.SDK_INT >= 28) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES
         @Volatile private var instance: CompatibilityRepository? = null
         fun get(context: Context) = instance ?: synchronized(this) { instance ?: CompatibilityRepository(context.applicationContext).also { instance = it } }
         fun version(info: PackageInfo): Long = if (Build.VERSION.SDK_INT >= 28) info.longVersionCode else @Suppress("DEPRECATION") info.versionCode.toLong()

@@ -53,8 +53,11 @@ def main():
             smoke.shell("input", "keyevent", "KEYCODE_DPAD_" + directions[count % len(directions)])
         raise AssertionError("Could not focus " + label)
 
+    # Onboarding comes up at setup's first start of Home, so it too is driven the way --dpad asks.
+    smoke.onboarding_activate = activate
+
     def setup_screen():
-        smoke.shell("am", "start", "-W", "-f", "0x04000000", "-n", base.MANAGER + "/eu.darken.porter.manager.MainActivity")
+        smoke.open_home()
         if any(n.get("text") == "Shizuku compatibility" for n in smoke.ui().iter("node")):
             activate("Shizuku compatibility")
         else:

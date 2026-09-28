@@ -319,9 +319,9 @@ class StopPorterConfirmationTest(unittest.TestCase):
 
     @patch.object(smoke.time, "sleep")
     def test_confirms_the_dialog_before_waiting_for_the_server_to_exit(self, sleep):
-        # Two reads per tap: the one that locates the button and the one that confirms the
-        # screen moved on from it.
-        self.runner.ui = Mock(side_effect=[self.home, self.service,
+        # One read that finds Home rather than onboarding in front, then two per tap: the one
+        # that locates the button and the one that confirms the screen moved on from it.
+        self.runner.ui = Mock(side_effect=[self.home, self.home, self.service,
                                            self.service, self.dialog,
                                            self.dialog, self.service])
         self.runner.pid = Mock(side_effect=["5271", ""])
@@ -342,6 +342,86 @@ class StopPorterConfirmationTest(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "Timed out"):
             self.runner.tap("Stop Porter", occurrence=1)
         self.runner.shell.assert_not_called()
+
+
+class OpenHomeTest(unittest.TestCase):
+    """Home is only reachable through onboarding until that has been completed once."""
+
+    START = call("am", "start", "-W", "-f", "0x04000000",
+                 "-n", "eu.darken.porter/eu.darken.porter.manager.MainActivity")
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.shell = Mock()
+        self.runner.tap = Mock()
+        patcher = patch.object(smoke.time, "sleep")
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def screen(self, *texts, package="eu.darken.porter"):
+        nodes = "".join(f'<node text="{text}" package="{package}" enabled="true" '
+                        f'bounds="[0,{100 * index}][100,{100 * index + 50}]" />'
+                        for index, text in enumerate(texts))
+        return ET.fromstring(f'<hierarchy><node package="{package}">{nodes}</node></hierarchy>')
+
+    def home(self):
+        return self.screen("Porter is running")
+
+    def welcome(self):
+        return self.screen("Welcome to Porter", "Continue")
+
+    def shizuku(self):
+        return self.screen("Shizuku is installed", "Compatibility guide", "Continue")
+
+    def privacy(self):
+        return self.screen("Privacy", "Privacy policy", "Get started")
+
+    def test_home_in_front_is_only_started(self):
+        self.runner.ui = Mock(side_effect=[self.home()])
+        self.runner.open_home()
+        self.assertEqual(self.runner.shell.call_args_list, [self.START])
+        self.runner.tap.assert_not_called()
+
+    def test_onboarding_without_the_shizuku_page_continues_then_gets_started(self):
+        self.runner.ui = Mock(side_effect=[self.welcome(), self.privacy(), self.home()])
+        self.runner.open_home()
+        self.assertEqual(self.runner.shell.call_args_list, [self.START])
+        self.assertEqual(self.runner.tap.call_args_list, [call("Continue"), call("Get started")])
+
+    def test_onboarding_with_the_shizuku_page_continues_twice(self):
+        self.runner.ui = Mock(side_effect=[self.welcome(), self.shizuku(), self.privacy(), self.home()])
+        self.runner.open_home()
+        self.assertEqual(self.runner.tap.call_args_list,
+                         [call("Continue"), call("Continue"), call("Get started")])
+
+    def test_a_dpad_activation_replaces_the_taps(self):
+        self.runner.onboarding_activate = Mock()
+        self.runner.ui = Mock(side_effect=[self.welcome(), self.privacy(), self.home()])
+        self.runner.open_home()
+        self.assertEqual(self.runner.onboarding_activate.call_args_list,
+                         [call("Continue"), call("Get started")])
+        self.runner.tap.assert_not_called()
+
+    def test_a_window_still_in_front_of_the_start_is_not_read_as_no_onboarding(self):
+        launcher = self.screen("Phone", package="com.google.android.apps.nexuslauncher")
+        self.runner.ui = Mock(side_effect=[launcher, self.welcome(), self.privacy(), self.home()])
+        self.runner.open_home()
+        self.assertEqual(self.runner.tap.call_args_list, [call("Continue"), call("Get started")])
+
+    def test_a_page_in_transition_is_not_the_next_page(self):
+        # Both titles are on screen while the pages swap, and Continue pressed then would land on
+        # the page still leaving.
+        both = self.screen("Welcome to Porter", "Privacy", "Get started")
+        self.runner.ui = Mock(side_effect=[self.welcome(), both, self.privacy(), self.home()])
+        self.runner.open_home()
+        self.assertEqual(self.runner.tap.call_args_list, [call("Continue"), call("Get started")])
+        self.assertEqual(self.runner.ui.call_count, 4)
+
+    def test_it_returns_only_once_onboarding_has_gone(self):
+        finishing = self.screen("Privacy", "Privacy policy")
+        self.runner.ui = Mock(side_effect=[self.welcome(), self.privacy(), finishing, self.home()])
+        self.runner.open_home()
+        self.assertEqual(self.runner.ui.call_count, 4)
 
 
 class TapConfirmationTest(unittest.TestCase):
@@ -812,6 +892,7 @@ class ScenarioRestoreTest(unittest.TestCase):
         self.runner.extra_users = Mock(side_effect=lambda: list(self.users))
         self.runner.shell_removes_user = None
         self.runner.start_service = Mock()
+        self.runner.open_home = Mock()
         # cases=None explicitly: a bare Mock would hand case() a truthy attribute to filter on.
         self.runner.args = Mock(cases=None, manager=Path("/apks/manager.apk"),
                                 native=Path("/apks/native.apk"), legacy=Path("/apks/legacy.apk"))
@@ -890,6 +971,7 @@ class ScenarioRestoreTest(unittest.TestCase):
         self.runner.case("probe-case", lambda: None, restore=("manager", "service"))
         self.assertIn(call("install", str(Path("/apks/manager.apk").resolve())),
                       self.runner.adb.call_args_list)
+        self.runner.open_home.assert_called_once()
         self.runner.start_service.assert_called_once()
 
 
