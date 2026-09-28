@@ -319,6 +319,9 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d #v2.38.0
         with:
           api-level: ${{ matrix.api }}
+          # Not google_atd like the smoke suites. That image has no Settings or SystemUI, which the
+          # pairing case drives, and on it system_server stopped responding after this suite's
+          # reboots, leaving its "isn't responding" dialog over the app.
           target: google_apis
           arch: x86_64
           profile: pixel_2
