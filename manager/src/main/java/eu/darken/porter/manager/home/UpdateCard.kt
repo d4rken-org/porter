@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.NewReleases
 import androidx.compose.material3.AlertDialog
@@ -84,7 +86,10 @@ internal fun UpdateDownloadDialog(fileName: String, automaticAvailable: Boolean,
     AlertDialog(onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.updater_dialog_title)) },
         text = {
-            Column(Modifier.selectableGroup(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(
+                Modifier.verticalScroll(rememberScrollState()).selectableGroup(),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
                 Text(fileName, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 UpdateOption(selected == UpdateAction.DOWNLOAD, true, stringResource(R.string.updater_download),
                     stringResource(R.string.updater_download_summary)) { selected = UpdateAction.DOWNLOAD }
