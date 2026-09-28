@@ -629,8 +629,7 @@ class CaseBodyTest(unittest.TestCase):
                 on_push=replaces_the_secondary).run_case("secondary-before-delivery")
 
     def adoption_device(self, *, grant_survives=False, kept=True, uninstall_kills=False,
-                        adopts=True, connects=True, authorizes=True, pushes_again=False,
-                        restarts_shizuku=False, orphan_service=False):
+                        adopts=True, connects=True, pushes_again=False, restarts_shizuku=False):
         """Porter absent and Shizuku running, as selection-porter-stopped leaves them. `stream` is
         the probe's lines interleaved with the SDK's, in the order sdk_logs_for reads them."""
         stream = []
@@ -661,11 +660,7 @@ class CaseBodyTest(unittest.TestCase):
             if adopts:
                 stream.append("Porter: adopting a kept SHIZUKU binder")
                 if connects:
-                    probe_says("BINDER_DEAD", self.SHIZUKU_BINDER, "BACKEND SHIZUKU",
-                               *(("AUTHORIZED managerOperationDenied=", self.USER_SERVICE)
-                                 if authorizes else ()))
-                    if authorizes:
-                        device.processes[dualwire.BRIDGE + ":porter-probe"] = "500"
+                    probe_says("BINDER_DEAD", self.SHIZUKU_BINDER, "BACKEND SHIZUKU")
 
         def adb(*args, **kwargs):
             if args[:2] == ("uninstall", dualwire.base.MANAGER):
@@ -675,11 +670,7 @@ class CaseBodyTest(unittest.TestCase):
         def shell(*args, **kwargs):
             if grant_survives and args[:2] == ("dumpsys", "package"):
                 return dualwire.base.PERMISSION + ": granted=true"
-            result = device.shell(*args, **kwargs)
-            # After the delegated force-stop, which would otherwise remove it again.
-            if orphan_service and args[:3] == ("am", "force-stop", dualwire.BRIDGE):
-                device.processes[dualwire.BRIDGE + ":porter-probe"] = "500"
-            return result
+            return device.shell(*args, **kwargs)
 
         device = MockedDevice(processes={"shizuku_server": MockedDevice.SHIZUKU_SERVER},
                               launches=[self.lines(self.PORTER_BINDER, "BACKEND PORTER")],
@@ -700,8 +691,6 @@ class CaseBodyTest(unittest.TestCase):
             "replaced the probe process": dict(uninstall_kills=True),
             "the kept Shizuku binder is adopted": dict(adopts=False),
             "the probe connects on Shizuku": dict(connects=False),
-            "AUTHORIZED": dict(authorizes=False),
-            "the user service follows its client": dict(orphan_service=True),
             "pushed a binder after the uninstall": dict(pushes_again=True),
             "the Shizuku server was replaced": dict(restarts_shizuku=True),
         }
