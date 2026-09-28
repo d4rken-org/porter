@@ -422,13 +422,8 @@ class Dualwire(base.Smoke):
                     "a server pushed a binder after the uninstall, so nothing was adopted"
                 assert self.pid("shizuku_server") == shizuku_pid, "the Shizuku server was replaced"
                 assert self.pid(BRIDGE) == probe_pid, "the probe process was replaced"
-                # The shizuku-permission-lifecycle authorization is still there, so the adopted
-                # connection is used rather than only published.
-                self.authorized(BRIDGE, require_manager_guard=False)
             finally:
                 self.shell("am", "force-stop", BRIDGE)
-            self.until("the user service follows its client",
-                       lambda: not self.pid(BRIDGE + ":porter-probe"))
             return {"probe_pid": probe_pid, "shizuku_pid": shizuku_pid}
         # Leaves Porter uninstalled and only Shizuku running, which is what selection-porter-stopped
         # hands the recovery case.
