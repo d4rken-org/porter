@@ -36,6 +36,7 @@ internal data class HomeUiState(
     val busy: Boolean = false,
     val wirelessAdbAvailable: Boolean = false,
     val tlsSupported: Boolean = false,
+    val update: UpdateCardState? = null,
 )
 
 internal data class HomeActions(
@@ -48,6 +49,9 @@ internal data class HomeActions(
     val onStartWireless: () -> Unit,
     val onViewWirelessGuide: () -> Unit,
     val onShowAdbCommand: () -> Unit,
+    val onUpdateIgnore: () -> Unit = {},
+    val onUpdateChangelog: () -> Unit = {},
+    val onUpdateDownload: () -> Unit = {},
 )
 
 @Composable
@@ -67,6 +71,9 @@ internal fun HomeScreenContent(state: HomeUiState, actions: HomeActions, modifie
         }) { padding ->
         LazyColumn(modifier.padding(padding).consumeWindowInsets(padding), state = listState, contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             item { ServiceStatusCard(state.statusUi, onDetails = actions.onOpenService) }
+            state.update?.let { update ->
+                item { UpdateCard(update, actions.onUpdateIgnore, actions.onUpdateChangelog, actions.onUpdateDownload) }
+            }
             if (state.canStart) {
                 if (state.wirelessAdbAvailable) item {
                     HomeCard(stringResource(R.string.home_wireless_adb_title), Icons.TwoTone.Wifi) {

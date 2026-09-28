@@ -31,6 +31,7 @@ import eu.darken.porter.manager.management.AppsViewModel
 import eu.darken.porter.manager.management.ApplicationManagementActivity
 import eu.darken.porter.manager.settings.SettingsActivity
 import eu.darken.porter.manager.ui.*
+import eu.darken.porter.manager.updater.UpdateRepository
 import eu.darken.porter.manager.utils.*
 
 abstract class HomeActivity : ComposeActivity() {
@@ -39,6 +40,7 @@ abstract class HomeActivity : ComposeActivity() {
     private val service by lazy { eu.darken.porter.manager.service.ServiceStatusRepository.get(this) }
     private val appsModel: AppsViewModel by viewModels()
     private val compatibility by lazy { CompatibilityRepository.get(this) }
+    private val updates by lazy { UpdateRepository.get(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +97,7 @@ abstract class HomeActivity : ComposeActivity() {
         homeModel.checkBatteryOptimization()
         if (PorterStateMachine.instance.isRunning()) appsModel.load()
         compatibility.refresh()
+        updates.refresh()
     }
 
     override fun onPostResume() {
@@ -122,6 +125,8 @@ abstract class HomeActivity : ComposeActivity() {
         val reboot by homeModel.shouldShowRebootDialog.collectAsStateWithLifecycle()
         val duplicate by homeModel.shouldShowUninstallDialog.collectAsStateWithLifecycle()
         val battery by homeModel.shouldShowBatteryOptimizationSnackbar.collectAsStateWithLifecycle()
+        val updateState by updates.state.collectAsStateWithLifecycle()
+        val update = updateState.update
         val serviceState = snapshot.serviceState
         LaunchedEffect(serviceState) { if (serviceState == PorterStateMachine.State.RUNNING) appsModel.load() }
         val statusUi = serviceStatusUi(snapshot)
@@ -138,7 +143,8 @@ abstract class HomeActivity : ComposeActivity() {
             HomeUiState(statusUi, appsState, compatState, buildBadge, battery,
                 canStart = snapshot.canStart, primaryUser = snapshot.primaryUser, integratedCompatibility = BuildConfig.IS_FOSS,
                 busy = snapshot.busy,
-                wirelessAdbAvailable = wirelessAdbAvailable, tlsSupported = tlsSupported),
+                wirelessAdbAvailable = wirelessAdbAvailable, tlsSupported = tlsSupported,
+                update = update?.toCardState()),
             HomeActions(
                 onOpenSettings = { startActivity(Intent(this@HomeActivity, SettingsActivity::class.java)) },
                 onOpenApps = { startActivity(Intent(this@HomeActivity, ApplicationManagementActivity::class.java)) },
@@ -149,6 +155,8 @@ abstract class HomeActivity : ComposeActivity() {
                 onStartWireless = { if (canStart("Wireless start")) WirelessStart.start(this@HomeActivity, lifecycleScope) },
                 onViewWirelessGuide = { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, Helps.ADB_ANDROID11.get()) },
                 onShowAdbCommand = { if (canStart("ADB command")) dialog = "command" },
+                onUpdateIgnore = { updates.dismiss() },
+                onUpdateChangelog = { update?.let { CustomTabsHelper.launchUrlOrCopy(this@HomeActivity, it.release.changelogUrl) } },
             ),
         )
         if (dialog == "command") AlertDialog(onDismissRequest = { dialog = null },

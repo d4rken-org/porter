@@ -452,4 +452,18 @@
     <string name="porter_contact_description_error">Please add some details (at least 20 characters).</string>
     <string name="porter_contact_expected_error">Please describe what you expected.</string>
     <string name="porter_contact_no_email">Install or enable an email app to open this draft. You can also share saved logs or contact us through GitHub or Discord.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Update available</string>
+    <string name="updater_card_versions">Porter %1$s is available. You have %2$s.</string>
+    <string name="updater_ignore">Ignore</string>
+    <string name="updater_changelog">Changelog</string>
+    <string name="updater_download">Download</string>
+    <string name="updater_check">Check for updates</string>
+    <string name="updater_check_summary">Looks for a newer Porter release on GitHub when you open Porter, at most once a day.</string>
+    <string name="updater_channel">Update channel</string>
+    <string name="updater_channel_production">Production</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Production: full releases only</string>
+    <string name="updater_channel_beta_choice">Beta: newest release, including betas and pre-releases</string>
 </resources>
