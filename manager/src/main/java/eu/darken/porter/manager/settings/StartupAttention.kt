@@ -8,8 +8,8 @@ import eu.darken.porter.manager.utils.NotificationAlerts
 import eu.darken.porter.manager.utils.SettingsHelper
 
 /**
- * What the Startup screen's two conditional rows report. Home, the settings index and Startup all
- * answer from here, so none of them can flag a problem the others do not show.
+ * Whether the startup setup has a problem to raise: battery optimization that would stop an enabled
+ * start on boot or watchdog, or alerts those features cannot deliver.
  */
 internal object StartupAttention {
 
