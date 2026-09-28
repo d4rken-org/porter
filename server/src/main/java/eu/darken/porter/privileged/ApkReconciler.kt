@@ -3,12 +3,12 @@ package eu.darken.porter.privileged
 import android.os.Bundle
 import android.os.SystemClock
 import eu.darken.porter.privileged.util.PackageIdentity
+import eu.darken.porter.privileged.util.UsersCompat
 import java.util.IdentityHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
-import rikka.hidden.compat.UserManagerApis
 import rikka.shizuku.server.UserServiceRecord
 import rikka.shizuku.server.util.Logger
 
@@ -352,7 +352,7 @@ class ApkReconciler(
             try {
                 // The throwing variant: getUserIdsNoThrow() answers {0} when enumeration fails, and a
                 // silent narrowing to user 0 would read a package living only in user 10 as absent.
-                val users = UserManagerApis.getUsers(true, true, true)
+                val users = UsersCompat.getUsers(true, true, true)
                 val ids = ArrayList<Int>(users.size)
                 for (user in users) ids.add(user.id)
                 return ids

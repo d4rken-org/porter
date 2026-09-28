@@ -35,4 +35,5 @@ dependencies {
     implementation(project(":server-shared"))
     implementation(libs.hidden.compat)
     compileOnly(libs.hidden.stub)
+    testCompileOnly(libs.hidden.stub)
 }
