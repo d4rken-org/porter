@@ -8,9 +8,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import eu.darken.porter.manager.Manifest
-import eu.darken.porter.manager.PorterSettings
+import eu.darken.porter.manager.settings.StartupAttention
 import eu.darken.porter.manager.utils.EnvironmentUtils
-import eu.darken.porter.manager.utils.SettingsHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -44,8 +43,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun checkBatteryOptimization() {
         if (EnvironmentUtils.isTelevision()) return
-        if (!PorterSettings.isStartOnBoot(appContext) && !PorterSettings.watchdog) { shouldShowBatteryOptimizationSnackbar.value = false; return }
-        shouldShowBatteryOptimizationSnackbar.value = !SettingsHelper.isIgnoringBatteryOptimizations(appContext)
+        shouldShowBatteryOptimizationSnackbar.value = StartupAttention.batteryRowNeeded(appContext)
     }
 
 }
