@@ -22,7 +22,7 @@ android {
         create("sign")
     }
     buildTypes {
-        debug { signingConfig = signingConfigs.getByName("sign") }
+        debug { signingConfig = signingConfigs.getByName("debug") }
         release { signingConfig = signingConfigs.getByName("sign") }
     }
     applicationVariants.configureEach {

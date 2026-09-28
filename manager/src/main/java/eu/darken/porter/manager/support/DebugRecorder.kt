@@ -30,16 +30,22 @@ import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.model.PorterServiceVersion
 import eu.darken.porter.manager.utils.EnvironmentUtils
+import eu.darken.porter.manager.utils.Logger
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.ServerBinder
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DebugRecorder internal constructor(
     private val appContext: Context,
     storeOverride: DebugLogStore? = null,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
     private val managerLog: (pid: Int) -> java.lang.Process = { pid ->
-        ProcessBuilder("logcat", "-v", "threadtime", "--pid=$pid", "-T", "1").redirectErrorStream(true).start()
+        // Replays what is logged between the launch and logcat attaching.
+        val since = SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US).format(Date())
+        ProcessBuilder("logcat", "-v", "threadtime", "--pid=$pid", "-T", since).redirectErrorStream(true).start()
     },
     private val binders: StateFlow<IBinder?> = ServerBinder.binder,
     private val anchors: ClockAnchors = ClockAnchors(appContext),
@@ -129,6 +135,7 @@ class DebugRecorder internal constructor(
         val child = managerLog(Process.myPid())
         try {
             process = child
+            Logger.recording = true
             mutableState.value = State(true, started)
             showNotification()
             reader = scope.launch {
@@ -147,6 +154,7 @@ class DebugRecorder internal constructor(
             follower = ServiceFollower(binders, serviceOperations, directory, deadline, started, session, anchors, scope).also { it.start() }
             watchServiceState(directory)
         } catch (e: Exception) {
+            Logger.recording = false
             process = null
             child.destroy()
             runCatching { child.inputStream.close() }
@@ -187,6 +195,8 @@ class DebugRecorder internal constructor(
     private suspend fun stop(expected: java.lang.Process?) = withContext(Dispatchers.IO + NonCancellable) {
         mutex.withLock {
             if (expected != null && process !== expected) return@withLock
+            // Closed while logcat still runs, so nothing debug-level is logged uncaptured.
+            Logger.recording = false
             val id = store.activeId() ?: return@withLock
             val child = process
             process = null

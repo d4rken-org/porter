@@ -3,12 +3,14 @@ package eu.darken.porter.privileged.util
 import android.content.pm.PackageInfo
 import android.os.Build
 import android.util.Log
+import rikka.shizuku.server.util.Logger
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
 object InstalledPackagesCompat {
 
     private const val TAG = "InstalledPackagesCompat"
+    private val LOGGER = Logger(TAG)
     private const val ANDROID_13 = 33
     private const val PARCELED_LIST_SLICE = "android.content.pm.ParceledListSlice"
 
@@ -31,7 +33,7 @@ object InstalledPackagesCompat {
             return if (result == null) emptyList() else result as List<PackageInfo>
         } catch (ignored: NoSuchMethodException) {
         } catch (e: Exception) {
-            Log.d(TAG, "getInstalledPackagesAsUser failed, falling back to hidden API", e)
+            LOGGER.d("getInstalledPackagesAsUser failed, falling back to hidden API", e)
         }
 
         val packageManager = getPackageManager()

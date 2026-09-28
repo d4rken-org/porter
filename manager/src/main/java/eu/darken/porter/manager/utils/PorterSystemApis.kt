@@ -4,15 +4,15 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.RemoteException
 import rikka.hidden.compat.PermissionManagerApis
-import rikka.hidden.compat.UserManagerApis
 import rikka.hidden.compat.util.SystemServiceBinder
 import eu.darken.porter.privileged.util.InstalledPackagesCompat
+import eu.darken.porter.privileged.util.UsersCompat
 
 private fun loadUsersFromService(): List<UserInfoCompat> {
     return if (!PorterStateMachine.instance.isRunning()) {
         arrayListOf(UserInfoCompat(UserHandleCompat.myUserId(), "Owner"))
     } else try {
-        val list = UserManagerApis.getUsers(true, true, true)
+        val list = UsersCompat.getUsers(true, true, true)
         val users: MutableList<UserInfoCompat> = ArrayList<UserInfoCompat>()
         for (ui in list) {
             users.add(UserInfoCompat(ui.id, ui.name))

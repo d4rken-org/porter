@@ -107,7 +107,7 @@ android {
     }
     buildTypes {
         debug {
-            signingConfig = signingConfigs.getByName("sign")
+            signingConfig = signingConfigs.getByName("debug")
         }
         release {
             signingConfig = signingConfigs.getByName("sign")
@@ -258,6 +258,7 @@ dependencies {
 
     implementation(project(":common"))
     implementation(project(":server"))
+    implementation(project(":server-shared"))
     implementation(project(":porsh"))
     implementation(project(":starter"))
     implementation(project(":sdk"))
