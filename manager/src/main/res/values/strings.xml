@@ -460,7 +460,7 @@
     <string name="updater_changelog">Changelog</string>
     <string name="updater_download">Download</string>
     <string name="updater_check">Check for updates</string>
-    <string name="updater_check_summary">Looks for a newer Porter release on GitHub when you open Porter, at most once a day.</string>
+    <string name="updater_check_summary">Looks for a newer Porter release on GitHub when you open Porter. A successful check is kept for a day.</string>
     <string name="updater_channel">Update channel</string>
     <string name="updater_channel_production">Production</string>
     <string name="updater_channel_beta">Beta</string>
