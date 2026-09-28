@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -142,18 +143,17 @@ private fun OnboardingBottomBar(state: OnboardingUiState, actions: OnboardingAct
             Text(stringResource(R.string.onboarding_save_failed), color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyMedium)
         }
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Spacer(Modifier.weight(1f))
             OnboardingPageIndicator(state.pages.size, state.pages.indexOf(state.page))
-            Button(
-                onClick = if (last) actions.onFinish else actions.onNext,
-                enabled = !(last && state.finishing),
-                modifier = Modifier.focusRequester(primaryFocus),
-            ) {
-                Text(stringResource(if (last) R.string.onboarding_get_started else R.string.onboarding_continue))
+            Box(Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
+                Button(
+                    onClick = if (last) actions.onFinish else actions.onNext,
+                    enabled = !(last && state.finishing),
+                    modifier = Modifier.focusRequester(primaryFocus),
+                ) {
+                    Text(stringResource(if (last) R.string.onboarding_get_started else R.string.onboarding_continue))
+                }
             }
         }
     }
