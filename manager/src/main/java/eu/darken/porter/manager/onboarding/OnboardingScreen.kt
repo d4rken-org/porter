@@ -7,8 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -65,11 +63,11 @@ internal fun OnboardingScreenContent(state: OnboardingUiState, actions: Onboardi
         Column(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
             AnimatedContent(state.page, Modifier.weight(1f), label = "onboardingPage") { page ->
                 Column(
-                    Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp, vertical = 16.dp),
+                    Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    OnboardingPageBody(page, state.isBeta)
+                    OnboardingPageBody(page, state.isBeta, actions)
                 }
             }
             OnboardingBottomBar(state, actions)
@@ -78,11 +76,10 @@ internal fun OnboardingScreenContent(state: OnboardingUiState, actions: Onboardi
 }
 
 @Composable
-private fun OnboardingPageBody(page: OnboardingPage, isBeta: Boolean) {
-    val mascot = if (page == OnboardingPage.WELCOME) R.drawable.porter_mascot_happy_large else R.drawable.porter_mascot_large
-    Image(painterResource(mascot), contentDescription = null, modifier = Modifier.size(160.dp))
+private fun OnboardingPageBody(page: OnboardingPage, isBeta: Boolean, actions: OnboardingActions) {
     when (page) {
         OnboardingPage.WELCOME -> {
+            OnboardingMascot(R.drawable.porter_mascot_happy_large)
             OnboardingTitle(stringResource(R.string.onboarding_welcome_title))
             OnboardingParagraph(stringResource(R.string.onboarding_welcome_body))
             OnboardingParagraph(stringResource(R.string.onboarding_welcome_service))
@@ -92,15 +89,27 @@ private fun OnboardingPageBody(page: OnboardingPage, isBeta: Boolean) {
             }
         }
         OnboardingPage.SHIZUKU -> {
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                Image(painterResource(R.drawable.ic_shizuku), contentDescription = null, modifier = Modifier.size(104.dp))
+                Image(painterResource(R.drawable.porter_mascot_large), contentDescription = null, modifier = Modifier.size(128.dp))
+            }
             OnboardingTitle(stringResource(R.string.onboarding_shizuku_title))
             OnboardingParagraph(stringResource(R.string.onboarding_shizuku_body))
             OnboardingParagraph(stringResource(R.string.onboarding_shizuku_replace))
+            OutlinedButton(onClick = actions.onCompatibilityGuide) { Text(stringResource(R.string.onboarding_shizuku_guide)) }
         }
         OnboardingPage.PRIVACY -> {
+            OnboardingMascot(R.drawable.porter_mascot_large)
             OnboardingTitle(stringResource(R.string.onboarding_privacy_title))
             OnboardingParagraph(stringResource(R.string.onboarding_privacy_body))
+            OutlinedButton(onClick = actions.onPrivacyPolicy) { Text(stringResource(R.string.onboarding_privacy_policy)) }
         }
     }
+}
+
+@Composable
+private fun OnboardingMascot(mascot: Int) {
+    Image(painterResource(mascot), contentDescription = null, modifier = Modifier.size(160.dp))
 }
 
 @Composable
@@ -114,7 +123,6 @@ private fun OnboardingParagraph(text: String) {
     Text(text, Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodyLarge)
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun OnboardingBottomBar(state: OnboardingUiState, actions: OnboardingActions) {
     val primaryFocus = remember { FocusRequester() }
@@ -125,13 +133,8 @@ private fun OnboardingBottomBar(state: OnboardingUiState, actions: OnboardingAct
         }
     }
     val last = state.page == OnboardingPage.PRIVACY
-    val secondary = when (state.page) {
-        OnboardingPage.WELCOME -> null
-        OnboardingPage.SHIZUKU -> stringResource(R.string.onboarding_shizuku_guide) to actions.onCompatibilityGuide
-        OnboardingPage.PRIVACY -> stringResource(R.string.onboarding_privacy_policy) to actions.onPrivacyPolicy
-    }
     Column(
-        Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp),
+        Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
@@ -140,12 +143,7 @@ private fun OnboardingBottomBar(state: OnboardingUiState, actions: OnboardingAct
                 style = MaterialTheme.typography.bodyMedium)
         }
         OnboardingPageIndicator(state.pages.size, state.pages.indexOf(state.page))
-        FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.End),
-            verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (secondary != null) {
-                val (label, onClick) = secondary
-                OutlinedButton(onClick = onClick) { Text(label) }
-            }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             Button(
                 onClick = if (last) actions.onFinish else actions.onNext,
                 enabled = !(last && state.finishing),

@@ -92,7 +92,7 @@ class OnboardingScreenContentTest : ComposeTest() {
     @Test fun theShizukuPageShowsItsTitleAndBothButtons() {
         render(state(SHIZUKU))
         node(R.string.onboarding_shizuku_title).assertIsDisplayed()
-        node(R.string.onboarding_shizuku_guide).assertIsDisplayed().performClick()
+        node(R.string.onboarding_shizuku_guide).performScrollTo().assertIsDisplayed().performClick()
         node(R.string.onboarding_continue).assertIsDisplayed().performClick()
         assertEquals(listOf("compatibilityGuide", "next"), clicks)
     }
@@ -100,7 +100,7 @@ class OnboardingScreenContentTest : ComposeTest() {
     @Test fun thePrivacyPageOpensThePolicyAndGetsStarted() {
         render(state(PRIVACY))
         node(R.string.onboarding_privacy_title).assertIsDisplayed()
-        node(R.string.onboarding_privacy_policy).assertIsDisplayed().performClick()
+        node(R.string.onboarding_privacy_policy).performScrollTo().assertIsDisplayed().performClick()
         node(R.string.onboarding_get_started).assertIsDisplayed().performClick()
         assertEquals(listOf("privacyPolicy", "finish"), clicks)
     }
@@ -132,8 +132,9 @@ class OnboardingScreenContentTest : ComposeTest() {
     @Test fun aShortLargeFontViewportKeepsTheButtonsAndScrollsTheText() {
         val ui = render(state(SHIZUKU), fontScale = 1.5f)
         node(R.string.onboarding_continue).assertIsDisplayed()
-        node(R.string.onboarding_shizuku_guide).assertIsDisplayed()
         node(R.string.onboarding_shizuku_replace).performScrollTo().assertIsDisplayed()
+        node(R.string.onboarding_shizuku_guide).performScrollTo().assertIsDisplayed()
+        node(R.string.onboarding_continue).assertIsDisplayed()
 
         composeTestRule.runOnIdle { ui.value = state(WELCOME, isBeta = true) }
         node(R.string.onboarding_continue).assertIsDisplayed()
