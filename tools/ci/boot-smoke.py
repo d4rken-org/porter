@@ -344,6 +344,7 @@ class Boot(base.Smoke):
             """Leaves the setting in the asked-for state, whatever it was before."""
             self.open_home()
             self.tap("Settings", desc="Settings")
+            self.tap("Startup")
             if start_on_boot_is(enable):
                 return
             self.tap("Start on boot", screenshot="start-on-boot-" + ("on" if enable else "off"))

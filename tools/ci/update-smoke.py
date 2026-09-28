@@ -106,7 +106,8 @@ class Update(base.Smoke):
             return
         self.open_home()
         self.tap("Settings", desc="Settings")
-        self.tap("Update service automatically", scroll=True, screenshot="auto-update-setting")
+        self.tap("Startup")
+        self.tap("Update service automatically", screenshot="auto-update-setting")
         # The switch moves before the write lands, and what follows restarts the app.
         self.until("the app saved the setting",
                    lambda: enabled in self.shell("su", "0", "cat", settings, check=False), timeout=60)
