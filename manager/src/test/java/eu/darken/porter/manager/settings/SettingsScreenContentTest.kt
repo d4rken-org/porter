@@ -37,6 +37,8 @@ class SettingsScreenContentTest : ComposeTest() {
         onSupport = { clicks += "support" },
         onAcknowledgements = { clicks += "acknowledgements" },
         onVersion = { clicks += "version" },
+        onUpdateCheckChange = { clicks += "updateCheck=$it" },
+        onUpdateChannel = { clicks += "updateChannel" },
     )
 
     private fun state(themeColorEnabled: Boolean = true) = SettingsUiState(
@@ -101,6 +103,38 @@ class SettingsScreenContentTest : ComposeTest() {
     @Test fun aSelectableThemeColorRowIsEnabled() {
         render()
         composeTestRule.onNodeWithText(string(R.string.porter_theme_color)).assertIsEnabled()
+    }
+
+    @Test fun unsupportedUpdateCheckHidesItsRows() {
+        render(state().copy(updateCheckSupported = false, updateCheck = true, updateChannelLabel = "Production"))
+        composeTestRule.onAllNodesWithText(string(R.string.updater_check)).assertCountEquals(0)
+        composeTestRule.onAllNodesWithText(string(R.string.updater_channel)).assertCountEquals(0)
+    }
+
+    @Test fun supportedUpdateCheckShowsItsRows() {
+        render(state().copy(updateCheckSupported = true, updateCheck = true, updateChannelLabel = "Production"))
+        composeTestRule.onNodeWithText(string(R.string.updater_check)).assertIsDisplayed().assertIsOn()
+        composeTestRule.onNodeWithText(string(R.string.updater_channel)).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Production").assertIsDisplayed()
+    }
+
+    @Test fun updateCheckSwitchReportsItsChange() {
+        render(state().copy(updateCheckSupported = true, updateCheck = false, updateChannelLabel = "Production"))
+        composeTestRule.onNodeWithText(string(R.string.updater_check)).assertIsOff().performClick()
+        assertEquals(listOf("updateCheck=true"), clicks.toList())
+    }
+
+    @Test fun updateChannelIsDisabledWhileChecksAreOff() {
+        render(state().copy(updateCheckSupported = true, updateCheck = false, updateChannelLabel = "Beta"))
+        composeTestRule.onNodeWithText(string(R.string.updater_channel)).assertIsNotEnabled().performClick()
+        composeTestRule.onNodeWithText("Beta").assertIsDisplayed()
+        assertEquals(emptyList<String>(), clicks.toList())
+    }
+
+    @Test fun updateChannelOpensItsChoiceWhileChecksAreOn() {
+        render(state().copy(updateCheckSupported = true, updateCheck = true, updateChannelLabel = "Beta"))
+        composeTestRule.onNodeWithText(string(R.string.updater_channel)).assertIsEnabled().performClick()
+        assertEquals(listOf("updateChannel"), clicks.toList())
     }
 
     @Test fun everyRowInvokesItsOwnAction() {
