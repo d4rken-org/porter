@@ -6,70 +6,34 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.twotone.AltRoute
 import androidx.compose.material.icons.automirrored.twotone.HelpOutline
 import androidx.compose.material.icons.twotone.Apps
-import androidx.compose.material.icons.twotone.Autorenew
 import androidx.compose.material.icons.twotone.Code
-import androidx.compose.material.icons.twotone.Contrast
-import androidx.compose.material.icons.twotone.DarkMode
 import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.IntegrationInstructions
-import androidx.compose.material.icons.twotone.Link
-import androidx.compose.material.icons.twotone.NewReleases
-import androidx.compose.material.icons.twotone.NotificationsOff
-import androidx.compose.material.icons.twotone.Palette
-import androidx.compose.material.icons.twotone.PlayArrow
-import androidx.compose.material.icons.twotone.RestartAlt
-import androidx.compose.material.icons.twotone.SystemUpdate
+import androidx.compose.material.icons.twotone.PowerSettingsNew
 import androidx.compose.material.icons.twotone.Terminal
-import androidx.compose.material.icons.twotone.Wifi
+import androidx.compose.material.icons.twotone.Tune
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.ui.PorterScaffold
 import eu.darken.porter.manager.ui.SettingsCategory
 import eu.darken.porter.manager.ui.SettingsItem
-import eu.darken.porter.manager.ui.SettingsSwitch
 
-/** Toggle states and already-resolved row labels; the activity owns the preference reads. */
+/** What the index summarises; the subscreens own their own reads. */
 internal data class SettingsUiState(
-    val startOnBoot: Boolean,
-    val startOnBootEnabled: Boolean,
-    val togglesBusy: Boolean = false,
-    val watchdog: Boolean,
-    val autoUpdateService: Boolean,
-    val autoUpdateServiceEnabled: Boolean,
-    val showPairingMethod: Boolean,
-    val pairingMethodLabel: String,
-    val showTcpPort: Boolean,
-    val tcpPortLabel: String,
-    val tcpPortNeedsRestart: Boolean,
-    val themeModeLabel: String,
-    val themeStyleLabel: String,
-    val themeColorLabel: String,
-    val themeColorEnabled: Boolean,
     val versionName: String,
-    val showBatteryAction: Boolean = false,
-    val showAlertsAction: Boolean = false,
     val updateCheckSupported: Boolean = false,
-    val updateCheck: Boolean = false,
-    val updateChannelLabel: String = "",
+    val startupNeedsAttention: Boolean = false,
 )
 
 internal data class SettingsActions(
     val onBack: () -> Unit,
-    val onStartOnBootChange: (Boolean) -> Unit,
-    val onWatchdogChange: (Boolean) -> Unit,
-    val onAutoUpdateServiceChange: (Boolean) -> Unit,
-    val onPairingMethod: () -> Unit,
-    val onTcpPort: () -> Unit,
-    val onThemeMode: () -> Unit,
-    val onThemeStyle: () -> Unit,
-    val onThemeColor: () -> Unit,
+    val onGeneral: () -> Unit,
+    val onStartup: () -> Unit,
     val onCompatibility: () -> Unit,
     val onTerminal: () -> Unit,
     val onAutomation: () -> Unit,
@@ -77,50 +41,18 @@ internal data class SettingsActions(
     val onSupport: () -> Unit,
     val onAcknowledgements: () -> Unit,
     val onVersion: () -> Unit,
-    val onBatteryOptimization: () -> Unit = {},
-    val onNotificationSettings: () -> Unit = {},
-    val onUpdateCheckChange: (Boolean) -> Unit = {},
-    val onUpdateChannel: () -> Unit = {},
 )
-
-internal fun tcpPortIcon(needsRestart: Boolean): ImageVector =
-    if (needsRestart) Icons.TwoTone.RestartAlt else Icons.TwoTone.Wifi
 
 @Composable
 internal fun SettingsScreenContent(state: SettingsUiState, actions: SettingsActions, modifier: Modifier = Modifier) {
     PorterScaffold(stringResource(R.string.settings_title), onBack = actions.onBack) { padding ->
         Column(modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState())) {
-            SettingsCategory(stringResource(R.string.porter_startup))
-            SettingsSwitch(stringResource(R.string.settings_start_on_boot), Icons.TwoTone.PlayArrow,
-                state.startOnBoot, enabled = state.startOnBootEnabled && !state.togglesBusy,
-                summary = if (state.startOnBootEnabled) null else stringResource(R.string.settings_start_on_boot_summary),
-                onCheckedChange = actions.onStartOnBootChange)
-            SettingsSwitch(stringResource(R.string.settings_watchdog), Icons.TwoTone.Autorenew,
-                state.watchdog, stringResource(R.string.settings_watchdog_summary),
-                enabled = !state.togglesBusy, onCheckedChange = actions.onWatchdogChange)
-            SettingsSwitch(stringResource(R.string.porter_service_auto_update), Icons.TwoTone.SystemUpdate,
-                state.autoUpdateService, enabled = state.autoUpdateServiceEnabled,
-                summary = stringResource(if (state.autoUpdateServiceEnabled) R.string.porter_service_auto_update_summary else R.string.porter_service_update_primary),
-                onCheckedChange = actions.onAutoUpdateServiceChange)
-            if (state.showBatteryAction) SettingsItem(stringResource(R.string.porter_background_operation), Icons.TwoTone.Info,
-                stringResource(R.string.snackbar_battery_optimization_home), onClick = actions.onBatteryOptimization)
-            if (state.showAlertsAction) SettingsItem(stringResource(R.string.settings_alerts_blocked_title), Icons.TwoTone.NotificationsOff,
-                stringResource(R.string.settings_alerts_blocked_summary), onClick = actions.onNotificationSettings)
-            if (state.showPairingMethod) {
-                SettingsItem(stringResource(R.string.porter_pairing_method), Icons.TwoTone.Link,
-                    state.pairingMethodLabel, onClick = actions.onPairingMethod)
-            }
-            if (state.showTcpPort) {
-                SettingsItem(stringResource(R.string.settings_tcp_port), tcpPortIcon(state.tcpPortNeedsRestart),
-                    state.tcpPortLabel, onClick = actions.onTcpPort)
-            }
-            SettingsCategory(stringResource(R.string.settings_user_interface))
-            SettingsItem(stringResource(R.string.porter_theme_mode), Icons.TwoTone.DarkMode,
-                state.themeModeLabel, onClick = actions.onThemeMode)
-            SettingsItem(stringResource(R.string.porter_theme_style), Icons.TwoTone.Contrast,
-                state.themeStyleLabel, onClick = actions.onThemeStyle)
-            SettingsItem(stringResource(R.string.porter_theme_color), Icons.TwoTone.Palette,
-                state.themeColorLabel, enabled = state.themeColorEnabled, onClick = actions.onThemeColor)
+            SettingsItem(stringResource(R.string.settings_general), Icons.TwoTone.Tune,
+                stringResource(if (state.updateCheckSupported) R.string.settings_general_summary else R.string.settings_general_summary_theme),
+                onClick = actions.onGeneral)
+            SettingsItem(stringResource(R.string.porter_startup), Icons.TwoTone.PowerSettingsNew,
+                stringResource(if (state.startupNeedsAttention) R.string.settings_startup_attention else R.string.settings_startup_summary),
+                onClick = actions.onStartup)
             SettingsCategory(stringResource(R.string.porter_tools))
             SettingsItem(stringResource(R.string.compat_setup_title), Icons.TwoTone.Apps,
                 onClick = actions.onCompatibility)
@@ -134,12 +66,6 @@ internal fun SettingsScreenContent(state: SettingsUiState, actions: SettingsActi
             SettingsItem(stringResource(R.string.porter_acknowledgements), Icons.TwoTone.Favorite,
                 stringResource(R.string.porter_acknowledgements_summary),
                 onClick = actions.onAcknowledgements)
-            if (state.updateCheckSupported) {
-                SettingsSwitch(stringResource(R.string.updater_check), Icons.TwoTone.NewReleases, state.updateCheck,
-                    stringResource(R.string.updater_check_summary), onCheckedChange = actions.onUpdateCheckChange)
-                SettingsItem(stringResource(R.string.updater_channel), Icons.AutoMirrored.TwoTone.AltRoute,
-                    state.updateChannelLabel, enabled = state.updateCheck, onClick = actions.onUpdateChannel)
-            }
             SettingsItem(stringResource(R.string.porter_version), Icons.TwoTone.Info, state.versionName,
                 onClick = actions.onVersion)
         }
