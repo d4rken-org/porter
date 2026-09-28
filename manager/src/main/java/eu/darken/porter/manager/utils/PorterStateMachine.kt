@@ -1,6 +1,5 @@
 package eu.darken.porter.manager.utils
 
-import android.util.Log
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +10,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import eu.darken.porter.manager.ServerBinder
+import eu.darken.porter.manager.ktx.logd
 
 class PorterStateMachine {
 
@@ -71,7 +71,7 @@ class PorterStateMachine {
             transitions.tryEmit(newState)
             newState
         }
-        Log.d("PorterStateMachine", newState.toString())
+        logd("PorterStateMachine", newState.toString())
     }
 
     fun set(newState: State) = transition { newState }

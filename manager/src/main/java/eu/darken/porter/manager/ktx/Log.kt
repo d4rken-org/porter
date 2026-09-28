@@ -3,6 +3,7 @@
 package eu.darken.porter.manager.ktx
 
 import android.util.Log
+import eu.darken.porter.manager.utils.Logger
 
 inline val <reified T> T.TAG: String
     get() =
@@ -17,8 +18,12 @@ inline fun <reified T> T.logw(message: String, throwable: Throwable? = null) = l
 inline fun <reified T> T.logd(message: String, throwable: Throwable? = null) = logd(TAG, message, throwable)
 inline fun <reified T> T.loge(message: String, throwable: Throwable? = null) = loge(TAG, message, throwable)
 
-inline fun <reified T> T.logv(tag: String, message: String, throwable: Throwable? = null) = Log.v(tag, message, throwable)
+inline fun <reified T> T.logv(tag: String, message: String, throwable: Throwable? = null) {
+    if (Logger.debugEnabled()) Logger.println(Log.VERBOSE, tag, message, throwable)
+}
 inline fun <reified T> T.logi(tag: String, message: String, throwable: Throwable? = null) = Log.i(tag, message, throwable)
 inline fun <reified T> T.logw(tag: String, message: String, throwable: Throwable? = null) = Log.w(tag, message, throwable)
-inline fun <reified T> T.logd(tag: String, message: String, throwable: Throwable? = null) = Log.d(tag, message, throwable)
+inline fun <reified T> T.logd(tag: String, message: String, throwable: Throwable? = null) {
+    if (Logger.debugEnabled()) Logger.println(Log.DEBUG, tag, message, throwable)
+}
 inline fun <reified T> T.loge(tag: String, message: String, throwable: Throwable? = null) = Log.e(tag, message, throwable)
