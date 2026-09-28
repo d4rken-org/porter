@@ -128,6 +128,11 @@ HOME = MANAGER + "/eu.darken.porter.manager.MainActivity"
 # while another app owns the Shizuku permission. A page in transition shows two titles, and the
 # earlier one names it until it has gone.
 ONBOARDING_TITLES = ("Welcome to Porter", "Shizuku is installed", "Privacy")
+# How dumpsys activity activities names Home and onboarding, and the lines in it naming the resumed
+# activity, which releases spell differently.
+HOME_RECORD = MANAGER + "/.manager.MainActivity"
+ONBOARDING_RECORD = MANAGER + "/.manager.onboarding.OnboardingActivity"
+RESUMED_ACTIVITY = re.compile(r"^\s*(topResumedActivity|mResumedActivity|ResumedActivity)\s*[=:]")
 
 
 class PushTracker:
@@ -863,8 +868,16 @@ class Smoke:
                 break
         else:
             raise AssertionError("onboarding never offered 'Get started'")
+        # Read from dumpsys rather than a UI dump: a uiautomator session starting or ending while
+        # onboarding's window is torn down crashes Android 14 inside ViewRootImpl.
+        self.until("Home resumed and onboarding destroyed", self.onboarding_gone)
         self.until("onboarding completed and Home in front",
                    lambda: (n := manager_screen()) and page(n) is None and self.find(n, "Get started") is None)
+
+    def onboarding_gone(self):
+        activities = self.shell("dumpsys", "activity", "activities", check=False)
+        resumed = [line for line in activities.splitlines() if RESUMED_ACTIVITY.match(line)]
+        return any(HOME_RECORD in line for line in resumed) and ONBOARDING_RECORD not in activities
 
     def stop_porter(self):
         self.open_home()

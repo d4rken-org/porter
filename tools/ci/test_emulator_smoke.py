@@ -349,14 +349,32 @@ class OpenHomeTest(unittest.TestCase):
 
     START = call("am", "start", "-W", "-f", "0x04000000",
                  "-n", "eu.darken.porter/eu.darken.porter.manager.MainActivity")
+    ACTIVITIES = call("dumpsys", "activity", "activities", check=False)
+    MAIN = "ActivityRecord{c1d2e3 u0 eu.darken.porter/.manager.MainActivity t5}"
+    ONBOARDING = "ActivityRecord{a4b5c6 u0 eu.darken.porter/.manager.onboarding.OnboardingActivity t5}"
 
     def setUp(self):
         self.runner = smoke.Smoke.__new__(smoke.Smoke)
-        self.runner.shell = Mock()
+        self.runner.shell = Mock(side_effect=self.shell)
         self.runner.tap = Mock()
+        self.dumps = [self.activities(self.MAIN, resumed=self.MAIN)]
         patcher = patch.object(smoke.time, "sleep")
         patcher.start()
         self.addCleanup(patcher.stop)
+
+    def shell(self, *args, **kwargs):
+        if args == ("dumpsys", "activity", "activities"):
+            return self.dumps.pop(0) if len(self.dumps) > 1 else self.dumps[0]
+        return ""
+
+    def activities(self, *records, resumed):
+        history = "".join(f"    * Hist  #{len(records) - 1 - index}: {record}\n"
+                          for index, record in enumerate(records))
+        return ("ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)\n"
+                "Display #0 (activities from top to bottom):\n"
+                "  * Task{8a3c1e5 #5 type=standard A=10123:eu.darken.porter}\n"
+                f"{history}"
+                f"  topResumedActivity={resumed}\n")
 
     def screen(self, *texts, package="eu.darken.porter"):
         nodes = "".join(f'<node text="{text}" package="{package}" enabled="true" '
@@ -385,7 +403,7 @@ class OpenHomeTest(unittest.TestCase):
     def test_onboarding_without_the_shizuku_page_continues_then_gets_started(self):
         self.runner.ui = Mock(side_effect=[self.welcome(), self.privacy(), self.home()])
         self.runner.open_home()
-        self.assertEqual(self.runner.shell.call_args_list, [self.START])
+        self.assertEqual(self.runner.shell.call_args_list, [self.START, self.ACTIVITIES])
         self.assertEqual(self.runner.tap.call_args_list, [call("Continue"), call("Get started")])
 
     def test_onboarding_with_the_shizuku_page_continues_twice(self):
@@ -422,6 +440,28 @@ class OpenHomeTest(unittest.TestCase):
         self.runner.ui = Mock(side_effect=[self.welcome(), self.privacy(), finishing, self.home()])
         self.runner.open_home()
         self.assertEqual(self.runner.ui.call_count, 4)
+
+    def test_no_ui_dump_runs_until_onboarding_has_been_destroyed(self):
+        events = []
+        self.dumps = [self.activities(self.ONBOARDING, self.MAIN, resumed=self.ONBOARDING),
+                      self.activities(self.MAIN, self.ONBOARDING, resumed=self.MAIN),
+                      self.activities(self.MAIN, resumed=self.MAIN)]
+        screens = [self.welcome(), self.privacy(), self.home()]
+
+        def shell(*args, **kwargs):
+            events.append(args[0])
+            return self.shell(*args, **kwargs)
+
+        def ui(*args):
+            events.append("ui")
+            return screens.pop(0)
+
+        self.runner.shell = Mock(side_effect=shell)
+        self.runner.ui = Mock(side_effect=ui)
+        self.runner.tap = Mock(side_effect=lambda text: events.append(text))
+        self.runner.open_home()
+        self.assertEqual(events, ["am", "ui", "Continue", "ui", "Get started",
+                                  "dumpsys", "dumpsys", "dumpsys", "ui"])
 
 
 class TapConfirmationTest(unittest.TestCase):
