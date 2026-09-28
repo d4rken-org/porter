@@ -4,9 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.test.core.app.ApplicationProvider
+import eu.darken.porter.manager.updater.UpdateChannel
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -26,6 +28,7 @@ class PorterSettingsTest {
     @Before fun resetSettings() {
         store(PorterSettings.NAME).edit().clear().commit()
         store(PorterSettings.SECRETS_NAME).edit().clear().commit()
+        store(PorterSettings.UPDATER_NAME).edit().clear().commit()
         PorterSettings.resetForTest()
     }
 
@@ -73,5 +76,34 @@ class PorterSettingsTest {
 
         assertFalse("the completion write reached disk", PorterSettings.markOnboardingCompleted())
         assertFalse("completion is set in memory after a failed write", PorterSettings.onboardingCompleted)
+    }
+
+    /** Unset is kept apart from either choice, because the defaults are worked out at runtime. */
+    @Test fun updateChoicesStayUnsetUntilMade() {
+        PorterSettings.initialize(application)
+        assertNull(PorterSettings.updateCheck)
+        assertNull(PorterSettings.updateChannel)
+
+        PorterSettings.updateCheck = false
+        PorterSettings.updateChannel = UpdateChannel.BETA
+        assertEquals(false, PorterSettings.updateCheck)
+        assertEquals(UpdateChannel.BETA, PorterSettings.updateChannel)
+        assertEquals(false, store(PorterSettings.NAME).getBoolean(PorterSettings.Keys.KEY_UPDATE_CHECK, true))
+        assertEquals("beta", store(PorterSettings.NAME).getString(PorterSettings.Keys.KEY_UPDATE_CHANNEL, null))
+
+        PorterSettings.updateChannel = UpdateChannel.PRODUCTION
+        assertEquals("production", store(PorterSettings.NAME).getString(PorterSettings.Keys.KEY_UPDATE_CHANNEL, null))
+
+        PorterSettings.updateCheck = null
+        PorterSettings.updateChannel = null
+        assertFalse(store(PorterSettings.NAME).contains(PorterSettings.Keys.KEY_UPDATE_CHECK))
+        assertFalse(store(PorterSettings.NAME).contains(PorterSettings.Keys.KEY_UPDATE_CHANNEL))
+    }
+
+    @Test fun updaterStateLivesOutsideTheBackedUpSettings() {
+        PorterSettings.initialize(application)
+        PorterSettings.updaterPreferences.edit().putLong("last_check", 1L).commit()
+        assertTrue(store(PorterSettings.UPDATER_NAME).contains("last_check"))
+        assertFalse(store(PorterSettings.NAME).contains("last_check"))
     }
 }

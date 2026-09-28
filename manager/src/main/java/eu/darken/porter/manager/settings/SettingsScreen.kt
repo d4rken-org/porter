@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.AltRoute
 import androidx.compose.material.icons.automirrored.twotone.HelpOutline
 import androidx.compose.material.icons.twotone.Apps
 import androidx.compose.material.icons.twotone.Autorenew
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.IntegrationInstructions
 import androidx.compose.material.icons.twotone.Link
+import androidx.compose.material.icons.twotone.NewReleases
 import androidx.compose.material.icons.twotone.NotificationsOff
 import androidx.compose.material.icons.twotone.Palette
 import androidx.compose.material.icons.twotone.PlayArrow
@@ -53,6 +55,9 @@ internal data class SettingsUiState(
     val versionName: String,
     val showBatteryAction: Boolean = false,
     val showAlertsAction: Boolean = false,
+    val updateCheckSupported: Boolean = false,
+    val updateCheck: Boolean = false,
+    val updateChannelLabel: String = "",
 )
 
 internal data class SettingsActions(
@@ -74,6 +79,8 @@ internal data class SettingsActions(
     val onVersion: () -> Unit,
     val onBatteryOptimization: () -> Unit = {},
     val onNotificationSettings: () -> Unit = {},
+    val onUpdateCheckChange: (Boolean) -> Unit = {},
+    val onUpdateChannel: () -> Unit = {},
 )
 
 internal fun tcpPortIcon(needsRestart: Boolean): ImageVector =
@@ -127,6 +134,12 @@ internal fun SettingsScreenContent(state: SettingsUiState, actions: SettingsActi
             SettingsItem(stringResource(R.string.porter_acknowledgements), Icons.TwoTone.Favorite,
                 stringResource(R.string.porter_acknowledgements_summary),
                 onClick = actions.onAcknowledgements)
+            if (state.updateCheckSupported) {
+                SettingsSwitch(stringResource(R.string.updater_check), Icons.TwoTone.NewReleases, state.updateCheck,
+                    stringResource(R.string.updater_check_summary), onCheckedChange = actions.onUpdateCheckChange)
+                SettingsItem(stringResource(R.string.updater_channel), Icons.AutoMirrored.TwoTone.AltRoute,
+                    state.updateChannelLabel, enabled = state.updateCheck, onClick = actions.onUpdateChannel)
+            }
             SettingsItem(stringResource(R.string.porter_version), Icons.TwoTone.Info, state.versionName,
                 onClick = actions.onVersion)
         }

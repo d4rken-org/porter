@@ -2,8 +2,11 @@
 """Replace a running Porter service of another build with the installed one, as the manager does."""
 import argparse
 import importlib.util
+import os
 from pathlib import Path
+import select
 import shlex
+import time
 
 spec = importlib.util.spec_from_file_location("porter_smoke", Path(__file__).with_name("emulator-smoke.py"))
 base = importlib.util.module_from_spec(spec)
@@ -15,6 +18,8 @@ HANDOFF_TIMEOUT = 90
 # From the tap to a successor that sent its binders: a native starter, an app_process start and a
 # binder push, with a margin for a software-rendered emulator.
 REPLACEMENT_TIMEOUT = 90
+# From the adb shell starting to its first line of output, su included.
+FIXTURE_PID_TIMEOUT = 30
 # The order run() declares, which --case narrows without ever reordering. The automatic update
 # goes first: the manager skips one for a build it already holds a record of, and every manual
 # case writes a record for the same installed build.
@@ -48,16 +53,50 @@ class Update(base.Smoke):
         assert not self.pid("porter_server"), "another server is still running"
         apk = self.shell("pm", "path", FIXTURE).removeprefix("package:").splitlines()[0]
         library_dir = str(Path(self.starter_binary(base.MANAGER)).parent)
-        command = (f"CLASSPATH={shlex.quote(apk)} app_process -Dporter.library.path={shlex.quote(library_dir)}"
+        # The shell prints its own pid and execs the fixture onto it, because the manager can replace
+        # a fixture before any pidof poll sees it, and then the first porter_server seen is the
+        # replacement.
+        command = (f"echo $$; export CLASSPATH={shlex.quote(apk)};"
+                   f" exec app_process -Dporter.library.path={shlex.quote(library_dir)}"
                    f" /system/bin --nice-name=porter_server eu.darken.porter.updatefixture.FixtureService"
                    f" {mode} </dev/null >/dev/null 2>&1")
         # Held open for the fixture's lifetime, so nothing depends on how adbd treats a background
         # process when its session ends.
         self.fixture_session = self.detached(*(("su", "0", "sh", "-c", command) if root else ("sh", "-c", command)))
-        pid = self.until("the fixture is running", lambda: self.pid("porter_server"))
+        with (self.output / "commands.log").open("a") as log:
+            log.write(shlex.join(self.fixture_session.args) + "\n")
+        try:
+            pid = self.launched_pid(self.fixture_session)
+        except AssertionError as e:
+            # A failed su or adb says why on stderr, which restore() would collect and drop.
+            session, self.fixture_session = self.fixture_session, None
+            if session.poll() is None:
+                session.kill()
+            stderr = session.communicate()[1].decode(errors="replace")
+            raise AssertionError(f"{e}; the session's stderr: {stderr!r}") from e
+        with (self.output / "commands.log").open("a") as log:
+            log.write(f"(fixture pid {pid})\n")
         if verify:
             self.until("the fixture sent its binders", lambda: "sent binders" in self.server_log(pid))
             assert self.classpath(pid, root) == apk, "the running porter_server is not the fixture"
+        return pid
+
+    def launched_pid(self, session, timeout=FIXTURE_PID_TIMEOUT):
+        """The first line a detached session printed, as a pid. Read to its newline, because a
+        readable pipe holds some bytes, not necessarily the whole line."""
+        deadline = time.monotonic() + timeout
+        fd = session.stdout.fileno()
+        line = b""
+        while b"\n" not in line:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0 or not select.select([fd], [], [], remaining)[0]:
+                raise AssertionError(f"Timed out: the fixture's pid, having read {line!r}")
+            chunk = os.read(fd, 64)
+            if not chunk:
+                raise AssertionError(f"the fixture's shell ended before printing its pid: {line!r}")
+            line += chunk
+        pid = line.split(b"\n", 1)[0].strip().decode(errors="replace")
+        assert pid.isdigit() and int(pid) > 0, f"the fixture's shell printed {line!r}, not a pid"
         return pid
 
     def opt_into_automatic_updates(self):

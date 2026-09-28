@@ -11,6 +11,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
 import eu.darken.porter.manager.receiver.BootCompleteReceiver
 import eu.darken.porter.manager.service.WatchdogService
+import eu.darken.porter.manager.updater.UpdateChannel
 import eu.darken.porter.manager.utils.EmptySharedPreferencesImpl
 import eu.darken.porter.manager.utils.Token
 import java.util.Locale
@@ -31,6 +32,9 @@ object PorterSettings {
     /** The boot that needs no start-on-boot any more; device-specific, so outside [NAME] too. */
     const val BOOT_NAME = "boot"
 
+    /** Update check timestamps and the cached release; device-specific, so outside [NAME] too. */
+    const val UPDATER_NAME = "updater"
+
     const val SCHEMA_VERSION = 1
 
     object Keys {
@@ -47,15 +51,21 @@ object PorterSettings {
         const val KEY_AUTH_TOKEN = "auth_token"
         const val KEY_STARTED_BOOT = "started_boot"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
+        const val KEY_UPDATE_CHECK = "update_check"
+        const val KEY_UPDATE_CHANNEL = "update_channel"
     }
 
     private var storage: SharedPreferences? = null
     private var secretStorage: SharedPreferences? = null
     private var refusalStorage: SharedPreferences? = null
     private var bootStorage: SharedPreferences? = null
+    private var updaterStorage: SharedPreferences? = null
 
     val preferences: SharedPreferences
         get() = checkNotNull(storage) { "PorterSettings.initialize was not called" }
+
+    val updaterPreferences: SharedPreferences
+        get() = checkNotNull(updaterStorage) { "PorterSettings.initialize was not called" }
 
     private val secrets: SharedPreferences
         get() = checkNotNull(secretStorage) { "PorterSettings.initialize was not called" }
@@ -85,6 +95,7 @@ object PorterSettings {
         secretStorage = storageContext.getSharedPreferences(SECRETS_NAME, Context.MODE_PRIVATE)
         refusalStorage = storageContext.getSharedPreferences(REFUSALS_NAME, Context.MODE_PRIVATE)
         bootStorage = storageContext.getSharedPreferences(BOOT_NAME, Context.MODE_PRIVATE)
+        updaterStorage = storageContext.getSharedPreferences(UPDATER_NAME, Context.MODE_PRIVATE)
         migrate(preferences)
     }
 
@@ -106,6 +117,7 @@ object PorterSettings {
         secretStorage = null
         refusalStorage = null
         bootStorage = null
+        updaterStorage = null
     }
 
     /**
@@ -222,6 +234,20 @@ object PorterSettings {
             preferences.edit().remove(Keys.KEY_TCP_PORT).apply()
         }
     }
+
+    /** Null until the user chooses; the default depends on the build and how it was installed. */
+    var updateCheck: Boolean?
+        get() = if (preferences.contains(Keys.KEY_UPDATE_CHECK)) preferences.getBoolean(Keys.KEY_UPDATE_CHECK, false) else null
+        set(value) {
+            val editor = preferences.edit()
+            if (value == null) editor.remove(Keys.KEY_UPDATE_CHECK) else editor.putBoolean(Keys.KEY_UPDATE_CHECK, value)
+            editor.apply()
+        }
+
+    /** Null until the user chooses; the default follows the installed version. */
+    var updateChannel: UpdateChannel?
+        get() = UpdateChannel.fromKey(preferences.getString(Keys.KEY_UPDATE_CHANNEL, null))
+        set(value) = preferences.edit().putString(Keys.KEY_UPDATE_CHANNEL, value?.key).apply()
 
     val legacyPairing: Boolean
         get() = preferences.getBoolean(Keys.KEY_LEGACY_PAIRING, false)

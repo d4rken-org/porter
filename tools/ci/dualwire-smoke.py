@@ -22,7 +22,8 @@ NO_BINDER_SETTLE = base.LAUNCH_TIMEOUT
 CASES = ("setup", "visibility-listed-manager", "visibility-unlisted-manager",
          "shizuku-permission-lifecycle", "forwarding-over-shizuku", "secondary-before-delivery",
          "selection-prefers-porter", "duplicate-delivery", "forwarding-over-porter",
-         "selection-porter-stopped", "multiprocess-delivery-and-recovery")
+         "selection-porter-stopped", "adoption-after-porter-uninstall",
+         "multiprocess-delivery-and-recovery")
 # Each of these inherits installs and a running server from the case before it, so a narrowing
 # that drops one leaves the next asserting against a fixture that was never built.
 REQUIRES = {
@@ -34,6 +35,9 @@ REQUIRES = {
     # dialog still open, and this case needs the grant its answer makes.
     "forwarding-over-porter": ("duplicate-delivery",),
     "selection-porter-stopped": ("selection-prefers-porter",),
+    # selection-porter-stopped rather than anything that answers Porter's dialog: that one leaves
+    # Porter uninstalled, and adoption has to work whether or not an earlier case allowed it.
+    "adoption-after-porter-uninstall": ("selection-porter-stopped",),
     "multiprocess-delivery-and-recovery": ("shizuku-permission-lifecycle",),
 }
 
@@ -73,6 +77,15 @@ class Dualwire(base.Smoke):
     def logs_for(self, pid):
         """One process's probe lines; logs() answers only for the last launched activity."""
         return self.adb("logcat", "-d", "--pid=" + pid, "-s", "PorterProbe:I", "*:S")
+
+    def sdk_logs_for(self, pid):
+        """One process's probe lines interleaved with the SDK's own, which logs_for leaves out: its
+        keeps and adoptions, and every delivery a server pushed into it. Without logcat's buffer
+        dividers, which head every read and would keep added() from finding where an earlier read
+        ends once the buffer has dropped some of its lines."""
+        lines = self.adb("logcat", "-d", "--pid=" + pid, "-s", "PorterProbe:I", "Porter:I",
+                         "PorterApiProvider:D", "*:S").splitlines()
+        return "\n".join(line for line in lines if not line.startswith("--------- "))
 
     def since(self, pid):
         """A boundary to read later lines against, so a reconnection is not matched by its first
@@ -358,6 +371,63 @@ class Dualwire(base.Smoke):
             return {"shizuku_pid": shizuku_pid}
         self.case("selection-porter-stopped", selection_porter_stopped)
 
+        def adoption_after_porter_uninstall():
+            """A process connected on Porter falls back to Shizuku once Porter is uninstalled, in the
+            same process and with no second push.
+
+            Shizuku pushes once per process, so the binder the process takes is the one the SDK
+            kept when it refused it at start. The probe answers Deny: a process holding a runtime
+            permission of the package being removed is killed with it, and a new process connects
+            to Shizuku with or without a kept binder.
+            """
+            assert not self.installed(base.MANAGER), "Porter is installed, so there is no uninstall to observe"
+            assert not self.pid("porter_server"), "a Porter server outlived its manager"
+            shizuku_pid = self.pid("shizuku_server")
+            assert shizuku_pid, "no Shizuku server to fall back to"
+            self.adb("install", str(self.args.manager.resolve()))
+            # The server keeps an app's Allow across a manager uninstall and drops it only once
+            # Android reports the permission ungranted. A grant that came back with the reinstall
+            # would skip the prompt answered below and have the uninstall kill the probe.
+            assert base.PERMISSION + ": granted=true" not in self.shell("dumpsys", "package", BRIDGE), \
+                "the probe still holds the Porter permission after the manager was reinstalled"
+            self.shell("am", "start", "-W", "-f", "0x04000000", "-n",
+                       base.MANAGER + "/eu.darken.porter.manager.MainActivity")
+            self.start_service()
+            assert self.pid("shizuku_server") == shizuku_pid, "starting Porter replaced Shizuku"
+            try:
+                self.launch_bridge()
+                probe_pid = self.probe_pid
+                self.expect_log(BRIDGE, "BACKEND PORTER")
+                # Asserted before the uninstall: a push that never reached the process would
+                # otherwise surface as an adoption timeout that says nothing about why.
+                self.until("the refused Shizuku push is kept",
+                           lambda: "keeping a SHIZUKU binder" in self.sdk_logs_for(probe_pid))
+                self.tap("Deny", base.MANAGER)
+                self.expect_log(BRIDGE, "DENIED")
+                boundary = self.sdk_logs_for(probe_pid).splitlines()
+                self.adb("uninstall", base.MANAGER)
+                self.until("the server exits once the manager is gone",
+                           lambda: not self.pid("porter_server"), timeout=base.MANAGER_SCAN_TIMEOUT)
+                assert self.pid(BRIDGE) == probe_pid, "the uninstall replaced the probe process"
+
+                def after():
+                    return added(boundary, self.sdk_logs_for(probe_pid).splitlines())
+                self.until("the kept Shizuku binder is adopted",
+                           lambda: any("adopting a kept SHIZUKU binder" in line for line in after()))
+                self.until("the probe connects on Shizuku",
+                           lambda: any(BRIDGE + " BACKEND SHIZUKU" in line for line in after()))
+                # The pid alone would also match a Shizuku server that restarted and pushed anew.
+                assert not any("binder received" in line for line in after()), \
+                    "a server pushed a binder after the uninstall, so nothing was adopted"
+                assert self.pid("shizuku_server") == shizuku_pid, "the Shizuku server was replaced"
+                assert self.pid(BRIDGE) == probe_pid, "the probe process was replaced"
+            finally:
+                self.shell("am", "force-stop", BRIDGE)
+            return {"probe_pid": probe_pid, "shizuku_pid": shizuku_pid}
+        # Leaves Porter uninstalled and only Shizuku running, which is what selection-porter-stopped
+        # hands the recovery case.
+        self.case("adoption-after-porter-uninstall", adoption_after_porter_uninstall)
+
         def multiprocess_delivery_and_recovery():
             """Delivery into a process the server never reached, and both processes recovering.
 
@@ -433,10 +503,11 @@ def parse_args(argv=None):
     # The inverse of REQUIRES: a case whose side effects a later one cannot tolerate until a third
     # undoes them. The test below keys on position, "any case declared after
     # selection-porter-stopped", while the actual hazard is "cannot tolerate Porter being
-    # installed". Those coincide only because the recovery case is the one case declared later: a
-    # Porter-agnostic case appended after it would be rejected with no cause, and a
-    # Porter-intolerant case inserted before selection-porter-stopped would not be caught at all.
-    # Generalising waits until a second such case exists to generalise from.
+    # installed". Those coincide only because both cases declared later need Porter absent at
+    # entry: adoption-after-porter-uninstall already requires selection-porter-stopped through
+    # REQUIRES, which leaves the recovery case as the one this check exists for. A Porter-agnostic
+    # case appended after them would be rejected with no cause, and a Porter-intolerant case
+    # inserted before selection-porter-stopped would not be caught at all.
     if args.cases:
         later = CASES[CASES.index("selection-porter-stopped") + 1:]
         if ("selection-prefers-porter" in args.cases

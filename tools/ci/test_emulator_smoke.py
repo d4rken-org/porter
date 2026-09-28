@@ -484,6 +484,11 @@ class TapConfirmationTest(unittest.TestCase):
         patcher = patch.object(smoke, "TAP_SETTLE", 0)
         patcher.start()
         self.addCleanup(patcher.stop)
+        # The evidence an unanswered tap leaves, which is read past shell() in one command.
+        patcher = patch.object(smoke.subprocess, "run", return_value=completed(
+            0, stdout=b"=== dumpsys input at 09-26 15:18:49\nINPUT MANAGER (dumpsys input)\n"))
+        self.evidence_run = patcher.start()
+        self.addCleanup(patcher.stop)
 
     def taps(self):
         return [c for c in self.runner.shell.call_args_list if c.args[0] == "input"]
@@ -525,6 +530,53 @@ class TapConfirmationTest(unittest.TestCase):
         self.runner.tap("Allow all the time")
         self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)])
 
+    def evidence(self, number):
+        return (self.runner.output / f"unanswered-tap-{number}.txt").read_text()
+
+    def test_every_unanswered_tap_leaves_the_input_and_window_state(self):
+        self.runner.ui = Mock(return_value=self.prompt)
+        with self.assertRaisesRegex(AssertionError, "unanswered-tap-3.txt"):
+            self.runner.tap("Allow all the time")
+        first = self.evidence(1)
+        self.assertIn("button 'Allow all the time' in eu.darken.porter at 726,1218: screen unchanged", first)
+        self.assertIn('bounds="[556,1144][897,1292]"', first)
+        self.assertIn("INPUT MANAGER (dumpsys input)", first)
+        self.assertIn("=== evidence query: adb exit status 0", first)
+        self.assertEqual(self.evidence_run.call_count, smoke.TAP_ATTEMPTS)
+        script = self.evidence_run.call_args.args[0][-1]
+        for query in ("dumpsys input", "dumpsys window windows", "dumpsys activity activities",
+                      "dumpsys SurfaceFlinger"):
+            self.assertIn(f'{query} 2>&1; echo "=== {query} exit status $?"', script)
+
+    def test_the_evidence_is_one_attempt_on_its_own_budget(self):
+        self.runner.ui = Mock(side_effect=[self.prompt, self.prompt, self.prompt, self.granted])
+        self.runner.tap("Allow all the time")
+        self.evidence_run.assert_called_once()
+        self.assertEqual(self.evidence_run.call_args.kwargs["timeout"], smoke.TAP_EVIDENCE_TIMEOUT)
+
+    def test_a_screen_no_dump_could_read_is_told_apart_from_an_unchanged_one(self):
+        self.runner.ui = Mock(side_effect=[
+            self.prompt, RuntimeError("no UI dump"), self.prompt, self.granted])
+        self.runner.tap("Allow all the time")
+        self.assertIn("screen unreadable", self.evidence(1))
+
+    def test_evidence_that_runs_out_of_time_keeps_what_it_read_and_the_tap_failure(self):
+        self.evidence_run.side_effect = smoke.subprocess.TimeoutExpired(
+            ["adb"], smoke.TAP_EVIDENCE_TIMEOUT, output=b"=== dumpsys input at 09-26 15:18:49\npartial")
+        self.runner.ui = Mock(return_value=self.prompt)
+        with self.assertRaisesRegex(AssertionError, "'Allow all the time' in eu.darken.porter 3 times"):
+            self.runner.tap("Allow all the time")
+        first = self.evidence(1)
+        self.assertIn("partial", first)
+        self.assertIn(f"=== evidence query: timed out after {smoke.TAP_EVIDENCE_TIMEOUT}s", first)
+
+    def test_a_failed_evidence_query_says_so(self):
+        # Nothing on stdout is otherwise indistinguishable from a device with nothing to say.
+        self.evidence_run.return_value = completed(1, stderr=b"adb: device offline\n")
+        self.runner.ui = Mock(side_effect=[self.prompt, self.prompt, self.prompt, self.granted])
+        self.runner.tap("Allow all the time")
+        self.assertIn("=== evidence query: adb exit status 1\nadb: device offline", self.evidence(1))
+
     def test_the_screenshot_records_what_was_tapped_once(self):
         self.runner.ui = Mock(side_effect=[self.prompt, self.prompt, self.prompt, self.granted])
         self.runner.tap("Allow all the time", screenshot="native-permission")
@@ -564,6 +616,27 @@ class FrameworkErrorDialogTest(unittest.TestCase):
         self.runner.dump = Mock(return_value=self.crash)
         self.assertIs(self.runner.ui(), self.crash)
         self.runner.shell.assert_not_called()
+
+    def test_a_crash_in_a_process_of_an_app_under_test_is_left_on_screen(self):
+        self.runner.adb = Mock(return_value=CRASH % (smoke.MANAGER + ":remote"))
+        self.runner.dump = Mock(return_value=self.crash)
+        self.assertIs(self.runner.ui(), self.crash)
+        self.runner.shell.assert_not_called()
+
+    def test_an_anr_dialog_is_left_on_screen_whatever_crashed_before(self):
+        for label in ("Porter", "Process system"):
+            with self.subTest(label=label):
+                self.runner.shell.reset_mock()
+                anr = ET.fromstring(f'''<hierarchy><node package="android">
+                    <node text="{label} isn't responding" package="android" enabled="true"
+                    bounds="[133,760][947,831]" />
+                    <node text="Close app" package="android" enabled="true"
+                    bounds="[70,870][1010,996]" />
+                    <node text="Wait" package="android" enabled="true"
+                    bounds="[70,996][1010,1122]" /></node></hierarchy>''')
+                self.runner.dump = Mock(return_value=anr)
+                self.assertIs(self.runner.ui(), anr)
+                self.runner.shell.assert_not_called()
 
     def test_the_newest_crash_is_the_one_the_dialog_is_about(self):
         # The buffer keeps every crash of the run, and an old one of ours is not this dialog.

@@ -99,11 +99,17 @@ UI_STABLE_POLLS = 2
 # injected gesture outright, and a dropped one is indistinguishable from a tap nobody acted on.
 TAP_SETTLE = 3
 TAP_ATTEMPTS = 3
-# The framework's own crash and ANR dialogs, which belong to no app under test and sit in front of
-# whatever the case was about. Both offer this button; the message is phrased around the crashed
-# app's name, so the wording that is not is what identifies them.
+# What is asked of the device when a tap goes unanswered, and how long all of it may take.
+# SurfaceFlinger comes last, being the largest; it says whether a window the window manager counts
+# as shown ever became a visible layer, which is where the input dispatcher's windows come from.
+TAP_EVIDENCE_QUERIES = ("input", "window windows", "activity activities", "SurfaceFlinger")
+TAP_EVIDENCE_TIMEOUT = 20
+# The framework's own crash dialog, which belongs to no app under test and sits in front of
+# whatever the case was about. The message is phrased around the crashed app's name, so the
+# wording that is not is what identifies it. An ANR dialog offers the same button but is never
+# cleared: the crash buffer does not record ANRs, so nothing attributes one.
 FRAMEWORK_ERROR_BUTTON = "Close app"
-FRAMEWORK_ERROR_TEXT = re.compile(r"(keeps stopping|kept stopping|has stopped|isn't responding)")
+FRAMEWORK_ERROR_TEXT = re.compile(r"(keeps stopping|kept stopping|has stopped)")
 FRAMEWORK_ERROR_DISMISSALS = 2
 # Which app a crash dialog is about, which the dialog itself says only as a label. The crash buffer
 # names the package, and the newest entry in it is the crash whose dialog is in front.
@@ -201,6 +207,7 @@ class Smoke:
         self.probe_pid = None
         self.foreign_apk = None
         self.install_hangs = 0
+        self.unanswered_taps = 0
 
     def adb(self, *args, check=True, binary=False, timeout=None):
         if timeout is None:
@@ -316,12 +323,13 @@ class Smoke:
                                    f"{elapsed:.0f}s; see {self.output / 'commands.log'}")
 
     def crashed(self):
-        """The package of the newest crash the device recorded, or None if it recorded none."""
+        """The package of the newest crash the device recorded, or None if it recorded none. The
+        buffer names the process: "eu.darken.porter:remote" is Porter's."""
         found = CRASHED_PROCESS.findall(self.adb("logcat", "-d", "-b", "crash", check=False))
-        return found[-1] if found else None
+        return found[-1].split(":")[0] if found else None
 
     def framework_error(self, root):
-        """The bounds of the button that clears a crash or ANR dialog raised by something else.
+        """The bounds of the button that clears a crash dialog raised by something else.
 
         Such a dialog is drawn by the framework, so every node in it carries the "android"
         package, the way the user-switching overlay does; what tells those two apart is the
@@ -441,23 +449,56 @@ class Smoke:
                 self.shell("input", "swipe", x, bottom - inset, x, top + inset, 300)
         return None
 
-    def heard(self, before):
-        """Whether the screen stopped being [before] within [TAP_SETTLE].
+    def unanswered(self, before):
+        """None once the screen stops being [before] within [TAP_SETTLE], or why it did not:
+        "unchanged" when a dump read the tapped screen again, "unreadable" when no dump could be read.
 
         A dump that fails inside the window answers neither way, so it is polled past rather than
         counted. What follows a window that ends undecided is another look at the button on its
         own full budget, not a tap at bounds nothing has confirmed.
         """
         deadline = time.monotonic() + TAP_SETTLE
+        reason = "unreadable"
         while True:
             try:
                 if ET.tostring(self.ui(UI_POLL_TIMEOUT)) != before:
-                    return True
+                    return None
+                reason = "unchanged"
             except RuntimeError:
                 pass
             if time.monotonic() >= deadline:
-                return False
+                return reason
             time.sleep(0.4)
+
+    def unanswered_tap_evidence(self, description, x, y, reason, before):
+        """The device's input and window state when a tap went unanswered, beside the case's log.
+
+        The dump shows what was drawn, not which window the gesture went to or why the one drawn
+        there did not take it; only these dumps say that. Taken before the next attempt and before
+        the case restores anything, in one device command on one attempt, because whatever it
+        costs is time a slow dialog gets that the retry did not give it. A query that fails or
+        runs out of time is written down as such, so the tap's own failure stays the one reported.
+        """
+        self.unanswered_taps += 1
+        path = self.output / f"unanswered-tap-{self.unanswered_taps}.txt"
+        # Each section stamped to the second, to line up against logcat, and closed with its own status.
+        script = "; ".join(f"echo \"=== dumpsys {query} at $(date '+%m-%d %H:%M:%S')\"; "
+                           f"dumpsys {query} 2>&1; echo \"=== dumpsys {query} exit status $?\""
+                           for query in TAP_EVIDENCE_QUERIES)
+        command = ["adb", "-s", self.args.serial, "shell", script]
+        try:
+            result = subprocess.run(command, capture_output=True, timeout=TAP_EVIDENCE_TIMEOUT)
+            dumps, stderr, outcome = result.stdout, result.stderr, f"adb exit status {result.returncode}"
+        except subprocess.TimeoutExpired as e:
+            dumps, stderr, outcome = e.stdout or b"", e.stderr or b"", f"timed out after {TAP_EVIDENCE_TIMEOUT}s"
+        with path.open("w") as evidence:
+            evidence.write(f"=== tap\n{description} at {x},{y}: screen {reason}\n")
+            evidence.write(f"=== tapped screen\n{before.decode(errors='replace')}\n")
+            evidence.write(dumps.decode(errors="replace"))
+            evidence.write(f"\n=== evidence query: {outcome}\n{stderr.decode(errors='replace')}")
+        with (self.output / "commands.log").open("a") as log:
+            log.write(f"{shlex.join(command)}\n({outcome}, written to {path.name})\n")
+        return path
 
     def tap(self, text=None, package=MANAGER, prefix=False, screenshot=None, scroll=False, occurrence=0, desc=None):
         """Taps a button and returns once the screen has acknowledged it.
@@ -489,12 +530,16 @@ class Smoke:
             if screenshot and attempt == 0:
                 self.screenshot(screenshot)
             left, top, right, bottom = bounds
-            self.shell("input", "tap", (left + right) // 2, (top + bottom) // 2)
-            if self.heard(before):
+            x, y = (left + right) // 2, (top + bottom) // 2
+            self.shell("input", "tap", x, y)
+            reason = self.unanswered(before)
+            if reason is None:
                 return
-            print(f"NOTE the screen did not answer a tap on {description}", flush=True)
+            evidence = self.unanswered_tap_evidence(description, x, y, reason, before)
+            print(f"NOTE the screen did not answer a tap on {description} ({reason}); see {evidence}",
+                  flush=True)
         raise AssertionError(f"Tapped {description} {TAP_ATTEMPTS} times and the screen never "
-                             f"changed; see {self.output / 'last-ui.xml'}")
+                             f"answered; see {evidence}")
 
     def screenshot(self, name):
         (self.output / f"{name}.png").write_bytes(self.adb("exec-out", "screencap", "-p", binary=True))
