@@ -29,6 +29,12 @@ ADB daemon, either over the device's loopback interface or over wireless debuggi
 wireless debugging port through local network discovery (mDNS). These connections stay on your device or your local
 network.
 
+The GitHub version of Porter can check for updates. While the update check is on, Porter asks GitHub's releases API
+(`api.github.com`) for the newest release when you open the dashboard. A successful answer is kept for 24 hours, and a
+failed check is retried after an hour at the earliest. You can turn the check off in the settings. It is off by default
+when Porter was installed by a recognized app store (F-Droid clients, Obtainium, Aurora and similar). Porter downloads a
+release APK from GitHub only when you ask it to.
+
 ### Accessibility service
 
 On devices where the pairing notification cannot be used, such as Android TV, Porter offers an optional accessibility
@@ -38,7 +44,9 @@ once the code is found. Porter does not use the AccessibilityService API to coll
 ### Install apps
 
 The GitHub version of Porter can install and uninstall its bundled compatibility companion (`REQUEST_INSTALL_PACKAGES`,
-`REQUEST_DELETE_PACKAGES`). The system installer performs the installation and asks for your confirmation.
+`REQUEST_DELETE_PACKAGES`), and install Porter updates you downloaded. The system installer performs the installation and
+asks for your confirmation. If you choose the automatic option for a Porter update, Porter installs it through its own
+ADB or root service instead.
 
 ## Apps using Porter
 
