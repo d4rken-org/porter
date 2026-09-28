@@ -497,6 +497,27 @@ class FrameworkErrorDialogTest(unittest.TestCase):
         self.assertIs(self.runner.ui(), self.crash)
         self.runner.shell.assert_not_called()
 
+    def test_a_crash_in_a_process_of_an_app_under_test_is_left_on_screen(self):
+        self.runner.adb = Mock(return_value=CRASH % (smoke.MANAGER + ":remote"))
+        self.runner.dump = Mock(return_value=self.crash)
+        self.assertIs(self.runner.ui(), self.crash)
+        self.runner.shell.assert_not_called()
+
+    def test_an_anr_dialog_is_left_on_screen_whatever_crashed_before(self):
+        for label in ("Porter", "Process system"):
+            with self.subTest(label=label):
+                self.runner.shell.reset_mock()
+                anr = ET.fromstring(f'''<hierarchy><node package="android">
+                    <node text="{label} isn't responding" package="android" enabled="true"
+                    bounds="[133,760][947,831]" />
+                    <node text="Close app" package="android" enabled="true"
+                    bounds="[70,870][1010,996]" />
+                    <node text="Wait" package="android" enabled="true"
+                    bounds="[70,996][1010,1122]" /></node></hierarchy>''')
+                self.runner.dump = Mock(return_value=anr)
+                self.assertIs(self.runner.ui(), anr)
+                self.runner.shell.assert_not_called()
+
     def test_the_newest_crash_is_the_one_the_dialog_is_about(self):
         # The buffer keeps every crash of the run, and an old one of ours is not this dialog.
         self.runner.adb = Mock(return_value=(CRASH % smoke.NATIVE) + (CRASH % "com.android.bluetooth"))
