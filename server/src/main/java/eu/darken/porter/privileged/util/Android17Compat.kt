@@ -43,7 +43,7 @@ object Android17Compat {
 
     @Synchronized
     @Throws(Exception::class)
-    private fun getPackageManager(): Any {
+    internal fun getPackageManager(): Any {
         if (sPackageManager == null) {
             val binder = ServiceManager.getService("package")
             val stubClass = Class.forName("android.content.pm.IPackageManager\$Stub")

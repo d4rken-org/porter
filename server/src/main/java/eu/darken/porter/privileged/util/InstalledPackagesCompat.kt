@@ -2,6 +2,7 @@ package eu.darken.porter.privileged.util
 
 import android.content.pm.PackageInfo
 import android.os.Build
+import android.os.SystemProperties
 import android.util.Log
 import rikka.shizuku.server.util.Logger
 import java.lang.reflect.InvocationTargetException
@@ -13,6 +14,9 @@ object InstalledPackagesCompat {
     private val LOGGER = Logger(TAG)
     private const val ANDROID_13 = 33
     private const val PARCELED_LIST_SLICE = "android.content.pm.ParceledListSlice"
+
+    // `adb shell setprop debug.porter.pm_fallback 1` skips the context lookup.
+    private const val FORCE_FALLBACK_PROPERTY = "debug.porter.pm_fallback"
 
     fun getInstalledPackagesNoThrow(flags: Long, userId: Int): List<PackageInfo> {
         try {
@@ -26,17 +30,20 @@ object InstalledPackagesCompat {
     @Suppress("UNCHECKED_CAST")
     @Throws(ReflectiveOperationException::class)
     fun getInstalledPackages(flags: Long, userId: Int): List<PackageInfo> {
-        try {
-            val packageManager = getContextPackageManager()
-            val method = packageManager.javaClass.getMethod("getInstalledPackagesAsUser", Integer.TYPE, Integer.TYPE)
-            val result = invoke(method, packageManager, flags.toInt(), userId)
-            return if (result == null) emptyList() else result as List<PackageInfo>
-        } catch (ignored: NoSuchMethodException) {
-        } catch (e: Exception) {
-            LOGGER.d("getInstalledPackagesAsUser failed, falling back to hidden API", e)
+        if (SystemProperties.getBoolean(FORCE_FALLBACK_PROPERTY, false)) {
+            Log.i(TAG, "Hidden API lookup forced by $FORCE_FALLBACK_PROPERTY")
+        } else {
+            try {
+                val packageManager = getContextPackageManager()
+                val method = packageManager.javaClass.getMethod("getInstalledPackagesAsUser", Integer.TYPE, Integer.TYPE)
+                val result = invoke(method, packageManager, flags.toInt(), userId)
+                return if (result == null) emptyList() else result as List<PackageInfo>
+            } catch (e: Exception) {
+                LOGGER.d("getInstalledPackagesAsUser failed, falling back to hidden API", e)
+            }
         }
 
-        val packageManager = getPackageManager()
+        val packageManager = Android17Compat.getPackageManager()
         val method: Method
         val result: Any?
 
@@ -59,15 +66,6 @@ object InstalledPackagesCompat {
         }
 
         throw IllegalStateException("Unsupported getInstalledPackages return type: $resultClassName")
-    }
-
-    @Throws(ReflectiveOperationException::class)
-    private fun getPackageManager(): Any {
-        val servicesClass = Class.forName("rikka.hidden.compat.Services")
-        val field = servicesClass.getDeclaredField("packageManager")
-        field.isAccessible = true
-        val service = field.get(null)
-        return service.javaClass.getMethod("get").invoke(service)
     }
 
     @Throws(ReflectiveOperationException::class)
