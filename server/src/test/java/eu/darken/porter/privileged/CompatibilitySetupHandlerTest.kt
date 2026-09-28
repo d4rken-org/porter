@@ -6,7 +6,9 @@ import android.content.pm.PackageManager
 import android.content.pm.PermissionInfo
 import android.content.pm.Signature
 import android.content.pm.SigningInfo
+import android.content.pm.UserInfo
 import eu.darken.porter.common.CompatibilitySetup
+import eu.darken.porter.privileged.util.userInfos
 import java.security.MessageDigest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
@@ -40,7 +42,7 @@ class CompatibilitySetupHandlerTest {
         // Compatibility.isAvailable() runs for real over those answers.
         mockStatic(UserManagerApis::class.java).use { users ->
             mockStatic(PackageManagerApis::class.java).use { packages ->
-                users.`when`<List<Int>> { UserManagerApis.getUserIdsNoThrow() }.thenReturn(listOf(0, 10))
+                users.`when`<List<UserInfo>> { UserManagerApis.getUsers(true, true, true) }.thenReturn(userInfos(0, 10))
                 val installed = PackageInfo()
                 val applicationInfo = ApplicationInfo()
                 applicationInfo.flags = ApplicationInfo.FLAG_INSTALLED
@@ -50,7 +52,7 @@ class CompatibilitySetupHandlerTest {
                 }
                 val handler = CompatibilitySetupHandler(mock(ShizukuConfigManager::class.java), { _, _ -> }, {})
                 assertArrayEquals(intArrayOf(10), handler.execute(CompatibilitySetup.INSPECT, null).getIntArray("users"))
-                users.`when`<List<Int>> { UserManagerApis.getUserIdsNoThrow() }.thenReturn(emptyList())
+                users.`when`<List<UserInfo>> { UserManagerApis.getUsers(true, true, true) }.thenReturn(emptyList())
                 assertThrows(IllegalStateException::class.java) { handler.execute(CompatibilitySetup.INSPECT, null) }
             }
         }

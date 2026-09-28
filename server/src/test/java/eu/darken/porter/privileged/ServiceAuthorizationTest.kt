@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.content.pm.PermissionInfo
 import android.content.pm.Signature
 import android.content.pm.SigningInfo
+import android.content.pm.UserInfo
 import android.os.Binder
 import android.os.Bundle
 import android.os.Looper
@@ -28,6 +29,7 @@ import eu.darken.porter.core.ClientCallback
 import eu.darken.porter.endpoint.PorterClientCallback
 import eu.darken.porter.endpoint.PorterManagerEndpoint
 import eu.darken.porter.privileged.util.PackageIdentity
+import eu.darken.porter.privileged.util.userInfos
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.server.IPorterApplication
 import moe.shizuku.server.IShizukuApplication
@@ -548,7 +550,7 @@ class ServiceAuthorizationTest {
         }
         mockStatic(UserManagerApis::class.java).use { users ->
             withPackageManager(listing) {
-                users.`when`<List<Int>> { UserManagerApis.getUserIdsNoThrow() }.thenReturn(listOf(0, 10))
+                users.`when`<List<UserInfo>> { UserManagerApis.getUsers(true, true, true) }.thenReturn(userInfos(0, 10))
                 val request = Parcel.obtain()
                 val reply = Parcel.obtain()
                 try {
@@ -1097,7 +1099,7 @@ class ServiceAuthorizationTest {
         mockStatic(UserManagerApis::class.java).use { users ->
             withPackageManager(packageManagerListing { user -> if (user == 0) listOf(installedApp) else emptyList() }) {
                 mockStatic(OsUtils::class.java).use { os ->
-                    users.`when`<List<Int>> { UserManagerApis.getUserIdsNoThrow() }.thenReturn(listOf(0))
+                    users.`when`<List<UserInfo>> { UserManagerApis.getUsers(true, true, true) }.thenReturn(userInfos(0))
                     os.`when`<Int> { OsUtils.uid }.thenReturn(MANAGER_UID)
 
                     val manager = porterTransact(AppTransactions.GET_MANAGER) {}

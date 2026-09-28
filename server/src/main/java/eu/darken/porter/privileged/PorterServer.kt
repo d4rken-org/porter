@@ -31,6 +31,7 @@ import eu.darken.porter.privileged.util.Android17Compat
 import eu.darken.porter.privileged.util.ForegroundUser
 import eu.darken.porter.privileged.util.InstalledPackagesCompat
 import eu.darken.porter.privileged.util.PackageIdentity
+import eu.darken.porter.privileged.util.UsersCompat
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.starter.util.IContentProviderCompat
 import java.io.File
@@ -41,7 +42,6 @@ import moe.shizuku.api.BinderContainer
 import rikka.hidden.compat.ActivityManagerApis
 import rikka.hidden.compat.DeviceIdleControllerApis
 import rikka.hidden.compat.PackageManagerApis
-import rikka.hidden.compat.UserManagerApis
 import rikka.parcelablelist.ParcelableListSlice
 import rikka.shizuku.ShizukuApiConstants
 import rikka.shizuku.ShizukuApiConstants.BIND_APPLICATION_PERMISSION_GRANTED
@@ -542,7 +542,7 @@ class PorterServer internal constructor(
         val list = ArrayList<PackageInfo>()
         val users = ArrayList<Int>()
         if (userId == -1) {
-            users.addAll(UserManagerApis.getUserIdsNoThrow())
+            users.addAll(UsersCompat.getUserIdsNoThrow())
         } else {
             users.add(userId)
         }
@@ -574,7 +574,7 @@ class PorterServer internal constructor(
     }
 
     internal fun writeDiscovery(userId: Int, reply: Parcel) {
-        val users: Collection<Int> = if (userId == -1) UserManagerApis.getUserIdsNoThrow() else listOf(userId)
+        val users: Collection<Int> = if (userId == -1) UsersCompat.getUserIdsNoThrow() else listOf(userId)
         if (users.isEmpty()) throw IllegalStateException("Cannot enumerate Android users")
         val apps = ArrayList<DiscoveredApplication>()
         val failedUsers = ArrayList<Int>()
@@ -640,7 +640,7 @@ class PorterServer internal constructor(
     }
 
     internal fun sendBinderToClient() {
-        for (userId in UserManagerApis.getUserIdsNoThrow()) {
+        for (userId in UsersCompat.getUserIdsNoThrow()) {
             sendBinderToClient(endpoint, porterEndpoint, userId)
         }
     }

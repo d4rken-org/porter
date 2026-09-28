@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import eu.darken.porter.common.CompatibilitySetup
 import eu.darken.porter.privileged.util.Android17Compat
+import eu.darken.porter.privileged.util.UsersCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -17,7 +18,6 @@ import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.Locale
 import rikka.hidden.compat.PackageManagerApis
-import rikka.hidden.compat.UserManagerApis
 
 internal class CompatibilitySetupHandler(
     private val config: ShizukuConfigManager,
@@ -34,7 +34,7 @@ internal class CompatibilitySetupHandler(
         val reply = Bundle()
         reply.putInt("version", CompatibilitySetup.VERSION)
         if (operation == CompatibilitySetup.INSPECT) {
-            val users: Collection<Int> = UserManagerApis.getUserIdsNoThrow()
+            val users: Collection<Int> = UsersCompat.getUserIdsNoThrow()
             if (users.isEmpty()) throw IllegalStateException("Cannot check Android users")
             val installed = ArrayList<Int>()
             for (user in users) {
