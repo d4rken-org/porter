@@ -142,8 +142,12 @@ private fun OnboardingBottomBar(state: OnboardingUiState, actions: OnboardingAct
             Text(stringResource(R.string.onboarding_save_failed), color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyMedium)
         }
-        OnboardingPageIndicator(state.pages.size, state.pages.indexOf(state.page))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            OnboardingPageIndicator(state.pages.size, state.pages.indexOf(state.page))
             Button(
                 onClick = if (last) actions.onFinish else actions.onNext,
                 enabled = !(last && state.finishing),
