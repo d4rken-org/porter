@@ -120,8 +120,10 @@ internal object ServerDiagnostics {
             if (connection != null) {
                 details.appendText("UID: ${connection.uid}\nProtocol: ${connection.serverInfo.version}\nSELinux: ${connection.seLinuxContext}\n")
             } else {
+                details.appendText("SDK connection: none for this binder\n")
                 val refused = (Porter.availability(context) as? PorterAvailability.Incompatible)?.incompatibility
-                details.appendText("SDK connection: none (${refused ?: "not attached"})\n")
+                // The SDK does not say which binder it refused; with instances replacing each other it may be another one.
+                if (refused != null) details.appendText("SDK last refused a binder, possibly another instance: $refused\n")
             }
             val info = readInfo(binder) ?: error("Service diagnostics unsupported")
             details.appendText("PID: ${info.pid}\nPorter service: ${info.version?.name ?: "unknown"} (${info.version?.code ?: "unknown"})\nInstalled build: ${PorterServiceVersion.installed.buildId}\nService build: ${info.version?.buildId ?: "unknown"}\n")
