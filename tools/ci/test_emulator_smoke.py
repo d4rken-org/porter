@@ -504,6 +504,33 @@ class TapConfirmationTest(unittest.TestCase):
         self.runner.tap("Allow all the time")
         self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)])
 
+    def moved(self):
+        """The prompt pushed 75 px down, so that the centre tapped before the push misses it by a pixel."""
+        return ET.fromstring(ET.tostring(self.prompt).replace(b"[556,1144][897,1292]", b"[556,1219][897,1367]"))
+
+    def test_a_screen_that_only_moved_is_tapped_again_where_the_button_is_now(self):
+        self.runner.ui = Mock(side_effect=[self.prompt, self.moved(), self.moved(), self.granted])
+        self.runner.tap("Allow all the time")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218), call("input", "tap", 726, 1293)])
+        self.assertIn("at 726,1218: screen moved", self.evidence(1))
+
+    def test_a_screen_that_moved_and_then_answered_is_not_tapped_again(self):
+        with patch.object(smoke, "TAP_SETTLE", 60), \
+             patch.object(smoke.time, "monotonic", return_value=0), \
+             patch.object(smoke.time, "sleep"):
+            self.runner.ui = Mock(side_effect=[self.prompt, self.moved(), self.granted])
+            self.runner.tap("Allow all the time")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)])
+        self.assertEqual(self.runner.ui.call_count, 3)
+        self.evidence_run.assert_not_called()
+
+    def test_a_moved_screen_that_also_changed_answers_the_tap(self):
+        changed = self.moved()
+        changed.find("node/node").set("enabled", "false")
+        self.runner.ui = Mock(side_effect=[self.prompt, changed])
+        self.runner.tap("Allow all the time")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)])
+
     def test_a_button_gone_by_the_retry_counts_as_tapped(self):
         # The screen answered too slowly to be seen, not not at all: tapping where the button was
         # would land on whatever replaced it.
