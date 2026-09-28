@@ -104,11 +104,12 @@ TAP_ATTEMPTS = 3
 # as shown ever became a visible layer, which is where the input dispatcher's windows come from.
 TAP_EVIDENCE_QUERIES = ("input", "window windows", "activity activities", "SurfaceFlinger")
 TAP_EVIDENCE_TIMEOUT = 20
-# The framework's own crash and ANR dialogs, which belong to no app under test and sit in front of
-# whatever the case was about. Both offer this button; the message is phrased around the crashed
-# app's name, so the wording that is not is what identifies them.
+# The framework's own crash dialog, which belongs to no app under test and sits in front of
+# whatever the case was about. The message is phrased around the crashed app's name, so the
+# wording that is not is what identifies it. An ANR dialog offers the same button but is never
+# cleared: the crash buffer does not record ANRs, so nothing attributes one.
 FRAMEWORK_ERROR_BUTTON = "Close app"
-FRAMEWORK_ERROR_TEXT = re.compile(r"(keeps stopping|kept stopping|has stopped|isn't responding)")
+FRAMEWORK_ERROR_TEXT = re.compile(r"(keeps stopping|kept stopping|has stopped)")
 FRAMEWORK_ERROR_DISMISSALS = 2
 # Which app a crash dialog is about, which the dialog itself says only as a label. The crash buffer
 # names the package, and the newest entry in it is the crash whose dialog is in front.
@@ -309,12 +310,13 @@ class Smoke:
                                    f"{elapsed:.0f}s; see {self.output / 'commands.log'}")
 
     def crashed(self):
-        """The package of the newest crash the device recorded, or None if it recorded none."""
+        """The package of the newest crash the device recorded, or None if it recorded none. The
+        buffer names the process: "eu.darken.porter:remote" is Porter's."""
         found = CRASHED_PROCESS.findall(self.adb("logcat", "-d", "-b", "crash", check=False))
-        return found[-1] if found else None
+        return found[-1].split(":")[0] if found else None
 
     def framework_error(self, root):
-        """The bounds of the button that clears a crash or ANR dialog raised by something else.
+        """The bounds of the button that clears a crash dialog raised by something else.
 
         Such a dialog is drawn by the framework, so every node in it carries the "android"
         package, the way the user-switching overlay does; what tells those two apart is the
