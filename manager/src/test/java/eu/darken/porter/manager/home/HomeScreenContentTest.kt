@@ -9,6 +9,9 @@ import eu.darken.porter.manager.R
 import eu.darken.porter.manager.compatibility.CompatibilityRepository
 import eu.darken.porter.manager.management.AppsViewModel
 import eu.darken.porter.manager.ui.PorterTheme
+import eu.darken.porter.manager.updater.Asset
+import eu.darken.porter.manager.updater.AvailableUpdate
+import eu.darken.porter.manager.updater.Release
 import eu.darken.porter.manager.utils.PorterStateMachine
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -26,6 +29,11 @@ class HomeScreenContentTest : ComposeTest() {
 
     private val installedCompanion = CompatibilityRepository.State(status = CompatibilityRepository.Status.INSTALLED,
         isCompanion = true, installedVersionName = "1.1", installedVersionCode = 101010)
+
+    private val apk = Asset("porter-0.7.0-rc0.apk", "https://example.invalid/porter.apk", 1024)
+
+    private fun update(name: String? = "Spring release", apk: Asset? = this.apk) = AvailableUpdate("0.6.0-rc0",
+        Release("v0.7.0-rc0", name, "https://example.invalid/releases/v0.7.0-rc0", apk)).toCardState()
 
     private fun statusUi(running: Boolean) = ServiceStatusUi(
         running = running, restricted = false, updateAvailable = false,
@@ -56,6 +64,41 @@ class HomeScreenContentTest : ComposeTest() {
 
     private fun assertNotShown(text: String) =
         composeTestRule.onAllNodesWithText(text, substring = true).assertCountEquals(0)
+
+    @Test fun noUpdateLeavesTheUpdateCardOff() {
+        render(state())
+        composeTestRule.onAllNodesWithText(string(R.string.updater_card_title)).assertCountEquals(0)
+        assertNotShown(string(R.string.updater_changelog))
+    }
+
+    @Test fun updateCardNamesBothVersionsAndTheRelease() {
+        render(state().copy(update = update()))
+        composeTestRule.onNodeWithText(string(R.string.updater_card_title)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(string(R.string.updater_card_versions, "0.7.0-rc0", "0.6.0-rc0")).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Spring release").assertIsDisplayed()
+    }
+
+    @Test fun updateWithoutAReleaseNameShowsOnlyTheVersions() {
+        render(state().copy(update = update(name = null)))
+        composeTestRule.onNodeWithText(string(R.string.updater_card_versions, "0.7.0-rc0", "0.6.0-rc0")).assertIsDisplayed()
+        assertNotShown("Spring release")
+    }
+
+    @Test fun updateWithoutAnApkOffersNoDownload() {
+        render(state().copy(update = update(apk = null)))
+        composeTestRule.onNodeWithText(string(R.string.updater_changelog)).assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(string(R.string.updater_download)).assertCountEquals(0)
+    }
+
+    @Test fun updateCardButtonsCallTheirActions() {
+        val clicks = mutableListOf<String>()
+        render(state().copy(update = update()), actions().copy(onUpdateIgnore = { clicks += "ignore" },
+            onUpdateChangelog = { clicks += "changelog" }, onUpdateDownload = { clicks += "download" }))
+        composeTestRule.onNodeWithText(string(R.string.updater_ignore)).performClick()
+        composeTestRule.onNodeWithText(string(R.string.updater_changelog)).performClick()
+        composeTestRule.onNodeWithText(string(R.string.updater_download)).performClick()
+        assertEquals(listOf("ignore", "changelog", "download"), clicks)
+    }
 
     @Test fun applicationsCardNeedsBothARunningServiceAndPermission() {
         render(state(running = true, permitted = true))
