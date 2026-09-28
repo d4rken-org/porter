@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.TimeZone
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -103,6 +104,23 @@ internal class FakeOperations : ServiceFollower.Operations {
         metadata += file
         file.writeText("metadata\n")
     }
+}
+
+/** Clocks that read the same instant every time, 2026-09-28T15:05:03.123Z by default. */
+internal class FixedClocks(
+    @Volatile var epochMs: Long = 1_790_607_903_123L,
+    @Volatile var elapsedMs: Long = 1_000L,
+    @Volatile var uptimeMs: Long = 900L,
+    @Volatile var zone: TimeZone = TimeZone.getTimeZone("Europe/Berlin"),
+    @Volatile var bootCount: Int = 7,
+) : ClockAnchors.Clocks {
+    /** Runs on every wall clock reading, which every anchor takes exactly once. */
+    @Volatile var onRead: () -> Unit = {}
+    override fun epochMs(): Long = epochMs.also { onRead() }
+    override fun elapsedMs() = elapsedMs
+    override fun uptimeMs() = uptimeMs
+    override fun zone() = zone
+    override fun bootCount() = bootCount
 }
 
 /** Polls [condition] until it holds, failing after [timeoutMs]. */

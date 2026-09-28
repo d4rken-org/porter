@@ -35,6 +35,7 @@ class ServiceFollowerTest {
     private val operations = FakeOperations()
     private val directory by lazy { temporary.newFolder() }
     private val binders = MutableStateFlow<IBinder?>(null)
+    private val anchors = ClockAnchors(FixedClocks(elapsedMs = 1_000L))
 
     @After fun cancelEverything() {
         scope.cancel()
@@ -43,11 +44,12 @@ class ServiceFollowerTest {
     private fun service(pid: Int?) = Binder().also { binder -> pid?.let { synchronized(operations.pids) { operations.pids[binder] = it } } }
 
     private fun follower(flow: Flow<IBinder?> = binders, deadline: Long = 601_000L) =
-        ServiceFollower(flow, operations, directory, deadline, elapsedNow = { 1_000L }, scope = scope).also { it.start() }
+        ServiceFollower(flow, operations, directory, deadline, anchors, scope).also { it.start() }
 
     private fun events() = File(directory, "events.txt").takeIf { it.isFile }?.readText().orEmpty()
     private fun awaitEvent(line: String) = eventually(message = { "missing \"$line\" in:\n${events()}" }) { events().contains(line) }
     private fun count(line: String) = events().lines().count { it.startsWith(line) }
+    private fun lineAfter(prefix: String) = events().lines().let { lines -> lines[lines.indexOfFirst { it.startsWith(prefix) } + 1] }
 
     @Test fun aServiceDeliveredAfterTheStartIsAttached() {
         follower()
@@ -256,5 +258,36 @@ class ServiceFollowerTest {
         binders.value = service(10)
         awaitEvent("Server stream attached pid=10 attach=4")
         assertTrue(File(directory, "server-attach-4-pid10.txt").isFile)
+    }
+
+    @Test fun anAttachIsAnchoredRightAfterItsArrival() {
+        follower()
+        binders.value = service(4321)
+        awaitEvent("Server stream attached pid=4321 attach=1")
+
+        assertEquals(anchors.line("attach 1"), lineAfter("Service binder arrived attach=1 pid=4321 at "))
+    }
+
+    @Test fun aLossIsAnchoredRightAfterItIsNoted() {
+        follower()
+        binders.value = service(1)
+        awaitEvent("Server stream attached pid=1")
+
+        binders.value = null
+        awaitEvent("Clock lost ")
+
+        assertEquals(anchors.line("lost"), lineAfter("Service binder lost at "))
+    }
+
+    @Test fun aReplacementIsAnchoredRightAfterItIsNoted() {
+        follower()
+        binders.value = service(1)
+        awaitEvent("Server stream attached pid=1")
+
+        binders.value = service(2)
+        awaitEvent("Server stream attached pid=2 attach=2")
+
+        assertEquals(anchors.line("replaced"), lineAfter("Service replaced at "))
+        assertEquals(anchors.line("attach 2"), lineAfter("Service binder arrived attach=2 pid=2 at "))
     }
 }

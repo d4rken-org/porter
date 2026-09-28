@@ -14,7 +14,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.IBinder
 import android.os.Process
-import android.os.SystemClock
 import android.os.UserManager
 import android.provider.Settings
 import android.util.Log
@@ -43,7 +42,8 @@ class DebugRecorder internal constructor(
         ProcessBuilder("logcat", "-v", "threadtime", "--pid=$pid", "-T", "1").redirectErrorStream(true).start()
     },
     private val binders: StateFlow<IBinder?> = ServerBinder.binder,
-    private val serviceOperations: ServiceFollower.Operations = ServiceFollower.ServiceOperations(appContext),
+    private val anchors: ClockAnchors = ClockAnchors(appContext),
+    private val serviceOperations: ServiceFollower.Operations = ServiceFollower.ServiceOperations(appContext, anchors),
     private val serviceStates: () -> Flow<PorterStateMachine.State> = { PorterStateMachine.instance.asFlow() },
     private val describeDevice: () -> String = { deviceDetails(appContext) },
     private val wallClock: () -> Long = System::currentTimeMillis,
@@ -83,7 +83,7 @@ class DebugRecorder internal constructor(
         scope.launch {
             try {
                 mutex.withLock {
-                    if (process == null) store.activeId()?.let { resume(it) }
+                    if (process == null) store.activeId()?.let { resume(it, fresh = false) }
                     store.prune()
                 }
             } catch (e: Exception) { report(e) }
@@ -94,7 +94,7 @@ class DebugRecorder internal constructor(
         mutex.withLock {
             if (state.value.active) return@withLock
             val id = store.create()
-            try { resume(id) }
+            try { resume(id, fresh = true) }
             catch (e: Exception) {
                 store.finish()
                 report(e)
@@ -103,7 +103,8 @@ class DebugRecorder internal constructor(
         }
     }
 
-    private suspend fun resume(id: String) {
+    /** [fresh] tells a new session from one continued by a manager process that came back. */
+    private suspend fun resume(id: String, fresh: Boolean) {
         val directory = store.directory(id)
         val started = id.substringBefore('-').toLong()
         val remaining = MAX_DURATION - (System.currentTimeMillis() - started).coerceAtLeast(0)
@@ -120,8 +121,10 @@ class DebugRecorder internal constructor(
                 })
             }
         }
-        val deadline = SystemClock.elapsedRealtime() + remaining
-        File(directory, "events.txt").appendText("Recording manager pid=${Process.myPid()} at ${wallClock()}\n")
+        val deadline = anchors.elapsedNow() + remaining
+        val events = File(directory, "events.txt")
+        events.appendText("Recording manager pid=${Process.myPid()} at ${wallClock()}\n")
+        anchors.append(events, if (fresh) "start" else "resume")
         val child = managerLog(Process.myPid())
         try {
             process = child
@@ -139,8 +142,8 @@ class DebugRecorder internal constructor(
                 scope.launch { stop(child) }
             }
             timer = scope.launch { delay(remaining); scope.launch { stop(child) } }
-            ServerDiagnostics.captureMetadata(appContext, directory, "start")
-            follower = ServiceFollower(binders, serviceOperations, directory, deadline, scope = scope).also { it.start() }
+            ServerDiagnostics.captureMetadata(appContext, directory, "start", anchors)
+            follower = ServiceFollower(binders, serviceOperations, directory, deadline, anchors, scope).also { it.start() }
             watchServiceState(directory)
         } catch (e: Exception) {
             process = null
@@ -194,10 +197,11 @@ class DebugRecorder internal constructor(
             reader = null
             detachService()
             val directory = store.directory(id)
+            anchors.append(File(directory, "events.txt"), "stop")
             store.finish()
             mutableState.value = State()
             appContext.getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
-            ServerDiagnostics.captureMetadata(appContext, directory, "stop")
+            ServerDiagnostics.captureMetadata(appContext, directory, "stop", anchors)
             store.prune()
         }
     }

@@ -28,6 +28,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.File
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -43,6 +44,8 @@ class DebugRecorderFollowTest {
     private val operations = FakeOperations()
     private val binders = MutableStateFlow<IBinder?>(null)
     private val states = MutableStateFlow(PorterStateMachine.State.STOPPED)
+    private val clocks = FixedClocks()
+    private val anchors = ClockAnchors(clocks)
 
     @After fun cancelEverything() {
         scope.cancel()
@@ -57,6 +60,7 @@ class DebugRecorderFollowTest {
         scope = scope,
         managerLog = { FakeProcess() },
         binders = binders,
+        anchors = anchors,
         serviceOperations = operations,
         serviceStates = serviceStates,
         describeDevice = { "device" },
@@ -67,6 +71,7 @@ class DebugRecorderFollowTest {
 
     private fun session() = store.sessions().single()
     private fun events() = File(store.directory(session().id), "events.txt").readText()
+    private fun lineAfter(prefix: String) = events().lines().let { lines -> lines[lines.indexOfFirst { it.startsWith(prefix) } + 1] }
 
     @Test fun stopReleasesTheServiceAndStopsFollowing() = runBlocking {
         val recorder = recorder()
@@ -141,5 +146,43 @@ class DebugRecorderFollowTest {
 
         assertNull(store.activeId())
         assertTrue(events().contains("Service RUNNING at "))
+    }
+
+    @Test fun aNewSessionIsAnchoredAsAStart() = runBlocking {
+        val recorder = recorder()
+        recorder.start()
+
+        assertEquals(anchors.line("start"), lineAfter("Recording manager pid="))
+        recorder.stop()
+    }
+
+    @Test fun aSessionContinuedByANewProcessIsAnchoredAsAResume() = runBlocking {
+        store.create()
+        val recorder = recorder()
+
+        recorder.attach()
+        eventually { recorder.state.value.active }
+
+        assertEquals(anchors.line("resume"), lineAfter("Recording manager pid="))
+        assertTrue(events().lines().none { it.startsWith("Clock start ") })
+        recorder.stop()
+    }
+
+    @Test fun stopIsAnchoredAfterTheFollowerEndsAndBeforeTheSessionFinishes() = runBlocking {
+        val recorder = recorder()
+        recorder.start()
+        binders.value = service(4321)
+        eventually(message = { events() }) { events().contains("Server stream attached pid=4321") }
+        val id = session().id
+        val activeAtRead = CopyOnWriteArrayList<String?>()
+        clocks.onRead = { activeAtRead += store.activeId() }
+
+        recorder.stop()
+
+        assertEquals(id, activeAtRead.first())
+        val lines = File(store.directory(id), "events.txt").readText().trimEnd().lines()
+        assertEquals(anchors.line("stop"), lines.last())
+        assertTrue(lines.joinToString("\n"), lines.indexOfFirst { it.startsWith("Server stream ended pid=4321 ") } in 0 until lines.lastIndex)
+        assertEquals("Elapsed: 1000", File(store.directory(id), "server-stop.txt").readLines()[1])
     }
 }

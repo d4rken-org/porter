@@ -104,13 +104,13 @@ internal object ServerDiagnostics {
         }
     }
 
-    suspend fun captureMetadata(context: Context, directory: File, phase: String) =
-        captureMetadata(context, ServerBinder.binder.value, File(directory, "server-$phase.txt"))
+    suspend fun captureMetadata(context: Context, directory: File, phase: String, anchors: ClockAnchors) =
+        captureMetadata(context, ServerBinder.binder.value, File(directory, "server-$phase.txt"), anchors)
 
     /** Describes [service] and nothing else, so a replacement arriving meanwhile cannot mix in. */
-    suspend fun captureMetadata(context: Context, service: IBinder?, details: File) {
+    suspend fun captureMetadata(context: Context, service: IBinder?, details: File, anchors: ClockAnchors) {
         try {
-            details.writeText("Time: ${System.currentTimeMillis()}\nBoot start: ${PorterSettings.preferences.getBoolean("start_on_boot", false)}\nWatchdog: ${PorterSettings.watchdog}\n")
+            details.writeText("${anchors.metadata()}Boot start: ${PorterSettings.preferences.getBoolean("start_on_boot", false)}\nWatchdog: ${PorterSettings.watchdog}\n")
             val binder = service?.takeIf { it.pingBinder() }
             if (binder == null) {
                 details.appendText("Porter service unavailable\n")

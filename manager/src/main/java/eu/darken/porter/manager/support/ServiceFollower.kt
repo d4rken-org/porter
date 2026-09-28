@@ -3,7 +3,6 @@ package eu.darken.porter.manager.support
 import android.content.Context
 import android.os.Binder
 import android.os.IBinder
-import android.os.SystemClock
 import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +29,7 @@ internal class ServiceFollower(
     private val operations: Operations,
     private val directory: File,
     private val deadlineElapsed: Long,
-    private val elapsedNow: () -> Long = SystemClock::elapsedRealtime,
+    private val anchors: ClockAnchors,
     private val scope: CoroutineScope,
 ) {
     interface Operations {
@@ -41,7 +40,7 @@ internal class ServiceFollower(
         suspend fun captureMetadata(binder: IBinder, file: File)
     }
 
-    class ServiceOperations(private val context: Context) : Operations {
+    class ServiceOperations(private val context: Context, private val anchors: ClockAnchors) : Operations {
         override fun readInfo(binder: IBinder) = ServerDiagnostics.readInfo(binder)
         override fun requestLease(binder: IBinder, token: IBinder, durationMs: Long) =
             ServerDiagnostics.requestDebugLogging(binder, token, durationMs)
@@ -51,7 +50,7 @@ internal class ServiceFollower(
         override fun openStream(binder: IBinder, pid: Int, directory: File, since: String) =
             ServerDiagnostics.openStream(binder, pid, directory, since)
         override suspend fun captureMetadata(binder: IBinder, file: File) =
-            ServerDiagnostics.captureMetadata(context, binder, file)
+            ServerDiagnostics.captureMetadata(context, binder, file, anchors)
     }
 
     /** What one attach has acquired so far, so a cancelled attach releases exactly that. */
@@ -100,6 +99,7 @@ internal class ServiceFollower(
                     !previousNull -> {
                         detach()
                         note("Service binder lost")
+                        anchors.append(events, "lost")
                     }
                 }
                 previousNull = true
@@ -113,7 +113,10 @@ internal class ServiceFollower(
                 note("Service binder not answering")
                 return@collect
             }
-            if (attachedBefore && !nullSinceAttach) note("Service replaced")
+            if (attachedBefore && !nullSinceAttach) {
+                note("Service replaced")
+                anchors.append(events, "replaced")
+            }
             attachedBefore = true
             nullSinceAttach = false
             attach(binder, ++attaches)
@@ -129,6 +132,7 @@ internal class ServiceFollower(
             null
         }
         note("Service binder arrived attach=$attach pid=${pid ?: "unknown"}")
+        anchors.append(events, "attach $attach")
         val metadata = File(directory, "server-attach-$attach-${if (pid != null) "pid$pid" else "unknown"}.txt")
         try {
             operations.captureMetadata(binder, metadata)
@@ -165,7 +169,7 @@ internal class ServiceFollower(
      * still worth having, so no outcome here stops one.
      */
     private fun acquireLease(instance: Instance) {
-        val remaining = deadlineElapsed - elapsedNow()
+        val remaining = deadlineElapsed - anchors.elapsedNow()
         if (remaining <= 0) {
             note("Debug logging skipped: recording ends at deadline")
             return
