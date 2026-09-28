@@ -94,6 +94,21 @@ class ArgumentTest(unittest.TestCase):
         self.assertEqual(self.parse(*[arg for name in chain for arg in ("--case", name)]).cases,
                          chain)
 
+    def test_a_selection_dropping_the_uninstall_the_adoption_case_starts_from_is_rejected(self):
+        # The adoption case reinstalls Porter itself, and needs it absent first so that the prompt
+        # it answers is a fresh one and the uninstall it observes is its own.
+        # Without selection-prefers-porter, so that the positional check cannot reject it instead.
+        message = self.rejected("--case", "setup", "--case", "shizuku-permission-lifecycle",
+                                "--case", "adoption-after-porter-uninstall")
+        self.assertIn("selection-porter-stopped", message)
+        self.assertIn("selection-prefers-porter", message)
+
+    def test_the_adoption_chain_without_an_earlier_allow_is_accepted(self):
+        chain = ["setup", "shizuku-permission-lifecycle", "selection-prefers-porter",
+                 "selection-porter-stopped", "adoption-after-porter-uninstall"]
+        self.assertEqual(self.parse(*[arg for name in chain for arg in ("--case", name)]).cases,
+                         chain)
+
     def test_an_unknown_case_is_rejected_and_names_the_valid_ones(self):
         message = self.rejected("--case", "setup", "--case", "dualwire")
         self.assertIn("dualwire", message)
@@ -218,6 +233,22 @@ class ProcessLogTest(unittest.TestCase):
         with patch.object(dualwire.time, "sleep"), \
                 patch.object(dualwire.time, "monotonic", side_effect=[0, 1]):
             self.assertTrue(self.runner.fresh(self.SECONDARY, boundary, "SECONDARY BINDER_DEAD"))
+
+    def test_the_sdk_stream_adds_the_sdk_s_own_tags(self):
+        self.runner.sdk_logs_for(self.MAIN)
+        self.assertEqual(self.runner.adb.call_args_list[-1],
+                         call("logcat", "-d", "--pid=4711", "-s", "PorterProbe:I", "Porter:I",
+                              "PorterApiProvider:D", "*:S"))
+
+    def test_a_divider_ahead_of_dropped_lines_does_not_replay_the_rest(self):
+        # logcat heads every read with a divider, so once the buffer drops a line from the front
+        # the divider sits ahead of a different first line and no earlier read is a prefix.
+        self.buffers[self.MAIN].insert(0, "--------- beginning of main")
+        boundary = self.runner.sdk_logs_for(self.MAIN).splitlines()
+        del self.buffers[self.MAIN][1]
+        self.buffers[self.MAIN].append(dualwire.BRIDGE + " BINDER_DEAD")
+        self.assertEqual(dualwire.added(boundary, self.runner.sdk_logs_for(self.MAIN).splitlines()),
+                         [dualwire.BRIDGE + " BINDER_DEAD"])
 
     def test_lines_the_buffer_dropped_from_the_front_do_not_replay_as_new(self):
         boundary = [str(line) for line in range(4)]
@@ -596,6 +627,96 @@ class CaseBodyTest(unittest.TestCase):
                     "process to deliver into it, which is a fresh fetch rather than a push"):
             self.secondary_device(
                 on_push=replaces_the_secondary).run_case("secondary-before-delivery")
+
+    def adoption_device(self, *, grant_survives=False, kept=True, uninstall_kills=False,
+                        adopts=True, connects=True, authorizes=True, pushes_again=False,
+                        restarts_shizuku=False, orphan_service=False):
+        """Porter absent and Shizuku running, as selection-porter-stopped leaves them. `stream` is
+        the probe's lines interleaved with the SDK's, in the order sdk_logs_for reads them."""
+        stream = []
+
+        def probe_says(*messages):
+            lines = self.lines(*messages)
+            device.buffer.extend(lines)
+            stream.extend(lines)
+
+        def launched(processes):
+            processes[dualwire.BRIDGE] = "4711"
+            # Both servers push into the new process, and each push is logged before it is taken
+            # or refused, so these lines are there before the boundary on a device too.
+            stream.append("PorterApiProvider: binder received")
+            stream.extend(device.buffer)
+            stream.append("PorterApiProvider: binder received")
+            if kept:
+                stream.append("Porter: keeping a SHIZUKU binder")
+
+        def uninstalled():
+            device.processes.pop("porter_server", None)
+            if uninstall_kills:
+                device.processes[dualwire.BRIDGE] = "4799"
+            if restarts_shizuku:
+                device.processes["shizuku_server"] = "301"
+            if pushes_again:
+                stream.append("PorterApiProvider: binder received")
+            if adopts:
+                stream.append("Porter: adopting a kept SHIZUKU binder")
+                if connects:
+                    probe_says("BINDER_DEAD", self.SHIZUKU_BINDER, "BACKEND SHIZUKU",
+                               *(("AUTHORIZED managerOperationDenied=", self.USER_SERVICE)
+                                 if authorizes else ()))
+                    if authorizes:
+                        device.processes[dualwire.BRIDGE + ":porter-probe"] = "500"
+
+        def adb(*args, **kwargs):
+            if args[:2] == ("uninstall", dualwire.base.MANAGER):
+                uninstalled()
+            return ""
+
+        def shell(*args, **kwargs):
+            if grant_survives and args[:2] == ("dumpsys", "package"):
+                return dualwire.base.PERMISSION + ": granted=true"
+            result = device.shell(*args, **kwargs)
+            # After the delegated force-stop, which would otherwise remove it again.
+            if orphan_service and args[:3] == ("am", "force-stop", dualwire.BRIDGE):
+                device.processes[dualwire.BRIDGE + ":porter-probe"] = "500"
+            return result
+
+        device = MockedDevice(processes={"shizuku_server": MockedDevice.SHIZUKU_SERVER},
+                              launches=[self.lines(self.PORTER_BINDER, "BACKEND PORTER")],
+                              on_launch=launched, on_tap=lambda device: probe_says("DENIED"))
+        runner = device.runner
+        runner.adb = Mock(side_effect=adb)
+        runner.sdk_logs_for = Mock(side_effect=lambda pid: "\n".join(stream))
+        runner.shell = Mock(side_effect=shell)
+        return device
+
+    def test_the_adoption_case_passes_only_for_an_adoption_in_the_same_process(self):
+        self.assertEqual(self.adoption_device().run_case("adoption-after-porter-uninstall"),
+                         {"probe_pid": "4711", "shizuku_pid": MockedDevice.SHIZUKU_SERVER})
+
+        broken = {
+            "the probe still holds the Porter permission": dict(grant_survives=True),
+            "the refused Shizuku push is kept": dict(kept=False),
+            "replaced the probe process": dict(uninstall_kills=True),
+            "the kept Shizuku binder is adopted": dict(adopts=False),
+            "the probe connects on Shizuku": dict(connects=False),
+            "AUTHORIZED": dict(authorizes=False),
+            "the user service follows its client": dict(orphan_service=True),
+            "pushed a binder after the uninstall": dict(pushes_again=True),
+            "the Shizuku server was replaced": dict(restarts_shizuku=True),
+        }
+        for message, fault in broken.items():
+            with self.subTest(fault=fault), self.assertRaisesRegex(
+                    AssertionError, message,
+                    msg=f"adoption-after-porter-uninstall passed on a device with {fault}"):
+                self.adoption_device(**fault).run_case("adoption-after-porter-uninstall")
+
+    def test_the_adoption_case_stops_its_probe_even_when_it_fails(self):
+        device = self.adoption_device(adopts=False)
+        with self.assertRaises(AssertionError):
+            device.run_case("adoption-after-porter-uninstall")
+        self.assertNotIn(dualwire.BRIDGE, device.processes,
+                         "a probe left running would take a later case's binder")
 
 
 class ForwardedCallTest(unittest.TestCase):
