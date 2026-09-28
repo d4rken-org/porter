@@ -466,4 +466,10 @@
     <string name="updater_channel_beta">Beta</string>
     <string name="updater_channel_production_choice">Production: full releases only</string>
     <string name="updater_channel_beta_choice">Beta: newest release, including betas and pre-releases</string>
+    <string name="updater_download_failed">Download failed: %1$s</string>
+    <string name="updater_download_failed_partial">Download failed: %1$s. The partially saved file may remain.</string>
+    <string name="updater_not_porter">The downloaded file is not a Porter APK.</string>
+    <string name="updater_not_newer">The downloaded APK is not newer than the installed Porter.</string>
+    <string name="updater_automatic_unavailable">Porter\'s service is no longer available on this device\'s main user, so the update was not installed.</string>
+    <string name="updater_install_failed">Install failed: %1$s</string>
 </resources>
