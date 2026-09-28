@@ -88,6 +88,11 @@ abstract class HomeActivity : ComposeActivity() {
         pendingUpdate?.let { outState.putBundle(STATE_PENDING_UPDATE, it.toBundle()) }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) updateInstaller.finishManualInstall()
+    }
+
     /** Clears the choice whatever it was, so a result never reuses it. */
     private fun takePendingUpdate(action: UpdateAction): PendingUpdate? =
         pendingUpdate.also { pendingUpdate = null }?.takeIf { it.action == action }
