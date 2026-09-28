@@ -9,11 +9,11 @@ import java.io.IOException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -185,10 +185,9 @@ class UpdateRepositoryTest {
         val repository = repository()
         val check = repository.refresh()
         runCurrent()
-        repository.setEnabled(false)
+        assertNull(repository.setEnabled(false))
         gate.complete(NEWER)
         check.join()
-        advanceUntilIdle()
         assertNull(repository.state.value.update)
         assertFalse(repository.state.value.enabled)
     }
@@ -227,8 +226,9 @@ class UpdateRepositoryTest {
     @Test fun enablingChecksRightAway() = runTest {
         checker.enabledByDefault = false
         val repository = repository()
-        repository.setEnabled(true)
-        advanceUntilIdle()
+        val check = repository.setEnabled(true)
+        assertNotNull(check)
+        check?.join()
         assertEquals(1, checker.requests.size)
         assertEquals(true, PorterSettings.updateCheck)
         assertEquals(NEWER, repository.state.value.update?.release)
@@ -251,8 +251,9 @@ class UpdateRepositoryTest {
         val repository = repository()
         repository.refresh().join()
         checker.answer = { NEWEST }
-        repository.setChannel(UpdateChannel.BETA)
-        advanceUntilIdle()
+        val check = repository.setChannel(UpdateChannel.BETA)
+        assertNotNull(check)
+        check?.join()
         assertEquals(listOf(false, true), checker.requests)
         assertEquals(UpdateChannel.BETA, PorterSettings.updateChannel)
         assertEquals(UpdateChannel.BETA, repository.state.value.channel)

@@ -115,16 +115,18 @@ class UpdateRepository @VisibleForTesting internal constructor(
         return at <= now && now - at < interval
     }
 
-    fun setEnabled(enabled: Boolean) {
+    /** Returns the check it starts, or null when there is nothing to check. */
+    fun setEnabled(enabled: Boolean): Job? {
         PorterSettings.updateCheck = enabled
         publish()
-        if (enabled) refresh()
+        return if (enabled) refresh() else null
     }
 
-    fun setChannel(channel: UpdateChannel) {
+    /** Returns the check it starts, or null when checks are off. */
+    fun setChannel(channel: UpdateChannel): Job? {
         PorterSettings.updateChannel = channel
         publish()
-        if (isEnabled()) refresh()
+        return if (isEnabled()) refresh() else null
     }
 
     /** Hides the offered release until a different one comes along. */
