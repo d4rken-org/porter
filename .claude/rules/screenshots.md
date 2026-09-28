@@ -25,9 +25,10 @@ copy_screenshots.sh       →  Sorts PNGs into fastlane/metadata/android/{locale
 ```
 
 The shots render the **hoisted** screen bodies (`HomeScreenContent`, `SettingsScreenContent`) and
-the existing `ApplicationManagementList`, never the activities. `HomeActivity.HomeScreen()` and
-`SettingsActivity.SettingsScreen()` read view models and call `startActivity`, which layoutlib
-cannot do, which is why those bodies were hoisted in the first place.
+the existing `ApplicationManagementList`, never the activities. `HomeActivity.HomeScreen()` reads
+view models, `SettingsActivity.SettingsScreen()` reads the update repository, and both call
+`startActivity`, which layoutlib cannot do, which is why those bodies were hoisted in the first
+place.
 
 ## Commands
 
@@ -107,7 +108,7 @@ The number is the fastlane filename prefix, which is the order Play shows them i
 | 2 | `Apps`              | `2_apps.png`             | light | Management list across five app states |
 | 3 | `HomeCompatibility` | `3_home_compatibility.png` | light | Home with the tertiary-coloured compatibility card |
 | 4 | `HomeSetup`         | `4_home_setup.png`       | light | Home while stopped: wireless debugging and ADB command cards |
-| 5 | `Settings`          | `5_settings.png`         | dark  | Settings |
+| 5 | `Settings`          | `5_settings.png`         | dark  | Settings index: General and Startup entries, Tools |
 | 6 | `AppsDark`          | `6_apps_dark.png`        | dark  | Management list in dark theme |
 
 Shot 3 reaches the compatibility story through the existing `CompatibilityCard` on Home rather than
@@ -115,9 +116,11 @@ through `CompatibilityActivity`, which is still private and activity-coupled. In
 that card appears when counts are available and apps need the companion
 (`companionRequiredCount > 0 || pendingCompanionCount > 0`). It opens the Compatibility screen.
 
-Shot 5 is a crop, deliberately. At 411×731 dp the settings screen shows roughly its first seven
-rows, so Startup and Appearance land in full and Tools begins. All four categories exist in the
-composable and are covered by `SettingsScreenContentTest`, not by the shot.
+Shot 5 is a crop, deliberately. At 411×731 dp the settings index shows the General and Startup
+entries and all of Tools, and the bottom edge cuts through Support. The index is covered by
+`SettingsScreenContentTest`, the General and Startup screens by `GeneralSettingsContentTest` and
+`StartupSettingsContentTest`, not by the shot. Its mock state matches the Play build: update check
+unsupported and no Startup attention.
 
 **Function names must not contain underscores.** `copy_screenshots.sh` splits the rendered file name
 at the first underscore to separate the function name from the locale. Rendered names look like
