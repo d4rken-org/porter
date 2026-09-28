@@ -1642,6 +1642,9 @@ class Smoke:
             self.shell("am", "force-stop", "--user", user, NATIVE)
             assert self.absent("Allow all the time", MANAGER), \
                 "a prompt refused in another user surfaced later"
+            # Left running, the second user cost enough memory on Android 17's google_apis image
+            # that the low-memory killer took the owner's probe while its prompt was on screen.
+            self.shell("am", "stop-user", "-w", user)
 
             # The owner user's copy still works, and its answer stays its own. Whether it is
             # asked again depends on what the case before this one left it holding, which is not
