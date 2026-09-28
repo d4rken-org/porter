@@ -4,6 +4,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.android.org.conscrypt.Conscrypt
+import eu.darken.porter.manager.ktx.logd
 import java.io.Closeable
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -47,7 +48,7 @@ private class PeerInfo(
             put(data)
         }
 
-        Log.d(TAG, "write PeerInfo ${toStringShort()}")
+        logd(TAG, "write PeerInfo ${toStringShort()}")
     }
 
     override fun toString(): String {
@@ -55,7 +56,7 @@ private class PeerInfo(
     }
 
     fun toStringShort(): String {
-        return "type=$type, data=${data.contentToString()}"
+        return "type=$type"
     }
 
     companion object {
@@ -86,7 +87,7 @@ private class PairingPacketHeader(
             putInt(payload)
         }
 
-        Log.d(TAG, "write PairingPacketHeader ${toStringShort()}")
+        logd(TAG, "write PairingPacketHeader ${toStringShort()}")
     }
 
     override fun toString(): String {
@@ -118,7 +119,7 @@ private class PairingPacketHeader(
             }
 
             val header = PairingPacketHeader(version, type, payload)
-            Log.d(TAG, "read PairingPacketHeader ${header.toStringShort()}")
+            logd(TAG, "read PairingPacketHeader ${header.toStringShort()}")
             return header
         }
     }
@@ -210,7 +211,7 @@ class AdbPairingClient(private val host: String, private val port: Int, private 
         val sslSocket = sslContext.socketFactory.createSocket(socket, host, port, true) as SSLSocket
         sslSocket.soTimeout = 15_000
         sslSocket.startHandshake()
-        Log.d(TAG, "Handshake succeeded.")
+        logd(TAG, "Handshake succeeded.")
 
         inputStream = DataInputStream(sslSocket.inputStream)
         outputStream = DataOutputStream(sslSocket.outputStream)
@@ -243,7 +244,7 @@ class AdbPairingClient(private val host: String, private val port: Int, private 
 
         outputStream.write(buffer.array())
         outputStream.write(payload)
-        Log.d(TAG, "write payload, size=${payload.size}")
+        logd(TAG, "write payload, size=${payload.size}")
     }
 
     private fun doExchangeMsgs(): Boolean {
@@ -284,7 +285,7 @@ class AdbPairingClient(private val host: String, private val port: Int, private 
             return false
         }
         val theirPeerInfo = PeerInfo.readFrom(ByteBuffer.wrap(decrypted))
-        Log.d(TAG, theirPeerInfo.toString())
+        logd(TAG, theirPeerInfo.toString())
         return true
     }
 

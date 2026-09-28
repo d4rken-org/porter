@@ -6,9 +6,9 @@ import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.edit
+import eu.darken.porter.manager.ktx.logd
 import eu.darken.porter.manager.ktx.unsafeLazy
 import org.bouncycastle.asn1.x500.X500Name
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
@@ -94,8 +94,6 @@ class AdbKey(private val adbKeyStore: AdbKeyStore, name: String = "Porter") {
         ).build(signer)
         this.certificate = CertificateFactory.getInstance("X.509")
                 .generateCertificate(ByteArrayInputStream(x509Certificate.encoded)) as X509Certificate
-
-        Log.d(TAG, privateKey.toString())
     }
 
     val adbPublicKey: ByteArray by unsafeLazy {
@@ -184,7 +182,7 @@ class AdbKey(private val adbKeyStore: AdbKeyStore, name: String = "Porter") {
             private val alias = "key"
 
             override fun chooseClientAlias(keyTypes: Array<out String>, issuers: Array<out Principal>?, socket: Socket?): String? {
-                Log.d(TAG, "chooseClientAlias: keyType=${keyTypes.contentToString()}, issuers=${issuers?.contentToString()}")
+                logd(TAG, "chooseClientAlias: keyType=${keyTypes.contentToString()}, issuers=${issuers?.size}")
                 for (keyType in keyTypes) {
                     if (keyType == "RSA") return alias
                 }
@@ -192,12 +190,12 @@ class AdbKey(private val adbKeyStore: AdbKeyStore, name: String = "Porter") {
             }
 
             override fun getCertificateChain(alias: String?): Array<X509Certificate>? {
-                Log.d(TAG, "getCertificateChain: alias=$alias")
+                logd(TAG, "getCertificateChain: alias=$alias")
                 return if (alias == this.alias) arrayOf(certificate) else null
             }
 
             override fun getPrivateKey(alias: String?): PrivateKey? {
-                Log.d(TAG, "getPrivateKey: alias=$alias")
+                logd(TAG, "getPrivateKey: alias=$alias")
                 return if (alias == this.alias) privateKey else null
             }
 

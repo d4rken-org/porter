@@ -258,6 +258,7 @@ dependencies {
 
     implementation(project(":common"))
     implementation(project(":server"))
+    implementation(project(":server-shared"))
     implementation(project(":porsh"))
     implementation(project(":starter"))
     implementation(project(":sdk"))
