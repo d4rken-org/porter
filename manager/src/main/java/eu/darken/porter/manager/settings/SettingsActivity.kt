@@ -22,10 +22,13 @@ import eu.darken.porter.manager.receiver.NotifCancelReceiver
 import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.receiver.PorterReceiverStarter
 import eu.darken.porter.manager.ui.*
+import eu.darken.porter.manager.updater.UpdateChannel
+import eu.darken.porter.manager.updater.UpdateRepository
 import eu.darken.porter.manager.utils.*
 
 class SettingsActivity : ComposeActivity() {
     private val model: SettingsViewModel by viewModels()
+    private val updates by lazy { UpdateRepository.get(this) }
     private val battery = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { model.batteryResult() }
 
     private var batteryRestricted by mutableStateOf(false)
@@ -61,6 +64,7 @@ class SettingsActivity : ComposeActivity() {
         val dialog by model.dialog.collectAsStateWithLifecycle()
         val canBoot by model.canBoot.collectAsStateWithLifecycle()
         val togglesBusy by model.busy.collectAsStateWithLifecycle()
+        val updateState by updates.state.collectAsStateWithLifecycle()
         val alertsBlocked = remember(revision, resumed, togglesBusy) { alertsBlocked() }
         val mode = (values[PorterSettings.Keys.KEY_NIGHT_MODE] as? Int ?: -1).toString()
         val style = values[PorterSettings.Keys.KEY_THEME_STYLE] as? String ?: "DEFAULT"
@@ -98,6 +102,12 @@ class SettingsActivity : ComposeActivity() {
                 versionName = BuildConfig.VERSION_NAME,
                 showBatteryAction = batteryRestricted && (PorterSettings.isStartOnBoot(this@SettingsActivity) || PorterSettings.watchdog),
                 showAlertsAction = alertsBlocked,
+                updateCheckSupported = updateState.supported,
+                updateCheck = updateState.enabled,
+                updateChannelLabel = stringResource(when (updateState.channel) {
+                    UpdateChannel.PRODUCTION -> R.string.updater_channel_production
+                    UpdateChannel.BETA -> R.string.updater_channel_beta
+                }),
             ),
             SettingsActions(
                 onBack = { finish() },
@@ -118,6 +128,8 @@ class SettingsActivity : ComposeActivity() {
                 onVersion = { CustomTabsHelper.launchUrlOrCopy(this@SettingsActivity, Helps.DOWNLOAD.get()) },
                 onBatteryOptimization = { SettingsHelper.requestIgnoreBatteryOptimizations(this@SettingsActivity) },
                 onNotificationSettings = { SettingsPage.Notifications.NotificationSettings.launch(this@SettingsActivity) },
+                onUpdateCheckChange = { updates.setEnabled(it) },
+                onUpdateChannel = { model.show("update_channel") },
             ),
         )
         val dismiss = { model.show(null) }
@@ -140,6 +152,12 @@ class SettingsActivity : ComposeActivity() {
             "pairing" -> ChoiceDialog(stringResource(R.string.porter_pairing_method), pairings,
                 if (values[PorterSettings.Keys.KEY_LEGACY_PAIRING] == true) 1 else 0, dismiss) {
                 preferences.edit().putBoolean(PorterSettings.Keys.KEY_LEGACY_PAIRING, it == 1).apply(); model.show(null)
+            }
+            "update_channel" -> ChoiceDialog(stringResource(R.string.updater_channel),
+                listOf(stringResource(R.string.updater_channel_production_choice), stringResource(R.string.updater_channel_beta_choice)),
+                UpdateChannel.entries.indexOf(updateState.channel), dismiss) {
+                updates.setChannel(UpdateChannel.entries[it])
+                model.show(null)
             }
             "boot_warning" -> MessageDialog(stringResource(android.R.string.dialog_alert_title), stringResource(R.string.settings_start_on_boot_bug),
                 model::cancelToggle, onConfirm = { model.checkBattery() })
