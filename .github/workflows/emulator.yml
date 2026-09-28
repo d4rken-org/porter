@@ -7,12 +7,14 @@ on:
   workflow_dispatch:
     inputs:
       image:
-        # Pushes and pull requests always run google_apis. Android 7 and 9 have no ATD image, so
-        # they keep google_apis whatever is picked here, and the TV entry keeps its own.
+        # Pushes and pull requests run google_atd. On google_apis at Android 16, a permission prompt
+        # about one job in ten never reached the input dispatcher, and every tap on it was lost.
+        # Android 7 and 9 have no ATD image, so they keep google_apis whatever is picked here, and
+        # the TV entry keeps its own.
         description: System image for the smoke suites
         type: choice
-        options: [google_apis, google_atd, aosp_atd]
-        default: google_apis
+        options: [google_atd, google_apis, aosp_atd]
+        default: google_atd
 
 permissions:
   contents: read
@@ -111,7 +113,7 @@ jobs:
     env:
       SHIZUKU_SHA256: 6e273ab0e991c4e79bc8b1bbb9b9dd739ccac1a8712a541a214078886b7b790f
       DEVICE_TESTS: ${{ needs.changes.outputs.devices }}
-      EMULATOR_IMAGE: ${{ matrix.target || ((matrix.api == 24 || matrix.api == 28) && 'google_apis') || inputs.image || 'google_apis' }}
+      EMULATOR_IMAGE: ${{ matrix.target || ((matrix.api == 24 || matrix.api == 28) && 'google_apis') || inputs.image || 'google_atd' }}
     strategy:
       fail-fast: false
       matrix:
