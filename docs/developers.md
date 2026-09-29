@@ -313,6 +313,11 @@ through another library. Without both the artifact and the provider, a Shizuku-o
 When both are installed, the SDK uses Porter, even when it is stopped, so tell those users to start
 Porter.
 
+Uninstalling Porter ends your app if the user allowed it in Porter. Porter's permission is a runtime
+permission, and Android kills an app when it revokes one the app holds. Your app reaches Shizuku the
+next time it starts. A process that holds no Porter permission, because the user denied it or was
+never asked, keeps running and switches to Shizuku once Porter's server has exited.
+
 An app that keeps upstream's `dev.rikka.shizuku:api` and `:provider`, for example for a library
 built on them, can use this SDK for Porter alone. Leave out `shizuku-compat` and
 keep upstream's `ShizukuProvider`. Each client then gets its own server's Binder, and
