@@ -55,8 +55,8 @@ TRANSPORT_BACKOFF = 2
 LOGCAT_CLEAR_ATTEMPTS = 5
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "standalone", "app-list-grant", "app-list-fallback", "debug-recording", "compatibility",
-         "coexistence", "porsh", "server-crash-recovery", "root-server", "decisions-across-start-modes",
-         "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
+         "coexistence", "porsh", "server-crash-recovery", "force-stop-stays-stopped", "root-server",
+         "decisions-across-start-modes", "daemon-host-uninstalled", "daemon-host-upgraded", "host-removed-from-one-user",
          "foreign-signer-peeks", "foreign-signer-binds", "foreign-signer-never-binds",
          "non-daemon-control", "daemon-revoked-in-settings",
          "manager-stopped-then-uninstalled", "manager-upgraded-then-uninstalled",
@@ -127,6 +127,8 @@ SERVER_QUIET_POLLS = 4
 SERVER_QUIET_TIMEOUT = 60
 # am start -W answers in well under a second when it is the only start outstanding for the package.
 LAUNCH_TIMEOUT = 20
+# How long a force-stopped client is watched for coming back.
+STOPPED_WATCH = 10
 LAUNCH_ATTEMPTS = 3
 FOREIGN_PASSWORD = "porterci"
 USER_ID = re.compile(r"UserInfo\{(\d+):")
@@ -1575,6 +1577,64 @@ class Smoke:
             assert self.pid("porter_server") != server_pid
             return {"client_pid": client_pid, "server_pid": server_pid, "service_pid": service_pid}
         self.case("server-crash-recovery", server_crash_recovery, restore=("probes", "grants", "service"))
+
+        def force_stop_stays_stopped():
+            """A client stopped from outside is not started again by the server delivering to it."""
+            self.launch_probe(NATIVE)
+            self.allow_if_requested()
+            self.authorized(NATIVE)
+            # Restarted while the client is already in front, so the new server has not recorded it
+            # starting by the time the force-stop comes.
+            client_pid = self.probe_pid
+            boundary = len(self.logs())
+            self.kill_server()
+            self.until("the server is gone", lambda: not self.pid("porter_server"))
+            self.start_service()
+            self.until("the running client reconnected",
+                       lambda: f"{NATIVE} BINDER uid=2000" in self.logs()[boundary:], timeout=60)
+            assert self.pid(NATIVE) == client_pid, "the client was replaced rather than reconnected"
+            # Home first: Android 7.0 restarts an app force-stopped in front for its activity.
+            self.shell("input", "keyevent", "KEYCODE_HOME")
+            self.until("the probe out of the foreground", lambda: resumed_elsewhere(
+                self.shell("dumpsys", "activity", "activities", check=False), NATIVE))
+
+            def starts():
+                return [line for line in self.adb("logcat", "-d", "-v", "threadtime", "-s",
+                                                  "ActivityManager:I", "*:S").splitlines()
+                        if "Start proc " in line and f":{NATIVE}/" in line]
+            earlier_starts = set(starts())
+            self.shell("am", "force-stop", NATIVE)
+
+            def restarts():
+                # Read from the log rather than from pidof: a start that died again between two
+                # looks is still a start.
+                return [line for line in starts() if line not in earlier_starts]
+            deadline = time.monotonic() + STOPPED_WATCH
+            while time.monotonic() < deadline:
+                started = restarts()
+                assert not started, f"the force-stopped client was started again: {started}"
+                time.sleep(0.4)
+            assert not self.pid(NATIVE), "the force-stopped client is still running"
+
+            # A client started for its provider alone still has to be delivered to. The server logs
+            # a push only once the client's provider has taken it.
+            server_pid = self.pid("porter_server")
+            push = f"send binder to user app {NATIVE} in user 0"
+
+            def pushes():
+                return logged_by(self.adb("logcat", "-d", "-v", "threadtime", "--pid=" + server_pid,
+                                          "-s", "Service:V", "*:S"), server_pid, push)
+            earlier = set(pushes())
+            # The query only has to start the process; what the provider answers is irrelevant.
+            self.shell("content", "query", "--uri", f"content://{NATIVE}.porter.api", check=False)
+            self.until("a client started for its provider is delivered to",
+                       lambda: [line for line in pushes() if line not in earlier])
+
+            # And the stop broke nothing: the next launch connects and is still authorized.
+            self.launch_probe(NATIVE)
+            self.authorized(NATIVE)
+            return {"client_pid": client_pid}
+        self.case("force-stop-stays-stopped", force_stop_stays_stopped, restore=("probes", "grants"))
 
         def root_server():
             """Everything the ADB-started server is asked for, asked of a uid 0 one."""
