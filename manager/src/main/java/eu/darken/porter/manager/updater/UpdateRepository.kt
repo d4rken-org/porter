@@ -115,11 +115,11 @@ class UpdateRepository @VisibleForTesting internal constructor(
         return at <= now && now - at < interval
     }
 
-    /** Returns the check it starts, or null when there is nothing to check. */
-    fun setEnabled(enabled: Boolean): Job? {
+    /** Returns the check it starts, or null when there is nothing to check or [checkNow] is false. */
+    fun setEnabled(enabled: Boolean, checkNow: Boolean = true): Job? {
         PorterSettings.updateCheck = enabled
         publish()
-        return if (enabled) refresh() else null
+        return if (enabled && checkNow) refresh() else null
     }
 
     /** Returns the check it starts, or null when checks are off. */
