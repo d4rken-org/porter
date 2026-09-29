@@ -4,7 +4,6 @@ import android.app.ActivityManagerHidden
 import android.app.ActivityManagerHidden.UID_OBSERVER_ACTIVE
 import android.app.ActivityManagerHidden.UID_OBSERVER_CACHED
 import android.app.ActivityManagerHidden.UID_OBSERVER_GONE
-import android.app.ActivityManagerHidden.UID_OBSERVER_IDLE
 import android.content.pm.PackageManager
 import android.os.Binder
 import android.os.Build
@@ -99,13 +98,6 @@ object BinderSender {
         }
 
         @Throws(RemoteException::class)
-        override fun onUidIdle(uid: Int, disabled: Boolean) {
-            LOGGER.d("onUidIdle: uid=%d, disabled=%s", uid, disabled.toString())
-
-            uidStarts(uid)
-        }
-
-        @Throws(RemoteException::class)
         override fun onUidGone(uid: Int, disabled: Boolean) {
             LOGGER.d("onUidGone: uid=%d, disabled=%s", uid, disabled.toString())
 
@@ -192,7 +184,9 @@ object BinderSender {
         }
 
         if (Build.VERSION.SDK_INT >= 26) {
-            var flags = UID_OBSERVER_GONE or UID_OBSERVER_IDLE or UID_OBSERVER_ACTIVE
+            // No UID_OBSERVER_IDLE: a force-stop reports the uid idle while it tears the process
+            // down, and delivering then starts the stopped client again through its provider.
+            var flags = UID_OBSERVER_GONE or UID_OBSERVER_ACTIVE
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                 flags = flags or UID_OBSERVER_CACHED
             }
