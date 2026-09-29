@@ -50,7 +50,9 @@ internal class ServiceStatusRepository private constructor(private val appContex
         ServiceSnapshot(value, runtime, update.running, update.failed, UserHandleCompat.myUserId() == 0)
     }.stateIn(scope, SharingStarted.Eagerly, ServiceSnapshot(serviceState = PorterStateMachine.instance.get(), primaryUser = UserHandleCompat.myUserId() == 0))
 
-    init { scope.launch { PorterStateMachine.instance.asFlow().collect { refresh() } } }
+    // The protocol version is read from the SDK connection, which can arrive after the state
+    // change a new server causes; ServiceStatusRepositoryTest covers that order.
+    init { scope.launch { merge(PorterStateMachine.instance.asFlow(), Porter.connection).collect { refresh() } } }
 
     fun refresh() {
         scope.launch {
@@ -101,6 +103,12 @@ internal class ServiceStatusRepository private constructor(private val appContex
         @Volatile private var instance: ServiceStatusRepository? = null
         fun get(context: Context): ServiceStatusRepository = instance ?: synchronized(this) {
             instance ?: ServiceStatusRepository(context.applicationContext).also { instance = it }
+        }
+
+        internal fun resetForTest() {
+            val repository = instance ?: return
+            instance = null
+            runBlocking { repository.scope.coroutineContext.job.cancelAndJoin() }
         }
 
         // Deliberately not an instance method: get() would build the process-wide singleton and
