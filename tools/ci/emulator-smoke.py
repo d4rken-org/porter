@@ -1250,9 +1250,13 @@ class Smoke:
                 return logged_by(self.adb("logcat", "-d", "-v", "threadtime", "--pid=" + server_pid,
                                           "-s", "Service:V", "*:S"), server_pid, push)
             earlier = set(pushes())
-            self.launch_probe(NATIVE)
+            # Peek instead of binding: binding starts the manager, which would resume the recording
+            # before the Home launch below.
+            self.launch_probe(NATIVE, peek=True)
             gap = self.until("the service pushed the probe its binder",
                              lambda: [line for line in pushes() if line not in earlier])[-1]
+            # Once the peek has returned, so the check below comes after the probe's last call.
+            self.expect_log(NATIVE, "PEEK version=")
             assert not self.pid(MANAGER), "launching the probe started the manager, which could read the push live"
             events = events_of(abandoned_path)
             assert "Clock resume" not in events, events
@@ -1274,7 +1278,7 @@ class Smoke:
 
             self.shell("pm", "revoke", NATIVE, PERMISSION)
             self.shell("am", "force-stop", NATIVE)
-            self.until("revocation terminates user service", lambda: not self.pid(NATIVE + ":porter-probe"))
+            self.until("probe user-service cleanup completed", lambda: not self.pid(NATIVE + ":porter-probe"))
             return {"session": session, "first_server": first_pid, "restarted_server": server_pid,
                     "attaches": attaches, "clock_anchors": anchors, "baseline": baseline,
                     "followed": followed, "streamed": streamed, "first_supervisor": first_supervisor[0],
