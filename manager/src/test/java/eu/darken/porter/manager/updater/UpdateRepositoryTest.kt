@@ -234,6 +234,29 @@ class UpdateRepositoryTest {
         assertEquals(NEWER, repository.state.value.update?.release)
     }
 
+    @Test fun enablingWithoutCheckingNowStoresAndLeavesTheFetchToTheNextRefresh() = runTest {
+        checker.enabledByDefault = false
+        val repository = repository()
+        assertNull(repository.setEnabled(true, checkNow = false))
+        runCurrent()
+        assertTrue(checker.requests.isEmpty())
+        assertEquals(true, PorterSettings.updateCheck)
+        assertTrue(repository.state.value.enabled)
+
+        repository.refresh().join()
+        assertEquals(1, checker.requests.size)
+        assertEquals(NEWER, repository.state.value.update?.release)
+    }
+
+    @Test fun disablingWithoutCheckingNowKeepsTheNextRefreshOffline() = runTest {
+        val repository = repository()
+        assertNull(repository.setEnabled(false, checkNow = false))
+        assertEquals(false, PorterSettings.updateCheck)
+        assertFalse(repository.state.value.enabled)
+        repository.refresh().join()
+        assertTrue(checker.requests.isEmpty())
+    }
+
     @Test fun theChannelFollowsTheInstalledVersionUntilChosen() = runTest {
         assertEquals(UpdateChannel.BETA, repository("0.7.0-beta2").state.value.channel)
         assertEquals(UpdateChannel.PRODUCTION, repository("0.7.0-rc0").state.value.channel)

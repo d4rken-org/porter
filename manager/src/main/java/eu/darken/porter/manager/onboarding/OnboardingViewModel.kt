@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import eu.darken.porter.manager.Helps
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.compatibility.OtherShizukuDetector
+import eu.darken.porter.manager.updater.UpdateRepository
 import eu.darken.porter.manager.utils.LOGGER
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CancellationException
@@ -34,6 +35,7 @@ internal class OnboardingViewModel @JvmOverloads constructor(
     detectShizuku: (Context) -> Boolean = { OtherShizukuDetector.isInstalled(it) },
     private val markCompleted: () -> Boolean = { PorterSettings.markOnboardingCompleted() },
     private val io: CoroutineContext = Dispatchers.IO,
+    private val updates: UpdateRepository = UpdateRepository.get(application),
 ) : AndroidViewModel(application) {
 
     /**
@@ -59,6 +61,8 @@ internal class OnboardingViewModel @JvmOverloads constructor(
     private val mutableSaveFailed = MutableStateFlow(false)
     val saveFailed: StateFlow<Boolean> = mutableSaveFailed.asStateFlow()
 
+    val updateState: StateFlow<UpdateRepository.State> get() = updates.state
+
     private val eventChannel = Channel<OnboardingEvent>(Channel.BUFFERED)
     val events: ReceiveChannel<OnboardingEvent> get() = eventChannel
 
@@ -80,6 +84,10 @@ internal class OnboardingViewModel @JvmOverloads constructor(
 
     fun openPrivacyPolicy() {
         eventChannel.trySend(OnboardingEvent.OpenUrl(Helps.PRIVACY))
+    }
+
+    fun setUpdateCheck(enabled: Boolean) {
+        updates.setEnabled(enabled, checkNow = false)
     }
 
     fun openCompatibilityGuide() {

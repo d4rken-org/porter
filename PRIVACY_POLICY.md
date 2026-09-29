@@ -31,9 +31,9 @@ network.
 
 The GitHub version of Porter can check for updates. While the update check is on, Porter asks GitHub's releases API
 (`api.github.com`) for the newest release when you open the dashboard. A successful answer is kept for 24 hours, and a
-failed check is retried after an hour at the earliest. You can turn the check off in the settings. It is off by default
-when Porter was installed by a recognized app store (F-Droid clients, Obtainium, Aurora and similar). Porter downloads a
-release APK from GitHub only when you ask it to.
+failed check is retried after an hour at the earliest. You can turn the check off on the last page of the first-run
+introduction or in the settings. It is off by default when Porter was installed by a recognized app store (F-Droid
+clients, Obtainium, Aurora and similar). Porter downloads a release APK from GitHub only when you ask it to.
 
 ### Accessibility service
 

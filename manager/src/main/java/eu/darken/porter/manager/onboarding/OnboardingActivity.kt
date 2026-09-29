@@ -56,6 +56,7 @@ class OnboardingActivity : ComposeActivity() {
         val page by model.page.collectAsStateWithLifecycle()
         val finishing by model.finishing.collectAsStateWithLifecycle()
         val saveFailed by model.saveFailed.collectAsStateWithLifecycle()
+        val updateState by model.updateState.collectAsStateWithLifecycle()
         OnboardingScreenContent(
             OnboardingUiState(
                 pages = model.pages,
@@ -63,6 +64,8 @@ class OnboardingActivity : ComposeActivity() {
                 isBeta = isBetaVersion(BuildConfig.VERSION_NAME),
                 finishing = finishing,
                 saveFailed = saveFailed,
+                updateCheckSupported = updateState.supported,
+                updateCheck = updateState.enabled,
             ),
             OnboardingActions(
                 onNext = model::next,
@@ -70,6 +73,7 @@ class OnboardingActivity : ComposeActivity() {
                 onFinish = model::finish,
                 onPrivacyPolicy = model::openPrivacyPolicy,
                 onCompatibilityGuide = model::openCompatibilityGuide,
+                onUpdateCheckChange = model::setUpdateCheck,
             ),
         )
     }

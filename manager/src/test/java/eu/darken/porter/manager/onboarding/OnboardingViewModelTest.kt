@@ -9,6 +9,10 @@ import eu.darken.porter.manager.TestApplication
 import eu.darken.porter.manager.onboarding.OnboardingPage.PRIVACY
 import eu.darken.porter.manager.onboarding.OnboardingPage.SHIZUKU
 import eu.darken.porter.manager.onboarding.OnboardingPage.WELCOME
+import eu.darken.porter.manager.updater.Release
+import eu.darken.porter.manager.updater.UpdateChecker
+import eu.darken.porter.manager.updater.UpdateRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -17,6 +21,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -30,6 +35,20 @@ import org.robolectric.annotation.Config
 class OnboardingViewModelTest {
     private val application = ApplicationProvider.getApplicationContext<Application>()
     private val dispatcher = StandardTestDispatcher()
+    private val updaterPrefs = application.getSharedPreferences("updater-onboarding-test", Context.MODE_PRIVATE)
+    private val checker = FakeChecker()
+
+    private class FakeChecker : UpdateChecker {
+        var enabledByDefault = true
+        var fetches = 0
+
+        override val isSupported: Boolean = true
+        override fun isEnabledByDefault(): Boolean = enabledByDefault
+        override suspend fun latest(includePrereleases: Boolean): Release? {
+            fetches++
+            return null
+        }
+    }
 
     @Before fun setUp() {
         Dispatchers.setMain(dispatcher)
@@ -37,6 +56,8 @@ class OnboardingViewModelTest {
             .edit().clear().commit()
         PorterSettings.resetForTest()
         PorterSettings.initialize(application)
+        PorterSettings.updateCheck = null
+        updaterPrefs.edit().clear().commit()
     }
 
     @After fun tearDown() { Dispatchers.resetMain() }
@@ -45,7 +66,8 @@ class OnboardingViewModelTest {
         handle: SavedStateHandle = SavedStateHandle(),
         detect: (Context) -> Boolean = { false },
         markCompleted: () -> Boolean = { PorterSettings.markOnboardingCompleted() },
-    ) = OnboardingViewModel(application, handle, detect, markCompleted, dispatcher)
+    ) = OnboardingViewModel(application, handle, detect, markCompleted, dispatcher,
+        UpdateRepository(checker, updaterPrefs, "0.7.0-rc0", { 1_700_000_000_000L }, CoroutineScope(dispatcher)))
 
     private fun advance() = dispatcher.scheduler.advanceUntilIdle()
 
@@ -62,6 +84,28 @@ class OnboardingViewModelTest {
 
     @Test fun withShizukuItsPageSitsBetweenWelcomeAndPrivacy() {
         assertEquals(listOf(WELCOME, SHIZUKU, PRIVACY), model(detect = { true }).pages)
+    }
+
+    @Test fun anUntouchedUpdateCheckShowsTheInstallerDefaultWithoutStoringIt() {
+        checker.enabledByDefault = false
+        val model = model()
+        assertFalse(model.updateState.value.enabled)
+        assertNull(PorterSettings.updateCheck)
+    }
+
+    @Test fun flippingTheUpdateCheckStoresEachChoiceAndNeverFetches() {
+        val model = model()
+        assertTrue(model.updateState.value.enabled)
+        model.setUpdateCheck(false)
+        advance()
+        assertEquals(false, PorterSettings.updateCheck)
+        assertFalse(model.updateState.value.enabled)
+
+        model.setUpdateCheck(true)
+        advance()
+        assertEquals(true, PorterSettings.updateCheck)
+        assertTrue(model.updateState.value.enabled)
+        assertEquals(0, checker.fetches)
     }
 
     @Test fun nextAndBackWalkThePagesInOrder() {
