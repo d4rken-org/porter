@@ -45,6 +45,8 @@ for apk, (package, permission) in zip([args.manager, args.companion], expected):
         identities = declared | {p.attrib[android + "name"] for p in manifest.findall("permission-group")}
         assert not any(name.startswith("moe.shizuku.manager.") for name in identities), identities
         requested = {p.attrib[android + "name"] for p in manifest.findall("uses-permission")}
+        assert permission not in requested, "Manager must not request its own client API permission"
+        assert "eu.darken.porter.permission.MANAGER" in requested, "Manager must request its signature permission"
         assert ("android.permission.REQUEST_INSTALL_PACKAGES" in requested) == (args.embedded == "required"), "Installer permission must match the embedded build"
     other_permission = expected[1 if package == expected[0][0] else 0][1]
     assert other_permission not in declared, (apk, declared)
