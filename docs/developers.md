@@ -48,9 +48,9 @@ depends on `dev.rikka.shizuku:provider`, do not add `shizuku-compat`.
 ## 2. Wait for the connection
 
 Your app gets a connection once Porter's service is running, and a new one whenever the user
-restarts Porter while your app is alive. `Porter.connection` is a `StateFlow<PorterConnection?>`:
-null until a connection exists, then the connection, and null again when it dies. Collect it rather
-than reading it once.
+restarts Porter while your app is alive. `Porter.state` is a `StateFlow<PorterConnectionState>`:
+`Connected` with the connection to use, `Incompatible` while a running service and your app's SDK
+share no protocol version, and `Disconnected` otherwise. Collect it rather than reading it once.
 
 ```kotlin
 class MyActivity : ComponentActivity() {
@@ -59,8 +59,12 @@ class MyActivity : ComponentActivity() {
         super.onCreate(state)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                Porter.connection.collect { connection ->
-                    if (connection == null) showDisconnected() else onPorterReady(connection)
+                Porter.state.collect { connectionState ->
+                    when (connectionState) {
+                        is PorterConnectionState.Connected -> onPorterReady(connectionState.connection)
+                        is PorterConnectionState.Incompatible -> showIncompatible(connectionState.incompatibility)
+                        PorterConnectionState.Disconnected -> showDisconnected()
+                    }
                 }
             }
         }
@@ -68,8 +72,10 @@ class MyActivity : ComponentActivity() {
 }
 ```
 
-Handle the null: Porter can stop at any time. After a restart, use the new connection from the
-flow rather than the old one.
+Handle `Disconnected`: Porter can stop at any time. After a restart, use the new connection from
+the flow rather than the old one. `Incompatible` says which side needs an update; section 3 shows
+how to word it. `Porter.connection` is the same connection on its own, as a
+`StateFlow<PorterConnection?>`, for code that needs nothing else.
 
 Every call on a connection that reaches the server suspends and is safe on the main thread. A failed
 call throws a `PorterException`: `PorterSecurityException` when the server refused it, usually
@@ -78,7 +84,8 @@ Cancelling a call returns at once, so `withTimeout` works against a server that 
 
 ## 3. Tell the user why nothing happened
 
-`Porter.availability(context)` distinguishes the cases behind a connection that never arrives:
+`Porter.state` reports an incompatible service as soon as it arrives. `Porter.availability(context)`
+also distinguishes the cases behind a connection that never arrives:
 
 ```kotlin
 lifecycleScope.launch {
@@ -125,7 +132,7 @@ suspend fun onPorterReady(connection: PorterConnection) {
 ```
 
 Catch `PorterConnectionLostException`: uncaught, it ends the coroutine collecting
-`Porter.connection`, and the replacement connection is never handled.
+`Porter.state`, and the replacement connection is never handled.
 
 `connection.permission` is a `StateFlow<PermissionState>` a screen can observe. The user can revoke
 access at any time, so handle a refused call rather than trusting an earlier check.
@@ -275,10 +282,12 @@ Only one process receives the connection. In every other process, call:
 PorterApiProvider.requestBinderForNonProviderProcess(context)
 ```
 
-The connection then arrives on `Porter.connection` there too. Calling it in the process that
-receives the connection does nothing, so one call site for every process is fine. The first call
-also listens for each connection that process receives later, so a process that started before
-Porter still gets one.
+The connection then arrives on `Porter.connection` and `Porter.state` there too. Calling it in the
+process that receives the connection does nothing, so one call site for every process is fine. The
+first call also listens for each connection that process receives later, so a process that started
+before Porter still gets one. A refused service is not forwarded: while the receiving process
+holds only a refusal, a process that fetches its connection this way stays `Disconnected`, and its
+`Porter.availability` does not report `Incompatible` either.
 
 ## Shizuku
 
