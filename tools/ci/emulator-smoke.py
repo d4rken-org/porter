@@ -79,8 +79,9 @@ USER_SWITCH_TIMEOUT = 90
 # Enough to cover the first two host deadlines after a record was created, which is what a scenario
 # asserting "nothing was removed" has to outlive to mean anything.
 HOST_SETTLE = 45
-# Past the first host deadline after a record was created. A scan that finds nothing changed puts
-# the next one 30s out, so waiting this long leaves a stretch no scan falls into.
+# Past the usual first host deadline after a record was created. A scan that finds nothing changed
+# puts the next one 30s out, reducing the chance of a scan in the uninstall/install gap. Earlier
+# deadlines and slow installs can still overlap it; this is not synchronization.
 HOST_QUIET = 17
 MANAGER_SETTLE = 20
 ADB_TIMEOUT = 45
@@ -1724,19 +1725,23 @@ class Smoke:
         self.case("host-removed-from-one-user", host_removed_from_one_user,
                   restore=("users", "probes", "grants"))
 
-        def replaced_by_a_foreign_signer():
-            """A live daemon of the original signer, with the replacement installed over it."""
-            original = self.authorized_daemon()
-            # Between the uninstall and the install the package is absent in every user. On
-            # Android 7 that outlasts the scan's confirmation grace, so a scan landing there removes
-            # the daemon before the replacement can bind.
+        def replaced_by_a_foreign_signer(*, require_survival=True):
+            """Replace the host of an authorized daemon without preparing an APK in the gap."""
+            apk = self.foreign_probe()
+            self.authorized_daemon()
+            # Destruction of a prior daemon is asynchronous; never capture a multi-PID string as
+            # the original, and wait only after the new service's authorization was checked.
+            original = self.until(
+                "one privileged user service",
+                lambda: (pids := self.service_pids(NATIVE)) and len(pids) == 1 and next(iter(pids)))
+            # A scan in the uninstall/install gap can confirm absence instead of replacement.
             time.sleep(HOST_QUIET)
-            self.adb("uninstall", NATIVE)
-            # Bounds the interval hand_over_reason() reads: the replacement only exists from here
-            # on, so every warning about it was logged after this point.
+            # Include that gap in the evidence, so host-absent cannot be cleared away.
             self.clear_logcat()
-            self.adb("install", str(self.foreign_probe()))
-            assert original in self.service_pids(NATIVE), "the daemon was gone before the bind"
+            self.adb("uninstall", NATIVE)
+            self.adb("install", str(apk))
+            if require_survival:
+                assert original in self.service_pids(NATIVE), "the daemon was gone before the bind"
             return original
 
         def foreign_signer_peeks():
@@ -1768,18 +1773,31 @@ class Smoke:
         self.case("foreign-signer-binds", foreign_signer_binds, restore=("probes", "grants"))
 
         def foreign_signer_never_binds():
-            service_pid = self.authorized_daemon()
-            self.adb("uninstall", NATIVE)
-            # The uninstall kills the daemon itself, so its absence proves nothing about the scan.
-            # What this case is about is the scan removing the record of a package that came back
-            # under a different signer, and the scan says so itself. Clearing here bounds the
-            # interval to the replacement.
-            self.clear_logcat()
-            self.adb("install", str(self.foreign_probe()))
-            self.until("the host scan removed the replaced package's record",
-                       lambda: f"host replaced {NATIVE}" in self.adb(
-                           "logcat", "-d", "-s", "ApkReconciler:W", "*:S"),
+            # Scan cleanup may already have completed before install returned. Unlike bind/peek,
+            # this case needs no surviving daemon to hand over, only replacement evidence and exit.
+            service_pid = replaced_by_a_foreign_signer(require_survival=False)
+
+            def replacement_logged():
+                warnings = self.adb("logcat", "-d", "-s", "ApkReconciler:W", "*:S")
+                assert f"host absent {NATIVE} " not in warnings, \
+                    "invalid replacement setup: host absent during uninstall/install"
+                return f"host replaced {NATIVE} " in warnings
+
+            def scanned():
+                if replacement_logged():
+                    return True
+                if service_pid not in self.service_pids(NATIVE):
+                    # The scan logs before dispatching destruction, but it may have landed
+                    # between the warning read and the PID read. Check fresh evidence once.
+                    assert replacement_logged(), \
+                        "lost replacement setup: original daemon exited without host-replaced evidence"
+                    return True
+                return False
+
+            self.until("the host scan removed the replaced package's record", scanned,
                        timeout=HOST_SCAN_TIMEOUT)
+            self.until("the host scan released the original daemon",
+                       lambda: service_pid not in self.service_pids(NATIVE), timeout=HOST_SCAN_TIMEOUT)
             return {"service_pid": service_pid}
         self.case("foreign-signer-never-binds", foreign_signer_never_binds, restore=("probes", "grants"))
 

@@ -982,6 +982,218 @@ class LaunchProbeModeTest(unittest.TestCase):
         self.runner.expect_log.assert_any_call(smoke.NATIVE, "MODE daemon=false peek=true")
 
 
+class ForeignSignerReconciliationTest(unittest.TestCase):
+    """Run the nested replacement cases, with only their fixture I/O mocked."""
+    ORIGINAL = "4200"
+    APK = Path("/apks/probe-foreign.apk")
+    REPLACED = f"host replaced {smoke.NATIVE} user 0 (signer changed) via host"
+    ABSENT = f"host absent {smoke.NATIVE} (absent in every user) via host"
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.runner.restore = Mock()
+        self.bodies = {}
+        self.restores = {}
+
+        def case(name, action, restore=()):
+            self.bodies[name] = action
+            self.restores[name] = restore
+        self.runner.case = case
+        self.runner.reconciliation()
+        self.runner.restore.assert_called_once_with("probes", "grants")
+        self.installed = False
+        self.before_pids = [{self.ORIGINAL}]
+        self.after_pids = [set()]
+        self.warnings = [self.REPLACED]
+        self.order = Mock()
+        for name, mock in (
+                ("foreign_probe", Mock(return_value=self.APK)),
+                ("launch_probe", Mock()),
+                ("allow_if_requested", Mock()),
+                ("expect_log", Mock()),
+                ("logs", Mock(return_value="")),
+                # authorized_daemon's raw PID can include a prior daemon still being destroyed.
+                ("pid", Mock(return_value="4100 4200")),
+                ("service_pids", Mock(side_effect=self.service_pids)),
+                ("clear_logcat", Mock()),
+                ("adb", Mock(side_effect=self.adb)),
+                ("hand_over_reason", Mock(return_value="bind")),
+                ("shell", Mock(side_effect=AssertionError("unexpected shell command")))):
+            setattr(self.runner, name, mock)
+            self.order.attach_mock(mock, name)
+        sleep = patch.object(smoke.time, "sleep")
+        self.order.attach_mock(sleep.start(), "sleep")
+        self.addCleanup(sleep.stop)
+        # Keep the real until() conditions and timeout behavior, without waiting on wall time.
+        clock = patch.object(smoke.time, "monotonic", side_effect=itertools.count())
+        clock.start()
+        self.addCleanup(clock.stop)
+
+    def service_pids(self, package):
+        self.assertEqual(package, smoke.NATIVE)
+        answers = self.after_pids if self.installed else self.before_pids
+        return answers.pop(0) if len(answers) > 1 else answers[0]
+
+    def adb(self, *args):
+        if args == ("uninstall", smoke.NATIVE):
+            return "Success"
+        if args == ("install", str(self.APK)):
+            self.installed = True
+            return "Success"
+        if args == ("logcat", "-d", "-s", "ApkReconciler:W", "*:S"):
+            return self.warnings.pop(0) if len(self.warnings) > 1 else self.warnings[0]
+        self.fail(f"Unexpected command: {args}")
+
+    def run_case(self, name="foreign-signer-never-binds"):
+        self.assertEqual(self.restores[name], ("probes", "grants"))
+        return self.bodies[name]()
+
+    def warning_reads(self):
+        return [c for c in self.runner.adb.call_args_list if c.args[0] == "logcat"]
+
+    def test_prepares_then_authorizes_settles_one_pid_and_bounds_the_install_gap(self):
+        self.before_pids = [{"4100", self.ORIGINAL}, set(), {self.ORIGINAL}]
+        self.assertEqual(self.run_case(), {"service_pid": self.ORIGINAL})
+        install = call.adb("install", str(self.APK))
+        self.assertEqual(self.order.mock_calls[:self.order.mock_calls.index(install) + 1], [
+            call.foreign_probe(),
+            call.launch_probe(smoke.NATIVE, daemon=True),
+            call.allow_if_requested(),
+            call.expect_log(smoke.NATIVE, "AUTHORIZED managerOperationDenied=true"),
+            call.expect_log(smoke.NATIVE, "USER_SERVICE uid=2000 file=" + smoke.PAYLOAD),
+            call.logs(),
+            call.pid(smoke.NATIVE + ":porter-probe"),
+            call.service_pids(smoke.NATIVE), call.sleep(0.4),
+            call.service_pids(smoke.NATIVE), call.sleep(0.4),
+            call.service_pids(smoke.NATIVE),
+            call.sleep(smoke.HOST_QUIET), call.clear_logcat(),
+            call.adb("uninstall", smoke.NATIVE), install,
+        ])
+        self.runner.foreign_probe.assert_called_once_with()
+        # Only the original authorized app launches; the foreign app never launches, binds or peeks.
+        self.runner.launch_probe.assert_called_once_with(smoke.NATIVE, daemon=True)
+        self.runner.hand_over_reason.assert_not_called()
+        self.runner.shell.assert_not_called()
+
+    def test_multiple_service_pids_never_become_the_original(self):
+        self.before_pids = [{"4100", self.ORIGINAL}]
+        with self.assertRaisesRegex(AssertionError, "Timed out: one privileged user service"):
+            self.run_case()
+        self.runner.adb.assert_not_called()
+        self.runner.clear_logcat.assert_not_called()
+
+    def test_completed_scan_cleanup_before_install_returns_is_valid(self):
+        self.assertEqual(self.run_case(), {"service_pid": self.ORIGINAL})
+        self.assertEqual(len(self.warning_reads()), 1)
+        self.assertEqual(self.order.mock_calls[-2:], [
+            call.adb("logcat", "-d", "-s", "ApkReconciler:W", "*:S"),
+            call.service_pids(smoke.NATIVE),
+        ])
+
+    def test_absence_fails_promptly_even_while_original_pid_is_alive(self):
+        self.warnings = [self.ABSENT]
+        self.after_pids = [{self.ORIGINAL}]
+        with self.assertRaisesRegex(AssertionError, "invalid replacement setup: host absent"):
+            self.run_case()
+        self.assertEqual(len(self.warning_reads()), 1)
+        self.runner.service_pids.assert_called_once_with(smoke.NATIVE)
+
+    def test_absence_cannot_be_rescued_by_replacement_evidence(self):
+        self.warnings = [self.ABSENT + "\n" + self.REPLACED]
+        with self.assertRaisesRegex(AssertionError, "host absent"):
+            self.run_case()
+        self.assertEqual(len(self.warning_reads()), 1)
+
+    def test_replacement_warning_without_original_pid_exit_cannot_pass(self):
+        self.after_pids = [{self.ORIGINAL}]
+        with self.assertRaisesRegex(AssertionError, "Timed out: the host scan released the original daemon"):
+            self.run_case()
+        self.assertEqual(len(self.warning_reads()), 1)
+        self.assertGreater(self.runner.service_pids.call_count, 2)
+
+    def test_replacement_evidence_waits_for_original_pid_not_every_service_to_exit(self):
+        self.after_pids = [{self.ORIGINAL}, {self.ORIGINAL, "4300"}, {"4300"}]
+        self.assertEqual(self.run_case(), {"service_pid": self.ORIGINAL})
+        self.assertEqual(len(self.warning_reads()), 1)
+        self.assertEqual(self.runner.service_pids.call_count, 4)
+
+    def test_each_scan_poll_reads_warnings_once_while_the_pid_lives(self):
+        self.warnings = ["", "", self.REPLACED]
+        self.after_pids = [{self.ORIGINAL}, {self.ORIGINAL}, set()]
+        self.assertEqual(self.run_case(), {"service_pid": self.ORIGINAL})
+        self.assertEqual(len(self.warning_reads()), 3)
+        self.assertEqual(self.runner.service_pids.call_count, 4)
+
+    def test_scan_between_warning_and_pid_reads_is_reclassified(self):
+        self.warnings = ["", self.REPLACED]
+        self.assertEqual(self.run_case(), {"service_pid": self.ORIGINAL})
+        self.assertEqual(len(self.warning_reads()), 2)
+        self.assertEqual(self.order.mock_calls[-4:], [
+            call.adb("logcat", "-d", "-s", "ApkReconciler:W", "*:S"),
+            call.service_pids(smoke.NATIVE),
+            call.adb("logcat", "-d", "-s", "ApkReconciler:W", "*:S"),
+            call.service_pids(smoke.NATIVE),
+        ])
+
+    def test_absence_between_warning_and_pid_reads_is_rejected(self):
+        self.warnings = ["", self.ABSENT]
+        with self.assertRaisesRegex(AssertionError, "host absent"):
+            self.run_case()
+        self.assertEqual(len(self.warning_reads()), 2)
+
+    def test_original_pid_loss_without_evidence_fails_promptly(self):
+        self.warnings = [""]
+        with self.assertRaisesRegex(AssertionError, "exited without host-replaced evidence"):
+            self.run_case()
+        self.assertEqual(len(self.warning_reads()), 2)
+        self.assertEqual(self.runner.service_pids.call_count, 2)
+
+    def test_bind_refusal_or_another_packages_replacement_cannot_pass(self):
+        for warning in (
+                f"does not belong to the current installation of {smoke.NATIVE}",
+                self.REPLACED.replace(smoke.NATIVE, smoke.LEGACY),
+                self.REPLACED.replace(smoke.NATIVE, smoke.NATIVE + ".extra")):
+            with self.subTest(warning=warning):
+                self.installed = False
+                self.warnings = [warning]
+                with self.assertRaisesRegex(AssertionError, "without host-replaced evidence"):
+                    self.run_case()
+
+    def test_another_packages_absence_is_not_this_packages_absence(self):
+        self.warnings = [self.ABSENT.replace(smoke.NATIVE, smoke.NATIVE + ".extra")
+                         + "\n" + self.REPLACED]
+        self.assertEqual(self.run_case(), {"service_pid": self.ORIGINAL})
+
+    def test_bind_and_peek_still_require_post_install_survival(self):
+        for name in ("foreign-signer-binds", "foreign-signer-peeks"):
+            with self.subTest(case=name):
+                self.installed = False
+                self.runner.launch_probe.reset_mock()
+                with self.assertRaisesRegex(AssertionError, "the daemon was gone before the bind"):
+                    self.run_case(name)
+                self.runner.launch_probe.assert_called_once_with(smoke.NATIVE, daemon=True)
+        self.assertEqual(len(self.warning_reads()), 0)
+
+    def check_hand_over(self, name, **mode):
+        self.after_pids = [{self.ORIGINAL}, set()]
+        result = self.run_case(name)
+        self.assertEqual(result, {"original": self.ORIGINAL, "after": [], "reason": "bind"})
+        self.assertEqual(self.runner.launch_probe.call_args_list, [
+            call(smoke.NATIVE, daemon=True), call(smoke.NATIVE, **mode),
+        ])
+        install = self.order.mock_calls.index(call.adb("install", str(self.APK)))
+        self.assertEqual(self.order.mock_calls[install + 1:install + 3], [
+            call.service_pids(smoke.NATIVE), call.launch_probe(smoke.NATIVE, **mode),
+        ])
+
+    def test_bind_launches_only_after_post_install_survival(self):
+        self.check_hand_over("foreign-signer-binds", daemon=True)
+
+    def test_peek_launches_only_after_post_install_survival(self):
+        self.check_hand_over("foreign-signer-peeks", peek=True)
+        self.runner.expect_log.assert_any_call(smoke.NATIVE, "PEEK version=-1")
+
+
 class DeviceStateReadingTest(unittest.TestCase):
     def setUp(self):
         self.runner = smoke.Smoke.__new__(smoke.Smoke)
