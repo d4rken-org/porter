@@ -365,9 +365,6 @@
     <string name="compat_dismiss_result">Tutup</string>
     <string name="compat_import_complete">Impor selesai</string>
     <string name="compat_replace_action">Ganti</string>
-    <string name="compat_import_applied">Diimpor: %1$d</string>
-    <string name="compat_import_skipped">Dilewati: %1$d</string>
-    <string name="compat_import_skipped_explanation">Pilihan dilewati jika Porter sudah memiliki pilihan atau aplikasinya telah berubah.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Sudah diinstal</string>
     <string name="compat_summary_missing">Belum diinstal</string>

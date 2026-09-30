@@ -372,9 +372,9 @@
     <string name="compat_dismiss_result">Ausblenden</string>
     <string name="compat_import_complete">Import abgeschlossen</string>
     <string name="compat_replace_action">Ersetzen</string>
-    <string name="compat_import_applied">Importiert: %1$d</string>
-    <string name="compat_import_skipped">Übersprungen: %1$d</string>
-    <string name="compat_import_skipped_explanation">Entscheidungen werden übersprungen, wenn in Porter bereits eine Entscheidung vorliegt oder sich die App geändert hat.</string>
+    <string name="compat_import_result_applied">Neu importierte Zugriffsentscheidungen: %1$d</string>
+    <string name="compat_import_result_skipped">Beim Import übersprungen: %1$d</string>
+    <string name="compat_import_result_explanation">Bestehende Porter-Entscheidungen bleiben erhalten und zählen nicht als neu importiert. Als übersprungen zählen gespeicherte Importentscheidungen, die nicht mehr angewendet werden konnten, etwa weil sich eine App geändert hat oder in Porter bereits eine Entscheidung vorlag. Bereits vor dem Import ausgeschlossene Apps werden nicht mitgezählt.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Installiert</string>
     <string name="compat_summary_missing">Nicht installiert</string>

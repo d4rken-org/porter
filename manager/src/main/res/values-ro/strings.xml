@@ -401,9 +401,6 @@
     <string name="compat_dismiss_result">Închide</string>
     <string name="compat_import_complete">Import finalizat</string>
     <string name="compat_replace_action">Înlocuiește</string>
-    <string name="compat_import_applied">Importate: %1$d</string>
-    <string name="compat_import_skipped">Omise: %1$d</string>
-    <string name="compat_import_skipped_explanation">Opțiunile sunt omise când Porter are deja o opțiune sau aplicația s-a schimbat.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Instalată</string>
     <string name="compat_summary_missing">Neinstalată</string>

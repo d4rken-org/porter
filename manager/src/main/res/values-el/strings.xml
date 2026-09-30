@@ -413,9 +413,6 @@
     <string name="compat_dismiss_result">Παράβλεψη</string>
     <string name="compat_import_complete">Η εισαγωγή ολοκληρώθηκε</string>
     <string name="compat_replace_action">Αντικατάσταση</string>
-    <string name="compat_import_applied">Εισήχθησαν: %1$d</string>
-    <string name="compat_import_skipped">Παραλείφθηκαν: %1$d</string>
-    <string name="compat_import_skipped_explanation">Οι επιλογές παραλείπονται όταν το Porter έχει ήδη επιλογή για την εφαρμογή ή όταν η εφαρμογή έχει αλλάξει.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Εγκατεστημένη</string>
     <string name="compat_summary_missing">Μη εγκατεστημένη</string>

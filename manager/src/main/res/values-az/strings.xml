@@ -394,9 +394,6 @@
     <string name="compat_dismiss_result">Bağlayın</string>
     <string name="compat_import_complete">İdxal tamamlandı</string>
     <string name="compat_replace_action">Əvəz edin</string>
-    <string name="compat_import_applied">İdxal edildi: %1$d</string>
-    <string name="compat_import_skipped">Ötürüldü: %1$d</string>
-    <string name="compat_import_skipped_explanation">Porter-də artıq seçim olduqda və ya tətbiq dəyişdikdə seçimlər ötürülür.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Quraşdırılıb</string>
     <string name="compat_summary_missing">Quraşdırılmayıb</string>
