@@ -15,8 +15,11 @@ import eu.darken.porter.manager.starter.ServiceReplacement
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.protocol.PorterProtocol
 import eu.darken.porter.sdk.Porter
+import eu.darken.porter.sdk.PorterConnectionState
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -27,17 +30,19 @@ import org.robolectric.annotation.Config
 class ServiceStatusRepositoryTest {
     private val application = ApplicationProvider.getApplicationContext<Application>()
     private val server = StatusServer()
+    private val tooOld = StatusServer(PorterProtocol.MIN_VERSION - 1)
 
     @After fun detach() {
         ServiceStatusRepository.resetForTest()
         ServiceReplacement.resetForTest()
         Porter.onBinderReceived(null, "eu.darken.porter.manager")
         ServerBinder.drop(server)
+        ServerBinder.drop(tooOld)
         PorterStateMachine.instance.set(PorterStateMachine.State.STOPPED)
     }
 
     /** Answers the attach and the calls a status load makes; diagnostics stay unanswered. */
-    private class StatusServer : Binder() {
+    private class StatusServer(private val protocol: Int = PorterProtocol.VERSION) : Binder() {
         override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
             val id = code - IBinder.FIRST_CALL_TRANSACTION
             if (id !in ATTACH..GET_SELINUX_CONTEXT) return false
@@ -45,7 +50,7 @@ class ServiceStatusRepositoryTest {
             reply!!.writeNoException()
             when (id) {
                 ATTACH -> reply.writeTypedObject(Bundle().apply {
-                    putInt(PorterProtocol.REPLY_PROTOCOL_VERSION, PorterProtocol.VERSION)
+                    putInt(PorterProtocol.REPLY_PROTOCOL_VERSION, protocol)
                     putInt(PorterProtocol.REPLY_MIN_PROTOCOL_VERSION, PorterProtocol.MIN_VERSION)
                 }, 0)
                 GET_UID -> reply.writeInt(2000)
@@ -72,6 +77,9 @@ class ServiceStatusRepositoryTest {
         // The binder is here and the SDK has not attached yet, as after a service update.
         val early = withTimeout(10_000) { repository.state.first { it.status.uid == 2000 } }
         assertEquals(0, early.status.protocolVersion)
+        // Both initial triggers, the state machine's and the SDK's, have refreshed, so only a new
+        // SDK emission can refresh again.
+        withTimeout(10_000) { repository.awaitTriggeredRefreshesForTest(2) }
 
         Porter.onBinderReceived(server, "eu.darken.porter.manager")
 
@@ -79,5 +87,27 @@ class ServiceStatusRepositoryTest {
             repository.state.first { it.status.protocolVersion == PorterProtocol.VERSION }
         }
         assertEquals(2000, attached.status.uid)
+    }
+
+    /** A server the SDK refuses publishes no connection, only a refusal. */
+    @Test fun aRefusalAfterTheServerArrivedShowsItsProtocol() = runBlocking {
+        ServerBinder.deliver(tooOld)
+        PorterStateMachine.instance.set(PorterStateMachine.State.RUNNING)
+        val repository = ServiceStatusRepository.get(application)
+
+        val early = withTimeout(10_000) { repository.state.first { it.status.uid == 2000 } }
+        assertEquals(0, early.status.protocolVersion)
+        // Both initial triggers, the state machine's and the SDK's, have refreshed, so only a new
+        // SDK emission can refresh again.
+        withTimeout(10_000) { repository.awaitTriggeredRefreshesForTest(2) }
+
+        Porter.onBinderReceived(tooOld, "eu.darken.porter.manager")
+        assertTrue(Porter.state.value is PorterConnectionState.Incompatible)
+        assertNull(Porter.connection.value)
+
+        val refused = withTimeout(10_000) {
+            repository.state.first { it.status.protocolVersion == PorterProtocol.MIN_VERSION - 1 }
+        }
+        assertEquals(2000, refused.status.uid)
     }
 }
