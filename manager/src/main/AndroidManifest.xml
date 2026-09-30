@@ -52,6 +52,10 @@
         android:label="@string/permission_label"
         android:permissionGroup="eu.darken.porter.permission-group.API"
         android:protectionLevel="dangerous" />
+    <!-- The manager uses its signature permission, not the SDK's client permission. -->
+    <uses-permission
+        android:name="eu.darken.porter.permission.API"
+        tools:node="remove" />
     <uses-permission
         android:name="moe.shizuku.manager.permission.API_V23"
         tools:node="remove" />
