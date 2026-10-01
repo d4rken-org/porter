@@ -449,4 +449,65 @@
     <string name="porter_contact_description_error">Добавьте подробности (не менее 20 символов).</string>
     <string name="porter_contact_expected_error">Опишите, чего вы ожидали.</string>
     <string name="porter_contact_no_email">Установите или включите почтовое приложение, чтобы открыть этот черновик. Вы также можете поделиться сохранёнными журналами или связаться с нами через GitHub или Discord.</string>
+
+    <string name="settings_general">Общие</string>
+    <string name="settings_general_summary">Тема и проверка обновлений</string>
+    <string name="settings_general_summary_theme">Тема</string>
+    <string name="settings_startup_summary">Запуск при загрузке, watchdog и обновления службы</string>
+    <string name="settings_startup_attention">Фоновая работа или оповещения требуют внимания</string>
+    <string name="settings_updates">Обновления</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Продолжить</string>
+    <string name="onboarding_welcome_title">Добро пожаловать в Porter</string>
+    <string name="onboarding_welcome_body">Porter даёт твоим приложениям ADB-доступ, чтобы они могли делать то, для чего обычно нужен компьютер. Ты решаешь, какие приложения его получат.</string>
+    <string name="onboarding_welcome_service">Porter один раз запускает небольшую службу, и одобренные тобой приложения используют её прямо на твоём устройстве.</string>
+    <string name="onboarding_welcome_beta">Это бета-сборка для тестирования. Продолжай с чувством юмора и запасным планом. Сообщай о возникающих проблемах.</string>
+    <string name="onboarding_shizuku_title">Shizuku установлен</string>
+    <string name="onboarding_shizuku_body">Porter — поддерживаемый форк Shizuku, и они могут работать одновременно. Приложения с поддержкой Porter могут использовать Porter, а остальные — продолжать использовать Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Можно также позволить Porter заменить Shizuku, чтобы приложения, созданные только для Shizuku, использовали Porter. Решать тебе. Это можно сделать позже в разделе «Настройки → Совместимость с Shizuku». В руководстве по совместимости описаны варианты, доступные для твоей установки.</string>
+    <string name="onboarding_shizuku_guide">Руководство по совместимости</string>
+    <string name="onboarding_privacy_title">Конфиденциальность</string>
+    <string name="onboarding_privacy_body">Porter не собирает, не отслеживает и не продаёт твои данные. В нём нет рекламы, аналитики и аккаунта.</string>
+    <string name="onboarding_privacy_policy">Политика конфиденциальности</string>
+    <string name="onboarding_get_started">Начать</string>
+    <string name="onboarding_save_failed">Не удалось сохранить. Попробуй ещё раз.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Доступно обновление</string>
+    <string name="updater_card_versions">Доступен Porter %1$s. У тебя %2$s.</string>
+    <string name="updater_ignore">Игнорировать</string>
+    <string name="updater_changelog">Список изменений</string>
+    <string name="updater_download">Скачать</string>
+    <string name="updater_check">Проверять обновления</string>
+    <string name="updater_check_summary">Ищет новый выпуск Porter на GitHub при открытии Porter. Результат успешной проверки сохраняется на сутки.</string>
+    <string name="updater_channel">Канал обновлений</string>
+    <string name="updater_channel_production">Стабильный</string>
+    <string name="updater_channel_beta">Бета</string>
+    <string name="updater_channel_production_choice">Стабильный: только полноценные выпуски</string>
+    <string name="updater_channel_beta_choice">Бета: самый новый выпуск, включая бета-версии и предварительные выпуски</string>
+    <string name="updater_dialog_title">Скачать обновление</string>
+    <string name="updater_download_summary">Выбери, куда сохранить APK.</string>
+    <string name="updater_install_manual">Установить вручную</string>
+    <string name="updater_install_manual_summary">Установщик Android запросит подтверждение.</string>
+    <string name="updater_install_automatic">Установить автоматически</string>
+    <string name="updater_install_automatic_summary">Использует ADB-доступ или root-доступ Porter. Porter закрывается на время установки обновления.</string>
+    <string name="updater_install_automatic_requirement">Служба Porter должна быть запущена у основного пользователя устройства.</string>
+    <string name="updater_continue">Продолжить</string>
+    <string name="updater_downloading">Скачивание…</string>
+    <string name="updater_installing">Установка…</string>
+    <string name="updater_saved">Сохранено: %1$s.</string>
+    <string name="updater_download_failed">Не удалось скачать: %1$s</string>
+    <string name="updater_download_failed_partial">Не удалось скачать: %1$s. Частично сохранённый файл может остаться.</string>
+    <string name="updater_not_porter">Скачанный файл не является APK Porter.</string>
+    <string name="updater_not_newer">Скачанный APK не новее установленного Porter.</string>
+    <string name="updater_automatic_unavailable">Служба Porter больше недоступна у основного пользователя устройства, поэтому обновление не установлено.</string>
+    <string name="updater_install_failed">Не удалось установить: %1$s</string>
+    <string name="updater_install_permission_denied">Разреши Porter устанавливать неизвестные приложения, чтобы установить обновление вручную.</string>
+    <string name="updater_install_permission_unavailable">На этом устройстве нет экрана для разрешения установки приложений. Сохрани APK и установи его с помощью другого установщика.</string>
+    <string name="updater_installer_unavailable">Не удалось открыть установщик Android.</string>
+    <string name="updater_save_unavailable">Нет приложения для выбора места сохранения APK.</string>
 </resources>

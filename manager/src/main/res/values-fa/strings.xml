@@ -105,7 +105,7 @@
         نوشتن مسیر اجرا کنید.\n\nدر غیر این صورت، می‌توانید یک نام مستعار برای %2$s در فایل پیکربندی
         %3$s برنامه ترمینال خود ایجاد کنید.</string>
     <string name="terminal_tutorial_3">با دستور زیر یک پوسته باز کنید:</string>
-    <string name="rish_description"><![CDATA[با %1$sمی‌توانید دستورات shell را در هر برنامه ترمینالی اجرا کنید.<p>برای کسب اطلاعات بیشتر در مورد نحوه استفاده از آن، ضربه بزنید.]]></string>
+    <string name="rish_description"><![CDATA[با %1$s می‌توانید دستورات shell را در هر برنامه ترمینالی اجرا کنید.<p>برای کسب اطلاعات بیشتر در مورد نحوه استفاده از آن، ضربه بزنید.]]></string>
     <!-- Settings -->
     <string name="settings_title">تنظیمات</string>
     <string name="settings_start_on_boot">شروع در بوت</string>
@@ -457,4 +457,65 @@
     <string name="porter_contact_description_error">لطفاً جزئیاتی اضافه کنید (دست‌کم ۲۰ نویسه).</string>
     <string name="porter_contact_expected_error">لطفاً توضیح دهید چه انتظاری داشتید.</string>
     <string name="porter_contact_no_email">برای باز کردن این پیش‌نویس، یک برنامه ایمیل نصب یا فعال کنید. همچنین می‌توانید گزارش‌های ذخیره‌شده را به اشتراک بگذارید یا از طریق GitHub یا Discord با ما تماس بگیرید.</string>
+
+    <string name="settings_general">عمومی</string>
+    <string name="settings_general_summary">زمینه و بررسی به‌روزرسانی</string>
+    <string name="settings_general_summary_theme">زمینه</string>
+    <string name="settings_startup_summary">شروع در بوت، دیده‌بان و به‌روزرسانی‌های سرویس</string>
+    <string name="settings_startup_attention">عملیات پس‌زمینه یا هشدارها به توجه نیاز دارند</string>
+    <string name="settings_updates">به‌روزرسانی‌ها</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">ادامه</string>
+    <string name="onboarding_welcome_title">به Porter خوش آمدید</string>
+    <string name="onboarding_welcome_body">Porter به برنامه‌های شما دسترسی ADB می‌دهد تا بتوانند کارهایی را انجام دهند که معمولاً به رایانه نیاز دارند. شما تصمیم می‌گیرید کدام برنامه‌ها این دسترسی را داشته باشند.</string>
+    <string name="onboarding_welcome_service">Porter یک بار سرویس کوچکی را راه‌اندازی می‌کند و برنامه‌هایی که تأیید می‌کنید، مستقیماً روی دستگاه شما از آن استفاده می‌کنند.</string>
+    <string name="onboarding_welcome_beta">این یک ساخت بتا (آزمایشی) است. با شوخ‌طبعی و یک برنامه جایگزین پیش بروید. لطفاً مشکلاتی را که با آن‌ها روبه‌رو می‌شوید گزارش کنید.</string>
+    <string name="onboarding_shizuku_title">Shizuku نصب شده است</string>
+    <string name="onboarding_shizuku_body">Porter یک فورک نگهداری‌شده از Shizuku است و این دو می‌توانند در کنار هم اجرا شوند. برنامه‌هایی که از Porter پشتیبانی می‌کنند می‌توانند از Porter استفاده کنند، در حالی که برنامه‌های دیگر همچنان از Shizuku استفاده می‌کنند.</string>
+    <string name="onboarding_shizuku_replace">همچنین می‌توانید اجازه دهید Porter جایگزین Shizuku شود تا برنامه‌هایی که فقط برای Shizuku ساخته شده‌اند، به‌جای آن از Porter استفاده کنند. انتخاب با شماست. می‌توانید بعداً در «تنظیمات ← سازگاری با Shizuku» تصمیم بگیرید. راهنمای سازگاری توضیح می‌دهد نصب شما از چه گزینه‌هایی پشتیبانی می‌کند.</string>
+    <string name="onboarding_shizuku_guide">راهنمای سازگاری</string>
+    <string name="onboarding_privacy_title">حریم خصوصی</string>
+    <string name="onboarding_privacy_body">Porter اطلاعات شما را جمع‌آوری یا ردیابی نمی‌کند و نمی‌فروشد. نه تبلیغات دارد، نه تحلیل‌های آماری و نه حساب کاربری.</string>
+    <string name="onboarding_privacy_policy">سیاست حریم خصوصی</string>
+    <string name="onboarding_get_started">شروع کنید</string>
+    <string name="onboarding_save_failed">ذخیره نشد. دوباره امتحان کنید.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">به‌روزرسانی در دسترس است</string>
+    <string name="updater_card_versions">Porter %1$s در دسترس است. نسخه شما %2$s است.</string>
+    <string name="updater_ignore">نادیده گرفتن</string>
+    <string name="updater_changelog">فهرست تغییرات</string>
+    <string name="updater_download">دانلود</string>
+    <string name="updater_check">بررسی به‌روزرسانی‌ها</string>
+    <string name="updater_check_summary">هنگام باز کردن Porter، انتشار جدیدتری از آن را در GitHub جستجو می‌کند. نتیجه بررسی موفق برای یک روز نگه داشته می‌شود.</string>
+    <string name="updater_channel">کانال به‌روزرسانی</string>
+    <string name="updater_channel_production">پایدار</string>
+    <string name="updater_channel_beta">بتا</string>
+    <string name="updater_channel_production_choice">پایدار: فقط انتشارهای نهایی</string>
+    <string name="updater_channel_beta_choice">بتا: جدیدترین انتشار، شامل نسخه‌های بتا و پیش‌انتشارها</string>
+    <string name="updater_dialog_title">دانلود به‌روزرسانی</string>
+    <string name="updater_download_summary">محل ذخیره APK را انتخاب کنید.</string>
+    <string name="updater_install_manual">نصب دستی</string>
+    <string name="updater_install_manual_summary">نصب‌کننده Android از شما تأیید می‌خواهد.</string>
+    <string name="updater_install_automatic">نصب خودکار</string>
+    <string name="updater_install_automatic_summary">از دسترسی ADB یا روت Porter استفاده می‌کند. هنگام نصب به‌روزرسانی، Porter بسته می‌شود.</string>
+    <string name="updater_install_automatic_requirement">سرویس Porter باید در کاربر اصلی این دستگاه در حال اجرا باشد.</string>
+    <string name="updater_continue">ادامه</string>
+    <string name="updater_downloading">در حال دانلود…</string>
+    <string name="updater_installing">در حال نصب…</string>
+    <string name="updater_saved">%1$s ذخیره شد.</string>
+    <string name="updater_download_failed">دانلود انجام نشد: %1$s</string>
+    <string name="updater_download_failed_partial">دانلود انجام نشد: %1$s. ممکن است فایل نیمه‌ذخیره‌شده باقی بماند.</string>
+    <string name="updater_not_porter">فایل دانلودشده APK برنامه Porter نیست.</string>
+    <string name="updater_not_newer">APK دانلودشده جدیدتر از Porter نصب‌شده نیست.</string>
+    <string name="updater_automatic_unavailable">سرویس Porter دیگر در کاربر اصلی این دستگاه در دسترس نیست، بنابراین به‌روزرسانی نصب نشد.</string>
+    <string name="updater_install_failed">نصب انجام نشد: %1$s</string>
+    <string name="updater_install_permission_denied">برای نصب دستی به‌روزرسانی، به Porter اجازه نصب برنامه‌های ناشناس را بدهید.</string>
+    <string name="updater_install_permission_unavailable">این دستگاه صفحه‌ای برای اجازه دادن به نصب برنامه ندارد. APK را ذخیره کنید و با نصب‌کننده دیگری نصب کنید.</string>
+    <string name="updater_installer_unavailable">نصب‌کننده Android باز نشد.</string>
+    <string name="updater_save_unavailable">برنامه‌ای برای انتخاب محل ذخیره APK در دسترس نیست.</string>
 </resources>

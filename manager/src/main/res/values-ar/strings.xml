@@ -457,4 +457,67 @@
     <string name="porter_contact_description_error">يُرجى إضافة بعض التفاصيل (20 حرفًا على الأقل).</string>
     <string name="porter_contact_expected_error">يُرجى وصف ما توقعته.</string>
     <string name="porter_contact_no_email">ثبّت تطبيق بريد إلكتروني أو فعّله لفتح هذه المسودة. يمكنك أيضًا مشاركة السجلات المحفوظة أو التواصل معنا عبر GitHub أو Discord.</string>
+
+    <!-- Settings navigation -->
+    <string name="settings_general">عام</string>
+    <string name="settings_general_summary">المظهر والتحقق من التحديثات</string>
+    <string name="settings_general_summary_theme">المظهر</string>
+    <string name="settings_startup_summary">البدء عند تشغيل الجهاز والمراقب وتحديثات الخدمة</string>
+    <string name="settings_startup_attention">تحتاج العملية في الخلفية أو التنبيهات إلى انتباهك</string>
+    <string name="settings_updates">التحديثات</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">متابعة</string>
+    <string name="onboarding_welcome_title">مرحبًا بك في Porter</string>
+    <string name="onboarding_welcome_body">يمنح Porter تطبيقاتك وصول ADB، لتتمكن من القيام بأمور تتطلب عادةً جهاز كمبيوتر. القرار لك في تحديد التطبيقات التي تحصل عليه.</string>
+    <string name="onboarding_welcome_service">يشغّل Porter خدمة صغيرة مرة واحدة، وتستخدمها التطبيقات التي توافق عليها مباشرةً على جهازك.</string>
+    <string name="onboarding_welcome_beta">هذه نسخة تجريبية (للاختبار). يُرجى المتابعة بروح مرحة ومع خطة بديلة، والإبلاغ عن أي مشكلات تواجهك.</string>
+    <string name="onboarding_shizuku_title">Shizuku مثبّت</string>
+    <string name="onboarding_shizuku_body">Porter نسخة مشتقة من Shizuku تخضع للصيانة، ويمكن تشغيلهما جنبًا إلى جنب. يمكن للتطبيقات التي تدعم Porter استخدامه، بينما تستمر التطبيقات الأخرى في استخدام Shizuku.</string>
+    <string name="onboarding_shizuku_replace">يمكنك أيضًا السماح لـ Porter باستبدال Shizuku، لتستخدم التطبيقات المصممة لـ Shizuku فقط خدمة Porter بدلًا منه. الخيار لك. يمكنك اتخاذ القرار لاحقًا ضمن الإعدادات ← توافق Shizuku، ويوضّح دليل التوافق الخيارات التي يدعمها تثبيتك.</string>
+    <string name="onboarding_shizuku_guide">دليل التوافق</string>
+    <string name="onboarding_privacy_title">الخصوصية</string>
+    <string name="onboarding_privacy_body">لا يجمع Porter معلوماتك ولا يتتبّعها ولا يبيعها. لا إعلانات ولا تحليلات ولا حساب.</string>
+    <string name="onboarding_privacy_policy">سياسة الخصوصية</string>
+    <string name="onboarding_get_started">البدء</string>
+    <string name="onboarding_save_failed">تعذّر الحفظ. يُرجى المحاولة مجددًا.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">يتوفر تحديث</string>
+    <string name="updater_card_versions">يتوفر Porter %1$s. إصدارك الحالي هو %2$s.</string>
+    <string name="updater_ignore">تجاهل</string>
+    <string name="updater_changelog">سجل التغييرات</string>
+    <string name="updater_download">تنزيل</string>
+    <string name="updater_check">التحقق من التحديثات</string>
+    <string name="updater_check_summary">يبحث عن إصدار أحدث من Porter على GitHub عند فتح Porter. تُحفظ نتيجة التحقق الناجح لمدة يوم.</string>
+    <string name="updater_channel">قناة التحديثات</string>
+    <string name="updater_channel_production">مستقرة</string>
+    <string name="updater_channel_beta">تجريبية</string>
+    <string name="updater_channel_production_choice">مستقرة: الإصدارات النهائية فقط</string>
+    <string name="updater_channel_beta_choice">تجريبية: أحدث إصدار، بما في ذلك الإصدارات التجريبية والأولية</string>
+    <string name="updater_dialog_title">تنزيل التحديث</string>
+    <string name="updater_download_summary">يُرجى اختيار مكان حفظ ملف APK.</string>
+    <string name="updater_install_manual">التثبيت يدويًا</string>
+    <string name="updater_install_manual_summary">يطلب مثبّت Android تأكيدك.</string>
+    <string name="updater_install_automatic">التثبيت تلقائيًا</string>
+    <string name="updater_install_automatic_summary">يستخدم وصول ADB أو صلاحيات الجذر الخاصة بـ Porter. يُغلق Porter أثناء تثبيت التحديث.</string>
+    <string name="updater_install_automatic_requirement">يتطلب تشغيل خدمة Porter لدى المستخدم الأساسي لهذا الجهاز.</string>
+    <string name="updater_continue">متابعة</string>
+    <string name="updater_downloading">جارٍ التنزيل…</string>
+    <string name="updater_installing">جارٍ التثبيت…</string>
+    <string name="updater_saved">تم حفظ %1$s.</string>
+    <string name="updater_download_failed">فشل التنزيل: %1$s</string>
+    <string name="updater_download_failed_partial">فشل التنزيل: %1$s. قد يبقى الملف المحفوظ جزئيًا.</string>
+    <string name="updater_not_porter">الملف الذي تم تنزيله ليس ملف APK لتطبيق Porter.</string>
+    <string name="updater_not_newer">ملف APK الذي تم تنزيله ليس أحدث من إصدار Porter المثبّت.</string>
+    <string name="updater_automatic_unavailable">لم تعد خدمة Porter متاحة لدى المستخدم الأساسي لهذا الجهاز، لذا لم يُثبّت التحديث.</string>
+    <string name="updater_install_failed">فشل التثبيت: %1$s</string>
+    <string name="updater_install_permission_denied">يُرجى السماح لـ Porter بتثبيت تطبيقات غير معروفة لتثبيت التحديث يدويًا.</string>
+    <string name="updater_install_permission_unavailable">لا يحتوي هذا الجهاز على شاشة للسماح بتثبيت التطبيقات. يُرجى حفظ ملف APK وتثبيته باستخدام مثبّت آخر.</string>
+    <string name="updater_installer_unavailable">تعذّر فتح مثبّت Android.</string>
+    <string name="updater_save_unavailable">لا يوجد تطبيق لاختيار مكان حفظ ملف APK.</string>
 </resources>

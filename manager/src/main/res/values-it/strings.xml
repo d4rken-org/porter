@@ -5,9 +5,9 @@
     <string name="home_status_service_not_running">%1$s non è in esecuzione</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Avvia collegandoti ad un computer]]></string>
-    <string name="home_adb_description"><![CDATA[Per i dispositivi non rootati occorre usare adb per avviare Porter (serve una connessione ad un computer). Questo processo deve essere ripetuto ogni volta che il dispositivo viene riavviato. Per favore <b><a href="%1$s">leggi la guida</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Per i dispositivi non rootati occorre usare adb per avviare Porter (serve una connessione ad un computer). Questo processo deve essere ripetuto ogni volta che il dispositivo viene riavviato. Per favore <b><a href=\"%1$s\">leggi la guida</a></b>.]]></string>
     <string name="home_adb_button_view_command">Visualizza comando</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Ci sono altre considerazioni, conferma di aver letto prima la guida.]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=\"monospace\">%1$s</font><br><br>* Ci sono altre considerazioni, conferma di aver letto prima la guida.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Invia</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Avvia tramite Debug Wireless]]></string>
@@ -50,15 +50,15 @@
         con codice di accoppiamento\". Porter rileverà automaticamente il codice di accoppiamento.</string>
     <string name="adb_pairing_requires_multi_window">Entra prima nella modalità schermo diviso
         (multi-finestra).</string>
-    <string name="adb_pairing_requires_multi_window_reason">Il sistema richiede che la dialogo di
-        accoppiamento sia sempre visibile. Usare la modalità split-screen è l\'unico modo per
+    <string name="adb_pairing_requires_multi_window_reason">Il sistema richiede che la finestra di dialogo di
+        accoppiamento sia sempre visibile. Usare la modalità schermo diviso è l’unico modo per
         rendere visibile sia questa app che la finestra di dialogo di sistema contemporaneamente.</string>
     <string name="adb_error_key_store">Impossibile generare la chiave per il debug wireless.\nQuesto
         potrebbe essere dovuto al fatto che il meccanismo KeyStore di questo dispositivo è rotto.</string>
     <string name="adb_pair_required_title">Accoppiamento necessario</string>
     <string name="adb_pair_required">Il debug wireless è attivo, ma non riconosce Porter. Porter deve essere accoppiato con il debug wireless su questo dispositivo prima di potersi avviare in questo modo. Serve una volta, e di nuovo ogni volta che l\'accoppiamento va perso, ad esempio dopo aver cancellato i dati dell\'app Porter o rimosso Porter dall\'elenco dei dispositivi accoppiati.\n\nScegli Accoppiamento, segui i passaggi e poi avvia di nuovo Porter.</string>
     <string name="enable">Abilitare</string>
-    <string name="development_settings">Modalitá sviluppatore</string>
+    <string name="development_settings">Opzioni sviluppatore</string>
     <string name="notification_settings">Opzioni di notifica</string>
     <string name="adb_pairing_tutorial_content_notification">Una notifica da Porter ti aiuterà a
         completare l\'accoppiamento.</string>
@@ -99,7 +99,7 @@
     <string name="home_automation_title">Controlla Porter con le app di automazione</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Il permesso di adb è limitato</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[È molto probabile che il fabbricante del tuo dispositivo limiti i permessi di adb.<p>Ci potrebbe essere una soluzione per il vostro dispositivo in <b><a href="%1$s">questo documento</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[È molto probabile che il fabbricante del tuo dispositivo limiti i permessi di adb.<p>Ci potrebbe essere una soluzione per il vostro dispositivo in <b><a href=\"%1$s\">questo documento</a></b>.]]></string>
     <string name="app_management_item_summary_requires_root">* richiede Porter in modalità root</string>
     <string name="app_management_toggle_all">Attiva/disattiva tutto</string>
     <!-- Terminal -->
@@ -113,7 +113,7 @@
     <string name="terminal_tutorial_1">Esportare i file in una nuova cartella.</string>
     <string name="terminal_tutorial_1_description">Verranno esportati due file: %1$s e %2$s. Se i
         file sono già presenti nella cartella selezionata, verranno eliminati.</string>
-    <string name="terminal_export_files">Esporta files</string>
+    <string name="terminal_export_files">Esporta file</string>
     <string name="terminal_tutorial_2">Utilizza l\'app del terminale per copiare i file nella
         directory dei file privati.</string>
     <string name="terminal_tutorial_2_description">Suggerimento: se la directory home dell\'app
@@ -148,7 +148,7 @@
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter sta già iniziando sullo sfondo</string>
     <string name="toast_accessibility_tv_only">Questo servizio è supportato solo su dispositivi TV.</string>
-    <string name="toast_pairing_timeout">Il servizio di accoppiamento di Porter è terminato.</string>
+    <string name="toast_pairing_timeout">Il tempo di attesa del servizio di accoppiamento di Porter è scaduto.</string>
     <!-- Stop -->
     <string name="action_stop">Interrompi Porter</string>
     <!-- Notification -->
@@ -170,11 +170,11 @@
     <string name="grant_dialog_button_allow_always">Consenti sempre</string>
     <string name="grant_dialog_button_deny">"Nega"</string>
     <!-- Starter -->
-    <string name="starter">Accensione</string>
+    <string name="starter">Avvio</string>
     <string name="start_with_root_failed">Impossibile avviare il servizio poiché i permessi di root
         non sono stati concessi o questo dispositivo non è rootato.</string>
     <!-- WADB Starter -->
-    <string name="wadb_notification_title">Inizia Porter…</string>
+    <string name="wadb_notification_title">Avvio di Porter…</string>
     <string name="wadb_notification_wifi_required">In attesa della connessione Wi-Fi prima di
         procedere</string>
     <string name="wadb_notification_retry">In attesa di riprovare</string>
@@ -187,7 +187,7 @@
     <!-- Watchdog -->
     <string name="watchdog_running">Il cane da guardia è in esecuzione</string>
     <string name="watchdog_turn_off">Spegni</string>
-    <string name="watchdog_shizuku_crashed_title">Porter si è schiantato di recente</string>
+    <string name="watchdog_shizuku_crashed_title">Porter si è arrestato in modo anomalo di recente</string>
     <string name="watchdog_shizuku_crashed_text">Watchdog ha riavviato il servizio. Tocca per
         scoprire le possibili soluzioni per prevenire futuri arresti anomali.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Disattiva gli avvisi</string>
@@ -479,4 +479,64 @@
     <string name="porter_contact_description_error">Aggiungi qualche dettaglio (almeno 20 caratteri).</string>
     <string name="porter_contact_expected_error">Descrivi cosa ti aspettavi.</string>
     <string name="porter_contact_no_email">Installa o attiva un’app email per aprire questa bozza. Puoi anche condividere i log salvati o contattarci tramite GitHub o Discord.</string>
+    <string name="settings_general">Generali</string>
+    <string name="settings_general_summary">Tema e ricerca di aggiornamenti</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Avvio all’accensione, cane da guardia e aggiornamenti del servizio</string>
+    <string name="settings_startup_attention">Il funzionamento in background o gli avvisi richiedono attenzione</string>
+    <string name="settings_updates">Aggiornamenti</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Continua</string>
+    <string name="onboarding_welcome_title">Ti diamo il benvenuto in Porter</string>
+    <string name="onboarding_welcome_body">Porter dà alle tue app l’accesso ADB, così possono fare cose che normalmente richiedono un computer. Sei tu a decidere quali app lo ottengono.</string>
+    <string name="onboarding_welcome_service">Porter avvia una volta un piccolo servizio e le app che approvi lo usano direttamente sul tuo dispositivo.</string>
+    <string name="onboarding_welcome_beta">Questa è una build beta (di prova). Procedi con senso dell’umorismo e un piano di riserva. Segnala i problemi che incontri.</string>
+    <string name="onboarding_shizuku_title">Shizuku è installato</string>
+    <string name="onboarding_shizuku_body">Porter è un fork mantenuto di Shizuku e i due possono funzionare fianco a fianco. Le app che supportano Porter possono usare Porter, mentre le altre continuano a usare Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Puoi anche lasciare che Porter sostituisca Shizuku, così le app create solo per Shizuku useranno Porter al suo posto. La scelta è tua. Puoi decidere in seguito in Impostazioni → Compatibilità con Shizuku; la guida alla compatibilità spiega quali opzioni supporta la tua installazione.</string>
+    <string name="onboarding_shizuku_guide">Guida alla compatibilità</string>
+    <string name="onboarding_privacy_title">Privacy</string>
+    <string name="onboarding_privacy_body">Porter non raccoglie, traccia o vende le tue informazioni. Non ha pubblicità, analisi dell’utilizzo né account.</string>
+    <string name="onboarding_privacy_policy">Informativa sulla privacy</string>
+    <string name="onboarding_get_started">Inizia</string>
+    <string name="onboarding_save_failed">Impossibile salvare. Riprova.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Aggiornamento disponibile</string>
+    <string name="updater_card_versions">Porter %1$s è disponibile. Hai la versione %2$s.</string>
+    <string name="updater_ignore">Ignora</string>
+    <string name="updater_changelog">Note di rilascio</string>
+    <string name="updater_download">Scarica</string>
+    <string name="updater_check">Cerca aggiornamenti</string>
+    <string name="updater_check_summary">Cerca una versione più recente di Porter su GitHub quando apri Porter. L’esito di una ricerca riuscita viene conservato per un giorno.</string>
+    <string name="updater_channel">Canale di aggiornamento</string>
+    <string name="updater_channel_production">Produzione</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Produzione: solo versioni definitive</string>
+    <string name="updater_channel_beta_choice">Beta: la versione più recente, incluse beta e versioni preliminari</string>
+    <string name="updater_dialog_title">Scarica aggiornamento</string>
+    <string name="updater_download_summary">Scegli dove salvare l’APK.</string>
+    <string name="updater_install_manual">Installa manualmente</string>
+    <string name="updater_install_manual_summary">Il programma di installazione di Android ti chiede conferma.</string>
+    <string name="updater_install_automatic">Installa automaticamente</string>
+    <string name="updater_install_automatic_summary">Usa l’accesso ADB o root di Porter. Porter si chiude durante l’installazione dell’aggiornamento.</string>
+    <string name="updater_install_automatic_requirement">Richiede che il servizio Porter sia in esecuzione nell’utente principale di questo dispositivo.</string>
+    <string name="updater_continue">Continua</string>
+    <string name="updater_downloading">Download in corso…</string>
+    <string name="updater_installing">Installazione in corso…</string>
+    <string name="updater_saved">Salvato %1$s.</string>
+    <string name="updater_download_failed">Download non riuscito: %1$s</string>
+    <string name="updater_download_failed_partial">Download non riuscito: %1$s. Il file salvato parzialmente potrebbe rimanere.</string>
+    <string name="updater_not_porter">Il file scaricato non è un APK di Porter.</string>
+    <string name="updater_not_newer">L’APK scaricato non è più recente della versione di Porter installata.</string>
+    <string name="updater_automatic_unavailable">Il servizio Porter non è più disponibile nell’utente principale di questo dispositivo, quindi l’aggiornamento non è stato installato.</string>
+    <string name="updater_install_failed">Installazione non riuscita: %1$s</string>
+    <string name="updater_install_permission_denied">Consenti a Porter di installare app sconosciute per installare l’aggiornamento manualmente.</string>
+    <string name="updater_install_permission_unavailable">Questo dispositivo non ha una schermata per consentire l’installazione di app. Salva l’APK e installalo con un altro programma di installazione.</string>
+    <string name="updater_installer_unavailable">Impossibile aprire il programma di installazione di Android.</string>
+    <string name="updater_save_unavailable">Nessuna app disponibile per scegliere dove salvare l’APK.</string>
 </resources>

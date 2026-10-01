@@ -1,0 +1,1 @@
+Catatan rilis untuk setiap versi diterbitkan di https://porter.darken.eu/ dan di halaman rilis proyek ini.

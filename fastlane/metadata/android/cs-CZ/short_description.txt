@@ -1,1 +1,1 @@
-Dejte aplikacím přístup ADB, s rootem i bez něj. Vy určíte, které ho dostanou.
+Dej aplikacím přístup ADB, s rootem i bez něj. Ty určíš, které ho dostanou.

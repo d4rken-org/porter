@@ -5,9 +5,9 @@
     <string name="home_status_service_not_running">%1$s davam etmir</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Kompüterə qoşularaq başlayın]]></string>
-    <string name="home_adb_description"><![CDATA[Root olmayan cihazlarda Porter-i işə salmaq üçün adb-dən istifadə etməlisiniz (kompüter bağlantısı tələb olunur). Cihaz hər dəfə yenidən işə salındıqda bu proses təkrarlanmalıdır. Lütfən, <b><a href="%1$s">yardımı oxuyun</a></b>.]]></string>
-    <string name="home_adb_button_view_command">Əmirə baxın</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Bəzi başqa mülahizələr də var, lütfən, əvvəlcə yardımı oxuduğunuzu təsdiqləyin.]]></string>
+    <string name="home_adb_description"><![CDATA[Root olmayan cihazlarda Porter-i işə salmaq üçün adb-dən istifadə etməlisiniz (kompüter bağlantısı tələb olunur). Cihaz hər dəfə yenidən işə salındıqda bu proses təkrarlanmalıdır. Lütfən, <b><a href=\"%1$s\">yardımı oxuyun</a></b>.]]></string>
+    <string name="home_adb_button_view_command">Əmrə baxın</string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=\"monospace\">%1$s</font><br><br>* Bəzi başqa mülahizələr də var, lütfən, əvvəlcə yardımı oxuduğunuzu təsdiqləyin.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Göndər</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Simsiz sazlama ilə başladın]]></string>
@@ -26,7 +26,7 @@
     <string name="dialog_adb_pairing_paring_code">Cütləşmə kodu</string>
     <string name="paring_code_is_wrong">Cütləşmə kodu yanlışdır</string>
     <string name="cannot_connect_port">Simsiz sazlama xidmətinə qoşulmaq mümkün deyil.\n\nŞəbəkəyə
-        girişi məhdudlaşdıra bilən bütün firewall, reklam bloku, VPN və ya oxşar tətbiqlərdə
+        girişi məhdudlaşdıra bilən bütün təhlükəsizlik divarı, reklam bloklayıcısı, VPN və ya oxşar tətbiqlərdə
         Porter-in ağ siyahıya salındığından əmin olun.</string>
     <string name="dialog_wireless_adb_not_enabled">Simsiz sazlama aktiv edilməyib.
         \nQeyd edək ki, Android 11-dən əvvəl simsiz sazlamanı aktivləşdirmək üçün kompüter bağlantısı
@@ -44,10 +44,10 @@
         \"USB sazlaması\"nı və \"Simsiz sazlama\"nı aktiv edin\n- \"Simsiz sazlama\" bölməsinin
         sol tərəfinə toxunun\n- \"Cihazı cütləşdirmə kodu ilə cütləşdirin\" düyməsini basın. Porter
         cütləşdirmə kodunu avtomatik aşkar edəcək.</string>
-    <string name="adb_pairing_requires_multi_window">Əvvəlcə bölünmüş ekran (çoxu pəncərə) rejiminə
+    <string name="adb_pairing_requires_multi_window">Əvvəlcə bölünmüş ekran (çoxpəncərəli) rejiminə
         daxil olun.</string>
     <string name="adb_pairing_requires_multi_window_reason">Sistem cütləşdirmə dialoqunun həmişə
-        görünməsini tələb edir. Split ekran rejimindən istifadə bu tətbiqin və sistem dialoqunun
+        görünməsini tələb edir. Bölünmüş ekran rejimindən istifadə bu tətbiqin və sistem dialoqunun
         eyni vaxtda görünməsinə imkan verməyin yeganə yoludur.</string>
     <string name="adb_error_key_store">Simsiz sazlama üçün açar yaratmaq mümkün deyil.\nBunun səbəbi
         bu cihazın KeyStore mexanizminin xarab olması ola bilər.</string>
@@ -64,7 +64,7 @@
         tərəfinə toxunun, sonra \"Cihazı cütləşdirmə kodu ilə cütləşdirin\" üzərinə toxunun.
         Qoşulmanı tamamlamaq üçün bildirişdə kodu daxil edin.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Cütləşmə prosesi Porter-dən
-        gələn bildirişi görməyinizi tələb edir. Zəhmət olmasa, Porter-ə bildirişlər göndərməyə
+        gələn bildirişlə qarşılıqlı əlaqə qurmağınızı tələb edir. Zəhmət olmasa, Porter-ə bildirişlər göndərməyə
         icazə verin.</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI istifadəçiləri sistem parametrlərində
         bildiriş tərzini \"Bildiriş\" - \"Bildiriş kölgəsi\"ndən \"Android\"ə keçirməli ola bilərlər</string>
@@ -93,7 +93,7 @@
     <string name="home_automation_title">Avtomatlaşdırma proqramları ilə Porter-ə nəzarət edin</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">adb icazəsi məhduddur</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Çox güman ki, cihazınızın istehsalçısı adb icazəsini məhdudlaşdırır.<p>Sisteminiz üçün <b><a href="%1$s">bu sənəddə</a></b> həll yolu ola bilər.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Çox güman ki, cihazınızın istehsalçısı adb icazəsini məhdudlaşdırır.<p>Sisteminiz üçün <b><a href=\"%1$s\">bu sənəddə</a></b> həll yolu ola bilər.]]></string>
     <string name="app_management_item_summary_requires_root">* Porter rootla işləməsini tələb edir</string>
     <string name="app_management_toggle_all">Hamısını dəyiş</string>
     <!-- Terminal -->
@@ -103,7 +103,7 @@
     <string name="terminal_tutorial_miui">İstifadəçilər MIUI-nin ixrac funksiyası tərəfindən
         istifadə edilən Yaddaş Giriş Çərçivəsini pozduğunu bildirdilər.</string>
     <string name="terminal_tutorial_miui_2">Əgər MIUI istifadə edirsinizsə, faylı Porter
-        APK-sindəki aktivlər qovluğundan çıxarmalı ola bilərsiniz.</string>
+        APK-sindəki assets qovluğundan çıxarmalı ola bilərsiniz.</string>
     <string name="terminal_tutorial_1">Faylları yeni qovluğa ixrac edin.</string>
     <string name="terminal_tutorial_1_description">İki fayl ixrac olunacaq: %1$s və %2$s. Fayllar
         seçilmiş qovluqda artıq varsa, onlar silinəcək.</string>
@@ -115,10 +115,10 @@
         salmağa imkan verəcək.\n\nƏks halda, siz terminal proqramınızın %3$s konfiqurasiya faylında
         %2$s üçün ləqəb yarada bilərsiniz.</string>
     <string name="terminal_tutorial_3">Aşağıdakı əmrlə qabığı açın:</string>
-    <string name="rish_description"><![CDATA[%1$silə siz istənilən terminal proqramında qabıq əmrlərini işlədə bilərsiniz.<p>Onu necə istifadə etmək barədə ətraflı öyrənmək üçün toxunun.]]></string>
+    <string name="rish_description"><![CDATA[%1$s ilə siz istənilən terminal proqramında qabıq əmrlərini işlədə bilərsiniz.<p>Onu necə istifadə etmək barədə ətraflı öyrənmək üçün toxunun.]]></string>
     <!-- Settings -->
     <string name="settings_title">Parametrlər</string>
-    <string name="settings_start_on_boot">Bootda başla</string>
+    <string name="settings_start_on_boot">Açılışda başla</string>
     <string name="settings_start_on_boot_summary">Android 11+ və ya root tələb edir</string>
     <string name="settings_start_on_boot_bug">Android 11-12-də bir səhvə görə, simsiz sazlama heç
         bir səlahiyyətli şəbəkəni xatırlamır.\n\nAvtorizasiya dialoqu açıldıqda \"İcazə verin\"
@@ -126,7 +126,7 @@
     <string name="settings_watchdog">Nəzarətçi</string>
     <string name="settings_watchdog_summary">Porter qəzaya uğradıqda onu avtomatik olaraq yenidən
         başladın</string>
-    <string name="settings_restart_dialog_title">Yenidən başladın Tələb olunur</string>
+    <string name="settings_restart_dialog_title">Yenidən başlatma tələb olunur</string>
     <string name="settings_restart_dialog_message">Bu ayarı tətbiq etmək üçün Porter yenidən
         başlamalıdır.</string>
     <string name="settings_tcp_port">TCP portu</string>
@@ -135,7 +135,7 @@
     <string name="settings_support">Dəstək</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Port 1 ilə 65535 arasında olmalıdır</string>
-    <string name="snackbar_battery_optimization_home">Start on boot/watchdog düzgün işləməsi üçün
+    <string name="snackbar_battery_optimization_home">Açılışda başlatmanın və nəzarətçinin düzgün işləməsi üçün
         batareya optimizasiyası deaktiv edilməlidir.</string>
     <string name="snackbar_battery_optimization_settings">Zəhmət olmasa, bu funksiyadan istifadə
         etmək üçün batareya optimizasiyasını söndürün.</string>
@@ -152,7 +152,7 @@
     <string name="notification_adb_pairing_searching_for_service_title">Qoşulma xidməti axtarılır</string>
     <string name="notification_adb_pairing_service_found_title">Qoşulma xidməti tapıldı</string>
     <string name="notification_adb_pairing_stop_searching">Axtarışı dayandırın</string>
-    <string name="notification_adb_pairing_working_title">Axtarış davam edir</string>
+    <string name="notification_adb_pairing_working_title">Cütləşdirmə davam edir</string>
     <string name="notification_adb_pairing_succeed_title">Qoşulma uğurludur</string>
     <string name="notification_adb_pairing_succeed_text">Siz indi Porter xidmətini başlata
         bilərsiniz.</string>
@@ -161,9 +161,9 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">Porter-ə giriş</string>
     <string name="permission_description">Proqramın Porter-dən istifadə etməsinə icazə verin.</string>
-    <string name="permission_warning_template"><![CDATA[<b>%1$s</b> - ya %2$s üçün icazə verilsin\?]]></string>
+    <string name="permission_warning_template"><![CDATA[<b>%1$s</b> üçün %2$s icazəsi verilsin?]]></string>
     <string name="grant_dialog_button_allow_always">Hər zaman icazə ver</string>
-    <string name="grant_dialog_button_deny">"Ləğv et"</string>
+    <string name="grant_dialog_button_deny">"Rədd et"</string>
     <!-- Starter -->
     <string name="starter">Başlanğıc</string>
     <string name="start_with_root_failed">Root icazəsi verilmədiyi və ya bu cihaz rootlu olmadığı
@@ -173,19 +173,19 @@
     <string name="wadb_notification_wifi_required">Davam etməzdən əvvəl Wi-Fi bağlantısını
         gözləyirəm</string>
     <string name="wadb_notification_retry">Yenidən cəhd gözlənilir</string>
-    <string name="wadb_error_title">Yükləmə zamanı xəta</string>
-    <string name="wadb_error_notify_dev">İnkişafıçıya xəbər vermək üçün toxunun.</string>
+    <string name="wadb_error_title">Açılışda başlatma zamanı xəta</string>
+    <string name="wadb_error_notify_dev">Tərtibatçıya xəbər vermək üçün toxunun.</string>
     <string name="wadb_pair_required_notification">Simsiz sazlama Porter-i tanımır, buna görə Porter arxa fonda başlaya bilmədi. Porter-i yenidən cütləşdirmək üçün toxunun.</string>
     <string name="wadb_permission_error_notification_title">İcazə xətası</string>
-    <string name="wadb_permission_error_notification_content">Porter işə başlamaq üçün
-        WRITE_SECURE_SETTINGS lazımdır. Onu necə vermək lazım olduğunu öyrənmək üçün toxun.</string>
+    <string name="wadb_permission_error_notification_content">Porter-in açılışda başlaması üçün
+        WRITE_SECURE_SETTINGS icazəsi lazımdır. Onu necə vermək lazım olduğunu öyrənmək üçün toxun.</string>
     <!-- Watchdog -->
-    <string name="watchdog_running">Watchdog qaçır</string>
+    <string name="watchdog_running">Nəzarətçi işləyir</string>
     <string name="watchdog_turn_off">Söndürün</string>
     <string name="watchdog_shizuku_crashed_title">Porter yaxınlarda çökdü</string>
-    <string name="watchdog_shizuku_crashed_text">Watchdog xidməti yenidən başladıb. Gələcək
+    <string name="watchdog_shizuku_crashed_text">Nəzarətçi xidməti yenidən başladıb. Gələcək
         çöküşlərin qarşısını almaq üçün mümkün düzəlişlər barədə məlumat almaq üçün toxunun.</string>
-    <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Siqnalları Söndür</string>
+    <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Xəbərdarlıqları Söndür</string>
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">Brauzeri başlatmaq mümkün deyil</string>
     <string name="toast_copied_to_clipboard">Buferə kopyalandı</string>
@@ -467,4 +467,64 @@
     <string name="porter_contact_description_error">Zəhmət olmasa, bir az təfərrüat əlavə edin (ən azı 20 simvol).</string>
     <string name="porter_contact_expected_error">Zəhmət olmasa, nə gözlədiyinizi təsvir edin.</string>
     <string name="porter_contact_no_email">Bu qaralamanı açmaq üçün e-poçt tətbiqi quraşdırın və ya aktivləşdirin. Həmçinin saxlanılmış jurnalları paylaşa və ya bizimlə GitHub ya da Discord vasitəsilə əlaqə saxlaya bilərsiniz.</string>
+    <string name="settings_general">Ümumi</string>
+    <string name="settings_general_summary">Tema və yeniləmə yoxlaması</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Açılışda başlatma, nəzarətçi və xidmət yeniləmələri</string>
+    <string name="settings_startup_attention">Arxa plan əməliyyatı və ya xəbərdarlıqlar diqqət tələb edir</string>
+    <string name="settings_updates">Yeniləmələr</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Davam et</string>
+    <string name="onboarding_welcome_title">Porter-ə xoş gəlmisən</string>
+    <string name="onboarding_welcome_body">Porter tətbiqlərinə ADB girişi verir ki, onlar adətən kompüter tələb edən işləri görə bilsinlər. Hansı tətbiqlərin bu girişi alacağına sən qərar verirsən.</string>
+    <string name="onboarding_welcome_service">Porter bir dəfə kiçik bir xidmət başladır və təsdiq etdiyin tətbiqlər ondan birbaşa cihazında istifadə edir.</string>
+    <string name="onboarding_welcome_beta">Bu, beta (sınaq) yığımıdır. Yumor hissi və ehtiyat planla davam et. Qarşılaşdığın problemləri bildir.</string>
+    <string name="onboarding_shizuku_title">Shizuku quraşdırılıb</string>
+    <string name="onboarding_shizuku_body">Porter Shizuku-nun baxımı davam etdirilən fork-udur və ikisi yanaşı işləyə bilər. Porter-i dəstəkləyən tətbiqlər Porter-dən istifadə edə, digər tətbiqlər isə Shizuku-dan istifadə etməyə davam edə bilər.</string>
+    <string name="onboarding_shizuku_replace">Porter-in Shizuku-nu əvəz etməsinə də icazə verə bilərsən ki, yalnız Shizuku üçün hazırlanmış tətbiqlər onun yerinə Porter-dən istifadə etsin. Seçim sənindir. Daha sonra Parametrlər → Shizuku uyğunluğu bölməsində qərar verə bilərsən. Uyğunluq təlimatı quraşdırmanın hansı seçimləri dəstəklədiyini izah edir.</string>
+    <string name="onboarding_shizuku_guide">Uyğunluq təlimatı</string>
+    <string name="onboarding_privacy_title">Məxfilik</string>
+    <string name="onboarding_privacy_body">Porter məlumatlarını toplamır, izləmir və satmır. Reklam, analitika və hesab yoxdur.</string>
+    <string name="onboarding_privacy_policy">Məxfilik siyasəti</string>
+    <string name="onboarding_get_started">Başla</string>
+    <string name="onboarding_save_failed">Saxlamaq mümkün olmadı. Yenidən cəhd et.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Yeniləmə mövcuddur</string>
+    <string name="updater_card_versions">Porter %1$s mövcuddur. Səndə %2$s var.</string>
+    <string name="updater_ignore">Nəzərə alma</string>
+    <string name="updater_changelog">Dəyişikliklər jurnalı</string>
+    <string name="updater_download">Endir</string>
+    <string name="updater_check">Yeniləmələri yoxla</string>
+    <string name="updater_check_summary">Porter-i açanda GitHub-da daha yeni Porter buraxılışı axtarılır. Uğurlu yoxlamanın nəticəsi bir gün saxlanılır.</string>
+    <string name="updater_channel">Yeniləmə kanalı</string>
+    <string name="updater_channel_production">Stabil</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Stabil: yalnız tam buraxılışlar</string>
+    <string name="updater_channel_beta_choice">Beta: beta və ilkin buraxılışlar daxil olmaqla ən yeni buraxılış</string>
+    <string name="updater_dialog_title">Yeniləməni endir</string>
+    <string name="updater_download_summary">APK-nın harada saxlanılacağını seç.</string>
+    <string name="updater_install_manual">Əl ilə quraşdır</string>
+    <string name="updater_install_manual_summary">Android quraşdırıcısı səndən təsdiq istəyir.</string>
+    <string name="updater_install_automatic">Avtomatik quraşdır</string>
+    <string name="updater_install_automatic_summary">Porter-in ADB və ya root girişindən istifadə edir. Yeniləmə quraşdırılarkən Porter bağlanır.</string>
+    <string name="updater_install_automatic_requirement">Porter xidmətinin bu cihazın əsas istifadəçisində işləməsi tələb olunur.</string>
+    <string name="updater_continue">Davam et</string>
+    <string name="updater_downloading">Endirilir…</string>
+    <string name="updater_installing">Quraşdırılır…</string>
+    <string name="updater_saved">%1$s saxlanıldı.</string>
+    <string name="updater_download_failed">Endirmə uğursuz oldu: %1$s</string>
+    <string name="updater_download_failed_partial">Endirmə uğursuz oldu: %1$s. Qismən saxlanılmış fayl qala bilər.</string>
+    <string name="updater_not_porter">Endirilmiş fayl Porter APK-sı deyil.</string>
+    <string name="updater_not_newer">Endirilmiş APK quraşdırılmış Porter-dən daha yeni deyil.</string>
+    <string name="updater_automatic_unavailable">Porter xidməti artıq bu cihazın əsas istifadəçisində mövcud deyil, ona görə yeniləmə quraşdırılmadı.</string>
+    <string name="updater_install_failed">Quraşdırma uğursuz oldu: %1$s</string>
+    <string name="updater_install_permission_denied">Yeniləməni əl ilə quraşdırmaq üçün Porter-ə naməlum tətbiqləri quraşdırmağa icazə ver.</string>
+    <string name="updater_install_permission_unavailable">Bu cihazda tətbiq quraşdırılmasına icazə vermək üçün ekran yoxdur. APK-nı saxla və başqa quraşdırıcı ilə quraşdır.</string>
+    <string name="updater_installer_unavailable">Android quraşdırıcısını açmaq mümkün olmadı.</string>
+    <string name="updater_save_unavailable">APK-nın harada saxlanılacağını seçmək üçün tətbiq yoxdur.</string>
 </resources>

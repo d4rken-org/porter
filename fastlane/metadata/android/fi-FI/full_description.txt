@@ -15,7 +15,7 @@ Porter on Shizukun ylläpidetty fork, joka pidetään pienenä ja vakaana sovell
 - Sovellusten on pyydettävä ensin, ja sinä hyväksyt tai hylkäät jokaisen erikseen
 - Näe, mitkä asennetut sovellukset tukevat Porteria ja mitkä ovat yhteydessä
 - Peru käyttöoikeus milloin tahansa tai keskeytä se kaikilta sovelluksilta kerralla
-- Ohjaa Porteria automaatiosovelluksilla intentien avulla
+- Ohjaa Porteria automaatiosovelluksilla intenttien avulla
 
 <b>Shizukulle tehdyt sovellukset</b>
 Sovellukset, jotka tukevat Porteria suoraan, tarvitsevat vain Porterin. Vain Shizukua tukevat sovellukset tarvitsevat yhden lisävaiheen, joka selitetään osoitteessa https://porter.darken.eu/compatibility

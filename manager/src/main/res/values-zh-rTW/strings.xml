@@ -32,7 +32,7 @@
     <string name="dialog_usb_debugging_not_enabled">USB 偵錯功能未啟用。\n請在「開發人員選項」中啟用它。</string>
     <string name="dialog_adb_pairing_accessibility_permission">在 Android 14，使用套件安裝程式安裝或更新 Porter
         會取消用於開啟無障礙服務配對的 ^1 權限。\n\n透過執行下面的 ADB 指令重新授權：\n\n^2\n\n執行指令之後，您可以繼續配對程序。\n\n備註：您可以透過 ADB 安裝
-        Porter 繞過此限制。</string>
+        Porter，或透過 ADB 更新 Porter，以繞過此限制。</string>
     <string name="dialog_adb_pairing_accessibility_enable">請啟用無障礙服務以開始配對流程。這能讓 Porter 偵測到配對碼。\n\n無障礙服務會在配對嘗試後關閉，或在一分鐘內未找到配對碼時關閉。Porter 會顯示結果，並讓您重試。</string>
     <string name="dialog_adb_pairing_accessibility_navigate">請依照以下步驟開始配對：\n- 進入「開發人員選項」\n-
         啟用「USB 偵錯」與「無線偵錯」\n- 點選「無線偵錯」左側\n- 點選「使用配對碼配對裝置」。Porter 將自動偵測配對碼。</string>
@@ -48,7 +48,7 @@
     <string name="adb_pairing_tutorial_content_notification">一則來自 Porter 的通知將協助您完成配對。</string>
     <string name="adb_pairing_tutorial_content_steps">進入「開發人員選項」，然後啟用「USB 偵錯」和「無線偵錯」。</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">
-        點選「無線偵錯」左側，然後點選「使用配對碼配對裝置」。輸入通知中的代碼以完成配對。</string>
+        點選「無線偵錯」左側，然後點選「使用配對碼配對裝置」。在通知中輸入配對碼以完成配對。</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">配對過程需要您與 Porter 的通知互動。請允許
         Porter 發布通知。</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI
@@ -108,7 +108,7 @@
     <string name="snackbar_battery_optimization_settings">請關閉電池最佳化以使用此功能。</string>
     <string name="snackbar_action_fix">修正</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Porter 已在背景啟動了</string>
+    <string name="toast_shizuku_already_starting">Porter 已在背景啟動中</string>
     <string name="toast_accessibility_tv_only">此服務僅支援電視裝置</string>
     <!-- Dark Mode Setting Override -->
     <string name="follow_system">跟隨系統</string>
@@ -429,4 +429,65 @@
     <string name="porter_contact_description_error">請補充一些細節（至少 20 個字元）。</string>
     <string name="porter_contact_expected_error">請描述您預期的結果。</string>
     <string name="porter_contact_no_email">請安裝或啟用電子郵件應用程式以開啟此草稿。您也可以分享已儲存的記錄，或透過 GitHub 或 Discord 與我們聯絡。</string>
+
+    <string name="settings_general">一般</string>
+    <string name="settings_general_summary">主題與更新檢查</string>
+    <string name="settings_general_summary_theme">主題</string>
+    <string name="settings_startup_summary">開機時啟動、看門狗與服務更新</string>
+    <string name="settings_startup_attention">背景作業或警示需要處理</string>
+    <string name="settings_updates">更新</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">繼續</string>
+    <string name="onboarding_welcome_title">歡迎使用 Porter</string>
+    <string name="onboarding_welcome_body">Porter 為你的應用程式提供 ADB 存取權，讓它們能做到通常需要電腦才能完成的事。由你決定哪些應用程式可以取得存取權。</string>
+    <string name="onboarding_welcome_service">Porter 只需啟動一次小型服務，你核准的應用程式就能直接在裝置上使用。</string>
+    <string name="onboarding_welcome_beta">這是測試版。請帶著幽默感和備用方案繼續使用，並回報遇到的問題。</string>
+    <string name="onboarding_shizuku_title">已安裝 Shizuku</string>
+    <string name="onboarding_shizuku_body">Porter 是 Shizuku 的持續維護分支，兩者可以同時執行。支援 Porter 的應用程式可以使用 Porter，其他應用程式則繼續使用 Shizuku。</string>
+    <string name="onboarding_shizuku_replace">你也可以讓 Porter 取代 Shizuku，讓僅支援 Shizuku 的應用程式改用 Porter。選擇權在你手上。稍後也能在「設定」→「Shizuku 相容性」中決定，相容性指南會說明你的安裝方式支援哪些選項。</string>
+    <string name="onboarding_shizuku_guide">相容性指南</string>
+    <string name="onboarding_privacy_title">隱私權</string>
+    <string name="onboarding_privacy_body">Porter 不會收集、追蹤或販售你的資訊。沒有廣告、沒有使用情況分析，也不需要帳戶。</string>
+    <string name="onboarding_privacy_policy">隱私權政策</string>
+    <string name="onboarding_get_started">開始使用</string>
+    <string name="onboarding_save_failed">無法儲存，請再試一次。</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">有可用的更新</string>
+    <string name="updater_card_versions">Porter %1$s 已推出。目前安裝的是 %2$s。</string>
+    <string name="updater_ignore">忽略</string>
+    <string name="updater_changelog">更新記錄</string>
+    <string name="updater_download">下載</string>
+    <string name="updater_check">檢查更新</string>
+    <string name="updater_check_summary">開啟 Porter 時，會在 GitHub 上檢查是否有較新的 Porter 版本。成功的檢查結果會保留一天。</string>
+    <string name="updater_channel">更新管道</string>
+    <string name="updater_channel_production">正式版</string>
+    <string name="updater_channel_beta">測試版</string>
+    <string name="updater_channel_production_choice">正式版：僅正式發布的版本</string>
+    <string name="updater_channel_beta_choice">測試版：最新版本，包含測試版與預先發布版本</string>
+    <string name="updater_dialog_title">下載更新</string>
+    <string name="updater_download_summary">選擇 APK 的儲存位置。</string>
+    <string name="updater_install_manual">手動安裝</string>
+    <string name="updater_install_manual_summary">Android 安裝程式會要求你確認。</string>
+    <string name="updater_install_automatic">自動安裝</string>
+    <string name="updater_install_automatic_summary">使用 Porter 的 ADB 或 root 存取權。安裝更新時 Porter 會關閉。</string>
+    <string name="updater_install_automatic_requirement">需要 Porter 服務在此裝置的主要使用者中執行。</string>
+    <string name="updater_continue">繼續</string>
+    <string name="updater_downloading">正在下載…</string>
+    <string name="updater_installing">正在安裝…</string>
+    <string name="updater_saved">已儲存 %1$s。</string>
+    <string name="updater_download_failed">下載失敗：%1$s</string>
+    <string name="updater_download_failed_partial">下載失敗：%1$s。部分儲存的檔案可能仍會保留。</string>
+    <string name="updater_not_porter">下載的檔案不是 Porter APK。</string>
+    <string name="updater_not_newer">下載的 APK 並未比已安裝的 Porter 更新。</string>
+    <string name="updater_automatic_unavailable">Porter 服務已無法在此裝置的主要使用者中使用，因此未安裝更新。</string>
+    <string name="updater_install_failed">安裝失敗：%1$s</string>
+    <string name="updater_install_permission_denied">請允許 Porter 安裝未知的應用程式，以手動安裝更新。</string>
+    <string name="updater_install_permission_unavailable">此裝置沒有允許安裝應用程式的畫面。請儲存 APK 並使用其他安裝程式安裝。</string>
+    <string name="updater_installer_unavailable">無法開啟 Android 安裝程式。</string>
+    <string name="updater_save_unavailable">沒有可用的應用程式能選擇 APK 的儲存位置。</string>
 </resources>

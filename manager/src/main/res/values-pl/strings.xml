@@ -64,7 +64,7 @@
         następnie włącz „Debugowanie USB” i „Debugowanie bezprzewodowe”.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Dotknij lewej strony opcji
         „Debugowanie bezprzewodowe”, a następnie dotknij opcji „Sparuj urządzenie przy użyciu kodu
-        parowania”. Wprowadź kod z powiadomienia, aby dokończyć parowanie.</string>
+        parowania”. Wprowadź kod w powiadomieniu, aby dokończyć parowanie.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Proces parowania wymaga
         interakcji z powiadomieniem od Porter. Zezwól Porter na wyświetlanie powiadomień.</string>
     <string name="adb_pairing_tutorial_content_miui">Użytkownicy MIUI mogą potrzebować zmiany stylu
@@ -480,4 +480,65 @@
     <string name="porter_contact_description_error">Dodaj więcej szczegółów (co najmniej 20 znaków).</string>
     <string name="porter_contact_expected_error">Opisz, co powinno się wydarzyć.</string>
     <string name="porter_contact_no_email">Zainstaluj lub włącz aplikację poczty e-mail, aby otworzyć ten szkic. Możesz też udostępnić zapisane logi lub skontaktować się z nami przez GitHub lub Discord.</string>
+
+    <string name="settings_general">Ogólne</string>
+    <string name="settings_general_summary">Motyw i sprawdzanie aktualizacji</string>
+    <string name="settings_general_summary_theme">Motyw</string>
+    <string name="settings_startup_summary">Uruchamianie przy starcie, nadzorowanie i aktualizacje usługi</string>
+    <string name="settings_startup_attention">Działanie w tle lub alerty wymagają uwagi</string>
+    <string name="settings_updates">Aktualizacje</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Dalej</string>
+    <string name="onboarding_welcome_title">Witaj w Porter</string>
+    <string name="onboarding_welcome_body">Porter daje Twoim aplikacjom dostęp ADB, dzięki czemu mogą robić rzeczy, które zwykle wymagają komputera. Ty decydujesz, które aplikacje go dostaną.</string>
+    <string name="onboarding_welcome_service">Porter raz uruchamia małą usługę, a zatwierdzone przez Ciebie aplikacje korzystają z niej bezpośrednio na urządzeniu.</string>
+    <string name="onboarding_welcome_beta">To wersja beta (testowa). Zachowaj poczucie humoru i przygotuj plan awaryjny. Zgłaszaj napotkane problemy.</string>
+    <string name="onboarding_shizuku_title">Shizuku jest zainstalowane</string>
+    <string name="onboarding_shizuku_body">Porter to utrzymywany fork Shizuku. Obie usługi mogą działać równolegle. Aplikacje obsługujące Porter mogą z niego korzystać, a pozostałe nadal używać Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Możesz też pozwolić Porter zastąpić Shizuku, aby aplikacje stworzone wyłącznie dla Shizuku korzystały zamiast niego z Porter. Wybór należy do Ciebie. Możesz zdecydować później w sekcji Ustawienia → Zgodność z Shizuku. Przewodnik zgodności wyjaśnia, jakie opcje obsługuje Twoja instalacja.</string>
+    <string name="onboarding_shizuku_guide">Przewodnik zgodności</string>
+    <string name="onboarding_privacy_title">Prywatność</string>
+    <string name="onboarding_privacy_body">Porter nie zbiera, nie śledzi ani nie sprzedaje Twoich informacji. Nie ma reklam, analityki ani konta.</string>
+    <string name="onboarding_privacy_policy">Polityka prywatności</string>
+    <string name="onboarding_get_started">Zaczynamy</string>
+    <string name="onboarding_save_failed">Nie udało się zapisać. Spróbuj ponownie.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Dostępna aktualizacja</string>
+    <string name="updater_card_versions">Dostępny jest Porter %1$s. Masz wersję %2$s.</string>
+    <string name="updater_ignore">Ignoruj</string>
+    <string name="updater_changelog">Lista zmian</string>
+    <string name="updater_download">Pobierz</string>
+    <string name="updater_check">Sprawdzaj aktualizacje</string>
+    <string name="updater_check_summary">Szuka nowszego wydania Porter na GitHubie po otwarciu Porter. Wynik udanego sprawdzenia jest zachowywany przez jeden dzień.</string>
+    <string name="updater_channel">Kanał aktualizacji</string>
+    <string name="updater_channel_production">Stabilny</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Stabilny: tylko pełne wydania</string>
+    <string name="updater_channel_beta_choice">Beta: najnowsze wydanie, w tym wersje beta i przedpremierowe</string>
+    <string name="updater_dialog_title">Pobierz aktualizację</string>
+    <string name="updater_download_summary">Wybierz miejsce zapisania pliku APK.</string>
+    <string name="updater_install_manual">Zainstaluj ręcznie</string>
+    <string name="updater_install_manual_summary">Instalator Androida poprosi o potwierdzenie.</string>
+    <string name="updater_install_automatic">Zainstaluj automatycznie</string>
+    <string name="updater_install_automatic_summary">Używa dostępu ADB lub root aplikacji Porter. Porter zamyka się na czas instalacji aktualizacji.</string>
+    <string name="updater_install_automatic_requirement">Wymaga działającej usługi Porter u głównego użytkownika tego urządzenia.</string>
+    <string name="updater_continue">Dalej</string>
+    <string name="updater_downloading">Pobieranie…</string>
+    <string name="updater_installing">Instalowanie…</string>
+    <string name="updater_saved">Zapisano %1$s.</string>
+    <string name="updater_download_failed">Pobieranie nie powiodło się: %1$s</string>
+    <string name="updater_download_failed_partial">Pobieranie nie powiodło się: %1$s. Częściowo zapisany plik może pozostać.</string>
+    <string name="updater_not_porter">Pobrany plik nie jest plikiem APK aplikacji Porter.</string>
+    <string name="updater_not_newer">Pobrany plik APK nie jest nowszy niż zainstalowana wersja Porter.</string>
+    <string name="updater_automatic_unavailable">Usługa Porter nie jest już dostępna u głównego użytkownika tego urządzenia, więc aktualizacja nie została zainstalowana.</string>
+    <string name="updater_install_failed">Instalacja nie powiodła się: %1$s</string>
+    <string name="updater_install_permission_denied">Zezwól Porter na instalowanie nieznanych aplikacji, aby ręcznie zainstalować aktualizację.</string>
+    <string name="updater_install_permission_unavailable">To urządzenie nie ma ekranu do zezwalania na instalowanie aplikacji. Zapisz plik APK i zainstaluj go innym instalatorem.</string>
+    <string name="updater_installer_unavailable">Nie udało się otworzyć instalatora Androida.</string>
+    <string name="updater_save_unavailable">Nie ma dostępnej aplikacji do wyboru miejsca zapisania pliku APK.</string>
 </resources>

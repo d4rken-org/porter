@@ -1,0 +1,1 @@
+Las notas de cada versión se publican en https://porter.darken.eu/ y en la página de versiones del proyecto.

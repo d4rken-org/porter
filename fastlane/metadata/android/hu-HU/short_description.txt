@@ -1,1 +1,1 @@
-ADB-hozzáférés alkalmazásoknak, roottal vagy anélkül. Ön dönti el, melyik kapja.
+ADB-hozzáférés appoknak, roottal vagy anélkül. Te döntöd el, melyik kapja.
