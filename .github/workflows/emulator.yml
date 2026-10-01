@@ -146,13 +146,16 @@ jobs:
             profile: tv_1080p
             input: --dpad
           # Android 17 QPR1, debug and release. It has no google_atd image.
+          # Give its full Google image 6 GiB to avoid foreground manager low-memory kills after cold boot.
           - api: '37.1'
             suite: emulator
             target: google_apis_ps16k
+            ram: '6144'
           - api: '37.1'
             suite: emulator
             target: google_apis_ps16k
             build: release
+            ram: '6144'
           # The minified manager, for what R8 can break: entry points started by name, JNI
           # registration, reflection. Combinations of their own, which the suite-keyed entries
           # above do not reach, so each carries its own extra.
@@ -232,11 +235,14 @@ jobs:
           target: ${{ env.EMULATOR_IMAGE }}
           arch: ${{ matrix.arch || 'x86_64' }}
           profile: ${{ matrix.profile || 'pixel_2' }}
+          ram-size: ${{ matrix.ram || '' }}
+          pre-emulator-launch-script: ${{ matrix.ram && 'free -m' || '' }}
           avd-name: porter-ci
           emulator-port: 5554
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none ${{ matrix.features }}
           disable-animations: true
           script: >-
+            ${{ matrix.ram && 'adb -s emulator-5554 shell cat /proc/meminfo &&' || '' }}
             python3 tools/ci/${{ matrix.suite }}-smoke.py --serial emulator-5554 ${{ matrix.input }}
             --manager manager/build/outputs/apk/foss/${{ matrix.build || 'debug' }}/*.apk
             --compat compat/build/outputs/apk/${{ matrix.build || 'debug' }}/*.apk
