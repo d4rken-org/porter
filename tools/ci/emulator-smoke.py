@@ -207,6 +207,28 @@ def resumed_elsewhere(activities, package):
     return bool(resumed) and not any(f" {package}/" in line for line in resumed)
 
 
+def user_home_resumed(activities, user, component):
+    """Whether the resolved HOME is actually resumed in this user, not merely in task history."""
+    home = re.fullmatch(r"([\w.]+)/([\w.$]+)", component)
+    if not home:
+        return False
+    package, activity = home.groups()
+    if package in ("com.google.android.googlesdksetup", "com.android.provision"):
+        return False
+    activity = package + activity if activity.startswith(".") else activity
+    for line in activities.splitlines():
+        if not RESUMED_ACTIVITY.match(line):
+            continue
+        record = re.search(r"ActivityRecord\{\S+ u(\d+) ([\w.]+)/([\w.$]+)(?:\s|})", line)
+        if record:
+            record_user, record_package, record_activity = record.groups()
+            if record_activity.startswith("."):
+                record_activity = record_package + record_activity
+            if (record_user, record_package, record_activity) == (str(user), package, activity):
+                return True
+    return False
+
+
 class PushTracker:
     """The server's binder pushes that have been opened and not yet closed.
 
@@ -854,6 +876,22 @@ class Smoke:
             if entry.get("uid") == uid:
                 return entry.get("flags", 0)
         return 0
+
+    def wait_user_home(self, user):
+        """Finish the switch's initial HOME transition before starting a client activity."""
+        self.unlock()
+
+        def ready():
+            if self.shell("am", "get-current-user") != user:
+                return False
+            component = self.shell("cmd", "package", "resolve-activity", "--components", "--user", user,
+                                   "-a", "android.intent.action.MAIN", "-c", "android.intent.category.HOME")
+            activities = self.shell("dumpsys", "activity", "activities")
+            return user_home_resumed(activities, user, component)
+
+        # get-current-user changes before the framework starts HOME. Keep its resolved component
+        # and resumed record in commands.log; the probe's logcat is cleared after this barrier.
+        self.until(f"user {user} HOME is resumed", ready, timeout=USER_SWITCH_TIMEOUT)
 
     def launch_probe_as(self, package, user):
         """Starts the probe in another user and adopts its process for [logs]."""
@@ -1870,6 +1908,7 @@ class Smoke:
             self.shell("am", "switch-user", user)
             self.until(f"am reports user {user}", lambda: self.shell("am", "get-current-user") == user,
                        timeout=USER_SWITCH_TIMEOUT)
+            self.wait_user_home(user)
             self.clear_logcat()
             self.launch_probe_as(NATIVE, user)
             # The point of the case: a request nobody could answer is answered rather than left
