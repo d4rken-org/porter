@@ -213,7 +213,8 @@ def user_home_resumed(activities, user, component):
     if not home:
         return False
     package, activity = home.groups()
-    if package in ("com.google.android.googlesdksetup", "com.android.provision"):
+    if package in ("com.google.android.googlesdksetup", "com.android.provision",
+                   "com.google.android.setupwizard", "com.android.sdksetup", "com.google.android.sdksetup"):
         return False
     activity = package + activity if activity.startswith(".") else activity
     for line in activities.splitlines():
