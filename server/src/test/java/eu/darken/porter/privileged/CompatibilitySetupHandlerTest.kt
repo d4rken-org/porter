@@ -7,13 +7,18 @@ import android.content.pm.PermissionInfo
 import android.content.pm.Signature
 import android.content.pm.SigningInfo
 import android.content.pm.UserInfo
+import android.os.Bundle
+import android.util.Log
 import eu.darken.porter.common.CompatibilitySetup
 import eu.darken.porter.privileged.util.userInfos
+import java.io.File
 import java.security.MessageDigest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
@@ -27,13 +32,18 @@ import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowLog
 import rikka.hidden.compat.PackageManagerApis
 import rikka.hidden.compat.PermissionManagerApis
 import rikka.hidden.compat.UserManagerApis
+import rikka.shizuku.server.util.Logger
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], manifest = Config.NONE)
 class CompatibilitySetupHandlerTest {
+
+    @get:Rule
+    val temporary = TemporaryFolder()
 
     @Test
     fun inspectionIncludesOtherInstalledUsersAndFailsWhenUsersUnknown() {
@@ -113,7 +123,71 @@ class CompatibilitySetupHandlerTest {
         }
     }
 
+    @Test
+    fun previewLogsLeftOutEntriesAndTheDatabaseItRead() {
+        val database = temporary.newFile("shizuku.json")
+        database.writeText(DATABASE)
+        val (reply, logs) = preview(database)
+        assertEquals(1, LegacyAccessImport.decode(reply.getString("decisions")!!).size)
+        assertEquals(
+            listOf(
+                Log.INFO to "Import preview leaves out uid=10200 reason=PACKAGE_UNRESOLVED package=missing.client",
+                Log.INFO to "Import preview read shizuku.json: entries=2 kept=1",
+            ),
+            logs.map { it.type to it.msg },
+        )
+    }
+
+    @Test
+    fun previewReadsAndNamesTheBackupWhenPresent() {
+        val database = temporary.newFile("shizuku.json")
+        database.writeText("{\"version\":2,\"packages\":[]}")
+        File(database.path + ".bak").writeText(DATABASE)
+        val (_, logs) = preview(database)
+        assertEquals(Log.INFO to "Import preview read shizuku.json.bak: entries=2 kept=1", logs.last().let { it.type to it.msg })
+    }
+
+    /** Runs PREVIEW_IMPORT with the original Shizuku installed and Porter's companion absent. */
+    private fun preview(database: File): Pair<Bundle, List<ShadowLog.LogItem>> =
+        mockStatic(PackageManagerApis::class.java).use { packages ->
+            mockStatic(PermissionManagerApis::class.java).use { permissions ->
+                val signature = Signature(byteArrayOf(1, 2, 3))
+                val original = signed(ServerConstants.COMPAT_APPLICATION_ID, signature)
+                val legacy = PermissionInfo()
+                legacy.name = ServerConstants.LEGACY_PERMISSION
+                legacy.packageName = ServerConstants.COMPAT_APPLICATION_ID
+                legacy.protectionLevel = PermissionInfo.PROTECTION_DANGEROUS
+                original.permissions = arrayOf(legacy)
+                val installed = signed("test.client", signature)
+                installed.applicationInfo!!.uid = 10123
+                installed.requestedPermissions = arrayOf(ServerConstants.LEGACY_PERMISSION)
+                packages.`when`<PackageInfo?> { PackageManagerApis.getPackageInfo(anyString(), anyLong(), anyInt()) }.thenAnswer { invocation ->
+                    if (invocation.getArgument<Int>(2) != 0) return@thenAnswer null
+                    when (invocation.getArgument<String>(0)) {
+                        "test.client" -> installed
+                        ServerConstants.COMPAT_APPLICATION_ID -> original
+                        else -> null
+                    }
+                }
+                packages.`when`<List<String>> { PackageManagerApis.getPackagesForUidNoThrow(10123) }.thenReturn(listOf("test.client"))
+                permissions.`when`<Int> { PermissionManagerApis.checkPermission(anyString(), anyString(), anyInt()) }.thenReturn(PackageManager.PERMISSION_GRANTED)
+                val handler = CompatibilitySetupHandler(mock(ShizukuConfigManager::class.java), { _, _ -> }, {}, database)
+                ShadowLog.clear()
+                Logger.setDebugAlways(false)
+                try {
+                    val reply = handler.execute(CompatibilitySetup.PREVIEW_IMPORT, null)
+                    reply to ShadowLog.getLogsForTag("CompatibilityImport")
+                } finally {
+                    Logger.setDebugAlways(true)
+                }
+            }
+        }
+
     private companion object {
+        const val DATABASE = "{\"version\":2,\"packages\":[" +
+            "{\"uid\":10123,\"flags\":2,\"packages\":[\"test.client\"]}," +
+            "{\"uid\":10200,\"flags\":2,\"packages\":[\"missing.client\"]}]}"
+
         /** A package installed for user 0 with one signer, as the API 34 signing info carries it. */
         fun signed(packageName: String, vararg signers: Signature): PackageInfo {
             val info = PackageInfo()

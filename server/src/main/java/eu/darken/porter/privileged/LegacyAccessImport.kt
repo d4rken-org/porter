@@ -49,8 +49,30 @@ internal object LegacyAccessImport {
         var packages: List<String>? = null
     }
 
+    enum class SkipReason {
+        NULL_ENTRY,
+        UID_OUT_OF_RANGE,
+        DUPLICATE_UID,
+        PACKAGES_NOT_SINGLE,
+        UNSUPPORTED_FLAGS,
+        PORTER_DECISION_EXISTS,
+        NOT_CLIENT_PACKAGE,
+        PACKAGE_UNRESOLVED,
+        UID_CHANGED,
+        UID_NOT_EXCLUSIVE,
+        NO_API_V23_REQUEST,
+        NO_CERTIFICATE,
+        ALLOW_NOT_GRANTED,
+        DENY_GRANTED,
+    }
+
+    /** @param skipped called once per left-out entry with its uid (-1 for a null entry) and its only package, if any */
     @Throws(Exception::class)
-    fun preview(json: String, resolver: Resolver): List<Decision> {
+    fun preview(
+        json: String,
+        resolver: Resolver,
+        skipped: (uid: Int, packageName: String?, reason: SkipReason) -> Unit = { _, _, _ -> },
+    ): List<Decision> {
         val source = GSON.fromJson(json, Source::class.java)
         val packages = source?.packages
         if (source == null || source.version != 2 || packages == null || packages.size > MAX_ENTRIES)
@@ -62,15 +84,66 @@ internal object LegacyAccessImport {
             if (entry != null && !seen.add(entry.uid)) duplicates.add(entry.uid)
         }
         for (entry in packages) {
-            val entryPackages = entry?.packages
-            if (entry == null || entry.uid < 10000 || entry.uid >= 100000 || duplicates.contains(entry.uid)
-                || entryPackages == null || entryPackages.size != 1
-                || (entry.flags != ALLOW && entry.flags != DENY) || resolver.hasPorterDecision(entry.uid)) continue
-            val name = entryPackages[0]
-            if (!clientPackage(name)) continue
+            if (entry == null) {
+                skipped(-1, null, SkipReason.NULL_ENTRY)
+                continue
+            }
+            val uid = entry.uid
+            val entryPackages = entry.packages
+            val name: String? = if (entryPackages != null && entryPackages.size == 1) entryPackages[0] else null
+            if (uid < 10000 || uid >= 100000) {
+                skipped(uid, name, SkipReason.UID_OUT_OF_RANGE)
+                continue
+            }
+            if (duplicates.contains(uid)) {
+                skipped(uid, name, SkipReason.DUPLICATE_UID)
+                continue
+            }
+            if (entryPackages == null || entryPackages.size != 1) {
+                skipped(uid, name, SkipReason.PACKAGES_NOT_SINGLE)
+                continue
+            }
+            if (entry.flags != ALLOW && entry.flags != DENY) {
+                skipped(uid, name, SkipReason.UNSUPPORTED_FLAGS)
+                continue
+            }
+            if (resolver.hasPorterDecision(uid)) {
+                skipped(uid, name, SkipReason.PORTER_DECISION_EXISTS)
+                continue
+            }
+            if (name == null || !clientPackage(name)) {
+                skipped(uid, name, SkipReason.NOT_CLIENT_PACKAGE)
+                continue
+            }
             val app = resolver.resolve(name)
-            if (app == null || app.uid != entry.uid || !app.exclusiveUid || !app.legacy
-                || app.certificate == null || (entry.flags == ALLOW) != app.granted) continue
+            if (app == null) {
+                skipped(uid, name, SkipReason.PACKAGE_UNRESOLVED)
+                continue
+            }
+            if (app.uid != uid) {
+                skipped(uid, name, SkipReason.UID_CHANGED)
+                continue
+            }
+            if (!app.exclusiveUid) {
+                skipped(uid, name, SkipReason.UID_NOT_EXCLUSIVE)
+                continue
+            }
+            if (!app.legacy) {
+                skipped(uid, name, SkipReason.NO_API_V23_REQUEST)
+                continue
+            }
+            if (app.certificate == null) {
+                skipped(uid, name, SkipReason.NO_CERTIFICATE)
+                continue
+            }
+            if (entry.flags == ALLOW && !app.granted) {
+                skipped(uid, name, SkipReason.ALLOW_NOT_GRANTED)
+                continue
+            }
+            if (entry.flags == DENY && app.granted) {
+                skipped(uid, name, SkipReason.DENY_GRANTED)
+                continue
+            }
             val decision = Decision()
             decision.packageName = name
             decision.label = app.label
