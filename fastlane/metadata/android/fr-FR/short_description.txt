@@ -1,1 +1,1 @@
-Accès ADB pour vos applications, avec ou sans root. Vous choisissez lesquelles.
+Accès ADB pour tes applications, avec ou sans root. Tu choisis lesquelles.

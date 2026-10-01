@@ -12,7 +12,7 @@
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Starten via draadloze foutopsporing]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Op Android 11 of hoger kun je draadloze foutopsporing inschakelen en Porter direct vanaf je apparaat starten, zonder verbinding te maken met een computer.<p>Bekijk eerst de stapsgewijze handleiding.]]></string>
-    <string name="home_wireless_adb_description_pre_11"><![CDATA[Voor Android 11 of lager is verbinding maken met een computer vereist om draadloze foutopsporing in te schakelen.]]></string>
+    <string name="home_wireless_adb_description_pre_11"><![CDATA[Vóór Android 11 is verbinding maken met een computer vereist om draadloze foutopsporing in te schakelen.]]></string>
     <string name="home_wireless_adb_view_guide_button">Stapsgewijze handleiding</string>
     <!-- Adb -->
     <string name="dialog_adb_discovery">Zoeken naar draadloze foutopsporingsservice</string>
@@ -153,20 +153,20 @@
     <!-- Stop -->
     <string name="action_stop">Stop Porter</string>
     <!-- Notification -->
-    <string name="notification_channel_adb_pairing">Draadloos debugging-koppeling</string>
+    <string name="notification_channel_adb_pairing">Koppeling via draadloze foutopsporing</string>
     <string name="notification_adb_pairing_input_paring_code">Voer de koppelingscode in</string>
     <string name="notification_adb_pairing_searching_for_service_title">Zoeken naar koppelingsdienst</string>
     <string name="notification_adb_pairing_service_found_title">Koppelingsdienst gevonden</string>
     <string name="notification_adb_pairing_stop_searching">Stop met zoeken</string>
-    <string name="notification_adb_pairing_working_title">Pairing in uitvoering</string>
-    <string name="notification_adb_pairing_succeed_title">Succesvolle combinatie</string>
+    <string name="notification_adb_pairing_working_title">Bezig met koppelen</string>
+    <string name="notification_adb_pairing_succeed_title">Koppelen geslaagd</string>
     <string name="notification_adb_pairing_succeed_text">Je kunt nu de Porter-service starten.</string>
     <string name="notification_adb_pairing_failed_title">Koppeling mislukte</string>
     <string name="notification_adb_pairing_retry">Opnieuw</string>
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">toegang tot Porter</string>
     <string name="permission_description">Laat de app Porter gebruiken.</string>
-    <string name="permission_warning_template"><![CDATA[<b>%1$s</b> toestaan tot %2$s?]]></string>
+    <string name="permission_warning_template"><![CDATA[<b>%1$s</b> %2$s toestaan?]]></string>
     <string name="grant_dialog_button_allow_always">Altijd toestaan</string>
     <string name="grant_dialog_button_deny">"Weigeren"</string>
     <!-- Starter -->
@@ -177,7 +177,7 @@
     <string name="wadb_notification_title">Porter starten…</string>
     <string name="wadb_notification_wifi_required">Wacht op Wi-Fi-verbinding voordat ik verder ga</string>
     <string name="wadb_notification_retry">Wachten op een nieuwe poging</string>
-    <string name="wadb_error_title">Fout bij het opstarten bij het opstarten</string>
+    <string name="wadb_error_title">Fout bij het starten tijdens het opstarten</string>
     <string name="wadb_error_notify_dev">Klik om de ontwikkelaar te informeren.</string>
     <string name="wadb_pair_required_notification">Draadloze foutopsporing herkent Porter niet, waardoor Porter niet op de achtergrond kon starten. Tik om Porter opnieuw te koppelen.</string>
     <string name="wadb_permission_error_notification_title">Toestemmingsfout</string>
@@ -475,4 +475,64 @@
     <string name="porter_contact_description_error">Voeg wat details toe (minimaal 20 tekens).</string>
     <string name="porter_contact_expected_error">Beschrijf wat je had verwacht.</string>
     <string name="porter_contact_no_email">Installeer een e-mailapp of schakel er een in om dit concept te openen. Je kunt ook opgeslagen logboeken delen of contact met ons opnemen via GitHub of Discord.</string>
+    <string name="settings_general">Algemeen</string>
+    <string name="settings_general_summary">Thema en updatecontrole</string>
+    <string name="settings_general_summary_theme">Thema</string>
+    <string name="settings_startup_summary">Starten bij het opstarten, bewaker en service-updates</string>
+    <string name="settings_startup_attention">Werking op de achtergrond of meldingen hebben aandacht nodig</string>
+    <string name="settings_updates">Updates</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Doorgaan</string>
+    <string name="onboarding_welcome_title">Welkom bij Porter</string>
+    <string name="onboarding_welcome_body">Porter geeft je apps ADB-toegang, zodat ze dingen kunnen doen waarvoor je normaal een computer nodig hebt. Jij bepaalt welke apps die toegang krijgen.</string>
+    <string name="onboarding_welcome_service">Porter start één keer een kleine service, en de apps die je toestaat gebruiken die rechtstreeks op je apparaat.</string>
+    <string name="onboarding_welcome_beta">Dit is een bètabuild (testversie). Ga verder met gevoel voor humor en een reserveplan. Meld problemen die je tegenkomt.</string>
+    <string name="onboarding_shizuku_title">Shizuku is geïnstalleerd</string>
+    <string name="onboarding_shizuku_body">Porter is een onderhouden fork van Shizuku, en beide kunnen naast elkaar actief zijn. Apps die Porter ondersteunen kunnen Porter gebruiken, terwijl andere apps Shizuku blijven gebruiken.</string>
+    <string name="onboarding_shizuku_replace">Je kunt Porter ook Shizuku laten vervangen, zodat apps die alleen voor Shizuku zijn gebouwd Porter gebruiken. Jij kiest. Je kunt dit later beslissen onder Instellingen → Shizuku-compatibiliteit. De compatibiliteitshandleiding legt uit welke opties je installatie ondersteunt.</string>
+    <string name="onboarding_shizuku_guide">Compatibiliteitshandleiding</string>
+    <string name="onboarding_privacy_title">Privacy</string>
+    <string name="onboarding_privacy_body">Porter verzamelt, volgt of verkoopt je gegevens niet. Het heeft geen advertenties, geen analyses en geen account.</string>
+    <string name="onboarding_privacy_policy">Privacybeleid</string>
+    <string name="onboarding_get_started">Aan de slag</string>
+    <string name="onboarding_save_failed">Opslaan mislukt. Probeer het opnieuw.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Update beschikbaar</string>
+    <string name="updater_card_versions">Porter %1$s is beschikbaar. Je hebt %2$s.</string>
+    <string name="updater_ignore">Negeren</string>
+    <string name="updater_changelog">Wijzigingen</string>
+    <string name="updater_download">Downloaden</string>
+    <string name="updater_check">Controleren op updates</string>
+    <string name="updater_check_summary">Zoekt naar een nieuwere Porter-release op GitHub wanneer je Porter opent. Een geslaagde controle wordt een dag bewaard.</string>
+    <string name="updater_channel">Updatekanaal</string>
+    <string name="updater_channel_production">Productie</string>
+    <string name="updater_channel_beta">Bèta</string>
+    <string name="updater_channel_production_choice">Productie: alleen volledige releases</string>
+    <string name="updater_channel_beta_choice">Bèta: nieuwste release, inclusief bèta’s en voorlopige releases</string>
+    <string name="updater_dialog_title">Update downloaden</string>
+    <string name="updater_download_summary">Kies waar je de APK wilt opslaan.</string>
+    <string name="updater_install_manual">Handmatig installeren</string>
+    <string name="updater_install_manual_summary">Het installatieprogramma van Android vraagt je om bevestiging.</string>
+    <string name="updater_install_automatic">Automatisch installeren</string>
+    <string name="updater_install_automatic_summary">Gebruikt de ADB- of root-toegang van Porter. Porter sluit terwijl de update wordt geïnstalleerd.</string>
+    <string name="updater_install_automatic_requirement">Vereist dat de Porter-service actief is bij de primaire gebruiker van dit apparaat.</string>
+    <string name="updater_continue">Doorgaan</string>
+    <string name="updater_downloading">Downloaden…</string>
+    <string name="updater_installing">Installeren…</string>
+    <string name="updater_saved">%1$s opgeslagen.</string>
+    <string name="updater_download_failed">Downloaden mislukt: %1$s</string>
+    <string name="updater_download_failed_partial">Downloaden mislukt: %1$s. Het gedeeltelijk opgeslagen bestand kan achterblijven.</string>
+    <string name="updater_not_porter">Het gedownloade bestand is geen Porter-APK.</string>
+    <string name="updater_not_newer">De gedownloade APK is niet nieuwer dan de geïnstalleerde Porter.</string>
+    <string name="updater_automatic_unavailable">De Porter-service is niet meer beschikbaar bij de primaire gebruiker van dit apparaat, dus de update is niet geïnstalleerd.</string>
+    <string name="updater_install_failed">Installeren mislukt: %1$s</string>
+    <string name="updater_install_permission_denied">Sta Porter toe onbekende apps te installeren om de update handmatig te installeren.</string>
+    <string name="updater_install_permission_unavailable">Dit apparaat heeft geen scherm om app-installatie toe te staan. Sla de APK op en installeer deze met een ander installatieprogramma.</string>
+    <string name="updater_installer_unavailable">Het installatieprogramma van Android kon niet worden geopend.</string>
+    <string name="updater_save_unavailable">Er is geen app beschikbaar om te kiezen waar je de APK wilt opslaan.</string>
 </resources>

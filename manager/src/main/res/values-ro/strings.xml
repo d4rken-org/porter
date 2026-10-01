@@ -5,9 +5,9 @@
     <string name="home_status_service_not_running">%1$s nu rulează</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Începe prin a te conecta la un computer]]></string>
-    <string name="home_adb_description"><![CDATA[Pentru dispozitivele fără root, trebuie să utilizezi adb pentru a porni Porter (necesită conexiune la computer). Acest proces trebuie repetat de fiecare dată când dispozitivul este repornit. <b><a href="%1$s">Citește ajutorul</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Pentru dispozitivele fără root, trebuie să utilizezi adb pentru a porni Porter (necesită conexiune la computer). Acest proces trebuie repetat de fiecare dată când dispozitivul este repornit. <b><a href=\"%1$s\">Citește ajutorul</a></b>.]]></string>
     <string name="home_adb_button_view_command">Vizualizare comandă</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Există și alte considerații, mai întâi confirmă că ai citit ajutorul.]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=\"monospace\">%1$s</font><br><br>* Există și alte considerații, mai întâi confirmă că ai citit ajutorul.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Trimitere</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Pornește prin remedierea erorilor wireless]]></string>
@@ -64,9 +64,9 @@
         apoi activează „Remedierea erorilor prin USB” și „Remedierea erorilor wireless”.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Atinge partea stângă a opțiunii
         „Remedierea erorilor wireless”, apoi atinge „Asociază dispozitivul folosind codul de conectare”.
-        Introdu codul din notificare pentru a finaliza asocierea.</string>
+        Introdu codul în notificare pentru a finaliza asocierea.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Procesul de asociere necesită
-        să interacționarea cu o notificare de la Porter. Permite lui Porter să afișeze notificări.</string>
+        să interacționezi cu o notificare de la Porter. Permite lui Porter să afișeze notificări.</string>
     <string name="adb_pairing_tutorial_content_miui">Este posibil ca utilizatorii MIUI să fie
         nevoiți să schimbe stilul de notificare la „Android” în „Notificări” - „Panou de notificare”
         în setările sistemului.</string>
@@ -96,8 +96,8 @@
     <string name="home_automation_title">Controlează Porter cu aplicații de automatizare</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Permisiunea adb este limitată</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Este foarte posibil ca producătorul dispozitivului să limiteze permisiunea adb.<p>Este posibil să existe o soluție pentru acest sistem în <b><a href="%1$s">acest document</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* necesită Porter să rulează cu root</string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Este foarte posibil ca producătorul dispozitivului să limiteze permisiunea adb.<p>Este posibil să existe o soluție pentru acest sistem în <b><a href=\"%1$s\">acest document</a></b>.]]></string>
+    <string name="app_management_item_summary_requires_root">* necesită ca Porter să ruleze cu root</string>
     <string name="app_management_toggle_all">Comutare toate</string>
     <!-- Terminal -->
     <string name="home_terminal_title">Utilizează Porter în aplicații terminale</string>
@@ -106,7 +106,7 @@
     <string name="terminal_tutorial_miui">Utilizatorii au raportat că MIUI încalcă Storage Access
         Framework, care este utilizat de funcția de export.</string>
     <string name="terminal_tutorial_miui_2">Dacă folosești MIUI, este posibil să fie nevoie să
-        extragi fișierul din folderul de resurse din APK-ul lui Porter.</string>
+        extragi fișierul din folderul assets din APK-ul lui Porter.</string>
     <string name="terminal_tutorial_1">Exportă fișierele într-un folder nou.</string>
     <string name="terminal_tutorial_1_description">Vor fi exportate două fișiere: %1$s și %2$s. Dacă
         fișierele există deja în folderul selectat, acestea vor fi șterse.</string>
@@ -145,7 +145,7 @@
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter începe deja în fundal</string>
     <string name="toast_accessibility_tv_only">Acest serviciu este suportat doar pe dispozitive TV.</string>
-    <string name="toast_pairing_timeout">Serviciul de pereche Porter expirat.</string>
+    <string name="toast_pairing_timeout">Timpul de așteptare pentru serviciul de asociere Porter a expirat.</string>
     <!-- Stop -->
     <string name="action_stop">Oprire Porter</string>
     <!-- Notification -->
@@ -475,4 +475,66 @@
     <string name="porter_contact_description_error">Adaugă câteva detalii (cel puțin 20 de caractere).</string>
     <string name="porter_contact_expected_error">Descrie ce te așteptai.</string>
     <string name="porter_contact_no_email">Instalează sau activează o aplicație de e-mail pentru a deschide această ciornă. Poți, de asemenea, să partajezi jurnalele salvate sau să ne contactezi prin GitHub sau Discord.</string>
+    <!-- Settings - Categories -->
+    <string name="settings_general">General</string>
+    <string name="settings_general_summary">Temă și verificarea actualizărilor</string>
+    <string name="settings_general_summary_theme">Temă</string>
+    <string name="settings_startup_summary">Pornire la bootare, câine de pază și actualizări ale serviciului</string>
+    <string name="settings_startup_attention">Funcționarea în fundal sau alertele necesită atenție</string>
+    <string name="settings_updates">Actualizări</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Continuă</string>
+    <string name="onboarding_welcome_title">Bun venit la Porter</string>
+    <string name="onboarding_welcome_body">Porter oferă aplicațiilor tale acces ADB, ca să poată face lucruri care de obicei necesită un computer. Tu decizi care aplicații îl primesc.</string>
+    <string name="onboarding_welcome_service">Porter pornește o singură dată un mic serviciu, iar aplicațiile pe care le aprobi îl folosesc direct pe dispozitivul tău.</string>
+    <string name="onboarding_welcome_beta">Aceasta este o versiune beta (de testare). Continuă cu simțul umorului și un plan de rezervă. Raportează problemele pe care le întâmpini.</string>
+    <string name="onboarding_shizuku_title">Shizuku este instalat</string>
+    <string name="onboarding_shizuku_body">Porter este un fork întreținut al Shizuku, iar cele două pot rula în paralel. Aplicațiile care acceptă Porter pot folosi Porter, în timp ce celelalte continuă să folosească Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Poți și să lași Porter să înlocuiască Shizuku, astfel încât aplicațiile create doar pentru Shizuku să folosească Porter în locul lui. Tu alegi. Poți decide mai târziu din Setări → Compatibilitate Shizuku, iar ghidul de compatibilitate explică ce opțiuni acceptă instalarea ta.</string>
+    <string name="onboarding_shizuku_guide">Ghid de compatibilitate</string>
+    <string name="onboarding_privacy_title">Confidențialitate</string>
+    <string name="onboarding_privacy_body">Porter nu colectează, nu urmărește și nu vinde informațiile tale. Nu are reclame, analiză de utilizare sau cont.</string>
+    <string name="onboarding_privacy_policy">Politica de confidențialitate</string>
+    <string name="onboarding_get_started">Începe</string>
+    <string name="onboarding_save_failed">Salvarea nu a reușit. Încearcă din nou.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Actualizare disponibilă</string>
+    <string name="updater_card_versions">Porter %1$s este disponibil. Ai versiunea %2$s.</string>
+    <string name="updater_ignore">Ignoră</string>
+    <string name="updater_changelog">Jurnal de modificări</string>
+    <string name="updater_download">Descarcă</string>
+    <string name="updater_check">Verifică actualizările</string>
+    <string name="updater_check_summary">Caută o versiune mai nouă de Porter pe GitHub când deschizi Porter. O verificare reușită este păstrată timp de o zi.</string>
+    <string name="updater_channel">Canal de actualizare</string>
+    <string name="updater_channel_production">Producție</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Producție: doar versiuni finale</string>
+    <string name="updater_channel_beta_choice">Beta: cea mai nouă versiune, inclusiv versiunile beta și preliminare</string>
+    <string name="updater_dialog_title">Descarcă actualizarea</string>
+    <string name="updater_download_summary">Alege unde să salvezi APK-ul.</string>
+    <string name="updater_install_manual">Instalează manual</string>
+    <string name="updater_install_manual_summary">Programul de instalare Android îți cere confirmarea.</string>
+    <string name="updater_install_automatic">Instalează automat</string>
+    <string name="updater_install_automatic_summary">Folosește accesul ADB sau root al Porter. Porter se închide în timpul instalării actualizării.</string>
+    <string name="updater_install_automatic_requirement">Necesită ca serviciul Porter să ruleze în utilizatorul principal al acestui dispozitiv.</string>
+    <string name="updater_continue">Continuă</string>
+    <string name="updater_downloading">Se descarcă…</string>
+    <string name="updater_installing">Se instalează…</string>
+    <string name="updater_saved">S-a salvat %1$s.</string>
+    <string name="updater_download_failed">Descărcarea a eșuat: %1$s</string>
+    <string name="updater_download_failed_partial">Descărcarea a eșuat: %1$s. Fișierul salvat parțial poate rămâne.</string>
+    <string name="updater_not_porter">Fișierul descărcat nu este un APK Porter.</string>
+    <string name="updater_not_newer">APK-ul descărcat nu este mai nou decât versiunea Porter instalată.</string>
+    <string name="updater_automatic_unavailable">Serviciul Porter nu mai este disponibil în utilizatorul principal al acestui dispozitiv, așa că actualizarea nu a fost instalată.</string>
+    <string name="updater_install_failed">Instalarea a eșuat: %1$s</string>
+    <string name="updater_install_permission_denied">Permite Porter să instaleze aplicații necunoscute pentru a instala manual actualizarea.</string>
+    <string name="updater_install_permission_unavailable">Acest dispozitiv nu are un ecran pentru permiterea instalării aplicațiilor. Salvează APK-ul și instalează-l cu alt program de instalare.</string>
+    <string name="updater_installer_unavailable">Programul de instalare Android nu a putut fi deschis.</string>
+    <string name="updater_save_unavailable">Nu este disponibilă nicio aplicație pentru a alege unde să salvezi APK-ul.</string>
 </resources>

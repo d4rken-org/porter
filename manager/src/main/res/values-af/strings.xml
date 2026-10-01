@@ -22,7 +22,7 @@
         nie, anders sal Porter gestop word.</string>
     <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Probeer asseblief om
         \"Draadlose ontfouting\" te deaktiveer en te aktiveer as dit aanhou soek.</string>
-    <string name="dialog_adb_port">Hawe</string>
+    <string name="dialog_adb_port">Poort</string>
     <string name="adb_pairing">Paring</string>
     <string name="dialog_adb_pairing_title">Koppel met toestel</string>
     <string name="dialog_adb_pairing_discovery">Soek tans na paringsdiens</string>
@@ -99,7 +99,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Die toestemming van adb is beperk</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Dit is hoogs moontlik dat jou toestelvervaardiger die toestemming van adb beperk.<p>Daar mag dalk \'n oplossing vir jou stelsel wees in <b><a href=\"%1$s\">hierdie dokument</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* vereis Porter-lopies met root</string>
+    <string name="app_management_item_summary_requires_root">* vereis dat Porter met root loop</string>
     <string name="app_management_toggle_all">Wissel alles</string>
     <!-- Terminal -->
     <string name="home_terminal_title">Gebruik Porter in terminaalprogramme</string>
@@ -163,7 +163,7 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">toegang tot Porter</string>
     <string name="permission_description">Laat die program toe om Porter te gebruik.</string>
-    <string name="permission_warning_template"><![CDATA[Laat <b>%1$s</b> tot %2$s toe?]]></string>
+    <string name="permission_warning_template"><![CDATA[Laat <b>%1$s</b> toe om %2$s te kry?]]></string>
     <string name="grant_dialog_button_allow_always">Laat heeltyd toe</string>
     <string name="grant_dialog_button_deny">"Weier"</string>
     <!-- Starter -->
@@ -472,4 +472,63 @@
     <string name="porter_contact_description_error">Voeg asseblief \'n paar besonderhede by (minstens 20 karakters).</string>
     <string name="porter_contact_expected_error">Beskryf asseblief wat jy verwag het.</string>
     <string name="porter_contact_no_email">Installeer of aktiveer \'n e-posprogram om hierdie konsep oop te maak. Jy kan ook gestoorde logboeke deel of ons via GitHub of Discord kontak.</string>
+    <string name="settings_general">Algemeen</string>
+    <string name="settings_general_summary">Tema en opdateringskontrole</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Begin met opstart, waghond en diensopdaterings</string>
+    <string name="settings_startup_attention">Agtergrondwerking of waarskuwings het aandag nodig</string>
+    <string name="settings_updates">Opdaterings</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Gaan voort</string>
+    <string name="onboarding_welcome_title">Welkom by Porter</string>
+    <string name="onboarding_welcome_body">Porter gee jou programme ADB-toegang, sodat hulle dinge kan doen waarvoor jy gewoonlik \'n rekenaar nodig het. Jy besluit watter programme dit kry.</string>
+    <string name="onboarding_welcome_service">Porter begin een keer \'n klein diens, en die programme wat jy goedkeur, gebruik dit direk op jou toestel.</string>
+    <string name="onboarding_welcome_beta">Dit is \'n beta-bou (toetsweergawe). Gaan voort met \'n sin vir humor en \'n rugsteunplan. Rapporteer asseblief probleme wat jy teëkom.</string>
+    <string name="onboarding_shizuku_title">Shizuku is geïnstalleer</string>
+    <string name="onboarding_shizuku_body">Porter is \'n fork van Shizuku wat steeds onderhou word, en die twee kan langs mekaar loop. Programme wat Porter ondersteun, kan Porter gebruik, terwyl ander programme Shizuku bly gebruik.</string>
+    <string name="onboarding_shizuku_replace">Jy kan Porter ook toelaat om Shizuku te vervang, sodat programme wat net vir Shizuku gebou is, eerder Porter gebruik. Dit is jou keuse. Jy kan later onder Instellings → Shizuku-versoenbaarheid besluit, en die versoenbaarheidsgids verduidelik watter opsies jou installasie ondersteun.</string>
+    <string name="onboarding_shizuku_guide">Versoenbaarheidsgids</string>
+    <string name="onboarding_privacy_title">Privaatheid</string>
+    <string name="onboarding_privacy_body">Porter versamel nie jou inligting nie, hou dit nie dop nie en verkoop dit nie. Dit het geen advertensies, geen ontleding en geen rekening nie.</string>
+    <string name="onboarding_privacy_policy">Privaatheidsbeleid</string>
+    <string name="onboarding_get_started">Begin</string>
+    <string name="onboarding_save_failed">Kon nie stoor nie. Probeer weer.</string>
+
+    <string name="updater_card_title">Opdatering beskikbaar</string>
+    <string name="updater_card_versions">Porter %1$s is beskikbaar. Jy het %2$s.</string>
+    <string name="updater_ignore">Ignoreer</string>
+    <string name="updater_changelog">Veranderingslogboek</string>
+    <string name="updater_download">Laai af</string>
+    <string name="updater_check">Kyk vir opdaterings</string>
+    <string name="updater_check_summary">Soek na \'n nuwer Porter-vrystelling op GitHub wanneer jy Porter oopmaak. \'n Suksesvolle kontrole word vir \'n dag behou.</string>
+    <string name="updater_channel">Opdateringskanaal</string>
+    <string name="updater_channel_production">Produksie</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Produksie: slegs volledige vrystellings</string>
+    <string name="updater_channel_beta_choice">Beta: nuutste vrystelling, insluitend betas en voorlopige vrystellings</string>
+    <string name="updater_dialog_title">Laai opdatering af</string>
+    <string name="updater_download_summary">Kies waar om die APK te stoor.</string>
+    <string name="updater_install_manual">Installeer handmatig</string>
+    <string name="updater_install_manual_summary">Android se installeerder vra jou om te bevestig.</string>
+    <string name="updater_install_automatic">Installeer outomaties</string>
+    <string name="updater_install_automatic_summary">Gebruik Porter se ADB- of root-toegang. Porter sluit terwyl die opdatering geïnstalleer word.</string>
+    <string name="updater_install_automatic_requirement">Vereis dat Porter se diens op hierdie toestel se primêre gebruiker loop.</string>
+    <string name="updater_continue">Gaan voort</string>
+    <string name="updater_downloading">Laai tans af…</string>
+    <string name="updater_installing">Installeer tans…</string>
+    <string name="updater_saved">%1$s gestoor.</string>
+    <string name="updater_download_failed">Aflaai het misluk: %1$s</string>
+    <string name="updater_download_failed_partial">Aflaai het misluk: %1$s. Die gedeeltelik gestoorde lêer kan agterbly.</string>
+    <string name="updater_not_porter">Die afgelaaide lêer is nie \'n Porter-APK nie.</string>
+    <string name="updater_not_newer">Die afgelaaide APK is nie nuwer as die geïnstalleerde Porter nie.</string>
+    <string name="updater_automatic_unavailable">Porter se diens is nie meer op hierdie toestel se primêre gebruiker beskikbaar nie, dus is die opdatering nie geïnstalleer nie.</string>
+    <string name="updater_install_failed">Installering het misluk: %1$s</string>
+    <string name="updater_install_permission_denied">Laat Porter toe om onbekende programme te installeer om die opdatering handmatig te installeer.</string>
+    <string name="updater_install_permission_unavailable">Hierdie toestel het geen skerm om programinstallasie toe te laat nie. Stoor die APK en installeer dit met \'n ander installeerder.</string>
+    <string name="updater_installer_unavailable">Android se installeerder kon nie oopgemaak word nie.</string>
+    <string name="updater_save_unavailable">Geen program is beskikbaar om te kies waar die APK gestoor moet word nie.</string>
 </resources>

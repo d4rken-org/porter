@@ -437,4 +437,64 @@
     <string name="porter_contact_description_error">请补充一些细节（至少 20 个字符）。</string>
     <string name="porter_contact_expected_error">请描述您期望的结果。</string>
     <string name="porter_contact_no_email">请安装或启用电子邮件应用以打开此草稿。您也可以分享已保存的日志，或通过 GitHub 或 Discord 联系我们。</string>
+    <string name="settings_general">常规</string>
+    <string name="settings_general_summary">主题和更新检查</string>
+    <string name="settings_general_summary_theme">主题</string>
+    <string name="settings_startup_summary">开机启动、看门狗和服务更新</string>
+    <string name="settings_startup_attention">后台操作或提醒需要处理</string>
+    <string name="settings_updates">更新</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">继续</string>
+    <string name="onboarding_welcome_title">欢迎使用 Porter</string>
+    <string name="onboarding_welcome_body">Porter 为应用提供 ADB 访问权限，让它们能完成通常需要电脑才能做到的事情。由你决定哪些应用可以获得权限。</string>
+    <string name="onboarding_welcome_service">Porter 只需启动一次小型服务，你批准的应用就能直接在设备上使用它。</string>
+    <string name="onboarding_welcome_beta">这是测试版。请带着一点幽默感继续，也准备好备用方案。遇到问题请报告。</string>
+    <string name="onboarding_shizuku_title">已安装 Shizuku</string>
+    <string name="onboarding_shizuku_body">Porter 是 Shizuku 的一个持续维护的分支，两者可以同时运行。支持 Porter 的应用可以使用 Porter，其他应用则继续使用 Shizuku。</string>
+    <string name="onboarding_shizuku_replace">你也可以让 Porter 替换 Shizuku，让仅支持 Shizuku 的应用改用 Porter。由你决定。也可以稍后在“设置 → Shizuku 兼容性”中选择，兼容性指南会说明当前安装方式支持哪些选项。</string>
+    <string name="onboarding_shizuku_guide">兼容性指南</string>
+    <string name="onboarding_privacy_title">隐私</string>
+    <string name="onboarding_privacy_body">Porter 不会收集、跟踪或出售你的信息。没有广告、没有分析统计，也无需账号。</string>
+    <string name="onboarding_privacy_policy">隐私政策</string>
+    <string name="onboarding_get_started">开始使用</string>
+    <string name="onboarding_save_failed">无法保存。请重试。</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">有可用更新</string>
+    <string name="updater_card_versions">Porter %1$s 已可用。当前版本为 %2$s。</string>
+    <string name="updater_ignore">忽略</string>
+    <string name="updater_changelog">更新日志</string>
+    <string name="updater_download">下载</string>
+    <string name="updater_check">检查更新</string>
+    <string name="updater_check_summary">打开 Porter 时，在 GitHub 上检查是否有更新的 Porter 版本。成功的检查结果会保留一天。</string>
+    <string name="updater_channel">更新渠道</string>
+    <string name="updater_channel_production">正式版</string>
+    <string name="updater_channel_beta">测试版</string>
+    <string name="updater_channel_production_choice">正式版：仅正式发布的版本</string>
+    <string name="updater_channel_beta_choice">测试版：最新版本，包括测试版和预发布版</string>
+    <string name="updater_dialog_title">下载更新</string>
+    <string name="updater_download_summary">选择 APK 的保存位置。</string>
+    <string name="updater_install_manual">手动安装</string>
+    <string name="updater_install_manual_summary">Android 安装程序会要求你确认。</string>
+    <string name="updater_install_automatic">自动安装</string>
+    <string name="updater_install_automatic_summary">使用 Porter 的 ADB 或 root 权限。安装更新期间，Porter 会关闭。</string>
+    <string name="updater_install_automatic_requirement">需要 Porter 服务在此设备的主用户中运行。</string>
+    <string name="updater_continue">继续</string>
+    <string name="updater_downloading">正在下载…</string>
+    <string name="updater_installing">正在安装…</string>
+    <string name="updater_saved">已保存 %1$s。</string>
+    <string name="updater_download_failed">下载失败：%1$s</string>
+    <string name="updater_download_failed_partial">下载失败：%1$s。部分保存的文件可能仍然存在。</string>
+    <string name="updater_not_porter">下载的文件不是 Porter APK。</string>
+    <string name="updater_not_newer">下载的 APK 并不比已安装的 Porter 更新。</string>
+    <string name="updater_automatic_unavailable">Porter 服务已无法在此设备的主用户中使用，因此未安装更新。</string>
+    <string name="updater_install_failed">安装失败：%1$s</string>
+    <string name="updater_install_permission_denied">请允许 Porter 安装未知应用，以便手动安装更新。</string>
+    <string name="updater_install_permission_unavailable">此设备没有允许安装应用的界面。请保存 APK，并使用其他安装程序安装。</string>
+    <string name="updater_installer_unavailable">无法打开 Android 安装程序。</string>
+    <string name="updater_save_unavailable">没有可用于选择 APK 保存位置的应用。</string>
 </resources>

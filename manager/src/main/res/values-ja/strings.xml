@@ -437,4 +437,67 @@
     <string name="porter_contact_description_error">詳細を入力してください（20文字以上）。</string>
     <string name="porter_contact_expected_error">期待していた動作を記入してください。</string>
     <string name="porter_contact_no_email">この下書きを開くには、メールアプリをインストールまたは有効にしてください。保存したログを共有するか、GitHubまたはDiscordからお問い合わせいただくこともできます。</string>
+    <!-- Settings - General and Startup -->
+    <string name="settings_general">一般</string>
+    <string name="settings_general_summary">テーマと更新の確認</string>
+    <string name="settings_general_summary_theme">テーマ</string>
+    <string name="settings_startup_summary">起動時に開始、ウォッチドッグ、サービスの更新</string>
+    <string name="settings_startup_attention">バックグラウンド処理またはアラートへの対応が必要です</string>
+    <string name="settings_updates">更新</string>
+
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">続行</string>
+    <string name="onboarding_welcome_title">Porterへようこそ</string>
+    <string name="onboarding_welcome_body">PorterはアプリにADBアクセスを提供し、通常はコンピュータが必要な操作をアプリから行えるようにします。どのアプリに許可するかはあなたが決めます。</string>
+    <string name="onboarding_welcome_service">Porterは小さなサービスを一度起動し、あなたが許可したアプリはデバイス上で直接そのサービスを利用します。</string>
+    <string name="onboarding_welcome_beta">これはベータ版（テスト用）のビルドです。ユーモアを忘れず、万一の備えも用意して進めてください。問題が見つかったら報告してください。</string>
+    <string name="onboarding_shizuku_title">Shizukuがインストールされています</string>
+    <string name="onboarding_shizuku_body">PorterはメンテナンスされているShizukuのフォークで、両方を同時に実行できます。Porterに対応しているアプリはPorterを使い、ほかのアプリは引き続きShizukuを使えます。</string>
+    <string name="onboarding_shizuku_replace">PorterでShizukuを置き換え、Shizukuのみに対応しているアプリが代わりにPorterを使うようにすることもできます。選ぶのはあなたです。後から「設定 → Shizuku互換」で決めることもできます。お使いのインストールで利用できる方法は、互換ガイドで説明しています。</string>
+    <string name="onboarding_shizuku_guide">互換ガイド</string>
+    <string name="onboarding_privacy_title">プライバシー</string>
+    <string name="onboarding_privacy_body">Porterはあなたの情報を収集、追跡、販売しません。広告もアクセス解析もなく、アカウントも不要です。</string>
+    <string name="onboarding_privacy_policy">プライバシーポリシー</string>
+    <string name="onboarding_get_started">はじめる</string>
+    <string name="onboarding_save_failed">保存できませんでした。もう一度お試しください。</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">アップデートがあります</string>
+    <string name="updater_card_versions">Porter %1$s が利用できます。現在のバージョンは %2$s です。</string>
+    <string name="updater_ignore">無視</string>
+    <string name="updater_changelog">変更履歴</string>
+    <string name="updater_download">ダウンロード</string>
+    <string name="updater_check">更新を確認</string>
+    <string name="updater_check_summary">Porterを開くと、GitHubでPorterの新しいリリースを確認します。確認に成功すると、その結果を1日間保持します。</string>
+    <string name="updater_channel">更新チャンネル</string>
+    <string name="updater_channel_production">正式版</string>
+    <string name="updater_channel_beta">ベータ版</string>
+    <string name="updater_channel_production_choice">正式版: 正式リリースのみ</string>
+    <string name="updater_channel_beta_choice">ベータ版: ベータ版やプレリリースを含む最新のリリース</string>
+    <string name="updater_dialog_title">アップデートをダウンロード</string>
+    <string name="updater_download_summary">APKの保存先を選択してください。</string>
+    <string name="updater_install_manual">手動でインストール</string>
+    <string name="updater_install_manual_summary">Androidのインストーラーで確認を求められます。</string>
+    <string name="updater_install_automatic">自動でインストール</string>
+    <string name="updater_install_automatic_summary">PorterのADBまたはrootアクセスを使用します。アップデートのインストール中はPorterが閉じます。</string>
+    <string name="updater_install_automatic_requirement">このデバイスのメインユーザーでPorterのサービスが実行中である必要があります。</string>
+    <string name="updater_continue">続行</string>
+    <string name="updater_downloading">ダウンロード中…</string>
+    <string name="updater_installing">インストール中…</string>
+    <string name="updater_saved">%1$s を保存しました。</string>
+    <string name="updater_download_failed">ダウンロードに失敗しました: %1$s</string>
+    <string name="updater_download_failed_partial">ダウンロードに失敗しました: %1$s。一部だけ保存されたファイルが残っている場合があります。</string>
+    <string name="updater_not_porter">ダウンロードしたファイルはPorterのAPKではありません。</string>
+    <string name="updater_not_newer">ダウンロードしたAPKは、インストール済みのPorterより新しいバージョンではありません。</string>
+    <string name="updater_automatic_unavailable">このデバイスのメインユーザーでPorterのサービスを利用できなくなったため、アップデートはインストールされませんでした。</string>
+    <string name="updater_install_failed">インストールに失敗しました: %1$s</string>
+    <string name="updater_install_permission_denied">アップデートを手動でインストールするには、Porterによる不明なアプリのインストールを許可してください。</string>
+    <string name="updater_install_permission_unavailable">このデバイスには、アプリのインストールを許可する画面がありません。APKを保存し、別のインストーラーでインストールしてください。</string>
+    <string name="updater_installer_unavailable">Androidのインストーラーを開けませんでした。</string>
+    <string name="updater_save_unavailable">APKの保存先を選択できるアプリがありません。</string>
 </resources>

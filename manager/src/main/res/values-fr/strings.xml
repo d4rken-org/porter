@@ -446,4 +446,65 @@
     <string name="porter_contact_description_error">Veuillez ajouter quelques détails (au moins 20 caractères).</string>
     <string name="porter_contact_expected_error">Veuillez décrire ce à quoi vous vous attendiez.</string>
     <string name="porter_contact_no_email">Installez ou activez une application de messagerie pour ouvrir ce brouillon. Vous pouvez aussi partager les journaux enregistrés ou nous contacter via GitHub ou Discord.</string>
+    <string name="settings_general">Général</string>
+    <string name="settings_general_summary">Thème et recherche de mises à jour</string>
+    <string name="settings_general_summary_theme">Thème</string>
+    <string name="settings_startup_summary">Lancement au démarrage, chien de garde et mises à jour du service</string>
+    <string name="settings_startup_attention">Le fonctionnement en arrière-plan ou les alertes nécessitent ton attention</string>
+    <string name="settings_updates">Mises à jour</string>
+
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Continuer</string>
+    <string name="onboarding_welcome_title">Bienvenue dans Porter</string>
+    <string name="onboarding_welcome_body">Porter donne à tes applications un accès ADB, pour qu’elles puissent faire ce qui nécessite normalement un ordinateur. Tu décides quelles applications y ont droit.</string>
+    <string name="onboarding_welcome_service">Porter démarre une fois un petit service, et les applications que tu autorises l’utilisent directement sur ton appareil.</string>
+    <string name="onboarding_welcome_beta">C’est une version bêta (de test). Garde ton sens de l’humour et prévois un plan de secours. Signale les problèmes que tu rencontres.</string>
+    <string name="onboarding_shizuku_title">Shizuku est installé</string>
+    <string name="onboarding_shizuku_body">Porter est un fork maintenu de Shizuku, et les deux peuvent fonctionner côte à côte. Les applications qui prennent en charge Porter peuvent l’utiliser, tandis que les autres continuent d’utiliser Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Tu peux aussi laisser Porter remplacer Shizuku, pour que les applications conçues uniquement pour Shizuku utilisent Porter à la place. À toi de choisir. Tu peux décider plus tard dans Paramètres → Compatibilité Shizuku. Le guide de compatibilité explique les options prises en charge par ton installation.</string>
+    <string name="onboarding_shizuku_guide">Guide de compatibilité</string>
+    <string name="onboarding_privacy_title">Confidentialité</string>
+    <string name="onboarding_privacy_body">Porter ne collecte, ne suit ni ne vend tes informations. Il n’a ni publicité, ni analyse d’utilisation, ni compte.</string>
+    <string name="onboarding_privacy_policy">Politique de confidentialité</string>
+    <string name="onboarding_get_started">Commencer</string>
+    <string name="onboarding_save_failed">Impossible d’enregistrer. Réessaie.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Mise à jour disponible</string>
+    <string name="updater_card_versions">Porter %1$s est disponible. Tu utilises la version %2$s.</string>
+    <string name="updater_ignore">Ignorer</string>
+    <string name="updater_changelog">Notes de version</string>
+    <string name="updater_download">Télécharger</string>
+    <string name="updater_check">Rechercher des mises à jour</string>
+    <string name="updater_check_summary">Recherche une version plus récente de Porter sur GitHub à l’ouverture de Porter. Une vérification réussie est conservée pendant une journée.</string>
+    <string name="updater_channel">Canal de mise à jour</string>
+    <string name="updater_channel_production">Production</string>
+    <string name="updater_channel_beta">Bêta</string>
+    <string name="updater_channel_production_choice">Production : versions finales uniquement</string>
+    <string name="updater_channel_beta_choice">Bêta : version la plus récente, y compris les bêtas et les préversions</string>
+    <string name="updater_dialog_title">Télécharger la mise à jour</string>
+    <string name="updater_download_summary">Choisis où enregistrer l’APK.</string>
+    <string name="updater_install_manual">Installer manuellement</string>
+    <string name="updater_install_manual_summary">Le programme d’installation d’Android te demande de confirmer.</string>
+    <string name="updater_install_automatic">Installer automatiquement</string>
+    <string name="updater_install_automatic_summary">Utilise l’accès ADB ou root de Porter. Porter se ferme pendant l’installation de la mise à jour.</string>
+    <string name="updater_install_automatic_requirement">Nécessite que le service de Porter fonctionne sur l’utilisateur principal de cet appareil.</string>
+    <string name="updater_continue">Continuer</string>
+    <string name="updater_downloading">Téléchargement…</string>
+    <string name="updater_installing">Installation…</string>
+    <string name="updater_saved">%1$s enregistré.</string>
+    <string name="updater_download_failed">Échec du téléchargement : %1$s</string>
+    <string name="updater_download_failed_partial">Échec du téléchargement : %1$s. Le fichier partiellement enregistré peut subsister.</string>
+    <string name="updater_not_porter">Le fichier téléchargé n’est pas un APK de Porter.</string>
+    <string name="updater_not_newer">L’APK téléchargé n’est pas plus récent que la version installée de Porter.</string>
+    <string name="updater_automatic_unavailable">Le service de Porter n’est plus disponible sur l’utilisateur principal de cet appareil. La mise à jour n’a donc pas été installée.</string>
+    <string name="updater_install_failed">Échec de l’installation : %1$s</string>
+    <string name="updater_install_permission_denied">Autorise Porter à installer des applications inconnues pour installer la mise à jour manuellement.</string>
+    <string name="updater_install_permission_unavailable">Cet appareil ne dispose d’aucun écran permettant d’autoriser l’installation d’applications. Enregistre l’APK et installe-le avec un autre programme d’installation.</string>
+    <string name="updater_installer_unavailable">Impossible d’ouvrir le programme d’installation d’Android.</string>
+    <string name="updater_save_unavailable">Aucune application ne permet de choisir où enregistrer l’APK.</string>
 </resources>

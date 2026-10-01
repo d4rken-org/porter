@@ -1,0 +1,1 @@
+Ghi chú phát hành cho từng phiên bản được đăng tại https://porter.darken.eu/ và trên trang phát hành của dự án.
