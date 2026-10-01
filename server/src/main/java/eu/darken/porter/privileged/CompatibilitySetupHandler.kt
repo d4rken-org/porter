@@ -18,11 +18,13 @@ import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.Locale
 import rikka.hidden.compat.PackageManagerApis
+import rikka.shizuku.server.util.Logger
 
 internal class CompatibilitySetupHandler(
     private val config: ShizukuConfigManager,
     private val writer: Writer,
     private val refresh: Runnable,
+    private val database: File = File("/data/user_de/0/com.android.shell/shizuku.json"),
 ) {
     fun interface Writer {
         @Throws(Exception::class)
@@ -58,11 +60,17 @@ internal class CompatibilitySetupHandler(
                     definesLegacy = true
             }
             if (!definesLegacy) throw IllegalStateException("Installed app does not own the Shizuku permission")
-            val source = File("/data/user_de/0/com.android.shell/shizuku.json")
-            val backup = File(source.path + ".bak")
-            FileInputStream(if (backup.exists()) backup else source).use { input ->
-                reply.putString("decisions", LegacyAccessImport.encode(LegacyAccessImport.preview(readBounded(input), resolver)))
+            val backup = File(database.path + ".bak")
+            val selected = if (backup.exists()) backup else database
+            val leftOut = ArrayList<String>()
+            val decisions = FileInputStream(selected).use { input ->
+                LegacyAccessImport.preview(readBounded(input), resolver) { uid, packageName, reason ->
+                    leftOut.add(String.format(Locale.ENGLISH, "Import preview leaves out uid=%d reason=%s package=%s", uid, reason, packageName ?: "none"))
+                }
             }
+            for (line in leftOut) LOGGER.i(line)
+            LOGGER.i("Import preview read %s: entries=%d kept=%d", selected.name, leftOut.size + decisions.size, decisions.size)
+            reply.putString("decisions", LegacyAccessImport.encode(decisions))
         } else if (operation == CompatibilitySetup.APPLY_IMPORT) {
             if (!Compatibility.isAvailable()) throw IllegalStateException("Compatibility support is not verified")
             if (json == null || json.toByteArray(StandardCharsets.UTF_8).size > CompatibilitySetup.MAX_SNAPSHOT_BYTES)
@@ -109,6 +117,8 @@ internal class CompatibilitySetupHandler(
     }
 
     private companion object {
+        private val LOGGER = Logger("CompatibilityImport")
+
         private val PACKAGE_FLAGS = PackageManager.GET_PERMISSIONS or
             (if (Build.VERSION.SDK_INT >= 28) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES)
 
