@@ -394,9 +394,6 @@
     <string name="compat_dismiss_result">Փակել</string>
     <string name="compat_import_complete">Ներմուծումն ավարտվեց</string>
     <string name="compat_replace_action">Փոխարինել</string>
-    <string name="compat_import_applied">Ներմուծված՝ %1$d</string>
-    <string name="compat_import_skipped">Բաց թողնված՝ %1$d</string>
-    <string name="compat_import_skipped_explanation">Ընտրությունները բաց են թողնվում, երբ Porter-ն արդեն ունի ընտրություն կամ հավելվածը փոխվել է։</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Տեղադրված է</string>
     <string name="compat_summary_missing">Տեղադրված չէ</string>

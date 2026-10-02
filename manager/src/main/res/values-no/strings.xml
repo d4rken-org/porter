@@ -392,9 +392,6 @@
     <string name="compat_dismiss_result">Lukk</string>
     <string name="compat_import_complete">Importen er fullført</string>
     <string name="compat_replace_action">Erstatt</string>
-    <string name="compat_import_applied">Importert: %1$d</string>
-    <string name="compat_import_skipped">Hoppet over: %1$d</string>
-    <string name="compat_import_skipped_explanation">Valg hoppes over når Porter allerede har et valg, eller når appen er endret.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Installert</string>
     <string name="compat_summary_missing">Ikke installert</string>

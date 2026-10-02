@@ -400,9 +400,6 @@
     <string name="compat_dismiss_result">Kapat</string>
     <string name="compat_import_complete">İçe aktarma tamamlandı</string>
     <string name="compat_replace_action">Değiştir</string>
-    <string name="compat_import_applied">İçe aktarılan: %1$d</string>
-    <string name="compat_import_skipped">Atlanan: %1$d</string>
-    <string name="compat_import_skipped_explanation">Porter’da zaten bir tercih varsa veya uygulama değiştiyse tercihler atlanır.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Yüklü</string>
     <string name="compat_summary_missing">Yüklü değil</string>

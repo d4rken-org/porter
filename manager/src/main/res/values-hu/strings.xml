@@ -406,9 +406,6 @@
     <string name="compat_dismiss_result">Elvetés</string>
     <string name="compat_import_complete">Importálás kész</string>
     <string name="compat_replace_action">Csere</string>
-    <string name="compat_import_applied">Importálva: %1$d</string>
-    <string name="compat_import_skipped">Kihagyva: %1$d</string>
-    <string name="compat_import_skipped_explanation">Egy döntés kimarad, ha a Porterben már van döntés az alkalmazáshoz, vagy ha az alkalmazás megváltozott.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Telepítve</string>
     <string name="compat_summary_missing">Nincs telepítve</string>

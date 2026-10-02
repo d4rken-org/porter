@@ -350,9 +350,6 @@
     <string name="compat_dismiss_result">Zavřít</string>
     <string name="compat_import_complete">Import dokončen</string>
     <string name="compat_replace_action">Nahradit</string>
-    <string name="compat_import_applied">Importováno: %1$d</string>
-    <string name="compat_import_skipped">Přeskočeno: %1$d</string>
-    <string name="compat_import_skipped_explanation">Volby se přeskakují, pokud už Porter volbu má nebo se aplikace změnila.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Nainstalována</string>
     <string name="compat_summary_missing">Nenainstalována</string>

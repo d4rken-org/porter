@@ -402,9 +402,6 @@
     <string name="compat_dismiss_result">Sluiten</string>
     <string name="compat_import_complete">Import voltooid</string>
     <string name="compat_replace_action">Vervangen</string>
-    <string name="compat_import_applied">Geïmporteerd: %1$d</string>
-    <string name="compat_import_skipped">Overgeslagen: %1$d</string>
-    <string name="compat_import_skipped_explanation">Keuzes worden overgeslagen als Porter al een keuze heeft of de app is gewijzigd.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Geïnstalleerd</string>
     <string name="compat_summary_missing">Niet geïnstalleerd</string>

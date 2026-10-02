@@ -357,9 +357,6 @@
     <string name="compat_dismiss_result">關閉</string>
     <string name="compat_import_complete">匯入完成</string>
     <string name="compat_replace_action">取代</string>
-    <string name="compat_import_applied">已匯入：%1$d</string>
-    <string name="compat_import_skipped">已略過：%1$d</string>
-    <string name="compat_import_skipped_explanation">若 Porter 中已有選擇或應用程式已變更，則會略過該選擇。</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">已安裝</string>
     <string name="compat_summary_missing">未安裝</string>

@@ -365,9 +365,6 @@
     <string name="compat_dismiss_result">閉じる</string>
     <string name="compat_import_complete">インポート完了</string>
     <string name="compat_replace_action">置き換える</string>
-    <string name="compat_import_applied">インポート済み: %1$d</string>
-    <string name="compat_import_skipped">スキップ: %1$d</string>
-    <string name="compat_import_skipped_explanation">Porterに既に設定がある場合や、アプリが変更されている場合はスキップされます。</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">インストール済み</string>
     <string name="compat_summary_missing">未インストール</string>

@@ -396,9 +396,6 @@
     <string name="compat_dismiss_result">Stäng</string>
     <string name="compat_import_complete">Importen är klar</string>
     <string name="compat_replace_action">Ersätt</string>
-    <string name="compat_import_applied">Importerade: %1$d</string>
-    <string name="compat_import_skipped">Överhoppade: %1$d</string>
-    <string name="compat_import_skipped_explanation">Val hoppas över när Porter redan har ett val eller när appen har ändrats.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Installerad</string>
     <string name="compat_summary_missing">Inte installerad</string>
