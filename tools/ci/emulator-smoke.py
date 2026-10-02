@@ -213,8 +213,7 @@ def user_home_resumed(activities, user, component):
     if not home:
         return False
     package, activity = home.groups()
-    if package in ("com.google.android.googlesdksetup", "com.android.provision",
-                   "com.google.android.setupwizard", "com.android.sdksetup", "com.google.android.sdksetup"):
+    if package in ("com.google.android.googlesdksetup", "com.android.provision"):
         return False
     activity = package + activity if activity.startswith(".") else activity
     for line in activities.splitlines():
@@ -1909,7 +1908,10 @@ class Smoke:
             self.shell("am", "switch-user", user)
             self.until(f"am reports user {user}", lambda: self.shell("am", "get-current-user") == user,
                        timeout=USER_SWITCH_TIMEOUT)
-            self.wait_user_home(user)
+            # Only the Android 16 and 17 images were seen to resume the new user's HOME. 7 leaves
+            # its launcher asleep and 11 never starts it, so the wait would only time out there.
+            if int(self.shell("getprop", "ro.build.version.sdk")) >= 36:
+                self.wait_user_home(user)
             self.clear_logcat()
             self.launch_probe_as(NATIVE, user)
             # The point of the case: a request nobody could answer is answered rather than left

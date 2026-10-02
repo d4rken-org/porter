@@ -1840,22 +1840,6 @@ class UserHomeResumedTest(unittest.TestCase):
                 self.assertFalse(smoke.user_home_resumed(
                     "topResumedActivity=" + self.record(component), "11", component))
 
-    def test_observed_android24_and_30_setup_home_records_are_not_ready(self):
-        # Run 36888624031: API24 commands.log:101529 and API30 commands.log:423041.
-        for component, activities in (
-                ("com.google.android.setupwizard/.SetupWizardActivity",
-                 "    mResumedActivity: ActivityRecord{11118b7 u11 com.google.android.setupwizard/.SetupWizardActivity t1100000}"),
-                ("com.google.android.sdksetup/.DefaultActivity",
-                 "  ResumedActivity: ActivityRecord{e3fc45e u11 com.google.android.sdksetup/.DefaultActivity t1100001}")):
-            with self.subTest(component=component):
-                self.assertFalse(smoke.user_home_resumed(activities, "11", component))
-
-    def test_android24_intermediate_sdk_setup_is_not_ready(self):
-        # Synthetic resumed record: the artifact captures this intermediate's HOME START only.
-        component = "com.android.sdksetup/.DefaultActivity"
-        self.assertFalse(smoke.user_home_resumed(
-            "mResumedActivity: " + self.record(component), "11", component))
-
     def test_barrier_retains_resolver_and_resumed_evidence_in_commands_log(self):
         with tempfile.TemporaryDirectory() as directory:
             runner = smoke.Smoke(argparse.Namespace(serial="emulator-5554", output=Path(directory)))
@@ -1890,6 +1874,7 @@ class SecondaryUserPromptTest(unittest.TestCase):
             self.restores[name] = restore
         self.runner.case = case
         self.runner.reconciliation()
+        self.sdk = "36"
         self.current = "0"
         # get-current-user already says 11 throughout these incomplete transitions.
         self.states = [(self.HOME, "0", self.HOME),
@@ -1925,6 +1910,8 @@ class SecondaryUserPromptTest(unittest.TestCase):
         self.addCleanup(clock.stop)
 
     def shell(self, *args):
+        if args == ("getprop", "ro.build.version.sdk"):
+            return self.sdk
         if args == ("am", "start-user", "11"):
             return "Success"
         if args[:2] == ("am", "switch-user"):
@@ -1972,35 +1959,16 @@ class SecondaryUserPromptTest(unittest.TestCase):
         self.assertLess(calls.index(call.shell("am", "stop-user", "-w", "11")),
                         calls.index(call.launch_probe(smoke.NATIVE)))
 
-    def test_android24_waits_through_both_setup_activities_before_single_launch(self):
-        wizard = "com.google.android.setupwizard/.SetupWizardActivity"
-        sdk = "com.android.sdksetup/.DefaultActivity"
-        home = "com.android.launcher3/.Launcher"
-        # Synthetic transitions; only the wizard's resumed record was captured in the artifact.
-        self.states = [(wizard, "11", wizard), (sdk, "11", sdk),
-                       (home, "11", sdk), (home, "11", home)]
-        self.run_case()
-        self.assertEqual(self.reads, 4)
-        clear = self.order.mock_calls.index(call.clear_logcat())
-        self.assertEqual(self.order.mock_calls[clear - 1:clear + 3], [
-            call.shell("dumpsys", "activity", "activities"), call.clear_logcat(),
-            call.launch_probe_as(smoke.NATIVE, "11"), call.expect_log(smoke.NATIVE, "DENIED")])
-        self.runner.clear_logcat.assert_called_once_with()
-        self.runner.launch_probe_as.assert_called_once_with(smoke.NATIVE, "11")
-
-    def test_android30_waits_for_final_home_not_transient_sdk_setup(self):
-        sdk = "com.google.android.sdksetup/.DefaultActivity"
-        # Synthetic convergence sequence; this user's final HOME was not captured in the artifact.
-        self.states = [(sdk, "11", sdk), (self.HOME, "11", sdk),
-                       (self.HOME, "11", None), (self.HOME, "11", self.HOME)]
-        self.run_case()
-        self.assertEqual(self.reads, 4)
-        clear = self.order.mock_calls.index(call.clear_logcat())
-        self.assertEqual(self.order.mock_calls[clear - 1:clear + 3], [
-            call.shell("dumpsys", "activity", "activities"), call.clear_logcat(),
-            call.launch_probe_as(smoke.NATIVE, "11"), call.expect_log(smoke.NATIVE, "DENIED")])
-        self.runner.clear_logcat.assert_called_once_with()
-        self.runner.launch_probe_as.assert_called_once_with(smoke.NATIVE, "11")
+    def test_android30_launches_without_waiting_for_home(self):
+        self.sdk = "30"
+        self.assertEqual(self.run_case(), {"user": "11", "uid": self.UID})
+        self.assertEqual(self.reads, 0)
+        calls = self.order.mock_calls
+        clear = calls.index(call.clear_logcat())
+        self.assertEqual(calls[clear - 2:clear + 3], [
+            call.shell("am", "get-current-user"), call.shell("getprop", "ro.build.version.sdk"),
+            call.clear_logcat(), call.launch_probe_as(smoke.NATIVE, "11"),
+            call.expect_log(smoke.NATIVE, "DENIED")])
 
     def test_missing_home_fails_before_clearing_evidence_or_launching(self):
         self.states = [(self.SETUP, "11", self.SETUP)]
