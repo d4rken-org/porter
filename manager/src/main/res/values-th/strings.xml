@@ -5,9 +5,9 @@
     <string name="home_status_service_not_running">%1$s ไม่ได้กำลังทำงาน</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[เริ่มโดยเชื่อมต่อกับคอมพิวเตอร์]]></string>
-    <string name="home_adb_description"><![CDATA[สำหรับอุปกรณ์ที่ไม่ได้ติดตั้งรูท จะต้องใช้ adb เพื่อเริ่ม Porter (จำเป็นต้องเชื่อมต่อกับคอมพิวเตอร์) กระบวนการนี้จะต้องทำทุกครั้งที่อุปกรณ์ปิดและเปิดใหม่ กรุณา<b><a href="%1$s">อ่านการช่วยเหลือ</a></b>]]></string>
+    <string name="home_adb_description"><![CDATA[สำหรับอุปกรณ์ที่ไม่ได้ติดตั้งรูท จะต้องใช้ adb เพื่อเริ่ม Porter (จำเป็นต้องเชื่อมต่อกับคอมพิวเตอร์) กระบวนการนี้จะต้องทำทุกครั้งที่อุปกรณ์ปิดและเปิดใหม่ กรุณา<b><a href=\"%1$s\">อ่านการช่วยเหลือ</a></b>]]></string>
     <string name="home_adb_button_view_command">ดูคำสั่ง</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* มีข้อควรพิจารณาอื่น ๆ โปรดอ่านความช่วยเหลือให้เข้าใจก่อน]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=\"monospace\">%1$s</font><br><br>* มีข้อควรพิจารณาอื่น ๆ โปรดอ่านความช่วยเหลือให้เข้าใจก่อน]]></string>
     <string name="home_adb_dialog_view_command_button_send">ส่ง</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[เริ่มผ่านการแก้ไขข้อบกพร่องผ่าน Wi-Fi]]></string>
@@ -70,7 +70,7 @@
         Porter โปรดอนุญาตให้ Porter ส่งการแจ้งเตือน</string>
     <string name="adb_pairing_tutorial_content_miui">ผู้ใช้ MIUI
         อาจจำเป็นต้องเปลี่ยนสไตล์การแจ้งเตือนเป็น \"Android\" ใน \"การแจ้งเตือน\"
-        -\"เฉดการแจ้งเตือน\" ในการตั้งค่าของระบบ</string>
+        -\"แผงการแจ้งเตือน\" ในการตั้งค่าของระบบ</string>
     <string name="adb_pairing_tutorial_content_miui_2">มิฉะนั้น
         คุณอาจไม่สามารถป้อนรหัสการจับคู่จากการแจ้งเตือนได้</string>
     <string name="adb_pairing_tutorial_content_finish">กลับไปที่ Porter และเริ่ม Porter</string>
@@ -93,7 +93,7 @@
     <string name="home_automation_title">ควบคุม Porter ด้วยแอปอัตโนมัติ</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">การอนุญาตของ adb นั้นจำกัด</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[เป็นไปได้สูงที่ผู้ผลิตอุปกรณ์ของคุณจะจำกัดการอนุญาตของ adb <p>อาจมีวิธีแก้ไขสำหรับอุปกรณ์ของคุณใน<b><a href="%1$s">เอกสารนี้</a></b>]]></string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[เป็นไปได้สูงที่ผู้ผลิตอุปกรณ์ของคุณจะจำกัดการอนุญาตของ adb <p>อาจมีวิธีแก้ไขสำหรับอุปกรณ์ของคุณใน<b><a href=\"%1$s\">เอกสารนี้</a></b>]]></string>
     <string name="app_management_item_summary_requires_root">* จำเป็นต้องให้ Porter ทำงานผ่านรูท</string>
     <string name="app_management_toggle_all">สลับทั้งหมด</string>
     <!-- Terminal -->
@@ -101,7 +101,7 @@
     <string name="home_terminal_description">รันคำสั่งเชลล์ในแอปเทอร์มินัลผ่าน Porter</string>
     <string name="terminal_tutorial_miui">ผู้ใช้รายงานว่า MIUI ทำลาย Storage Access Framework
         ซึ่งใช้โดยฟังก์ชันการส่งออก</string>
-    <string name="terminal_tutorial_miui_2">หากคุณใช้ MIUI คุณอาจต้องแตกไฟล์จากโฟลเดอร์สินทรัพย์ใน
+    <string name="terminal_tutorial_miui_2">หากคุณใช้ MIUI คุณอาจต้องแตกไฟล์จากโฟลเดอร์ assets ใน
         APK ของ Porter</string>
     <string name="terminal_tutorial_1">ส่งออกไฟล์ไปยังโฟลเดอร์ใหม่</string>
     <string name="terminal_tutorial_1_description">ไฟล์สองไฟล์จะถูกส่งออก: %1$s และ
@@ -168,7 +168,7 @@
     <string name="wadb_notification_title">กำลังเริ่ม Porter…</string>
     <string name="wadb_notification_wifi_required">รอการเชื่อมต่อ Wi-Fi ก่อนดำเนินการต่อ</string>
     <string name="wadb_notification_retry">กำลังรอเพื่อลองใหม่อีกครั้ง</string>
-    <string name="wadb_error_title">เกิดข้อผิดพลาดขณะเริ่มต้นระบบ</string>
+    <string name="wadb_error_title">เกิดข้อผิดพลาดขณะเริ่มทำงานเมื่อบูตเครื่อง</string>
     <string name="wadb_error_notify_dev">แตะเพื่อแจ้งให้ผู้พัฒนาทราบ</string>
     <string name="wadb_pair_required_notification">การแก้ไขข้อบกพร่องผ่าน Wi-Fi ไม่รู้จัก Porter จึงเริ่ม Porter ในเบื้องหลังไม่ได้ แตะเพื่อจับคู่ Porter อีกครั้ง</string>
     <string name="wadb_permission_error_notification_title">ข้อผิดพลาดในการอนุญาต</string>
@@ -177,8 +177,8 @@
     <string name="watchdog_running">วอทช์ด็อกกำลังทำงาน</string>
     <string name="watchdog_turn_off">ปิด</string>
     <string name="watchdog_shizuku_crashed_title">Porter ขัดข้องเมื่อเร็วๆ นี้</string>
-    <string name="watchdog_shizuku_crashed_text">Watchdog ได้รีสตาร์ทบริการแล้ว
-        แตะเพื่อดูวิธีแก้ไขที่อาจเกิดขึ้นเพื่อป้องกันปัญหาขัดข้องในอนาคต</string>
+    <string name="watchdog_shizuku_crashed_text">วอทช์ด็อกได้รีสตาร์ทบริการแล้ว
+        แตะเพื่อดูแนวทางแก้ไขที่อาจช่วยป้องกันปัญหาขัดข้องในอนาคต</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">ปิดการแจ้งเตือน</string>
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">ไม่สามารถเปิดบราวเซอร์</string>
@@ -458,4 +458,63 @@
     <string name="porter_contact_description_error">โปรดเพิ่มรายละเอียด (อย่างน้อย 20 อักขระ)</string>
     <string name="porter_contact_expected_error">โปรดอธิบายสิ่งที่คุณคาดไว้</string>
     <string name="porter_contact_no_email">ติดตั้งหรือเปิดใช้แอปอีเมลเพื่อเปิดร่างนี้ คุณยังแชร์ล็อกที่บันทึกไว้หรือติดต่อเราผ่าน GitHub หรือ Discord ได้</string>
+    <string name="settings_general">ทั่วไป</string>
+    <string name="settings_general_summary">ธีมและการตรวจสอบอัปเดต</string>
+    <string name="settings_general_summary_theme">ธีม</string>
+    <string name="settings_startup_summary">เริ่มเมื่อบูตเครื่อง วอทช์ด็อก และการอัปเดตบริการ</string>
+    <string name="settings_startup_attention">การทำงานหรือการแจ้งเตือนในเบื้องหลังต้องได้รับการดูแล</string>
+    <string name="settings_updates">การอัปเดต</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">ดำเนินการต่อ</string>
+    <string name="onboarding_welcome_title">ยินดีต้อนรับสู่ Porter</string>
+    <string name="onboarding_welcome_body">Porter ให้แอปของคุณเข้าถึง ADB ได้ แอปจึงทำสิ่งที่ปกติต้องใช้คอมพิวเตอร์ได้ คุณเป็นผู้เลือกว่าแอปใดจะได้รับสิทธิ์นี้</string>
+    <string name="onboarding_welcome_service">Porter เริ่มบริการขนาดเล็กเพียงครั้งเดียว แล้วแอปที่คุณอนุมัติจะใช้บริการนั้นได้โดยตรงบนอุปกรณ์ของคุณ</string>
+    <string name="onboarding_welcome_beta">นี่คือบิลด์เบต้า (สำหรับทดสอบ) ใช้งานด้วยอารมณ์ขันและเตรียมแผนสำรองไว้ด้วย โปรดรายงานปัญหาที่พบ</string>
+    <string name="onboarding_shizuku_title">ติดตั้ง Shizuku อยู่แล้ว</string>
+    <string name="onboarding_shizuku_body">Porter เป็นฟอร์กของ Shizuku ที่ยังได้รับการดูแลอยู่ และทั้งสองทำงานควบคู่กันได้ แอปที่รองรับ Porter ใช้ Porter ได้ ส่วนแอปอื่นยังใช้ Shizuku ต่อไป</string>
+    <string name="onboarding_shizuku_replace">คุณยังเลือกให้ Porter แทนที่ Shizuku ได้ เพื่อให้แอปที่สร้างมาสำหรับ Shizuku เท่านั้นใช้ Porter แทน คุณเป็นผู้ตัดสินใจ และเลือกภายหลังได้ใน การตั้งค่า → ความเข้ากันได้กับ Shizuku คู่มือความเข้ากันได้อธิบายว่าการติดตั้งของคุณรองรับตัวเลือกใดบ้าง</string>
+    <string name="onboarding_shizuku_guide">คู่มือความเข้ากันได้</string>
+    <string name="onboarding_privacy_title">ความเป็นส่วนตัว</string>
+    <string name="onboarding_privacy_body">Porter ไม่เก็บ ติดตาม หรือขายข้อมูลของคุณ ไม่มีโฆษณา ไม่มีการวิเคราะห์ข้อมูล และไม่มีบัญชีผู้ใช้</string>
+    <string name="onboarding_privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="onboarding_get_started">เริ่มใช้งาน</string>
+    <string name="onboarding_save_failed">บันทึกไม่ได้ โปรดลองอีกครั้ง</string>
+
+    <string name="updater_card_title">มีอัปเดต</string>
+    <string name="updater_card_versions">มี Porter %1$s แล้ว คุณใช้ %2$s อยู่</string>
+    <string name="updater_ignore">ละเว้น</string>
+    <string name="updater_changelog">บันทึกการเปลี่ยนแปลง</string>
+    <string name="updater_download">ดาวน์โหลด</string>
+    <string name="updater_check">ตรวจสอบอัปเดต</string>
+    <string name="updater_check_summary">ค้นหา Porter รุ่นใหม่บน GitHub เมื่อคุณเปิด Porter ผลการตรวจสอบที่สำเร็จจะถูกเก็บไว้หนึ่งวัน</string>
+    <string name="updater_channel">ช่องทางอัปเดต</string>
+    <string name="updater_channel_production">รุ่นใช้งานจริง</string>
+    <string name="updater_channel_beta">เบต้า</string>
+    <string name="updater_channel_production_choice">รุ่นใช้งานจริง: เฉพาะรุ่นเผยแพร่เต็มรูปแบบ</string>
+    <string name="updater_channel_beta_choice">เบต้า: รุ่นล่าสุด รวมถึงรุ่นเบต้าและรุ่นก่อนเผยแพร่</string>
+    <string name="updater_dialog_title">ดาวน์โหลดอัปเดต</string>
+    <string name="updater_download_summary">เลือกตำแหน่งที่จะบันทึก APK</string>
+    <string name="updater_install_manual">ติดตั้งด้วยตนเอง</string>
+    <string name="updater_install_manual_summary">โปรแกรมติดตั้งของ Android จะขอให้คุณยืนยัน</string>
+    <string name="updater_install_automatic">ติดตั้งอัตโนมัติ</string>
+    <string name="updater_install_automatic_summary">ใช้สิทธิ์ ADB หรือรูทของ Porter โดย Porter จะปิดขณะติดตั้งอัปเดต</string>
+    <string name="updater_install_automatic_requirement">ต้องให้บริการ Porter ทำงานในผู้ใช้หลักของอุปกรณ์นี้</string>
+    <string name="updater_continue">ดำเนินการต่อ</string>
+    <string name="updater_downloading">กำลังดาวน์โหลด…</string>
+    <string name="updater_installing">กำลังติดตั้ง…</string>
+    <string name="updater_saved">บันทึก %1$s แล้ว</string>
+    <string name="updater_download_failed">ดาวน์โหลดไม่สำเร็จ: %1$s</string>
+    <string name="updater_download_failed_partial">ดาวน์โหลดไม่สำเร็จ: %1$s ไฟล์ที่บันทึกไว้บางส่วนอาจยังคงอยู่</string>
+    <string name="updater_not_porter">ไฟล์ที่ดาวน์โหลดไม่ใช่ APK ของ Porter</string>
+    <string name="updater_not_newer">APK ที่ดาวน์โหลดไม่ได้ใหม่กว่า Porter ที่ติดตั้งไว้</string>
+    <string name="updater_automatic_unavailable">บริการ Porter ไม่พร้อมใช้งานในผู้ใช้หลักของอุปกรณ์นี้แล้ว จึงไม่ได้ติดตั้งอัปเดต</string>
+    <string name="updater_install_failed">ติดตั้งไม่สำเร็จ: %1$s</string>
+    <string name="updater_install_permission_denied">อนุญาตให้ Porter ติดตั้งแอปที่ไม่รู้จักเพื่อติดตั้งอัปเดตด้วยตนเอง</string>
+    <string name="updater_install_permission_unavailable">อุปกรณ์นี้ไม่มีหน้าจอสำหรับอนุญาตการติดตั้งแอป โปรดบันทึก APK แล้วติดตั้งด้วยโปรแกรมติดตั้งอื่น</string>
+    <string name="updater_installer_unavailable">เปิดโปรแกรมติดตั้งของ Android ไม่ได้</string>
+    <string name="updater_save_unavailable">ไม่มีแอปสำหรับเลือกตำแหน่งที่จะบันทึก APK</string>
 </resources>

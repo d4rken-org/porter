@@ -56,7 +56,7 @@
         do cơ chế KeyStore của thiết bị này bị hỏng.</string>
     <string name="adb_pair_required_title">Cần ghép nối</string>
     <string name="adb_pair_required">Gỡ lỗi không dây đang bật nhưng không nhận ra Porter. Porter cần được ghép nối với gỡ lỗi không dây trên thiết bị này trước khi có thể khởi động theo cách này. Việc này cần làm một lần và làm lại mỗi khi mất ghép nối, chẳng hạn sau khi xóa dữ liệu ứng dụng của Porter hoặc xóa Porter khỏi danh sách thiết bị đã ghép nối.\n\nChọn Ghép nối và làm theo các bước, sau đó khởi động lại Porter.</string>
-    <string name="enable">Cho phép</string>
+    <string name="enable">Bật</string>
     <string name="development_settings">Tùy chọn cho nhà phát triển</string>
     <string name="notification_settings">Tùy chọn thông báo</string>
     <string name="adb_pairing_tutorial_content_notification">Một thông báo từ Porter sẽ giúp bạn
@@ -69,7 +69,7 @@
     <string name="adb_pairing_tutorial_content_notification_blocked">Quá trình ghép nối cần bạn
         tương tác với thông báo từ Porter. Vui lòng cho phép Porter đăng thông báo.</string>
     <string name="adb_pairing_tutorial_content_miui">Người dùng MIUI có thể cần chuyển kiểu thông
-        báo sang \"Android\" từ \"Thông báo\" - \"Bóng thông báo\" trong cài đặt hệ thống.</string>
+        báo sang \"Android\" từ \"Thông báo\" - \"Ngăn thông báo\" trong cài đặt hệ thống.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Nếu không, bạn có thể không nhập được mã ghép
         nối từ thông báo.</string>
     <string name="adb_pairing_tutorial_content_finish">Quay trở lại Porter và bắt đầu Porter.</string>
@@ -104,7 +104,7 @@
     <string name="terminal_tutorial_miui">Người dùng đã báo cáo rằng MIUI làm hỏng Storage Access
         Framework, được sử dụng bởi chức năng xuất.</string>
     <string name="terminal_tutorial_miui_2">Nếu bạn đang sử dụng MIUI, bạn có thể phải giải nén tệp
-        từ thư mục tài sản trong APK của Porter.</string>
+        từ thư mục assets trong APK của Porter.</string>
     <string name="terminal_tutorial_1">Xuất các tập tin vào một thư mục mới.</string>
     <string name="terminal_tutorial_1_description">Hai tệp sẽ được xuất: %1$s và %2$s. Nếu các tệp
         đã tồn tại trong thư mục đã chọn, chúng sẽ bị xóa.</string>
@@ -134,13 +134,12 @@
     <string name="settings_support">Ủng hộ</string>
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">Cổng phải nằm trong khoảng từ 1 đến 65535</string>
-    <string name="snackbar_battery_optimization_home">Phải tắt tính năng tối ưu hóa pin để khởi động
-        khi khởi động/theo dõi hoạt động bình thường.</string>
+    <string name="snackbar_battery_optimization_home">Phải tắt tính năng tối ưu hóa pin để Bắt đầu khi khởi động và Chó canh gác hoạt động bình thường.</string>
     <string name="snackbar_battery_optimization_settings">Vui lòng tắt tính năng tối ưu hóa pin để
         sử dụng tính năng này.</string>
     <string name="snackbar_action_fix">Sửa chữa</string>
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Porter đã bắt đầu ở phía sau</string>
+    <string name="toast_shizuku_already_starting">Porter đã bắt đầu khởi động trong nền</string>
     <string name="toast_accessibility_tv_only">Dịch vụ này chỉ được hỗ trợ trên các thiết bị TV.</string>
     <string name="toast_pairing_timeout">Dịch vụ ghép nối Porter đã hết thời gian chờ.</string>
     <!-- Stop -->
@@ -161,7 +160,7 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">truy cập Porter</string>
     <string name="permission_description">Cho phép ứng dụng sử dụng Porter.</string>
-    <string name="permission_warning_template"><![CDATA[Cho phép <b>%1$s</b> thành %2$s\?]]></string>
+    <string name="permission_warning_template"><![CDATA[Cho phép <b>%1$s</b> %2$s\?]]></string>
     <string name="grant_dialog_button_allow_always">Cho phép mọi lúc</string>
     <string name="grant_dialog_button_deny">"Từ chối"</string>
     <!-- Starter -->
@@ -172,17 +171,17 @@
     <string name="wadb_notification_title">Bắt đầu Porter…</string>
     <string name="wadb_notification_wifi_required">Đang chờ kết nối Wi-Fi trước khi tiếp tục</string>
     <string name="wadb_notification_retry">Đang chờ để thử lại</string>
-    <string name="wadb_error_title">Lỗi khi khởi động</string>
+    <string name="wadb_error_title">Lỗi khi khởi động cùng thiết bị</string>
     <string name="wadb_error_notify_dev">Nhấn để thông báo cho nhà phát triển.</string>
     <string name="wadb_pair_required_notification">Gỡ lỗi không dây không nhận ra Porter nên Porter không thể khởi động trong nền. Nhấn để ghép nối lại Porter.</string>
     <string name="wadb_permission_error_notification_title">Lỗi quyền</string>
     <string name="wadb_permission_error_notification_content">Porter cần WRITE_SECURE_SETTINGS để
-        bắt đầu khởi động. Nhấn để tìm hiểu cách cấp nó.</string>
+        khởi động cùng thiết bị. Nhấn để tìm hiểu cách cấp quyền này.</string>
     <!-- Watchdog -->
-    <string name="watchdog_running">Cơ quan giám sát đang hoạt động</string>
+    <string name="watchdog_running">Chó canh gác đang hoạt động</string>
     <string name="watchdog_turn_off">Tắt</string>
-    <string name="watchdog_shizuku_crashed_title">Porter bị rơi gần đây</string>
-    <string name="watchdog_shizuku_crashed_text">Cơ quan giám sát đã khởi động lại dịch vụ. Nhấn để
+    <string name="watchdog_shizuku_crashed_title">Porter gặp sự cố gần đây</string>
+    <string name="watchdog_shizuku_crashed_text">Chó canh gác đã khởi động lại dịch vụ. Nhấn để
         tìm hiểu về các bản sửa lỗi tiềm năng nhằm ngăn chặn sự cố trong tương lai.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Tắt cảnh báo</string>
     <!-- Misc -->
@@ -463,4 +462,65 @@
     <string name="porter_contact_description_error">Vui lòng thêm một số chi tiết (ít nhất 20 ký tự).</string>
     <string name="porter_contact_expected_error">Vui lòng mô tả điều bạn mong đợi.</string>
     <string name="porter_contact_no_email">Hãy cài đặt hoặc bật một ứng dụng email để mở bản nháp này. Bạn cũng có thể chia sẻ nhật ký đã lưu hoặc liên hệ với chúng tôi qua GitHub hoặc Discord.</string>
+
+    <string name="settings_general">Chung</string>
+    <string name="settings_general_summary">Giao diện và kiểm tra cập nhật</string>
+    <string name="settings_general_summary_theme">Giao diện</string>
+    <string name="settings_startup_summary">Bắt đầu khi khởi động, Chó canh gác và cập nhật dịch vụ</string>
+    <string name="settings_startup_attention">Tác vụ chạy nền hoặc cảnh báo cần được chú ý</string>
+    <string name="settings_updates">Cập nhật</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Tiếp tục</string>
+    <string name="onboarding_welcome_title">Chào mừng đến với Porter</string>
+    <string name="onboarding_welcome_body">Porter cấp quyền truy cập ADB cho các ứng dụng để chúng làm được những việc thường cần đến máy tính. Tự quyết định ứng dụng nào được cấp quyền.</string>
+    <string name="onboarding_welcome_service">Porter khởi động một dịch vụ nhỏ một lần, sau đó các ứng dụng được cho phép sẽ dùng dịch vụ đó trực tiếp trên thiết bị.</string>
+    <string name="onboarding_welcome_beta">Đây là bản beta (thử nghiệm). Hãy tiếp tục với tinh thần hài hước và một phương án dự phòng. Hãy báo cáo các sự cố gặp phải.</string>
+    <string name="onboarding_shizuku_title">Shizuku đã được cài đặt</string>
+    <string name="onboarding_shizuku_body">Porter là một bản fork của Shizuku vẫn đang được duy trì, và cả hai có thể chạy song song. Các ứng dụng hỗ trợ Porter có thể dùng Porter, còn các ứng dụng khác vẫn dùng Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Cũng có thể cho phép Porter thay thế Shizuku để các ứng dụng chỉ dành cho Shizuku dùng Porter thay thế. Lựa chọn này hoàn toàn tùy ý. Có thể quyết định sau trong Cài đặt → Tương thích Shizuku. Hướng dẫn tương thích giải thích các tùy chọn mà bản cài đặt hiện tại hỗ trợ.</string>
+    <string name="onboarding_shizuku_guide">Hướng dẫn tương thích</string>
+    <string name="onboarding_privacy_title">Quyền riêng tư</string>
+    <string name="onboarding_privacy_body">Porter không thu thập, theo dõi hay bán thông tin cá nhân. Không có quảng cáo, không có công cụ phân tích và không cần tài khoản.</string>
+    <string name="onboarding_privacy_policy">Chính sách quyền riêng tư</string>
+    <string name="onboarding_get_started">Bắt đầu</string>
+    <string name="onboarding_save_failed">Không thể lưu. Hãy thử lại.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Có bản cập nhật</string>
+    <string name="updater_card_versions">Porter %1$s đã có sẵn. Phiên bản hiện tại là %2$s.</string>
+    <string name="updater_ignore">Bỏ qua</string>
+    <string name="updater_changelog">Nhật ký thay đổi</string>
+    <string name="updater_download">Tải xuống</string>
+    <string name="updater_check">Kiểm tra cập nhật</string>
+    <string name="updater_check_summary">Tìm bản phát hành Porter mới hơn trên GitHub khi mở Porter. Kết quả kiểm tra thành công được lưu trong một ngày.</string>
+    <string name="updater_channel">Kênh cập nhật</string>
+    <string name="updater_channel_production">Chính thức</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Chính thức: chỉ các bản phát hành chính thức</string>
+    <string name="updater_channel_beta_choice">Beta: bản phát hành mới nhất, kể cả bản beta và bản phát hành sơ bộ</string>
+    <string name="updater_dialog_title">Tải bản cập nhật</string>
+    <string name="updater_download_summary">Chọn nơi lưu APK.</string>
+    <string name="updater_install_manual">Cài đặt thủ công</string>
+    <string name="updater_install_manual_summary">Trình cài đặt của Android sẽ yêu cầu xác nhận.</string>
+    <string name="updater_install_automatic">Cài đặt tự động</string>
+    <string name="updater_install_automatic_summary">Dùng quyền truy cập ADB hoặc root của Porter. Porter sẽ đóng trong khi cài đặt bản cập nhật.</string>
+    <string name="updater_install_automatic_requirement">Cần dịch vụ Porter đang chạy trong người dùng chính của thiết bị này.</string>
+    <string name="updater_continue">Tiếp tục</string>
+    <string name="updater_downloading">Đang tải xuống…</string>
+    <string name="updater_installing">Đang cài đặt…</string>
+    <string name="updater_saved">Đã lưu %1$s.</string>
+    <string name="updater_download_failed">Tải xuống thất bại: %1$s</string>
+    <string name="updater_download_failed_partial">Tải xuống thất bại: %1$s. Tệp lưu chưa hoàn chỉnh có thể vẫn còn.</string>
+    <string name="updater_not_porter">Tệp đã tải xuống không phải là APK của Porter.</string>
+    <string name="updater_not_newer">APK đã tải xuống không mới hơn phiên bản Porter đã cài đặt.</string>
+    <string name="updater_automatic_unavailable">Dịch vụ Porter không còn khả dụng trong người dùng chính của thiết bị này, nên bản cập nhật chưa được cài đặt.</string>
+    <string name="updater_install_failed">Cài đặt thất bại: %1$s</string>
+    <string name="updater_install_permission_denied">Hãy cho phép Porter cài đặt ứng dụng không rõ nguồn gốc để cài đặt bản cập nhật theo cách thủ công.</string>
+    <string name="updater_install_permission_unavailable">Thiết bị này không có màn hình cho phép cài đặt ứng dụng. Hãy lưu APK và cài đặt bằng một trình cài đặt khác.</string>
+    <string name="updater_installer_unavailable">Không thể mở trình cài đặt của Android.</string>
+    <string name="updater_save_unavailable">Không có ứng dụng nào để chọn nơi lưu APK.</string>
 </resources>

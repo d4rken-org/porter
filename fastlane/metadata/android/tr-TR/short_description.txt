@@ -1,1 +1,1 @@
-Root olsun olmasın, uygulamalara ADB erişimi verin. Hangileri alacak, siz seçin.
+Root olsun olmasın, uygulamalarına ADB erişimi ver. Hangileri alacak, sen seç.

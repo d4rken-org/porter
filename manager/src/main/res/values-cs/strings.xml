@@ -5,12 +5,12 @@
     <string name="home_status_service_not_running">%1$s neběží</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Spustit připojením k počítači]]></string>
-    <string name="home_adb_description"><![CDATA[U zařízení bez root musíte ke spuštění Porter použít adb (vyžaduje připojení k počítači). Tento proces je třeba opakovat při každém restartu zařízení. Přečtěte si prosím <b> <a href="%1$s"> nápovědu </a> </b>.]]></string>
+    <string name="home_adb_description"><![CDATA[U zařízení bez root musíte ke spuštění Porter použít adb (vyžaduje připojení k počítači). Tento proces je třeba opakovat při každém restartu zařízení. Přečtěte si prosím <b> <a href=\"%1$s\"> nápovědu </a> </b>.]]></string>
     <string name="home_adb_button_view_command">Zobrazit příkaz</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Existuje několik dalších úvah, nejprve si prosím přečtěte nápovědu.]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=\"monospace\">%1$s</font><br><br>* Existuje několik dalších úvah, nejprve prosím potvrďte přečtení nápovědy.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Odeslat</string>
     <!-- Home - Wireless Adb -->
-    <string name="home_wireless_adb_title"><![CDATA[Spustit pomocí WiFi debuging]]></string>
+    <string name="home_wireless_adb_title"><![CDATA[Spustit pomocí bezdrátového ladění]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Na Androidu 11 nebo novějším můžete povolit bezdrátové ladění a spustit Porter přímo ze zařízení, bez připojení k počítači.<p>Nejprve si prosím přečtěte návod krok za krokem.]]></string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Před Androidem 11, připojení k počítači je vyžadováno k povolení Bezdrátového Ladění.]]></string>
     <string name="home_wireless_adb_view_guide_button">Návod krok-za-krokem</string>
@@ -40,15 +40,15 @@
     <string name="notification_settings">Nastavení oznámení</string>
     <string name="adb_pairing_tutorial_content_notification">Notifikace od Porter vám pomůže dokončit párování.</string>
     <string name="adb_pairing_tutorial_content_steps">Přejděte do sekce „Pro vývojáře“ a poté povolte „Ladění přes USB“ a „Bezdrátové ladění“.</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">Klepněte na levou stranu položky „Bezdrátové ladění“ a poté klepněte na „Párovat zařízení pomocí párovacího kódu“. Párování dokončíte zadáním kódu z oznámení.</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">Klepněte na levou stranu položky „Bezdrátové ladění“ a poté klepněte na „Párovat zařízení pomocí párovacího kódu“. Párování dokončíte zadáním kódu do oznámení.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Proces párování vyžaduje interakci s oznámením od Porter. Prosím povolte Porter posílat oznámení.</string>
     <string name="adb_pairing_tutorial_content_miui">Uživatelé MIUI možná budou muset přepnout styl oznámení na \"Android\" z \"Oznámení\" - \"Lišta Oznámení\" v nastavení systému.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Jinak se vám nemusí podařit zadat párovací kód z oznámení.</string>
-    <string name="adb_pairing_tutorial_content_finish">Vraťte se do Porter a začněte Porter.</string>
+    <string name="adb_pairing_tutorial_content_finish">Vraťte se do Porter a spusťte Porter.</string>
     <string name="adb_pairing_tutorial_content_network">Porter potřebuje přístup k místní síti. Je řízen síťovými oprávněními.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Některé systémy (například MIUI) neumožňují aplikacím přístup k síti, když nejsou viditelné, a to i v případě, že aplikace používá službu v popředí. V takových systémech prosím vypněte funkce optimalizace baterie pro aplikaci Porter.</string>
     <!-- Home - Root -->
-    <string name="home_root_title"><![CDATA[Start (pro rootovaná zařízení)]]></string>
+    <string name="home_root_title"><![CDATA[Spustit (pro rootovaná zařízení)]]></string>
     <string name="home_root_button_start">Spustit</string>
     <!-- Home - Application management -->
     <string name="home_app_management_title">Správa aplikací</string>
@@ -64,7 +64,7 @@
     <string name="home_automation_title">Ovládejte Porter pomocí automatizačních aplikací</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Oprávnění adb je omezené</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Je vysoce možné, že výrobce vašeho zařízení omezuje oprávnění adb. <p> V <b> <a href="%1$s"> tomto dokumentu </a> </b> může být pro váš systém řešení.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Je vysoce možné, že výrobce vašeho zařízení omezuje oprávnění adb. <p> V <b> <a href=\"%1$s\"> tomto dokumentu </a> </b> může být pro váš systém řešení.]]></string>
     <string name="app_management_item_summary_requires_root">* vyžaduje spustit Porter s rootem</string>
     <string name="app_management_toggle_all">Přepínat vše</string>
     <!-- Terminal -->
@@ -78,7 +78,7 @@
     <string name="terminal_tutorial_2">Pomocí terminálové aplikace zkopírujte soubory do jejího soukromého adresáře souborů.</string>
     <string name="terminal_tutorial_2_description">Tip: Pokud se domovský adresář (~) vaší terminálové aplikace nachází v adresáři soukromých souborů, umístění souborů tam vám umožní spustit %1$s bez zápisu cesty.\n\nV opačném případě můžete vytvořit alias pro %2$s v konfiguračním souboru %3$s vaší terminálové aplikace.</string>
     <string name="terminal_tutorial_3">Otevřete shell pomocí následujícího příkazu:</string>
-    <string name="rish_description"><![CDATA[Pomocí %1$smůžete spouštět příkazy shellu v jakékoli terminálové aplikaci.<p>Klepnutím se dozvíte více o jeho použití.]]></string>
+    <string name="rish_description"><![CDATA[Pomocí %1$s můžete spouštět příkazy shellu v jakékoli terminálové aplikaci.<p>Klepnutím se dozvíte více o jeho použití.]]></string>
     <!-- Settings -->
     <string name="settings_title">Nastavení</string>
     <string name="settings_start_on_boot">Spustit po startu</string>
@@ -116,7 +116,7 @@
     <string name="notification_adb_pairing_retry">Zkusit znovu</string>
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">přístup k Porter</string>
-    <string name="permission_description">povolí aplikaci používat systémová rozhraní API s vyššími oprávněními (Porter).</string>
+    <string name="permission_description">povolí aplikaci používat Porter.</string>
     <string name="permission_warning_template"><![CDATA[Povolit aplikaci <b>%1$s</b> %2$s\?]]></string>
     <string name="grant_dialog_button_allow_always">Povolit vždy</string>
     <string name="grant_dialog_button_deny">"Zakázat"</string>
@@ -131,17 +131,17 @@
     <string name="wadb_error_notify_dev">Klepněte pro upozornění vývojáře.</string>
     <string name="wadb_pair_required_notification">Bezdrátové ladění nerozpoznává aplikaci Porter, proto se Porter nemohl spustit na pozadí. Klepnutím Porter znovu spárujete.</string>
     <string name="wadb_permission_error_notification_title">Chyba oprávnění</string>
-    <string name="wadb_permission_error_notification_content">Porter potřebuje WRITE_SECURE_SETTINGS začít na startu. Klepněte a zjistěte, jak ji udělit.</string>
+    <string name="wadb_permission_error_notification_content">Porter potřebuje oprávnění WRITE_SECURE_SETTINGS ke spuštění po startu. Klepněte a zjistěte, jak ho udělit.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog běží</string>
     <string name="watchdog_turn_off">Vypnout</string>
     <string name="watchdog_shizuku_crashed_title">Porter nedávno spadl</string>
-    <string name="watchdog_shizuku_crashed_text">Watchdog službu znovu spustil. Klepněte a zjistěte o možných řešeních, jak předejít budoucím pádům.</string>
+    <string name="watchdog_shizuku_crashed_text">Watchdog službu znovu spustil. Klepněte a zjistěte více o možných řešeních, jak předejít budoucím pádům.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Vypnout upozornění</string>
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">Prohlížeč nelze spustit</string>
     <string name="toast_copied_to_clipboard">Zkopírováno do schránky</string>
-    <string name="accessibility_service_description">Podporuje párování zařízení (např. televizorů s Androidem 14+), kde nelze používat oznámení nebo rozdělenou obrazovku.\n\nUmožňuje Porter extrahovat párovací kód z obrazovky pro ladění bezdrátového ladění. Jakmile najdete párovací kód, deaktivuje se.</string>
+    <string name="accessibility_service_description">Podporuje párování zařízení (např. televizorů s Androidem 14+), kde nelze používat oznámení nebo rozdělenou obrazovku.\n\nUmožňuje Porter extrahovat párovací kód z obrazovky párování bezdrátového ladění. Jakmile je párovací kód nalezen, služba se sama vypne.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Pokus nyní</string>
     <string name="home_root_description"><![CDATA[Pokud používáte Magisk, další možností je %1$s. Aplikace musí %2$s výslovně podporovat.]]></string>
@@ -399,7 +399,7 @@
     <string name="porter_debug_start_summary">Zaznamená, co se děje, zatímco problém vyvoláváte.</string>
     <string name="porter_debug_notification">Klepnutím otevřete podporu, nebo nahrávání zastavte níže.</string>
     <string name="porter_debug_consent">Nahrávka může obsahovat citlivé údaje, jako jsou názvy aplikací, podrobnosti o zařízení a akce provedené přes Porter. Protokoly zůstávají v tomto zařízení, dokud se je nerozhodnete sdílet.\n\nSpusťte nahrávání, vyvolejte problém a pak se sem vraťte a nahrávání zastavte. Nahrávání se pozastaví, když Android Porter zavře, a pokračuje po jeho opětovném otevření, celkem nejvýše 30 minut.</string>
-    <string name="porter_debug_short">Tato nahrávka je velmi krátká. Podařilo se vám problém vyvolat? Můžete zrušit a pokračovat v nahrávání.</string>
+    <string name="porter_debug_short">Tato nahrávka je velmi krátká. Podařilo se vám problém vyvolat? Můžete zrušit uložení a pokračovat v nahrávání.</string>
     <string name="porter_debug_stop_message">Uložit tuto nahrávku? Můžete ji sdílet z Uložených protokolů ladění nebo ji přiložit při kontaktování podpory.</string>
     <string name="porter_debug_saved">Uložené protokoly ladění</string>
     <string name="porter_debug_storage">Uchovává se pět posledních uložených nahrávek. Každá nahrávka obsahuje protokoly aplikace a diagnostiku služby a po uplynutí časového limitu se automaticky zastaví. Nahrávky jsou vyloučeny ze záloh Androidu.</string>
@@ -422,4 +422,64 @@
     <string name="porter_contact_description_error">Doplňte prosím podrobnosti (alespoň 20 znaků).</string>
     <string name="porter_contact_expected_error">Popište prosím, co jste očekávali.</string>
     <string name="porter_contact_no_email">Chcete-li tento koncept otevřít, nainstalujte nebo povolte e-mailovou aplikaci. Můžete také sdílet uložené protokoly nebo nás kontaktovat přes GitHub či Discord.</string>
+    <string name="settings_general">Obecné</string>
+    <string name="settings_general_summary">Motiv a kontrola aktualizací</string>
+    <string name="settings_general_summary_theme">Motiv</string>
+    <string name="settings_startup_summary">Spuštění po startu, watchdog a aktualizace služby</string>
+    <string name="settings_startup_attention">Operace na pozadí nebo upozornění vyžadují pozornost</string>
+    <string name="settings_updates">Aktualizace</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Pokračovat</string>
+    <string name="onboarding_welcome_title">Vítej v Porter</string>
+    <string name="onboarding_welcome_body">Porter dává tvým aplikacím přístup ADB, takže mohou dělat věci, na které je jinak potřeba počítač. Ty rozhoduješ, které aplikace ho dostanou.</string>
+    <string name="onboarding_welcome_service">Porter jednou spustí malou službu a aplikace, které schválíš, ji používají přímo na tvém zařízení.</string>
+    <string name="onboarding_welcome_beta">Toto je beta (testovací) sestavení. Pokračuj se smyslem pro humor a se záložním plánem. Nahlas prosím problémy, na které narazíš.</string>
+    <string name="onboarding_shizuku_title">Shizuku je nainstalováno</string>
+    <string name="onboarding_shizuku_body">Porter je udržovaný fork Shizuku a oba mohou běžet vedle sebe. Aplikace, které podporují Porter, mohou používat Porter, zatímco ostatní aplikace dál používají Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Můžeš také nechat Porter nahradit Shizuku, aby aplikace určené jen pro Shizuku používaly místo něj Porter. Je to na tobě. Rozhodnout se můžeš později v Nastavení → Kompatibilita se Shizuku. Průvodce kompatibilitou vysvětluje, jaké možnosti podporuje tvoje instalace.</string>
+    <string name="onboarding_shizuku_guide">Průvodce kompatibilitou</string>
+    <string name="onboarding_privacy_title">Soukromí</string>
+    <string name="onboarding_privacy_body">Porter neshromažďuje, nesleduje ani neprodává tvoje údaje. Nemá reklamy, analytiku ani účet.</string>
+    <string name="onboarding_privacy_policy">Zásady ochrany osobních údajů</string>
+    <string name="onboarding_get_started">Začít</string>
+    <string name="onboarding_save_failed">Uložení se nezdařilo. Zkus to znovu.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">K dispozici je aktualizace</string>
+    <string name="updater_card_versions">Porter %1$s je k dispozici. Máš verzi %2$s.</string>
+    <string name="updater_ignore">Ignorovat</string>
+    <string name="updater_changelog">Přehled změn</string>
+    <string name="updater_download">Stáhnout</string>
+    <string name="updater_check">Kontrolovat aktualizace</string>
+    <string name="updater_check_summary">Při otevření Porter hledá novější vydání na GitHubu. Výsledek úspěšné kontroly se uchovává jeden den.</string>
+    <string name="updater_channel">Kanál aktualizací</string>
+    <string name="updater_channel_production">Stabilní</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Stabilní: pouze finální vydání</string>
+    <string name="updater_channel_beta_choice">Beta: nejnovější vydání včetně beta a předběžných verzí</string>
+    <string name="updater_dialog_title">Stáhnout aktualizaci</string>
+    <string name="updater_download_summary">Vyber, kam uložit APK.</string>
+    <string name="updater_install_manual">Nainstalovat ručně</string>
+    <string name="updater_install_manual_summary">Instalační program Androidu tě požádá o potvrzení.</string>
+    <string name="updater_install_automatic">Nainstalovat automaticky</string>
+    <string name="updater_install_automatic_summary">Používá přístup ADB nebo root aplikace Porter. Porter se během instalace aktualizace zavře.</string>
+    <string name="updater_install_automatic_requirement">Vyžaduje spuštěnou službu Porter u hlavního uživatele tohoto zařízení.</string>
+    <string name="updater_continue">Pokračovat</string>
+    <string name="updater_downloading">Stahování…</string>
+    <string name="updater_installing">Instalace…</string>
+    <string name="updater_saved">Uloženo: %1$s.</string>
+    <string name="updater_download_failed">Stažení selhalo: %1$s</string>
+    <string name="updater_download_failed_partial">Stažení selhalo: %1$s. Částečně uložený soubor může zůstat na zařízení.</string>
+    <string name="updater_not_porter">Stažený soubor není APK aplikace Porter.</string>
+    <string name="updater_not_newer">Stažený APK není novější než nainstalovaný Porter.</string>
+    <string name="updater_automatic_unavailable">Služba Porter již není k dispozici u hlavního uživatele tohoto zařízení, takže se aktualizace nenainstalovala.</string>
+    <string name="updater_install_failed">Instalace selhala: %1$s</string>
+    <string name="updater_install_permission_denied">Povol Porter instalovat neznámé aplikace, aby šlo aktualizaci nainstalovat ručně.</string>
+    <string name="updater_install_permission_unavailable">Toto zařízení nemá obrazovku pro povolení instalace aplikací. Ulož APK a nainstaluj jej jiným instalačním programem.</string>
+    <string name="updater_installer_unavailable">Instalační program Androidu se nepodařilo otevřít.</string>
+    <string name="updater_save_unavailable">Není k dispozici žádná aplikace pro výběr místa k uložení APK.</string>
 </resources>

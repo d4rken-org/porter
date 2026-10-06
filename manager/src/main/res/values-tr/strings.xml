@@ -5,14 +5,14 @@
     <string name="home_status_service_not_running">%1$s çalışmıyor</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Bilgisayara bağlanarak başlatın]]></string>
-    <string name="home_adb_description"><![CDATA[Rootsuz cihazlar için Porter’ı başlatmak için adb kullanmanız gerekir (bilgisayar bağlantısı gerektirir). Bu işlemin cihaz her yeniden başlatıldığında tekrarlanması gerekir. Lütfen <b><a href="%1$s">yardımı okuyun</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Rootsuz cihazlar için Porter’ı başlatmak için adb kullanmanız gerekir (bilgisayar bağlantısı gerektirir). Bu işlemin cihaz her yeniden başlatıldığında tekrarlanması gerekir. Lütfen <b><a href=\"%1$s\">yardımı okuyun</a></b>.]]></string>
     <string name="home_adb_button_view_command">Komutu görüntüle</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Başka hususlar da var, lütfen önce yardımı okuduğunuzu onaylayın.]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=\"monospace\">%1$s</font><br><br>* Başka hususlar da var, lütfen önce yardımı okuduğunuzu onaylayın.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Gönder</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Kablosuz hata ayıklama ile başlat]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Android 11 ve üzeri sürümlerde, Kablosuz hata ayıklama ve Porter\'ı cihazınızdan bir bilgisayara bağlanmadan direkt aktif edebilirsiniz.<p>Lütfen öncelikle adım adım kılavuz\'u inceleyin.]]></string>
-    <string name="home_wireless_adb_description_pre_11"><![CDATA[Android 11 ve önceki sürümlerde, Kablosuz hata ayıklama’yı aktif etmek için bir bilgisayara bağlanmak gereklidir.]]></string>
+    <string name="home_wireless_adb_description_pre_11"><![CDATA[Android 11’den önceki sürümlerde, Kablosuz hata ayıklama’yı aktif etmek için bir bilgisayara bağlanmak gereklidir.]]></string>
     <string name="home_wireless_adb_view_guide_button">Adım adım kılavuz</string>
     <!-- Adb -->
     <string name="dialog_adb_discovery">Kablosuz hata ayıklama hizmeti aranıyor</string>
@@ -22,8 +22,7 @@
         \n
         \nNot, \"Geliştirici seçenekleri\" veya \"USB hata ayıklama\" devre dışı bırakmayın, Porter
         durdurulur.</string>
-    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Eğer sürekli arıyorsa
-        lütfen \"Wireless Debugging\" ayarını kapatıp açmayı deneyin.</string>
+    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">Aramaya devam ediyorsa lütfen \"Kablosuz hata ayıklama\" ayarını kapatıp açmayı dene.</string>
     <string name="dialog_adb_port">Port</string>
     <string name="adb_pairing">Eşleştirme</string>
     <string name="dialog_adb_pairing_title">Cihazla eşleş</string>
@@ -67,7 +66,7 @@
         \"USB hata ayıklama\" ve \"Kablosuz hata ayıklama\"yı etkinleştirin.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">\"Kablosuz hata ayıklama\"nın sol
         tarafına dokunun, ardından \"Cihazı eşleştirme koduyla eşleştir\" seçeneğine dokunun.
-        Eşleştirmeyi tamamlamak için bildirimdeki kodu girin.</string>
+        Eşleştirmeyi tamamlamak için kodu bildirime girin.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Eşleştirme işlemi, Porter\'dan
         gelen bir bildirimle etkileşim kurmanızı gerektirir. Lütfen Porter\'ın bildirim
         göndermesine izin verin.</string>
@@ -99,7 +98,7 @@
     <string name="home_automation_title">Porter\'ı otomasyon uygulamalarıyla kontrol edin</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB’nin izni sınırlıdır</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Cihaz üreticinizin adb iznini sınırlaması son derece olasıdır. <p>Bu belgede<b><a href="%1$s">sisteminiz için bir çözüm olabilir</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Cihaz üreticinizin adb iznini sınırlaması son derece olasıdır. <p>Bu belgede<b><a href=\"%1$s\">sisteminiz için bir çözüm olabilir</a></b>.]]></string>
     <string name="app_management_item_summary_requires_root">* Porter’ın root ile çalıştırılması
         gerekli</string>
     <string name="app_management_toggle_all">Tümünü aç/kapat</string>
@@ -122,7 +121,7 @@
         çalıştırmanıza olanak tanır.\n\nAksi takdirde, terminal uygulamanızın %3$s yapılandırma
         dosyasında %2$s için bir takma ad oluşturabilirsiniz.</string>
     <string name="terminal_tutorial_3">Aşağıdaki komutla bir kabuk açın:</string>
-    <string name="rish_description"><![CDATA[%1$sile herhangi bir terminal uygulamasında kabuk komutlarını çalıştırabilirsiniz.<p>Nasıl kullanılacağı hakkında daha fazla bilgi edinmek için dokunun.]]></string>
+    <string name="rish_description"><![CDATA[%1$s ile herhangi bir terminal uygulamasında kabuk komutlarını çalıştırabilirsiniz.<p>Nasıl kullanılacağı hakkında daha fazla bilgi edinmek için dokunun.]]></string>
     <!-- Settings -->
     <string name="settings_title">Ayarlar</string>
     <string name="settings_start_on_boot">Önyüklemede başla</string>
@@ -471,4 +470,66 @@
     <string name="porter_contact_description_error">Lütfen biraz ayrıntı ekleyin (en az 20 karakter).</string>
     <string name="porter_contact_expected_error">Lütfen ne beklediğinizi açıklayın.</string>
     <string name="porter_contact_no_email">Bu taslağı açmak için bir e-posta uygulaması yükleyin veya etkinleştirin. Kaydedilen kayıtları da paylaşabilir veya bize GitHub ya da Discord üzerinden ulaşabilirsiniz.</string>
+    <!-- Settings navigation -->
+    <string name="settings_general">Genel</string>
+    <string name="settings_general_summary">Tema ve güncelleme denetimi</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Önyüklemede başlatma, bekçi köpeği ve hizmet güncellemeleri</string>
+    <string name="settings_startup_attention">Arka plan işlemi veya uyarılar ilgilenmeni gerektiriyor</string>
+    <string name="settings_updates">Güncellemeler</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Devam et</string>
+    <string name="onboarding_welcome_title">Porter’a hoş geldin</string>
+    <string name="onboarding_welcome_body">Porter, uygulamalarına ADB erişimi vererek normalde bilgisayar gerektiren işleri yapmalarını sağlar. Hangi uygulamaların bu erişimi alacağına sen karar verirsin.</string>
+    <string name="onboarding_welcome_service">Porter küçük bir hizmeti bir kez başlatır ve onayladığın uygulamalar bu hizmeti doğrudan cihazında kullanır.</string>
+    <string name="onboarding_welcome_beta">Bu bir beta (test) derlemesidir. Mizah duygunu ve bir yedek planı yanına alarak devam et. Lütfen karşılaştığın sorunları bildir.</string>
+    <string name="onboarding_shizuku_title">Shizuku yüklü</string>
+    <string name="onboarding_shizuku_body">Porter, Shizuku’nun bakımı sürdürülen bir çatalıdır ve ikisi yan yana çalışabilir. Porter’ı destekleyen uygulamalar Porter’ı kullanabilirken diğer uygulamalar Shizuku’yu kullanmaya devam eder.</string>
+    <string name="onboarding_shizuku_replace">Porter’ın Shizuku’nun yerini almasına da izin verebilirsin; böylece yalnızca Shizuku için geliştirilen uygulamalar onun yerine Porter’ı kullanır. Karar senin. Daha sonra Ayarlar → Shizuku uyumluluğu bölümünden karar verebilirsin. Uyumluluk kılavuzu, kullandığın kurulumun hangi seçenekleri desteklediğini açıklar.</string>
+    <string name="onboarding_shizuku_guide">Uyumluluk kılavuzu</string>
+    <string name="onboarding_privacy_title">Gizlilik</string>
+    <string name="onboarding_privacy_body">Porter bilgilerini toplamaz, izlemez veya satmaz. Reklam, analiz veya hesap yoktur.</string>
+    <string name="onboarding_privacy_policy">Gizlilik politikası</string>
+    <string name="onboarding_get_started">Başla</string>
+    <string name="onboarding_save_failed">Kaydedilemedi. Yeniden dene.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Güncelleme mevcut</string>
+    <string name="updater_card_versions">Porter %1$s mevcut. Sende %2$s var.</string>
+    <string name="updater_ignore">Yoksay</string>
+    <string name="updater_changelog">Değişiklik günlüğü</string>
+    <string name="updater_download">İndir</string>
+    <string name="updater_check">Güncellemeleri denetle</string>
+    <string name="updater_check_summary">Porter’ı açtığında GitHub’da daha yeni bir Porter sürümü arar. Başarılı bir denetim bir gün boyunca saklanır.</string>
+    <string name="updater_channel">Güncelleme kanalı</string>
+    <string name="updater_channel_production">Kararlı</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Kararlı: yalnızca tam sürümler</string>
+    <string name="updater_channel_beta_choice">Beta: beta ve ön sürümler dahil en yeni sürüm</string>
+    <string name="updater_dialog_title">Güncellemeyi indir</string>
+    <string name="updater_download_summary">APK’nın nereye kaydedileceğini seç.</string>
+    <string name="updater_install_manual">Elle yükle</string>
+    <string name="updater_install_manual_summary">Android’in yükleyicisi onayını ister.</string>
+    <string name="updater_install_automatic">Otomatik yükle</string>
+    <string name="updater_install_automatic_summary">Porter’ın ADB veya root erişimini kullanır. Güncelleme yüklenirken Porter kapanır.</string>
+    <string name="updater_install_automatic_requirement">Porter hizmetinin bu cihazın birincil kullanıcısında çalışıyor olması gerekir.</string>
+    <string name="updater_continue">Devam et</string>
+    <string name="updater_downloading">İndiriliyor…</string>
+    <string name="updater_installing">Yükleniyor…</string>
+    <string name="updater_saved">%1$s kaydedildi.</string>
+    <string name="updater_download_failed">İndirme başarısız: %1$s</string>
+    <string name="updater_download_failed_partial">İndirme başarısız: %1$s. Kısmen kaydedilen dosya kalabilir.</string>
+    <string name="updater_not_porter">İndirilen dosya bir Porter APK’sı değil.</string>
+    <string name="updater_not_newer">İndirilen APK, yüklü Porter’dan daha yeni değil.</string>
+    <string name="updater_automatic_unavailable">Porter hizmeti artık bu cihazın birincil kullanıcısında kullanılamadığı için güncelleme yüklenmedi.</string>
+    <string name="updater_install_failed">Yükleme başarısız: %1$s</string>
+    <string name="updater_install_permission_denied">Güncellemeyi elle yüklemek için Porter’ın bilinmeyen uygulamaları yüklemesine izin ver.</string>
+    <string name="updater_install_permission_unavailable">Bu cihazda uygulama yüklemeye izin verme ekranı yok. APK’yı kaydet ve başka bir yükleyiciyle yükle.</string>
+    <string name="updater_installer_unavailable">Android’in yükleyicisi açılamadı.</string>
+    <string name="updater_save_unavailable">APK’nın nereye kaydedileceğini seçmek için kullanılabilecek bir uygulama yok.</string>
 </resources>

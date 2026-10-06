@@ -442,4 +442,68 @@
     <string name="porter_contact_description_error">Adicione alguns detalhes (pelo menos 20 caracteres).</string>
     <string name="porter_contact_expected_error">Descreva o que você esperava.</string>
     <string name="porter_contact_no_email">Instale ou ative um app de e-mail para abrir este rascunho. Você também pode compartilhar os logs salvos ou falar conosco pelo GitHub ou pelo Discord.</string>
+
+    <!-- Settings navigation -->
+    <string name="settings_general">Geral</string>
+    <string name="settings_general_summary">Tema e verificação de atualizações</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Iniciar na inicialização, watchdog e atualizações do serviço</string>
+    <string name="settings_startup_attention">A operação em segundo plano ou os alertas precisam de atenção</string>
+    <string name="settings_updates">Atualizações</string>
+
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Continuar</string>
+    <string name="onboarding_welcome_title">Boas-vindas ao Porter</string>
+    <string name="onboarding_welcome_body">O Porter dá acesso ADB aos seus apps, para que eles façam coisas que normalmente exigem um computador. Você decide quais apps recebem esse acesso.</string>
+    <string name="onboarding_welcome_service">O Porter inicia um pequeno serviço uma vez, e os apps que você aprovar o usam diretamente no seu dispositivo.</string>
+    <string name="onboarding_welcome_beta">Esta é uma compilação beta (de teste). Prossiga com bom humor e um plano B. Relate os problemas que encontrar.</string>
+    <string name="onboarding_shizuku_title">O Shizuku está instalado</string>
+    <string name="onboarding_shizuku_body">O Porter é um fork do Shizuku que continua recebendo manutenção, e os dois podem funcionar lado a lado. Apps com suporte ao Porter podem usar o Porter, enquanto outros apps continuam usando o Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Você também pode deixar o Porter substituir o Shizuku, para que apps criados apenas para o Shizuku usem o Porter no lugar dele. Você escolhe. Você pode decidir depois em Configurações → Compatibilidade com o Shizuku, e o guia de compatibilidade explica quais opções sua instalação oferece.</string>
+    <string name="onboarding_shizuku_guide">Guia de compatibilidade</string>
+    <string name="onboarding_privacy_title">Privacidade</string>
+    <string name="onboarding_privacy_body">O Porter não coleta, rastreia nem vende suas informações. Não tem anúncios, análises de uso nem conta.</string>
+    <string name="onboarding_privacy_policy">Política de privacidade</string>
+    <string name="onboarding_get_started">Começar</string>
+    <string name="onboarding_save_failed">Não foi possível salvar. Tente novamente.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Atualização disponível</string>
+    <string name="updater_card_versions">O Porter %1$s está disponível. Você tem a versão %2$s.</string>
+    <string name="updater_ignore">Ignorar</string>
+    <string name="updater_changelog">Histórico de alterações</string>
+    <string name="updater_download">Baixar</string>
+    <string name="updater_check">Verificar atualizações</string>
+    <string name="updater_check_summary">Procura uma versão mais recente do Porter no GitHub quando você abre o Porter. O resultado de uma verificação bem-sucedida é mantido por um dia.</string>
+    <string name="updater_channel">Canal de atualização</string>
+    <string name="updater_channel_production">Produção</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Produção: apenas versões finais</string>
+    <string name="updater_channel_beta_choice">Beta: versão mais recente, incluindo betas e pré-lançamentos</string>
+    <string name="updater_dialog_title">Baixar atualização</string>
+    <string name="updater_download_summary">Escolha onde salvar o APK.</string>
+    <string name="updater_install_manual">Instalar manualmente</string>
+    <string name="updater_install_manual_summary">O instalador do Android pede sua confirmação.</string>
+    <string name="updater_install_automatic">Instalar automaticamente</string>
+    <string name="updater_install_automatic_summary">Usa o acesso ADB ou root do Porter. O Porter fecha enquanto a atualização é instalada.</string>
+    <string name="updater_install_automatic_requirement">Requer que o serviço do Porter esteja em execução no usuário principal deste dispositivo.</string>
+    <string name="updater_continue">Continuar</string>
+    <string name="updater_downloading">Baixando…</string>
+    <string name="updater_installing">Instalando…</string>
+    <string name="updater_saved">%1$s foi salvo.</string>
+    <string name="updater_download_failed">Falha no download: %1$s</string>
+    <string name="updater_download_failed_partial">Falha no download: %1$s. O arquivo salvo parcialmente pode permanecer.</string>
+    <string name="updater_not_porter">O arquivo baixado não é um APK do Porter.</string>
+    <string name="updater_not_newer">O APK baixado não é mais recente que o Porter instalado.</string>
+    <string name="updater_automatic_unavailable">O serviço do Porter não está mais disponível no usuário principal deste dispositivo, então a atualização não foi instalada.</string>
+    <string name="updater_install_failed">Falha na instalação: %1$s</string>
+    <string name="updater_install_permission_denied">Permita que o Porter instale apps desconhecidos para instalar a atualização manualmente.</string>
+    <string name="updater_install_permission_unavailable">Este dispositivo não tem uma tela para permitir a instalação de apps. Salve o APK e instale-o com outro instalador.</string>
+    <string name="updater_installer_unavailable">Não foi possível abrir o instalador do Android.</string>
+    <string name="updater_save_unavailable">Nenhum app está disponível para escolher onde salvar o APK.</string>
 </resources>

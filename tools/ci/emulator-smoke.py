@@ -79,8 +79,9 @@ USER_SWITCH_TIMEOUT = 90
 # Enough to cover the first two host deadlines after a record was created, which is what a scenario
 # asserting "nothing was removed" has to outlive to mean anything.
 HOST_SETTLE = 45
-# Past the first host deadline after a record was created. A scan that finds nothing changed puts
-# the next one 30s out, so waiting this long leaves a stretch no scan falls into.
+# Past the usual first host deadline after a record was created. A scan that finds nothing changed
+# puts the next one 30s out, reducing the chance of a scan in the uninstall/install gap. Earlier
+# deadlines and slow installs can still overlap it; this is not synchronization.
 HOST_QUIET = 17
 MANAGER_SETTLE = 20
 ADB_TIMEOUT = 45
@@ -204,6 +205,28 @@ def resumed_elsewhere(activities, package):
     resumed = [line for line in activities.splitlines()
                if RESUMED_ACTIVITY.match(line) and "ActivityRecord{" in line]
     return bool(resumed) and not any(f" {package}/" in line for line in resumed)
+
+
+def user_home_resumed(activities, user, component):
+    """Whether the resolved HOME is actually resumed in this user, not merely in task history."""
+    home = re.fullmatch(r"([\w.]+)/([\w.$]+)", component)
+    if not home:
+        return False
+    package, activity = home.groups()
+    if package in ("com.google.android.googlesdksetup", "com.android.provision"):
+        return False
+    activity = package + activity if activity.startswith(".") else activity
+    for line in activities.splitlines():
+        if not RESUMED_ACTIVITY.match(line):
+            continue
+        record = re.search(r"ActivityRecord\{\S+ u(\d+) ([\w.]+)/([\w.$]+)(?:\s|})", line)
+        if record:
+            record_user, record_package, record_activity = record.groups()
+            if record_activity.startswith("."):
+                record_activity = record_package + record_activity
+            if (record_user, record_package, record_activity) == (str(user), package, activity):
+                return True
+    return False
 
 
 class PushTracker:
@@ -854,6 +877,22 @@ class Smoke:
                 return entry.get("flags", 0)
         return 0
 
+    def wait_user_home(self, user):
+        """Finish the switch's initial HOME transition before starting a client activity."""
+        self.unlock()
+
+        def ready():
+            if self.shell("am", "get-current-user") != user:
+                return False
+            component = self.shell("cmd", "package", "resolve-activity", "--components", "--user", user,
+                                   "-a", "android.intent.action.MAIN", "-c", "android.intent.category.HOME")
+            activities = self.shell("dumpsys", "activity", "activities")
+            return user_home_resumed(activities, user, component)
+
+        # get-current-user changes before the framework starts HOME. Keep its resolved component
+        # and resumed record in commands.log; the probe's logcat is cleared after this barrier.
+        self.until(f"user {user} HOME is resumed", ready, timeout=USER_SWITCH_TIMEOUT)
+
     def launch_probe_as(self, package, user):
         """Starts the probe in another user and adopts its process for [logs]."""
         # Every user, not just the target one: pidof does not say which user a process belongs to,
@@ -1250,9 +1289,13 @@ class Smoke:
                 return logged_by(self.adb("logcat", "-d", "-v", "threadtime", "--pid=" + server_pid,
                                           "-s", "Service:V", "*:S"), server_pid, push)
             earlier = set(pushes())
-            self.launch_probe(NATIVE)
+            # Peek instead of binding: binding starts the manager, which would resume the recording
+            # before the Home launch below.
+            self.launch_probe(NATIVE, peek=True)
             gap = self.until("the service pushed the probe its binder",
                              lambda: [line for line in pushes() if line not in earlier])[-1]
+            # Once the peek has returned, so the check below comes after the probe's last call.
+            self.expect_log(NATIVE, "PEEK version=")
             assert not self.pid(MANAGER), "launching the probe started the manager, which could read the push live"
             events = events_of(abandoned_path)
             assert "Clock resume" not in events, events
@@ -1274,7 +1317,7 @@ class Smoke:
 
             self.shell("pm", "revoke", NATIVE, PERMISSION)
             self.shell("am", "force-stop", NATIVE)
-            self.until("revocation terminates user service", lambda: not self.pid(NATIVE + ":porter-probe"))
+            self.until("probe user-service cleanup completed", lambda: not self.pid(NATIVE + ":porter-probe"))
             return {"session": session, "first_server": first_pid, "restarted_server": server_pid,
                     "attaches": attaches, "clock_anchors": anchors, "baseline": baseline,
                     "followed": followed, "streamed": streamed, "first_supervisor": first_supervisor[0],
@@ -1724,19 +1767,23 @@ class Smoke:
         self.case("host-removed-from-one-user", host_removed_from_one_user,
                   restore=("users", "probes", "grants"))
 
-        def replaced_by_a_foreign_signer():
-            """A live daemon of the original signer, with the replacement installed over it."""
-            original = self.authorized_daemon()
-            # Between the uninstall and the install the package is absent in every user. On
-            # Android 7 that outlasts the scan's confirmation grace, so a scan landing there removes
-            # the daemon before the replacement can bind.
+        def replaced_by_a_foreign_signer(*, require_survival=True):
+            """Replace the host of an authorized daemon without preparing an APK in the gap."""
+            apk = self.foreign_probe()
+            self.authorized_daemon()
+            # Destruction of a prior daemon is asynchronous; never capture a multi-PID string as
+            # the original, and wait only after the new service's authorization was checked.
+            original = self.until(
+                "one privileged user service",
+                lambda: (pids := self.service_pids(NATIVE)) and len(pids) == 1 and next(iter(pids)))
+            # A scan in the uninstall/install gap can confirm absence instead of replacement.
             time.sleep(HOST_QUIET)
-            self.adb("uninstall", NATIVE)
-            # Bounds the interval hand_over_reason() reads: the replacement only exists from here
-            # on, so every warning about it was logged after this point.
+            # Include that gap in the evidence, so host-absent cannot be cleared away.
             self.clear_logcat()
-            self.adb("install", str(self.foreign_probe()))
-            assert original in self.service_pids(NATIVE), "the daemon was gone before the bind"
+            self.adb("uninstall", NATIVE)
+            self.adb("install", str(apk))
+            if require_survival:
+                assert original in self.service_pids(NATIVE), "the daemon was gone before the bind"
             return original
 
         def foreign_signer_peeks():
@@ -1768,18 +1815,31 @@ class Smoke:
         self.case("foreign-signer-binds", foreign_signer_binds, restore=("probes", "grants"))
 
         def foreign_signer_never_binds():
-            service_pid = self.authorized_daemon()
-            self.adb("uninstall", NATIVE)
-            # The uninstall kills the daemon itself, so its absence proves nothing about the scan.
-            # What this case is about is the scan removing the record of a package that came back
-            # under a different signer, and the scan says so itself. Clearing here bounds the
-            # interval to the replacement.
-            self.clear_logcat()
-            self.adb("install", str(self.foreign_probe()))
-            self.until("the host scan removed the replaced package's record",
-                       lambda: f"host replaced {NATIVE}" in self.adb(
-                           "logcat", "-d", "-s", "ApkReconciler:W", "*:S"),
+            # Scan cleanup may already have completed before install returned. Unlike bind/peek,
+            # this case needs no surviving daemon to hand over, only replacement evidence and exit.
+            service_pid = replaced_by_a_foreign_signer(require_survival=False)
+
+            def replacement_logged():
+                warnings = self.adb("logcat", "-d", "-s", "ApkReconciler:W", "*:S")
+                assert f"host absent {NATIVE} " not in warnings, \
+                    "invalid replacement setup: host absent during uninstall/install"
+                return f"host replaced {NATIVE} " in warnings
+
+            def scanned():
+                if replacement_logged():
+                    return True
+                if service_pid not in self.service_pids(NATIVE):
+                    # The scan logs before dispatching destruction, but it may have landed
+                    # between the warning read and the PID read. Check fresh evidence once.
+                    assert replacement_logged(), \
+                        "lost replacement setup: original daemon exited without host-replaced evidence"
+                    return True
+                return False
+
+            self.until("the host scan removed the replaced package's record", scanned,
                        timeout=HOST_SCAN_TIMEOUT)
+            self.until("the host scan released the original daemon",
+                       lambda: service_pid not in self.service_pids(NATIVE), timeout=HOST_SCAN_TIMEOUT)
             return {"service_pid": service_pid}
         self.case("foreign-signer-never-binds", foreign_signer_never_binds, restore=("probes", "grants"))
 
@@ -1848,6 +1908,10 @@ class Smoke:
             self.shell("am", "switch-user", user)
             self.until(f"am reports user {user}", lambda: self.shell("am", "get-current-user") == user,
                        timeout=USER_SWITCH_TIMEOUT)
+            # Only the Android 16 and 17 images were seen to resume the new user's HOME. 7 leaves
+            # its launcher asleep and 11 never starts it, so the wait would only time out there.
+            if int(self.shell("getprop", "ro.build.version.sdk")) >= 36:
+                self.wait_user_home(user)
             self.clear_logcat()
             self.launch_probe_as(NATIVE, user)
             # The point of the case: a request nobody could answer is answered rather than left

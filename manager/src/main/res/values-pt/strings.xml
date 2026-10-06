@@ -5,9 +5,9 @@
     <string name="home_status_service_not_running">%1$s não está em execução</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Comece por ligar-se a um computador]]></string>
-    <string name="home_adb_description"><![CDATA[Para dispositivos sem root, tem de usar o adb para iniciar o Porter (requer ligação ao computador). Este processo tem de ser repetido sempre que o dispositivo for reiniciado. Por favor, <b><a href="%1$s">leia a Ajuda</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Para dispositivos sem root, tem de usar o adb para iniciar o Porter (requer ligação ao computador). Este processo tem de ser repetido sempre que o dispositivo for reiniciado. Por favor, <b><a href=\"%1$s\">leia a Ajuda</a></b>.]]></string>
     <string name="home_adb_button_view_command">Ver o comando</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Existem algumas outras considerações, por favor confirme primeiro que leu a ajuda.]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=\"monospace\">%1$s</font><br><br>* Existem algumas outras considerações, por favor confirme primeiro que leu a ajuda.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Mandar</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Iniciar via depuração sem fios]]></string>
@@ -48,7 +48,7 @@
     <string name="dialog_adb_pairing_accessibility_navigate">Para iniciar o emparelhamento, siga os
         seguintes passos:\n- Aceda a \"Opções de programador\"\n- Ative \"Depuração USB\" e
         \"Depuração sem fios\"\n- Toque no lado esquerdo de \"Depuração sem fios\"\n- Toque em
-        \"Sincronize dispositivo com código de sincronização\". O Porter detetará o código de
+        \"Emparelhar dispositivo com código de emparelhamento\". O Porter detetará o código de
         emparelhamento automaticamente.</string>
     <string name="adb_pairing_requires_multi_window">Por favor, entre primeiro no modo de ecrã
         dividido (várias janelas).</string>
@@ -67,8 +67,8 @@
     <string name="adb_pairing_tutorial_content_steps">Aceda às \"Opções do programador\" e ative a
         \"Depuração USB\" e a \"Depuração sem fios\".</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Toque no lado esquerdo de
-        \"Depuração sem fios\" e, em seguida, toque em \"Sincronize dispositivo com código de
-        sincronização\". Introduza o código na notificação para concluir o emparelhamento.</string>
+        \"Depuração sem fios\" e, em seguida, toque em \"Emparelhar dispositivo com código de
+        emparelhamento\". Introduza o código na notificação para concluir o emparelhamento.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">O processo de emparelhamento
         precisa que interaja com uma notificação do Porter. Por favor, permita que o Porter
         mostre notificações.</string>
@@ -91,7 +91,7 @@
     <string name="home_app_management_title">Gestão de aplicações</string>
     <plurals name="home_app_management_authorized_apps_count">
         <item quantity="one"><![CDATA[%d aplicação autorizada]]></item>
-        <item quantity="many"><![CDATA[%d de aplicações autorizadas]]></item>
+        <item quantity="many"><![CDATA[%d aplicações autorizadas]]></item>
         <item quantity="other"><![CDATA[%d aplicações autorizadas]]></item>
     </plurals>
     <string name="home_app_management_view_authorized_apps"><![CDATA[Toque para gerir as aplicações autorizadas]]></string>
@@ -101,7 +101,7 @@
     <string name="home_automation_title">Controle o Porter com aplicações de automação</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">A permissão do adb é limitada</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[É altamente possível que o fabricante do seu dispositivo limite a permissão do adb.<p>Pode haver uma solução para o seu sistema <b><a href="%1$s">neste documento</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[É altamente possível que o fabricante do seu dispositivo limite a permissão do adb.<p>Pode haver uma solução para o seu sistema <b><a href=\"%1$s\">neste documento</a></b>.]]></string>
     <string name="app_management_item_summary_requires_root">* requer que o Porter seja executado
         com root</string>
     <string name="app_management_toggle_all">Alternar tudo</string>
@@ -122,7 +122,7 @@
     <string name="terminal_tutorial_2_description">Dica: Se o diretório inicial da sua aplicação de
         terminal (~) estiver no diretório de ficheiros privados, colocar os ficheiros lá permitirá
         que execute %1$s sem ter de digitar o caminho.\n\nCaso contrário, pode criar um alias para
-        %2$s no ficheiro de configuração da sua aplicação de terminal. %3$s</string>
+        %2$s no ficheiro de configuração %3$s da sua aplicação de terminal.</string>
     <string name="terminal_tutorial_3">Abra um terminal com o seguinte comando:</string>
     <string name="rish_description"><![CDATA[Com %1$s, pode executar comandos shell em qualquer aplicação de terminal.<p>Toque para saber mais sobre como utilizá-lo.]]></string>
     <!-- Settings -->
@@ -145,14 +145,14 @@
     <!-- Snackbar -->
     <string name="snackbar_invalid_port">A porta deve estar entre 1 e 65535.</string>
     <string name="snackbar_battery_optimization_home">A otimização da bateria deve estar desativada
-        para que o arranque no arranque/vigilância funcione corretamente.</string>
+        para que o início no arranque/cão de guarda funcione corretamente.</string>
     <string name="snackbar_battery_optimization_settings">Desative a otimização da bateria para
         utilizar esta funcionalidade.</string>
     <string name="snackbar_action_fix">Corrigir</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter já está a começar em segundo plano.</string>
     <string name="toast_accessibility_tv_only">Este serviço só é suportado em dispositivos de TV.</string>
-    <string name="toast_pairing_timeout">Serviço de emparelhamento Porter esgotado.</string>
+    <string name="toast_pairing_timeout">O serviço de emparelhamento do Porter excedeu o tempo limite.</string>
     <!-- Stop -->
     <string name="action_stop">Parar Porter</string>
     <!-- Notification -->
@@ -181,7 +181,7 @@
     <string name="wadb_notification_title">Começar Porter…</string>
     <string name="wadb_notification_wifi_required">Aguarda ligação Wi-Fi antes de prosseguir.</string>
     <string name="wadb_notification_retry">Aguarda para tentar novamente.</string>
-    <string name="wadb_error_title">Erro ao iniciar o sistema.</string>
+    <string name="wadb_error_title">Erro ao iniciar no arranque.</string>
     <string name="wadb_error_notify_dev">Toque para notificar o programador.</string>
     <string name="wadb_pair_required_notification">A depuração sem fios não reconhece o Porter, pelo que o Porter não conseguiu iniciar em segundo plano. Toque para emparelhar novamente o Porter.</string>
     <string name="wadb_permission_error_notification_title">Erro de permissão</string>
@@ -190,7 +190,7 @@
     <!-- Watchdog -->
     <string name="watchdog_running">O cão de vigilância está em execução.</string>
     <string name="watchdog_turn_off">Desligar</string>
-    <string name="watchdog_shizuku_crashed_title">Porter sofreu um acidente recentemente</string>
+    <string name="watchdog_shizuku_crashed_title">O Porter falhou recentemente</string>
     <string name="watchdog_shizuku_crashed_text">O serviço foi reiniciado pelo Watchdog. Toque para
         saber mais sobre as possíveis soluções para evitar futuras falhas.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Desativar alertas</string>
@@ -328,7 +328,7 @@
     <string name="porter_get_compatibility">Obter aplicação de compatibilidade</string>
     <plurals name="porter_compatibility_pending">
         <item quantity="one">Permitiu o acesso a %d aplicação que precisa da aplicação de compatibilidade do Porter. O acesso dela ficará disponível quando a aplicação de compatibilidade for instalada.</item>
-        <item quantity="many">Permitiu o acesso a %d de aplicações que precisam da aplicação de compatibilidade do Porter. O acesso delas ficará disponível quando a aplicação de compatibilidade for instalada.</item>
+        <item quantity="many">Permitiu o acesso a %d aplicações que precisam da aplicação de compatibilidade do Porter. O acesso delas ficará disponível quando a aplicação de compatibilidade for instalada.</item>
         <item quantity="other">Permitiu o acesso a %d aplicações que precisam da aplicação de compatibilidade do Porter. O acesso delas ficará disponível quando a aplicação de compatibilidade for instalada.</item>
     </plurals>
     <string name="porter_access_pending_android">Não foi possível ativar o acesso. Verifique as permissões desta aplicação nas definições do Android.</string>
@@ -392,7 +392,7 @@
     <string name="compat_conflict_description">Para ligar aplicações que só conhecem o Shizuku, o Porter tem de substituir a aplicação Shizuku instalada pela respetiva aplicação de compatibilidade. As suas escolhas de acesso das aplicações serão transferidas.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Usada por %d aplicação</item>
-        <item quantity="many">Usada por %d de aplicações</item>
+        <item quantity="many">Usada por %d aplicações</item>
         <item quantity="other">Usada por %d aplicações</item>
     </plurals>
     <string name="compat_check_retrying">Não foi possível verificar o serviço. A tentar novamente automaticamente…</string>
@@ -415,13 +415,13 @@
     <string name="compat_usage_none">Não utilizada</string>
     <plurals name="compat_needed_count">
         <item quantity="one">Necessária para %d aplicação</item>
-        <item quantity="many">Necessária para %d de aplicações</item>
+        <item quantity="many">Necessária para %d aplicações</item>
         <item quantity="other">Necessária para %d aplicações</item>
     </plurals>
 
     <string name="porter_navigate_back">Voltar</string>
     <string name="porter_local_network_permission">Permita o acesso à sua rede local para que o Porter possa encontrar o serviço de depuração sem fios do Android e ligar-se a ele.</string>
-    <string name="porter_pairing_dialog_instructions">Abra “Depuração sem fios” nas “Opções de programador” do Android e escolha “Sincronize dispositivo com código de sincronização”. Introduza aqui a porta e o código de emparelhamento.</string>
+    <string name="porter_pairing_dialog_instructions">Abra “Depuração sem fios” nas “Opções de programador” do Android e escolha “Emparelhar dispositivo com código de emparelhamento”. Introduza aqui a porta e o código de emparelhamento.</string>
     <string name="porter_permission_detail">O Porter vai executar comandos no seu dispositivo para esta aplicação, com os mesmos privilégios que o próprio Porter tem. Permita apenas aplicações em que confia.</string>
     <string name="porter_permission_waiting">A aguardar o Porter…</string>
     <string name="porter_permission_also_covers">Também se aplica a: %1$s</string>
@@ -479,4 +479,66 @@
     <string name="porter_contact_description_error">Adicione alguns detalhes (pelo menos 20 carateres).</string>
     <string name="porter_contact_expected_error">Descreva o que esperava.</string>
     <string name="porter_contact_no_email">Instale ou ative uma aplicação de email para abrir este rascunho. Também pode partilhar os registos guardados ou contactar-nos através do GitHub ou do Discord.</string>
+    <!-- General and startup settings -->
+    <string name="settings_general">Geral</string>
+    <string name="settings_general_summary">Tema e procura de atualizações</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Iniciar no arranque, cão de guarda e atualizações do serviço</string>
+    <string name="settings_startup_attention">A operação em segundo plano ou os alertas precisam de atenção</string>
+    <string name="settings_updates">Atualizações</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Continuar</string>
+    <string name="onboarding_welcome_title">Boas-vindas ao Porter</string>
+    <string name="onboarding_welcome_body">O Porter dá acesso ADB às tuas aplicações, para que possam fazer coisas que normalmente exigem um computador. Tu decides quais as aplicações que o recebem.</string>
+    <string name="onboarding_welcome_service">O Porter inicia um pequeno serviço uma vez, e as aplicações que aprovas usam-no diretamente no teu dispositivo.</string>
+    <string name="onboarding_welcome_beta">Esta é uma compilação beta (de teste). Avança com sentido de humor e um plano de reserva. Comunica os problemas que encontrares.</string>
+    <string name="onboarding_shizuku_title">O Shizuku está instalado</string>
+    <string name="onboarding_shizuku_body">O Porter é um fork mantido do Shizuku, e os dois podem funcionar lado a lado. As aplicações que suportam o Porter podem usá-lo, enquanto as outras continuam a usar o Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Também podes deixar o Porter substituir o Shizuku, para que as aplicações feitas apenas para o Shizuku usem o Porter em vez dele. A escolha é tua. Podes decidir mais tarde em Definições → Compatibilidade com o Shizuku, e o guia de compatibilidade explica quais as opções que a tua instalação suporta.</string>
+    <string name="onboarding_shizuku_guide">Guia de compatibilidade</string>
+    <string name="onboarding_privacy_title">Privacidade</string>
+    <string name="onboarding_privacy_body">O Porter não recolhe, rastreia nem vende as tuas informações. Não tem anúncios, análises de utilização nem conta.</string>
+    <string name="onboarding_privacy_policy">Política de privacidade</string>
+    <string name="onboarding_get_started">Começar</string>
+    <string name="onboarding_save_failed">Não foi possível guardar. Tenta novamente.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Atualização disponível</string>
+    <string name="updater_card_versions">O Porter %1$s está disponível. Tens a versão %2$s.</string>
+    <string name="updater_ignore">Ignorar</string>
+    <string name="updater_changelog">Notas de versão</string>
+    <string name="updater_download">Transferir</string>
+    <string name="updater_check">Procurar atualizações</string>
+    <string name="updater_check_summary">Procura uma versão mais recente do Porter no GitHub quando abres o Porter. Uma verificação bem-sucedida é guardada durante um dia.</string>
+    <string name="updater_channel">Canal de atualização</string>
+    <string name="updater_channel_production">Produção</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Produção: apenas versões finais</string>
+    <string name="updater_channel_beta_choice">Beta: a versão mais recente, incluindo betas e pré-lançamentos</string>
+    <string name="updater_dialog_title">Transferir atualização</string>
+    <string name="updater_download_summary">Escolhe onde guardar o APK.</string>
+    <string name="updater_install_manual">Instalar manualmente</string>
+    <string name="updater_install_manual_summary">O instalador do Android pede-te confirmação.</string>
+    <string name="updater_install_automatic">Instalar automaticamente</string>
+    <string name="updater_install_automatic_summary">Usa o acesso ADB ou root do Porter. O Porter fecha-se durante a instalação da atualização.</string>
+    <string name="updater_install_automatic_requirement">Requer o serviço do Porter em execução no utilizador principal deste dispositivo.</string>
+    <string name="updater_continue">Continuar</string>
+    <string name="updater_downloading">A transferir…</string>
+    <string name="updater_installing">A instalar…</string>
+    <string name="updater_saved">%1$s guardado.</string>
+    <string name="updater_download_failed">A transferência falhou: %1$s</string>
+    <string name="updater_download_failed_partial">A transferência falhou: %1$s. O ficheiro parcialmente guardado pode permanecer.</string>
+    <string name="updater_not_porter">O ficheiro transferido não é um APK do Porter.</string>
+    <string name="updater_not_newer">O APK transferido não é mais recente do que o Porter instalado.</string>
+    <string name="updater_automatic_unavailable">O serviço do Porter já não está disponível no utilizador principal deste dispositivo, pelo que a atualização não foi instalada.</string>
+    <string name="updater_install_failed">A instalação falhou: %1$s</string>
+    <string name="updater_install_permission_denied">Permite que o Porter instale aplicações desconhecidas para instalar a atualização manualmente.</string>
+    <string name="updater_install_permission_unavailable">Este dispositivo não tem um ecrã para permitir a instalação de aplicações. Guarda o APK e instala-o com outro instalador.</string>
+    <string name="updater_installer_unavailable">Não foi possível abrir o instalador do Android.</string>
+    <string name="updater_save_unavailable">Não há nenhuma aplicação disponível para escolher onde guardar o APK.</string>
 </resources>

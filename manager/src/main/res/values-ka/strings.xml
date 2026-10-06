@@ -5,10 +5,10 @@
     <string name="home_status_service_not_running">%1$s არ მუშაობს</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[დაიწყე კომპიუტერთან დაკავშირებით]]></string>
-    <string name="home_adb_description"><![CDATA[არა დარუთული მოწყობილობებისთვის, Porter რომ ჩართო შენ გჭირდება ადბ-ს გამოყენება(საჭიროებს კომპიუტერთან კავშირს). ეს პროცესი უნდა გაიმეოროთ თქვენი მოწყობილობის ყოველ გადატვირთვაზე. გთხოვთ <b><a href="%1$s">წაიკითხოთ დახმარება</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[არა დარუთული მოწყობილობებისთვის, Porter რომ ჩართო შენ გჭირდება ადბ-ს გამოყენება(საჭიროებს კომპიუტერთან კავშირს). ეს პროცესი უნდა გაიმეოროთ თქვენი მოწყობილობის ყოველ გადატვირთვაზე. გთხოვთ <b><a href=\"%1$s\">წაიკითხოთ დახმარება</a></b>.]]></string>
     <string name="home_adb_button_view_command">ბრძანების ნახვა</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* არსებობს სხვა მოსაზრებები, გთხოვთ, დაადასტუროთ, რომ ჯერ წაიკითხეთ დახმარება.]]></string>
-    <string name="home_adb_dialog_view_command_button_send">გამოწერა</string>
+    <string name="home_adb_dialog_view_command_button_send">გაგზავნა</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[დაიწყეთ უსადენო გამართვის საშუალებით]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Android 11-ზე ან ზემოთ, შეგიძლიათ ჩართოთ უსადენო გამართვა და გაუშვათ Porter პირდაპირ თქვენი მოწყობილობიდან, კომპიუტერთან დაკავშირების გარეშე.<p>გთხოვთ, ჯერ ნახოთ ნაბიჯ-ნაბიჯ სახელმძღვანელო.]]></string>
@@ -65,7 +65,7 @@
         ჩართეთ „USB გამართვა“ და „უკაბელო გამართვა“.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">შეეხეთ „უკაბელო გამართვის“
         მარცხენა მხარეს, შემდეგ შეეხეთ „მოწყობილობის დაწყვილება დაწყვილების კოდით“. დაწყვილების
-        დასასრულებლად შეიყვანეთ შეტყობინებაში მითითებული კოდი.</string>
+        დასასრულებლად კოდი შეტყობინებაში შეიყვანეთ.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">დაწყვილების პროცესს სჭირდება
         ურთიერთობა Porter-ის შეტყობინებასთან. გთხოვთ, ნება მიეცით Porter-ს გამოაქვეყნოს
         შეტყობინებები.</string>
@@ -98,7 +98,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB-ის ნებართვა შეზღუდულია</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[ძალიან შესაძლებელია, რომ თქვენი მოწყობილობის მწარმოებელმა შეზღუდოს adb-ის ნებართვა.<p>შეიძლება არსებობდეს გამოსავალი თქვენი სისტემისთვის <b><a href=\"%1$s\">ეს დოკუმენტი</a></b>.]]></string>
-    <string name="app_management_item_summary_requires_root">* მოითხოვს Porter გადის root</string>
+    <string name="app_management_item_summary_requires_root">* მოითხოვს Porter-ის root-ით მუშაობას</string>
     <string name="app_management_toggle_all">ყველაფრის გადართვა</string>
     <!-- Terminal -->
     <string name="home_terminal_title">გამოიყენეთ Porter ტერმინალის აპებში</string>
@@ -143,7 +143,7 @@
         ჩატვირთვის / მაკონტროლებლის დასაწყებად გამართულად მუშაობისთვის.</string>
     <string name="snackbar_battery_optimization_settings">გთხოვთ, გამორთოთ ბატარეის ოპტიმიზაცია ამ
         ფუნქციის გამოსაყენებლად.</string>
-    <string name="snackbar_action_fix">დაფიქსირება</string>
+    <string name="snackbar_action_fix">გამოსწორება</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter უკვე იწყება ფონზე</string>
     <string name="toast_accessibility_tv_only">ეს სერვისი მხოლოდ ტელევიზორის მოწყობილობებზეა
@@ -166,11 +166,11 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">Porter-ზე წვდომა</string>
     <string name="permission_description">მიეცით აპს საშუალება გამოიყენოს Porter.</string>
-    <string name="permission_warning_template"><![CDATA[ნება დართეთ <b>%1$s</b> მდე %2$s?]]></string>
-    <string name="grant_dialog_button_allow_always">ნება დართეთ ყველა დროის</string>
+    <string name="permission_warning_template"><![CDATA[მიეცეს <b>%1$s</b>-ს %2$s?]]></string>
+    <string name="grant_dialog_button_allow_always">ყოველთვის დაშვება</string>
     <string name="grant_dialog_button_deny">"უარყოფა"</string>
     <!-- Starter -->
-    <string name="starter">შემქმნელი</string>
+    <string name="starter">გამშვები</string>
     <string name="start_with_root_failed">შეუძლებელია სერვისის დაწყება, რადგან root ნებართვა არ არის
         გაცემული ან ეს მოწყობილობა არ არის rooted.</string>
     <!-- WADB Starter -->
@@ -186,8 +186,8 @@
     <string name="watchdog_running">Watchdog მუშაობს</string>
     <string name="watchdog_turn_off">გამორთვა</string>
     <string name="watchdog_shizuku_crashed_title">Porter ცოტა ხნის წინ ჩამოვარდა</string>
-    <string name="watchdog_shizuku_crashed_text">Watchdog-მა განაახლა სერვისი. შეეხეთ პოტენციურ
-        გამოსწორებებს, რათა თავიდან აიცილოთ მომავალი ავარიები.</string>
+    <string name="watchdog_shizuku_crashed_text">Watchdog-მა ხელახლა გაუშვა სერვისი. შეეხეთ, რომ გაიგოთ პოტენციური
+        გამოსწორებების შესახებ და თავიდან აიცილოთ მომავალი ავარიები.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">გამორთეთ შეტყობინებები</string>
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">ბრაუზერის გაშვება შეუძლებელია</string>
@@ -471,4 +471,63 @@
     <string name="porter_contact_description_error">გთხოვთ, დაამატოთ დეტალები (მინიმუმ 20 სიმბოლო).</string>
     <string name="porter_contact_expected_error">გთხოვთ, აღწეროთ, რას ელოდით.</string>
     <string name="porter_contact_no_email">ამ მონახაზის გასახსნელად დააინსტალირეთ ან ჩართეთ ელფოსტის აპი. ასევე შეგიძლიათ გააზიაროთ შენახული ჟურნალები ან დაგვიკავშირდეთ GitHub-ით ან Discord-ით.</string>
+    <string name="settings_general">ზოგადი</string>
+    <string name="settings_general_summary">თემა და განახლებების შემოწმება</string>
+    <string name="settings_general_summary_theme">თემა</string>
+    <string name="settings_startup_summary">ჩატვირთვისას დაწყება, მაკონტროლებელი და სერვისის განახლებები</string>
+    <string name="settings_startup_attention">ფონურ ოპერაციას ან გაფრთხილებებს ყურადღება სჭირდება</string>
+    <string name="settings_updates">განახლებები</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">გაგრძელება</string>
+    <string name="onboarding_welcome_title">კეთილი იყოს შენი მობრძანება Porter-ში</string>
+    <string name="onboarding_welcome_body">Porter შენს აპებს ADB წვდომას აძლევს, რათა მათ შეძლონ ის, რისთვისაც ჩვეულებრივ კომპიუტერია საჭირო. შენ წყვეტ, რომელი აპი მიიღებს მას.</string>
+    <string name="onboarding_welcome_service">Porter ერთხელ უშვებს პატარა სერვისს და შენ მიერ დამტკიცებული აპები მას პირდაპირ შენს მოწყობილობაზე იყენებენ.</string>
+    <string name="onboarding_welcome_beta">ეს ბეტა (სატესტო) ანაწყობია. გააგრძელე იუმორის გრძნობითა და სათადარიგო გეგმით. შეგვატყობინე პრობლემების შესახებ, რომლებსაც წააწყდები.</string>
+    <string name="onboarding_shizuku_title">Shizuku დაინსტალირებულია</string>
+    <string name="onboarding_shizuku_body">Porter არის Shizuku-ს ფორკი, რომლის ტექნიკური მოვლაც გრძელდება, და ორივეს შეუძლია ერთდროულად მუშაობა. აპებს, რომლებსაც Porter-ის მხარდაჭერა აქვთ, შეუძლიათ Porter გამოიყენონ, ხოლო სხვა აპები Shizuku-ს გამოყენებას გააგრძელებენ.</string>
+    <string name="onboarding_shizuku_replace">შეგიძლია Porter-ს Shizuku-ს ჩანაცვლების უფლებაც მისცე, რათა მხოლოდ Shizuku-სთვის შექმნილმა აპებმა მის ნაცვლად Porter გამოიყენონ. არჩევანი შენზეა. ამის გადაწყვეტა მოგვიანებითაც შეგიძლია: პარამეტრები → Shizuku-სთან თავსებადობა. თავსებადობის სახელმძღვანელო განმარტავს, რომელ ვარიანტებს უჭერს მხარს შენი ინსტალაცია.</string>
+    <string name="onboarding_shizuku_guide">თავსებადობის სახელმძღვანელო</string>
+    <string name="onboarding_privacy_title">კონფიდენციალურობა</string>
+    <string name="onboarding_privacy_body">Porter არ აგროვებს, არ ადევნებს თვალს და არ ყიდის შენს ინფორმაციას. მას არ აქვს რეკლამა, ანალიტიკა ან ანგარიში.</string>
+    <string name="onboarding_privacy_policy">კონფიდენციალურობის პოლიტიკა</string>
+    <string name="onboarding_get_started">დაწყება</string>
+    <string name="onboarding_save_failed">შენახვა ვერ მოხერხდა. სცადე ხელახლა.</string>
+
+    <string name="updater_card_title">ხელმისაწვდომია განახლება</string>
+    <string name="updater_card_versions">ხელმისაწვდომია Porter %1$s. შენ გაქვს %2$s.</string>
+    <string name="updater_ignore">იგნორირება</string>
+    <string name="updater_changelog">ცვლილებების ჟურნალი</string>
+    <string name="updater_download">ჩამოტვირთვა</string>
+    <string name="updater_check">განახლებების შემოწმება</string>
+    <string name="updater_check_summary">Porter-ის გახსნისას GitHub-ზე მის უფრო ახალ გამოშვებას ეძებს. წარმატებული შემოწმების შედეგი ერთი დღით ინახება.</string>
+    <string name="updater_channel">განახლებების არხი</string>
+    <string name="updater_channel_production">სტაბილური</string>
+    <string name="updater_channel_beta">ბეტა</string>
+    <string name="updater_channel_production_choice">სტაბილური: მხოლოდ სრული გამოშვებები</string>
+    <string name="updater_channel_beta_choice">ბეტა: უახლესი გამოშვება, ბეტა და წინასწარი გამოშვებების ჩათვლით</string>
+    <string name="updater_dialog_title">განახლების ჩამოტვირთვა</string>
+    <string name="updater_download_summary">აირჩიე, სად შეინახო APK.</string>
+    <string name="updater_install_manual">ხელით ინსტალაცია</string>
+    <string name="updater_install_manual_summary">Android-ის ინსტალატორი დადასტურებას გთხოვს.</string>
+    <string name="updater_install_automatic">ავტომატური ინსტალაცია</string>
+    <string name="updater_install_automatic_summary">იყენებს Porter-ის ADB ან root წვდომას. განახლების ინსტალაციისას Porter იხურება.</string>
+    <string name="updater_install_automatic_requirement">საჭიროა Porter-ის სერვისის მუშაობა ამ მოწყობილობის ძირითად მომხმარებელში.</string>
+    <string name="updater_continue">გაგრძელება</string>
+    <string name="updater_downloading">მიმდინარეობს ჩამოტვირთვა…</string>
+    <string name="updater_installing">ინსტალირდება…</string>
+    <string name="updater_saved">შენახულია %1$s.</string>
+    <string name="updater_download_failed">ჩამოტვირთვა ვერ მოხერხდა: %1$s</string>
+    <string name="updater_download_failed_partial">ჩამოტვირთვა ვერ მოხერხდა: %1$s. ნაწილობრივ შენახული ფაილი შეიძლება დარჩეს.</string>
+    <string name="updater_not_porter">ჩამოტვირთული ფაილი Porter-ის APK არ არის.</string>
+    <string name="updater_not_newer">ჩამოტვირთული APK დაინსტალირებულ Porter-ზე ახალი არ არის.</string>
+    <string name="updater_automatic_unavailable">Porter-ის სერვისი ამ მოწყობილობის ძირითად მომხმარებელში აღარ არის ხელმისაწვდომი, ამიტომ განახლება არ დაინსტალირდა.</string>
+    <string name="updater_install_failed">ინსტალაცია ვერ მოხერხდა: %1$s</string>
+    <string name="updater_install_permission_denied">განახლების ხელით დასაინსტალირებლად Porter-ს უცნობი აპების ინსტალაციის უფლება მიეცი.</string>
+    <string name="updater_install_permission_unavailable">ამ მოწყობილობას არ აქვს ეკრანი აპების ინსტალაციის დასაშვებად. შეინახე APK და სხვა ინსტალატორით დააინსტალირე.</string>
+    <string name="updater_installer_unavailable">Android-ის ინსტალატორის გახსნა ვერ მოხერხდა.</string>
+    <string name="updater_save_unavailable">არ არის ხელმისაწვდომი აპი APK-ის შენახვის ადგილის ასარჩევად.</string>
 </resources>

@@ -113,7 +113,7 @@
         uten å skrive banen.\n\nEllers kan du opprette et alias for %2$s i konfigurasjonsfilen til
         terminalappen din %3$s .</string>
     <string name="terminal_tutorial_3">Åpne et skall med følgende kommando:</string>
-    <string name="rish_description"><![CDATA[Med %1$skan du kjøre skallkommandoer i en hvilken som helst terminalapp.<p>Trykk for å lære mer om hvordan du bruker det.]]></string>
+    <string name="rish_description"><![CDATA[Med %1$s kan du kjøre skallkommandoer i en hvilken som helst terminalapp.<p>Trykk for å lære mer om hvordan du bruker det.]]></string>
     <!-- Settings -->
     <string name="settings_title">Innstillinger</string>
     <string name="settings_start_on_boot">Start ved oppstart</string>
@@ -462,4 +462,66 @@
     <string name="porter_contact_description_error">Legg til noen detaljer (minst 20 tegn).</string>
     <string name="porter_contact_expected_error">Beskriv hva du forventet.</string>
     <string name="porter_contact_no_email">Installer eller aktiver en e-postapp for å åpne dette utkastet. Du kan også dele lagrede logger eller kontakte oss via GitHub eller Discord.</string>
+
+    <string name="settings_general">Generelt</string>
+    <string name="settings_general_summary">Tema og oppdateringssjekk</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Start ved oppstart, watchdog og tjenesteoppdateringer</string>
+    <string name="settings_startup_attention">Bakgrunnsoperasjon eller varsler trenger oppmerksomhet</string>
+    <string name="settings_updates">Oppdateringer</string>
+
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Fortsett</string>
+    <string name="onboarding_welcome_title">Velkommen til Porter</string>
+    <string name="onboarding_welcome_body">Porter gir appene dine ADB-tilgang, slik at de kan gjøre ting som vanligvis krever en datamaskin. Du bestemmer hvilke apper som får den.</string>
+    <string name="onboarding_welcome_service">Porter starter en liten tjeneste én gang, og appene du godkjenner, bruker den direkte på enheten din.</string>
+    <string name="onboarding_welcome_beta">Dette er en betaversjon (testversjon). Fortsett med godt humør og en reserveplan. Rapporter problemer du støter på.</string>
+    <string name="onboarding_shizuku_title">Shizuku er installert</string>
+    <string name="onboarding_shizuku_body">Porter er en vedlikeholdt fork av Shizuku, og de to kan kjøre side om side. Apper som støtter Porter, kan bruke Porter, mens andre apper fortsetter å bruke Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Du kan også la Porter erstatte Shizuku, slik at apper laget bare for Shizuku bruker Porter i stedet. Det er opp til deg. Du kan bestemme deg senere under Innstillinger → Shizuku-kompatibilitet, og kompatibilitetsveiledningen forklarer hvilke alternativer installasjonen din støtter.</string>
+    <string name="onboarding_shizuku_guide">Kompatibilitetsveiledning</string>
+    <string name="onboarding_privacy_title">Personvern</string>
+    <string name="onboarding_privacy_body">Porter samler ikke inn, sporer eller selger informasjonen din. Den har ingen reklame, ingen analyseverktøy og ingen konto.</string>
+    <string name="onboarding_privacy_policy">Personvernerklæring</string>
+    <string name="onboarding_get_started">Kom i gang</string>
+    <string name="onboarding_save_failed">Kunne ikke lagre. Prøv igjen.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Oppdatering tilgjengelig</string>
+    <string name="updater_card_versions">Porter %1$s er tilgjengelig. Du har %2$s.</string>
+    <string name="updater_ignore">Ignorer</string>
+    <string name="updater_changelog">Endringslogg</string>
+    <string name="updater_download">Last ned</string>
+    <string name="updater_check">Se etter oppdateringer</string>
+    <string name="updater_check_summary">Ser etter en nyere Porter-utgivelse på GitHub når du åpner Porter. En vellykket sjekk beholdes i én dag.</string>
+    <string name="updater_channel">Oppdateringskanal</string>
+    <string name="updater_channel_production">Produksjon</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Produksjon: bare fullstendige utgivelser</string>
+    <string name="updater_channel_beta_choice">Beta: nyeste utgivelse, inkludert beta- og forhåndsutgivelser</string>
+    <string name="updater_dialog_title">Last ned oppdatering</string>
+    <string name="updater_download_summary">Velg hvor APK-en skal lagres.</string>
+    <string name="updater_install_manual">Installer manuelt</string>
+    <string name="updater_install_manual_summary">Androids installasjonsprogram ber deg om å bekrefte.</string>
+    <string name="updater_install_automatic">Installer automatisk</string>
+    <string name="updater_install_automatic_summary">Bruker Porters ADB- eller root-tilgang. Porter lukkes mens oppdateringen installeres.</string>
+    <string name="updater_install_automatic_requirement">Krever at Porter-tjenesten kjører under enhetens primære bruker.</string>
+    <string name="updater_continue">Fortsett</string>
+    <string name="updater_downloading">Laster ned…</string>
+    <string name="updater_installing">Installerer…</string>
+    <string name="updater_saved">Lagret %1$s.</string>
+    <string name="updater_download_failed">Nedlastingen mislyktes: %1$s</string>
+    <string name="updater_download_failed_partial">Nedlastingen mislyktes: %1$s. Den delvis lagrede filen kan bli liggende.</string>
+    <string name="updater_not_porter">Den nedlastede filen er ikke en Porter-APK.</string>
+    <string name="updater_not_newer">Den nedlastede APK-en er ikke nyere enn den installerte Porter-versjonen.</string>
+    <string name="updater_automatic_unavailable">Porter-tjenesten er ikke lenger tilgjengelig under enhetens primære bruker, så oppdateringen ble ikke installert.</string>
+    <string name="updater_install_failed">Installasjonen mislyktes: %1$s</string>
+    <string name="updater_install_permission_denied">Tillat at Porter installerer ukjente apper for å installere oppdateringen manuelt.</string>
+    <string name="updater_install_permission_unavailable">Denne enheten har ingen skjerm for å tillate appinstallasjon. Lagre APK-en og installer den med et annet installasjonsprogram.</string>
+    <string name="updater_installer_unavailable">Androids installasjonsprogram kunne ikke åpnes.</string>
+    <string name="updater_save_unavailable">Ingen app er tilgjengelig for å velge hvor APK-en skal lagres.</string>
 </resources>

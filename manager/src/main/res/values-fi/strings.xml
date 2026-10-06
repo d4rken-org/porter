@@ -59,7 +59,7 @@
         sitten käyttöön \"USB-virheenkorjaus\" ja \"Langaton virheenkorjaus\".</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Napauta \"Langaton
         virheenkorjaus\" -kohdan vasenta puolta ja napauta sitten \"Muodosta laitepari
-        laiteparikoodilla\". Syötä ilmoituksessa oleva koodi parituksen viimeistelemiseksi.</string>
+        laiteparikoodilla\". Syötä koodi ilmoitukseen parituksen viimeistelemiseksi.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Paritus edellyttää, että käytät Porterin ilmoitusta. Salli Porterin lähettää ilmoituksia.</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI:n käyttäjät saattavat joutua vaihtamaan
         ilmoitustyylin \"Android\"-muotoon \"Notification\" - \"Notification shade\" -asetuksista
@@ -87,7 +87,7 @@
     <string name="app_management_dialog_adb_is_limited_title">adb:n lupa on rajoitettu</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[On hyvin mahdollista, että laitevalmistajasi rajoittaa adb:n käyttöoikeuksia.<p>Järjestelmällesi saattaa olla ratkaisu <b><a href=\"%1$s\">Tämä asiakirja</a></b>.]]></string>
     <string name="app_management_item_summary_requires_root">* vaatii, että Porter on käynnissä rootilla</string>
-    <string name="app_management_toggle_all">Kytke kaikki päälle</string>
+    <string name="app_management_toggle_all">Vaihda kaikkien tila</string>
     <!-- Terminal -->
     <string name="home_terminal_title">Käytä Porteria päätesovelluksissa</string>
     <string name="home_terminal_description">Suorita shell-komentoja päätesovelluksissa Porterin kautta</string>
@@ -105,7 +105,7 @@
         -komennon suorittamisen kirjoittamatta polkua.\n\nMuussa tapauksessa voit luoda aliaksen
         %2$s -komennolle päätesovelluksesi %3$s -määritystiedostossa.</string>
     <string name="terminal_tutorial_3">Avaa komentotulkki seuraavalla komennolla:</string>
-    <string name="rish_description"><![CDATA[Komentosarjalla %1$svoit suorittaa komentotulkkikomentoja missä tahansa päätesovelluksessa.<p>Napauta saadaksesi lisätietoja sen käytöstä.]]></string>
+    <string name="rish_description"><![CDATA[Komentosarjalla %1$s voit suorittaa komentotulkkikomentoja missä tahansa päätesovelluksessa.<p>Napauta saadaksesi lisätietoja sen käytöstä.]]></string>
     <!-- Settings -->
     <string name="settings_title">Asetukset</string>
     <string name="settings_start_on_boot">Käynnistä laitteen käynnistyessä</string>
@@ -162,7 +162,7 @@
     <string name="wadb_notification_title">Käynnistetään Porteria…</string>
     <string name="wadb_notification_wifi_required">Odotetaan Wi-Fi-yhteyttä ennen jatkamista</string>
     <string name="wadb_notification_retry">Odotetaan uudelleenyritystä</string>
-    <string name="wadb_error_title">Virhe käynnistyksen yhteydessä</string>
+    <string name="wadb_error_title">Virhe Porterin käynnistyksessä laitteen käynnistyessä</string>
     <string name="wadb_error_notify_dev">Napauta ilmoittaaksesi kehittäjälle.</string>
     <string name="wadb_pair_required_notification">Langaton virheenkorjaus ei tunnista Porteria, joten Porter ei voinut käynnistyä taustalla. Napauta ja parita Porter uudelleen.</string>
     <string name="wadb_permission_error_notification_title">Lupavirhe</string>
@@ -209,7 +209,7 @@
     <string name="porter_status_running_root">Käynnissä rootin kautta</string>
     <string name="porter_status_restart_service">Käynnistä Porter uudelleen, niin käynnissä oleva palvelu päivittyy.</string>
     <string name="porter_status_version_unknown">Tuntematon</string>
-    <string name="porter_status_versions">Asennettu Porter: %1$s\nKäynnissä oleva palvelu: %2$s\nShizuku API: %3$d · Patch: %4$d</string>
+    <string name="porter_status_versions">Asennettu Porter: %1$s\nKäynnissä oleva palvelu: %2$s\nShizuku API: %3$d · Korjaustaso: %4$d</string>
     <string name="porter_acknowledgements">Kiitokset</string>
     <string name="porter_acknowledgements_summary">Alkuperäisprojektit, avoimen lähdekoodin kirjastot ja lisenssit.</string>
     <string name="porter_acknowledgements_thanks">Kiitos</string>
@@ -452,4 +452,64 @@
     <string name="porter_contact_description_error">Lisää tietoja (vähintään 20 merkkiä).</string>
     <string name="porter_contact_expected_error">Kuvaile, mitä odotit.</string>
     <string name="porter_contact_no_email">Asenna tai ota käyttöön sähköpostisovellus, niin voit avata tämän luonnoksen. Voit myös jakaa tallennettuja lokeja tai ottaa meihin yhteyttä GitHubin tai Discordin kautta.</string>
+
+    <string name="settings_general">Yleiset</string>
+    <string name="settings_general_summary">Teema ja päivitysten tarkistus</string>
+    <string name="settings_general_summary_theme">Teema</string>
+    <string name="settings_startup_summary">Käynnistys laitteen käynnistyessä, vahtikoira ja palvelupäivitykset</string>
+    <string name="settings_startup_attention">Taustatoiminto tai ilmoitukset tarvitsevat huomiota</string>
+    <string name="settings_updates">Päivitykset</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Jatka</string>
+    <string name="onboarding_welcome_title">Tervetuloa Porteriin</string>
+    <string name="onboarding_welcome_body">Porter antaa sovelluksillesi ADB-käyttöoikeuden, joten ne voivat tehdä asioita, joihin tavallisesti tarvitaan tietokone. Sinä päätät, mitkä sovellukset sen saavat.</string>
+    <string name="onboarding_welcome_service">Porter käynnistää kerran pienen palvelun, ja hyväksymäsi sovellukset käyttävät sitä suoraan laitteellasi.</string>
+    <string name="onboarding_welcome_beta">Tämä on beeta- eli testiversio. Jatka huumorintajulla ja varasuunnitelma valmiina. Ilmoita kohtaamistasi ongelmista.</string>
+    <string name="onboarding_shizuku_title">Shizuku on asennettu</string>
+    <string name="onboarding_shizuku_body">Porter on Shizukun ylläpidetty kehityshaara, ja molemmat voivat olla käynnissä rinnakkain. Porteria tukevat sovellukset voivat käyttää Porteria, kun taas muut sovellukset jatkavat Shizukun käyttöä.</string>
+    <string name="onboarding_shizuku_replace">Voit myös antaa Porterin korvata Shizukun, jolloin vain Shizukulle tehdyt sovellukset käyttävät sen sijaan Porteria. Sinä päätät. Voit päättää myöhemmin kohdassa Asetukset → Shizuku-yhteensopivuus. Yhteensopivuusopas kertoo, mitä vaihtoehtoja asennuksesi tukee.</string>
+    <string name="onboarding_shizuku_guide">Yhteensopivuusopas</string>
+    <string name="onboarding_privacy_title">Tietosuoja</string>
+    <string name="onboarding_privacy_body">Porter ei kerää, seuraa eikä myy tietojasi. Siinä ei ole mainoksia, analytiikkaa eikä tiliä.</string>
+    <string name="onboarding_privacy_policy">Tietosuojakäytäntö</string>
+    <string name="onboarding_get_started">Aloita</string>
+    <string name="onboarding_save_failed">Tallennus epäonnistui. Yritä uudelleen.</string>
+
+    <string name="updater_card_title">Päivitys saatavilla</string>
+    <string name="updater_card_versions">Porter %1$s on saatavilla. Sinulla on %2$s.</string>
+    <string name="updater_ignore">Ohita</string>
+    <string name="updater_changelog">Muutosloki</string>
+    <string name="updater_download">Lataa</string>
+    <string name="updater_check">Tarkista päivitykset</string>
+    <string name="updater_check_summary">Etsii uudempaa Porter-julkaisua GitHubista, kun avaat Porterin. Onnistuneen tarkistuksen tulos säilytetään päivän ajan.</string>
+    <string name="updater_channel">Päivityskanava</string>
+    <string name="updater_channel_production">Vakaa</string>
+    <string name="updater_channel_beta">Beeta</string>
+    <string name="updater_channel_production_choice">Vakaa: vain varsinaiset julkaisut</string>
+    <string name="updater_channel_beta_choice">Beeta: uusin julkaisu, myös beeta- ja ennakkojulkaisut</string>
+    <string name="updater_dialog_title">Lataa päivitys</string>
+    <string name="updater_download_summary">Valitse APK:n tallennuspaikka.</string>
+    <string name="updater_install_manual">Asenna manuaalisesti</string>
+    <string name="updater_install_manual_summary">Androidin asennusohjelma pyytää vahvistusta.</string>
+    <string name="updater_install_automatic">Asenna automaattisesti</string>
+    <string name="updater_install_automatic_summary">Käyttää Porterin ADB- tai root-käyttöoikeutta. Porter sulkeutuu päivityksen asennuksen ajaksi.</string>
+    <string name="updater_install_automatic_requirement">Vaatii, että Porterin palvelu on käynnissä tämän laitteen ensisijaisella käyttäjällä.</string>
+    <string name="updater_continue">Jatka</string>
+    <string name="updater_downloading">Ladataan…</string>
+    <string name="updater_installing">Asennetaan…</string>
+    <string name="updater_saved">Tallennettu: %1$s.</string>
+    <string name="updater_download_failed">Lataus epäonnistui: %1$s</string>
+    <string name="updater_download_failed_partial">Lataus epäonnistui: %1$s. Osittain tallennettu tiedosto voi jäädä laitteelle.</string>
+    <string name="updater_not_porter">Ladattu tiedosto ei ole Porterin APK.</string>
+    <string name="updater_not_newer">Ladattu APK ei ole asennettua Porteria uudempi.</string>
+    <string name="updater_automatic_unavailable">Porterin palvelu ei ole enää käytettävissä tämän laitteen ensisijaisella käyttäjällä, joten päivitystä ei asennettu.</string>
+    <string name="updater_install_failed">Asennus epäonnistui: %1$s</string>
+    <string name="updater_install_permission_denied">Salli Porterin asentaa tuntemattomia sovelluksia, jotta voit asentaa päivityksen manuaalisesti.</string>
+    <string name="updater_install_permission_unavailable">Tässä laitteessa ei ole näyttöä sovellusten asentamisen sallimiseen. Tallenna APK ja asenna se toisella asennusohjelmalla.</string>
+    <string name="updater_installer_unavailable">Androidin asennusohjelmaa ei voitu avata.</string>
+    <string name="updater_save_unavailable">APK:n tallennuspaikan valintaan ei ole käytettävissä sovellusta.</string>
 </resources>

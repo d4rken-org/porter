@@ -50,9 +50,20 @@ internal class ServiceStatusRepository private constructor(private val appContex
         ServiceSnapshot(value, runtime, update.running, update.failed, UserHandleCompat.myUserId() == 0)
     }.stateIn(scope, SharingStarted.Eagerly, ServiceSnapshot(serviceState = PorterStateMachine.instance.get(), primaryUser = UserHandleCompat.myUserId() == 0))
 
-    init { scope.launch { PorterStateMachine.instance.asFlow().collect { refresh() } } }
+    /** Refreshes the triggers below started that are no longer running. */
+    private val triggeredDone = MutableStateFlow(0)
 
-    fun refresh() {
+    // Porter.state as well: the SDK's connection or refusal can land after the server's state
+    // change; ServiceStatusRepositoryTest covers a connection and a refusal arriving that way.
+    init {
+        scope.launch {
+            merge(PorterStateMachine.instance.asFlow(), Porter.state).collect {
+                refresh().invokeOnCompletion { triggeredDone.update { it + 1 } }
+            }
+        }
+    }
+
+    fun refresh(): Job =
         scope.launch {
             mutex.withLock {
                 val binder = ServerBinder.binder.value
@@ -63,6 +74,10 @@ internal class ServiceStatusRepository private constructor(private val appContex
                 if (PorterStateMachine.instance.isRunning()) ServiceReplacement.get(appContext).reconcile()
             }
         }
+
+    /** Waits for the first [count] triggered refreshes; the triggers must not fire again meanwhile. */
+    internal suspend fun awaitTriggeredRefreshesForTest(count: Int) {
+        triggeredDone.first { it >= count }
     }
 
     private suspend fun load(binder: IBinder?): ServiceStatus {
@@ -101,6 +116,12 @@ internal class ServiceStatusRepository private constructor(private val appContex
         @Volatile private var instance: ServiceStatusRepository? = null
         fun get(context: Context): ServiceStatusRepository = instance ?: synchronized(this) {
             instance ?: ServiceStatusRepository(context.applicationContext).also { instance = it }
+        }
+
+        internal fun resetForTest() {
+            val repository = instance ?: return
+            instance = null
+            runBlocking { repository.scope.coroutineContext.job.cancelAndJoin() }
         }
 
         // Deliberately not an instance method: get() would build the process-wide singleton and

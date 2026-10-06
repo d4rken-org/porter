@@ -23,8 +23,8 @@ Porter lang ang kailangan ng mga app na may direktang suporta sa Porter. May dag
 <b>Para sa mga developer ng app</b>
 Magdagdag ng direktang suporta sa Porter sa iyong app: https://porter.darken.eu/developers
 
-<b>Privacy</b>
-Walang ads, walang tracking, walang account. Ang mga app na inaprubahan mo lang ang may access. Open source ang Porter.
+<b>Pagkapribado</b>
+Walang mga patalastas, walang pagsubaybay, walang account. Ang mga app na inaprubahan mo lang ang may access. Open source ang Porter.
 
 <b>Serbisyo ng accessibility</b>
 May kasamang opsyonal na serbisyo ng accessibility ang Porter na ginagamit lang sa Android TV para sa pagpapares ng Wireless na pag-debug. Binabasa nito ang code ng pagpapares mula sa screen ng pagpapares ng Android at kusa itong nag-o-off kapag tapos na ang pagpapares. Wala itong kinokolekta o ibinabahaging iba pang impormasyon.

@@ -473,4 +473,64 @@
     <string name="porter_contact_description_error">Sila tambahkan beberapa butiran (sekurang-kurangnya 20 aksara).</string>
     <string name="porter_contact_expected_error">Sila terangkan apa yang anda jangkakan.</string>
     <string name="porter_contact_no_email">Pasang atau dayakan apl e-mel untuk membuka draf ini. Anda juga boleh berkongsi log yang disimpan atau menghubungi kami melalui GitHub atau Discord.</string>
+    <string name="settings_general">Umum</string>
+    <string name="settings_general_summary">Tema dan semakan kemas kini</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Mulakan semasa but, pengawas dan kemas kini perkhidmatan</string>
+    <string name="settings_startup_attention">Operasi latar belakang atau makluman memerlukan perhatian</string>
+    <string name="settings_updates">Kemas kini</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Teruskan</string>
+    <string name="onboarding_welcome_title">Selamat datang ke Porter</string>
+    <string name="onboarding_welcome_body">Porter memberikan akses ADB kepada apl kamu supaya apl boleh melakukan perkara yang biasanya memerlukan komputer. Kamu tentukan apl mana yang mendapatnya.</string>
+    <string name="onboarding_welcome_service">Porter memulakan satu perkhidmatan kecil sekali sahaja, dan apl yang kamu benarkan menggunakannya terus pada peranti kamu.</string>
+    <string name="onboarding_welcome_beta">Ini ialah binaan beta (ujian). Teruskan dengan selera humor dan pelan sandaran. Sila laporkan isu yang ditemui.</string>
+    <string name="onboarding_shizuku_title">Shizuku telah dipasang</string>
+    <string name="onboarding_shizuku_body">Porter ialah fork Shizuku yang diselenggara, dan kedua-duanya boleh berjalan serentak. Apl yang menyokong Porter boleh menggunakan Porter, manakala apl lain terus menggunakan Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Kamu juga boleh membenarkan Porter menggantikan Shizuku supaya apl yang dibina hanya untuk Shizuku menggunakan Porter sebagai gantinya. Pilihan di tangan kamu. Kamu boleh membuat keputusan kemudian di bawah Tetapan → Keserasian Shizuku, dan panduan keserasian menerangkan pilihan yang disokong oleh pemasangan kamu.</string>
+    <string name="onboarding_shizuku_guide">Panduan keserasian</string>
+    <string name="onboarding_privacy_title">Privasi</string>
+    <string name="onboarding_privacy_body">Porter tidak mengumpul, menjejak atau menjual maklumat kamu. Tiada iklan, tiada analitik dan tiada akaun.</string>
+    <string name="onboarding_privacy_policy">Dasar privasi</string>
+    <string name="onboarding_get_started">Mula sekarang</string>
+    <string name="onboarding_save_failed">Tidak dapat menyimpan. Cuba lagi.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Kemas kini tersedia</string>
+    <string name="updater_card_versions">Porter %1$s tersedia. Kamu menggunakan %2$s.</string>
+    <string name="updater_ignore">Abaikan</string>
+    <string name="updater_changelog">Log perubahan</string>
+    <string name="updater_download">Muat turun</string>
+    <string name="updater_check">Semak kemas kini</string>
+    <string name="updater_check_summary">Mencari keluaran Porter yang lebih baharu di GitHub apabila kamu membuka Porter. Semakan yang berjaya disimpan selama sehari.</string>
+    <string name="updater_channel">Saluran kemas kini</string>
+    <string name="updater_channel_production">Pengeluaran</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Pengeluaran: keluaran penuh sahaja</string>
+    <string name="updater_channel_beta_choice">Beta: keluaran terbaharu, termasuk beta dan prakeluaran</string>
+    <string name="updater_dialog_title">Muat turun kemas kini</string>
+    <string name="updater_download_summary">Pilih tempat untuk menyimpan APK.</string>
+    <string name="updater_install_manual">Pasang secara manual</string>
+    <string name="updater_install_manual_summary">Pemasang Android meminta pengesahan kamu.</string>
+    <string name="updater_install_automatic">Pasang secara automatik</string>
+    <string name="updater_install_automatic_summary">Menggunakan akses ADB atau root Porter. Porter ditutup semasa kemas kini dipasang.</string>
+    <string name="updater_install_automatic_requirement">Memerlukan perkhidmatan Porter berjalan pada pengguna utama peranti ini.</string>
+    <string name="updater_continue">Teruskan</string>
+    <string name="updater_downloading">Memuat turun…</string>
+    <string name="updater_installing">Memasang…</string>
+    <string name="updater_saved">%1$s disimpan.</string>
+    <string name="updater_download_failed">Muat turun gagal: %1$s</string>
+    <string name="updater_download_failed_partial">Muat turun gagal: %1$s. Fail yang disimpan sebahagiannya mungkin masih ada.</string>
+    <string name="updater_not_porter">Fail yang dimuat turun bukan APK Porter.</string>
+    <string name="updater_not_newer">APK yang dimuat turun tidak lebih baharu daripada Porter yang dipasang.</string>
+    <string name="updater_automatic_unavailable">Perkhidmatan Porter tidak lagi tersedia pada pengguna utama peranti ini, jadi kemas kini tidak dipasang.</string>
+    <string name="updater_install_failed">Pemasangan gagal: %1$s</string>
+    <string name="updater_install_permission_denied">Benarkan Porter memasang apl yang tidak diketahui untuk memasang kemas kini secara manual.</string>
+    <string name="updater_install_permission_unavailable">Peranti ini tiada skrin untuk membenarkan pemasangan apl. Simpan APK dan pasangnya dengan pemasang lain.</string>
+    <string name="updater_installer_unavailable">Pemasang Android tidak dapat dibuka.</string>
+    <string name="updater_save_unavailable">Tiada apl tersedia untuk memilih tempat menyimpan APK.</string>
 </resources>

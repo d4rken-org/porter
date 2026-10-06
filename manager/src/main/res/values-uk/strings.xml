@@ -35,8 +35,8 @@
         фаєрволах, блокуванні реклами, VPN чи подібних додатках, які можуть обмежувати доступ до
         мережі.</string>
     <string name="dialog_wireless_adb_not_enabled">Налагодження через Wi-Fi не ввімкнено.
-        \nЗверніть увагу, до Android 11, щоб увімкнути налагодження через Wi-Fi, під\'\'єднання до
-        ПК обов\'\'язкове.</string>
+        \nЗверніть увагу, до Android 11, щоб увімкнути налагодження через Wi-Fi, під\'єднання до
+        ПК обов\'язкове.</string>
     <string name="dialog_usb_debugging_not_enabled">Налагодження через USB не ввімкнено.\nБудь
         ласка, увімкніть його в розділі «Параметри розробника».</string>
     <string name="dialog_adb_pairing_accessibility_permission">На Android 14 встановлення/оновлення
@@ -61,12 +61,12 @@
     <string name="adb_pairing_tutorial_content_notification">Повідомлення від Porter допоможе вам
         закінчити сполучення.</string>
     <string name="adb_pairing_tutorial_content_steps">Перейдіть до розділу «Параметри розробника», потім увімкніть «Налагодження USB» і «Налагодження через Wi-Fi».</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">Натисніть ліву частину пункту «Налагодження через Wi-Fi», потім натисніть «Підключати пристрій за допомогою коду підключення». Введіть код зі сповіщення, щоб завершити сполучення.</string>
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">Натисніть ліву частину пункту «Налагодження через Wi-Fi», потім натисніть «Підключати пристрій за допомогою коду підключення». Введіть код у сповіщенні, щоб завершити сполучення.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Процес сполучення потребує, щоб
         ви взаємодіяли із сповіщенням від Porter. Будь ласка, дозвольте Porter публікувати
         сповіщення.</string>
-    <string name="adb_pairing_tutorial_content_miui">Користувачам MIUI, иожливо, доведеться змінити
-        стіль сповіщень на \"Android\" із \"Сповіщення\" - \"Панель сповіщень\" в системних
+    <string name="adb_pairing_tutorial_content_miui">Користувачам MIUI, можливо, доведеться змінити
+        стиль сповіщень на \"Android\" із \"Сповіщення\" - \"Панель сповіщень\" в системних
         налаштуваннях.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Інакше ви можете не мати змоги ввести код
         пари з повідомлення.</string>
@@ -74,20 +74,20 @@
     <string name="adb_pairing_tutorial_content_network">Porter потрібен доступ до локальної мережі. Він контролюється дозволом на доступ до мережі.</string>
     <string name="adb_pairing_tutorial_content_network_limation_not_foreground">Деякі системи
         (наприклад, MIUI) забороняють додаткам доступ до мережі, якщо вони не видимі, навіть якщо
-        додаток використовує передній план. Будь ласка, вимкніть функції оптимізації батареї для
+        додаток використовує службу переднього плану. Будь ласка, вимкніть функції оптимізації батареї для
         Porter на таких системах.</string>
     <!-- Home - Root -->
     <string name="home_root_title"><![CDATA[Запустіть службу з root доступом]]></string>
     <string name="home_root_button_start">Запуск</string>
     <!-- Home - Application management -->
-    <string name="home_app_management_title">Авторизовані додатки</string>
+    <string name="home_app_management_title">Керування додатками</string>
     <plurals name="home_app_management_authorized_apps_count">
         <item quantity="one"><![CDATA[Авторизовано %d програму]]></item>
         <item quantity="few"><![CDATA[Авторизовано %d програми]]></item>
         <item quantity="many"><![CDATA[Авторизовано %d програм]]></item>
         <item quantity="other"><![CDATA[Авторизовано %d програм]]></item>
     </plurals>
-    <string name="home_app_management_view_authorized_apps"><![CDATA[Натисніть для перегляду авторизованих додатків]]></string>
+    <string name="home_app_management_view_authorized_apps"><![CDATA[Натисніть для керування авторизованими додатками]]></string>
     <string name="home_app_management_empty">Тут відображатимуться програми, які запросили або
         оголосили дозвіл Porter.</string>
     <!-- Home - Automation -->
@@ -116,7 +116,7 @@
         дозволить вам запускати %1$s без запису шляху.\n\nВ іншому випадку ви можете створити
         псевдонім для %2$s у файлі конфігурації вашої термінальної програми %3$s .</string>
     <string name="terminal_tutorial_3">Відкрийте оболонку за допомогою такої команди:</string>
-    <string name="rish_description"><![CDATA[За допомогою %1$sви можете виконувати команди оболонки в будь-якій термінальній програмі.<p>Натисніть, щоб дізнатися більше про те, як ним користуватися.]]></string>
+    <string name="rish_description"><![CDATA[За допомогою %1$s ви можете виконувати команди оболонки в будь-якій термінальній програмі.<p>Натисніть, щоб дізнатися більше про те, як ним користуватися.]]></string>
     <!-- Settings -->
     <string name="settings_title">Налаштування</string>
     <string name="settings_start_on_boot">Запуск при завантаженні</string>
@@ -127,7 +127,7 @@
         авторизації.</string>
     <string name="settings_watchdog">Сторожовий таймер</string>
     <string name="settings_watchdog_summary">Автоматично перезапускати Porter у разі збою</string>
-    <string name="settings_restart_dialog_title">Потрібно перезавантажити</string>
+    <string name="settings_restart_dialog_title">Потрібен перезапуск</string>
     <string name="settings_restart_dialog_message">Щоб застосувати це налаштування, потрібно перезапустити Porter.</string>
     <string name="settings_tcp_port">TCP-порт</string>
     <string name="settings_tcp_port_default">За замовчуванням (5555)</string>
@@ -178,8 +178,8 @@
     <string name="wadb_pair_required_notification">Налагодження через Wi-Fi не розпізнає Porter, тому Porter не вдалося запустити у фоновому режимі. Торкніться, щоб знову сполучити Porter.</string>
     <string name="wadb_permission_error_notification_title">Помилка дозволу</string>
     <string name="wadb_permission_error_notification_content">Для запуску Porter під час
-        завантаження системи потрібні налаштування WRITE_SECURE_SETTINGS. Натисніть, щоб дізнатися,
-        як їх надати.</string>
+        завантаження системи потрібен дозвіл WRITE_SECURE_SETTINGS. Натисніть, щоб дізнатися,
+        як його надати.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Сторожовий таймер працює</string>
     <string name="watchdog_turn_off">Вимикати</string>
@@ -473,4 +473,67 @@
     <string name="porter_contact_description_error">Додайте подробиці (щонайменше 20 символів).</string>
     <string name="porter_contact_expected_error">Опишіть, чого ви очікували.</string>
     <string name="porter_contact_no_email">Встановіть або увімкніть поштовий додаток, щоб відкрити цю чернетку. Ви також можете поділитися збереженими журналами або зв’язатися з нами через GitHub чи Discord.</string>
+
+    <!-- Settings sections -->
+    <string name="settings_general">Загальні</string>
+    <string name="settings_general_summary">Тема й перевірка оновлень</string>
+    <string name="settings_general_summary_theme">Тема</string>
+    <string name="settings_startup_summary">Запуск при завантаженні, сторожовий таймер і оновлення служби</string>
+    <string name="settings_startup_attention">Фонова робота або сповіщення потребують уваги</string>
+    <string name="settings_updates">Оновлення</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Продовжити</string>
+    <string name="onboarding_welcome_title">Ласкаво просимо до Porter</string>
+    <string name="onboarding_welcome_body">Porter надає твоїм додаткам ADB-доступ, тож вони можуть робити те, що зазвичай потребує комп’ютера. Ти вирішуєш, які додатки його отримають.</string>
+    <string name="onboarding_welcome_service">Porter один раз запускає невелику службу, і схвалені тобою додатки користуються нею безпосередньо на твоєму пристрої.</string>
+    <string name="onboarding_welcome_beta">Це бета-версія (тестова збірка). Продовжуй із почуттям гумору та запасним планом. Повідомляй про проблеми, з якими стикаєшся.</string>
+    <string name="onboarding_shizuku_title">Shizuku встановлено</string>
+    <string name="onboarding_shizuku_body">Porter — це форк Shizuku, який і далі підтримується. Вони можуть працювати паралельно. Додатки з підтримкою Porter можуть використовувати Porter, а інші — і далі використовувати Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Можна також дозволити Porter замінити Shizuku, щоб додатки, створені лише для Shizuku, використовували натомість Porter. Вибір за тобою. Можеш вирішити пізніше в розділі «Налаштування → Сумісність із Shizuku». Посібник із сумісності пояснює, які варіанти підтримує твоя інсталяція.</string>
+    <string name="onboarding_shizuku_guide">Посібник із сумісності</string>
+    <string name="onboarding_privacy_title">Конфіденційність</string>
+    <string name="onboarding_privacy_body">Porter не збирає, не відстежує й не продає твої дані. У ньому немає реклами, аналітики чи облікового запису.</string>
+    <string name="onboarding_privacy_policy">Політика конфіденційності</string>
+    <string name="onboarding_get_started">Почати</string>
+    <string name="onboarding_save_failed">Не вдалося зберегти. Спробуй ще раз.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Доступне оновлення</string>
+    <string name="updater_card_versions">Доступний Porter %1$s. У тебе %2$s.</string>
+    <string name="updater_ignore">Ігнорувати</string>
+    <string name="updater_changelog">Історія змін</string>
+    <string name="updater_download">Завантажити</string>
+    <string name="updater_check">Перевіряти оновлення</string>
+    <string name="updater_check_summary">Шукає новішу версію Porter на GitHub, коли ти відкриваєш Porter. Результат успішної перевірки зберігається протягом доби.</string>
+    <string name="updater_channel">Канал оновлень</string>
+    <string name="updater_channel_production">Стабільний</string>
+    <string name="updater_channel_beta">Бета</string>
+    <string name="updater_channel_production_choice">Стабільний: лише повні випуски</string>
+    <string name="updater_channel_beta_choice">Бета: найновіший випуск, включно з бета-версіями та попередніми випусками</string>
+    <string name="updater_dialog_title">Завантажити оновлення</string>
+    <string name="updater_download_summary">Вибери, куди зберегти APK.</string>
+    <string name="updater_install_manual">Встановити вручну</string>
+    <string name="updater_install_manual_summary">Інсталятор Android попросить підтвердження.</string>
+    <string name="updater_install_automatic">Встановити автоматично</string>
+    <string name="updater_install_automatic_summary">Використовує ADB- або root-доступ Porter. Porter закривається під час встановлення оновлення.</string>
+    <string name="updater_install_automatic_requirement">Служба Porter має працювати в основного користувача цього пристрою.</string>
+    <string name="updater_continue">Продовжити</string>
+    <string name="updater_downloading">Завантаження…</string>
+    <string name="updater_installing">Встановлення…</string>
+    <string name="updater_saved">Збережено %1$s.</string>
+    <string name="updater_download_failed">Не вдалося завантажити: %1$s</string>
+    <string name="updater_download_failed_partial">Не вдалося завантажити: %1$s. Частково збережений файл може залишитися.</string>
+    <string name="updater_not_porter">Завантажений файл не є APK Porter.</string>
+    <string name="updater_not_newer">Завантажений APK не новіший за встановлений Porter.</string>
+    <string name="updater_automatic_unavailable">Служба Porter більше недоступна в основного користувача цього пристрою, тому оновлення не встановлено.</string>
+    <string name="updater_install_failed">Не вдалося встановити: %1$s</string>
+    <string name="updater_install_permission_denied">Дозволь Porter встановлювати невідомі додатки, щоб встановити оновлення вручну.</string>
+    <string name="updater_install_permission_unavailable">На цьому пристрої немає екрана для дозволу встановлення додатків. Збережи APK і встанови його за допомогою іншого інсталятора.</string>
+    <string name="updater_installer_unavailable">Не вдалося відкрити інсталятор Android.</string>
+    <string name="updater_save_unavailable">Немає додатка для вибору місця збереження APK.</string>
 </resources>

@@ -1,0 +1,1 @@
+Le note di rilascio di ogni versione sono pubblicate su https://porter.darken.eu/ e nella pagina delle versioni del progetto.

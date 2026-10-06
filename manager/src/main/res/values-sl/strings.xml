@@ -5,7 +5,7 @@
     <string name="home_status_service_not_running">%1$s ne teče</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Začni z povezovanjem na računalnik]]></string>
-    <string name="home_adb_description"><![CDATA[Za naprave brez root-a, potrebujete adb, da zaženete Porter (potrebna je računalniška povezava). Ta proces je potrebno ponoviti vsakič, ko se naprava ponovno zažene. Prosimo <b><a href="%1$s">preberite pomoč</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Za naprave brez root-a, potrebujete adb, da zaženete Porter (potrebna je računalniška povezava). Ta proces je potrebno ponoviti vsakič, ko se naprava ponovno zažene. Prosimo <b><a href=\"%1$s\">preberite pomoč</a></b>.]]></string>
     <string name="home_adb_button_view_command">Pokaži ukaz</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Obstaja nekaj premislekov. Prosimo, potrdite, da ste najprej prebrali pomoč.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Pošlji</string>
@@ -70,7 +70,7 @@
         omogočite »Odpravljanje napak prek USB-ja« in »Brezžično odpravljanje napak«.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">Dotaknite se leve strani
         »Brezžično odpravljanje napak« in nato »Seznanitev naprave s kodo za seznanjanje«. Vnesite kodo
-        iz obvestila, da dokončate seznanjanje.</string>
+        v obvestilo, da dokončate seznanjanje.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">Postopek seznanjanja zahteva
         interakcijo z obvestilom Porter. Dovolite Porter objavljanje obvestil.</string>
     <string name="adb_pairing_tutorial_content_miui">Uporabniki MIUI bodo morda morali v sistemskih
@@ -123,7 +123,7 @@
         brez pisanja poti.\n\nSicer pa lahko v konfiguracijski datoteki %3$s vaše terminalske
         aplikacije ustvarite vzdevek za %2$s .</string>
     <string name="terminal_tutorial_3">Odprite lupino z naslednjim ukazom:</string>
-    <string name="rish_description"><![CDATA[Z %1$slahko zaženete ukaze lupine v kateri koli terminalski aplikaciji.<p>Dotaknite se, če želite izvedeti več o uporabi.]]></string>
+    <string name="rish_description"><![CDATA[Z %1$s lahko zaženete ukaze lupine v kateri koli terminalski aplikaciji.<p>Dotaknite se, če želite izvedeti več o uporabi.]]></string>
     <!-- Settings -->
     <string name="settings_title">Nastavitve</string>
     <string name="settings_start_on_boot">Zaženi ob zagonu</string>
@@ -169,7 +169,7 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">dostop do Porter</string>
     <string name="permission_description">Dovoli aplikaciji uporabo aplikacije Porter.</string>
-    <string name="permission_warning_template"><![CDATA[Dovoli <b>%1$s</b> do %2$s?]]></string>
+    <string name="permission_warning_template"><![CDATA[Dovoli aplikaciji <b>%1$s</b> %2$s?]]></string>
     <string name="grant_dialog_button_allow_always">Dovoli ves čas</string>
     <string name="grant_dialog_button_deny">"Zavrni"</string>
     <!-- Starter -->
@@ -185,7 +185,7 @@
     <string name="wadb_pair_required_notification">Brezžično odpravljanje napak ne prepozna aplikacije Porter, zato se Porter ni mogel zagnati v ozadju. Dotaknite se, da Porter znova seznanite.</string>
     <string name="wadb_permission_error_notification_title">Napaka pri dovoljenju</string>
     <string name="wadb_permission_error_notification_content">Porter potrebuje
-        WRITE_SECURE_SETTINGS, da začne na začetku. Tapnite, da izveste, kako ga odobriti.</string>
+        WRITE_SECURE_SETTINGS, da se zažene ob zagonu naprave. Tapnite, da izveste, kako ga odobriti.</string>
     <!-- Watchdog -->
     <string name="watchdog_running">Watchdog teče</string>
     <string name="watchdog_turn_off">Izklop</string>
@@ -480,4 +480,66 @@
     <string name="porter_contact_description_error">Dodajte nekaj podrobnosti (vsaj 20 znakov).</string>
     <string name="porter_contact_expected_error">Opišite, kaj ste pričakovali.</string>
     <string name="porter_contact_no_email">Namestite ali omogočite aplikacijo za e-pošto, da odprete ta osnutek. Shranjene dnevnike lahko tudi delite ali se obrnete na nas prek GitHuba ali Discorda.</string>
+    <!-- General and startup settings -->
+    <string name="settings_general">Splošno</string>
+    <string name="settings_general_summary">Tema in preverjanje posodobitev</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Zagon ob vklopu naprave, nadzorni pes in posodobitve storitve</string>
+    <string name="settings_startup_attention">Delovanje v ozadju ali opozorila potrebujejo pozornost</string>
+    <string name="settings_updates">Posodobitve</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Nadaljuj</string>
+    <string name="onboarding_welcome_title">Porter te pozdravlja</string>
+    <string name="onboarding_welcome_body">Porter tvojim aplikacijam omogoča dostop ADB, da lahko počnejo stvari, za katere je običajno potreben računalnik. Ti odločaš, katere aplikacije ga dobijo.</string>
+    <string name="onboarding_welcome_service">Porter enkrat zažene majhno storitev, aplikacije, ki jih odobriš, pa jo uporabljajo neposredno v tvoji napravi.</string>
+    <string name="onboarding_welcome_beta">To je različica beta (za preizkušanje). Nadaljuj s smislom za humor in rezervnim načrtom. Prijavi težave, na katere naletiš.</string>
+    <string name="onboarding_shizuku_title">Shizuku je nameščen</string>
+    <string name="onboarding_shizuku_body">Porter je vzdrževan razcep projekta Shizuku in oba lahko delujeta hkrati. Aplikacije, ki podpirajo Porter, lahko uporabljajo Porter, druge pa še naprej uporabljajo Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Lahko tudi dovoliš, da Porter zamenja Shizuku, tako da aplikacije, narejene samo za Shizuku, namesto njega uporabljajo Porter. Odločitev je tvoja. To lahko izbereš pozneje v Nastavitve → Združljivost s Shizuku, vodnik za združljivost pa pojasnjuje, katere možnosti podpira tvoja namestitev.</string>
+    <string name="onboarding_shizuku_guide">Vodnik za združljivost</string>
+    <string name="onboarding_privacy_title">Zasebnost</string>
+    <string name="onboarding_privacy_body">Porter ne zbira, ne spremlja in ne prodaja tvojih podatkov. Nima oglasov, analitike ali računa.</string>
+    <string name="onboarding_privacy_policy">Pravilnik o zasebnosti</string>
+    <string name="onboarding_get_started">Začni</string>
+    <string name="onboarding_save_failed">Shranjevanje ni uspelo. Poskusi znova.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Na voljo je posodobitev</string>
+    <string name="updater_card_versions">Porter %1$s je na voljo. Tvoja različica je %2$s.</string>
+    <string name="updater_ignore">Prezri</string>
+    <string name="updater_changelog">Dnevnik sprememb</string>
+    <string name="updater_download">Prenesi</string>
+    <string name="updater_check">Preveri posodobitve</string>
+    <string name="updater_check_summary">Ko odpreš Porter, poišče novejšo izdajo na GitHubu. Uspešno preverjanje se shrani za en dan.</string>
+    <string name="updater_channel">Kanal posodobitev</string>
+    <string name="updater_channel_production">Produkcija</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Produkcija: samo končne izdaje</string>
+    <string name="updater_channel_beta_choice">Beta: najnovejša izdaja, vključno z različicami beta in predizdajami</string>
+    <string name="updater_dialog_title">Prenesi posodobitev</string>
+    <string name="updater_download_summary">Izberi, kam naj se shrani APK.</string>
+    <string name="updater_install_manual">Namesti ročno</string>
+    <string name="updater_install_manual_summary">Androidov namestitveni program te prosi za potrditev.</string>
+    <string name="updater_install_automatic">Namesti samodejno</string>
+    <string name="updater_install_automatic_summary">Uporablja dostop ADB ali root aplikacije Porter. Porter se med nameščanjem posodobitve zapre.</string>
+    <string name="updater_install_automatic_requirement">Zahteva delujočo storitev Porter pri glavnem uporabniku te naprave.</string>
+    <string name="updater_continue">Nadaljuj</string>
+    <string name="updater_downloading">Prenašanje…</string>
+    <string name="updater_installing">Nameščanje…</string>
+    <string name="updater_saved">Shranjeno: %1$s.</string>
+    <string name="updater_download_failed">Prenos ni uspel: %1$s</string>
+    <string name="updater_download_failed_partial">Prenos ni uspel: %1$s. Delno shranjena datoteka lahko ostane.</string>
+    <string name="updater_not_porter">Prenesena datoteka ni APK aplikacije Porter.</string>
+    <string name="updater_not_newer">Preneseni APK ni novejši od nameščene aplikacije Porter.</string>
+    <string name="updater_automatic_unavailable">Storitev Porter ni več na voljo pri glavnem uporabniku te naprave, zato posodobitev ni bila nameščena.</string>
+    <string name="updater_install_failed">Namestitev ni uspela: %1$s</string>
+    <string name="updater_install_permission_denied">Za ročno namestitev posodobitve dovoli aplikaciji Porter nameščanje neznanih aplikacij.</string>
+    <string name="updater_install_permission_unavailable">Ta naprava nima zaslona za dovoljenje nameščanja aplikacij. Shrani APK in ga namesti z drugim namestitvenim programom.</string>
+    <string name="updater_installer_unavailable">Androidovega namestitvenega programa ni bilo mogoče odpreti.</string>
+    <string name="updater_save_unavailable">Ni aplikacije, s katero bi bilo mogoče izbrati mesto za shranjevanje APK-ja.</string>
 </resources>

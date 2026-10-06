@@ -5,9 +5,9 @@
     <string name="home_status_service_not_running">Hindi tumatakbo ang %1$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Magsimula sa pamamagitan ng pagkonekta sa kompyuter]]></string>
-    <string name="home_adb_description"><![CDATA[Kailangan mong gumamit ng adb para masimulan ang Porter kung walang root ang device mo (kailangang kumonekta sa kompyuter). Dapat ulitin ito tuwing nare-restart ang device mo. Mangyaring <b><a href="%1$s">sumangguni sa gabay</a></b>.]]></string>
+    <string name="home_adb_description"><![CDATA[Kailangan mong gumamit ng adb para masimulan ang Porter kung walang root ang device mo (kailangang kumonekta sa kompyuter). Dapat ulitin ito tuwing nare-restart ang device mo. Mangyaring <b><a href=\"%1$s\">sumangguni sa gabay</a></b>.]]></string>
     <string name="home_adb_button_view_command">Tingnan ang command</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* May iba pang mga dapat ikonsidera, siguraduhin munang nabasa mo na ang gabay.]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=\"monospace\">%1$s</font><br><br>* May iba pang mga dapat ikonsidera, siguraduhin munang nabasa mo na ang gabay.]]></string>
     <string name="home_adb_dialog_view_command_button_send">Ipadala</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Simulan gamit ang Wireless na pag-debug]]></string>
@@ -100,7 +100,7 @@
     <string name="home_automation_title">Kontrolin ang Porter gamit ang mga automation app</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Limitado ang pahintulot ng adb</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Posibleng nilimitahan ng gumawa ng device mo ang kakayahan ng adb.<p>Maaaring may solusyon para sa sistema mo sa <b><a href="%1$s">dokumentong ito</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Posibleng nilimitahan ng gumawa ng device mo ang kakayahan ng adb.<p>Maaaring may solusyon para sa sistema mo sa <b><a href=\"%1$s\">dokumentong ito</a></b>.]]></string>
     <string name="app_management_item_summary_requires_root">* kailangang patakbuhin ang Porter
         gamit ang root</string>
     <string name="app_management_toggle_all">I-toggle ang lahat</string>
@@ -120,7 +120,7 @@
         direktoryo ng mga pribadong file nito.</string>
     <string name="terminal_tutorial_2_description">Tip: Kung ang home directory ng iyong terminal
         app (~) ay nasa private files directory, ang paglalagay ng mga file doon ay magbibigay-daan
-        sa iyong tumakbo %1$s nang hindi isinusulat ang path.\n\nKung hindi, maaari kang lumikha ng
+        na mapatakbo ang %1$s nang hindi isinusulat ang path.\n\nKung hindi, maaari kang lumikha ng
         alias para sa %2$s sa iyong terminal app na %3$s configuration file.</string>
     <string name="terminal_tutorial_3">Magbukas ng shell gamit ang sumusunod na command:</string>
     <string name="rish_description"><![CDATA[Sa %1$s, maaari kang magpatakbo ng mga shell command sa anumang terminal app.<p>I-tap para matuto pa tungkol sa kung paano ito gamitin.]]></string>
@@ -134,7 +134,7 @@
         nag-pop up ang dialog ng awtorisasyon.</string>
     <string name="settings_watchdog">Tagapagbantay</string>
     <string name="settings_watchdog_summary">Awtomatikong i-restart ang Porter kung nag-crash ito</string>
-    <string name="settings_restart_dialog_title">I-restart ang Kinakailangan</string>
+    <string name="settings_restart_dialog_title">Kailangang mag-restart</string>
     <string name="settings_restart_dialog_message">Kailangang mag-restart ng Porter para mailapat
         ang setting na ito.</string>
     <string name="settings_tcp_port">TCP port</string>
@@ -203,7 +203,7 @@
     <string name="accessibility_service_description">Nagbibigay ng suporta sa pagpapares para sa mga
         aparato (hal., Mga TV na nagpapatakbo ng Android 14+) kung saan hindi magagamit ang mga
         abiso o split screen.\n\nPinapayagan ang Porter na kunin ang code ng pagpapares mula sa
-        wireless debugging pairing screen. Hindi ito paganahin kapag natagpuan na ang code ng
+        wireless debugging pairing screen. Kusa itong mag-o-off kapag natagpuan na ang code ng
         pagpapares.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Subukan ngayon</string>
@@ -479,4 +479,64 @@
     <string name="porter_contact_description_error">Pakidagdag ang ilang detalye (hindi bababa sa 20 character).</string>
     <string name="porter_contact_expected_error">Pakilarawan kung ano ang inaasahan mo.</string>
     <string name="porter_contact_no_email">Mag-install o mag-enable ng email app para mabuksan ang draft na ito. Puwede mo ring ibahagi ang mga naka-save na log o makipag-ugnayan sa amin sa GitHub o Discord.</string>
+    <string name="settings_general">Pangkalahatan</string>
+    <string name="settings_general_summary">Tema at pagsusuri ng mga update</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Pagsisimula sa boot, tagapagbantay, at mga update ng serbisyo</string>
+    <string name="settings_startup_attention">Kailangan ng atensyon ang operasyon o mga alerto sa background</string>
+    <string name="settings_updates">Mga update</string>
+
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Magpatuloy</string>
+    <string name="onboarding_welcome_title">Maligayang pagdating sa Porter</string>
+    <string name="onboarding_welcome_body">Binibigyan ng Porter ng ADB access ang mga app mo, para magawa nila ang mga bagay na karaniwang nangangailangan ng kompyuter. Ikaw ang magpapasya kung aling mga app ang makakakuha nito.</string>
+    <string name="onboarding_welcome_service">Isang beses sinisimulan ng Porter ang isang maliit na serbisyo, at direkta itong ginagamit ng mga app na inaprubahan mo sa iyong device.</string>
+    <string name="onboarding_welcome_beta">Beta (pagsubok) na build ito. Magpatuloy nang may pagkamapagpatawa at reserbang plano. Pakiulat ang mga problemang makikita mo.</string>
+    <string name="onboarding_shizuku_title">Naka-install ang Shizuku</string>
+    <string name="onboarding_shizuku_body">Ang Porter ay isang pinananatiling fork ng Shizuku, at puwedeng tumakbo nang magkasabay ang dalawa. Puwedeng gamitin ng mga app na sumusuporta sa Porter ang Porter, habang patuloy na ginagamit ng ibang app ang Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Puwede mo ring hayaang palitan ng Porter ang Shizuku, para Porter na ang gamitin ng mga app na ginawa para lang sa Shizuku. Ikaw ang bahala. Puwede kang magpasya sa ibang pagkakataon sa Mga Setting → Compatibility sa Shizuku, at ipinaliliwanag ng gabay sa compatibility kung aling mga opsyon ang sinusuportahan ng iyong installation.</string>
+    <string name="onboarding_shizuku_guide">Gabay sa compatibility</string>
+    <string name="onboarding_privacy_title">Pagkapribado</string>
+    <string name="onboarding_privacy_body">Hindi kinokolekta, sinusubaybayan, o ibinebenta ng Porter ang iyong impormasyon. Wala itong mga patalastas, analytics, o account.</string>
+    <string name="onboarding_privacy_policy">Patakaran sa pagkapribado</string>
+    <string name="onboarding_get_started">Magsimula</string>
+    <string name="onboarding_save_failed">Hindi ma-save. Subukan ulit.</string>
+
+    <string name="updater_card_title">May available na update</string>
+    <string name="updater_card_versions">Available na ang Porter %1$s. %2$s ang bersyon mo.</string>
+    <string name="updater_ignore">Huwag pansinin</string>
+    <string name="updater_changelog">Tala ng mga pagbabago</string>
+    <string name="updater_download">I-download</string>
+    <string name="updater_check">Tingnan kung may mga update</string>
+    <string name="updater_check_summary">Naghahanap ng mas bagong release ng Porter sa GitHub kapag binuksan mo ang Porter. Itinatago ang matagumpay na pagsusuri sa loob ng isang araw.</string>
+    <string name="updater_channel">Channel ng mga update</string>
+    <string name="updater_channel_production">Produksiyon</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Produksiyon: mga kumpletong release lang</string>
+    <string name="updater_channel_beta_choice">Beta: pinakabagong release, kasama ang mga beta at pre-release</string>
+    <string name="updater_dialog_title">I-download ang update</string>
+    <string name="updater_download_summary">Piliin kung saan ise-save ang APK.</string>
+    <string name="updater_install_manual">Manual na i-install</string>
+    <string name="updater_install_manual_summary">Hihingi ng kumpirmasyon ang installer ng Android.</string>
+    <string name="updater_install_automatic">Awtomatikong i-install</string>
+    <string name="updater_install_automatic_summary">Ginagamit ang ADB o root access ng Porter. Magsasara ang Porter habang ini-install ang update.</string>
+    <string name="updater_install_automatic_requirement">Kailangang tumatakbo ang serbisyo ng Porter sa pangunahing user ng device na ito.</string>
+    <string name="updater_continue">Magpatuloy</string>
+    <string name="updater_downloading">Dina-download…</string>
+    <string name="updater_installing">Ini-install…</string>
+    <string name="updater_saved">Na-save ang %1$s.</string>
+    <string name="updater_download_failed">Hindi na-download: %1$s</string>
+    <string name="updater_download_failed_partial">Hindi na-download: %1$s. Maaaring manatili ang file na bahagyang na-save.</string>
+    <string name="updater_not_porter">Hindi APK ng Porter ang na-download na file.</string>
+    <string name="updater_not_newer">Hindi mas bago ang na-download na APK kaysa sa naka-install na Porter.</string>
+    <string name="updater_automatic_unavailable">Hindi na available ang serbisyo ng Porter sa pangunahing user ng device na ito, kaya hindi na-install ang update.</string>
+    <string name="updater_install_failed">Hindi na-install: %1$s</string>
+    <string name="updater_install_permission_denied">Payagan ang Porter na mag-install ng mga app mula sa hindi kilalang pinagmulan para manual na ma-install ang update.</string>
+    <string name="updater_install_permission_unavailable">Walang screen ang device na ito para payagan ang pag-install ng app. I-save ang APK at i-install ito gamit ang ibang installer.</string>
+    <string name="updater_installer_unavailable">Hindi mabuksan ang installer ng Android.</string>
+    <string name="updater_save_unavailable">Walang available na app para piliin kung saan ise-save ang APK.</string>
 </resources>

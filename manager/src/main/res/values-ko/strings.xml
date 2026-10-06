@@ -7,7 +7,7 @@
     <string name="home_adb_title"><![CDATA[컴퓨터에 연결하여 시작]]></string>
     <string name="home_adb_description"><![CDATA[루팅되지 않은 기기에서는 adb를 사용하여 Porter를 시작해야 합니다(컴퓨터 연결 필요). 기기를 다시 시작할 때마다 이 과정을 반복해야 합니다. <b><a href=\"%1$s\">도움말</a></b>을 읽어 주세요.]]></string>
     <string name="home_adb_button_view_command">명령어 보기</string>
-    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* 몇 가지 다른 참고 사항이 있으므로, 도움말을 먼저 확인하세요.]]></string>
+    <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* 몇 가지 다른 참고 사항이 있으므로, 도움말을 먼저 확인하세요.]]></string>
     <string name="home_adb_dialog_view_command_button_send">보내기</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[무선 디버깅으로 시작]]></string>
@@ -17,7 +17,7 @@
     <!-- Adb -->
     <string name="dialog_adb_discovery">무선 디버깅 서비스 검색 중</string>
     <string name="dialog_adb_discovery_message">\"개발자 옵션\"에서 \"무선 디버깅\"을 활성화하세요. 네트워크가 변경되면 \"무선 디버깅\"이 자동으로 비활성화됩니다.\n\n참고: \"개발자 옵션\"이나 \"USB 디버깅\"을 비활성화하지 마세요. 비활성화하면 Porter가 중지됩니다.</string>
-    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">\"무선 디버깅\"이 검색중으로 유지된다면
+    <string name="dialog_adb_discovery_message_toggle_wireless_debugging">검색이 계속된다면 \"무선 디버깅\"을
         비활성화했다가 다시 활성화해 보세요.</string>
     <string name="dialog_adb_port">포트 번호</string>
     <string name="adb_pairing">페어링</string>
@@ -45,10 +45,10 @@
     <string name="adb_pairing_tutorial_content_steps">\"개발자 옵션\"으로 이동한 다음 \"USB 디버깅\"과 \"무선 디버깅\"을
         활성화합니다.</string>
     <string name="adb_pairing_tutorial_content_enter_pairing_code">\"무선 디버깅\"의 왼쪽을 탭한 다음 \"페어링 코드로
-        기기 페어링\"을 탭합니다. 알림에 있는 코드를 입력하여 페어링을 완료합니다.</string>
+        기기 페어링\"을 탭합니다. 알림에 코드를 입력하여 페어링을 완료합니다.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">페어링 과정에서 Porter의 알림을 사용해야 합니다. Porter가 알림을 보낼 수 있도록 허용하세요.</string>
     <string name="adb_pairing_tutorial_content_miui">MIUI 사용자는 시스템 설정의 \"알림\" - \"알림 창\"에서 알림 스타일을
-        \"Android\"로 전환해야 합니다.</string>
+        \"Android\"로 전환해야 할 수도 있습니다.</string>
     <string name="adb_pairing_tutorial_content_miui_2">그렇지 않으면 알림에서 페어링 코드를 입력하지 못할 수도 있습니다.</string>
     <string name="adb_pairing_tutorial_content_finish">Porter로 돌아가서 Porter를 시작하세요.</string>
     <string name="adb_pairing_tutorial_content_network">Porter는 로컬 네트워크에 접근해야 합니다. 이는 네트워크 권한으로 제어됩니다.</string>
@@ -59,15 +59,15 @@
     <!-- Home - Application management -->
     <string name="home_app_management_title">어플리케이션 관리</string>
     <plurals name="home_app_management_authorized_apps_count">
-        <item quantity="other"><![CDATA[%d개 앱 인증됨]]></item>
+        <item quantity="other"><![CDATA[%d개 앱 승인됨]]></item>
     </plurals>
-    <string name="home_app_management_view_authorized_apps"><![CDATA[탭하여 인증된 앱 관리]]></string>
+    <string name="home_app_management_view_authorized_apps"><![CDATA[탭하여 승인된 앱 관리]]></string>
     <string name="home_app_management_empty">Porter 권한을 요청하거나 선언한 앱이 여기에 표시됩니다.</string>
     <!-- Home - Automation -->
     <string name="home_automation_title">자동화 앱으로 Porter 제어</string>
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB의 권한이 제한됨</string>
-    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[기기 제조사에서 ADB의 권한을 제한하고 있을 가능성이 높습니다.<p><b><a href="%1$s">이 문서</a></b>에 시스템에 대한 해결 방안이 있을 수 있습니다.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message"><![CDATA[기기 제조사에서 ADB의 권한을 제한하고 있을 가능성이 높습니다.<p><b><a href=\"%1$s\">이 문서</a></b>에 시스템에 대한 해결 방안이 있을 수 있습니다.]]></string>
     <string name="app_management_item_summary_requires_root">* 루트 권한으로 실행된 Porter 필요</string>
     <string name="app_management_toggle_all">모두 전환</string>
     <!-- Terminal -->
@@ -264,7 +264,7 @@
     <string name="porter_service_update_failed_summary">실행 중인 서비스를 설치된 버전으로 교체할 수 없습니다. 서비스가 아직 실행 중이면 다시 시도할 수 있습니다. 그렇지 않으면 \"서비스\" 화면에서 서비스를 다시 시작하세요.</string>
     <string name="porter_service_update_retry">업데이트 다시 시도</string>
 
-    <string name="porter_apps_counts">인증됨: %1$d · 호환: %2$d</string>
+    <string name="porter_apps_counts">승인됨: %1$d · 호환: %2$d</string>
     <string name="porter_discovery_partial">일부 프로필을 확인할 수 없습니다. 이 목록은 불완전할 수 있습니다.</string>
     <string name="porter_discovery_legacy">더 많은 앱을 찾고 연결 기록을 보려면 Porter를 다시 시작하세요.</string>
     <string name="porter_connections_explanation">앱은 Porter가 시작될 때 자동으로 연결될 수 있습니다. 연결 시간은 앱을 마지막으로 사용한 시간을 나타내지 않습니다.</string>
@@ -327,7 +327,7 @@
     <string name="compat_usage_unknown">앱 사용 현황을 아직 확인할 수 없습니다.</string>
     <string name="compat_usage_explanation">아직 접근을 허용하지 않았더라도 호환 앱을 통해 연결되는 설치된 앱이 포함됩니다.</string>
     <string name="compat_direct_title">자동 설치</string>
-    <string name="compat_direct_description">Porter가 포함된 호환 앱을 대신 설치합니다.</string>
+    <string name="compat_direct_description">Porter에 포함된 호환 앱을 대신 설치합니다.</string>
     <string name="compat_direct_stopped">호환 앱을 자동으로 설치하려면 Porter를 시작하세요.</string>
     <string name="compat_management_title">호환 앱 관리</string>
     <string name="compat_reinstall">재설치</string>
@@ -423,4 +423,66 @@
     <string name="porter_contact_description_error">세부 내용을 추가해 주세요(20자 이상).</string>
     <string name="porter_contact_expected_error">예상한 결과를 설명해 주세요.</string>
     <string name="porter_contact_no_email">이 초안을 열려면 이메일 앱을 설치하거나 활성화하세요. 저장된 로그를 공유하거나 GitHub 또는 Discord를 통해 문의할 수도 있습니다.</string>
+    <!-- Settings sections -->
+    <string name="settings_general">일반</string>
+    <string name="settings_general_summary">테마 및 업데이트 확인</string>
+    <string name="settings_general_summary_theme">테마</string>
+    <string name="settings_startup_summary">부팅 시 시작, 워치독 및 서비스 업데이트</string>
+    <string name="settings_startup_attention">백그라운드 작업이나 알림을 확인해야 해요</string>
+    <string name="settings_updates">업데이트</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">계속</string>
+    <string name="onboarding_welcome_title">Porter에 오신 것을 환영해요</string>
+    <string name="onboarding_welcome_body">Porter는 앱에 ADB 접근 권한을 제공해 보통 컴퓨터가 필요한 작업을 앱이 할 수 있게 해요. 어떤 앱에 허용할지는 직접 정하세요.</string>
+    <string name="onboarding_welcome_service">Porter가 작은 서비스를 한 번 시작하면, 승인한 앱은 기기에서 바로 이 서비스를 사용해요.</string>
+    <string name="onboarding_welcome_beta">이 버전은 베타(테스트) 빌드예요. 여유로운 마음으로, 문제가 생길 때를 대비해 두고 사용하세요. 문제가 발생하면 알려 주세요.</string>
+    <string name="onboarding_shizuku_title">Shizuku가 설치되어 있어요</string>
+    <string name="onboarding_shizuku_body">Porter는 유지 관리되는 Shizuku 포크이며, 두 앱은 함께 실행할 수 있어요. Porter를 지원하는 앱은 Porter를 사용하고, 다른 앱은 계속 Shizuku를 사용할 수 있어요.</string>
+    <string name="onboarding_shizuku_replace">Porter가 Shizuku를 교체하도록 할 수도 있어요. 그러면 Shizuku만 지원하는 앱도 대신 Porter를 사용해요. 선택은 자유예요. 나중에 설정 → Shizuku 호환에서 결정할 수 있어요. 설치 방식에 따라 지원되는 옵션은 호환 가이드에서 확인하세요.</string>
+    <string name="onboarding_shizuku_guide">호환 가이드</string>
+    <string name="onboarding_privacy_title">개인정보 보호</string>
+    <string name="onboarding_privacy_body">Porter는 개인정보를 수집하거나 추적하거나 판매하지 않아요. 광고도, 사용 분석도, 계정도 없어요.</string>
+    <string name="onboarding_privacy_policy">개인정보 처리방침</string>
+    <string name="onboarding_get_started">시작하기</string>
+    <string name="onboarding_save_failed">저장하지 못했어요. 다시 시도하세요.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">업데이트 가능</string>
+    <string name="updater_card_versions">Porter %1$s 버전을 사용할 수 있어요. 현재 버전은 %2$s예요.</string>
+    <string name="updater_ignore">무시</string>
+    <string name="updater_changelog">변경 사항</string>
+    <string name="updater_download">다운로드</string>
+    <string name="updater_check">업데이트 확인</string>
+    <string name="updater_check_summary">Porter를 열면 GitHub에서 새 Porter 버전이 있는지 확인해요. 확인에 성공하면 결과를 하루 동안 보관해요.</string>
+    <string name="updater_channel">업데이트 채널</string>
+    <string name="updater_channel_production">정식</string>
+    <string name="updater_channel_beta">베타</string>
+    <string name="updater_channel_production_choice">정식: 정식 출시 버전만</string>
+    <string name="updater_channel_beta_choice">베타: 베타 및 사전 출시 버전을 포함한 최신 버전</string>
+    <string name="updater_dialog_title">업데이트 다운로드</string>
+    <string name="updater_download_summary">APK를 저장할 위치를 선택하세요.</string>
+    <string name="updater_install_manual">수동 설치</string>
+    <string name="updater_install_manual_summary">Android 설치 프로그램에서 확인을 요청해요.</string>
+    <string name="updater_install_automatic">자동 설치</string>
+    <string name="updater_install_automatic_summary">Porter의 ADB 또는 루트 접근 권한을 사용해요. 업데이트를 설치하는 동안 Porter가 닫혀요.</string>
+    <string name="updater_install_automatic_requirement">이 기기의 기본 사용자에서 Porter 서비스가 실행 중이어야 해요.</string>
+    <string name="updater_continue">계속</string>
+    <string name="updater_downloading">다운로드 중…</string>
+    <string name="updater_installing">설치 중…</string>
+    <string name="updater_saved">%1$s을(를) 저장했어요.</string>
+    <string name="updater_download_failed">다운로드 실패: %1$s</string>
+    <string name="updater_download_failed_partial">다운로드 실패: %1$s. 일부만 저장된 파일이 남아 있을 수 있어요.</string>
+    <string name="updater_not_porter">다운로드한 파일은 Porter APK가 아니에요.</string>
+    <string name="updater_not_newer">다운로드한 APK는 설치된 Porter보다 최신 버전이 아니에요.</string>
+    <string name="updater_automatic_unavailable">이 기기의 기본 사용자에서 Porter 서비스를 더 이상 사용할 수 없어 업데이트를 설치하지 못했어요.</string>
+    <string name="updater_install_failed">설치 실패: %1$s</string>
+    <string name="updater_install_permission_denied">업데이트를 수동으로 설치하려면 Porter가 알 수 없는 앱을 설치하도록 허용하세요.</string>
+    <string name="updater_install_permission_unavailable">이 기기에는 앱 설치를 허용하는 화면이 없어요. APK를 저장한 다음 다른 설치 프로그램으로 설치하세요.</string>
+    <string name="updater_installer_unavailable">Android 설치 프로그램을 열지 못했어요.</string>
+    <string name="updater_save_unavailable">APK를 저장할 위치를 선택할 수 있는 앱이 없어요.</string>
 </resources>

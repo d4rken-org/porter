@@ -121,7 +121,7 @@
     <string name="snackbar_action_fix">Perbaiki</string>
 
     <!-- Toast -->
-    <string name="toast_shizuku_already_starting">Porter sudah dimulai di latar belakang</string>
+    <string name="toast_shizuku_already_starting">Porter sedang dimulai di latar belakang</string>
     <string name="toast_accessibility_tv_only">Layanan ini hanya didukung di perangkat TV</string>
     <string name="toast_pairing_timeout">Layanan penyambungan Porter kehabisan waktu</string>
 
@@ -434,4 +434,66 @@
     <string name="porter_contact_description_error">Harap tambahkan beberapa detail (minimal 20 karakter).</string>
     <string name="porter_contact_expected_error">Harap jelaskan apa yang Anda harapkan.</string>
     <string name="porter_contact_no_email">Instal atau aktifkan aplikasi email untuk membuka draf ini. Anda juga dapat membagikan log tersimpan atau menghubungi kami melalui GitHub atau Discord.</string>
+    <!-- Settings navigation -->
+    <string name="settings_general">Umum</string>
+    <string name="settings_general_summary">Tema dan pemeriksaan pembaruan</string>
+    <string name="settings_general_summary_theme">Tema</string>
+    <string name="settings_startup_summary">Mulai saat boot, watchdog, dan pembaruan layanan</string>
+    <string name="settings_startup_attention">Operasi latar belakang atau peringatan memerlukan perhatian</string>
+    <string name="settings_updates">Pembaruan</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Lanjutkan</string>
+    <string name="onboarding_welcome_title">Selamat datang di Porter</string>
+    <string name="onboarding_welcome_body">Porter memberi aplikasi kamu akses ADB, sehingga aplikasi bisa melakukan hal yang biasanya memerlukan komputer. Kamu yang menentukan aplikasi mana yang mendapatkannya.</string>
+    <string name="onboarding_welcome_service">Porter memulai layanan kecil satu kali, lalu aplikasi yang kamu setujui menggunakannya langsung di perangkat kamu.</string>
+    <string name="onboarding_welcome_beta">Ini adalah build beta (pengujian). Lanjutkan dengan santai dan siapkan rencana cadangan. Laporkan masalah yang kamu temui.</string>
+    <string name="onboarding_shizuku_title">Shizuku sudah diinstal</string>
+    <string name="onboarding_shizuku_body">Porter adalah fork Shizuku yang terus dikelola, dan keduanya dapat berjalan berdampingan. Aplikasi yang mendukung Porter dapat menggunakan Porter, sementara aplikasi lain tetap menggunakan Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Kamu juga bisa membiarkan Porter menggantikan Shizuku, agar aplikasi yang dibuat hanya untuk Shizuku menggunakan Porter sebagai gantinya. Pilihan ada di tangan kamu. Kamu bisa memutuskannya nanti di Setelan → Kompatibilitas Shizuku, dan panduan kompatibilitas menjelaskan opsi yang didukung oleh penginstalan kamu.</string>
+    <string name="onboarding_shizuku_guide">Panduan kompatibilitas</string>
+    <string name="onboarding_privacy_title">Privasi</string>
+    <string name="onboarding_privacy_body">Porter tidak mengumpulkan, melacak, atau menjual informasi kamu. Tidak ada iklan, analitik, atau akun.</string>
+    <string name="onboarding_privacy_policy">Kebijakan privasi</string>
+    <string name="onboarding_get_started">Mulai</string>
+    <string name="onboarding_save_failed">Tidak dapat menyimpan. Coba lagi.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Pembaruan tersedia</string>
+    <string name="updater_card_versions">Porter %1$s tersedia. Versi kamu saat ini %2$s.</string>
+    <string name="updater_ignore">Abaikan</string>
+    <string name="updater_changelog">Catatan perubahan</string>
+    <string name="updater_download">Unduh</string>
+    <string name="updater_check">Periksa pembaruan</string>
+    <string name="updater_check_summary">Mencari rilis Porter yang lebih baru di GitHub saat kamu membuka Porter. Hasil pemeriksaan yang berhasil disimpan selama satu hari.</string>
+    <string name="updater_channel">Saluran pembaruan</string>
+    <string name="updater_channel_production">Produksi</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Produksi: hanya rilis penuh</string>
+    <string name="updater_channel_beta_choice">Beta: rilis terbaru, termasuk versi beta dan prarilis</string>
+    <string name="updater_dialog_title">Unduh pembaruan</string>
+    <string name="updater_download_summary">Pilih lokasi untuk menyimpan APK.</string>
+    <string name="updater_install_manual">Instal secara manual</string>
+    <string name="updater_install_manual_summary">Penginstal Android meminta konfirmasi.</string>
+    <string name="updater_install_automatic">Instal otomatis</string>
+    <string name="updater_install_automatic_summary">Menggunakan akses ADB atau root milik Porter. Porter ditutup selama pembaruan diinstal.</string>
+    <string name="updater_install_automatic_requirement">Memerlukan layanan Porter yang berjalan di pengguna utama perangkat ini.</string>
+    <string name="updater_continue">Lanjutkan</string>
+    <string name="updater_downloading">Mengunduh…</string>
+    <string name="updater_installing">Menginstal…</string>
+    <string name="updater_saved">%1$s tersimpan.</string>
+    <string name="updater_download_failed">Unduhan gagal: %1$s</string>
+    <string name="updater_download_failed_partial">Unduhan gagal: %1$s. File yang tersimpan sebagian mungkin masih ada.</string>
+    <string name="updater_not_porter">File yang diunduh bukan APK Porter.</string>
+    <string name="updater_not_newer">APK yang diunduh tidak lebih baru daripada Porter yang terinstal.</string>
+    <string name="updater_automatic_unavailable">Layanan Porter tidak lagi tersedia di pengguna utama perangkat ini, sehingga pembaruan tidak diinstal.</string>
+    <string name="updater_install_failed">Penginstalan gagal: %1$s</string>
+    <string name="updater_install_permission_denied">Izinkan Porter menginstal aplikasi tidak dikenal untuk menginstal pembaruan secara manual.</string>
+    <string name="updater_install_permission_unavailable">Perangkat ini tidak memiliki layar untuk mengizinkan penginstalan aplikasi. Simpan APK dan instal dengan penginstal lain.</string>
+    <string name="updater_installer_unavailable">Penginstal Android tidak dapat dibuka.</string>
+    <string name="updater_save_unavailable">Tidak ada aplikasi yang tersedia untuk memilih lokasi penyimpanan APK.</string>
 </resources>

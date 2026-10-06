@@ -176,7 +176,7 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">πρόσβαση στο Porter</string>
     <string name="permission_description">Επιτρέψτε στην εφαρμογή να χρησιμοποιεί το Porter.</string>
-    <string name="permission_warning_template"><![CDATA[Επιτρέπεται η χρήση του <b>%1$s</b> σε %2$s;]]></string>
+    <string name="permission_warning_template"><![CDATA[Να επιτραπεί στην εφαρμογή <b>%1$s</b> η %2$s;]]></string>
     <string name="grant_dialog_button_allow_always">Επιτρέπεται συνεχώς</string>
     <string name="grant_dialog_button_deny">"Άρνηση"</string>
     <!-- Starter -->
@@ -483,4 +483,65 @@
     <string name="porter_contact_description_error">Προσθέστε μερικές λεπτομέρειες (τουλάχιστον 20 χαρακτήρες).</string>
     <string name="porter_contact_expected_error">Περιγράψτε τι περιμένατε.</string>
     <string name="porter_contact_no_email">Εγκαταστήστε ή ενεργοποιήστε μια εφαρμογή email για να ανοίξετε αυτό το πρόχειρο. Μπορείτε επίσης να κοινοποιήσετε τα αποθηκευμένα αρχεία καταγραφής ή να επικοινωνήσετε μαζί μας μέσω GitHub ή Discord.</string>
+
+    <string name="settings_general">Γενικά</string>
+    <string name="settings_general_summary">Θέμα και έλεγχος ενημερώσεων</string>
+    <string name="settings_general_summary_theme">Θέμα</string>
+    <string name="settings_startup_summary">Εκκίνηση με την ενεργοποίηση της συσκευής, άγρυπνος φρουρός και ενημερώσεις υπηρεσίας</string>
+    <string name="settings_startup_attention">Η λειτουργία στο παρασκήνιο ή οι ειδοποιήσεις χρειάζονται προσοχή</string>
+    <string name="settings_updates">Ενημερώσεις</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Συνέχεια</string>
+    <string name="onboarding_welcome_title">Καλώς ήρθες στο Porter</string>
+    <string name="onboarding_welcome_body">Το Porter δίνει στις εφαρμογές σου πρόσβαση ADB, ώστε να μπορούν να κάνουν πράγματα που συνήθως απαιτούν υπολογιστή. Εσύ αποφασίζεις ποιες εφαρμογές την αποκτούν.</string>
+    <string name="onboarding_welcome_service">Το Porter ξεκινά μία φορά μια μικρή υπηρεσία και οι εφαρμογές που εγκρίνεις τη χρησιμοποιούν απευθείας στη συσκευή σου.</string>
+    <string name="onboarding_welcome_beta">Αυτή είναι μια έκδοση beta (δοκιμαστική). Συνέχισε με αίσθηση του χιούμορ και ένα εφεδρικό σχέδιο. Αν συναντήσεις προβλήματα, ανάφερέ τα.</string>
+    <string name="onboarding_shizuku_title">Το Shizuku είναι εγκατεστημένο</string>
+    <string name="onboarding_shizuku_body">Το Porter είναι ένα fork του Shizuku που συνεχίζει να συντηρείται και τα δύο μπορούν να λειτουργούν παράλληλα. Οι εφαρμογές που υποστηρίζουν το Porter μπορούν να το χρησιμοποιούν, ενώ οι υπόλοιπες συνεχίζουν να χρησιμοποιούν το Shizuku.</string>
+    <string name="onboarding_shizuku_replace">Μπορείς επίσης να αφήσεις το Porter να αντικαταστήσει το Shizuku, ώστε οι εφαρμογές που έχουν δημιουργηθεί μόνο για το Shizuku να χρησιμοποιούν το Porter στη θέση του. Εσύ αποφασίζεις. Μπορείς να το αποφασίσεις αργότερα στις Ρυθμίσεις → Συμβατότητα με Shizuku. Ο οδηγός συμβατότητας εξηγεί ποιες επιλογές υποστηρίζει η εγκατάστασή σου.</string>
+    <string name="onboarding_shizuku_guide">Οδηγός συμβατότητας</string>
+    <string name="onboarding_privacy_title">Απόρρητο</string>
+    <string name="onboarding_privacy_body">Το Porter δεν συλλέγει, δεν παρακολουθεί και δεν πουλά τις πληροφορίες σου. Δεν έχει διαφημίσεις, αναλυτικά στοιχεία ή λογαριασμό.</string>
+    <string name="onboarding_privacy_policy">Πολιτική απορρήτου</string>
+    <string name="onboarding_get_started">Ξεκίνα</string>
+    <string name="onboarding_save_failed">Δεν ήταν δυνατή η αποθήκευση. Δοκίμασε ξανά.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Διαθέσιμη ενημέρωση</string>
+    <string name="updater_card_versions">Το Porter %1$s είναι διαθέσιμο. Έχεις την έκδοση %2$s.</string>
+    <string name="updater_ignore">Παράβλεψη</string>
+    <string name="updater_changelog">Ιστορικό αλλαγών</string>
+    <string name="updater_download">Λήψη</string>
+    <string name="updater_check">Έλεγχος για ενημερώσεις</string>
+    <string name="updater_check_summary">Αναζητά νεότερη έκδοση του Porter στο GitHub όταν ανοίγεις το Porter. Ένας επιτυχής έλεγχος διατηρείται για μία ημέρα.</string>
+    <string name="updater_channel">Κανάλι ενημερώσεων</string>
+    <string name="updater_channel_production">Σταθερές εκδόσεις</string>
+    <string name="updater_channel_beta">Beta</string>
+    <string name="updater_channel_production_choice">Σταθερές εκδόσεις: μόνο πλήρεις εκδόσεις</string>
+    <string name="updater_channel_beta_choice">Beta: η νεότερη έκδοση, συμπεριλαμβανομένων των beta και των προεκδόσεων</string>
+    <string name="updater_dialog_title">Λήψη ενημέρωσης</string>
+    <string name="updater_download_summary">Διάλεξε πού θα αποθηκευτεί το APK.</string>
+    <string name="updater_install_manual">Χειροκίνητη εγκατάσταση</string>
+    <string name="updater_install_manual_summary">Το πρόγραμμα εγκατάστασης του Android ζητά την επιβεβαίωσή σου.</string>
+    <string name="updater_install_automatic">Αυτόματη εγκατάσταση</string>
+    <string name="updater_install_automatic_summary">Χρησιμοποιεί την πρόσβαση ADB ή root του Porter. Το Porter κλείνει όσο εγκαθίσταται η ενημέρωση.</string>
+    <string name="updater_install_automatic_requirement">Η υπηρεσία του Porter πρέπει να εκτελείται στον κύριο χρήστη αυτής της συσκευής.</string>
+    <string name="updater_continue">Συνέχεια</string>
+    <string name="updater_downloading">Λήψη…</string>
+    <string name="updater_installing">Εγκατάσταση…</string>
+    <string name="updater_saved">Το %1$s αποθηκεύτηκε.</string>
+    <string name="updater_download_failed">Η λήψη απέτυχε: %1$s</string>
+    <string name="updater_download_failed_partial">Η λήψη απέτυχε: %1$s. Το μερικώς αποθηκευμένο αρχείο μπορεί να παραμείνει.</string>
+    <string name="updater_not_porter">Το αρχείο που λήφθηκε δεν είναι APK του Porter.</string>
+    <string name="updater_not_newer">Το APK που λήφθηκε δεν είναι νεότερο από την εγκατεστημένη έκδοση του Porter.</string>
+    <string name="updater_automatic_unavailable">Η υπηρεσία του Porter δεν είναι πλέον διαθέσιμη στον κύριο χρήστη αυτής της συσκευής, οπότε η ενημέρωση δεν εγκαταστάθηκε.</string>
+    <string name="updater_install_failed">Η εγκατάσταση απέτυχε: %1$s</string>
+    <string name="updater_install_permission_denied">Επίτρεψε στο Porter να εγκαθιστά άγνωστες εφαρμογές για να εγκαταστήσεις την ενημέρωση χειροκίνητα.</string>
+    <string name="updater_install_permission_unavailable">Αυτή η συσκευή δεν έχει οθόνη για να επιτρέψεις την εγκατάσταση εφαρμογών. Αποθήκευσε το APK και εγκατέστησέ το με άλλο πρόγραμμα εγκατάστασης.</string>
+    <string name="updater_installer_unavailable">Δεν ήταν δυνατό να ανοίξει το πρόγραμμα εγκατάστασης του Android.</string>
+    <string name="updater_save_unavailable">Δεν υπάρχει διαθέσιμη εφαρμογή για να επιλέξεις πού θα αποθηκευτεί το APK.</string>
 </resources>

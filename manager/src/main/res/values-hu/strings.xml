@@ -66,14 +66,14 @@
         befejezésében.</string>
     <string name="adb_pairing_tutorial_content_steps">Lépjen a „Fejlesztői beállítások” menüpontra,
         majd engedélyezze az „USB hibakeresés” és a „Vezeték nélküli hibakeresés” opciókat.</string>
-    <string name="adb_pairing_tutorial_content_enter_pairing_code">Koppintson a „Vezeték nélküli
+    <string name="adb_pairing_tutorial_content_enter_pairing_code">Koppints a „Vezeték nélküli
         hibakeresés” bal oldalára, majd az „Eszköz párosítása párosítási kóddal” lehetőségre. A
-        párosítás befejezéséhez írja be az értesítésben található kódot.</string>
+        párosítás befejezéséhez írd be a kódot az értesítésbe.</string>
     <string name="adb_pairing_tutorial_content_notification_blocked">A párosítás során a Porter egyik
         értesítését kell használnia. Kérjük, engedélyezze a Porternek, hogy értesítéseket
         jelenítsen meg.</string>
     <string name="adb_pairing_tutorial_content_miui">Előfordulhat, hogy a MIUI-felhasználóknak át
-        kell váltaniuk az értesítési stílust \"Android\"-ra a \"Értesítés\" - \"Értesítési árnyék\"
+        kell váltaniuk az értesítési stílust \"Android\"-ra a \"Értesítés\" - \"Értesítési panel\"
         lehetőségről a rendszerbeállításokban.</string>
     <string name="adb_pairing_tutorial_content_miui_2">Ellenkező esetben előfordulhat, hogy nem
         tudja megadni az értesítésben szereplő párosítási kódot.</string>
@@ -111,7 +111,7 @@
     <string name="terminal_tutorial_miui">A felhasználók arról számoltak be, hogy az MIUI sérti a
         Storage Access Frameworköt, amelyet az exportálási funkció használ.</string>
     <string name="terminal_tutorial_miui_2">Ha MIUI-t használsz, lehet, hogy ki kell csomagolnod a
-        fájlt a Porter APK-jának „eszközök” mappájából.</string>
+        fájlt a Porter APK-jának assets mappájából.</string>
     <string name="terminal_tutorial_1">Exportálja a fájlokat egy új mappába.</string>
     <string name="terminal_tutorial_1_description">Két fájl kerül exportálásra: %1$s és %2$s. Ha a
         fájlok már léteznek a kiválasztott mappában, akkor törlődnek.</string>
@@ -123,7 +123,7 @@
         %1$s futtatását az elérési út megadása nélkül.\n\nEgyébként létrehozhatsz egy aliast a %2$s
         számára a terminálalkalmazásod %3$s konfigurációs fájljában.</string>
     <string name="terminal_tutorial_3">Nyisson meg egy shell-t a következő paranccsal:</string>
-    <string name="rish_description"><![CDATA[A %1$sparanccsal shell parancsokat futtathatsz bármelyik terminálalkalmazásban.<p>Koppints ide, ha többet szeretnél megtudni a használatáról.]]></string>
+    <string name="rish_description"><![CDATA[A %1$s paranccsal shell parancsokat futtathatsz bármelyik terminálalkalmazásban.<p>Koppints ide, ha többet szeretnél megtudni a használatáról.]]></string>
     <!-- Settings -->
     <string name="settings_title">Beállítások</string>
     <string name="settings_start_on_boot">Indítás rendszerindításkor</string>
@@ -169,7 +169,7 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">Porter hozzáférés</string>
     <string name="permission_description">Engedélyezze az app számára a Porter használatát.</string>
-    <string name="permission_warning_template"><![CDATA[Engedélyezi <b>%1$s</b> ide, %2$s?]]></string>
+    <string name="permission_warning_template"><![CDATA[Engedélyezed a(z) <b>%1$s</b> számára a következőt: %2$s?]]></string>
     <string name="grant_dialog_button_allow_always">Mindig engedje meg</string>
     <string name="grant_dialog_button_deny">"Megtagad"</string>
     <!-- Starter -->
@@ -192,7 +192,7 @@
     <string name="watchdog_turn_off">Kikapcsolás</string>
     <string name="watchdog_shizuku_crashed_title">A Porter nemrég összeomlott</string>
     <string name="watchdog_shizuku_crashed_text">A Watchdog újraindította a szolgáltatást.
-        Koppintson a lehetséges javításokról a jövőbeli összeomlások megelőzése érdekében.</string>
+        Koppints a lehetséges javítások megismeréséhez, hogy megelőzd a jövőbeli összeomlásokat.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Kapcsolja ki a riasztásokat</string>
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">Nem lehet elindítani a böngészőt</string>
@@ -200,8 +200,8 @@
     <string name="accessibility_service_description">Párosítási támogatást nyújt olyan eszközökhöz
         (pl. Android 14+ rendszert futtató tévék), amelyeken nem használhatók az értesítések vagy az
         osztott képernyő.\n\nLehetővé teszi a Porter számára a párosítási kód kinyerését a vezeték
-        nélküli hibakeresési párosítási képernyőről. Amint megtalálja a párosítási kódot, a rendszer
-        letiltja magát.</string>
+        nélküli hibakeresési párosítási képernyőről. Amint megtalálja a párosítási kódot,
+        kikapcsolja magát.</string>
     <!-- Messages for legacy -->
     <string name="wadb_notification_attempt_now">Próbálja meg most</string>
     <string name="home_root_description"><![CDATA[Ha Magiskot használ, a(z) %1$s is egy lehetőség. Az alkalmazásoknak kifejezetten támogatniuk kell ezt: %2$s.]]></string>
@@ -476,4 +476,64 @@
     <string name="porter_contact_description_error">Adjon meg néhány részletet (legalább 20 karakter).</string>
     <string name="porter_contact_expected_error">Írja le, mire számított.</string>
     <string name="porter_contact_no_email">A piszkozat megnyitásához telepítsen vagy engedélyezzen egy levelezőalkalmazást. A mentett naplókat meg is oszthatja, vagy a GitHubon vagy a Discordon keresztül is felveheti velünk a kapcsolatot.</string>
+    <string name="settings_general">Általános</string>
+    <string name="settings_general_summary">Téma és frissítések keresése</string>
+    <string name="settings_general_summary_theme">Téma</string>
+    <string name="settings_startup_summary">Indítás rendszerindításkor, őrzőkutya és szolgáltatásfrissítések</string>
+    <string name="settings_startup_attention">A háttérben futás vagy az értesítések beavatkozást igényelnek</string>
+    <string name="settings_updates">Frissítések</string>
+    <string-array name="porter_pairing_methods">
+        <item>@string/porter_pairing_notification</item>
+        <item>@string/porter_pairing_dialog</item>
+    </string-array>
+
+    <string name="onboarding_continue">Folytatás</string>
+    <string name="onboarding_welcome_title">Üdv a Porterben</string>
+    <string name="onboarding_welcome_body">A Porter ADB-hozzáférést ad az alkalmazásaidnak, így olyasmire is képesek, amihez általában számítógép kell. Te döntöd el, melyik alkalmazás kapja meg.</string>
+    <string name="onboarding_welcome_service">A Porter egyszer elindít egy kis szolgáltatást, és az általad jóváhagyott alkalmazások közvetlenül az eszközödön használják.</string>
+    <string name="onboarding_welcome_beta">Ez egy béta (tesztelési) build. Folytasd humorérzékkel és egy tartalék tervvel. Kérjük, jelentsd a tapasztalt hibákat.</string>
+    <string name="onboarding_shizuku_title">A Shizuku telepítve van</string>
+    <string name="onboarding_shizuku_body">A Porter a Shizuku karbantartott forkja, és a kettő egymás mellett is futhat. A Portert támogató alkalmazások használhatják a Portert, míg a többi alkalmazás továbbra is a Shizukut használja.</string>
+    <string name="onboarding_shizuku_replace">Azt is megengedheted, hogy a Porter lecserélje a Shizukut, így a csak Shizukuhoz készült alkalmazások helyette a Portert használják. Te döntesz. Később is dönthetsz a Beállítások → Shizuku-kompatibilitás részben, a kompatibilitási útmutató pedig elmagyarázza, mely lehetőségeket támogatja a telepítésed.</string>
+    <string name="onboarding_shizuku_guide">Kompatibilitási útmutató</string>
+    <string name="onboarding_privacy_title">Adatvédelem</string>
+    <string name="onboarding_privacy_body">A Porter nem gyűjti, követi vagy értékesíti az adataidat. Nincsenek benne reklámok, analitika vagy felhasználói fiók.</string>
+    <string name="onboarding_privacy_policy">Adatvédelmi szabályzat</string>
+    <string name="onboarding_get_started">Kezdés</string>
+    <string name="onboarding_save_failed">Nem sikerült menteni. Próbáld újra.</string>
+
+    <!-- Updater -->
+    <string name="updater_card_title">Frissítés érhető el</string>
+    <string name="updater_card_versions">Elérhető a Porter %1$s verziója. Nálad a %2$s van telepítve.</string>
+    <string name="updater_ignore">Mellőzés</string>
+    <string name="updater_changelog">Változásnapló</string>
+    <string name="updater_download">Letöltés</string>
+    <string name="updater_check">Frissítések keresése</string>
+    <string name="updater_check_summary">Újabb Porter-kiadást keres a GitHubon, amikor megnyitod a Portert. A sikeres ellenőrzés eredményét egy napig megőrzi.</string>
+    <string name="updater_channel">Frissítési csatorna</string>
+    <string name="updater_channel_production">Stabil</string>
+    <string name="updater_channel_beta">Béta</string>
+    <string name="updater_channel_production_choice">Stabil: csak végleges kiadások</string>
+    <string name="updater_channel_beta_choice">Béta: a legújabb kiadás, beleértve a béta- és előzetes kiadásokat is</string>
+    <string name="updater_dialog_title">Frissítés letöltése</string>
+    <string name="updater_download_summary">Válaszd ki, hová mented az APK-t.</string>
+    <string name="updater_install_manual">Kézi telepítés</string>
+    <string name="updater_install_manual_summary">Az Android telepítője megerősítést kér tőled.</string>
+    <string name="updater_install_automatic">Automatikus telepítés</string>
+    <string name="updater_install_automatic_summary">A Porter ADB- vagy root-hozzáférését használja. A Porter bezárul a frissítés telepítése közben.</string>
+    <string name="updater_install_automatic_requirement">A Porter szolgáltatásának az eszköz elsődleges felhasználójánál kell futnia.</string>
+    <string name="updater_continue">Folytatás</string>
+    <string name="updater_downloading">Letöltés…</string>
+    <string name="updater_installing">Telepítés…</string>
+    <string name="updater_saved">Mentve: %1$s.</string>
+    <string name="updater_download_failed">A letöltés sikertelen: %1$s</string>
+    <string name="updater_download_failed_partial">A letöltés sikertelen: %1$s. A részben mentett fájl megmaradhat.</string>
+    <string name="updater_not_porter">A letöltött fájl nem Porter APK.</string>
+    <string name="updater_not_newer">A letöltött APK nem újabb a telepített Porternél.</string>
+    <string name="updater_automatic_unavailable">A Porter szolgáltatása már nem érhető el az eszköz elsődleges felhasználójánál, ezért a frissítés nem lett telepítve.</string>
+    <string name="updater_install_failed">A telepítés sikertelen: %1$s</string>
+    <string name="updater_install_permission_denied">A frissítés kézi telepítéséhez engedélyezd a Porternek az ismeretlen alkalmazások telepítését.</string>
+    <string name="updater_install_permission_unavailable">Ezen az eszközön nincs képernyő az alkalmazástelepítés engedélyezéséhez. Mentsd el az APK-t, és telepítsd egy másik telepítővel.</string>
+    <string name="updater_installer_unavailable">Nem sikerült megnyitni az Android telepítőjét.</string>
+    <string name="updater_save_unavailable">Nincs alkalmazás, amellyel kiválaszthatnád, hová mented az APK-t.</string>
 </resources>
