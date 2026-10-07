@@ -404,6 +404,9 @@
     <string name="compat_dismiss_result">Ketepikan</string>
     <string name="compat_import_complete">Import selesai</string>
     <string name="compat_replace_action">Gantikan</string>
+    <string name="compat_import_result_applied">Pilihan akses yang baru diimport: %1$d</string>
+    <string name="compat_import_result_skipped">Dilangkau semasa import: %1$d</string>
+    <string name="compat_import_result_explanation">Pilihan Porter sedia ada dikekalkan dan tidak dikira sebagai baru diimport. Yang dilangkau ialah pilihan import tersimpan yang tidak dapat digunakan lagi, contohnya kerana apl telah berubah atau Porter sudah mempunyai pilihan. Apl yang dikecualikan sebelum import tidak dikira.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Telah dipasang</string>
     <string name="compat_summary_missing">Tidak dipasang</string>

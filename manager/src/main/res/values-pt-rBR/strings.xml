@@ -371,6 +371,9 @@
     <string name="compat_dismiss_result">Fechar</string>
     <string name="compat_import_complete">Importação concluída</string>
     <string name="compat_replace_action">Substituir</string>
+    <string name="compat_import_result_applied">Novas escolhas de acesso importadas: %1$d</string>
+    <string name="compat_import_result_skipped">Ignoradas durante a importação: %1$d</string>
+    <string name="compat_import_result_explanation">As escolhas existentes do Porter são mantidas e não contam como novas importações. As ignoradas são escolhas de importação salvas que não puderam mais ser aplicadas, por exemplo porque um app mudou ou o Porter já tinha uma escolha. Apps excluídos antes da importação não são contados.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Instalado</string>
     <string name="compat_summary_missing">Não instalado</string>

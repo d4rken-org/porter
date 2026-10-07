@@ -396,6 +396,9 @@
     <string name="compat_dismiss_result">Stäng</string>
     <string name="compat_import_complete">Importen är klar</string>
     <string name="compat_replace_action">Ersätt</string>
+    <string name="compat_import_result_applied">Nyimporterade åtkomstval: %1$d</string>
+    <string name="compat_import_result_skipped">Överhoppade vid import: %1$d</string>
+    <string name="compat_import_result_explanation">Befintliga val i Porter behålls och räknas inte som nyimporterade. Överhoppade är sparade importval som inte längre kunde tillämpas, till exempel för att en app har ändrats eller Porter redan hade ett val. Appar som undantogs före importen räknas inte.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Installerad</string>
     <string name="compat_summary_missing">Inte installerad</string>

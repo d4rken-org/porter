@@ -394,6 +394,9 @@
     <string name="compat_dismiss_result">Փակել</string>
     <string name="compat_import_complete">Ներմուծումն ավարտվեց</string>
     <string name="compat_replace_action">Փոխարինել</string>
+    <string name="compat_import_result_applied">Նոր ներմուծված մուտքի ընտրություններ՝ %1$d</string>
+    <string name="compat_import_result_skipped">Ներմուծման ժամանակ բաց թողնված՝ %1$d</string>
+    <string name="compat_import_result_explanation">Porter-ի առկա ընտրությունները պահպանվում են և չեն հաշվվում որպես նոր ներմուծված։ Բաց թողնվածների մեջ հաշվվում են պահված ներմուծման ընտրությունները, որոնք այլևս հնարավոր չէր կիրառել, օրինակ՝ քանի որ հավելվածը փոխվել էր կամ Porter-ն արդեն ուներ ընտրություն։ Ներմուծումից առաջ բացառված հավելվածները չեն հաշվվում։</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Տեղադրված է</string>
     <string name="compat_summary_missing">Տեղադրված չէ</string>

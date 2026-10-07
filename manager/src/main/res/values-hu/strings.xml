@@ -406,6 +406,9 @@
     <string name="compat_dismiss_result">Elvetés</string>
     <string name="compat_import_complete">Importálás kész</string>
     <string name="compat_replace_action">Csere</string>
+    <string name="compat_import_result_applied">Újonnan importált hozzáférési döntések: %1$d</string>
+    <string name="compat_import_result_skipped">Importáláskor kihagyva: %1$d</string>
+    <string name="compat_import_result_explanation">A Porterben meglévő döntések megmaradnak, és nem számítanak újonnan importáltnak. A kihagyottak közé azok a mentett importálási döntések tartoznak, amelyeket már nem lehetett alkalmazni, például mert egy alkalmazás megváltozott, vagy a Porterben már volt döntés. Az importálás előtt kizárt alkalmazások nem számítanak bele.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Telepítve</string>
     <string name="compat_summary_missing">Nincs telepítve</string>

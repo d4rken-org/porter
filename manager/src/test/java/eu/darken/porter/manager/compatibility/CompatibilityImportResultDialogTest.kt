@@ -97,13 +97,17 @@ class CompatibilityImportResultDialogTest : ComposeTest() {
 
     @Test
     @Config(qualifiers = "fr")
-    fun frenchResultFallsBackToTheNewEnglishCopy() {
+    fun frenchResultUsesTheExactLocalizedCopy() {
         composeTestRule.setContent { PorterTheme {
             CompatibilityImportResultDialog(CompatibilityRepository.State(
                 status = CompatibilityRepository.Status.INSTALLED, completed = true,
                 applied = 1, skipped = 0)) {}
         } }
-        assertResult("Newly imported access choices: 1", "Skipped during import: 0", ENGLISH_EXPLANATION)
+        assertResult("Choix d'accès nouvellement importés : 1", "Ignorés pendant l'importation : 0",
+            "Les choix existants de Porter sont conservés et ne comptent pas comme nouvellement importés. " +
+                "Les éléments ignorés sont des choix d'importation enregistrés qui n'ont plus pu être appliqués, " +
+                "par exemple parce qu'une application a changé ou que Porter avait déjà un choix. " +
+                "Les applications exclues avant l'importation ne sont pas comptées.")
     }
 
     private fun assertResult(appliedText: String, skippedText: String, explanation: String) {

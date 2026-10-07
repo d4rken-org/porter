@@ -401,6 +401,9 @@
     <string name="compat_dismiss_result">დახურვა</string>
     <string name="compat_import_complete">იმპორტი დასრულდა</string>
     <string name="compat_replace_action">ჩანაცვლება</string>
+    <string name="compat_import_result_applied">ახლად იმპორტირებული წვდომის არჩევანი: %1$d</string>
+    <string name="compat_import_result_skipped">იმპორტისას გამოტოვებული: %1$d</string>
+    <string name="compat_import_result_explanation">Porter-ის არსებული არჩევანი ნარჩუნდება და ახლად იმპორტირებულად არ ითვლება. გამოტოვებულებში ითვლება შენახული იმპორტის არჩევანი, რომლის გამოყენებაც ვეღარ მოხერხდა, მაგალითად, იმიტომ რომ აპი შეიცვალა ან Porter-ს უკვე ჰქონდა არჩევანი. იმპორტამდე გამორიცხული აპები არ ითვლება.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">დაინსტალირებულია</string>
     <string name="compat_summary_missing">დაინსტალირებული არ არის</string>

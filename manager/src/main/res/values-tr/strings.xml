@@ -400,6 +400,9 @@
     <string name="compat_dismiss_result">Kapat</string>
     <string name="compat_import_complete">İçe aktarma tamamlandı</string>
     <string name="compat_replace_action">Değiştir</string>
+    <string name="compat_import_result_applied">Yeni içe aktarılan erişim tercihleri: %1$d</string>
+    <string name="compat_import_result_skipped">İçe aktarma sırasında atlanan: %1$d</string>
+    <string name="compat_import_result_explanation">Porter’daki mevcut tercihler korunur ve yeni içe aktarılmış sayılmaz. Atlananlar, örneğin bir uygulama değiştiği veya Porter’da zaten bir tercih olduğu için artık uygulanamayan kayıtlı içe aktarma tercihleridir. İçe aktarmadan önce hariç tutulan uygulamalar sayılmaz.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Yüklü</string>
     <string name="compat_summary_missing">Yüklü değil</string>

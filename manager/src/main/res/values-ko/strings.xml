@@ -354,6 +354,9 @@
     <string name="compat_dismiss_result">닫기</string>
     <string name="compat_import_complete">가져오기 완료</string>
     <string name="compat_replace_action">교체</string>
+    <string name="compat_import_result_applied">새로 가져온 접근 선택 사항: %1$d</string>
+    <string name="compat_import_result_skipped">가져오는 중 건너뜀: %1$d</string>
+    <string name="compat_import_result_explanation">Porter의 기존 선택 사항은 유지되며 새로 가져온 항목으로 계산되지 않습니다. 건너뜀에는 앱이 변경되었거나 Porter에 이미 선택 사항이 있는 등의 이유로 더 이상 적용할 수 없었던 저장된 가져오기 선택 사항이 포함됩니다. 가져오기 전에 제외된 앱은 계산되지 않습니다.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">설치됨</string>
     <string name="compat_summary_missing">설치되지 않음</string>

@@ -392,6 +392,9 @@
     <string name="compat_dismiss_result">Lukk</string>
     <string name="compat_import_complete">Importen er fullført</string>
     <string name="compat_replace_action">Erstatt</string>
+    <string name="compat_import_result_applied">Nyimporterte tilgangsvalg: %1$d</string>
+    <string name="compat_import_result_skipped">Hoppet over under import: %1$d</string>
+    <string name="compat_import_result_explanation">Eksisterende valg i Porter beholdes og telles ikke som nyimporterte. Hoppet over omfatter lagrede importvalg som ikke lenger kunne brukes, for eksempel fordi en app er endret eller Porter allerede hadde et valg. Apper som ble utelatt før importen, telles ikke.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Installert</string>
     <string name="compat_summary_missing">Ikke installert</string>

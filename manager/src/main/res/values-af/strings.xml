@@ -399,6 +399,9 @@
     <string name="compat_dismiss_result">Maak toe</string>
     <string name="compat_import_complete">Invoer voltooi</string>
     <string name="compat_replace_action">Vervang</string>
+    <string name="compat_import_result_applied">Nuut ingevoerde toegangkeuses: %1$d</string>
+    <string name="compat_import_result_skipped">Oorgeslaan tydens invoer: %1$d</string>
+    <string name="compat_import_result_explanation">Bestaande Porter-keuses word behou en tel nie as nuut ingevoer nie. Oorgeslaan tel gestoorde invoerkeuses wat nie meer toegepas kon word nie, byvoorbeeld omdat \'n program verander het of Porter reeds \'n keuse gehad het. Programme wat voor die invoer uitgesluit is, word nie getel nie.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Geïnstalleer</string>
     <string name="compat_summary_missing">Nie geïnstalleer nie</string>

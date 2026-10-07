@@ -402,6 +402,9 @@
     <string name="compat_dismiss_result">Sluiten</string>
     <string name="compat_import_complete">Import voltooid</string>
     <string name="compat_replace_action">Vervangen</string>
+    <string name="compat_import_result_applied">Nieuw geïmporteerde toegangskeuzes: %1$d</string>
+    <string name="compat_import_result_skipped">Overgeslagen tijdens import: %1$d</string>
+    <string name="compat_import_result_explanation">Bestaande Porter-keuzes blijven behouden en tellen niet als nieuw geïmporteerd. Overgeslagen telt opgeslagen importkeuzes die niet meer konden worden toegepast, bijvoorbeeld omdat een app is gewijzigd of Porter al een keuze had. Apps die vóór de import zijn uitgesloten, worden niet meegeteld.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Geïnstalleerd</string>
     <string name="compat_summary_missing">Niet geïnstalleerd</string>

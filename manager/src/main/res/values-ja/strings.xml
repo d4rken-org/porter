@@ -365,6 +365,9 @@
     <string name="compat_dismiss_result">閉じる</string>
     <string name="compat_import_complete">インポート完了</string>
     <string name="compat_replace_action">置き換える</string>
+    <string name="compat_import_result_applied">新たにインポートしたアクセス設定: %1$d</string>
+    <string name="compat_import_result_skipped">インポート中にスキップ: %1$d</string>
+    <string name="compat_import_result_explanation">Porterの既存の設定はそのまま保持され、新たにインポートした数には含まれません。スキップ数には、アプリが変更された場合やPorterに既に設定があった場合など、適用できなくなった保存済みのインポート設定が含まれます。インポート前に除外されたアプリは数えられません。</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">インストール済み</string>
     <string name="compat_summary_missing">未インストール</string>

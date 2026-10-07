@@ -379,6 +379,9 @@
     <string name="compat_dismiss_result">மூடு</string>
     <string name="compat_import_complete">இறக்குமதி முடிந்தது</string>
     <string name="compat_replace_action">மாற்று</string>
+    <string name="compat_import_result_applied">புதிதாக இறக்குமதி செய்த அணுகல் தேர்வுகள்: %1$d</string>
+    <string name="compat_import_result_skipped">இறக்குமதியின்போது தவிர்த்தவை: %1$d</string>
+    <string name="compat_import_result_explanation">Porter இல் ஏற்கெனவே உள்ள தேர்வுகள் அப்படியே வைக்கப்படும், அவை புதிதாக இறக்குமதி செய்தவையாகக் கணக்கிடப்படாது. ஒரு பயன்பாடு மாறியதாலோ Porter இல் ஏற்கெனவே ஒரு தேர்வு இருந்ததாலோ இனி பயன்படுத்த முடியாத சேமித்த இறக்குமதித் தேர்வுகள் தவிர்த்தவையாகக் கணக்கிடப்படும். இறக்குமதிக்கு முன் விலக்கப்பட்ட பயன்பாடுகள் கணக்கிடப்படாது.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">நிறுவப்பட்டது</string>
     <string name="compat_summary_missing">நிறுவப்படவில்லை</string>

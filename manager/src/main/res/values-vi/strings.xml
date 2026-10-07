@@ -393,6 +393,9 @@
     <string name="compat_dismiss_result">Đóng</string>
     <string name="compat_import_complete">Đã nhập xong</string>
     <string name="compat_replace_action">Thay thế</string>
+    <string name="compat_import_result_applied">Lựa chọn quyền truy cập mới được nhập: %1$d</string>
+    <string name="compat_import_result_skipped">Đã bỏ qua khi nhập: %1$d</string>
+    <string name="compat_import_result_explanation">Các lựa chọn hiện có trong Porter được giữ nguyên và không được tính là mới nhập. Số đã bỏ qua là các lựa chọn nhập đã lưu nhưng không thể áp dụng được nữa, ví dụ vì ứng dụng đã thay đổi hoặc Porter đã có lựa chọn. Các ứng dụng bị loại trừ trước khi nhập không được tính.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Đã cài đặt</string>
     <string name="compat_summary_missing">Chưa cài đặt</string>

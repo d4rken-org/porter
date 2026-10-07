@@ -408,6 +408,9 @@
     <string name="compat_dismiss_result">Opusti</string>
     <string name="compat_import_complete">Uvoz je končan</string>
     <string name="compat_replace_action">Zamenjaj</string>
+    <string name="compat_import_result_applied">Na novo uvožene izbire dostopa: %1$d</string>
+    <string name="compat_import_result_skipped">Preskočeno med uvozom: %1$d</string>
+    <string name="compat_import_result_explanation">Obstoječe izbire v aplikaciji Porter se ohranijo in se ne štejejo kot na novo uvožene. Med preskočene se štejejo shranjene izbire uvoza, ki jih ni bilo več mogoče uporabiti, na primer ker se je aplikacija spremenila ali ker je Porter že imel izbiro. Aplikacije, izključene pred uvozom, se ne štejejo.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Nameščena</string>
     <string name="compat_summary_missing">Ni nameščena</string>

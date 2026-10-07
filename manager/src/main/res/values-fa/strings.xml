@@ -384,6 +384,9 @@
     <string name="compat_dismiss_result">بستن</string>
     <string name="compat_import_complete">وارد کردن کامل شد</string>
     <string name="compat_replace_action">جایگزینی</string>
+    <string name="compat_import_result_applied">انتخاب‌های دسترسی تازه وارد شده: %1$d</string>
+    <string name="compat_import_result_skipped">رد شده هنگام وارد کردن: %1$d</string>
+    <string name="compat_import_result_explanation">انتخاب‌های موجود Porter حفظ می‌شوند و به‌عنوان تازه وارد شده شمرده نمی‌شوند. موارد رد شده شامل انتخاب‌های ذخیره‌شده‌ی وارد کردن است که دیگر قابل اعمال نبودند، برای مثال چون برنامه‌ای تغییر کرده بود یا Porter از قبل انتخابی داشت. برنامه‌هایی که پیش از وارد کردن کنار گذاشته شده‌اند شمرده نمی‌شوند.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">نصب شده</string>
     <string name="compat_summary_missing">نصب نشده</string>

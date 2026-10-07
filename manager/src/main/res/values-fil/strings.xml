@@ -409,6 +409,9 @@
     <string name="compat_dismiss_result">I-dismiss</string>
     <string name="compat_import_complete">Tapos na ang pag-import</string>
     <string name="compat_replace_action">Palitan</string>
+    <string name="compat_import_result_applied">Mga bagong na-import na pinili sa access: %1$d</string>
+    <string name="compat_import_result_skipped">Nilaktawan habang nag-i-import: %1$d</string>
+    <string name="compat_import_result_explanation">Pinapanatili ang mga kasalukuyang pinili sa Porter at hindi ito binibilang bilang bagong na-import. Ang nilaktawan ay ang mga naka-save na pinili sa pag-import na hindi na mailapat, halimbawa dahil nagbago ang isang app o may pinili na ang Porter. Hindi binibilang ang mga app na hindi isinama bago ang pag-import.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Naka-install</string>
     <string name="compat_summary_missing">Hindi naka-install</string>
