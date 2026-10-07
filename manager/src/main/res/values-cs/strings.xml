@@ -350,9 +350,9 @@
     <string name="compat_dismiss_result">Zavřít</string>
     <string name="compat_import_complete">Import dokončen</string>
     <string name="compat_replace_action">Nahradit</string>
-    <string name="compat_import_applied">Importováno: %1$d</string>
-    <string name="compat_import_skipped">Přeskočeno: %1$d</string>
-    <string name="compat_import_skipped_explanation">Volby se přeskakují, pokud už Porter volbu má nebo se aplikace změnila.</string>
+    <string name="compat_import_result_applied">Nově importované volby přístupu: %1$d</string>
+    <string name="compat_import_result_skipped">Přeskočeno při importu: %1$d</string>
+    <string name="compat_import_result_explanation">Stávající volby v aplikaci Porter zůstávají zachovány a nepočítají se jako nově importované. Mezi přeskočené patří uložené volby importu, které už nebylo možné použít, například protože se aplikace změnila nebo Porter už volbu měl. Aplikace vyloučené před importem se nezapočítávají.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Nainstalována</string>
     <string name="compat_summary_missing">Nenainstalována</string>

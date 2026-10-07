@@ -401,9 +401,9 @@
     <string name="compat_dismiss_result">Închide</string>
     <string name="compat_import_complete">Import finalizat</string>
     <string name="compat_replace_action">Înlocuiește</string>
-    <string name="compat_import_applied">Importate: %1$d</string>
-    <string name="compat_import_skipped">Omise: %1$d</string>
-    <string name="compat_import_skipped_explanation">Opțiunile sunt omise când Porter are deja o opțiune sau aplicația s-a schimbat.</string>
+    <string name="compat_import_result_applied">Opțiuni de acces nou importate: %1$d</string>
+    <string name="compat_import_result_skipped">Omise la import: %1$d</string>
+    <string name="compat_import_result_explanation">Opțiunile existente din Porter sunt păstrate și nu sunt numărate ca nou importate. Cele omise sunt opțiuni de import salvate care nu mai puteau fi aplicate, de exemplu pentru că o aplicație s-a schimbat sau Porter avea deja o opțiune. Aplicațiile excluse înainte de import nu sunt numărate.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Instalată</string>
     <string name="compat_summary_missing">Neinstalată</string>

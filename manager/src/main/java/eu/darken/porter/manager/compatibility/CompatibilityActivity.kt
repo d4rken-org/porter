@@ -359,12 +359,12 @@ internal fun CompatibilityImportResultDialog(state: CompatibilityRepository.Stat
     AlertDialog(onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.compat_import_complete)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(stringResource(R.string.compat_import_applied, state.applied))
-                    Text(stringResource(R.string.compat_import_skipped, state.skipped))
+                    Text(stringResource(R.string.compat_import_result_applied, state.applied))
+                    Text(stringResource(R.string.compat_import_result_skipped, state.skipped))
                 }
-                if (state.skipped > 0) Text(stringResource(R.string.compat_import_skipped_explanation),
+                Text(stringResource(R.string.compat_import_result_explanation),
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         },

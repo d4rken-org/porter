@@ -413,9 +413,9 @@
     <string name="compat_dismiss_result">Παράβλεψη</string>
     <string name="compat_import_complete">Η εισαγωγή ολοκληρώθηκε</string>
     <string name="compat_replace_action">Αντικατάσταση</string>
-    <string name="compat_import_applied">Εισήχθησαν: %1$d</string>
-    <string name="compat_import_skipped">Παραλείφθηκαν: %1$d</string>
-    <string name="compat_import_skipped_explanation">Οι επιλογές παραλείπονται όταν το Porter έχει ήδη επιλογή για την εφαρμογή ή όταν η εφαρμογή έχει αλλάξει.</string>
+    <string name="compat_import_result_applied">Νέες επιλογές πρόσβασης που εισήχθησαν: %1$d</string>
+    <string name="compat_import_result_skipped">Παραλείφθηκαν κατά την εισαγωγή: %1$d</string>
+    <string name="compat_import_result_explanation">Οι υπάρχουσες επιλογές του Porter διατηρούνται και δεν μετρώνται ως νέες εισαγωγές. Ως παραλειφθείσες μετρώνται οι αποθηκευμένες επιλογές εισαγωγής που δεν μπορούσαν πλέον να εφαρμοστούν, για παράδειγμα επειδή μια εφαρμογή άλλαξε ή επειδή το Porter είχε ήδη επιλογή. Οι εφαρμογές που εξαιρέθηκαν πριν από την εισαγωγή δεν μετρώνται.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Εγκατεστημένη</string>
     <string name="compat_summary_missing">Μη εγκατεστημένη</string>

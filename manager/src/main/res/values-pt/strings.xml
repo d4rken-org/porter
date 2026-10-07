@@ -408,9 +408,9 @@
     <string name="compat_dismiss_result">Fechar</string>
     <string name="compat_import_complete">Importação concluída</string>
     <string name="compat_replace_action">Substituir</string>
-    <string name="compat_import_applied">Importadas: %1$d</string>
-    <string name="compat_import_skipped">Ignoradas: %1$d</string>
-    <string name="compat_import_skipped_explanation">As escolhas são ignoradas quando o Porter já tem uma escolha ou a aplicação foi alterada.</string>
+    <string name="compat_import_result_applied">Novas escolhas de acesso importadas: %1$d</string>
+    <string name="compat_import_result_skipped">Ignoradas durante a importação: %1$d</string>
+    <string name="compat_import_result_explanation">As escolhas existentes do Porter são mantidas e não contam como novas importações. As ignoradas são escolhas de importação guardadas que já não puderam ser aplicadas, por exemplo porque uma aplicação foi alterada ou o Porter já tinha uma escolha. As aplicações excluídas antes da importação não são contadas.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Instalada</string>
     <string name="compat_summary_missing">Não instalada</string>

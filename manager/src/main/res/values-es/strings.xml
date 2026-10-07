@@ -371,9 +371,9 @@
     <string name="compat_dismiss_result">Cerrar</string>
     <string name="compat_import_complete">Importación completada</string>
     <string name="compat_replace_action">Reemplazar</string>
-    <string name="compat_import_applied">Importadas: %1$d</string>
-    <string name="compat_import_skipped">Omitidas: %1$d</string>
-    <string name="compat_import_skipped_explanation">Se omiten las decisiones cuando Porter ya tiene una decisión o la app ha cambiado.</string>
+    <string name="compat_import_result_applied">Nuevas decisiones de acceso importadas: %1$d</string>
+    <string name="compat_import_result_skipped">Omitidas durante la importación: %1$d</string>
+    <string name="compat_import_result_explanation">Las decisiones existentes de Porter se mantienen y no cuentan como nuevas importaciones. Las omitidas son decisiones de importación guardadas que ya no se pudieron aplicar, por ejemplo porque una app cambió o Porter ya tenía una decisión. Las apps excluidas antes de la importación no se cuentan.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Instalada</string>
     <string name="compat_summary_missing">No instalada</string>

@@ -401,9 +401,9 @@
     <string name="compat_dismiss_result">Закрити</string>
     <string name="compat_import_complete">Імпорт завершено</string>
     <string name="compat_replace_action">Замінити</string>
-    <string name="compat_import_applied">Імпортовано: %1$d</string>
-    <string name="compat_import_skipped">Пропущено: %1$d</string>
-    <string name="compat_import_skipped_explanation">Налаштування пропускаються, якщо в Porter уже є налаштування для додатка або додаток змінився.</string>
+    <string name="compat_import_result_applied">Нові імпортовані налаштування доступу: %1$d</string>
+    <string name="compat_import_result_skipped">Пропущено під час імпорту: %1$d</string>
+    <string name="compat_import_result_explanation">Наявні налаштування Porter зберігаються й не враховуються як нові імпортовані. До пропущених належать збережені налаштування імпорту, які більше не вдалося застосувати, наприклад тому, що додаток змінився або в Porter уже було налаштування. Додатки, виключені до імпорту, не враховуються.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Встановлено</string>
     <string name="compat_summary_missing">Не встановлено</string>

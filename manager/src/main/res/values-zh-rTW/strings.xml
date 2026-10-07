@@ -357,9 +357,9 @@
     <string name="compat_dismiss_result">關閉</string>
     <string name="compat_import_complete">匯入完成</string>
     <string name="compat_replace_action">取代</string>
-    <string name="compat_import_applied">已匯入：%1$d</string>
-    <string name="compat_import_skipped">已略過：%1$d</string>
-    <string name="compat_import_skipped_explanation">若 Porter 中已有選擇或應用程式已變更，則會略過該選擇。</string>
+    <string name="compat_import_result_applied">新匯入的存取選擇：%1$d</string>
+    <string name="compat_import_result_skipped">匯入時略過：%1$d</string>
+    <string name="compat_import_result_explanation">Porter 中既有的選擇會保留，不計為新匯入。略過的數量是指已儲存但無法再套用的匯入選擇，例如應用程式已變更或 Porter 中已有選擇。匯入前已排除的應用程式不計入。</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">已安裝</string>
     <string name="compat_summary_missing">未安裝</string>

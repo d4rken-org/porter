@@ -383,9 +383,9 @@
     <string name="compat_dismiss_result">Dismiss</string>
     <string name="compat_import_complete">Import complete</string>
     <string name="compat_replace_action">Replace</string>
-    <string name="compat_import_applied">Imported: %1$d</string>
-    <string name="compat_import_skipped">Skipped: %1$d</string>
-    <string name="compat_import_skipped_explanation">Choices are skipped when Porter already has a choice or the app has changed.</string>
+    <string name="compat_import_result_applied">Newly imported access choices: %1$d</string>
+    <string name="compat_import_result_skipped">Skipped during import: %1$d</string>
+    <string name="compat_import_result_explanation">Existing Porter choices are kept and do not count as newly imported. Skipped counts saved import choices that could no longer be applied, for example because an app changed or Porter already had a choice. Apps excluded before the import are not counted.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Installed</string>
     <string name="compat_summary_missing">Not installed</string>

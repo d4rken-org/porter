@@ -374,9 +374,9 @@
     <string name="compat_dismiss_result">Закрыть</string>
     <string name="compat_import_complete">Импорт завершён</string>
     <string name="compat_replace_action">Заменить</string>
-    <string name="compat_import_applied">Импортировано: %1$d</string>
-    <string name="compat_import_skipped">Пропущено: %1$d</string>
-    <string name="compat_import_skipped_explanation">Настройки пропускаются, если в Porter уже есть настройка для приложения или приложение изменилось.</string>
+    <string name="compat_import_result_applied">Новые импортированные настройки доступа: %1$d</string>
+    <string name="compat_import_result_skipped">Пропущено при импорте: %1$d</string>
+    <string name="compat_import_result_explanation">Существующие настройки Porter сохраняются и не считаются новыми импортированными. В число пропущенных входят сохранённые настройки импорта, которые больше не удалось применить, например потому, что приложение изменилось или в Porter уже была настройка. Приложения, исключённые до импорта, не учитываются.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Установлено</string>
     <string name="compat_summary_missing">Не установлено</string>

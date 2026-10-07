@@ -380,9 +380,9 @@
     <string name="compat_dismiss_result">إغلاق</string>
     <string name="compat_import_complete">اكتمل الاستيراد</string>
     <string name="compat_replace_action">استبدال</string>
-    <string name="compat_import_applied">تم الاستيراد: %1$d</string>
-    <string name="compat_import_skipped">تم التخطي: %1$d</string>
-    <string name="compat_import_skipped_explanation">يتم تخطي الاختيارات عندما يكون لدى Porter اختيار بالفعل أو عندما يكون التطبيق قد تغيّر.</string>
+    <string name="compat_import_result_applied">خيارات الوصول المستوردة حديثًا: %1$d</string>
+    <string name="compat_import_result_skipped">تم التخطي أثناء الاستيراد: %1$d</string>
+    <string name="compat_import_result_explanation">يتم الاحتفاظ باختيارات Porter الحالية ولا تُحتسب كمستوردة حديثًا. يشمل عدد العناصر التي تم تخطيها اختيارات الاستيراد المحفوظة التي لم يعد من الممكن تطبيقها، على سبيل المثال لأن تطبيقًا قد تغيّر أو لأن Porter كان لديه اختيار بالفعل. لا تُحتسب التطبيقات التي تم استبعادها قبل الاستيراد.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">مثبّت</string>
     <string name="compat_summary_missing">غير مثبّت</string>

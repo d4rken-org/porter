@@ -382,9 +382,9 @@
     <string name="compat_dismiss_result">Sulje</string>
     <string name="compat_import_complete">Tuonti valmis</string>
     <string name="compat_replace_action">Korvaa</string>
-    <string name="compat_import_applied">Tuotu: %1$d</string>
-    <string name="compat_import_skipped">Ohitettu: %1$d</string>
-    <string name="compat_import_skipped_explanation">Valinnat ohitetaan, kun Porterissa on jo valinta tai sovellus on muuttunut.</string>
+    <string name="compat_import_result_applied">Uudet tuodut käyttöoikeusvalinnat: %1$d</string>
+    <string name="compat_import_result_skipped">Ohitettu tuonnissa: %1$d</string>
+    <string name="compat_import_result_explanation">Porterin nykyiset valinnat säilyvät, eikä niitä lasketa uusiksi tuonneiksi. Ohitettuihin lasketaan tallennetut tuontivalinnat, joita ei enää voitu ottaa käyttöön esimerkiksi siksi, että sovellus oli muuttunut tai Porterissa oli jo valinta. Ennen tuontia pois jätettyjä sovelluksia ei lasketa.</string>
     <string name="compat_summary">%1$s · %2$s</string>
     <string name="compat_summary_installed">Asennettu</string>
     <string name="compat_summary_missing">Ei asennettu</string>
