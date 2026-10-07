@@ -145,14 +145,18 @@ jobs:
             arch: x86
             profile: tv_1080p
             input: --dpad
-          # Android 17 QPR1, debug and release. It has no google_atd image.
+          # Android 17 QPR1, debug and release. It has no google_atd image. At the 4096 MB the
+          # emulator otherwise settles on, lowmemorykiller kills even the app in front during the
+          # first minute after boot.
           - api: '37.1'
             suite: emulator
             target: google_apis_ps16k
+            ram: 6144M
           - api: '37.1'
             suite: emulator
             target: google_apis_ps16k
             build: release
+            ram: 6144M
           # The minified manager, for what R8 can break: entry points started by name, JNI
           # registration, reflection. Combinations of their own, which the suite-keyed entries
           # above do not reach, so each carries its own extra.
@@ -232,6 +236,7 @@ jobs:
           target: ${{ env.EMULATOR_IMAGE }}
           arch: ${{ matrix.arch || 'x86_64' }}
           profile: ${{ matrix.profile || 'pixel_2' }}
+          ram-size: ${{ matrix.ram || '' }}
           avd-name: porter-ci
           emulator-port: 5554
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none ${{ matrix.features }}
