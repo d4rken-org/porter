@@ -3,7 +3,7 @@ package eu.darken.porter.common
 /** Porter manager-only setup operations; independent of the client SDK. */
 object CompatibilitySetup {
     const val TRANSACTION = AppTransactions.COMPATIBILITY_SETUP
-    const val VERSION = 1
+    const val VERSION = 2
     const val INSPECT = 0
     const val PREVIEW_IMPORT = 1
     const val APPLY_IMPORT = 2

@@ -31,31 +31,29 @@ internal class CompatibilitySetupHandler(
         fun write(uid: Int, flags: Int)
     }
 
+    /** [argument] is the snapshot for APPLY_IMPORT and the target package for INSPECT and PREVIEW_IMPORT. */
     @Throws(Exception::class)
-    fun execute(operation: Int, json: String?): Bundle {
+    fun execute(operation: Int, argument: String?): Bundle {
         val reply = Bundle()
         reply.putInt("version", CompatibilitySetup.VERSION)
         if (operation == CompatibilitySetup.INSPECT) {
+            val target = argument ?: ServerConstants.COMPAT_APPLICATION_ID
             val users: Collection<Int> = UsersCompat.getUserIdsNoThrow()
             if (users.isEmpty()) throw IllegalStateException("Cannot check Android users")
-            val installed = ArrayList<Int>()
-            for (user in users) {
-                val pi = Android17Compat.getPackageInfo(ServerConstants.COMPAT_APPLICATION_ID, PACKAGE_FLAGS.toLong(), user)
-                val applicationInfo = pi?.applicationInfo
-                if (applicationInfo != null && (applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0) installed.add(user)
-            }
-            reply.putIntArray("users", installed.toIntArray())
-            val pi = Android17Compat.getPackageInfo(ServerConstants.COMPAT_APPLICATION_ID, PACKAGE_FLAGS.toLong(), 0)
+            reply.putIntArray("users", installedUsers(target, users))
+            reply.putIntArray("companionUsers", installedUsers(ServerConstants.COMPAT_APPLICATION_ID, users))
+            val pi = Android17Compat.getPackageInfo(target, PACKAGE_FLAGS.toLong(), 0)
             reply.putString("certificate", if (pi == null) null else certificate(pi))
             reply.putBoolean("available", Compatibility.isAvailable())
         } else if (operation == CompatibilitySetup.PREVIEW_IMPORT) {
-            val original = Android17Compat.getPackageInfo(ServerConstants.COMPAT_APPLICATION_ID, PACKAGE_FLAGS.toLong(), 0)
+            val target = argument ?: ServerConstants.COMPAT_APPLICATION_ID
+            val original = Android17Compat.getPackageInfo(target, PACKAGE_FLAGS.toLong(), 0)
             if (original == null || Compatibility.isAvailable() || original.permissions == null)
                 throw IllegalStateException("Original Shizuku is unavailable")
             var definesLegacy = false
             for (permission in original.permissions) {
                 if (ServerConstants.LEGACY_PERMISSION == permission.name
-                    && ServerConstants.COMPAT_APPLICATION_ID == permission.packageName
+                    && target == permission.packageName
                     && (permission.protectionLevel and PermissionInfo.PROTECTION_MASK_BASE) == PermissionInfo.PROTECTION_DANGEROUS)
                     definesLegacy = true
             }
@@ -73,11 +71,11 @@ internal class CompatibilitySetupHandler(
             reply.putString("decisions", LegacyAccessImport.encode(decisions))
         } else if (operation == CompatibilitySetup.APPLY_IMPORT) {
             if (!Compatibility.isAvailable()) throw IllegalStateException("Compatibility support is not verified")
-            if (json == null || json.toByteArray(StandardCharsets.UTF_8).size > CompatibilitySetup.MAX_SNAPSHOT_BYTES)
+            if (argument == null || argument.toByteArray(StandardCharsets.UTF_8).size > CompatibilitySetup.MAX_SNAPSHOT_BYTES)
                 throw IllegalArgumentException("Invalid access snapshot")
             var applied = 0
             var skipped = 0
-            for (decision in LegacyAccessImport.decode(json)) {
+            for (decision in LegacyAccessImport.decode(argument)) {
                 if (!LegacyAccessImport.canApply(decision, resolver)) {
                     skipped++
                     continue
@@ -94,6 +92,17 @@ internal class CompatibilitySetupHandler(
             refresh.run()
         } else throw IllegalArgumentException("Unknown compatibility operation")
         return reply
+    }
+
+    @Throws(Exception::class)
+    private fun installedUsers(packageName: String, users: Collection<Int>): IntArray {
+        val installed = ArrayList<Int>()
+        for (user in users) {
+            val pi = Android17Compat.getPackageInfo(packageName, PACKAGE_FLAGS.toLong(), user)
+            val applicationInfo = pi?.applicationInfo
+            if (applicationInfo != null && (applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0) installed.add(user)
+        }
+        return installed.toIntArray()
     }
 
     private val resolver: LegacyAccessImport.Resolver = object : LegacyAccessImport.Resolver {
