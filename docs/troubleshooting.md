@@ -58,7 +58,7 @@ If you use the companion, both Porter APKs must come from the same release sourc
 
 ## Android won't install an APK
 
-If you are installing the separate **Porter Compatibility** APK by hand, remove Shizuku first. The companion cannot update a differently signed Shizuku installation, even though Android sees the same app identity. Porter's integrated replacement removes Shizuku for you.
+If you are installing the separate **Porter Compatibility** APK by hand, remove Shizuku first. The companion cannot update a differently signed Shizuku installation, even though Android sees the same app identity. A Shizuku fork under its own package name blocks the companion the same way because it defines Shizuku's permission, so remove it first too. Porter's integrated replacement removes Shizuku or such a fork for you.
 
 For Porter itself, an older development build may have a different signature from a public release. Android will not install one over the other. Removing the old installation also removes its app data; record your setup before doing so. Reinstall from the intended source and approve your apps again.
 
