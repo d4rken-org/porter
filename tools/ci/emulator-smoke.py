@@ -88,6 +88,8 @@ ADB_TIMEOUT = 45
 # An install compiles the APK on the device, which an Android 7 emulator under software rendering
 # has run past ADB_TIMEOUT for the manager.
 INSTALL_TIMEOUT = 180
+# For each half of a restart: the old boot going away, then the new one finishing.
+BOOT_TIMEOUT = 300
 # A budget rather than a number of tries: a dump that comes back with no accessibility root has
 # started its own VM to get there, so each failed attempt costs seconds that a count would hide.
 UI_DUMP_TIMEOUT = 30
@@ -701,6 +703,24 @@ class Smoke:
             self.shell("wm", "dismiss-keyguard", check=False)
             return "mIsShowing=true" not in self.shell("dumpsys", "window", "policy", check=False)
         self.until("the lock screen is gone", gone)
+
+    def boot_id(self):
+        """The kernel's id for this boot, which is a different string after every restart."""
+        return self.shell("cat", "/proc/sys/kernel/random/boot_id", check=False)
+
+    def reboot(self, timeout=BOOT_TIMEOUT):
+        before = self.boot_id()
+        assert before, "no boot id to compare against"
+        self.adb("reboot")
+        # Compared rather than watched for a gap: a dropped transport also answers nothing, so
+        # "it stopped replying and then said it had booted" is satisfied by the boot that was
+        # already running. A new id is only ever a new boot.
+        self.until("the device came back on a new boot",
+                   lambda: (now := self.boot_id()) and now != before,
+                   timeout=timeout)
+        self.until("the device finished booting",
+                   lambda: self.shell("getprop", "sys.boot_completed", check=False) == "1",
+                   timeout=timeout)
 
     def install_for_user(self, user, package, apk):
         """The installation user 0 has, added for another user. Android 7's pm has no

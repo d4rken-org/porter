@@ -14,6 +14,11 @@ spec.loader.exec_module(base)
 # A Shizuku fork under its own package, which owns the client permission in Shizuku's place.
 NIGHTZUKU = "kerneldroid.nightzuku"
 SHIZUKU_DATABASE = "/data/user_de/0/com.android.shell/shizuku.json"
+# Android 13 and 14 keep an uninstalled app's permission group until a restart, so installing the
+# next app that declares Shizuku's group fails until then.
+DUPLICATE_GROUP = "redeclare permission group"
+# The start of what Porter shows when that stops it installing Porter Compatibility.
+RESTART_REQUIRED = "Android needs a restart before it can install Porter Compatibility"
 
 
 def parse_args(argv=None):
@@ -64,6 +69,13 @@ def main():
     # Onboarding comes up at setup's first start of Home, so it too is driven the way --dpad asks.
     smoke.onboarding_activate = activate
 
+    def reboot():
+        smoke.reboot()
+        # Animations off again rather than trusted to outlive the restart.
+        for scale in ("window_animation_scale", "transition_animation_scale", "animator_duration_scale"):
+            smoke.shell("settings", "put", "global", scale, "0")
+        smoke.unlock()
+
     def setup_screen():
         smoke.open_home()
         if any(n.get("text") == "Shizuku compatibility" for n in smoke.ui().iter("node")):
@@ -78,7 +90,7 @@ def main():
         smoke.probe_pid = pid
         setup_screen()
         smoke.screenshot("install-ready")
-        activate("Install automatically")
+        activate("Install automatically", scroll=True)
         smoke.until("companion installed by Porter", lambda: smoke.shell("pm", "path", base.COMPAT, check=False).startswith("package:"), timeout=90)
         smoke.expect_log(base.LEGACY, "BINDER uid=2000 version=13")
         smoke.tap("Allow all the time", base.MANAGER)
@@ -114,7 +126,7 @@ def main():
         smoke.until("Shizuku approval persisted", saved_original, timeout=30)
         smoke.start_service()
         setup_screen()
-        activate("Replace")
+        activate("Replace", scroll=True)
         smoke.until("import preview", lambda: any(n.get("text") == "Switch to Porter?" for n in smoke.ui().iter("node")))
         smoke.screenshot("replacement-preview")
         original_pid = smoke.pid("shizuku_server")
@@ -165,7 +177,16 @@ def main():
             except (ValueError, KeyError, TypeError):
                 return None
         assert approval() is None and not smoke.decision_flags(uid), "an earlier approval survived the reset"
-        smoke.adb("install", str(args.nightzuku.resolve()))
+        baseline_reboot = False
+        try:
+            smoke.adb("install", str(args.nightzuku.resolve()))
+        except RuntimeError as e:
+            # The companion uninstalled above still holds the group.
+            if DUPLICATE_GROUP not in str(e):
+                raise
+            baseline_reboot = True
+            reboot()
+            smoke.adb("install", str(args.nightzuku.resolve()))
         # Android 9 again keeps the grant across the permission's change of owner.
         if f"{base.LEGACY_PERMISSION}: granted=true" in smoke.shell("dumpsys", "package", base.LEGACY):
             smoke.shell("pm", "revoke", base.LEGACY, base.LEGACY_PERMISSION)
@@ -186,20 +207,46 @@ def main():
             setup_screen()
             def conflict():
                 texts = {n.get("text") for n in smoke.ui().iter("node")}
-                return {"Another Shizuku app is installed", NIGHTZUKU, "Replace"}.issubset(texts) and texts
+                return {"Another Shizuku app is installed", NIGHTZUKU}.issubset(texts) and texts
             assert "Install automatically" not in smoke.until("Nightzuku named as the conflicting app", conflict)
             smoke.screenshot("fork-conflict")
-            activate("Replace")
+            # Can sit below the fold; finding it is also what shows Replace is offered.
+            activate("Replace", scroll=True)
             smoke.until("fork import preview", lambda: any(n.get("text") == "Switch to Porter?" for n in smoke.ui().iter("node")))
             smoke.screenshot("fork-replacement-preview")
             activate("Switch to Porter")
-            smoke.until("fork replaced and imported", lambda: any(n.get("text") == "Import complete" for n in smoke.ui().iter("node")), timeout=90)
+            def outcome():
+                texts = [n.get("text") or "" for n in smoke.ui().iter("node")]
+                if "Import complete" in texts:
+                    return "imported"
+                if any(t.startswith(RESTART_REQUIRED) for t in texts):
+                    return "restart"
+                # The explanation follows the generic failure line and can sit below the fold.
+                if "Setup did not finish. You can retry." in texts and smoke.locate(RESTART_REQUIRED, prefix=True, scroll=True):
+                    return "restart"
+                return None
+            restart_required = smoke.until("fork replaced and imported, or the restart Android needs explained",
+                                           outcome, timeout=90) == "restart"
+            if restart_required:
+                smoke.screenshot("fork-replacement-restart-required")
+                assert not smoke.shell("pm", "path", NIGHTZUKU, check=False).startswith("package:")
+                assert not smoke.installed(base.COMPAT)
+                saved = json.loads(smoke.shell(*smoke.in_manager_data("cat no_backup/compatibility-import.json")))
+                assert any(d["uid"] == uid for d in saved["decisions"]), saved
+                # Before the restart, after which the starter's pid can belong to any process.
+                assert not smoke.pid("shizuku_server")
+                assert starter not in smoke.process_table(), "Nightzuku's starter is still running"
+                reboot()
+                smoke.start_service()
+                setup_screen()
+                activate("Install automatically", scroll=True)
+                smoke.until("fork import completed after the restart", lambda: any(n.get("text") == "Import complete" for n in smoke.ui().iter("node")), timeout=90)
             smoke.screenshot("fork-replacement-imported")
             assert not smoke.shell("pm", "path", NIGHTZUKU, check=False).startswith("package:")
             assert smoke.installed(base.COMPAT)
             assert not smoke.pid("shizuku_server")
             table = smoke.process_table()
-            assert starter not in table and not any(name.endswith("libshizuku.so") for _, name in table.values()), \
+            assert (restart_required or starter not in table) and not any(name.endswith("libshizuku.so") for _, name in table.values()), \
                 "Nightzuku's starter is still running"
             smoke.launch_probe(base.LEGACY)
             smoke.authorized(base.LEGACY)
@@ -207,7 +254,8 @@ def main():
             if supervisor.poll() is None:
                 supervisor.kill()
             smoke.settle(supervisor, check=False)
-        return {"imported_uid": uid, "starter_pid": starter, "fork_uninstalled": True}
+        return {"imported_uid": uid, "starter_pid": starter, "fork_uninstalled": True,
+                "baseline_reboot": baseline_reboot, "restart_required": restart_required}
 
     try:
         smoke.case("setup", smoke.setup)
