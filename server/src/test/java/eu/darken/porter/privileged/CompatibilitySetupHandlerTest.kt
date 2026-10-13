@@ -15,6 +15,7 @@ import java.io.File
 import java.security.MessageDigest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
@@ -61,9 +62,43 @@ class CompatibilitySetupHandlerTest {
                     if (invocation.getArgument<String>(0) == ServerConstants.COMPAT_APPLICATION_ID && invocation.getArgument<Int>(2) == 10) installed else null
                 }
                 val handler = CompatibilitySetupHandler(mock(ShizukuConfigManager::class.java), { _, _ -> }, {})
-                assertArrayEquals(intArrayOf(10), handler.execute(CompatibilitySetup.INSPECT, null).getIntArray("users"))
+                val reply = handler.execute(CompatibilitySetup.INSPECT, null)
+                assertArrayEquals(intArrayOf(10), reply.getIntArray("users"))
+                assertArrayEquals(intArrayOf(10), reply.getIntArray("companionUsers"))
+                assertNull(reply.getString("certificate"))
                 users.`when`<List<UserInfo>> { UserManagerApis.getUsers(true, true, true) }.thenReturn(emptyList())
                 assertThrows(IllegalStateException::class.java) { handler.execute(CompatibilitySetup.INSPECT, null) }
+            }
+        }
+    }
+
+    @Test
+    fun inspectionOfAnotherPackageReportsItsUsersAndCertificateBesideTheCompanionUsers() {
+        mockStatic(UserManagerApis::class.java).use { users ->
+            mockStatic(PackageManagerApis::class.java).use { packages ->
+                users.`when`<List<UserInfo>> { UserManagerApis.getUsers(true, true, true) }.thenReturn(userInfos(0, 10))
+                val companion = signed(ServerConstants.COMPAT_APPLICATION_ID, Signature(byteArrayOf(1, 2, 3)))
+                val targetSignature = Signature(byteArrayOf(4, 5, 6))
+                val target = signed(FOREIGN_OWNER, targetSignature)
+                var targetUser = 10
+                packages.`when`<PackageInfo?> { PackageManagerApis.getPackageInfo(anyString(), anyLong(), anyInt()) }.thenAnswer { invocation ->
+                    val user = invocation.getArgument<Int>(2)
+                    when (invocation.getArgument<String>(0)) {
+                        ServerConstants.COMPAT_APPLICATION_ID -> if (user == 0) companion else null
+                        FOREIGN_OWNER -> if (user == targetUser) target else null
+                        else -> null
+                    }
+                }
+                val handler = CompatibilitySetupHandler(mock(ShizukuConfigManager::class.java), { _, _ -> }, {})
+                val reply = handler.execute(CompatibilitySetup.INSPECT, FOREIGN_OWNER)
+                assertArrayEquals(intArrayOf(10), reply.getIntArray("users"))
+                assertArrayEquals(intArrayOf(0), reply.getIntArray("companionUsers"))
+                assertNull(reply.getString("certificate"))
+
+                targetUser = 0
+                val owned = handler.execute(CompatibilitySetup.INSPECT, FOREIGN_OWNER)
+                assertArrayEquals(intArrayOf(0), owned.getIntArray("users"))
+                assertEquals(certificate(targetSignature), owned.getString("certificate"))
             }
         }
     }
@@ -101,9 +136,7 @@ class CompatibilitySetupHandlerTest {
                     decision.packageName = "test.client"
                     decision.uid = 10123
                     decision.flags = LegacyAccessImport.ALLOW
-                    val digest = StringBuilder()
-                    for (b in MessageDigest.getInstance("SHA-256").digest(signature.toByteArray())) digest.append(String.format("%02x", b.toInt() and 255))
-                    decision.certificate = digest.toString()
+                    decision.certificate = certificate(signature)
                     val json = LegacyAccessImport.encode(listOf(decision))
                     val config = mock(ShizukuConfigManager::class.java)
                     val refresh = mock(Runnable::class.java)
@@ -147,17 +180,49 @@ class CompatibilitySetupHandlerTest {
         assertEquals(Log.INFO to "Import preview read shizuku.json.bak: entries=2 kept=1", logs.last().let { it.type to it.msg })
     }
 
-    /** Runs PREVIEW_IMPORT with the original Shizuku installed and Porter's companion absent. */
-    private fun preview(database: File): Pair<Bundle, List<ShadowLog.LogItem>> =
+    @Test
+    fun previewOfAnotherPackageOwningThePermissionReadsTheDatabase() {
+        val database = temporary.newFile("shizuku.json")
+        database.writeText(DATABASE)
+        val (reply, logs) = preview(database, FOREIGN_OWNER)
+        assertEquals(1, LegacyAccessImport.decode(reply.getString("decisions")!!).size)
+        assertEquals(Log.INFO to "Import preview read shizuku.json: entries=2 kept=1", logs.last().let { it.type to it.msg })
+    }
+
+    @Test
+    fun previewOfAnotherPackageNotOwningThePermissionAtDangerousLevelFailsBeforeReadingTheDatabase() {
+        val database = temporary.newFile("shizuku.json")
+        database.writeText(DATABASE)
+        for (protection in listOf(null, PermissionInfo.PROTECTION_SIGNATURE)) {
+            val error = assertThrows(IllegalStateException::class.java) { preview(database, FOREIGN_OWNER, protection) }
+            assertEquals("Installed app does not own the Shizuku permission", error.message)
+            assertEquals(emptyList<ShadowLog.LogItem>(), ShadowLog.getLogsForTag("CompatibilityImport"))
+        }
+    }
+
+    /**
+     * Runs PREVIEW_IMPORT for [target] (the original Shizuku when null) with Porter's companion absent.
+     * The target defines the legacy permission at [protection], or not at all when that is null.
+     */
+    private fun preview(
+        database: File,
+        target: String? = null,
+        protection: Int? = PermissionInfo.PROTECTION_DANGEROUS,
+    ): Pair<Bundle, List<ShadowLog.LogItem>> =
         mockStatic(PackageManagerApis::class.java).use { packages ->
             mockStatic(PermissionManagerApis::class.java).use { permissions ->
+                val owner = target ?: ServerConstants.COMPAT_APPLICATION_ID
                 val signature = Signature(byteArrayOf(1, 2, 3))
-                val original = signed(ServerConstants.COMPAT_APPLICATION_ID, signature)
-                val legacy = PermissionInfo()
-                legacy.name = ServerConstants.LEGACY_PERMISSION
-                legacy.packageName = ServerConstants.COMPAT_APPLICATION_ID
-                legacy.protectionLevel = PermissionInfo.PROTECTION_DANGEROUS
-                original.permissions = arrayOf(legacy)
+                val original = signed(owner, signature)
+                if (protection == null) {
+                    original.permissions = arrayOf()
+                } else {
+                    val legacy = PermissionInfo()
+                    legacy.name = ServerConstants.LEGACY_PERMISSION
+                    legacy.packageName = owner
+                    legacy.protectionLevel = protection
+                    original.permissions = arrayOf(legacy)
+                }
                 val installed = signed("test.client", signature)
                 installed.applicationInfo!!.uid = 10123
                 installed.requestedPermissions = arrayOf(ServerConstants.LEGACY_PERMISSION)
@@ -165,7 +230,7 @@ class CompatibilitySetupHandlerTest {
                     if (invocation.getArgument<Int>(2) != 0) return@thenAnswer null
                     when (invocation.getArgument<String>(0)) {
                         "test.client" -> installed
-                        ServerConstants.COMPAT_APPLICATION_ID -> original
+                        owner -> original
                         else -> null
                     }
                 }
@@ -175,7 +240,7 @@ class CompatibilitySetupHandlerTest {
                 ShadowLog.clear()
                 Logger.setDebugAlways(false)
                 try {
-                    val reply = handler.execute(CompatibilitySetup.PREVIEW_IMPORT, null)
+                    val reply = handler.execute(CompatibilitySetup.PREVIEW_IMPORT, target)
                     reply to ShadowLog.getLogsForTag("CompatibilityImport")
                 } finally {
                     Logger.setDebugAlways(true)
@@ -184,6 +249,8 @@ class CompatibilitySetupHandlerTest {
         }
 
     private companion object {
+        const val FOREIGN_OWNER = "kerneldroid.nightzuku"
+
         const val DATABASE = "{\"version\":2,\"packages\":[" +
             "{\"uid\":10123,\"flags\":2,\"packages\":[\"test.client\"]}," +
             "{\"uid\":10200,\"flags\":2,\"packages\":[\"missing.client\"]}]}"
@@ -199,6 +266,12 @@ class CompatibilitySetupHandlerTest {
             `when`(signingInfo.apkContentsSigners).thenReturn(arrayOf(*signers))
             info.signingInfo = signingInfo
             return info
+        }
+
+        fun certificate(signature: Signature): String {
+            val digest = StringBuilder()
+            for (b in MessageDigest.getInstance("SHA-256").digest(signature.toByteArray())) digest.append(String.format("%02x", b.toInt() and 255))
+            return digest.toString()
         }
     }
 }
