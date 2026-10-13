@@ -811,6 +811,11 @@ class DetachedCommandTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "sh -c porsh.*device offline"):
             self.runner.settle(self.pending(1, stderr=OFFLINE))
 
+    def test_an_unchecked_command_that_was_killed_is_still_logged(self):
+        self.runner.settle(self.pending(143, stdout=b"info: starting server\n"), check=False)
+        self.assertEqual((self.runner.output / "commands.log").read_text(),
+                         "adb -s emulator-5554 shell 'sh -c porsh'\ninfo: starting server\n")
+
     def test_a_command_that_never_ends_is_killed_before_the_timeout_propagates(self):
         process = self.pending(None)
         process.communicate.side_effect = [smoke.subprocess.TimeoutExpired(process.args, 45), (b"", b"")]
@@ -1225,6 +1230,17 @@ class DeviceStateReadingTest(unittest.TestCase):
         self.runner.shell.return_value = ""
         self.assertEqual(self.runner.service_pids(smoke.NATIVE), set())
 
+    def test_the_process_table_maps_each_pid_to_its_parent_and_name(self):
+        self.runner.shell.return_value = (
+            "  PID  PPID NAME\n    1     0 init\n"
+            " 4240  4100 /data/app/~~abc==/kerneldroid.nightzuku-def==/lib/x86_64/libshizuku.so\n"
+            " 4242  4240 shizuku_server\n")
+        self.assertEqual(self.runner.process_table(), {
+            "1": ("0", "init"),
+            "4240": ("4100", "/data/app/~~abc==/kerneldroid.nightzuku-def==/lib/x86_64/libshizuku.so"),
+            "4242": ("4240", "shizuku_server")})
+        self.runner.shell.assert_called_once_with("toybox", "ps", "-A", "-o", "PID,PPID,NAME", check=False)
+
 
 class ScenarioRestoreTest(unittest.TestCase):
     def setUp(self):
@@ -1349,6 +1365,21 @@ class StartServiceBinaryTest(unittest.TestCase):
     def test_the_original_shizuku_is_started_from_its_own_binary(self):
         self.assertEqual(self.started_binary(smoke.COMPAT, smoke.COMPAT),
                          "/data/app/~~abc==/moe.shizuku.privileged.api-def==/lib/x86_64/libshizuku.so")
+
+    def test_a_supervising_starter_is_left_running_and_handed_back(self):
+        apk = "/data/app/~~abc==/kerneldroid.nightzuku-def==/base.apk"
+        self.runner.shell = Mock(side_effect=[f"package:{apk}", "x86"])
+        self.runner.detached = Mock()
+        self.assertIs(self.runner.start_service("kerneldroid.nightzuku", supervised=True),
+                      self.runner.detached.return_value)
+        self.runner.detached.assert_called_once_with(
+            "/data/app/~~abc==/kerneldroid.nightzuku-def==/lib/x86/libshizuku.so")
+        # Only the two lookups: the starter itself never runs in a shell that waits for it.
+        self.assertEqual(self.runner.shell.call_count, 2)
+
+    def test_an_ordinary_start_hands_nothing_back(self):
+        self.runner.shell = Mock(side_effect=["package:/data/app/~~abc==/x-def==/base.apk", "x86_64", ""])
+        self.assertIsNone(self.runner.start_service(smoke.COMPAT))
 
 
 class StartServicePushTest(unittest.TestCase):
