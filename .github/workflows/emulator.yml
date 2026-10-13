@@ -112,6 +112,7 @@ jobs:
     timeout-minutes: 45
     env:
       SHIZUKU_SHA256: 6e273ab0e991c4e79bc8b1bbb9b9dd739ccac1a8712a541a214078886b7b790f
+      NIGHTZUKU_SHA256: 4fb574050dc753288596dd860d1a3711a5e0daf64bf75576fd5bb459921b94a2
       DEVICE_TESTS: ${{ needs.changes.outputs.devices }}
       EMULATOR_IMAGE: ${{ matrix.target || ((matrix.api == 24 || matrix.api == 28) && 'google_apis') || inputs.image || 'google_atd' }}
     strategy:
@@ -123,13 +124,15 @@ jobs:
         # value and are added as combinations of their own rather than merged into these.
         build: [debug]
         include:
-          # Keyed on the suite alone, so this augments the two dualwire combinations rather than
+          # Keyed on the suite alone, so each augments its suite's two combinations rather than
           # creating new ones. A top-level extra: list would multiply every combination and hand
           # these arguments to the other suites, whose parsers reject what they do not know.
           - suite: dualwire
             extra: --bridge probe/build/outputs/apk/bridge/release/*.apk --unlisted test-fixtures/unlisted-manager/build/outputs/apk/debug/*.apk
           - suite: update
             extra: --fixture test-fixtures/service-update/build/outputs/apk/debug/*.apk
+          - suite: compat-install
+            extra: --nightzuku "$RUNNER_TEMP/nightzuku.apk"
           # Android 7.0, the documented minimum, for the release-gated paths the other levels never
           # take. Its image panics in goldfish_dma_mmap about 20s into boot unless GL DMA is off,
           # which from the host looks like a device that never answers adb shell.
@@ -139,12 +142,14 @@ jobs:
           # Android 9 stands in for 9 and 10, which read the bundled companion's signers differently from 11 and later.
           - api: 28
             suite: compat-install
+            extra: --nightzuku "$RUNNER_TEMP/nightzuku.apk"
           - api: 34
             suite: compat-install
             target: android-tv
             arch: x86
             profile: tv_1080p
             input: --dpad
+            extra: --nightzuku "$RUNNER_TEMP/nightzuku.apk"
           # Android 17 QPR1, debug and release. It has no google_atd image. At the 4096 MB the
           # emulator otherwise settles on, lowmemorykiller kills even the app in front during the
           # first minute after boot.
@@ -166,6 +171,7 @@ jobs:
           - api: 36
             suite: compat-install
             build: release
+            extra: --nightzuku "$RUNNER_TEMP/nightzuku.apk"
           - api: 36
             suite: dualwire
             build: release
@@ -216,6 +222,30 @@ jobs:
         with:
           path: ${{ runner.temp }}/shizuku.apk
           key: shizuku-apk-${{ env.SHIZUKU_SHA256 }}
+      # A Shizuku fork under its own package, pinned because its starter stays on to restart its
+      # server, which Replace has to stop as well.
+      - name: Restore pinned Nightzuku cache
+        if: env.DEVICE_TESTS == 'true' && matrix.suite == 'compat-install'
+        id: nightzuku-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 #v6.1.0
+        with:
+          path: ${{ runner.temp }}/nightzuku.apk
+          key: nightzuku-apk-${{ env.NIGHTZUKU_SHA256 }}
+      - name: Download pinned Nightzuku for fork replacement testing
+        if: env.DEVICE_TESTS == 'true' && matrix.suite == 'compat-install' && steps.nightzuku-cache.outputs.cache-hit != 'true'
+        run: |
+          curl --fail --location --retry 5 --retry-delay 10 --retry-max-time 180 \
+            --connect-timeout 15 --max-time 120 -o "$RUNNER_TEMP/nightzuku.apk" \
+            https://github.com/kerneldroid/Nightzuku/releases/download/v13.7.1.r53/nightzuku-v13.7.1.r53.apk
+      - name: Verify pinned Nightzuku checksum
+        if: env.DEVICE_TESTS == 'true' && matrix.suite == 'compat-install'
+        run: echo "$NIGHTZUKU_SHA256  $RUNNER_TEMP/nightzuku.apk" | sha256sum --check
+      - name: Save verified Nightzuku cache
+        if: env.DEVICE_TESTS == 'true' && matrix.suite == 'compat-install' && steps.nightzuku-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 #v6.1.0
+        with:
+          path: ${{ runner.temp }}/nightzuku.apk
+          key: nightzuku-apk-${{ env.NIGHTZUKU_SHA256 }}
       - name: Enable KVM
         if: env.DEVICE_TESTS == 'true'
         run: |
