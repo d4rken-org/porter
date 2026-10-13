@@ -11,15 +11,23 @@ spec = importlib.util.spec_from_file_location("porter_smoke", Path(__file__).wit
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
 
+# A Shizuku fork under its own package, which owns the client permission in Shizuku's place.
+NIGHTZUKU = "kerneldroid.nightzuku"
+SHIZUKU_DATABASE = "/data/user_de/0/com.android.shell/shizuku.json"
 
-def main():
+
+def parse_args(argv=None):
     parser = argparse.ArgumentParser()
-    for name in ("manager", "compat", "native", "legacy", "shizuku", "output"):
+    for name in ("manager", "compat", "native", "legacy", "shizuku", "nightzuku", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--serial", required=True)
     parser.add_argument("--dpad", action="store_true")
     base.add_release_argument(parser)
-    args = parser.parse_args()
+    return parser.parse_args(argv)
+
+
+def main():
+    args = parse_args()
     smoke = base.Smoke(args)
 
     def activate(label, description=False, scroll=False):
@@ -143,10 +151,69 @@ def main():
         assert saved_original()
         return {"imported_uid": original_uid, "original_database_preserved": True, "resumed_after_install_failure_and_manager_restart": True}
 
+    def fork_replacement():
+        smoke.stop_porter()
+        assert not smoke.pid("shizuku_server")
+        smoke.adb("uninstall", base.COMPAT)
+        smoke.shell("am", "force-stop", base.LEGACY)
+        smoke.shell("rm", "-f", base.DECISIONS, base.DECISIONS + ".bak", SHIZUKU_DATABASE, SHIZUKU_DATABASE + ".bak")
+        uid = smoke.app_uid(base.LEGACY)
+        def approval():
+            try:
+                data = json.loads(smoke.shell("sh", "-c", f"cat {SHIZUKU_DATABASE} 2>/dev/null || true"))
+                return next((e["flags"] for e in data["packages"] if e["uid"] == uid), None)
+            except (ValueError, KeyError, TypeError):
+                return None
+        assert approval() is None and not smoke.decision_flags(uid), "an earlier approval survived the reset"
+        smoke.adb("install", str(args.nightzuku.resolve()))
+        # Android 9 again keeps the grant across the permission's change of owner.
+        if f"{base.LEGACY_PERMISSION}: granted=true" in smoke.shell("dumpsys", "package", base.LEGACY):
+            smoke.shell("pm", "revoke", base.LEGACY, base.LEGACY_PERMISSION)
+        supervisor = smoke.start_service(NIGHTZUKU, supervised=True)
+        try:
+            # Nightzuku's starter stays on as the server's parent and restarts it, which Replace
+            # has to stop as well.
+            server = smoke.pid("shizuku_server")
+            table = smoke.process_table()
+            starter = table.get(server, (None, None))[0]
+            assert starter and table.get(starter, (None, ""))[1].endswith("libshizuku.so"), \
+                f"shizuku_server {server} is not under Nightzuku's starter: {table.get(server)} {table.get(starter)}"
+            smoke.launch_probe(base.LEGACY)
+            smoke.tap("Allow all the time", NIGHTZUKU)
+            smoke.authorized(base.LEGACY, require_manager_guard=False)
+            smoke.until("Nightzuku approval persisted", lambda: approval() == 2, timeout=30)
+            smoke.start_service()
+            setup_screen()
+            def conflict():
+                texts = {n.get("text") for n in smoke.ui().iter("node")}
+                return {"Another Shizuku app is installed", NIGHTZUKU, "Replace"}.issubset(texts) and texts
+            assert "Install automatically" not in smoke.until("Nightzuku named as the conflicting app", conflict)
+            smoke.screenshot("fork-conflict")
+            activate("Replace")
+            smoke.until("fork import preview", lambda: any(n.get("text") == "Switch to Porter?" for n in smoke.ui().iter("node")))
+            smoke.screenshot("fork-replacement-preview")
+            activate("Switch to Porter")
+            smoke.until("fork replaced and imported", lambda: any(n.get("text") == "Import complete" for n in smoke.ui().iter("node")), timeout=90)
+            smoke.screenshot("fork-replacement-imported")
+            assert not smoke.shell("pm", "path", NIGHTZUKU, check=False).startswith("package:")
+            assert smoke.installed(base.COMPAT)
+            assert not smoke.pid("shizuku_server")
+            table = smoke.process_table()
+            assert starter not in table and not any(name.endswith("libshizuku.so") for _, name in table.values()), \
+                "Nightzuku's starter is still running"
+            smoke.launch_probe(base.LEGACY)
+            smoke.authorized(base.LEGACY)
+        finally:
+            if supervisor.poll() is None:
+                supervisor.kill()
+            smoke.settle(supervisor, check=False)
+        return {"imported_uid": uid, "starter_pid": starter, "fork_uninstalled": True}
+
     try:
         smoke.case("setup", smoke.setup)
         smoke.case("integrated-install", fresh_install)
         smoke.case("replacement-import", replacement_import)
+        smoke.case("fork-replacement", fork_replacement)
     finally:
         (smoke.output / "results.json").write_text(json.dumps(smoke.results, indent=2))
 
