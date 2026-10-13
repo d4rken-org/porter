@@ -361,7 +361,7 @@ class Smoke:
         return subprocess.Popen(command, stdin=subprocess.DEVNULL,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    def settle(self, pending, timeout=ADB_TIMEOUT):
+    def settle(self, pending, timeout=ADB_TIMEOUT, check=True):
         try:
             stdout, stderr = pending.communicate(timeout=timeout)
         except subprocess.TimeoutExpired:
@@ -371,7 +371,7 @@ class Smoke:
         stderr = stderr.decode(errors="replace")
         with (self.output / "commands.log").open("a") as log:
             log.write(shlex.join(pending.args) + "\n" + stdout.decode(errors="replace") + stderr)
-        if pending.returncode:
+        if check and pending.returncode:
             raise RuntimeError(f"{shlex.join(pending.args)}: {stderr}")
 
     def until(self, description, condition, timeout=30):
@@ -654,6 +654,16 @@ class Smoke:
         points ps at toolbox's, which takes neither -A nor -o."""
         return self.shell("toybox", "ps", "-A", "-o", columns, check=False).splitlines()
 
+    def process_table(self):
+        """{pid: (parent pid, name)} for every process. The name is argv[0], so a binary started
+        by its path may be listed under that path."""
+        table = {}
+        for line in self.processes("PID,PPID,NAME"):
+            fields = line.split()
+            if len(fields) == 3 and fields[0].isdigit() and fields[1].isdigit():
+                table[fields[0]] = (fields[1], fields[2])
+        return table
+
     def kill_server(self, check=True):
         """Every porter_server, as root. By pid, because Android 7's pkill takes neither -9 nor -f."""
         pids = self.pid("porter_server").split()
@@ -767,11 +777,18 @@ class Smoke:
         """Whether this image's su lets the ADB shell become root, which the root cases need."""
         return self.shell("su", "0", "id", "-u", check=False) == "0"
 
-    def start_service(self, package=MANAGER, root=False):
+    def start_service(self, package=MANAGER, root=False, supervised=False):
+        """A supervised start returns the adb shell its starter runs in, for settle()."""
         name = "porter_server" if package == MANAGER else "shizuku_server"
         previous = self.pid(name)
         starter = self.starter_binary(package)
-        self.shell(*(("su", "0", starter) if root else (starter,)))
+        command = ("su", "0", starter) if root else (starter,)
+        supervisor = None
+        if supervised:
+            # A starter that stays on as its server's parent, to restart it, never returns.
+            supervisor = self.detached(*command)
+        else:
+            self.shell(*command)
         started = self.until(f"new {name} process",
                              lambda: (pid := self.pid(name)) and pid != previous and pid)
         # Returning on the pid alone is too early: the server is still loading native code out of
@@ -786,7 +803,7 @@ class Smoke:
         if package == MANAGER:
             self.until(f"{name} sent its binders",
                        lambda: "sent binders" in self.server_log(started))
-            return
+            return supervisor
         # The pinned server brackets each push instead of the sweep, so an unmatched open bracket
         # is the thing to wait out. Repeated reads only cover the gap before the first one appears.
         tracker = PushTracker()
@@ -800,6 +817,7 @@ class Smoke:
                     and len(recent) == SERVER_QUIET_POLLS and len(set(recent)) == 1)
         self.until(f"{name} finished starting client processes", settled,
                    timeout=SERVER_QUIET_TIMEOUT)
+        return supervisor
 
     def server_log(self, pid):
         return self.adb("logcat", "-d", "--pid=" + pid, "-s", "Service:V", "*:S")
