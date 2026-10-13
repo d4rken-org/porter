@@ -350,6 +350,8 @@
     <string name="compat_import_saved">Impor persetujuan tersimpan</string>
     <string name="compat_conflict_description">Untuk menghubungkan aplikasi yang hanya mengenal Shizuku, Porter perlu mengganti aplikasi Shizuku yang terinstal dengan aplikasi kompatibilitasnya. Pilihan akses aplikasi Anda akan dipindahkan.</string>
     <string name="compat_conflict_remove_first">Porter tidak dapat mengganti %1$s secara otomatis. Uninstal aplikasi tersebut, lalu kembali ke sini untuk menginstal Porter Compatibility.</string>
+    <string name="compat_restart_required">Android perlu dimulai ulang sebelum dapat menginstal Porter Compatibility. Mulai ulang perangkat Anda, mulai Porter, lalu ketuk \"Instal otomatis\". Pilihan akses Anda yang tersimpan akan diimpor saat itu.</string>
+    <string name="compat_replace_restart_note">Pada versi Android ini, perangkat Anda mungkin perlu dimulai ulang sebelum Porter Compatibility dapat diinstal. Pilihan akses Anda tetap dipertahankan hingga saat itu.</string>
     <plurals name="compat_usage_count">
         <item quantity="other">Digunakan oleh %d aplikasi</item>
     </plurals>

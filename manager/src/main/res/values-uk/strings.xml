@@ -383,6 +383,8 @@
     <string name="compat_import_saved">Імпортувати збережені дозволи</string>
     <string name="compat_conflict_description">Щоб підключити додатки, які знають лише Shizuku, Porter має замінити встановлений додаток Shizuku своїм додатком сумісності. Ваші налаштування доступу додатків буде перенесено.</string>
     <string name="compat_conflict_remove_first">Porter не може автоматично замінити %1$s. Видаліть його, а потім поверніться сюди, щоб встановити Porter Compatibility.</string>
+    <string name="compat_restart_required">Android потрібно перезавантажити, перш ніж він зможе встановити Porter Compatibility. Перезавантажте пристрій, запустіть Porter і натисніть «Встановити автоматично». Тоді ваші збережені налаштування доступу буде імпортовано.</string>
+    <string name="compat_replace_restart_note">У цій версії Android пристрій може потребувати перезавантаження, перш ніж вдасться встановити Porter Compatibility. Ваші налаштування доступу зберігаються до того часу.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Використовує %d додаток</item>
         <item quantity="few">Використовують %d додатки</item>

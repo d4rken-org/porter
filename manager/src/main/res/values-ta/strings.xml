@@ -363,6 +363,8 @@
     <string name="compat_import_saved">சேமித்த அனுமதிகளை இறக்குமதி செய்</string>
     <string name="compat_conflict_description">Shizuku வை மட்டுமே அறிந்த பயன்பாடுகளை இணைக்க, நிறுவப்பட்ட Shizuku பயன்பாட்டை Porter தனது இணக்கத்தன்மை பயன்பாட்டால் மாற்ற வேண்டும். உங்கள் பயன்பாட்டு அணுகல் தேர்வுகள் கொண்டுவரப்படும்.</string>
     <string name="compat_conflict_remove_first">Porter ஆல் %1$s ஐத் தானாக மாற்ற முடியாது. அதை நிறுவல் நீக்கிவிட்டு, Porter Compatibility ஐ நிறுவ இங்கே திரும்பவும்.</string>
+    <string name="compat_restart_required">Porter Compatibility ஐ நிறுவ Android ஐ மறுதொடக்கம் செய்ய வேண்டும். உங்கள் சாதனத்தை மறுதொடக்கம் செய்து, Porter ஐத் தொடங்கி, \"தானாக நிறுவு\" என்பதைத் தட்டவும். சேமிக்கப்பட்ட உங்கள் அணுகல் தேர்வுகள் அப்போது இறக்குமதி செய்யப்படும்.</string>
+    <string name="compat_replace_restart_note">இந்த Android பதிப்பில், Porter Compatibility ஐ நிறுவுவதற்கு முன் உங்கள் சாதனத்தை மறுதொடக்கம் செய்ய வேண்டியிருக்கலாம். அதுவரை உங்கள் அணுகல் தேர்வுகள் தக்கவைக்கப்படும்.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">%d பயன்பாடு பயன்படுத்துகிறது</item>
         <item quantity="other">%d பயன்பாடுகள் பயன்படுத்துகின்றன</item>

@@ -378,6 +378,8 @@
     <string name="compat_import_saved">Saxlanılmış təsdiqləri idxal edin</string>
     <string name="compat_conflict_description">Yalnız Shizuku-nu tanıyan tətbiqləri qoşmaq üçün Porter quraşdırılmış Shizuku tətbiqini öz uyğunluq tətbiqi ilə əvəz etməlidir. Tətbiq girişi seçimləriniz köçürüləcək.</string>
     <string name="compat_conflict_remove_first">Porter %1$s tətbiqini avtomatik əvəz edə bilmir. Onu silin, sonra Porter Compatibility-ni quraşdırmaq üçün bura qayıdın.</string>
+    <string name="compat_restart_required">Android Porter Compatibility-ni quraşdıra bilməsi üçün yenidən başladılmalıdır. Cihazınızı yenidən başladın, Porter-i başladın və \"Avtomatik quraşdırın\" düyməsinə toxunun. Saxlanılmış giriş seçimləriniz o zaman idxal ediləcək.</string>
+    <string name="compat_replace_restart_note">Bu Android versiyasında Porter Compatibility quraşdırılmazdan əvvəl cihazınızı yenidən başlatmaq lazım ola bilər. Giriş seçimləriniz o vaxta qədər saxlanılır.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">%d tətbiq istifadə edir</item>
         <item quantity="other">%d tətbiq istifadə edir</item>

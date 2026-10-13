@@ -378,6 +378,8 @@
     <string name="compat_import_saved">Ներմուծել պահված թույլտվությունները</string>
     <string name="compat_conflict_description">Միայն Shizuku-ն ճանաչող հավելվածները միացնելու համար Porter-ը պետք է տեղադրված Shizuku հավելվածը փոխարինի իր համատեղելիության հավելվածով։ Հավելվածների մուտքի ձեր ընտրությունները կփոխանցվեն։</string>
     <string name="compat_conflict_remove_first">Porter-ը չի կարող ավտոմատ կերպով փոխարինել %1$s-ը։ Ապատեղադրեք այն, ապա վերադարձեք այստեղ՝ Porter Compatibility-ն տեղադրելու համար։</string>
+    <string name="compat_restart_required">Android-ը պետք է վերագործարկվի, նախքան կկարողանա տեղադրել Porter Compatibility-ն։ Վերագործարկեք ձեր սարքը, գործարկեք Porter-ը և հպեք «Տեղադրել ավտոմատ»։ Մուտքի ձեր պահված ընտրությունները այդ ժամանակ կներմուծվեն։</string>
+    <string name="compat_replace_restart_note">Android-ի այս տարբերակում ձեր սարքը կարող է վերագործարկման կարիք ունենալ, նախքան Porter Compatibility-ն կտեղադրվի։ Մուտքի ձեր ընտրությունները մինչ այդ պահպանվում են։</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Օգտագործվում է %d հավելվածի կողմից</item>
         <item quantity="other">Օգտագործվում է %d հավելվածի կողմից</item>

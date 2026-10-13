@@ -374,6 +374,8 @@
     <string name="compat_import_saved">นำเข้าการอนุมัติที่บันทึกไว้</string>
     <string name="compat_conflict_description">Porter ต้องแทนที่แอป Shizuku ที่ติดตั้งไว้ด้วยแอปความเข้ากันได้ของตัวเอง เพื่อเชื่อมต่อแอปที่รู้จักเฉพาะ Shizuku ตัวเลือกการเข้าถึงของแอปจะถูกย้ายมาด้วย</string>
     <string name="compat_conflict_remove_first">Porter แทนที่ %1$s โดยอัตโนมัติไม่ได้ โปรดถอนการติดตั้งแอปนี้ แล้วกลับมาที่นี่เพื่อติดตั้ง Porter Compatibility</string>
+    <string name="compat_restart_required">Android ต้องรีบูตก่อนจึงจะติดตั้ง Porter Compatibility ได้ โปรดรีบูตอุปกรณ์ เริ่ม Porter แล้วแตะ \"ติดตั้งอัตโนมัติ\" ตัวเลือกการเข้าถึงที่บันทึกไว้จะถูกนำเข้าในตอนนั้น</string>
+    <string name="compat_replace_restart_note">ใน Android เวอร์ชันนี้ อุปกรณ์อาจต้องรีบูตก่อนจึงจะติดตั้ง Porter Compatibility ได้ ตัวเลือกการเข้าถึงของคุณจะยังคงอยู่จนถึงตอนนั้น</string>
     <plurals name="compat_usage_count">
         <item quantity="other">ใช้โดย %d แอป</item>
     </plurals>

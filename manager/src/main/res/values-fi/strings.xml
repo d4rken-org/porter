@@ -366,6 +366,8 @@
     <string name="compat_import_saved">Tuo tallennetut hyväksynnät</string>
     <string name="compat_conflict_description">Jotta vain Shizukun tuntevat sovellukset voidaan yhdistää, Porterin on korvattava asennettu Shizuku-sovellus omalla yhteensopivuussovelluksellaan. Sovellusten käyttöoikeusvalintasi siirretään.</string>
     <string name="compat_conflict_remove_first">Porter ei voi korvata sovellusta %1$s automaattisesti. Poista sen asennus ja palaa sitten tänne asentamaan Porter Compatibility.</string>
+    <string name="compat_restart_required">Android on käynnistettävä uudelleen ennen kuin Porter Compatibility voidaan asentaa. Käynnistä laite uudelleen, käynnistä Porter ja napauta \"Asenna automaattisesti\". Tallennetut käyttöoikeusvalintasi tuodaan silloin.</string>
+    <string name="compat_replace_restart_note">Tässä Android-versiossa laite on ehkä käynnistettävä uudelleen ennen kuin Porter Compatibility voidaan asentaa. Käyttöoikeusvalintasi säilyvät siihen asti.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">%d sovellus käyttää tätä</item>
         <item quantity="other">%d sovellusta käyttää tätä</item>

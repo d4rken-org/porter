@@ -390,6 +390,8 @@
     <string name="compat_import_saved">Uvozi shranjene odobritve</string>
     <string name="compat_conflict_description">Za povezovanje aplikacij, ki poznajo samo Shizuku, mora Porter nameščeno aplikacijo Shizuku zamenjati s svojo aplikacijo za združljivost. Vaše izbire dostopa aplikacij bodo prenesene.</string>
     <string name="compat_conflict_remove_first">Porter aplikacije %1$s ne more samodejno zamenjati. Odstranite jo, nato se vrnite sem in namestite Porter Compatibility.</string>
+    <string name="compat_restart_required">Android je treba znova zagnati, preden lahko namesti Porter Compatibility. Znova zaženite napravo, zaženite Porter in tapnite »Namesti samodejno«. Vaše shranjene izbire dostopa bodo takrat uvožene.</string>
+    <string name="compat_replace_restart_note">V tej različici Androida bo morda treba napravo znova zagnati, preden bo mogoče namestiti Porter Compatibility. Vaše izbire dostopa se do takrat ohranijo.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Uporablja jo %d aplikacija</item>
         <item quantity="two">Uporabljata jo %d aplikaciji</item>

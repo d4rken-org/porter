@@ -356,6 +356,8 @@
     <string name="compat_import_saved">Импортировать сохранённые разрешения</string>
     <string name="compat_conflict_description">Чтобы подключить приложения, которые знают только Shizuku, Porter должен заменить установленное приложение Shizuku своим приложением совместимости. Ваши настройки доступа приложений будут перенесены.</string>
     <string name="compat_conflict_remove_first">Porter не может автоматически заменить %1$s. Удалите его, затем вернитесь сюда, чтобы установить Porter Compatibility.</string>
+    <string name="compat_restart_required">Android требуется перезагрузка, прежде чем он сможет установить Porter Compatibility. Перезагрузите устройство, запустите Porter и нажмите «Установить автоматически». Тогда сохранённые настройки доступа будут импортированы.</string>
+    <string name="compat_replace_restart_note">В этой версии Android перед установкой Porter Compatibility может потребоваться перезагрузка устройства. Ваши настройки доступа сохранятся до этого момента.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Используется %d приложением</item>
         <item quantity="few">Используется %d приложениями</item>

@@ -360,6 +360,8 @@
     <string name="compat_import_saved">استيراد الموافقات المحفوظة</string>
     <string name="compat_conflict_description">لربط التطبيقات التي لا تعرف سوى Shizuku، يحتاج Porter إلى استبدال تطبيق Shizuku المثبّت بتطبيق التوافق الخاص به. سيتم نقل اختيارات وصول تطبيقاتك.</string>
     <string name="compat_conflict_remove_first">لا يستطيع Porter استبدال %1$s تلقائيًا. ألغِ تثبيته، ثم عُد إلى هنا لتثبيت Porter Compatibility.</string>
+    <string name="compat_restart_required">يحتاج Android إلى إعادة التشغيل قبل أن يتمكن من تثبيت Porter Compatibility. أعد تشغيل جهازك، ثم ابدأ Porter واضغط على \"التثبيت تلقائيًا\". سيتم استيراد اختيارات الوصول المحفوظة عندها.</string>
+    <string name="compat_replace_restart_note">في إصدار Android هذا، قد يحتاج جهازك إلى إعادة التشغيل قبل أن يمكن تثبيت Porter Compatibility. يتم الاحتفاظ باختيارات الوصول الخاصة بك حتى ذلك الحين.</string>
     <plurals name="compat_usage_count">
         <item quantity="zero">لا يستخدمه أي تطبيق (%d)</item>
         <item quantity="one">يستخدمه تطبيق واحد (%d)</item>

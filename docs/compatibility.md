@@ -40,7 +40,7 @@ Once installed, the home screen shows how many installed apps connect through it
 
 Yes. Porter and Shizuku can both be installed and running. An app that supports choosing between them connects to one service at a time.
 
-**Porter Compatibility cannot be installed alongside Shizuku.** It uses Shizuku's Android app identity to support older apps. Android treats them as competing installations, not as two separate apps. This also applies to forks using that same identity, and to forks that use their own app name and package but define Shizuku's permission. Integrated replacement removes such a fork the same way. If it is a system app or Porter cannot read it, the compatibility screen names it instead; uninstall it first, then return to install Porter Compatibility.
+**Porter Compatibility cannot be installed alongside Shizuku.** It uses Shizuku's Android app identity to support older apps. Android treats them as competing installations, not as two separate apps. This also applies to forks using that same identity, and to forks that use their own app name and package but define Shizuku's permission. Integrated replacement removes such a fork the same way. On some Android versions (13 and 14 confirmed), the device has to restart between removing such a fork and installing Porter Compatibility; Porter keeps your access choices until then. If it is a system app or Porter cannot read it, the compatibility screen names it instead; uninstall it first, then return to install Porter Compatibility.
 
 To switch back, remove Porter Compatibility and reinstall Shizuku. Restart the client app and approve its access in Shizuku. You can keep standalone Porter installed.
 

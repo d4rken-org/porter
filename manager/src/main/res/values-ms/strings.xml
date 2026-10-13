@@ -389,6 +389,8 @@
     <string name="compat_import_saved">Import kelulusan yang disimpan</string>
     <string name="compat_conflict_description">Untuk menyambungkan apl yang hanya mengenali Shizuku, Porter perlu menggantikan apl Shizuku yang dipasang dengan apl keserasiannya. Pilihan akses apl anda akan dibawa bersama.</string>
     <string name="compat_conflict_remove_first">Porter tidak dapat menggantikan %1$s secara automatik. Nyahpasangnya, kemudian kembali ke sini untuk memasang Porter Compatibility.</string>
+    <string name="compat_restart_required">Android perlu dibut semula sebelum dapat memasang Porter Compatibility. But semula peranti anda, mulakan Porter dan ketik \"Pasang secara automatik\". Pilihan akses anda yang disimpan akan diimport pada masa itu.</string>
+    <string name="compat_replace_restart_note">Pada versi Android ini, peranti anda mungkin perlu dibut semula sebelum Porter Compatibility dapat dipasang. Pilihan akses anda dikekalkan sehingga masa itu.</string>
     <plurals name="compat_usage_count">
         <item quantity="other">Digunakan oleh %d apl</item>
     </plurals>

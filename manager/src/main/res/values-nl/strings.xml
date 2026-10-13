@@ -386,6 +386,8 @@
     <string name="compat_import_saved">Opgeslagen goedkeuringen importeren</string>
     <string name="compat_conflict_description">Om apps te verbinden die alleen Shizuku kennen, moet Porter de geïnstalleerde Shizuku-app vervangen door zijn compatibiliteitsapp. Je keuzes voor app-toegang worden overgenomen.</string>
     <string name="compat_conflict_remove_first">Porter kan %1$s niet automatisch vervangen. Verwijder het en keer daarna hier terug om Porter Compatibility te installeren.</string>
+    <string name="compat_restart_required">Android moet opnieuw worden opgestart voordat Porter Compatibility kan worden geïnstalleerd. Start je apparaat opnieuw op, start Porter en tik op \"Automatisch installeren\". Je opgeslagen toegangskeuzes worden dan geïmporteerd.</string>
+    <string name="compat_replace_restart_note">Op deze Android-versie moet je apparaat mogelijk opnieuw worden opgestart voordat Porter Compatibility kan worden geïnstalleerd. Je toegangskeuzes blijven tot dan behouden.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Gebruikt door %d app</item>
         <item quantity="other">Gebruikt door %d apps</item>

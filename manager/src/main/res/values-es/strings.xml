@@ -354,6 +354,8 @@
     <string name="compat_import_saved">Importar aprobaciones guardadas</string>
     <string name="compat_conflict_description">Para conectar las apps que solo conocen Shizuku, Porter necesita reemplazar la app de Shizuku instalada por su app de compatibilidad. Tus decisiones de acceso de las apps se transferirán.</string>
     <string name="compat_conflict_remove_first">Porter no puede reemplazar %1$s automáticamente. Desinstálalo y vuelve aquí para instalar Porter Compatibility.</string>
+    <string name="compat_restart_required">Android necesita reiniciarse antes de poder instalar Porter Compatibility. Reinicia tu dispositivo, inicia Porter y toca \"Instalar automáticamente\". Tus decisiones de acceso guardadas se importarán entonces.</string>
+    <string name="compat_replace_restart_note">En esta versión de Android, es posible que tu dispositivo deba reiniciarse antes de poder instalar Porter Compatibility. Tus decisiones de acceso se conservan hasta entonces.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Usada por %d app</item>
         <item quantity="many">Usada por %d de apps</item>

@@ -342,6 +342,8 @@
     <string name="compat_import_saved">匯入已儲存的核准</string>
     <string name="compat_conflict_description">若要連線只能辨識 Shizuku 的應用程式，Porter 需要以其相容應用程式取代已安裝的 Shizuku 應用程式。您的應用程式存取選擇將會轉移。</string>
     <string name="compat_conflict_remove_first">Porter 無法自動取代 %1$s。請將其解除安裝，然後返回此處安裝 Porter Compatibility。</string>
+    <string name="compat_restart_required">Android 需要重新啟動後才能安裝 Porter Compatibility。請重新啟動您的裝置，啟動 Porter，然後輕觸「自動安裝」。屆時將匯入您已儲存的存取選擇。</string>
+    <string name="compat_replace_restart_note">在此 Android 版本上，您的裝置可能需要重新啟動後才能安裝 Porter Compatibility。在此之前，您的存取選擇將會保留。</string>
     <plurals name="compat_usage_count">
         <item quantity="other">%d 個應用程式正在使用</item>
     </plurals>

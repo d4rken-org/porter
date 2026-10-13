@@ -384,6 +384,8 @@
     <string name="compat_import_saved">Kaydedilen onayları içe aktar</string>
     <string name="compat_conflict_description">Yalnızca Shizuku’yu tanıyan uygulamaları bağlamak için Porter’ın yüklü Shizuku uygulamasını kendi uyumluluk uygulamasıyla değiştirmesi gerekir. Uygulama erişimi tercihleriniz aktarılır.</string>
     <string name="compat_conflict_remove_first">Porter, %1$s uygulamasını otomatik olarak değiştiremez. Uygulamayı kaldırın, ardından Porter Compatibility’yi yüklemek için buraya dönün.</string>
+    <string name="compat_restart_required">Android’in Porter Compatibility’yi yükleyebilmesi için yeniden başlatılması gerekiyor. Cihazınızı yeniden başlatın, Porter’ı başlatın ve \"Otomatik yükle\" seçeneğine dokunun. Kaydedilen erişim tercihleriniz o zaman içe aktarılır.</string>
+    <string name="compat_replace_restart_note">Bu Android sürümünde Porter Compatibility yüklenmeden önce cihazınızın yeniden başlatılması gerekebilir. Erişim tercihleriniz o zamana kadar korunur.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">%d uygulama tarafından kullanılıyor</item>
         <item quantity="other">%d uygulama tarafından kullanılıyor</item>

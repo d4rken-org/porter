@@ -393,6 +393,8 @@
     <string name="compat_import_saved">I-import ang mga naka-save na pag-apruba</string>
     <string name="compat_conflict_description">Para ikonekta ang mga app na Shizuku lang ang kilala, kailangang palitan ng Porter ang naka-install na Shizuku app ng compatibility app nito. Ililipat ang mga pinili mo sa access ng app.</string>
     <string name="compat_conflict_remove_first">Hindi awtomatikong mapapalitan ng Porter ang %1$s. I-uninstall ito, pagkatapos ay bumalik dito para i-install ang Porter Compatibility.</string>
+    <string name="compat_restart_required">Kailangang i-reboot ang device bago ma-install ng Android ang Porter Compatibility. I-reboot ang iyong device, simulan ang Porter, at i-tap ang \"Awtomatikong i-install\". Saka ii-import ang mga naka-save mong pinili sa access.</string>
+    <string name="compat_replace_restart_note">Sa bersyong ito ng Android, maaaring kailanganing i-reboot ang iyong device bago ma-install ang Porter Compatibility. Pinapanatili ang mga pinili mo sa access hanggang doon.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Ginagamit ng %d app</item>
         <item quantity="other">Ginagamit ng %d na app</item>
