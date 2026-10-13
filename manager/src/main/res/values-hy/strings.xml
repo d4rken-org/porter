@@ -377,6 +377,7 @@
     <string name="compat_uninstall_unavailable">Android-ը չկարողացավ բացել ապատեղադրիչը։ Կարող եք հեռացնել Porter Compatibility-ն Android-ի հավելվածների կարգավորումներից։</string>
     <string name="compat_import_saved">Ներմուծել պահված թույլտվությունները</string>
     <string name="compat_conflict_description">Միայն Shizuku-ն ճանաչող հավելվածները միացնելու համար Porter-ը պետք է տեղադրված Shizuku հավելվածը փոխարինի իր համատեղելիության հավելվածով։ Հավելվածների մուտքի ձեր ընտրությունները կփոխանցվեն։</string>
+    <string name="compat_conflict_remove_first">Porter-ը չի կարող ավտոմատ կերպով փոխարինել %1$s-ը։ Ապատեղադրեք այն, ապա վերադարձեք այստեղ՝ Porter Compatibility-ն տեղադրելու համար։</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Օգտագործվում է %d հավելվածի կողմից</item>
         <item quantity="other">Օգտագործվում է %d հավելվածի կողմից</item>

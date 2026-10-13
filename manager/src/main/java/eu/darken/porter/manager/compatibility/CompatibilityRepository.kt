@@ -151,7 +151,7 @@ internal class CompatibilityRepository @VisibleForTesting internal constructor(
     fun prepareReplacement() = operation(Phase.PREPARING) {
         inspect()
         check(!snapshot.exists) { "Discard the saved import before reviewing a new replacement" }
-        check(mutable.value.replaceable)
+        check(mutable.value.replaceable) { "Installed apps changed; check again" }
         val current = inspected ?: error("Installed app changed; check again")
         val target = Pin(current.target, certificate(current.targetInfo ?: error("Installed app changed; check again")))
         pinned = target

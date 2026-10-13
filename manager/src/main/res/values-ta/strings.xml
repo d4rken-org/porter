@@ -362,6 +362,7 @@
     <string name="compat_uninstall_unavailable">Android ஆல் நிறுவல் நீக்கியைத் திறக்க முடியவில்லை. Android பயன்பாட்டு அமைப்புகளிலிருந்து Porter Compatibility ஐ அகற்றலாம்.</string>
     <string name="compat_import_saved">சேமித்த அனுமதிகளை இறக்குமதி செய்</string>
     <string name="compat_conflict_description">Shizuku வை மட்டுமே அறிந்த பயன்பாடுகளை இணைக்க, நிறுவப்பட்ட Shizuku பயன்பாட்டை Porter தனது இணக்கத்தன்மை பயன்பாட்டால் மாற்ற வேண்டும். உங்கள் பயன்பாட்டு அணுகல் தேர்வுகள் கொண்டுவரப்படும்.</string>
+    <string name="compat_conflict_remove_first">Porter ஆல் %1$s ஐத் தானாக மாற்ற முடியாது. அதை நிறுவல் நீக்கிவிட்டு, Porter Compatibility ஐ நிறுவ இங்கே திரும்பவும்.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">%d பயன்பாடு பயன்படுத்துகிறது</item>
         <item quantity="other">%d பயன்பாடுகள் பயன்படுத்துகின்றன</item>

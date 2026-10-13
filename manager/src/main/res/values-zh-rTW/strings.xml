@@ -341,6 +341,7 @@
     <string name="compat_uninstall_unavailable">Android 無法開啟解除安裝程式。您可以在 Android 應用程式設定中移除 Porter Compatibility。</string>
     <string name="compat_import_saved">匯入已儲存的核准</string>
     <string name="compat_conflict_description">若要連線只能辨識 Shizuku 的應用程式，Porter 需要以其相容應用程式取代已安裝的 Shizuku 應用程式。您的應用程式存取選擇將會轉移。</string>
+    <string name="compat_conflict_remove_first">Porter 無法自動取代 %1$s。請將其解除安裝，然後返回此處安裝 Porter Compatibility。</string>
     <plurals name="compat_usage_count">
         <item quantity="other">%d 個應用程式正在使用</item>
     </plurals>

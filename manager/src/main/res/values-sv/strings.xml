@@ -379,6 +379,7 @@
     <string name="compat_uninstall_unavailable">Android kunde inte öppna avinstallationsprogrammet. Du kan ta bort Porter Compatibility i Androids appinställningar.</string>
     <string name="compat_import_saved">Importera sparade godkännanden</string>
     <string name="compat_conflict_description">För att ansluta appar som bara känner till Shizuku måste Porter ersätta den installerade Shizuku-appen med sin kompatibilitetsapp. Dina val för appåtkomst förs över.</string>
+    <string name="compat_conflict_remove_first">Porter kan inte ersätta %1$s automatiskt. Avinstallera den och gå sedan tillbaka hit för att installera Porter Compatibility.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Används av %d app</item>
         <item quantity="other">Används av %d appar</item>

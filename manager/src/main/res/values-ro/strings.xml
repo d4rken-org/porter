@@ -383,6 +383,7 @@
     <string name="compat_uninstall_unavailable">Android nu a putut deschide programul de dezinstalare. Poți elimina Porter Compatibility din setările de aplicații Android.</string>
     <string name="compat_import_saved">Importă aprobările salvate</string>
     <string name="compat_conflict_description">Pentru a conecta aplicațiile care cunosc doar Shizuku, Porter trebuie să înlocuiască aplicația Shizuku instalată cu aplicația sa de compatibilitate. Opțiunile de acces ale aplicațiilor vor fi preluate.</string>
+    <string name="compat_conflict_remove_first">Porter nu poate înlocui automat %1$s. Dezinstalează-l, apoi revino aici pentru a instala Porter Compatibility.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Folosită de %d aplicație</item>
         <item quantity="few">Folosită de %d aplicații</item>

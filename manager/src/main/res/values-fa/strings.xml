@@ -367,6 +367,7 @@
     <string name="compat_uninstall_unavailable">Android نتوانست حذف‌کننده را باز کند. می‌توانید Porter Compatibility را از تنظیمات برنامه‌های Android حذف کنید.</string>
     <string name="compat_import_saved">وارد کردن تأییدهای ذخیره‌شده</string>
     <string name="compat_conflict_description">برای اتصال برنامه‌هایی که فقط Shizuku را می‌شناسند، Porter باید برنامه Shizuku نصب‌شده را با برنامه سازگاری خودش جایگزین کند. انتخاب‌های دسترسی برنامه‌های شما منتقل می‌شوند.</string>
+    <string name="compat_conflict_remove_first">Porter نمی‌تواند برنامه %1$s را به‌طور خودکار جایگزین کند. آن را حذف نصب کنید، سپس برای نصب Porter Compatibility به اینجا برگردید.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">مورد استفاده %d برنامه</item>
         <item quantity="other">مورد استفاده %d برنامه</item>

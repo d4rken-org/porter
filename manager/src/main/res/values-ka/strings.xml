@@ -384,6 +384,7 @@
     <string name="compat_uninstall_unavailable">Android-მა დეინსტალატორი ვერ გახსნა. Porter Compatibility-ის წაშლა შეგიძლიათ Android-ის აპების პარამეტრებიდან.</string>
     <string name="compat_import_saved">შენახული ნებართვების იმპორტი</string>
     <string name="compat_conflict_description">აპების დასაკავშირებლად, რომლებიც მხოლოდ Shizuku-ს ცნობენ, Porter-მა დაინსტალირებული Shizuku აპი თავისი თავსებადობის აპით უნდა ჩაანაცვლოს. აპების წვდომაზე თქვენი არჩევანი გადმოვა.</string>
+    <string name="compat_conflict_remove_first">Porter-ს არ შეუძლია %1$s-ის ავტომატურად ჩანაცვლება. წაშალეთ ის და შემდეგ დაბრუნდით აქ Porter Compatibility-ის დასაინსტალირებლად.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">იყენებს %d აპი</item>
         <item quantity="other">იყენებს %d აპი</item>
