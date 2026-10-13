@@ -2155,3 +2155,46 @@ class AppUidTest(unittest.TestCase):
         with patch.object(self.runner, "shell", side_effect=RuntimeError("adb: device offline")):
             with self.assertRaisesRegex(RuntimeError, "offline"):
                 self.runner.app_uid("p")
+
+
+class RebootTest(unittest.TestCase):
+    """A restart counts once the device answers with a boot id it did not have before."""
+
+    OLD = "11111111-1111-1111-1111-111111111111"
+    NEW = "22222222-2222-2222-2222-222222222222"
+
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.Smoke(argparse.Namespace(serial="emulator-5554", output=Path(directory.name)))
+
+    @patch.object(smoke.time, "sleep")
+    def test_a_new_boot_that_finished_booting_is_the_restart(self, sleep):
+        # The empty answer is the transport being down, and the old id after it is the boot that
+        # was still running, which must not count.
+        answers = [self.OLD, "", self.OLD, self.NEW, "0", "1"]
+        with patch.object(self.runner, "adb") as adb, \
+             patch.object(self.runner, "shell", side_effect=lambda *a, **k: answers.pop(0)) as shell:
+            self.runner.reboot()
+        self.assertEqual(answers, [])
+        adb.assert_called_once_with("reboot")
+        self.assertEqual(shell.call_args_list[0], call("cat", "/proc/sys/kernel/random/boot_id", check=False))
+        self.assertEqual(shell.call_args_list[-1], call("getprop", "sys.boot_completed", check=False))
+
+    def test_the_old_boot_answering_again_is_not_a_restart(self):
+        with patch.object(self.runner, "adb"), patch.object(self.runner, "shell", return_value=self.OLD):
+            with self.assertRaisesRegex(AssertionError, "new boot"):
+                self.runner.reboot(timeout=0.2)
+
+    def test_a_new_boot_that_never_finishes_fails(self):
+        answers = [self.OLD, self.NEW] + ["0"] * 10000
+        with patch.object(self.runner, "adb"), \
+             patch.object(self.runner, "shell", side_effect=lambda *a, **k: answers.pop(0)):
+            with self.assertRaisesRegex(AssertionError, "finished booting"):
+                self.runner.reboot(timeout=0.2)
+
+    def test_a_device_that_cannot_be_asked_is_never_told_to_restart(self):
+        with patch.object(self.runner, "adb") as adb, patch.object(self.runner, "shell", return_value=""):
+            with self.assertRaisesRegex(AssertionError, "no boot id"):
+                self.runner.reboot()
+        adb.assert_not_called()
