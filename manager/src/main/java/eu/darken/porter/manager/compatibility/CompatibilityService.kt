@@ -19,14 +19,14 @@ import java.util.concurrent.TimeUnit
 internal object CompatibilityService {
     private val timer = Executors.newSingleThreadScheduledExecutor { r -> Thread(r, "porter-compat-timeout").apply { isDaemon = true } }
 
-    fun request(operation: Int, snapshot: String? = null): Bundle {
+    fun request(operation: Int, argument: String? = null): Bundle {
         val binder = ServerBinder.require()
         val data = Parcel.obtain()
         val reply = Parcel.obtain()
         try {
             data.writeInterfaceToken(PorterProtocol.DESCRIPTOR)
             data.writeInt(operation)
-            data.writeString(snapshot)
+            data.writeString(argument)
             check(binder.transact(CompatibilitySetup.TRANSACTION, data, reply, 0)) { "Restart Porter to use compatibility setup" }
             reply.readException()
             val result = reply.readBundle() ?: error("Empty compatibility response")

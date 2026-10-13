@@ -9,14 +9,17 @@ import android.content.pm.PackageManager
  */
 internal object OtherShizukuDetector {
 
+    /** The package defining the Shizuku client permission, or null when no app defines it. */
+    fun permissionOwner(pm: PackageManager): String? = try {
+        pm.getPermissionInfo(CompatibilityRepository.PERMISSION, 0)?.packageName
+    } catch (_: PackageManager.NameNotFoundException) {
+        null
+    }
+
     fun isInstalled(context: Context): Boolean {
         return try {
             val pm = context.packageManager
-            val owner = try {
-                pm.getPermissionInfo(CompatibilityRepository.PERMISSION, 0)?.packageName
-            } catch (_: PackageManager.NameNotFoundException) {
-                null
-            } ?: return false
+            val owner = permissionOwner(pm) ?: return false
             if (owner != CompatibilityRepository.PACKAGE) return true
             val ownerCertificate = CompatibilityRepository.certificate(pm.getPackageInfo(owner, CompatibilityRepository.PACKAGE_FLAGS))
             val porterCertificate = CompatibilityRepository.certificate(pm.getPackageInfo(context.packageName, CompatibilityRepository.PACKAGE_FLAGS))
