@@ -2,6 +2,8 @@
 
 Icon, mascot and banner artwork by [Max Patchs](https://x.com/maxpatchs).
 
+This artwork is not covered by the Apache License; see [NOTICE](../../NOTICE).
+
 `icon.svg` is the neutral mascot without arms or legs. `mascot.svg` is the
 neutral full-body mascot and `mascot-happy.svg` is the same body with a happy
 expression, shown while Porter is running without restricted permissions.

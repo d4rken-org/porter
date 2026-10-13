@@ -50,4 +50,13 @@ Other app developers are welcome to support Porter's permission directly. [Add d
 
 Porter builds on [RikkaApps/Shizuku](https://github.com/RikkaApps/Shizuku) and the maintenance work by [thedjchi and contributors](https://github.com/thedjchi/Shizuku). It is not affiliated with the original Shizuku maintainers.
 
-Porter's code is available under [Apache 2.0](LICENSE); the bundled Shizuku API uses the MIT license. See [NOTICE](NOTICE) for attribution.
+## License
+
+Porter's code is available under [Apache 2.0](LICENSE); the bundled Shizuku API uses the MIT license. This excludes:
+
+* Porter icons, logos, mascots, marketing materials and assets.
+* Porter documentation.
+* Google Play screenshots.
+* Google Play texts & descriptions.
+
+Apps that support Porter may use the unmodified Porter icon to refer to it. See [NOTICE](NOTICE) for attribution and terms.
