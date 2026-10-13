@@ -332,6 +332,8 @@
     <string name="compat_import_saved">Importovat uložená schválení</string>
     <string name="compat_conflict_description">Aby mohl připojit aplikace, které znají jen Shizuku, musí Porter nahradit nainstalovanou aplikaci Shizuku svou aplikací pro kompatibilitu. Vaše volby přístupu aplikací budou převzaty.</string>
     <string name="compat_conflict_remove_first">Porter nemůže aplikaci %1$s nahradit automaticky. Odinstalujte ji a pak se sem vraťte a nainstalujte Porter Compatibility.</string>
+    <string name="compat_restart_required">Android se musí restartovat, než bude moci nainstalovat Porter Compatibility. Restartujte zařízení, spusťte Porter a klepněte na „Nainstalovat automaticky“. Vaše uložené volby přístupu se pak importují.</string>
+    <string name="compat_replace_restart_note">V této verzi Androidu může být nutné zařízení restartovat, než bude možné nainstalovat Porter Compatibility. Vaše volby přístupu zůstanou do té doby zachovány.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Používá %d aplikace</item>
         <item quantity="few">Používají %d aplikace</item>

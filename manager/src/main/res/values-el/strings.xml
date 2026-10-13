@@ -397,6 +397,8 @@
     <string name="compat_import_saved">Εισαγωγή αποθηκευμένων εγκρίσεων</string>
     <string name="compat_conflict_description">Για να συνδέσει εφαρμογές που γνωρίζουν μόνο το Shizuku, το Porter πρέπει να αντικαταστήσει την εγκατεστημένη εφαρμογή Shizuku με τη δική του εφαρμογή συμβατότητας. Οι επιλογές πρόσβασης εφαρμογών σας θα μεταφερθούν.</string>
     <string name="compat_conflict_remove_first">Το Porter δεν μπορεί να αντικαταστήσει αυτόματα το %1$s. Απεγκαταστήστε το και, στη συνέχεια, επιστρέψτε εδώ για να εγκαταστήσετε το Porter Compatibility.</string>
+    <string name="compat_restart_required">Το Android χρειάζεται επανεκκίνηση για να μπορέσει να εγκαταστήσει το Porter Compatibility. Επανεκκινήστε τη συσκευή σας, ξεκινήστε το Porter και πατήστε «Αυτόματη εγκατάσταση». Οι αποθηκευμένες επιλογές πρόσβασής σας θα εισαχθούν τότε.</string>
+    <string name="compat_replace_restart_note">Σε αυτήν την έκδοση του Android, η συσκευή σας ίσως χρειαστεί επανεκκίνηση για να μπορέσει να εγκατασταθεί το Porter Compatibility. Οι επιλογές πρόσβασής σας διατηρούνται μέχρι τότε.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Χρησιμοποιείται από %d εφαρμογή</item>
         <item quantity="other">Χρησιμοποιείται από %d εφαρμογές</item>

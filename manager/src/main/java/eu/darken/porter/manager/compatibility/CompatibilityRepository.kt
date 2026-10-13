@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import eu.darken.porter.manager.BuildConfig
+import eu.darken.porter.manager.R
 import eu.darken.porter.manager.authorization.AuthorizationManager
 import org.json.JSONArray
 import org.json.JSONObject
@@ -264,7 +265,11 @@ internal class CompatibilityRepository @VisibleForTesting internal constructor(
         if (force || mutable.value.status != Status.INSTALLED || installed() == null) {
             mutable.update { it.copy(phase = Phase.INSTALLING) }
             val file = bundledApk()
-            command(arrayOf("pm", "install", "-r", "--user", "0", "-S", file.length().toString()), file)
+            try { command(arrayOf("pm", "install", "-r", "--user", "0", "-S", file.length().toString()), file) }
+            catch (e: Exception) {
+                if (e is CancellationException || !needsRestart(e.message)) throw e
+                throw IllegalStateException(context.getString(R.string.compat_restart_required), e)
+            }
             file.delete()
         }
         inspect()
@@ -369,6 +374,10 @@ internal class CompatibilityRepository @VisibleForTesting internal constructor(
         val PACKAGE_FLAGS = PackageManager.GET_PERMISSIONS or if (Build.VERSION.SDK_INT >= 28) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES
         @Volatile private var instance: CompatibilityRepository? = null
         fun get(context: Context) = instance ?: synchronized(this) { instance ?: CompatibilityRepository(context.applicationContext).also { instance = it } }
+
+        // "Failure [-126: Package moe.shizuku.privileged.api attempting to redeclare permission group
+        // moe.shizuku.manager.permission-group.API already owned by kerneldroid.nightzuku]" lasts until a restart.
+        internal fun needsRestart(installOutput: String?) = installOutput?.contains("redeclare permission group") == true
 
         /** [owner] is the package defining [PERMISSION], null when no app defines it. */
         internal fun resolve(pm: PackageManager, owner: String?, ownCertificate: String): Resolution {

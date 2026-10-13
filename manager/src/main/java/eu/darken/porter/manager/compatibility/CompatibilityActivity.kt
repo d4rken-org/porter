@@ -294,6 +294,9 @@ class CompatibilityActivity : ComposeActivity() {
                 text = {
                     Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text(stringResource(R.string.compat_replace_description, state.installedLabel))
+                        if (state.conflictPackage != null && state.conflictPackage != CompatibilityRepository.PACKAGE && Build.VERSION.SDK_INT in 31..34) {
+                            Text(stringResource(R.string.compat_replace_restart_note))
+                        }
                         Text(stringResource(if (state.previewUnavailable) R.string.compat_import_unavailable else if (preview.isEmpty()) R.string.compat_import_empty else R.string.compat_import_description))
                         if (busy) {
                             LinearProgressIndicator(Modifier.fillMaxWidth())

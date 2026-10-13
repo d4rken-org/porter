@@ -367,6 +367,8 @@
     <string name="compat_import_saved">Увези сачувана одобрења</string>
     <string name="compat_conflict_description">Да би повезао апликације које познају само Shizuku, Porter мора да замени инсталирану Shizuku апликацију својом апликацијом за компатибилност. Ваши избори приступа апликација биће пренети.</string>
     <string name="compat_conflict_remove_first">Porter не може аутоматски да замени %1$s. Деинсталирајте је, па се вратите овде да бисте инсталирали Porter Compatibility.</string>
+    <string name="compat_restart_required">Android мора поново да се покрене пре него што може да инсталира Porter Compatibility. Поново покрените уређај, покрените Porter и додирните „Инсталирај аутоматски“. Ваши сачувани избори приступа ће тада бити увезени.</string>
+    <string name="compat_replace_restart_note">На овој верзији Android-а уређај ће можда морати поново да се покрене пре него што Porter Compatibility може да се инсталира. Ваши избори приступа се до тада задржавају.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Користи %d апликација</item>
         <item quantity="few">Користе %d апликације</item>

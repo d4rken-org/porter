@@ -91,4 +91,14 @@ class CompatibilityResolutionTest {
         assertFalse(resolution.foreign)
         assertNull(resolution.targetInfo)
     }
+
+    @Test fun duplicatePermissionGroupNeedsRestart() {
+        assertTrue(CompatibilityRepository.needsRestart("Failure [-126: Package moe.shizuku.privileged.api attempting to redeclare " +
+            "permission group moe.shizuku.manager.permission-group.API already owned by kerneldroid.nightzuku]"))
+    }
+
+    @Test fun otherInstallFailuresDoNotNeedRestart() {
+        assertFalse(CompatibilityRepository.needsRestart("Failure [INSTALL_FAILED_INSUFFICIENT_STORAGE]"))
+        assertFalse(CompatibilityRepository.needsRestart(null))
+    }
 }

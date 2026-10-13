@@ -387,6 +387,8 @@
     <string name="compat_import_saved">Importuj zapisane zgody</string>
     <string name="compat_conflict_description">Aby połączyć aplikacje, które znają tylko Shizuku, Porter musi zastąpić zainstalowaną aplikację Shizuku swoją aplikacją zgodności. Twoje wybory dostępu aplikacji zostaną przeniesione.</string>
     <string name="compat_conflict_remove_first">Porter nie może automatycznie zastąpić aplikacji %1$s. Odinstaluj ją, a potem wróć tutaj, aby zainstalować Porter Compatibility.</string>
+    <string name="compat_restart_required">Android wymaga ponownego uruchomienia, zanim będzie mógł zainstalować Porter Compatibility. Uruchom ponownie urządzenie, uruchom Porter i dotknij „Zainstaluj automatycznie”. Twoje zapisane wybory dostępu zostaną wtedy zaimportowane.</string>
+    <string name="compat_replace_restart_note">W tej wersji Androida urządzenie może wymagać ponownego uruchomienia, zanim będzie można zainstalować Porter Compatibility. Twoje wybory dostępu zostaną do tego czasu zachowane.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Używana przez %d aplikację</item>
         <item quantity="few">Używana przez %d aplikacje</item>

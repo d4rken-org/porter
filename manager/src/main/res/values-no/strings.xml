@@ -376,6 +376,8 @@
     <string name="compat_import_saved">Importer lagrede godkjenninger</string>
     <string name="compat_conflict_description">For å koble til apper som bare kjenner Shizuku, må Porter erstatte den installerte Shizuku-appen med sin kompatibilitetsapp. Valgene dine for apptilgang overføres.</string>
     <string name="compat_conflict_remove_first">Porter kan ikke erstatte %1$s automatisk. Avinstaller den, og kom deretter tilbake hit for å installere Porter Compatibility.</string>
+    <string name="compat_restart_required">Android må startes på nytt før Porter Compatibility kan installeres. Start enheten på nytt, start Porter og trykk på \"Installer automatisk\". De lagrede tilgangsvalgene dine importeres da.</string>
+    <string name="compat_replace_restart_note">På denne Android-versjonen kan det hende at enheten må startes på nytt før Porter Compatibility kan installeres. Tilgangsvalgene dine beholdes til da.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Brukes av %d app</item>
         <item quantity="other">Brukes av %d apper</item>

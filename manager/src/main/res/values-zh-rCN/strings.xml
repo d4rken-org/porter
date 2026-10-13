@@ -350,6 +350,8 @@
     <string name="compat_import_saved">导入已保存的授权</string>
     <string name="compat_conflict_description">要连接仅识别 Shizuku 的应用，Porter 需要用其兼容应用替换已安装的 Shizuku 应用。您的应用访问选择将被迁移。</string>
     <string name="compat_conflict_remove_first">Porter 无法自动替换 %1$s。请将其卸载，然后返回此处安装 Porter Compatibility。</string>
+    <string name="compat_restart_required">Android 需要重启后才能安装 Porter Compatibility。请重启您的设备，启动 Porter，然后点按“自动安装”。届时将导入您保存的访问选择。</string>
+    <string name="compat_replace_restart_note">在此 Android 版本上，您的设备可能需要重启后才能安装 Porter Compatibility。在此之前，您的访问选择将保留。</string>
     <plurals name="compat_usage_count">
         <item quantity="other">%d 个应用正在使用</item>
     </plurals>
