@@ -349,6 +349,7 @@
     <string name="compat_uninstall_unavailable">Android tidak dapat membuka uninstaler. Anda dapat menghapus Porter Compatibility dari setelan aplikasi Android.</string>
     <string name="compat_import_saved">Impor persetujuan tersimpan</string>
     <string name="compat_conflict_description">Untuk menghubungkan aplikasi yang hanya mengenal Shizuku, Porter perlu mengganti aplikasi Shizuku yang terinstal dengan aplikasi kompatibilitasnya. Pilihan akses aplikasi Anda akan dipindahkan.</string>
+    <string name="compat_conflict_remove_first">Porter tidak dapat mengganti %1$s secara otomatis. Uninstal aplikasi tersebut, lalu kembali ke sini untuk menginstal Porter Compatibility.</string>
     <plurals name="compat_usage_count">
         <item quantity="other">Digunakan oleh %d aplikasi</item>
     </plurals>

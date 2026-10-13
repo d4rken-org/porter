@@ -366,6 +366,7 @@
     <string name="compat_uninstall_unavailable">Android није могао да отвори деинсталатор. Porter Compatibility можете да уклоните из Android подешавања апликација.</string>
     <string name="compat_import_saved">Увези сачувана одобрења</string>
     <string name="compat_conflict_description">Да би повезао апликације које познају само Shizuku, Porter мора да замени инсталирану Shizuku апликацију својом апликацијом за компатибилност. Ваши избори приступа апликација биће пренети.</string>
+    <string name="compat_conflict_remove_first">Porter не може аутоматски да замени %1$s. Деинсталирајте је, па се вратите овде да бисте инсталирали Porter Compatibility.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Користи %d апликација</item>
         <item quantity="few">Користе %d апликације</item>

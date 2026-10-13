@@ -365,6 +365,7 @@
     <string name="compat_uninstall_unavailable">Android ei voinut avata asennuksen poistoa. Voit poistaa Porter Compatibilityn Androidin sovellusasetuksista.</string>
     <string name="compat_import_saved">Tuo tallennetut hyväksynnät</string>
     <string name="compat_conflict_description">Jotta vain Shizukun tuntevat sovellukset voidaan yhdistää, Porterin on korvattava asennettu Shizuku-sovellus omalla yhteensopivuussovelluksellaan. Sovellusten käyttöoikeusvalintasi siirretään.</string>
+    <string name="compat_conflict_remove_first">Porter ei voi korvata sovellusta %1$s automaattisesti. Poista sen asennus ja palaa sitten tänne asentamaan Porter Compatibility.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">%d sovellus käyttää tätä</item>
         <item quantity="other">%d sovellusta käyttää tätä</item>

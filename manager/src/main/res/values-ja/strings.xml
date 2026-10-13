@@ -349,6 +349,7 @@
     <string name="compat_uninstall_unavailable">Androidがアンインストーラーを開けませんでした。Androidのアプリ設定からPorter Compatibilityを削除できます。</string>
     <string name="compat_import_saved">保存した承認をインポート</string>
     <string name="compat_conflict_description">Shizukuしか認識しないアプリを接続するには、インストール済みのShizukuアプリをPorterの互換アプリに置き換える必要があります。アプリのアクセス設定は引き継がれます。</string>
+    <string name="compat_conflict_remove_first">Porterは %1$s を自動で置き換えられません。アンインストールしてからここに戻り、Porter Compatibilityをインストールしてください。</string>
     <plurals name="compat_usage_count">
         <item quantity="other">%d 個のアプリが使用中</item>
     </plurals>

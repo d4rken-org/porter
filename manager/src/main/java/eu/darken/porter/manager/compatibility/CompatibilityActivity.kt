@@ -138,11 +138,13 @@ class CompatibilityActivity : ComposeActivity() {
                     CompatibilityRepository.Status.CONFLICT -> R.string.compat_status_conflict
                     CompatibilityRepository.Status.INVALID -> R.string.compat_status_invalid
                 }), if (state.status == CompatibilityRepository.Status.INSTALLED) Icons.TwoTone.Link else Icons.TwoTone.Info) {
-                    if (state.isCompanion) {
+                    val identityPackage = state.conflictPackage.takeIf { state.status == CompatibilityRepository.Status.CONFLICT }
+                        ?: CompatibilityRepository.PACKAGE.takeIf { state.isCompanion }
+                    if (identityPackage != null) {
                         OutlinedCard(
                             onClick = {
                                 startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                    Uri.parse("package:${CompatibilityRepository.PACKAGE}")))
+                                    Uri.parse("package:$identityPackage")))
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -151,12 +153,14 @@ class CompatibilityActivity : ComposeActivity() {
                                 state.installedIcon?.let { Image(it.asImageBitmap(), null, Modifier.size(40.dp)) }
                                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                     Text(state.installedLabel, style = MaterialTheme.typography.titleSmall)
-                                    Text(android.text.BidiFormatter.getInstance().unicodeWrap(CompatibilityRepository.PACKAGE, android.text.TextDirectionHeuristics.LTR), style = MaterialTheme.typography.bodySmall)
+                                    Text(android.text.BidiFormatter.getInstance().unicodeWrap(identityPackage, android.text.TextDirectionHeuristics.LTR), style = MaterialTheme.typography.bodySmall)
                                     Text(compatibilityVersionText(state.installedVersionName, state.installedVersionCode),
                                         style = MaterialTheme.typography.bodySmall)
                                 }
                             }
                         }
+                    }
+                    if (state.isCompanion) {
                         CompatibilityUsage(state.running, apps) {
                             startActivity(Intent(this@CompatibilityActivity, ApplicationManagementActivity::class.java))
                         }
@@ -225,6 +229,7 @@ class CompatibilityActivity : ComposeActivity() {
                             Text(stringResource(R.string.compat_conflict_description))
                             if (!state.running) Text(stringResource(R.string.compat_direct_stopped))
                             else if (!state.supported) Text(stringResource(R.string.compat_restart_porter))
+                            else if (!state.replaceable) Text(stringResource(R.string.compat_conflict_remove_first, state.installedLabel))
                             else HomeCardActions {
                                 Button(enabled = !state.hasSnapshot && (!busy || state.phase == CompatibilityRepository.Phase.PREPARING),
                                     onClick = repository::prepareReplacement) {
@@ -299,7 +304,7 @@ class CompatibilityActivity : ComposeActivity() {
                             Text(stringResource(R.string.compat_stop_manually))
                             HomeCardActions {
                                 TextButton(onClick = {
-                                    val launch = packageManager.getLaunchIntentForPackage(CompatibilityRepository.PACKAGE)
+                                    val launch = packageManager.getLaunchIntentForPackage(state.conflictPackage ?: CompatibilityRepository.PACKAGE)
                                     try {
                                         if (launch != null) startActivity(launch)
                                         else manualError = getString(R.string.compat_original_open_failed)

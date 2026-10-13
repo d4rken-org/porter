@@ -359,6 +359,7 @@
     <string name="compat_uninstall_unavailable">تعذّر على Android فتح أداة إلغاء التثبيت. يمكنك إزالة Porter Compatibility من إعدادات التطبيقات في Android.</string>
     <string name="compat_import_saved">استيراد الموافقات المحفوظة</string>
     <string name="compat_conflict_description">لربط التطبيقات التي لا تعرف سوى Shizuku، يحتاج Porter إلى استبدال تطبيق Shizuku المثبّت بتطبيق التوافق الخاص به. سيتم نقل اختيارات وصول تطبيقاتك.</string>
+    <string name="compat_conflict_remove_first">لا يستطيع Porter استبدال %1$s تلقائيًا. ألغِ تثبيته، ثم عُد إلى هنا لتثبيت Porter Compatibility.</string>
     <plurals name="compat_usage_count">
         <item quantity="zero">لا يستخدمه أي تطبيق (%d)</item>
         <item quantity="one">يستخدمه تطبيق واحد (%d)</item>

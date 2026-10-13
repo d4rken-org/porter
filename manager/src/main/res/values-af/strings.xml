@@ -382,6 +382,7 @@
     <string name="compat_uninstall_unavailable">Android kon nie die deïnstalleerder oopmaak nie. Jy kan Porter Compatibility in Android se programinstellings verwyder.</string>
     <string name="compat_import_saved">Voer gestoorde goedkeurings in</string>
     <string name="compat_conflict_description">Om programme te koppel wat net Shizuku ken, moet Porter die geïnstalleerde Shizuku-program met sy versoenbaarheidsprogram vervang. Jou programtoegangkeuses sal oorgedra word.</string>
+    <string name="compat_conflict_remove_first">Porter kan nie %1$s outomaties vervang nie. Deïnstalleer dit en keer dan hierheen terug om Porter Compatibility te installeer.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Gebruik deur %d program</item>
         <item quantity="other">Gebruik deur %d programme</item>

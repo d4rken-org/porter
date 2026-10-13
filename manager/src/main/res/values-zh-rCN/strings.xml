@@ -349,6 +349,7 @@
     <string name="compat_uninstall_unavailable">Android 无法打开卸载程序。您可以在 Android 应用设置中移除 Porter Compatibility。</string>
     <string name="compat_import_saved">导入已保存的授权</string>
     <string name="compat_conflict_description">要连接仅识别 Shizuku 的应用，Porter 需要用其兼容应用替换已安装的 Shizuku 应用。您的应用访问选择将被迁移。</string>
+    <string name="compat_conflict_remove_first">Porter 无法自动替换 %1$s。请将其卸载，然后返回此处安装 Porter Compatibility。</string>
     <plurals name="compat_usage_count">
         <item quantity="other">%d 个应用正在使用</item>
     </plurals>

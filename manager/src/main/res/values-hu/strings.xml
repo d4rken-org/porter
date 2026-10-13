@@ -389,6 +389,7 @@
     <string name="compat_uninstall_unavailable">Az Android nem tudta megnyitni az eltávolítót. A Porter Compatibility alkalmazást az Android alkalmazásbeállításaiban távolíthatja el.</string>
     <string name="compat_import_saved">Mentett jóváhagyások importálása</string>
     <string name="compat_conflict_description">A csak Shizukut ismerő alkalmazások csatlakoztatásához a Porternek le kell cserélnie a telepített Shizuku alkalmazást a saját kompatibilitási alkalmazására. Az alkalmazás-hozzáférési döntései átkerülnek.</string>
+    <string name="compat_conflict_remove_first">A Porter nem tudja automatikusan lecserélni a(z) %1$s alkalmazást. Távolítsa el, majd térjen vissza ide a Porter Compatibility telepítéséhez.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">%d alkalmazás használja</item>
         <item quantity="other">%d alkalmazás használja</item>

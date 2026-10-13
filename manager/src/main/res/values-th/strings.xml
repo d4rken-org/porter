@@ -373,6 +373,7 @@
     <string name="compat_uninstall_unavailable">Android เปิดโปรแกรมถอนการติดตั้งไม่ได้ คุณนำ Porter Compatibility ออกได้จากการตั้งค่าแอปของ Android</string>
     <string name="compat_import_saved">นำเข้าการอนุมัติที่บันทึกไว้</string>
     <string name="compat_conflict_description">Porter ต้องแทนที่แอป Shizuku ที่ติดตั้งไว้ด้วยแอปความเข้ากันได้ของตัวเอง เพื่อเชื่อมต่อแอปที่รู้จักเฉพาะ Shizuku ตัวเลือกการเข้าถึงของแอปจะถูกย้ายมาด้วย</string>
+    <string name="compat_conflict_remove_first">Porter แทนที่ %1$s โดยอัตโนมัติไม่ได้ โปรดถอนการติดตั้งแอปนี้ แล้วกลับมาที่นี่เพื่อติดตั้ง Porter Compatibility</string>
     <plurals name="compat_usage_count">
         <item quantity="other">ใช้โดย %d แอป</item>
     </plurals>

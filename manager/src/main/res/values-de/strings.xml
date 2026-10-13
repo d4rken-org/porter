@@ -355,6 +355,7 @@
     <string name="compat_uninstall_unavailable">Android konnte den Deinstallationsdialog nicht öffnen. Du kannst Porter Compatibility in den Android-App-Einstellungen entfernen.</string>
     <string name="compat_import_saved">Gespeicherte Freigaben importieren</string>
     <string name="compat_conflict_description">Damit sich Apps verbinden können, die nur Shizuku kennen, muss Porter die installierte Shizuku-App durch seine Kompatibilitäts-App ersetzen. Deine App-Zugriffsentscheidungen werden übernommen.</string>
+    <string name="compat_conflict_remove_first">Porter kann %1$s nicht automatisch ersetzen. Deinstalliere die App und kehre dann hierher zurück, um Porter Compatibility zu installieren.</string>
     <plurals name="compat_usage_count">
         <item quantity="one">Von %d App verwendet</item>
         <item quantity="other">Von %d Apps verwendet</item>
