@@ -89,7 +89,7 @@ jobs:
               gh release delete "$RELEASE_TAG" --yes
             elif jq -e --arg tag "$RELEASE_TAG" '
               [.assets[].name] as $names |
-              ["porter-"+$tag+"-release.apk", "porter-compat-"+$tag+"-release.apk", "SHA256SUMS", "verification.txt", "build-info.json"] |
+              ["porter-"+$tag+"-release.apk", "porter-compat-"+$tag+"-release.apk", "porter-compat-"+$tag+"-gplay.apk", "SHA256SUMS", "verification.txt", "build-info.json"] |
               all(. as $name | $names | index($name) != null)' <<< "$release" >/dev/null; then
               published=true
             else
@@ -125,6 +125,20 @@ jobs:
           printf '%s' "$ENCODED_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/porter-signing/keystore.jks"
           test -s "$RUNNER_TEMP/porter-signing/keystore.jks"
           echo "STORE_PATH=$RUNNER_TEMP/porter-signing/keystore.jks" >> "$GITHUB_ENV"
+      - name: Decode Google Play app signing keystore
+        if: env.DRY_RUN != 'true' && steps.existing.outputs.published != 'true'
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.GPLAY_SIGNING_KEYSTORE_BASE64 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s' "$ENCODED_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/porter-signing/gplay-signing.jks"
+          if [[ ! -s "$RUNNER_TEMP/porter-signing/gplay-signing.jks" ]]; then
+            echo '::error::GPLAY_SIGNING_KEYSTORE_BASE64 is missing from this environment.'
+            exit 1
+          fi
+          echo "GPLAY_STORE_PATH=$RUNNER_TEMP/porter-signing/gplay-signing.jks" >> "$GITHUB_ENV"
       - name: Assemble signed APKs
         if: steps.existing.outputs.published != 'true'
         run: ./gradlew :manager:assembleFossRelease :compat:assembleRelease
@@ -132,6 +146,19 @@ jobs:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Sign the companion for Google Play
+        if: env.DRY_RUN != 'true' && steps.existing.outputs.published != 'true'
+        env:
+          GPLAY_STORE_PASSWORD: ${{ secrets.GPLAY_SIGNING_STORE_PASSWORD }}
+          GPLAY_KEY_ALIAS: ${{ secrets.GPLAY_SIGNING_KEY_ALIAS }}
+          GPLAY_KEY_PASSWORD: ${{ secrets.GPLAY_SIGNING_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gplay-companion"
+          companion=(compat/build/outputs/apk/release/*.apk)
+          name=$(basename "${companion[0]}")
+          python3 tools/release/sign-gplay-companion.py "${companion[0]}" "$RUNNER_TEMP/gplay-companion/${name%-release.apk}-gplay.apk" | tee "$RUNNER_TEMP/gplay-companion/verification.txt"
       - name: Verify and package downloads
         if: steps.existing.outputs.published != 'true'
         shell: bash
@@ -140,6 +167,11 @@ jobs:
           mkdir -p dist
           cp manager/build/outputs/apk/foss/release/*.apk compat/build/outputs/apk/release/*.apk dist/
           python3 tools/verify-apks.py manager/build/outputs/apk/foss/release/*.apk compat/build/outputs/apk/release/*.apk --embedded required | tee dist/verification.txt
+          # Dry runs build from any branch, so they never use the Play app signing key.
+          if [[ "$DRY_RUN" != true ]]; then
+            cp "$RUNNER_TEMP"/gplay-companion/*.apk dist/
+            cat "$RUNNER_TEMP/gplay-companion/verification.txt" >> dist/verification.txt
+          fi
           (cd dist && sha256sum -- *.apk > SHA256SUMS)
           jq -n --arg commit "$(git rev-parse HEAD)" --arg api "$(git -C api rev-parse HEAD)" \
             --arg run "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
