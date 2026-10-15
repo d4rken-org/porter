@@ -172,3 +172,96 @@ jobs:
       - name: Remove signing material
         if: always()
         run: rm -rf "$RUNNER_TEMP/porter-signing"
+
+  # Runs beside release-github rather than after it: a failed Play upload must not hold back the
+  # GitHub release, and the reverse. A dry run skips this job entirely, because its environment
+  # requires a review and the job's only output is the upload.
+  release-gplay:
+    name: Upload to Google Play
+    needs: validate-tag
+    if: ${{ !cancelled() && startsWith(github.ref, 'refs/tags/v') && (needs.validate-tag.result == 'success' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run)) }}
+    runs-on: ubuntu-26.04
+    environment: gplay-production-upload
+    env:
+      RELEASE_TAG: ${{ github.ref_name }}
+      BUNDLE_GEMFILE: ${{ github.workspace }}/fastlane/Gemfile
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - name: Validate version
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash tools/release/bump.sh --mode=check --expected-tag="$RELEASE_TAG" | tee "$RUNNER_TEMP/version.txt"
+          sed -n 's/^current_code=/PORTER_VERSION_CODE=/p' "$RUNNER_TEMP/version.txt" >> "$GITHUB_ENV"
+      - name: Set up Android build
+        uses: ./.github/actions/android-setup
+      - name: Decode upload keystore
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.GPLAY_UPLOAD_KEYSTORE_BASE64 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p "$RUNNER_TEMP/porter-signing"
+          printf '%s' "$ENCODED_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/porter-signing/upload.jks"
+          if [[ ! -s "$RUNNER_TEMP/porter-signing/upload.jks" ]]; then
+            echo '::error::GPLAY_UPLOAD_KEYSTORE_BASE64 is missing from this environment.'
+            exit 1
+          fi
+          echo "STORE_PATH=$RUNNER_TEMP/porter-signing/upload.jks" >> "$GITHUB_ENV"
+      # Built before the service account key exists on the runner, and without a daemon that would
+      # outlive the build.
+      - name: Build the bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./gradlew --no-daemon :manager:bundleGplayRelease
+          rm -f "$STORE_PATH"
+        env:
+          STORE_PASSWORD: ${{ secrets.GPLAY_UPLOAD_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.GPLAY_UPLOAD_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.GPLAY_UPLOAD_KEY_PASSWORD }}
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b #v1.321.0
+        with:
+          ruby-version: 3.3.12
+          bundler-cache: true
+          working-directory: fastlane
+      - name: Verify fastlane Bundler wiring
+        run: bundle exec fastlane --version
+      - name: Decode Google Play service account key
+        env:
+          ENCODED_SERVICE_KEY: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON_BASE64 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s' "$ENCODED_SERVICE_KEY" | base64 --decode > "$RUNNER_TEMP/porter-signing/service_account.json"
+          # An unset secret decodes to an empty file, which supply would only reject with a less
+          # specific error.
+          if ! jq -e . "$RUNNER_TEMP/porter-signing/service_account.json" >/dev/null 2>&1; then
+            echo '::error::GPLAY_SERVICE_ACCOUNT_KEY_JSON_BASE64 is missing or not base64-encoded JSON in this environment.'
+            exit 1
+          fi
+          echo "SUPPLY_JSON_KEY=$RUNNER_TEMP/porter-signing/service_account.json" >> "$GITHUB_ENV"
+      # Set the environment variable SUPPLY_RELEASE_STATUS to draft for the first upload, while
+      # eu.darken.porter is still a draft app, and delete it afterwards.
+      - name: Select release status
+        env:
+          RELEASE_STATUS: ${{ vars.SUPPLY_RELEASE_STATUS }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$RELEASE_STATUS" ]]; then echo "SUPPLY_RELEASE_STATUS=$RELEASE_STATUS" >> "$GITHUB_ENV"; fi
+      - name: Upload the bundle
+        run: bundle exec fastlane release
+        env:
+          FASTLANE_SKIP_UPDATE_CHECK: 'true'
+          PORTER_AAB: ${{ github.workspace }}/manager/build/outputs/bundle/gplayRelease/manager-gplay-release.aab
+      - name: Remove signing material
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/porter-signing"
