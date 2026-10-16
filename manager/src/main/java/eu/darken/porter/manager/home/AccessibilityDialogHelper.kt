@@ -59,8 +59,10 @@ internal fun accessibilityDialogStep(
 }
 
 class AccessibilityDialogFragment : ComposeDialogFragment() {
+    override val dpadScroll = true
     /** Shared by [Content] and [Actions], which compose as siblings and so cannot remember it between them. */
     private var step by mutableStateOf("enable")
+    override val scrollKey: Any get() = step
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
