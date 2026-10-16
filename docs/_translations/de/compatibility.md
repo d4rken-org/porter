@@ -38,6 +38,23 @@ Der integrierte Wechsel steht im primären Android-Nutzer zur Verfügung. Ist Sh
 Die Begleit-APK bleibt als separater Download derselben Veröffentlichung verfügbar. Für die manuelle Installation beendest und deinstallierst du Shizuku, installierst Porter Compatibility und startest Porter. Nutze Porters integrierten Wechsel, um geeignete Zugriffsentscheidungen zu übertragen; das bloße Öffnen des Wechsel-Dialogs speichert keinen Import. Installationsbeschränkungen des Geräts können auch für den integrierten Installer gelten; die Aktion **Manuell** öffnet den Android-Installer.
 
 Nach der Installation zeigt die Startseite, wie viele installierte Apps über sie verbunden sind. Tippe auf ihre Karte, um ihre Version zu sehen, die enthaltene Kopie erneut zu installieren oder sie zu deinstallieren. Porter versucht zuerst, über seinen Dienst zu deinstallieren, und öffnet den Android-Deinstaller, falls das fehlschlägt. Das Entfernen unterbricht Apps, die Kompatibilitätsunterstützung brauchen; Apps mit direkter Porter-Unterstützung laufen weiter. Die Kompatibilitätsseite prüft Änderungen automatisch, solange sie geöffnet ist.
+
+## Porter aus Google Play
+{: #porter-from-google-play }
+
+Porter aus Google Play enthält die Begleit-App nicht und übernimmt keine Zugriffsentscheidungen aus Shizuku. Es braucht eine eigene Begleit-App: Porter arbeitet nur mit einer Begleit-App, die mit demselben Schlüssel signiert ist wie Porter selbst, und Google Play signiert Porter mit einem anderen Schlüssel als die GitHub-Releases. Jedes Release bietet beide Begleit-Apps an:
+
+| Porter installiert aus | Download der Begleit-App |
+| --- | --- |
+| Google Play | `porter-compat-VERSION-gplay.apk` |
+| GitHub (FOSS-Version) | `porter-compat-VERSION-release.apk` |
+
+1. Beende und deinstalliere Shizuku.
+2. Lade die Begleit-App für Google Play aus dem [Release](https://github.com/d4rken-org/porter/releases) herunter, das zu deiner Porter-Version passt, und installiere sie.
+3. Starte Porter. Kehre zur Client-App zurück und erlaube den Zugriff.
+
+Meldet der Kompatibilitätsbildschirm eine andere Shizuku-App, obwohl Porter Compatibility installiert ist, gehört die Begleit-App zur anderen Version. Deinstalliere sie und installiere die passende.
+
 ## Können Porter und Shizuku gleichzeitig laufen?
 {: #can-porter-and-shizuku-run-together }
 
