@@ -121,6 +121,8 @@
     <string name="snackbar_invalid_port">Le port doit être compris entre 1 et 65535</string>
     <string name="snackbar_battery_optimization_home">L\'optimisation de la batterie doit être désactivée pour que le lancement au démarrage et le chien de garde fonctionnent correctement.</string>
     <string name="snackbar_battery_optimization_settings">Veuillez désactiver l\'optimisation de la batterie pour utiliser cette fonctionnalité.</string>
+    <string name="settings_battery_optimization_list">Dans la liste qui s\'ouvre ensuite, affichez toutes les applications, trouvez Porter et désactivez l\'optimisation de la batterie pour cette application.</string>
+    <string name="settings_battery_optimization_unavailable">Cet appareil ne dispose d\'aucun écran pour désactiver l\'optimisation de la batterie.</string>
     <string name="snackbar_action_fix">Corriger</string>
 
     <!-- Toast -->

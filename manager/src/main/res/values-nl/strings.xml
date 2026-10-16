@@ -144,6 +144,8 @@
         om bij opstarten/watchdog goed te starten.</string>
     <string name="snackbar_battery_optimization_settings">Schakel alstublieft batterijoptimalisatie
         uit om deze functie te gebruiken.</string>
+    <string name="settings_battery_optimization_list">Toon in de lijst die hierna opent alle apps, zoek Porter en schakel batterijoptimalisatie ervoor uit.</string>
+    <string name="settings_battery_optimization_unavailable">Dit apparaat heeft geen scherm om batterijoptimalisatie uit te schakelen.</string>
     <string name="snackbar_action_fix">Repareren</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter begint al op de achtergrond</string>

@@ -140,6 +140,8 @@
         batareya optimizasiyası deaktiv edilməlidir.</string>
     <string name="snackbar_battery_optimization_settings">Zəhmət olmasa, bu funksiyadan istifadə
         etmək üçün batareya optimizasiyasını söndürün.</string>
+    <string name="settings_battery_optimization_list">Növbəti açılan siyahıda bütün tətbiqləri göstərin, Porter-i tapın və onun üçün batareya optimallaşdırmasını söndürün.</string>
+    <string name="settings_battery_optimization_unavailable">Bu cihazda batareya optimallaşdırmasını söndürmək üçün ekran yoxdur.</string>
     <string name="snackbar_action_fix">Düzəlt</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter artıq arxa planda başlayır</string>

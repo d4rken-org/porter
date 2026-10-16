@@ -154,6 +154,8 @@
         «Άγρυπνος φρουρός».</string>
     <string name="snackbar_battery_optimization_settings">Απενεργοποιήστε τη βελτιστοποίηση
         μπαταρίας για να χρησιμοποιήσετε αυτήν τη δυνατότητα.</string>
+    <string name="settings_battery_optimization_list">Στη λίστα που θα ανοίξει, εμφανίστε όλες τις εφαρμογές, βρείτε το Porter και απενεργοποιήστε τη βελτιστοποίηση μπαταρίας για αυτό.</string>
+    <string name="settings_battery_optimization_unavailable">Αυτή η συσκευή δεν έχει οθόνη για την απενεργοποίηση της βελτιστοποίησης μπαταρίας.</string>
     <string name="snackbar_action_fix">Διόρθωση</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Το Porter ξεκινά ήδη στο παρασκήνιο</string>

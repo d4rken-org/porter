@@ -147,6 +147,8 @@
         mula semasa but/pengawas untuk berfungsi dengan baik.</string>
     <string name="snackbar_battery_optimization_settings">Sila lumpuhkan pengoptimuman bateri untuk
         menggunakan ciri ini.</string>
+    <string name="settings_battery_optimization_list">Dalam senarai yang dibuka seterusnya, tunjukkan semua apl, cari Porter dan matikan pengoptimuman bateri untuknya.</string>
+    <string name="settings_battery_optimization_unavailable">Peranti ini tiada skrin untuk mematikan pengoptimuman bateri.</string>
     <string name="snackbar_action_fix">Betulkan</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter sudah bermula di latar belakang</string>

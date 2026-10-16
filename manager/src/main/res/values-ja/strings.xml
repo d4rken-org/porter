@@ -119,6 +119,8 @@
     <string name="snackbar_invalid_port">ポートは1～65535の範囲で指定してください</string>
     <string name="snackbar_battery_optimization_home">起動時に開始/ウォッチドッグを正常に動作させるには、バッテリーの最適化を無効にする必要があります。</string>
     <string name="snackbar_battery_optimization_settings">この機能を使用するには、バッテリーの最適化を無効にしてください。</string>
+    <string name="settings_battery_optimization_list">次に開く一覧ですべてのアプリを表示し、Porter を探してバッテリーの最適化をオフにしてください。</string>
+    <string name="settings_battery_optimization_unavailable">このデバイスには、バッテリーの最適化をオフにする画面がありません。</string>
     <string name="snackbar_action_fix">修正</string>
 
     <!-- Toast -->

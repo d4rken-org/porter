@@ -144,6 +144,8 @@
         ჩატვირთვის / მაკონტროლებლის დასაწყებად გამართულად მუშაობისთვის.</string>
     <string name="snackbar_battery_optimization_settings">გთხოვთ, გამორთოთ ბატარეის ოპტიმიზაცია ამ
         ფუნქციის გამოსაყენებლად.</string>
+    <string name="settings_battery_optimization_list">შემდეგ გახსნილ სიაში აჩვენეთ ყველა აპი, იპოვეთ Porter და გამორთეთ მისთვის ბატარეის ოპტიმიზაცია.</string>
+    <string name="settings_battery_optimization_unavailable">ამ მოწყობილობას არ აქვს ბატარეის ოპტიმიზაციის გამორთვის ეკრანი.</string>
     <string name="snackbar_action_fix">გამოსწორება</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter უკვე იწყება ფონზე</string>

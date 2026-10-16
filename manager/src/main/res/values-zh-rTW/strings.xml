@@ -107,6 +107,8 @@
     <string name="snackbar_invalid_port">通訊埠必須介於 1 到 65535 之間</string>
     <string name="snackbar_battery_optimization_home">開機時啟動與看門狗功能必須關閉電池最佳化。</string>
     <string name="snackbar_battery_optimization_settings">請關閉電池最佳化以使用此功能。</string>
+    <string name="settings_battery_optimization_list">在接下來開啟的清單中顯示所有應用程式，找到 Porter，並關閉它的電池最佳化。</string>
+    <string name="settings_battery_optimization_unavailable">這部裝置沒有可關閉電池最佳化的畫面。</string>
     <string name="snackbar_action_fix">修正</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter 已在背景啟動中</string>

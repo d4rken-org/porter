@@ -97,6 +97,8 @@
     <string name="snackbar_invalid_port">Port musí být mezi 1 a 65535</string>
     <string name="snackbar_battery_optimization_home">Optimalizace baterie musí být vypnutá, aby start při startu/watchdogu fungoval správně.</string>
     <string name="snackbar_battery_optimization_settings">Pro použití této funkce prosím vypněte optimalizaci baterie.</string>
+    <string name="settings_battery_optimization_list">V seznamu, který se otevře, zobrazte všechny aplikace, najděte Porter a vypněte pro něj optimalizaci baterie.</string>
+    <string name="settings_battery_optimization_unavailable">Toto zařízení nemá obrazovku pro vypnutí optimalizace baterie.</string>
     <string name="snackbar_action_fix">Opravit</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter se již spouští na pozadí</string>

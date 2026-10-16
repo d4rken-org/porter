@@ -120,6 +120,8 @@
     <string name="snackbar_invalid_port">Der Port muss zwischen 1 und 65535 liegen</string>
     <string name="snackbar_battery_optimization_home">Die Akkuoptimierung muss deaktiviert sein, damit Start beim Systemstart und Watchdog richtig funktionieren.</string>
     <string name="snackbar_battery_optimization_settings">Bitte deaktiviere die Akkuoptimierung, um diese Funktion zu nutzen.</string>
+    <string name="settings_battery_optimization_list">Lass dir in der Liste, die sich als Nächstes öffnet, alle Apps anzeigen, suche Porter und deaktiviere dort die Akkuoptimierung.</string>
+    <string name="settings_battery_optimization_unavailable">Dieses Gerät hat keinen Bildschirm zum Deaktivieren der Akkuoptimierung.</string>
     <string name="snackbar_action_fix">Beheben</string>
 
     <!-- Toast -->

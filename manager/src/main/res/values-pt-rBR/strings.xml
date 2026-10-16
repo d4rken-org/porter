@@ -121,6 +121,8 @@
     <string name="snackbar_invalid_port">A porta deve estar entre 1 e 65535</string>
     <string name="snackbar_battery_optimization_home">A otimização de bateria precisa estar desativada para que o início na inicialização e o watchdog funcionem corretamente.</string>
     <string name="snackbar_battery_optimization_settings">Desative a otimização de bateria para usar este recurso.</string>
+    <string name="settings_battery_optimization_list">Na lista que será aberta, mostre todos os apps, encontre o Porter e desative a otimização de bateria para ele.</string>
+    <string name="settings_battery_optimization_unavailable">Este dispositivo não tem uma tela para desativar a otimização de bateria.</string>
     <string name="snackbar_action_fix">Corrigir</string>
 
     <!-- Toast -->

@@ -3,6 +3,7 @@ package eu.darken.porter.manager.settings
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,6 +14,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.receiver.NotifCancelReceiver
@@ -77,7 +79,9 @@ class StartupSettingsActivity : ComposeActivity() {
                 onAutoUpdateServiceChange = { model.setAutoUpdateService(it) },
                 onPairingMethod = { model.show("pairing") },
                 onTcpPort = { model.show("tcp") },
-                onBatteryOptimization = { SettingsHelper.requestIgnoreBatteryOptimizations(this@StartupSettingsActivity) },
+                onBatteryOptimization = {
+                    if (!SettingsHelper.requestIgnoreBatteryOptimizations(this@StartupSettingsActivity)) batteryScreenUnavailable()
+                },
                 onNotificationSettings = { SettingsPage.Notifications.NotificationSettings.launch(this@StartupSettingsActivity) },
             ),
         )
@@ -89,10 +93,14 @@ class StartupSettingsActivity : ComposeActivity() {
             }
             "boot_warning" -> MessageDialog(stringResource(android.R.string.dialog_alert_title), stringResource(R.string.settings_start_on_boot_bug),
                 model::cancelToggle, onConfirm = { model.checkBattery() })
-            "battery" -> MessageDialog(stringResource(R.string.settings_title), stringResource(R.string.snackbar_battery_optimization_settings),
+            "battery" -> MessageDialog(stringResource(R.string.settings_title), batteryMessage(),
                 model::cancelToggle, stringResource(R.string.snackbar_action_fix), onConfirm = {
                     model.show(null)
-                    runCatching { SettingsHelper.requestIgnoreBatteryOptimizations(this@StartupSettingsActivity, battery) }.onFailure { model.cancelToggle() }
+                    val opened = runCatching { SettingsHelper.requestIgnoreBatteryOptimizations(this@StartupSettingsActivity, battery) }
+                    if (!opened.getOrDefault(false)) {
+                        model.cancelToggle()
+                        batteryScreenUnavailable()
+                    }
                 })
             "alerts" -> AlertDialog(
                 onDismissRequest = model::cancelToggle,
@@ -125,4 +133,14 @@ class StartupSettingsActivity : ComposeActivity() {
                 onConfirm = { PorterSettings.setTcpPort(tcpText.toIntOrNull()); PorterReceiverStarter.start(this@StartupSettingsActivity, true); dismiss() })
         }
     }
+
+    private fun batteryScreenUnavailable() =
+        Toast.makeText(this, R.string.settings_battery_optimization_unavailable, Toast.LENGTH_LONG).show()
+}
+
+/** The Play build opens Android's list rather than a prompt for Porter alone. */
+@Composable
+private fun batteryMessage(): String {
+    val message = stringResource(R.string.snackbar_battery_optimization_settings)
+    return if (BuildConfig.IS_FOSS) message else message + "\n\n" + stringResource(R.string.settings_battery_optimization_list)
 }

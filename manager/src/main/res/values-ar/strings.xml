@@ -124,6 +124,8 @@
     <string name="snackbar_invalid_port">يجب أن يكون المنفذ بين 1 و65535</string>
     <string name="snackbar_battery_optimization_home">يجب إيقاف تحسين البطارية ليعمل البدء عند تشغيل الجهاز/المراقب بشكل صحيح.</string>
     <string name="snackbar_battery_optimization_settings">يُرجى إيقاف تحسين البطارية لاستخدام هذه الميزة.</string>
+    <string name="settings_battery_optimization_list">في القائمة التي ستُفتح بعد ذلك، اعرض كل التطبيقات، وابحث عن Porter وأوقف تحسين البطارية له.</string>
+    <string name="settings_battery_optimization_unavailable">لا يحتوي هذا الجهاز على شاشة لإيقاف تحسين البطارية.</string>
     <string name="snackbar_action_fix">إصلاح</string>
 
     <!-- Toast -->
