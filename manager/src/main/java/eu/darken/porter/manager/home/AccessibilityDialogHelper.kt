@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
+import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.adb.AdbPairingAccessibilityService
 import eu.darken.porter.manager.ktx.asActivity
@@ -22,18 +23,39 @@ import eu.darken.porter.manager.ui.ComposeDialogFragment
 import eu.darken.porter.manager.utils.SettingsPage
 
 fun Context.showAccessibilityDialog() {
-    val installer = packageManager.getInstallerPackageName(packageName)
-    val step = when {
-        isAccessibilityEnabled() -> "navigate"
-        checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED -> {
-            if (enableAccessibilityService()) return
-            "permission"
+    val step = when (val selected = accessibilityDialogStep(
+        enabled = isAccessibilityEnabled(),
+        canWriteSecureSettings = checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED,
+        foss = BuildConfig.IS_FOSS,
+        installer = packageManager.getInstallerPackageName(packageName),
+        sdkInt = Build.VERSION.SDK_INT,
+    )) {
+        "self-enable" -> when {
+            enableAccessibilityService() -> return
+            Build.VERSION.SDK_INT in 33..34 -> "permission"
+            else -> "enable"
         }
-        installer != "com.android.vending" && installer != null && Build.VERSION.SDK_INT <= 34 -> "permission"
-        else -> "enable"
+        else -> selected
     }
     AccessibilityDialogFragment().apply { arguments = Bundle().apply { putString("step", step) } }
         .show(asActivity<FragmentActivity>().supportFragmentManager)
+}
+
+/**
+ * Only the FOSS build can enable a disabled service through secure settings. Other builds route disabled services
+ * through the disclosure before opening Android accessibility settings.
+ */
+internal fun accessibilityDialogStep(
+    enabled: Boolean,
+    canWriteSecureSettings: Boolean,
+    foss: Boolean,
+    installer: String?,
+    sdkInt: Int,
+): String = when {
+    enabled -> "navigate"
+    foss && canWriteSecureSettings -> "self-enable"
+    installer != "com.android.vending" && installer != null && sdkInt in 33..34 -> "permission"
+    else -> "enable"
 }
 
 class AccessibilityDialogFragment : ComposeDialogFragment() {
@@ -68,7 +90,9 @@ class AccessibilityDialogFragment : ComposeDialogFragment() {
             verticalArrangement = Arrangement.spacedBy(8.dp)) {
             when (step) {
                 "permission" -> TextButton(onClick = { step = "enable" }) { Text(stringResource(android.R.string.ok)) }
-                "enable" -> TextButton(onClick = { SettingsPage.Accessibility.launch(context); dismissAllowingStateLoss() }) { Text(stringResource(R.string.enable)) }
+                "enable" -> TextButton(onClick = { SettingsPage.Accessibility.launch(context); dismissAllowingStateLoss() }) {
+                    Text(stringResource(R.string.dialog_adb_pairing_accessibility_agree))
+                }
                 "navigate" -> TextButton(onClick = { SettingsPage.Developer.HighlightWirelessDebugging.launch(context); dismissAllowingStateLoss() }) { Text(stringResource(R.string.development_settings)) }
             }
             TextButton(onClick = { dismissAllowingStateLoss() }) { Text(stringResource(android.R.string.cancel)) }

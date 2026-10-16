@@ -30,7 +30,7 @@
         \n안드로이드 11 이전은 무선 디버깅을 사용하기 위해서 컴퓨터 연결을 필수로 해야 합니다.</string>
     <string name="dialog_usb_debugging_not_enabled">USB 디버깅이 활성화되어 있지 않습니다.\n\"개발자 옵션\"에서 활성화해 주세요.</string>
     <string name="dialog_adb_pairing_accessibility_permission">Android 14에서 패키지 설치 프로그램으로 Porter를 설치/업데이트하면 페어링용 접근성 서비스를 활성화하는 데 필요한 ^1 권한이 취소됩니다.\n\n이 권한을 부여하려면 다음 ADB 명령을 실행하세요.\n\n^2\n\n명령을 실행한 후 페어링 과정을 계속할 수 있습니다.\n\n참고: ADB로 Porter를 설치/업데이트하면 이 문제를 피할 수 있습니다.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">페어링 과정을 시작하려면 접근성 서비스를 활성화하세요. 이렇게 하면 Porter가 페어링 코드를 감지할 수 있습니다.\n\n접근성 서비스는 페어링을 시도한 후, 또는 1분 이내에 코드를 찾지 못하면 꺼집니다. Porter가 결과를 표시하고 다시 시도할 수 있게 해 줍니다.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porter의 접근성 서비스는 무선 디버깅 페어링 주소와 코드를 찾기 위해 Android TV 설정 화면을 읽습니다. 또한 페어링 진행 상태를 표시하거나 숨기기 위해 어떤 앱이 앞에 있는지 확인하지만, 다른 앱의 콘텐츠는 읽지 않습니다. Porter는 주소와 코드를 해당 주소와 페어링하는 데에만 사용하며 수집하거나 공유하지 않습니다.\n\n접근성 서비스는 페어링을 시도한 후, 또는 1분 이내에 코드를 찾지 못하면 꺼집니다. Porter가 결과를 표시하고 다시 시도할 수 있게 해 줍니다.\n\n동의하면 다음으로 접근성 설정이 열립니다. 그곳에서 서비스를 켜세요.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">다음 단계에 따라 페어링을 시작하세요.\n- \"개발자 옵션\"으로 이동합니다.\n- \"USB 디버깅\" 및 \"무선 디버깅\"을 활성화합니다.\n- \"무선 디버깅\"의 왼쪽을 탭합니다.\n- \"페어링 코드로 기기 페어링\"을 탭합니다. Porter가 자동으로 페어링 코드를 감지합니다.</string>
     <string name="adb_pairing_requires_multi_window">먼저 화면 분할 (멀티 윈도우) 모드로 진입하세요.</string>
     <string name="adb_pairing_requires_multi_window_reason">시스템에서는 페어링 대화상자가 항상 표시되어야 합니다. 분할 화면 모드를 사용해야만 이 앱과 시스템 대화상자를 동시에 볼 수 있습니다.</string>
@@ -39,6 +39,7 @@
     <string name="adb_pair_required_title">페어링 필요</string>
     <string name="adb_pair_required">무선 디버깅이 켜져 있지만 Porter를 인식하지 못합니다. 이 방법으로 시작하려면 먼저 이 기기에서 Porter를 무선 디버깅과 페어링해야 합니다. 이 작업은 한 번 필요하며, Porter의 앱 데이터를 삭제하거나 페어링된 기기 목록에서 Porter를 제거하는 등 페어링이 해제될 때마다 다시 필요합니다.\n\n페어링을 선택하고 단계를 따른 다음 Porter를 다시 시작하세요.</string>
     <string name="enable">활성화</string>
+    <string name="dialog_adb_pairing_accessibility_agree">동의</string>
     <string name="development_settings">개발자 옵션</string>
     <string name="notification_settings">알림 옵션</string>
     <string name="adb_pairing_tutorial_content_notification">Porter의 알림이 페어링 완료를 도와줍니다.</string>

@@ -44,7 +44,7 @@
         pagpapares.\n\nPara ibigay ito, patakbuhin ang sumusunod na utos ng ADB:\n\n^2\n\nPagkatapos
         patakbuhin ang utos, maaari ka nang magpatuloy sa proseso ng pagpapares.\n\nPaalala: maaari
         mo itong iwasan sa pamamagitan ng pag-install/pag-update ng Porter gamit ang ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Mangyaring paganahin ang serbisyo ng accessibility para simulan ang proseso ng pagpapares. Pinapayagan nito ang Porter na matukoy ang code ng pagpapares.\n\nMao-off ang serbisyo ng accessibility pagkatapos ng pagtatangkang magpares, o kung walang makitang code sa loob ng isang minuto. Ipapakita ng Porter ang resulta at maaari mong subukang muli.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Binabasa ng serbisyo ng accessibility ng Porter ang mga screen ng Mga Setting ng Android TV para hanapin ang pairing address at code ng Wireless debugging. Tinitingnan din nito kung aling app ang nasa harap para ipakita o itago ang progreso ng pagpapares, pero hindi nito binabasa ang nilalaman ng ibang app. Ginagamit lang ng Porter ang address at code para makipagpares sa address na iyon, at hindi nito kinokolekta o ibinabahagi ang mga ito.\n\nMao-off ang serbisyo ng accessibility pagkatapos ng pagtatangkang magpares, o kung walang makitang code sa loob ng isang minuto. Ipapakita ng Porter ang resulta at maaari mong subukang muli.\n\nKung sang-ayon ka, susunod na magbubukas ang mga setting ng accessibility. I-on doon ang serbisyo.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Mangyaring simulan ang pagpapares sa
         pamamagitan ng pagsasagawa ng mga sumusunod na hakbang:\n- Mag-navigate sa \"Mga Pagpipilian
         sa Developer\"\n- Paganahin ang \"USB debugging\" at \"Wireless debugging\"\n- I-tap ang
@@ -60,6 +60,7 @@
     <string name="adb_pair_required_title">Kailangan ang pagpapares</string>
     <string name="adb_pair_required">Naka-on ang wireless na pag-debug, pero hindi nito nakikilala ang Porter. Kailangang ipares ang Porter sa wireless na pag-debug sa device na ito bago ito makapagsimula sa ganitong paraan. Kailangan ito nang isang beses, at muli tuwing mawawala ang pagpapares, halimbawa pagkatapos i-clear ang data ng app ng Porter o alisin ang Porter sa listahan ng mga nakapares na device.\n\nPiliin ang Pagpapares at sundin ang mga hakbang, pagkatapos ay simulan muli ang Porter.</string>
     <string name="enable">Paganahin</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Sang-ayon</string>
     <string name="development_settings">Mga opsyon ng developer</string>
     <string name="notification_settings">Mga opsyon sa notipikasyon</string>
     <string name="adb_pairing_tutorial_content_notification">Tutulungan ka ng isang notipikasyon

@@ -42,7 +42,7 @@
         die volgende ADB-opdrag uit:\n\n^2\n\nNadat u die opdrag uitgevoer het, kan u voortgaan met
         die paringsproses.\n\nLet wel: u kan dit omseil deur Porter met ADB te installeer/op te
         dateer.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Aktiveer asseblief die toeganklikheidsdiens om die paringsproses te begin. Dit laat Porter toe om die paringskode op te spoor.\n\nDie toeganklikheidsdiens sal afgeskakel word ná die paringspoging, of as geen kode binne een minuut gevind word nie. Porter sal die resultaat wys en jou toelaat om weer te probeer.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porter se toeganklikheidsdiens lees Android TV-instellingskerms om die paringsadres en -kode van Draadlose ontfouting te vind. Dit kyk ook watter app voor is om sy paringsvordering te wys of te versteek, maar lees nie die inhoud van ander apps nie. Porter gebruik die adres en kode slegs om met daardie adres te paar en versamel of deel dit nie.\n\nDie toeganklikheidsdiens sal afgeskakel word ná die paringspoging, of as geen kode binne een minuut gevind word nie. Porter sal die resultaat wys en jou toelaat om weer te probeer.\n\nAs jy instem, maak die toeganklikheidsinstellings volgende oop. Skakel die diens daar aan.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Begin asseblief met paring deur die
         volgende stappe uit te voer:\n- Navigeer na \"Ontwikkelaaropsies\"\n- Aktiveer
         \"USB-ontfouting\" en \"Draadlose ontfouting\"\n- Tik die linkerkant van \"Draadlose
@@ -58,6 +58,7 @@
     <string name="adb_pair_required_title">Paring vereis</string>
     <string name="adb_pair_required">Draadlose ontfouting is aan, maar dit herken nie Porter nie. Porter moet op hierdie toestel met draadlose ontfouting gepaar word voordat dit so kan begin. Dit is een keer nodig, en weer wanneer die paring verlore gaan, byvoorbeeld nadat Porter se programdata uitgevee is of Porter uit die lys van gepaarde toestelle verwyder is.\n\nKies Paring en volg die stappe, en begin dan Porter weer.</string>
     <string name="enable">Aktiveer</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Stem in</string>
     <string name="development_settings">Ontwikkelaaropsies</string>
     <string name="notification_settings">Kennisgewingopsies</string>
     <string name="adb_pairing_tutorial_content_notification">\'n Kennisgewing van Porter sal jou

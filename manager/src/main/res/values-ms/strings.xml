@@ -42,11 +42,9 @@
         arahan ADB berikut:\n\n^2\n\nSelepas menjalankan arahan, anda boleh meneruskan proses
         gandingan.\n\nNota: anda boleh memintas ini dengan memasang/mengemas kini Porter dengan
         ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Sila dayakan perkhidmatan kebolehaksesan
-        untuk memulakan proses gandingan. Ini membolehkan Porter mengesan kod
-        gandingan.\n\nPerkhidmatan kebolehaksesan akan dimatikan selepas percubaan gandingan, atau jika
+    <string name="dialog_adb_pairing_accessibility_enable">Perkhidmatan kebolehaksesan Porter membaca skrin Tetapan Android TV untuk mencari alamat dan kod gandingan Penyahpepijatan wayarles. Ia juga menyemak apl yang berada di hadapan untuk menunjukkan atau menyembunyikan kemajuan gandingan, tetapi tidak membaca kandungan apl lain. Porter menggunakan alamat dan kod itu hanya untuk bergandingan dengan alamat tersebut dan tidak mengumpul atau berkongsinya.\n\nPerkhidmatan kebolehaksesan akan dimatikan selepas percubaan gandingan, atau jika
         tiada kod ditemui dalam masa satu minit. Porter akan menunjukkan hasilnya dan membolehkan anda
-        mencuba semula.</string>
+        mencuba semula.\n\nJika anda bersetuju, tetapan kebolehaksesan akan dibuka seterusnya. Hidupkan perkhidmatan di sana.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Sila mulakan gandingan dengan
         melakukan langkah berikut:\n- Navigasi ke \"Pilihan pembangun\"\n- Dayakan \"Penyahpepijatan
         USB\" dan \"Penyahpepijatan wayarles\"\n- Ketik sebelah kiri \"Penyahpepijatan wayarles\"\n-
@@ -62,6 +60,7 @@
     <string name="adb_pair_required_title">Gandingan diperlukan</string>
     <string name="adb_pair_required">Penyahpepijatan wayarles dihidupkan, tetapi ia tidak mengenali Porter. Porter perlu digandingkan dengan penyahpepijatan wayarles pada peranti ini sebelum ia boleh bermula dengan cara ini. Ini diperlukan sekali, dan sekali lagi setiap kali gandingan hilang, contohnya selepas data apl Porter dikosongkan atau Porter dialih keluar daripada senarai peranti yang digandingkan.\n\nPilih Gandingan dan ikut langkah-langkahnya, kemudian mulakan Porter semula.</string>
     <string name="enable">Dayakan</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Setuju</string>
     <string name="development_settings">Pilihan pembangun</string>
     <string name="notification_settings">Pilihan pemberitahuan</string>
     <string name="adb_pairing_tutorial_content_notification">Pemberitahuan daripada Porter akan

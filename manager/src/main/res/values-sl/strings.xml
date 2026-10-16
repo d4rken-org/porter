@@ -43,10 +43,9 @@
         želite odobriti, zaženite naslednji ukaz ADB:\n\n^2\n\nPo zagonu ukaza lahko nadaljujete s
         postopkom seznanjanja.\n\nOpomba: temu se lahko izognete tako, da namestite/posodobite
         program Porter z ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Za začetek postopka seznanjanja omogočite
-        storitev dostopnosti. To bo Porter omogočilo zaznavanje kode za seznanjanje.\n\nStoritev
+    <string name="dialog_adb_pairing_accessibility_enable">Storitev za dostopnost aplikacije Porter bere zaslone nastavitev Android TV, da najde naslov in kodo za seznanjanje brezžičnega odpravljanja napak. Preveri tudi, katera aplikacija je v ospredju, da prikaže ali skrije potek seznanjanja, vendar ne bere vsebine drugih aplikacij. Porter naslov in kodo uporabi samo za seznanjanje s tem naslovom ter ju ne zbira in ne deli.\n\nStoritev
         dostopnosti se bo izklopila po poskusu seznanjanja ali če v eni minuti ne najde kode. Porter bo
-        prikazal rezultat in vam omogočil ponovni poskus.</string>
+        prikazal rezultat in vam omogočil ponovni poskus.\n\nČe se strinjate, se nato odprejo nastavitve dostopnosti. Tam vklopite storitev.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Začnite s seznanjanjem tako, da
         izvedete naslednje korake:\n- Pomaknite se do »Možnosti za razvijalce«\n- Omogočite
         »Odpravljanje napak prek USB-ja« in »Brezžično odpravljanje napak«\n- Dotaknite se leve strani
@@ -62,6 +61,7 @@
     <string name="adb_pair_required_title">Potrebno je seznanjanje</string>
     <string name="adb_pair_required">Brezžično odpravljanje napak je vklopljeno, vendar ne prepozna aplikacije Porter. Porter mora biti v tej napravi seznanjen z brezžičnim odpravljanjem napak, preden se lahko zažene na ta način. To je potrebno enkrat in znova vsakič, ko se seznanitev izgubi, na primer po izbrisu podatkov aplikacije Porter ali po odstranitvi aplikacije Porter s seznama seznanjenih naprav.\n\nIzberite Seznanjanje, sledite korakom in nato znova zaženite Porter.</string>
     <string name="enable">Omogoči</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Strinjam se</string>
     <string name="development_settings">Možnosti za razvijalce</string>
     <string name="notification_settings">Možnosti obveščanja</string>
     <string name="adb_pairing_tutorial_content_notification">Obvestilo aplikacije Porter vam bo pomagalo

@@ -32,7 +32,7 @@
     <string name="dialog_wireless_adb_not_enabled">Wireless debugging is not enabled.\nNote, before Android 11, to enable wireless debugging, computer connection is a must.</string>
     <string name="dialog_usb_debugging_not_enabled">USB debugging is not enabled.\nPlease enable it in \"Developer Options\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">On Android 14, installing/updating Porter with the Package Installer revokes the ^1 permission, which is required to enable the accessibility service for pairing.\n\nTo grant it, run the following ADB command:\n\n^2\n\nAfter running the command, you may continue with the pairing process.\n\nNote: you can bypass this by installing/updating Porter with ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Please enable the accessibility service to start the pairing process. This allows Porter to detect the pairing code.\n\nThe accessibility service will turn off after the pairing attempt, or if no code is found within one minute. Porter will show the result and let you retry.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porter\'s accessibility service reads Android TV Settings screens to find the Wireless debugging pairing address and code. It also checks which app is in front to show or hide its pairing progress, but does not read the content of other apps. Porter uses the address and code only to pair with that address and does not collect or share them.\n\nThe accessibility service will turn off after the pairing attempt, or if no code is found within one minute. Porter will show the result and let you retry.\n\nIf you agree, the accessibility settings open next. Turn on the service there.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Please start pairing by performing the following steps:\n- Navigate to \"Developer Options\"\n- Enable \"USB debugging\" and \"Wireless debugging\"\n- Tap the left side of \"Wireless debugging\"\n- Tap \"Pair device with pairing code.\" Porter will automatically detect the pairing code.</string>
     <string name="adb_pairing_requires_multi_window">Please enter split-screen (multi-window) mode first.</string>
     <string name="adb_pairing_requires_multi_window_reason">The system requires the pairing dialog to always be visible. Using split-screen mode is the only way to let this app and the system dialog be visible at the same time.</string>
@@ -40,6 +40,7 @@
     <string name="adb_pair_required_title">Pairing required</string>
     <string name="adb_pair_required">Wireless debugging is on, but it does not recognize Porter. Porter has to be paired with wireless debugging on this device before it can start this way. That is needed once, and again whenever the pairing is lost, for example after Porter\'s app data is cleared or Porter is removed from the list of paired devices.\n\nChoose Pairing and follow the steps, then start Porter again.</string>
     <string name="enable">Enable</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Agree</string>
     <string name="development_settings">Developer options</string>
     <string name="notification_settings">Notification options</string>
     <string name="adb_pairing_tutorial_content_notification">A notification from Porter will help you complete the pairing.</string>

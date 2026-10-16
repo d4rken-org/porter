@@ -41,7 +41,7 @@
         ADB-kommando för att bevilja den:\n\n^2\n\nEfter att du kört kommandot kan du fortsätta med
         parkopplingsprocessen.\n\nObs: du kan kringgå detta genom att installera/uppdatera Porter
         med ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Aktivera tillgänglighetstjänsten för att starta parkopplingen. Detta gör att Porter kan upptäcka parkopplingskoden.\n\nTillgänglighetstjänsten stängs av efter parkopplingsförsöket, eller om ingen kod hittas inom en minut. Porter visar resultatet och låter dig försöka igen.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porters tillgänglighetstjänst läser skärmar i Android TV-inställningarna för att hitta parkopplingsadressen och koden för Trådlös felsökning. Den kontrollerar också vilken app som är i förgrunden för att visa eller dölja parkopplingens förlopp, men läser inte innehåll från andra appar. Porter använder adressen och koden enbart för att parkoppla med den adressen och samlar inte in eller delar dem.\n\nTillgänglighetstjänsten stängs av efter parkopplingsförsöket, eller om ingen kod hittas inom en minut. Porter visar resultatet och låter dig försöka igen.\n\nOm du godkänner detta öppnas tillgänglighetsinställningarna härnäst. Aktivera tjänsten där.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Börja parkopplingen genom att utföra
         följande steg:\n- Navigera till \"Utvecklaralternativ\"\n- Aktivera \"USB-felsökning\" och
         \"Trådlös felsökning\"\n- Tryck på vänster sida av \"Trådlös felsökning\"\n- Tryck på \"Parkoppla
@@ -56,6 +56,7 @@
     <string name="adb_pair_required_title">Parkoppling krävs</string>
     <string name="adb_pair_required">Trådlös felsökning är på, men känner inte igen Porter. Porter måste parkopplas med trådlös felsökning på den här enheten innan den kan starta på det här sättet. Det behövs en gång, och igen när parkopplingen går förlorad, till exempel efter att Porters appdata har rensats eller Porter har tagits bort från listan över parkopplade enheter.\n\nVälj Parkoppling och följ stegen, och starta sedan Porter igen.</string>
     <string name="enable">Aktivera</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Godkänn</string>
     <string name="development_settings">Utvecklaralternativ</string>
     <string name="notification_settings">Aviseringsalternativ</string>
     <string name="adb_pairing_tutorial_content_notification">En avisering från Porter hjälper dig

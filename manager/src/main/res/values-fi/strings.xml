@@ -37,7 +37,7 @@
     <string name="dialog_usb_debugging_not_enabled">USB-virheenkorjaus ei ole käytössä.\nOta se
         käyttöön kohdassa \"Kehittäjäasetukset\".</string>
     <string name="dialog_adb_pairing_accessibility_permission">Android 14:ssä Porterin asentaminen/päivittäminen pakettiasentajalla peruuttaa ^1-käyttöoikeuden, jota tarvitaan parituksen saavutettavuuspalvelun käyttöönottoon.\n\nMyönnä käyttöoikeus suorittamalla seuraava ADB-komento:\n\n^2\n\nKomennon suorittamisen jälkeen voit jatkaa paritusta.\n\nHuomautus: voit ohittaa tämän asentamalla/päivittämällä Porterin ADB:llä.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Ota saavutettavuuspalvelu käyttöön aloittaaksesi parituksen. Näin Porter voi tunnistaa parituskoodin.\n\nSaavutettavuuspalvelu poistetaan käytöstä paritusyrityksen jälkeen tai jos koodia ei löydy minuutin kuluessa. Porter näyttää tuloksen ja antaa sinun yrittää uudelleen.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porterin saavutettavuuspalvelu lukee Android TV:n asetusnäkymiä löytääkseen Langattoman virheenkorjauksen paritusosoitteen ja -koodin. Se tarkistaa myös, mikä sovellus on edustalla, näyttääkseen tai piilottaakseen parituksen edistymisen, mutta ei lue muiden sovellusten sisältöä. Porter käyttää osoitetta ja koodia vain paritukseen kyseisen osoitteen kanssa eikä kerää tai jaa niitä.\n\nSaavutettavuuspalvelu poistetaan käytöstä paritusyrityksen jälkeen tai jos koodia ei löydy minuutin kuluessa. Porter näyttää tuloksen ja antaa sinun yrittää uudelleen.\n\nJos hyväksyt tämän, saavutettavuusasetukset avautuvat seuraavaksi. Ota palvelu käyttöön siellä.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Aloita paritus suorittamalla
         seuraavat vaiheet:\n- Siirry kohtaan \"Kehittäjäasetukset\"\n- Ota käyttöön
         \"USB-virheenkorjaus\" ja \"Langaton virheenkorjaus\"\n- Napauta \"Langaton virheenkorjaus\"
@@ -52,6 +52,7 @@
     <string name="adb_pair_required_title">Paritus vaaditaan</string>
     <string name="adb_pair_required">Langaton virheenkorjaus on päällä, mutta se ei tunnista Porteria. Porter on paritettava langattoman virheenkorjauksen kanssa tällä laitteella, ennen kuin se voi käynnistyä tällä tavalla. Tämä tarvitaan kerran ja uudelleen aina, kun paritus katoaa, esimerkiksi kun Porterin sovellustiedot on tyhjennetty tai Porter on poistettu paritettujen laitteiden luettelosta.\n\nValitse Paritus, seuraa ohjeita ja käynnistä sitten Porter uudelleen.</string>
     <string name="enable">Ota käyttöön</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Hyväksy</string>
     <string name="development_settings">Kehittäjäasetukset</string>
     <string name="notification_settings">Ilmoitusasetukset</string>
     <string name="adb_pairing_tutorial_content_notification">Porterin ilmoitus auttaa sinua viimeistelemään parituksen.</string>

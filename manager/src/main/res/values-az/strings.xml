@@ -38,7 +38,7 @@
         tələb olunan ^1 icazəsini ləğv edir.\n\nBunu etmək üçün aşağıdakı ADB əmrini
         işlədin:\n\n^2\n\nƏmri işlətdikdən sonra cütləşmə prosesinə davam edə bilərsiniz.\n\nQeyd:
         Porter-i ADB ilə quraşdırmaq/yeniləməklə bunu keçə bilərsiniz.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Zəhmət olmasa, cütləşdirmə prosesini başlatmaq üçün əlçatımlılıq xidmətini aktiv edin. Bu, Porter-ə cütləşdirmə kodunu aşkar etməyə imkan verir.\n\nƏlçatımlılıq xidməti cütləşdirmə cəhdindən sonra və ya bir dəqiqə ərzində kod tapılmazsa söndürüləcək. Porter nəticəni göstərəcək və yenidən cəhd etməyə imkan verəcək.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porter-in əlçatımlılıq xidməti Simsiz sazlamanın cütləşdirmə ünvanını və kodunu tapmaq üçün Android TV Ayarları ekranlarını oxuyur. O, cütləşdirmə gedişatını göstərmək və ya gizlətmək üçün öndə hansı tətbiqin olduğunu da yoxlayır, lakin digər tətbiqlərin məzmununu oxumur. Porter ünvanı və kodu yalnız həmin ünvanla cütləşmək üçün istifadə edir, onları toplamır və paylaşmır.\n\nƏlçatımlılıq xidməti cütləşdirmə cəhdindən sonra və ya bir dəqiqə ərzində kod tapılmazsa söndürüləcək. Porter nəticəni göstərəcək və yenidən cəhd etməyə imkan verəcək.\n\nRazısınızsa, növbəti olaraq əlçatımlılıq ayarları açılacaq. Xidməti orada aktiv edin.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Zəhmət olmasa, cütləşdirməyə aşağıdakı
         addımları yerinə yetirməklə başlayın:\n- \"Tərtibatçı seçimləri\"nə keçid edin\n-
         \"USB sazlaması\"nı və \"Simsiz sazlama\"nı aktiv edin\n- \"Simsiz sazlama\" bölməsinin
@@ -54,6 +54,7 @@
     <string name="adb_pair_required_title">Cütləşmə tələb olunur</string>
     <string name="adb_pair_required">Simsiz sazlama aktivdir, lakin Porter-i tanımır. Porter bu yolla başlaya bilməsi üçün əvvəlcə bu cihazda simsiz sazlama ilə cütləşdirilməlidir. Bu bir dəfə lazımdır və cütləşmə itdikdə yenidən lazım olur, məsələn, Porter-in tətbiq məlumatları silindikdən və ya Porter cütləşdirilmiş cihazlar siyahısından çıxarıldıqdan sonra.\n\n“Cütləşmə” düyməsinə toxunun və addımları izləyin, sonra Porter-i yenidən başladın.</string>
     <string name="enable">Aktiv et</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Razıyam</string>
     <string name="development_settings">Tərtibatçı seçimləri</string>
     <string name="notification_settings">Bildiriş seçimləri</string>
     <string name="adb_pairing_tutorial_content_notification">Porter-dən gələn bildiriş cütləşdirməni

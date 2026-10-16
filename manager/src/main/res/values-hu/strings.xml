@@ -43,7 +43,7 @@
         futtassa a következő ADB parancsot:\n\n^2\n\nA parancs futtatása után folytathatja a
         párosítási folyamatot.\n\nMegjegyzés: ezt megkerülheti a Porter ADB-vel történő
         telepítésével/frissítésével.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Kérjük, kapcsolja be a kisegítő szolgáltatást a párosítási folyamat megkezdéséhez. Ez lehetővé teszi, hogy a Porter észlelje a párosítókódot.\n\nA kisegítő szolgáltatás kikapcsol a párosítási kísérlet után, vagy ha egy percen belül nem található kód. A Porter megjeleníti az eredményt, és lehetővé teszi az újrapróbálkozást.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">A Porter kisegítő szolgáltatása beolvassa az Android TV beállításainak képernyőit, hogy megtalálja a Vezeték nélküli hibakeresés párosítási címét és kódját. Azt is ellenőrzi, melyik alkalmazás van előtérben, hogy megjelenítse vagy elrejtse a párosítás állapotát, de más alkalmazások tartalmát nem olvassa. A Porter a címet és a kódot csak az adott címmel való párosításhoz használja, nem gyűjti és nem osztja meg őket.\n\nA kisegítő szolgáltatás kikapcsol a párosítási kísérlet után, vagy ha egy percen belül nem található kód. A Porter megjeleníti az eredményt, és lehetővé teszi az újrapróbálkozást.\n\nHa elfogadja, ezután megnyílnak a kisegítő lehetőségek beállításai. Ott kapcsolja be a szolgáltatást.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Kérjük, kezdje el a párosítást a
         következő lépések végrehajtásával:\n- Navigáljon a „Fejlesztői beállítások” menüpontra\n-
         Engedélyezze az „USB hibakeresést” és a „Vezeték nélküli hibakeresést”\n- Koppintson a
@@ -60,6 +60,7 @@
     <string name="adb_pair_required_title">Párosítás szükséges</string>
     <string name="adb_pair_required">A vezeték nélküli hibakeresés be van kapcsolva, de nem ismeri fel a Portert. A Portert párosítani kell a vezeték nélküli hibakereséssel ezen az eszközön, mielőtt így elindulhatna. Erre egyszer van szükség, majd újra, ha a párosítás elvész, például ha a Porter alkalmazásadatait törölték, vagy a Portert eltávolították a párosított eszközök listájáról.\n\nVálassza a Párosítás lehetőséget, kövesse a lépéseket, majd indítsa el újra a Portert.</string>
     <string name="enable">Engedélyezés</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Elfogadom</string>
     <string name="development_settings">Fejlesztői lehetőségek</string>
     <string name="notification_settings">Értesítési lehetőségek</string>
     <string name="adb_pairing_tutorial_content_notification">A Porter értesítése segít a párosítás

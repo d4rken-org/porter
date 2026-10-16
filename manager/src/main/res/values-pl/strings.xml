@@ -42,7 +42,7 @@
         parowania.\n\nAby je przyznać, uruchom następujące polecenie ADB:\n\n^2\n\nPo uruchomieniu
         polecenia możesz kontynuować proces parowania.\n\nUwaga: możesz ominąć ten problem,
         instalując/aktualizując program Porter za pomocą programu ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Włącz usługę ułatwień dostępu, aby rozpocząć proces parowania. Pozwoli to Porter wykryć kod parowania.\n\nUsługa ułatwień dostępu zostanie wyłączona po próbie parowania lub jeśli w ciągu minuty nie zostanie znaleziony żaden kod. Porter wyświetli wynik i pozwoli spróbować ponownie.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Usługa ułatwień dostępu Porter odczytuje ekrany Ustawień Android TV, aby znaleźć adres i kod parowania Debugowania bezprzewodowego. Sprawdza też, która aplikacja jest na pierwszym planie, aby pokazać lub ukryć postęp parowania, ale nie odczytuje treści innych aplikacji. Porter używa adresu i kodu wyłącznie do sparowania z tym adresem i ich nie gromadzi ani nie udostępnia.\n\nUsługa ułatwień dostępu zostanie wyłączona po próbie parowania lub jeśli w ciągu minuty nie zostanie znaleziony żaden kod. Porter wyświetli wynik i pozwoli spróbować ponownie.\n\nJeśli się zgadzasz, następnie otworzą się ustawienia ułatwień dostępu. Włącz tam usługę.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Rozpocznij parowanie, wykonując
         następujące kroki:\n- Przejdź do „Opcji programistycznych”\n- Włącz „Debugowanie USB” i
         „Debugowanie bezprzewodowe”\n- Dotknij lewej strony „Debugowania bezprzewodowego”\n- Dotknij
@@ -56,6 +56,7 @@
     <string name="adb_pair_required_title">Wymagane parowanie</string>
     <string name="adb_pair_required">Debugowanie bezprzewodowe jest włączone, ale nie rozpoznaje aplikacji Porter. Aby Porter mógł uruchamiać się w ten sposób, musi zostać sparowany z debugowaniem bezprzewodowym na tym urządzeniu. Jest to potrzebne raz i ponownie za każdym razem, gdy parowanie zostanie utracone, na przykład po wyczyszczeniu danych aplikacji Porter lub usunięciu jej z listy sparowanych urządzeń.\n\nWybierz Parowanie, wykonaj kroki, a następnie ponownie uruchom aplikację Porter.</string>
     <string name="enable">Włącz</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Zgadzam się</string>
     <string name="development_settings">Opcje programisty</string>
     <string name="notification_settings">Opcje powiadomień</string>
     <string name="adb_pairing_tutorial_content_notification">Powiadomienie od Porter pomoże ci

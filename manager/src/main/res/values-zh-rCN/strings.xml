@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">无线调试未启用。\n注意：在 Android 11 之前，必须连接电脑才能启用无线调试。</string>
     <string name="dialog_usb_debugging_not_enabled">USB 调试未启用。\n请在“开发者选项”中启用。</string>
     <string name="dialog_adb_pairing_accessibility_permission">在 Android 14 上，通过软件包安装程序安装/更新 Porter 会撤销 ^1 权限，而启用配对所需的无障碍服务需要该权限。\n\n要授予该权限，请运行以下 ADB 命令：\n\n^2\n\n运行命令后，即可继续配对。\n\n注意：通过 ADB 安装/更新 Porter 可以避免此问题。</string>
-    <string name="dialog_adb_pairing_accessibility_enable">请启用无障碍服务以开始配对。这样 Porter 才能检测到配对码。\n\n无障碍服务会在配对尝试结束后关闭，或在一分钟内未找到配对码时关闭。Porter 会显示结果并允许您重试。</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porter 的无障碍服务会读取 Android TV 设置界面，以查找“无线调试”的配对地址和配对码。它还会检查哪个应用位于前台，以显示或隐藏配对进度，但不会读取其他应用的内容。Porter 仅将地址和配对码用于与该地址配对，不会收集或分享它们。\n\n无障碍服务会在配对尝试结束后关闭，或在一分钟内未找到配对码时关闭。Porter 会显示结果并允许您重试。\n\n如果您同意，接下来会打开无障碍设置。请在那里开启该服务。</string>
     <string name="dialog_adb_pairing_accessibility_navigate">请按以下步骤开始配对：\n- 进入“开发者选项”\n- 启用“USB 调试”和“无线调试”\n- 点按“无线调试”左侧\n- 点按“使用配对码配对设备”。Porter 会自动检测配对码。</string>
     <string name="adb_pairing_requires_multi_window">请先进入分屏（多窗口）模式。</string>
     <string name="adb_pairing_requires_multi_window_reason">系统要求配对对话框始终可见。只有使用分屏模式才能让此应用和系统对话框同时可见。</string>
@@ -39,6 +39,7 @@
     <string name="adb_pair_required_title">需要配对</string>
     <string name="adb_pair_required">无线调试已开启，但无法识别 Porter。Porter 必须先在此设备上与无线调试配对，才能以这种方式启动。这只需进行一次，但每当配对丢失时都需要重新配对，例如清除 Porter 的应用数据后，或将 Porter 从已配对设备列表中移除后。\n\n请选择“配对”并按步骤操作，然后重新启动 Porter。</string>
     <string name="enable">启用</string>
+    <string name="dialog_adb_pairing_accessibility_agree">同意</string>
     <string name="development_settings">开发者选项</string>
     <string name="notification_settings">通知设置</string>
     <string name="adb_pairing_tutorial_content_notification">一条来自 Porter 的通知将帮助您完成配对。</string>

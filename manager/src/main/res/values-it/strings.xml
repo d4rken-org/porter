@@ -43,7 +43,7 @@
         concederla, esegui il seguente comando ADB:\n\n^2\n\nDopo aver eseguito il comando, puoi
         continuare con il processo di associazione.\n\nNota: puoi aggirare questo problema
         installando/aggiornando Porter con ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Abilita il servizio di accessibilità per avviare il processo di accoppiamento. Questo permette a Porter di rilevare il codice di accoppiamento.\n\nIl servizio di accessibilità verrà disattivato dopo il tentativo di accoppiamento o se non viene trovato alcun codice entro un minuto. Porter mostrerà il risultato e ti permetterà di riprovare.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Il servizio di accessibilità di Porter legge le schermate delle Impostazioni di Android TV per trovare l\'indirizzo e il codice di accoppiamento del Debug wireless. Controlla anche quale app è in primo piano per mostrare o nascondere l\'avanzamento dell\'accoppiamento, ma non legge i contenuti di altre app. Porter usa l\'indirizzo e il codice solo per accoppiarsi con quell\'indirizzo e non li raccoglie né li condivide.\n\nIl servizio di accessibilità verrà disattivato dopo il tentativo di accoppiamento o se non viene trovato alcun codice entro un minuto. Porter mostrerà il risultato e ti permetterà di riprovare.\n\nSe sei d\'accordo, si apriranno le impostazioni di accessibilità. Attiva lì il servizio.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Per avviare l\'associazione, procedere
         come segue:\n- Vai su \"Opzioni sviluppatore\"\n- Abilita \"Debug USB\" e \"Debug
         wireless\"\n- Tocca il lato sinistro di \"Debug wireless\"\n- Tocca \"Accoppia dispositivo
@@ -58,6 +58,7 @@
     <string name="adb_pair_required_title">Accoppiamento necessario</string>
     <string name="adb_pair_required">Il debug wireless è attivo, ma non riconosce Porter. Porter deve essere accoppiato con il debug wireless su questo dispositivo prima di potersi avviare in questo modo. Serve una volta, e di nuovo ogni volta che l\'accoppiamento va perso, ad esempio dopo aver cancellato i dati dell\'app Porter o rimosso Porter dall\'elenco dei dispositivi accoppiati.\n\nScegli Accoppiamento, segui i passaggi e poi avvia di nuovo Porter.</string>
     <string name="enable">Abilitare</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Accetto</string>
     <string name="development_settings">Opzioni sviluppatore</string>
     <string name="notification_settings">Opzioni di notifica</string>
     <string name="adb_pairing_tutorial_content_notification">Una notifica da Porter ti aiuterà a

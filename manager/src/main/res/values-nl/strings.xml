@@ -42,7 +42,7 @@
         deze machtiging te verlenen, voer je de volgende ADB-opdracht uit:\n\n^2\n\nNa het uitvoeren
         van de opdracht kun je doorgaan met het koppelingsproces.\n\nOpmerking: Je kan dit omzeilen
         door Porter te installeren/bijwerken met ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Schakel de toegankelijkheidsservice in om het koppelen te starten. Hierdoor kan Porter de koppelingscode detecteren.\n\nDe toegankelijkheidsservice wordt uitgeschakeld na de koppelpoging, of als er binnen een minuut geen code wordt gevonden. Porter toont het resultaat en laat je het opnieuw proberen.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">De toegankelijkheidsservice van Porter leest schermen van de Android TV-instellingen om het koppeladres en de koppelingscode van Draadloze foutopsporing te vinden. De service controleert ook welke app op de voorgrond staat om de koppelvoortgang te tonen of te verbergen, maar leest geen inhoud van andere apps. Porter gebruikt het adres en de code alleen om met dat adres te koppelen en verzamelt of deelt ze niet.\n\nDe toegankelijkheidsservice wordt uitgeschakeld na de koppelpoging, of als er binnen een minuut geen code wordt gevonden. Porter toont het resultaat en laat je het opnieuw proberen.\n\nAls je akkoord gaat, worden hierna de toegankelijkheidsinstellingen geopend. Schakel de service daar in.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Begin met koppelen door de volgende
         stappen uit te voeren:\n- Ga naar \'Ontwikkelaarsopties\'\n- Schakel \'USB-foutopsporing\'
         en \'Draadloze foutopsporing\' in\n- Klik op de linkerkant van \'Draadloze
@@ -58,6 +58,7 @@
     <string name="adb_pair_required_title">Koppelen vereist</string>
     <string name="adb_pair_required">Draadloze foutopsporing staat aan, maar herkent Porter niet. Porter moet op dit apparaat met draadloze foutopsporing worden gekoppeld voordat het op deze manier kan starten. Dat is één keer nodig, en opnieuw wanneer de koppeling verloren gaat, bijvoorbeeld nadat de app-gegevens van Porter zijn gewist of Porter uit de lijst met gekoppelde apparaten is verwijderd.\n\nKies Koppelen, volg de stappen en start Porter daarna opnieuw.</string>
     <string name="enable">Inschakelen</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Akkoord</string>
     <string name="development_settings">Ontwikkelaarsopties</string>
     <string name="notification_settings">Meldingsopties</string>
     <string name="adb_pairing_tutorial_content_notification">Een melding van Porter zal je helpen

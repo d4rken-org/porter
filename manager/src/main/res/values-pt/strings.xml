@@ -44,7 +44,7 @@
         conceder, execute o seguinte comando ADB:\n\n^2\n\nApós executar o comando, pode continuar
         com o processo de emparelhamento.\n\nNota: pode contornar isto instalando/atualizando o
         Porter com o ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Ative o serviço de acessibilidade para iniciar o processo de emparelhamento. Isto permite que o Porter detete o código de emparelhamento.\n\nO serviço de acessibilidade será desativado após a tentativa de emparelhamento ou se nenhum código for encontrado no espaço de um minuto. O Porter mostrará o resultado e permitirá tentar novamente.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">O serviço de acessibilidade do Porter lê ecrãs das Definições do Android TV para encontrar o endereço e o código de emparelhamento da Depuração sem fios. Também verifica que app está em primeiro plano para mostrar ou ocultar o progresso do emparelhamento, mas não lê o conteúdo de outras apps. O Porter utiliza o endereço e o código apenas para emparelhar com esse endereço e não os recolhe nem partilha.\n\nO serviço de acessibilidade será desativado após a tentativa de emparelhamento ou se nenhum código for encontrado no espaço de um minuto. O Porter mostrará o resultado e permitirá tentar novamente.\n\nSe concordar, as definições de acessibilidade abrem-se a seguir. Ative lá o serviço.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Para iniciar o emparelhamento, siga os
         seguintes passos:\n- Aceda a \"Opções de programador\"\n- Ative \"Depuração USB\" e
         \"Depuração sem fios\"\n- Toque no lado esquerdo de \"Depuração sem fios\"\n- Toque em
@@ -60,6 +60,7 @@
     <string name="adb_pair_required_title">Emparelhamento necessário</string>
     <string name="adb_pair_required">A depuração sem fios está ativada, mas não reconhece o Porter. O Porter tem de ser emparelhado com a depuração sem fios neste dispositivo antes de poder iniciar desta forma. Isto é necessário uma vez e novamente sempre que o emparelhamento se perder, por exemplo, depois de os dados da aplicação Porter serem apagados ou de o Porter ser removido da lista de dispositivos emparelhados.\n\nEscolha Emparelhamento, siga os passos e depois inicie novamente o Porter.</string>
     <string name="enable">Ativar</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Concordo</string>
     <string name="development_settings">Opções de programador</string>
     <string name="notification_settings">Opções de notificação</string>
     <string name="adb_pairing_tutorial_content_notification">Uma notificação do Porter irá ajudá-lo
