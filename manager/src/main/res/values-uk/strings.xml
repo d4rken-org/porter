@@ -140,6 +140,8 @@
         завантаженні/сторожового таймера оптимізацію батареї необхідно вимкнути.</string>
     <string name="snackbar_battery_optimization_settings">Будь ласка, вимкніть оптимізацію батареї,
         щоб використовувати цю функцію.</string>
+    <string name="settings_battery_optimization_list">У списку, що відкриється, покажіть усі застосунки, знайдіть Porter і вимкніть для нього оптимізацію батареї.</string>
+    <string name="settings_battery_optimization_unavailable">На цьому пристрої немає екрана для вимкнення оптимізації батареї.</string>
     <string name="snackbar_action_fix">Виправити</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter уже запускається у фоновому режимі</string>

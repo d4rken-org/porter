@@ -143,6 +143,8 @@
         vir die aanvang met selflaai/waghond om behoorlik te werk.</string>
     <string name="snackbar_battery_optimization_settings">Deaktiveer asseblief batteryoptimalisering
         om hierdie kenmerk te gebruik.</string>
+    <string name="settings_battery_optimization_list">Wys alle apps in die lys wat volgende oopmaak, soek Porter en skakel batteryoptimalisering daarvoor af.</string>
+    <string name="settings_battery_optimization_unavailable">Hierdie toestel het geen skerm om batteryoptimalisering af te skakel nie.</string>
     <string name="snackbar_action_fix">Herstel</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter begin reeds in die agtergrond</string>

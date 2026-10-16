@@ -140,6 +140,8 @@
         att start vid uppstart/vakthunden ska fungera korrekt.</string>
     <string name="snackbar_battery_optimization_settings">Inaktivera batterioptimering för att
         använda den här funktionen.</string>
+    <string name="settings_battery_optimization_list">Visa alla appar i listan som öppnas härnäst, hitta Porter och stäng av batterioptimering för appen.</string>
+    <string name="settings_battery_optimization_unavailable">Den här enheten har ingen skärm för att stänga av batterioptimering.</string>
     <string name="snackbar_action_fix">Åtgärda</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter startar redan i bakgrunden</string>

@@ -1,5 +1,6 @@
 package eu.darken.porter.manager.utils
 
+import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -8,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
+import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.utils.SettingsPage
 
 object SettingsHelper {
@@ -40,15 +42,27 @@ object SettingsHelper {
         return pm.isIgnoringBatteryOptimizations(context.packageName)
     }
 
-    fun requestIgnoreBatteryOptimizations(context: Context, launcher: ActivityResultLauncher<Intent>? = null) {
-        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-            setData(Uri.parse("package:" + context.packageName))
-        }
-        if (launcher != null) {
-            launcher.launch(intent)
-        } else {
-            context.startActivity(intent)
+    /**
+     * Falls back to Porter's app info page, where battery use can also be set, when the device lacks the screen.
+     * Returns false when neither opens.
+     */
+    fun requestIgnoreBatteryOptimizations(context: Context, launcher: ActivityResultLauncher<Intent>? = null): Boolean {
+        val appInfo = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+        return listOf(batteryOptimizationIntent(context.packageName, BuildConfig.IS_FOSS), appInfo).any { intent ->
+            try {
+                if (launcher != null) launcher.launch(intent) else context.startActivity(intent)
+                true
+            } catch (e: ActivityNotFoundException) {
+                false
+            }
         }
     }
 
+    /**
+     * Google Play allows the direct exemption request only for listed app types, so the Play build opens the list:
+     * https://developer.android.com/training/monitoring-device-state/doze-standby
+     */
+    internal fun batteryOptimizationIntent(packageName: String, foss: Boolean): Intent =
+        if (foss) Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).setData(Uri.parse("package:$packageName"))
+        else Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
 }

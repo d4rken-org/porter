@@ -131,6 +131,8 @@
         би покретање при покретању система/чувар исправно функционисали.</string>
     <string name="snackbar_battery_optimization_settings">Онемогућите оптимизацију батерије да бисте
         користили ову функцију.</string>
+    <string name="settings_battery_optimization_list">На листи која се отвори прикажите све апликације, пронађите Porter и искључите оптимизацију батерије за њега.</string>
+    <string name="settings_battery_optimization_unavailable">Овај уређај нема екран за искључивање оптимизације батерије.</string>
     <string name="snackbar_action_fix">Поправи</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter се већ покреће у позадини</string>

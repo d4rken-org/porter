@@ -106,6 +106,8 @@
     <string name="snackbar_invalid_port">포트는 1~65535 사이여야 합니다.</string>
     <string name="snackbar_battery_optimization_home">부팅/워치독 시작 시 배터리 최적화를 비활성화해야 제대로 작동합니다.</string>
     <string name="snackbar_battery_optimization_settings">이 기능을 사용하려면 배터리 최적화를 비활성화하세요.</string>
+    <string name="settings_battery_optimization_list">다음에 열리는 목록에서 모든 앱을 표시하고 Porter를 찾아 배터리 최적화를 끄세요.</string>
+    <string name="settings_battery_optimization_unavailable">이 기기에는 배터리 최적화를 끄는 화면이 없습니다.</string>
     <string name="snackbar_action_fix">수정</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter가 이미 백그라운드에서 시작 중입니다</string>

@@ -149,6 +149,8 @@
         para que o início no arranque/cão de guarda funcione corretamente.</string>
     <string name="snackbar_battery_optimization_settings">Desative a otimização da bateria para
         utilizar esta funcionalidade.</string>
+    <string name="settings_battery_optimization_list">Na lista que se abre a seguir, mostre todas as apps, encontre o Porter e desative a otimização da bateria para ele.</string>
+    <string name="settings_battery_optimization_unavailable">Este dispositivo não tem um ecrã para desativar a otimização da bateria.</string>
     <string name="snackbar_action_fix">Corrigir</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter já está a começar em segundo plano.</string>

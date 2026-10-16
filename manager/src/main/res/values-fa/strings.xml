@@ -128,6 +128,8 @@
         درستی انجام شود، باید بهینه‌سازی باتری غیرفعال باشد.</string>
     <string name="snackbar_battery_optimization_settings">لطفاً برای استفاده از این ویژگی،
         بهینه‌سازی باتری را غیرفعال کنید.</string>
+    <string name="settings_battery_optimization_list">در فهرستی که باز می‌شود، همه برنامه‌ها را نمایش دهید، Porter را پیدا کنید و بهینه‌سازی باتری را برای آن خاموش کنید.</string>
+    <string name="settings_battery_optimization_unavailable">این دستگاه صفحه‌ای برای خاموش کردن بهینه‌سازی باتری ندارد.</string>
     <string name="snackbar_action_fix">رفع</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter هم‌اکنون در پس‌زمینه در حال راه‌اندازی است</string>

@@ -145,6 +145,8 @@
         düzgün çalışması için pil optimizasyonunun devre dışı bırakılması gerekir.</string>
     <string name="snackbar_battery_optimization_settings">Bu özelliği kullanmak için lütfen pil
         optimizasyonunu devre dışı bırakın.</string>
+    <string name="settings_battery_optimization_list">Ardından açılan listede tüm uygulamaları gösterin, Porter’ı bulun ve onun için pil optimizasyonunu kapatın.</string>
+    <string name="settings_battery_optimization_unavailable">Bu cihazda pil optimizasyonunu kapatmak için bir ekran yok.</string>
     <string name="snackbar_action_fix">Düzeltmek</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter arka planda zaten başlıyor</string>

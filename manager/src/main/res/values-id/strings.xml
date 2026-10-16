@@ -119,6 +119,8 @@
     <string name="snackbar_invalid_port">Port harus antara 1 dan 65535</string>
     <string name="snackbar_battery_optimization_home">Pengoptimalan baterai harus dinonaktifkan agar mulai saat boot/watchdog berfungsi dengan baik.</string>
     <string name="snackbar_battery_optimization_settings">Harap nonaktifkan pengoptimalan baterai untuk menggunakan fitur ini.</string>
+    <string name="settings_battery_optimization_list">Di daftar yang terbuka berikutnya, tampilkan semua aplikasi, cari Porter, lalu nonaktifkan pengoptimalan baterai untuknya.</string>
+    <string name="settings_battery_optimization_unavailable">Perangkat ini tidak memiliki layar untuk menonaktifkan pengoptimalan baterai.</string>
     <string name="snackbar_action_fix">Perbaiki</string>
 
     <!-- Toast -->

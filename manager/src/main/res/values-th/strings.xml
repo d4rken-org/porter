@@ -137,6 +137,8 @@
         จะต้องปิดใช้งานการเพิ่มประสิทธิภาพแบตเตอรี่เพื่อให้เริ่มทำงานเมื่อบูตเครื่อง/เฝ้าระวังเพื่อให้ทำงานได้อย่างถูกต้อง</string>
     <string name="snackbar_battery_optimization_settings">
         โปรดปิดใช้งานการเพิ่มประสิทธิภาพแบตเตอรี่เพื่อใช้ฟีเจอร์นี้</string>
+    <string name="settings_battery_optimization_list">ในรายการที่จะเปิดขึ้นถัดไป ให้แสดงแอปทั้งหมด ค้นหา Porter แล้วปิดการเพิ่มประสิทธิภาพแบตเตอรี่สำหรับแอปนี้</string>
+    <string name="settings_battery_optimization_unavailable">อุปกรณ์นี้ไม่มีหน้าจอสำหรับปิดการเพิ่มประสิทธิภาพแบตเตอรี่</string>
     <string name="snackbar_action_fix">แก้ไข</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter กำลังเริ่มทำงานในเบื้องหลังอยู่แล้ว</string>

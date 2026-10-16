@@ -119,6 +119,8 @@
     <string name="snackbar_invalid_port">端口必须介于 1 和 65535 之间</string>
     <string name="snackbar_battery_optimization_home">必须关闭电池优化，开机启动/看门狗才能正常工作。</string>
     <string name="snackbar_battery_optimization_settings">请关闭电池优化以使用此功能。</string>
+    <string name="settings_battery_optimization_list">在接下来打开的列表中显示所有应用，找到 Porter，并关闭它的电池优化。</string>
+    <string name="settings_battery_optimization_unavailable">此设备没有用于关闭电池优化的界面。</string>
     <string name="snackbar_action_fix">修复</string>
 
     <!-- Toast -->

@@ -122,6 +122,8 @@
     <string name="snackbar_invalid_port">Порт должен быть в диапазоне от 1 до 65535</string>
     <string name="snackbar_battery_optimization_home">Для корректной работы запуска при загрузке и watchdog необходимо отключить оптимизацию расхода батареи.</string>
     <string name="snackbar_battery_optimization_settings">Чтобы использовать эту функцию, отключите оптимизацию расхода батареи.</string>
+    <string name="settings_battery_optimization_list">В открывшемся списке покажите все приложения, найдите Porter и отключите для него оптимизацию расхода батареи.</string>
+    <string name="settings_battery_optimization_unavailable">На этом устройстве нет экрана для отключения оптимизации расхода батареи.</string>
     <string name="snackbar_action_fix">Исправить</string>
 
     <!-- Toast -->

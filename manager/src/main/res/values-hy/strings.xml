@@ -137,6 +137,8 @@
         որպեսզի սարքը միացնելիս գործարկումը և հսկիչը ճիշտ աշխատեն:</string>
     <string name="snackbar_battery_optimization_settings">Խնդրում ենք անջատել մարտկոցի
         օպտիմալացումը՝ այս հատկությունն օգտագործելու համար:</string>
+    <string name="settings_battery_optimization_list">Բացվող ցանկում ցուցադրեք բոլոր հավելվածները, գտեք Porter-ը և անջատեք դրա համար մարտկոցի օպտիմալացումը։</string>
+    <string name="settings_battery_optimization_unavailable">Այս սարքում մարտկոցի օպտիմալացումն անջատելու էկրան չկա։</string>
     <string name="snackbar_action_fix">Ուղղել</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter-ն արդեն գործարկվում է ֆոնային ռեժիմում</string>

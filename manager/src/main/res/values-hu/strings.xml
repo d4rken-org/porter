@@ -148,6 +148,8 @@
         indítás megfelelő működéséhez le kell tiltani az akkumulátoroptimalizálást.</string>
     <string name="snackbar_battery_optimization_settings">Kérjük, kapcsolja ki az
         akkumulátoroptimalizálást a funkció használatához.</string>
+    <string name="settings_battery_optimization_list">A következőként megnyíló listában jelenítse meg az összes alkalmazást, keresse meg a Portert, és kapcsolja ki számára az akkumulátor-optimalizálást.</string>
+    <string name="settings_battery_optimization_unavailable">Ezen az eszközön nincs képernyő az akkumulátor-optimalizálás kikapcsolásához.</string>
     <string name="snackbar_action_fix">Javítás</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">A Porter már elindul a háttérben</string>

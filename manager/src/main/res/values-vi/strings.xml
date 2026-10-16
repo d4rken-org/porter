@@ -138,6 +138,8 @@
     <string name="snackbar_battery_optimization_home">Phải tắt tính năng tối ưu hóa pin để Bắt đầu khi khởi động và Chó canh gác hoạt động bình thường.</string>
     <string name="snackbar_battery_optimization_settings">Vui lòng tắt tính năng tối ưu hóa pin để
         sử dụng tính năng này.</string>
+    <string name="settings_battery_optimization_list">Trong danh sách mở ra tiếp theo, hãy hiển thị tất cả ứng dụng, tìm Porter và tắt tối ưu hóa pin cho ứng dụng này.</string>
+    <string name="settings_battery_optimization_unavailable">Thiết bị này không có màn hình để tắt tối ưu hóa pin.</string>
     <string name="snackbar_action_fix">Sửa chữa</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter đã bắt đầu khởi động trong nền</string>

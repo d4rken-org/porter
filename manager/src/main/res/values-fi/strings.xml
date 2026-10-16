@@ -131,6 +131,8 @@
         käynnistys laitteen käynnistyessä ja vahtikoira toimivat kunnolla.</string>
     <string name="snackbar_battery_optimization_settings">Ole hyvä ja poista akun optimointi
         käytöstä tämän ominaisuuden käyttämiseksi.</string>
+    <string name="settings_battery_optimization_list">Näytä avautuvassa luettelossa kaikki sovellukset, etsi Porter ja poista akun optimointi siltä.</string>
+    <string name="settings_battery_optimization_unavailable">Tässä laitteessa ei ole näkymää akun optimoinnin poistamiseen.</string>
     <string name="snackbar_action_fix">Korjaa</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter käynnistyy jo taustalla</string>

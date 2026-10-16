@@ -127,6 +127,8 @@
     <string name="snackbar_invalid_port">Port must be between 1 and 65535</string>
     <string name="snackbar_battery_optimization_home">Battery optimization must be disabled for start on boot/watchdog to work properly.</string>
     <string name="snackbar_battery_optimization_settings">Please disable battery optimization to use this feature.</string>
+    <string name="settings_battery_optimization_list">In the list that opens next, show all apps, find Porter and turn off battery optimization for it.</string>
+    <string name="settings_battery_optimization_unavailable">This device has no screen for turning off battery optimization.</string>
     <string name="snackbar_action_fix">Fix</string>
     <string name="settings_alerts_blocked_title">Background alerts</string>
     <string name="settings_alerts_blocked_summary">Notifications from Porter are blocked, so start on boot and the watchdog cannot tell you when they need attention.</string>

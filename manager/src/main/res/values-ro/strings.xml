@@ -142,6 +142,8 @@
         pentru ca pornirea la bootare/funcția de supraveghere să funcționeze corect.</string>
     <string name="snackbar_battery_optimization_settings">Dezactivează optimizarea bateriei pentru a
         utiliza această funcție.</string>
+    <string name="settings_battery_optimization_list">În lista care se deschide, afișează toate aplicațiile, găsește Porter și dezactivează optimizarea bateriei pentru el.</string>
+    <string name="settings_battery_optimization_unavailable">Acest dispozitiv nu are un ecran pentru dezactivarea optimizării bateriei.</string>
     <string name="snackbar_action_fix">Reparare</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Porter începe deja în fundal</string>

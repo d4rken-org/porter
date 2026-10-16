@@ -148,6 +148,8 @@
         pinagana para sa pagsisimula sa boot / watchdog upang gumana nang maayos.</string>
     <string name="snackbar_battery_optimization_settings">Mangyaring huwag paganahin ang
         pag-optimize ng baterya upang magamit ang tampok na ito.</string>
+    <string name="settings_battery_optimization_list">Sa listahang susunod na magbubukas, ipakita ang lahat ng app, hanapin ang Porter at i-off ang battery optimization para dito.</string>
+    <string name="settings_battery_optimization_unavailable">Walang screen ang device na ito para i-off ang battery optimization.</string>
     <string name="snackbar_action_fix">Ayusin</string>
     <!-- Toast -->
     <string name="toast_shizuku_already_starting">Nagsisimula na si Porter sa background</string>
