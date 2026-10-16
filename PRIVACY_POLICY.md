@@ -37,9 +37,11 @@ clients, Obtainium, Aurora and similar). Porter downloads a release APK from Git
 
 ### Accessibility service
 
-On devices where the pairing notification cannot be used, such as Android TV, Porter offers an optional accessibility
-service. It only reads the system's wireless debugging pairing screen to pick up the pairing code and disables itself
-once the code is found. Porter does not use the AccessibilityService API to collect or send information.
+On Android TV, where the pairing notification cannot be used, Porter offers an optional accessibility service. While
+it is on, it reads Android TV Settings screens to find the wireless debugging pairing address and code, and checks
+which app is in front to show or hide its pairing progress. It does not read the content of other apps. Porter uses
+the address and code only to pair with that address, and does not collect them or share them with anyone. The service
+turns itself off after the pairing attempt, or if no code is found within one minute.
 
 ### Install apps
 

@@ -42,7 +42,7 @@
         için gerekli olan ^1 iznini iptal eder.\n\nBu izni vermek için aşağıdaki ADB komutunu
         çalıştırın:\n\n^2\n\nKomutu çalıştırdıktan sonra eşleştirme işlemine devam
         edebilirsiniz.\n\nNot: Bunu ADB ile Porter\'ı yükleyerek/güncelleyerek atlayabilirsiniz.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Eşleştirme işlemini başlatmak için lütfen erişilebilirlik hizmetini etkinleştirin. Bu, Porter’ın eşleştirme kodunu algılamasını sağlar.\n\nErişilebilirlik hizmeti, eşleştirme denemesinden sonra veya bir dakika içinde kod bulunamazsa kapanır. Porter sonucu gösterir ve yeniden denemenize izin verir.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porter’ın erişilebilirlik hizmeti, Kablosuz hata ayıklamanın eşleştirme adresini ve kodunu bulmak için Android TV Ayarları ekranlarını okur. Eşleştirme ilerlemesini göstermek veya gizlemek için hangi uygulamanın önde olduğunu da kontrol eder, ancak diğer uygulamaların içeriğini okumaz. Porter adresi ve kodu yalnızca o adresle eşleşmek için kullanır; bunları toplamaz veya paylaşmaz.\n\nErişilebilirlik hizmeti, eşleştirme denemesinden sonra veya bir dakika içinde kod bulunamazsa kapanır. Porter sonucu gösterir ve yeniden denemenize izin verir.\n\nKabul ediyorsanız, ardından erişilebilirlik ayarları açılır. Hizmeti orada açın.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Lütfen aşağıdaki adımları uygulayarak
         eşleştirmeyi başlatın:\n- \"Geliştirici Seçenekleri\"ne gidin\n- \"USB hata ayıklama\" ve
         \"Kablosuz hata ayıklama\"yı etkinleştirin\n- \"Kablosuz hata ayıklama\"nın sol tarafına
@@ -58,6 +58,7 @@
     <string name="adb_pair_required_title">Eşleştirme gerekli</string>
     <string name="adb_pair_required">Kablosuz hata ayıklama açık, ancak Porter’ı tanımıyor. Porter’ın bu şekilde başlayabilmesi için bu cihazda kablosuz hata ayıklama ile eşleştirilmesi gerekir. Bu bir kez gereklidir ve eşleştirme her kaybolduğunda yeniden gerekir; örneğin Porter’ın uygulama verileri temizlendikten veya Porter eşleştirilmiş cihazlar listesinden kaldırıldıktan sonra.\n\n“Eşleştirme”yi seçip adımları izleyin, ardından Porter’ı yeniden başlatın.</string>
     <string name="enable">Etkinleştir</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Kabul et</string>
     <string name="development_settings">Geliştirici seçenekleri</string>
     <string name="notification_settings">Bildirim seçenekleri</string>
     <string name="adb_pairing_tutorial_content_notification">Porter’dan bir bildirim eşleştirmeyi

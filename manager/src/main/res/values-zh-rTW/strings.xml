@@ -33,7 +33,7 @@
     <string name="dialog_adb_pairing_accessibility_permission">在 Android 14，使用套件安裝程式安裝或更新 Porter
         會取消用於開啟無障礙服務配對的 ^1 權限。\n\n透過執行下面的 ADB 指令重新授權：\n\n^2\n\n執行指令之後，您可以繼續配對程序。\n\n備註：您可以透過 ADB 安裝
         Porter，或透過 ADB 更新 Porter，以繞過此限制。</string>
-    <string name="dialog_adb_pairing_accessibility_enable">請啟用無障礙服務以開始配對流程。這能讓 Porter 偵測到配對碼。\n\n無障礙服務會在配對嘗試後關閉，或在一分鐘內未找到配對碼時關閉。Porter 會顯示結果，並讓您重試。</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porter 的無障礙服務會讀取 Android TV 設定畫面，以找出「無線偵錯」的配對位址和配對碼。它也會檢查哪個應用程式位於前景，以顯示或隱藏配對進度，但不會讀取其他應用程式的內容。Porter 只會將位址和配對碼用於與該位址配對，不會收集或分享這些資料。\n\n無障礙服務會在配對嘗試後關閉，或在一分鐘內未找到配對碼時關閉。Porter 會顯示結果，並讓您重試。\n\n如果您同意，接下來會開啟無障礙設定。請在那裡開啟這項服務。</string>
     <string name="dialog_adb_pairing_accessibility_navigate">請依照以下步驟開始配對：\n- 進入「開發人員選項」\n-
         啟用「USB 偵錯」與「無線偵錯」\n- 點選「無線偵錯」左側\n- 點選「使用配對碼配對裝置」。Porter 將自動偵測配對碼。</string>
     <string name="adb_pairing_requires_multi_window">請先進入「分割畫面」(多視窗) 模式。</string>
@@ -43,6 +43,7 @@
     <string name="adb_pair_required_title">需要配對</string>
     <string name="adb_pair_required">無線偵錯已開啟，但無法辨識 Porter。Porter 必須先在這部裝置上與無線偵錯配對，才能以這種方式啟動。這只需進行一次，但每當配對遺失時就需要重新配對，例如清除 Porter 的應用程式資料後，或將 Porter 從已配對裝置清單中移除後。\n\n請選擇「配對」並依照步驟操作，然後再次啟動 Porter。</string>
     <string name="enable">啟用</string>
+    <string name="dialog_adb_pairing_accessibility_agree">同意</string>
     <string name="development_settings">開發人員選項</string>
     <string name="notification_settings">通知設定</string>
     <string name="adb_pairing_tutorial_content_notification">一則來自 Porter 的通知將協助您完成配對。</string>

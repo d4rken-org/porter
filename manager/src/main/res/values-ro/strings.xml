@@ -41,7 +41,7 @@
         asociere.\n\nPentru a o acorda, execută următoarea comandă ADB:\n\n^2\n\nDupă executarea
         comenzii, poți continua procesul de asociere.\n\nNotă: poți ocoli acest lucru
         instalând/actualizând Porter cu ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Te rugăm să activezi serviciul de accesibilitate pentru a începe procesul de asociere. Acest lucru îi permite lui Porter să detecteze codul de asociere.\n\nServiciul de accesibilitate se va dezactiva după încercarea de asociere sau dacă nu este găsit niciun cod într-un minut. Porter va afișa rezultatul și îți va permite să încerci din nou.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Serviciul de accesibilitate Porter citește ecranele din Setările Android TV pentru a găsi adresa și codul de asociere pentru Remedierea erorilor wireless. De asemenea, verifică ce aplicație este în prim-plan pentru a afișa sau ascunde progresul asocierii, dar nu citește conținutul altor aplicații. Porter folosește adresa și codul doar pentru asocierea cu acea adresă și nu le colectează și nu le distribuie.\n\nServiciul de accesibilitate se va dezactiva după încercarea de asociere sau dacă nu este găsit niciun cod într-un minut. Porter va afișa rezultatul și îți va permite să încerci din nou.\n\nDacă ești de acord, se vor deschide setările de accesibilitate. Activează serviciul acolo.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Te rugăm să începi asocierea urmând
         următorii pași:\n- Navighează la „Opțiuni pentru dezvoltatori”\n- Activează „Remedierea erorilor prin USB” și
         „Remedierea erorilor wireless”\n- Atinge partea stângă a opțiunii „Remedierea erorilor wireless”\n- Atinge
@@ -56,6 +56,7 @@
     <string name="adb_pair_required_title">Asociere necesară</string>
     <string name="adb_pair_required">Remedierea erorilor wireless este activată, dar nu recunoaște Porter. Porter trebuie asociat cu remedierea erorilor wireless pe acest dispozitiv înainte de a putea porni astfel. Este necesar o dată și din nou de fiecare dată când asocierea se pierde, de exemplu după ștergerea datelor aplicației Porter sau după eliminarea lui Porter din lista dispozitivelor asociate.\n\nAlege Asociere, urmează pașii, apoi pornește din nou Porter.</string>
     <string name="enable">Permite</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Sunt de acord</string>
     <string name="development_settings">Opțiuni pentru dezvoltatori</string>
     <string name="notification_settings">Opțiuni de notificare</string>
     <string name="adb_pairing_tutorial_content_notification">O notificare de la Porter te va ajuta

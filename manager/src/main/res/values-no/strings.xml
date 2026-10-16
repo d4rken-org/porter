@@ -40,7 +40,7 @@
         som er nødvendig for å aktivere tilgjengelighetstjenesten for paring.\n\nFor å gi den, kjør
         følgende ADB-kommando:\n\n^2\n\nEtter at du har kjørt kommandoen, kan du fortsette med
         paringsprosessen.\n\nMerk: Du kan omgå dette ved å installere/oppdatere Porter med ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Aktiver tilgjengelighetstjenesten for å starte paringen. Dette lar Porter oppdage paringskoden.\n\nTilgjengelighetstjenesten slås av etter paringsforsøket, eller hvis ingen kode blir funnet innen ett minutt. Porter viser resultatet og lar deg prøve igjen.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porters tilgjengelighetstjeneste leser skjermer i Android TV-innstillingene for å finne paringsadressen og -koden for trådløs feilsøking. Den sjekker også hvilken app som er i forgrunnen for å vise eller skjule paringsfremdriften, men leser ikke innhold fra andre apper. Porter bruker adressen og koden bare til å pare med den adressen, og samler ikke inn eller deler dem.\n\nTilgjengelighetstjenesten slås av etter paringsforsøket, eller hvis ingen kode blir funnet innen ett minutt. Porter viser resultatet og lar deg prøve igjen.\n\nHvis du godtar dette, åpnes tilgjengelighetsinnstillingene etterpå. Slå på tjenesten der.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Start paringen ved å utføre følgende
         trinn:\n– Naviger til «Utvikleralternativer»\n– Aktiver «USB-feilsøking» og «Trådløs
         feilsøking»\n– Trykk på venstre side av «Trådløs feilsøking»\n– Trykk på «Koble til enheten med
@@ -55,6 +55,7 @@
     <string name="adb_pair_required_title">Paring kreves</string>
     <string name="adb_pair_required">Trådløs feilsøking er på, men gjenkjenner ikke Porter. Porter må pares med trådløs feilsøking på denne enheten før den kan starte på denne måten. Det trengs én gang, og igjen hver gang paringen går tapt, for eksempel etter at appdataene til Porter er tømt eller Porter er fjernet fra listen over parede enheter.\n\nVelg Paring og følg trinnene, og start deretter Porter på nytt.</string>
     <string name="enable">Aktivere</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Godta</string>
     <string name="development_settings">Utvikleralternativer</string>
     <string name="notification_settings">Varslingsalternativer</string>
     <string name="adb_pairing_tutorial_content_notification">En varsling fra Porter vil hjelpe deg

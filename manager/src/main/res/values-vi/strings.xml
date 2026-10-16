@@ -42,7 +42,7 @@
         dịch vụ trợ năng cho việc ghép nối.\n\nĐể cấp lại quyền này, hãy chạy lệnh ADB
         sau:\n\n^2\n\nSau khi chạy lệnh, bạn có thể tiếp tục quá trình ghép nối.\n\nLưu ý: bạn có
         thể bỏ qua bước này bằng cách cài đặt/cập nhật Porter bằng ADB.</string>
-    <string name="dialog_adb_pairing_accessibility_enable">Vui lòng bật dịch vụ trợ năng để bắt đầu quá trình ghép nối. Thao tác này cho phép Porter phát hiện mã ghép nối.\n\nDịch vụ trợ năng sẽ tắt sau lần thử ghép nối hoặc nếu không tìm thấy mã trong vòng một phút. Porter sẽ hiển thị kết quả và cho phép bạn thử lại.</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Dịch vụ trợ năng của Porter đọc các màn hình Cài đặt Android TV để tìm địa chỉ và mã ghép nối của Gỡ lỗi không dây. Dịch vụ cũng kiểm tra ứng dụng nào đang ở phía trước để hiện hoặc ẩn tiến trình ghép nối, nhưng không đọc nội dung của ứng dụng khác. Porter chỉ dùng địa chỉ và mã để ghép nối với địa chỉ đó và không thu thập hay chia sẻ chúng.\n\nDịch vụ trợ năng sẽ tắt sau lần thử ghép nối hoặc nếu không tìm thấy mã trong vòng một phút. Porter sẽ hiển thị kết quả và cho phép bạn thử lại.\n\nNếu bạn đồng ý, phần cài đặt trợ năng sẽ mở tiếp theo. Hãy bật dịch vụ ở đó.</string>
     <string name="dialog_adb_pairing_accessibility_navigate">Vui lòng bắt đầu ghép nối bằng cách
         thực hiện các bước sau:\n- Điều hướng đến \"Tùy chọn cho nhà phát triển\"\n- Bật \"Gỡ lỗi USB\"
         và \"Gỡ lỗi không dây\"\n- Chạm vào bên trái của \"Gỡ lỗi không dây\"\n- Chạm vào \"Ghép nối
@@ -57,6 +57,7 @@
     <string name="adb_pair_required_title">Cần ghép nối</string>
     <string name="adb_pair_required">Gỡ lỗi không dây đang bật nhưng không nhận ra Porter. Porter cần được ghép nối với gỡ lỗi không dây trên thiết bị này trước khi có thể khởi động theo cách này. Việc này cần làm một lần và làm lại mỗi khi mất ghép nối, chẳng hạn sau khi xóa dữ liệu ứng dụng của Porter hoặc xóa Porter khỏi danh sách thiết bị đã ghép nối.\n\nChọn Ghép nối và làm theo các bước, sau đó khởi động lại Porter.</string>
     <string name="enable">Bật</string>
+    <string name="dialog_adb_pairing_accessibility_agree">Đồng ý</string>
     <string name="development_settings">Tùy chọn cho nhà phát triển</string>
     <string name="notification_settings">Tùy chọn thông báo</string>
     <string name="adb_pairing_tutorial_content_notification">Một thông báo từ Porter sẽ giúp bạn

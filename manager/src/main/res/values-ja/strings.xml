@@ -31,7 +31,7 @@
     <string name="dialog_wireless_adb_not_enabled">ワイヤレスデバッグが有効になっていません。\n注意: Android 11より前では、ワイヤレスデバッグを有効にするにはコンピュータへの接続が必須です。</string>
     <string name="dialog_usb_debugging_not_enabled">USBデバッグが有効になっていません。\n「開発者向けオプション」で有効にしてください。</string>
     <string name="dialog_adb_pairing_accessibility_permission">Android 14では、パッケージインストーラーでPorterをインストール/更新すると、ペア設定用のユーザー補助サービスを有効にするために必要な ^1 権限が取り消されます。\n\nこの権限を付与するには、次のADBコマンドを実行してください。\n\n^2\n\nコマンドを実行した後、ペア設定手順を続行できます。\n\n注: ADBでPorterをインストール/更新すると、この問題を回避できます。</string>
-    <string name="dialog_adb_pairing_accessibility_enable">ペア設定手順を開始するには、ユーザー補助サービスを有効にしてください。これにより、Porterがペア設定コードを検出できるようになります。\n\nユーザー補助サービスは、ペア設定の試行後、または1分以内にコードが見つからなかった場合にオフになります。Porterが結果を表示し、再試行できるようにします。</string>
+    <string name="dialog_adb_pairing_accessibility_enable">Porter のユーザー補助サービスは、ワイヤレス デバッグのペア設定アドレスとコードを見つけるために Android TV の設定画面を読み取ります。また、ペア設定の進行状況を表示または非表示にするため、前面にあるアプリを確認しますが、他のアプリのコンテンツは読み取りません。Porter はアドレスとコードをそのアドレスとのペア設定にのみ使用し、収集や共有はしません。\n\nユーザー補助サービスは、ペア設定の試行後、または1分以内にコードが見つからなかった場合にオフになります。Porterが結果を表示し、再試行できるようにします。\n\n同意すると、次にユーザー補助の設定が開きます。そこでサービスをオンにしてください。</string>
     <string name="dialog_adb_pairing_accessibility_navigate">次の手順でペア設定を開始してください。\n- 「開発者向けオプション」に移動します\n- 「USBデバッグ」と「ワイヤレスデバッグ」を有効にします\n- 「ワイヤレスデバッグ」の左側をタップします\n- 「ペア設定コードによるデバイスのペア設定」をタップします。Porterがペア設定コードを自動的に検出します。</string>
     <string name="adb_pairing_requires_multi_window">まず分割画面（マルチウィンドウ）モードにしてください。</string>
     <string name="adb_pairing_requires_multi_window_reason">システムはペア設定ダイアログが常に表示されていることを要求します。このアプリとシステムのダイアログを同時に表示するには、分割画面モードを使用する以外に方法がありません。</string>
@@ -39,6 +39,7 @@
     <string name="adb_pair_required_title">ペア設定が必要です</string>
     <string name="adb_pair_required">ワイヤレスデバッグはオンですが、Porterを認識していません。この方法でPorterを起動するには、このデバイスでPorterをワイヤレスデバッグとペア設定する必要があります。これは最初に一度必要で、ペア設定が失われたとき（Porterのアプリデータを消去した場合や、ペア設定済みのデバイスのリストからPorterを削除した場合など）にも再度必要です。\n\n「ペア設定」を選んで手順に従い、Porterをもう一度起動してください。</string>
     <string name="enable">有効にする</string>
+    <string name="dialog_adb_pairing_accessibility_agree">同意する</string>
     <string name="development_settings">開発者向けオプション</string>
     <string name="notification_settings">通知オプション</string>
     <string name="adb_pairing_tutorial_content_notification">Porterからの通知がペア設定の完了をサポートします。</string>
