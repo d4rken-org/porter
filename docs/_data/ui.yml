@@ -1,7 +1,6 @@
 en:
   name: English
   automatic: Automatic (browser)
-  flag: 🇬🇧
   skip: Skip to content
   guide: Guide
   language: Page language
@@ -20,7 +19,6 @@ en:
 de:
   name: Deutsch
   automatic: Automatisch (Browser)
-  flag: 🇩🇪
   skip: Zum Inhalt springen
   guide: Anleitung
   language: Seitensprache
@@ -39,7 +37,6 @@ de:
 es:
   name: Español
   automatic: Automático (navegador)
-  flag: 🇪🇸
   skip: Saltar al contenido
   guide: Guía
   language: Idioma de la página
@@ -58,7 +55,6 @@ es:
 pt-BR:
   name: Português (Brasil)
   automatic: Automático (navegador)
-  flag: 🇧🇷
   skip: Pular para o conteúdo
   guide: Guia
   language: Idioma da página
@@ -77,7 +73,6 @@ pt-BR:
 zh-Hans:
   name: 简体中文
   automatic: 自动（浏览器）
-  flag: 🇨🇳
   skip: 跳转到正文
   guide: 指南
   language: 页面语言
@@ -96,7 +91,6 @@ zh-Hans:
 fr:
   name: Français
   automatic: Automatique (navigateur)
-  flag: 🇫🇷
   skip: Aller au contenu
   guide: Guide
   language: Langue de la page
@@ -115,7 +109,6 @@ fr:
 ru:
   name: Русский
   automatic: Автоматически (браузер)
-  flag: 🇷🇺
   skip: Перейти к содержимому
   guide: Руководство
   language: Язык страницы
@@ -134,7 +127,6 @@ ru:
 id:
   name: Bahasa Indonesia
   automatic: Otomatis (browser)
-  flag: 🇮🇩
   skip: Langsung ke konten
   guide: Panduan
   language: Bahasa halaman
@@ -153,7 +145,6 @@ id:
 ja:
   name: 日本語
   automatic: 自動（ブラウザー）
-  flag: 🇯🇵
   skip: 本文へスキップ
   guide: ガイド
   language: ページの言語
@@ -172,7 +163,6 @@ ja:
 ar:
   name: العربية
   automatic: تلقائي (المتصفح)
-  flag: 🇸🇦
   skip: انتقل إلى المحتوى
   guide: الدليل
   language: لغة الصفحة
