@@ -20,13 +20,13 @@
     <a class="brand" href="{{ '/' | relative_url }}"><img src="{{ "/assets/porter-icon.png" | relative_url }}" width="40" height="40" alt="">Porter</a>
     {% if page.translation_key %}
       <details class="language-switcher" hidden>
-        <summary aria-label="{{ ui.language }}: {{ ui.name }}"><span id="language-flag" aria-hidden="true">{{ ui.flag }}</span> <span id="language-name">{{ ui.name }}</span></summary>
+        <summary aria-label="{{ ui.language }}: {{ ui.name }}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><ellipse cx="12" cy="12" rx="4" ry="10"/></svg> <span id="language-name">{{ ui.name }}</span></summary>
         <nav aria-label="{{ ui.language }}" data-i18n-label="language">
           <button type="button" data-language="auto" data-i18n="automatic">{{ ui.automatic }}</button>
-          <button type="button" lang="en" data-language="en"><span aria-hidden="true">{{ ui.flag }}</span> {{ ui.name }}</button>
+          <button type="button" lang="en" data-language="en">{{ ui.name }}</button>
           {% for translation in translations %}
             {% assign language_ui = site.data.ui[translation.lang] %}
-            <button type="button" lang="{{ translation.lang }}" dir="{{ language_ui.dir | default: 'ltr' }}" data-language="{{ translation.lang }}"><span aria-hidden="true">{{ language_ui.flag }}</span> {{ language_ui.name }}</button>
+            <button type="button" lang="{{ translation.lang }}" dir="{{ language_ui.dir | default: 'ltr' }}" data-language="{{ translation.lang }}">{{ language_ui.name }}</button>
           {% endfor %}
         </nav>
       </details>

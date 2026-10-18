@@ -59,7 +59,6 @@
     document.querySelectorAll('[data-i18n-label]').forEach(element => {
       element.setAttribute('aria-label', text[element.dataset.i18nLabel]);
     });
-    document.getElementById('language-flag').textContent = text.flag;
     document.getElementById('language-name').textContent = text.name;
     switcher.querySelector('summary').setAttribute('aria-label', `${text.language}: ${text.name}`);
     switcher.querySelectorAll('[data-language]').forEach(button => {
