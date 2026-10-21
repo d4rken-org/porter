@@ -12,6 +12,8 @@
   <meta property="og:image" content="{{ "/assets/porter-banner.png" | absolute_url }}">
   <meta property="og:image:alt" content="Porter">
   <link rel="canonical" href="{{ page.url | remove: '.html' | absolute_url }}">
+  <meta property="og:site_name" content="{{ site.title | escape }}">
+  {% if page.url == '/' %}<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": {{ site.title | jsonify }}, "url": {{ '/' | absolute_url | jsonify }}}</script>{% endif %}
   {% if page.translation_key %}<script src="{{ '/assets/language.js' | relative_url }}" defer></script>{% endif %}
 </head>
 <body>
