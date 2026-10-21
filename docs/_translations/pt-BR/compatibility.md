@@ -38,6 +38,23 @@ A substituição integrada está disponível no usuário principal do Android. S
 O APK do complemento continua disponível como download separado da mesma versão. Para instalar manualmente, pare e desinstale o Shizuku, instale o Porter Compatibility e inicie o Porter. Use a substituição integrada do Porter para transferir as decisões de acesso elegíveis; abrir a caixa de diálogo de substituição por si só não salva uma importação. Restrições de instalação do aparelho também podem afetar o instalador integrado; a ação **Manual** abre o instalador do Android.
 
 Depois de instalado, a tela inicial mostra quantos apps instalados se conectam por meio dele. Toque no cartão dele para ver a versão, reinstalar a cópia incluída ou desinstalá-lo. O Porter tenta desinstalar primeiro pelo serviço dele e abre o desinstalador do Android se isso falhar. Removê-lo interrompe os apps que precisam de suporte de compatibilidade; os apps com suporte direto ao Porter continuam funcionando. A tela de compatibilidade verifica mudanças automaticamente enquanto está aberta.
+
+## Porter do Google Play
+{: #porter-from-google-play }
+
+O Porter do Google Play não inclui o app complementar e não importa as decisões de acesso do Shizuku. Ele precisa do próprio complemento: o Porter só funciona com um complemento assinado com a mesma chave que ele, e o Google Play assina o Porter com uma chave diferente da usada nas versões do GitHub. Cada versão oferece os dois complementos:
+
+| Porter instalado pelo | Download do complemento |
+| --- | --- |
+| Google Play | `porter-compat-VERSION-gplay.apk` |
+| GitHub (versão FOSS) | `porter-compat-VERSION-release.apk` |
+
+1. Pare e desinstale o Shizuku.
+2. Baixe o complemento para o Google Play na [versão](https://github.com/d4rken-org/porter/releases) que corresponde à sua versão do Porter e instale-o.
+3. Inicie o Porter. Volte ao app cliente e aprove o acesso.
+
+Se a tela de compatibilidade disser que outro app Shizuku está instalado mesmo com o Porter Compatibility instalado, o complemento pertence à outra versão. Desinstale-o e instale o correspondente.
+
 ## Porter e Shizuku podem funcionar juntos?
 {: #can-porter-and-shizuku-run-together }
 
