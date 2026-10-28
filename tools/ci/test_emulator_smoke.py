@@ -143,6 +143,14 @@ class UiDumpTest(unittest.TestCase):
         sleep.assert_not_called()
 
     @patch.object(smoke.time, "sleep")
+    def test_a_dump_reported_before_uiautomator_crashed_is_read(self, sleep):
+        crashed = completed(139, stdout=f"UI hierchary dumped to: {self.path}\n".encode())
+        with patch.object(smoke.subprocess, "run", side_effect=[
+                completed(0), crashed, completed(0, stdout=self.xml.encode())]):
+            self.assertEqual(self.runner.ui().find("node").get("text"), "Settings")
+        sleep.assert_not_called()
+
+    @patch.object(smoke.time, "sleep")
     def test_command_failure_is_not_hidden_by_ui_retries(self, sleep):
         with patch.object(smoke.subprocess, "run", side_effect=[
                 completed(0), completed(1, stderr=b"uiautomator: inaccessible\n")]) as run:
