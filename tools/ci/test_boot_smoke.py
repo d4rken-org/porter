@@ -178,6 +178,105 @@ class NotificationTapTest(unittest.TestCase):
                       (self.smoke.output / "unanswered-tap-1.txt").read_text())
 
 
+class ResumedComponentsTest(unittest.TestCase):
+    """What the home-start case reads to see the starter screen open and close by itself."""
+    STARTER = "ActivityRecord{2b0e4d2 u0 eu.darken.porter/.manager.starter.StarterActivity t15}"
+    HOME = "ActivityRecord{7f0a2c4 u0 eu.darken.porter/.manager.MainActivity t15}"
+
+    def activities(self, resumed):
+        return ("ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)\n"
+                f"    * Hist #1: {self.STARTER}\n"
+                f"    * Hist #0: {self.HOME}\n"
+                f"  mLastPausedActivity: {self.STARTER}\n"
+                f"{resumed}")
+
+    def test_later_releases_name_the_resumed_activity(self):
+        self.assertEqual(boot.resumed_components(self.activities(
+            f"  topResumedActivity={self.STARTER}\n    ResumedActivity: {self.STARTER}\n")),
+            {boot.STARTER_RECORD})
+
+    def test_android_7_names_it_too(self):
+        self.assertEqual(boot.resumed_components(self.activities(f"  mResumedActivity: {self.HOME}\n")),
+                         {boot.base.HOME_RECORD})
+
+    def test_history_and_paused_records_are_not_resumed(self):
+        self.assertEqual(boot.resumed_components(self.activities(f"  topResumedActivity={self.HOME}\n")),
+                         {boot.base.HOME_RECORD})
+
+    def test_nothing_resumed_is_nothing(self):
+        self.assertEqual(boot.resumed_components(self.activities("  mResumedActivity: null\n")), set())
+        self.assertEqual(boot.resumed_components(""), set())
+
+
+class SwitchedOnTest(unittest.TestCase):
+    KEY = "wireless_debugging_off"
+
+    def prefs(self, *entries):
+        return ("<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n<map>\n"
+                + "".join(f"    {entry}\n" for entry in entries) + "</map>")
+
+    def test_true_is_on(self):
+        self.assertTrue(boot.switched_on(self.prefs(f'<boolean name="{self.KEY}" value="true" />'), self.KEY))
+
+    def test_false_is_off(self):
+        self.assertFalse(boot.switched_on(self.prefs(f'<boolean name="{self.KEY}" value="false" />'), self.KEY))
+
+    def test_never_written_is_off(self):
+        self.assertFalse(boot.switched_on(self.prefs('<string name="adb_key">secret</string>'), self.KEY))
+
+    def test_another_key_that_is_on_says_nothing_about_this_one(self):
+        self.assertFalse(boot.switched_on(self.prefs('<boolean name="start_on_boot" value="true" />'), self.KEY))
+
+
+class SecureSettingsTest(unittest.TestCase):
+    """The home-start case's revocation has to take, or it would start with the permission held."""
+    GRANTED = "    runtime permissions:\n      android.permission.WRITE_SECURE_SETTINGS: granted=true, flags=[ ]"
+    REVOKED = "    runtime permissions:\n      android.permission.WRITE_SECURE_SETTINGS: granted=false, flags=[ ]"
+
+    def setUp(self):
+        self.smoke, directory = runner()
+        self.addCleanup(directory.cleanup)
+
+    def drive(self, dumps):
+        """Each dump is what one dumpsys package returns, oldest first; pm answers with nothing."""
+        remaining = list(dumps)
+        self.smoke.shell = Mock(side_effect=lambda *a, **k: remaining.pop(0) if a[0] == "dumpsys" else "")
+        self.smoke.revoke_secure_settings()
+
+    def test_a_revocation_that_took(self):
+        self.drive([self.GRANTED, self.REVOKED])
+        self.smoke.shell.assert_any_call("pm", "revoke", boot.base.MANAGER, boot.SECURE_SETTINGS)
+
+    def test_a_revocation_that_changed_nothing_fails(self):
+        with self.assertRaisesRegex(AssertionError, "left .* granted"):
+            self.drive([self.GRANTED, self.GRANTED])
+
+    def test_a_dump_that_never_shows_the_grant_is_not_a_revocation(self):
+        with self.assertRaisesRegex(AssertionError, "does not hold"):
+            self.drive([self.REVOKED, self.REVOKED])
+        self.assertNotIn(("pm", "revoke", boot.base.MANAGER, boot.SECURE_SETTINGS),
+                         [c.args for c in self.smoke.shell.call_args_list])
+
+
+class WirelessDebuggingOffRestoreTest(unittest.TestCase):
+    def setUp(self):
+        self.smoke, directory = runner()
+        self.addCleanup(directory.cleanup)
+
+    def test_the_switch_and_the_grant_come_back_before_the_manager_is_stopped(self):
+        steps = []
+        self.smoke.shell = Mock(side_effect=lambda *a, **k: steps.append(a) or boot.NO_PROCESS)
+        self.smoke.adb = Mock(return_value=b"")
+        self.smoke.set_wireless_debugging_off = Mock(side_effect=lambda enable: steps.append(("switch", enable)))
+        with patch.object(boot.base.Smoke, "restore") as inherited:
+            self.smoke.restore("wireless-debugging-off", "wireless-debugging")
+        inherited.assert_not_called()
+        stop = steps.index(("am", "force-stop", boot.base.MANAGER))
+        self.assertLess(steps.index(("pm", "grant", boot.base.MANAGER, boot.SECURE_SETTINGS)), stop)
+        self.assertLess(steps.index(("switch", False)), stop)
+        self.assertIn(("settings", "put", "global", "adb_wifi_enabled", "0"), steps)
+
+
 class CaseSelectionTest(unittest.TestCase):
     """A narrowed run must not assert against a device the cases it dropped would have built."""
 
@@ -191,8 +290,24 @@ class CaseSelectionTest(unittest.TestCase):
     def test_the_full_run_is_every_case_but_the_opt_in_ones(self):
         cases = self.parse().cases
         self.assertEqual(cases[0], "setup")
-        self.assertNotIn("wireless-pairing", cases)
-        self.assertEqual(set(cases) | {"wireless-pairing"}, set(boot.CASES))
+        for name in boot.OPT_IN:
+            self.assertNotIn(name, cases)
+        self.assertEqual(set(cases) | set(boot.OPT_IN), set(boot.CASES))
+
+    def test_the_wireless_debugging_off_cases_run_only_when_named(self):
+        for name in ("wireless-off-home-start", "wireless-off-background-start"):
+            self.assertIn(name, boot.OPT_IN)
+            self.assertEqual(boot.REQUIRES[name], ("wireless-pairing",))
+
+    def test_the_wireless_debugging_off_cases_run_after_pairing_in_declared_order(self):
+        cases = ("setup", "wireless-pairing", "wireless-off-home-start", "wireless-off-background-start")
+        self.assertEqual(self.parse(*cases).cases, list(cases))
+        self.assertEqual([name for name in boot.CASES if name in cases], list(cases))
+
+    def test_a_wireless_debugging_off_case_needs_the_pairing(self):
+        for name in ("wireless-off-home-start", "wireless-off-background-start"):
+            with self.assertRaises(SystemExit):
+                self.parse("setup", name)
 
     def test_the_release_flag_is_accepted(self):
         self.assertFalse(self.parse().release)

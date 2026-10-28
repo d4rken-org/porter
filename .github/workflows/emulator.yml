@@ -318,14 +318,14 @@ jobs:
         build: [debug]
         include:
           - suite: wireless-pairing
-            cases: --case setup --case wireless-pairing
+            cases: --case setup --case wireless-pairing --case wireless-off-home-start --case wireless-off-background-start
           - api: 36
             suite: boot
             build: release
           - api: 36
             suite: wireless-pairing
             build: release
-            cases: --case setup --case wireless-pairing
+            cases: --case setup --case wireless-pairing --case wireless-off-home-start --case wireless-off-background-start
     steps:
       - name: Require the test APKs
         id: require
