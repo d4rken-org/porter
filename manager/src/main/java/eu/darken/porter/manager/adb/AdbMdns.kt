@@ -16,9 +16,12 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.net.Inet4Address
+import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.NetworkInterface
 import java.net.ServerSocket
+import java.util.concurrent.atomic.AtomicInteger
 
 @RequiresApi(Build.VERSION_CODES.R)
 class AdbMdns(
@@ -27,6 +30,7 @@ class AdbMdns(
 ) {
     private val handler = Handler(Looper.getMainLooper())
     private val nsdManager = context.getSystemService(NsdManager::class.java)
+    private val client = Integer.toHexString(System.identityHashCode(nsdManager))
     private var listener: DiscoveryListener? = null
 
     fun start() {
@@ -34,11 +38,11 @@ class AdbMdns(
         if (listener != null) return
         val next = DiscoveryListener()
         listener = next
-        Log.i(TAG, "Discovery start: type=$serviceType")
+        Log.i(TAG, "Discovery start: type=$serviceType listener=${next.id} client=$client")
         try {
             nsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, next)
         } catch (e: Exception) {
-            Log.w(TAG, "Cannot start discovery", e)
+            Log.w(TAG, "Cannot start discovery: listener=${next.id}", e)
             listener = null
             observer.onChanged("" to -1)
         }
@@ -47,6 +51,7 @@ class AdbMdns(
     fun stop() {
         if (Looper.myLooper() != handler.looper) { handler.post { stop() }; return }
         val previous = listener ?: return
+        Log.i(TAG, "Discovery stop: type=$serviceType listener=${previous.id} registered=${previous.registered}")
         listener = null
         previous.scope.cancel()
         if (previous.registered) previous.stopDiscovery()
@@ -54,22 +59,40 @@ class AdbMdns(
     }
 
     private inner class DiscoveryListener : NsdManager.DiscoveryListener {
+        val id = "L${listenerIds.incrementAndGet()}"
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
         var registered = false
         private var serviceName: String? = null
         private val found = mutableMapOf<String, NsdServiceInfo>()
+        private val ordinals = mutableMapOf<String?, Int>()
+        private val sightings = mutableMapOf<String?, Int>()
+        private var resolves = 0
         private val active get() = listener === this
+
+        private fun label(name: String?) = "S${ordinals.getOrPut(name) { ordinals.size + 1 }}"
+
+        private fun staleReason(info: NsdServiceInfo) = when {
+            !active -> "inactive"
+            found[info.serviceName] == null -> "lost"
+            found[info.serviceName] !== info -> "replaced"
+            else -> null
+        }
+
+        private fun logOutcome(service: String, resolve: String, result: String) {
+            Log.i(TAG, "Resolve outcome: listener=$id service=$service resolve=$resolve result=$result")
+        }
 
         fun stopDiscovery() {
             try {
                 nsdManager.stopServiceDiscovery(this)
             } catch (e: Exception) {
-                Log.w(TAG, "Cannot stop discovery", e)
+                Log.w(TAG, "Cannot stop discovery: listener=$id", e)
             }
         }
 
         override fun onDiscoveryStarted(serviceType: String) {
             handler.post {
+                Log.i(TAG, "Discovery started: listener=$id active=$active")
                 registered = true
                 if (!active) stopDiscovery()
             }
@@ -77,7 +100,7 @@ class AdbMdns(
 
         override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
             handler.post {
-                Log.w(TAG, "Discovery failed: $errorCode")
+                Log.w(TAG, "Discovery failed: $errorCode listener=$id active=$active")
                 if (active) {
                     listener = null
                     observer.onChanged("" to -1)
@@ -87,6 +110,7 @@ class AdbMdns(
 
         override fun onDiscoveryStopped(serviceType: String) {
             handler.post {
+                Log.i(TAG, "Discovery stopped: listener=$id active=$active")
                 registered = false
                 if (active) {
                     listener = null
@@ -96,29 +120,45 @@ class AdbMdns(
         }
 
         override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) {
-            Log.w(TAG, "Stopping discovery failed: $errorCode")
+            Log.w(TAG, "Stopping discovery failed: $errorCode listener=$id")
         }
 
         override fun onServiceFound(info: NsdServiceInfo) {
             handler.post {
                 if (!active) return@post
                 found[info.serviceName] = info
+                val service = label(info.serviceName)
+                val seen = (sightings[info.serviceName] ?: 0) + 1
+                sightings[info.serviceName] = seen
+                Log.i(TAG, "Service found: listener=$id service=$service seen=$seen")
+                val resolve = "R${++resolves}"
+                val request = "listener=$id client=$client service=$service resolve=$resolve"
+                Log.i(TAG, "Resolve issued: $request")
                 try {
                     nsdManager.resolveService(info, object : NsdManager.ResolveListener {
                         override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
-                            Log.w(TAG, "Resolving service failed: $errorCode")
+                            Log.w(TAG, "Resolving service failed: $errorCode $request")
                         }
                         override fun onServiceResolved(resolved: NsdServiceInfo) {
+                            Log.i(TAG, "Service resolved: $request host=${hostKind(resolved.host)} port=${resolved.port}")
                             handler.post resolved@{
-                                if (!active || found[info.serviceName] !== info) return@resolved
-                                val host = resolved.host?.hostAddress ?: return@resolved
+                                staleReason(info)?.let { logOutcome(service, resolve, it); return@resolved }
+                                val host = resolved.host?.hostAddress
+                                    ?: run { logOutcome(service, resolve, "no-host"); return@resolved }
                                 scope.launch {
-                                    val available = withContext(Dispatchers.IO) {
-                                        NetworkInterface.getNetworkInterfaces().asSequence().any { network ->
+                                    val rejected = withContext(Dispatchers.IO) {
+                                        val local = NetworkInterface.getNetworkInterfaces().asSequence().any { network ->
                                             network.inetAddresses.asSequence().any { it.hostAddress == host }
-                                        } && isPortAvailable(host, resolved.port)
+                                        }
+                                        when {
+                                            !local -> "no-interface"
+                                            !isPortAvailable(host, resolved.port) -> "port-closed"
+                                            else -> null
+                                        }
                                     }
-                                    if (available && active && found[info.serviceName] === info) {
+                                    val result = rejected ?: staleReason(info)?.let { "recheck-$it" }
+                                    logOutcome(service, resolve, result ?: "accepted")
+                                    if (result == null) {
                                         serviceName = info.serviceName
                                         Log.i(TAG, "Service accepted: type=$serviceType port=${resolved.port}")
                                         observer.onChanged(host to resolved.port)
@@ -128,7 +168,7 @@ class AdbMdns(
                         }
                     })
                 } catch (e: Exception) {
-                    Log.w(TAG, "Cannot resolve service", e)
+                    Log.w(TAG, "Cannot resolve service: $request", e)
                 }
             }
         }
@@ -136,6 +176,7 @@ class AdbMdns(
         override fun onServiceLost(info: NsdServiceInfo) {
             handler.post {
                 if (!active) return@post
+                Log.i(TAG, "Service lost: listener=$id service=${label(info.serviceName)}")
                 found.remove(info.serviceName)
                 if (info.serviceName == serviceName) {
                     serviceName = null
@@ -154,9 +195,22 @@ class AdbMdns(
         true
     }
 
+    private fun hostKind(address: InetAddress?): String {
+        address ?: return "none"
+        val family = if (address is Inet4Address) "ipv4" else "ipv6"
+        val range = when {
+            address.isLoopbackAddress -> "loopback"
+            address.isLinkLocalAddress -> "link-local"
+            address.isSiteLocalAddress -> "site-local"
+            else -> "other"
+        }
+        return "$family-$range"
+    }
+
     companion object {
         const val TLS_CONNECT = "_adb-tls-connect._tcp"
         const val TLS_PAIRING = "_adb-tls-pairing._tcp"
         const val TAG = "AdbMdns"
+        private val listenerIds = AtomicInteger()
     }
 }
