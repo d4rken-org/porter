@@ -19,7 +19,7 @@ object Starter {
     val adbCommand = "adb shell $userCommand"
     val internalCommand = "$userCommand --apk=${app.applicationInfo.sourceDir}"
 
-    val serviceStartedMessage = "Service started, this window will be automatically closed in 3 seconds"
+    const val serviceStartedMessage = "Service started, this window will be automatically closed in 3 seconds"
 
     suspend fun waitForBinder(log: ((String) -> Unit)? = null) {
         try {

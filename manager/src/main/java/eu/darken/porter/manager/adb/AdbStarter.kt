@@ -58,3 +58,18 @@ object AdbStarter {
         error("unreachable")
     }
 }
+
+/** Starts the service over ADB on [port] and waits for it, then applies the post-start turn-off. */
+internal suspend fun startOverAdb(
+    context: Context,
+    port: Int,
+    requireTls: Boolean,
+    log: ((String) -> Unit)? = null,
+    start: suspend (Context, Int, Boolean, ((String) -> Unit)?) -> Unit = AdbStarter::startAdb,
+    awaitService: suspend (((String) -> Unit)?) -> Unit = Starter::waitForBinder,
+    turnOff: suspend (Context, Boolean) -> Unit = ::turnOffWirelessDebuggingAfterStart,
+) {
+    start(context, port, requireTls, log)
+    awaitService(log)
+    turnOff(context, requireTls)
+}

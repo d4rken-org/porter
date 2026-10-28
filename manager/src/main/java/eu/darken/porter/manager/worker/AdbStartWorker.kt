@@ -31,13 +31,12 @@ import eu.darken.porter.manager.R
 import eu.darken.porter.manager.NotificationChannels
 import eu.darken.porter.manager.adb.AdbMdns
 import eu.darken.porter.manager.adb.AdbPairingRequiredException
-import eu.darken.porter.manager.adb.AdbStarter
+import eu.darken.porter.manager.adb.startOverAdb
 import eu.darken.porter.manager.home.HomeActivity
 import eu.darken.porter.manager.receiver.PorterReceiverStarter
 import eu.darken.porter.manager.receiver.PorterReceiverStarter.WorkerState
 import eu.darken.porter.manager.receiver.PorterReceiverStarter.updateNotification
 import eu.darken.porter.manager.support.SupportActivity
-import eu.darken.porter.manager.starter.Starter
 import eu.darken.porter.manager.utils.EnvironmentUtils
 import eu.darken.porter.manager.utils.PorterStateMachine
 
@@ -170,8 +169,7 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
                 }
             }.first()
             
-            AdbStarter.startAdb(applicationContext, port, requireTls = tcpPort == null)
-            Starter.waitForBinder()
+            startOverAdb(applicationContext, port, requireTls = tcpPort == null)
 
             val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.cancel(PorterReceiverStarter.NOTIFICATION_ID)
