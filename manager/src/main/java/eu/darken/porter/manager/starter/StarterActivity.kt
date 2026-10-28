@@ -1,9 +1,11 @@
 package eu.darken.porter.manager.starter
 
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,7 +26,7 @@ import eu.darken.porter.manager.AppConstants.EXTRA
 import eu.darken.porter.manager.R
 import eu.darken.porter.manager.adb.AdbKeyException
 import eu.darken.porter.manager.adb.AdbPairingRequiredException
-import eu.darken.porter.manager.adb.AdbStarter
+import eu.darken.porter.manager.adb.startOverAdb
 import eu.darken.porter.manager.home.HomeActivity
 import eu.darken.porter.manager.utils.PorterStateMachine
 
@@ -106,14 +108,23 @@ class StarterViewModel(application: Application) : AndroidViewModel(application)
 
     private var started = false
 
+    @VisibleForTesting
+    internal var rootStart: suspend () -> Unit = ::startRoot
+
+    @VisibleForTesting
+    internal var adbStart: suspend (Context, Int, Boolean, ((String) -> Unit)?) -> Unit = ::startOverAdb
+
     fun start(root: Boolean, port: Int, requireTls: Boolean) {
         if (started) return
         started = true
 
         viewModelScope.launch(handler) {
-            if (root) startRoot()
-            else AdbStarter.startAdb(appContext, port, requireTls, { log(it) })
-            Starter.waitForBinder({ log(it) })
+            if (root) {
+                rootStart()
+                Starter.waitForBinder({ log(it) })
+            } else {
+                adbStart(appContext, port, requireTls, { log(it) })
+            }
         }
     }
 
