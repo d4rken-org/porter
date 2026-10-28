@@ -43,7 +43,7 @@ Necesitas una conexión Wi-Fi y Android 11 o posterior. Algunos fabricantes rest
 6. Vuelve a Porter y toca **Iniciar** en la sección de depuración inalámbrica.
 7. Comprueba que Porter indique que está en ejecución.
 
-Porter deja activados los ajustes de depuración de Android cuando se detiene. Puedes desactivarlos en Opciones para desarrolladores cuando ya no necesites acceso de depuración.
+Porter deja activados los ajustes de depuración de Android cuando se detiene. Puedes desactivarlos en Opciones para desarrolladores cuando ya no necesites acceso de depuración. Para que la depuración inalámbrica se desactive cada vez que Porter se inicie a través de ella, activa la opción **Desactivar la depuración inalámbrica** en **Ajustes**, **Inicio**. Esto desconecta los ordenadores y apps que usan la depuración inalámbrica, y Android puede volver a pedir que permitas la red en el siguiente inicio, incluidos los reinicios automáticos.
 
 Normalmente solo necesitas vincular el dispositivo una vez. Iniciar el servicio es un paso independiente que debes repetir tras reiniciar el dispositivo. Si Android olvida la vinculación, repite estos pasos.
 

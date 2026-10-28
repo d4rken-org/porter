@@ -38,7 +38,7 @@ You need a Wi-Fi connection and Android 11 or newer. Some device manufacturers r
 6. Return to Porter and tap **Start** under **Start via Wireless debugging**.
 7. Check that Porter says **Porter is running**.
 
-Porter leaves Android's debugging settings enabled when it stops. You can turn them off in Developer options when you no longer need debugging access.
+Porter leaves Android's debugging settings enabled when it stops. You can turn them off in Developer options when you no longer need debugging access. To have wireless debugging turned off whenever Porter starts through it, enable **Turn off wireless debugging** under **Settings**, **Startup**. This disconnects computers and apps that use wireless debugging, and Android may ask to allow the network again at the next start, including automatic restarts.
 
 Pairing normally only needs to be done once. Starting the service is a separate step and is needed again after a device restart. If Android forgets the pairing, repeat these steps.
 

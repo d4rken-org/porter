@@ -43,7 +43,7 @@ Você precisa de uma conexão Wi-Fi e Android 11 ou mais recente. Alguns fabrica
 6. Volte ao Porter e toque em **Iniciar** na seção de depuração por Wi-Fi.
 7. Confirme que o Porter indica que está em execução.
 
-O Porter deixa a depuração do Android ativada quando para. Você pode desativá-la nas opções do desenvolvedor quando não precisar mais desse acesso.
+O Porter deixa a depuração do Android ativada quando para. Você pode desativá-la nas opções do desenvolvedor quando não precisar mais desse acesso. Para que a depuração por Wi-Fi seja desativada sempre que o Porter iniciar por ela, ative a opção **Desativar a depuração por Wi-Fi** em **Configurações**, **Inicialização**. Isso desconecta computadores e apps que usam a depuração por Wi-Fi, e o Android pode pedir para permitir a rede novamente na próxima inicialização, incluindo reinicializações automáticas.
 
 Normalmente, o pareamento só precisa ser feito uma vez. Iniciar o serviço é uma etapa separada, necessária novamente após reiniciar o dispositivo. Se o Android esquecer o pareamento, repita essas etapas.
 
