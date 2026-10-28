@@ -28,7 +28,7 @@ suspend fun turnOffWirelessDebuggingAfterStart(
     context: Context,
     overWireless: Boolean,
     write: (ContentResolver, String, Int) -> Boolean = SettingsHelper::tryPutGlobalInt,
-    awaitConnection: suspend () -> Unit = { Porter.state.first { it is PorterConnectionState.Connected } },
+    awaitConnection: suspend () -> Unit = ::awaitPorterConnected,
 ) {
     try {
         if (!PorterSettings.wirelessDebuggingOff) {
@@ -57,6 +57,10 @@ suspend fun turnOffWirelessDebuggingAfterStart(
     } catch (e: Exception) {
         LOGGER.e(e, "Wireless debugging off: failed")
     }
+}
+
+private suspend fun awaitPorterConnected() {
+    Porter.state.first { it is PorterConnectionState.Connected }
 }
 
 private fun canWriteSecureSettings(context: Context): Boolean =
