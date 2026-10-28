@@ -290,6 +290,15 @@ def without_bounds(screen):
     return re.sub(rb' bounds="[^"]*"', b"", screen)
 
 
+class CommandFailed(RuntimeError):
+    """A command adb ran that exited non-zero, with what it printed before it did."""
+
+    def __init__(self, command, returncode, stdout, stderr):
+        super().__init__(f"{shlex.join(command)}: {stderr}")
+        self.returncode = returncode
+        self.stdout = stdout
+
+
 class Smoke:
     # How open_home() presses onboarding's buttons, called with the label; None taps them.
     onboarding_activate = None
@@ -332,9 +341,10 @@ class Smoke:
                 break
             if attempt < TRANSPORT_ATTEMPTS - 1:
                 time.sleep(TRANSPORT_BACKOFF)
+        stdout = result.stdout if binary else result.stdout.decode(errors="replace").strip()
         if check and result.returncode:
-            raise RuntimeError(f"{shlex.join(command)}: {stderr}")
-        return result.stdout if binary else result.stdout.decode(errors="replace").strip()
+            raise CommandFailed(command, result.returncode, stdout, stderr)
+        return stdout
 
     def install_hang_evidence(self, command):
         """The device's state when an install stopped answering, beside the case's own log."""
@@ -400,10 +410,20 @@ class Smoke:
             # Unchecked: an Android 7 emulator once failed this with no output at all, and the
             # dump below is judged by uiautomator's own reply, not by the file being gone first.
             self.shell("rm", "-f", path, check=False)
-            result = self.shell("uiautomator", "dump", path)
+            dumped = f"UI hierchary dumped to: {path}"
+            try:
+                result = self.shell("uiautomator", "dump", path)
+            except CommandFailed as failure:
+                # An Android 37.1 emulator's uiautomator has reported its dump and then died of
+                # SIGSEGV in libpowermanager's static destructors on the way out. The report is
+                # what counts, as it does on success; a failure without one still ends the case.
+                if dumped not in failure.stdout:
+                    raise
+                print(f"NOTE uiautomator exited {failure.returncode} after dumping", flush=True)
+                result = failure.stdout
             attempts += 1
             # A null accessibility root is reported on stderr with exit status zero.
-            if f"UI hierchary dumped to: {path}" in result:
+            if dumped in result:
                 xml = self.shell("cat", path)
                 root = ET.fromstring(xml)
                 (self.output / "last-ui.xml").write_text(xml)
