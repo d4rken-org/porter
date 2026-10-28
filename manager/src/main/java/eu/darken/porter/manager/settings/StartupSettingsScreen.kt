@@ -14,6 +14,7 @@ import androidx.compose.material.icons.twotone.PlayArrow
 import androidx.compose.material.icons.twotone.RestartAlt
 import androidx.compose.material.icons.twotone.SystemUpdate
 import androidx.compose.material.icons.twotone.Wifi
+import androidx.compose.material.icons.twotone.WifiOff
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -31,6 +32,8 @@ internal data class StartupSettingsUiState(
     val watchdog: Boolean,
     val autoUpdateService: Boolean,
     val autoUpdateServiceEnabled: Boolean,
+    val showWirelessDebuggingOff: Boolean = false,
+    val wirelessDebuggingOff: Boolean = false,
     val showPairingMethod: Boolean,
     val pairingMethodLabel: String,
     val showTcpPort: Boolean,
@@ -45,6 +48,7 @@ internal data class StartupSettingsActions(
     val onStartOnBootChange: (Boolean) -> Unit,
     val onWatchdogChange: (Boolean) -> Unit,
     val onAutoUpdateServiceChange: (Boolean) -> Unit,
+    val onWirelessDebuggingOffChange: (Boolean) -> Unit,
     val onPairingMethod: () -> Unit,
     val onTcpPort: () -> Unit,
     val onBatteryOptimization: () -> Unit,
@@ -69,6 +73,9 @@ internal fun StartupSettingsContent(state: StartupSettingsUiState, actions: Star
                 state.autoUpdateService, enabled = state.autoUpdateServiceEnabled,
                 summary = stringResource(if (state.autoUpdateServiceEnabled) R.string.porter_service_auto_update_summary else R.string.porter_service_update_primary),
                 onCheckedChange = actions.onAutoUpdateServiceChange)
+            if (state.showWirelessDebuggingOff) SettingsSwitch(stringResource(R.string.settings_wireless_debugging_off), Icons.TwoTone.WifiOff,
+                state.wirelessDebuggingOff, stringResource(R.string.settings_wireless_debugging_off_summary),
+                onCheckedChange = actions.onWirelessDebuggingOffChange)
             if (state.showBatteryAction) SettingsItem(stringResource(R.string.porter_background_operation), Icons.TwoTone.Info,
                 stringResource(R.string.snackbar_battery_optimization_home), onClick = actions.onBatteryOptimization)
             if (state.showAlertsAction) SettingsItem(stringResource(R.string.settings_alerts_blocked_title), Icons.TwoTone.NotificationsOff,

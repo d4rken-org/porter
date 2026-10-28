@@ -140,6 +140,8 @@
     <string name="settings_watchdog">Άγρυπνος φρουρός</string>
     <string name="settings_watchdog_summary">Αυτόματη επανεκκίνηση του Porter σε περίπτωση διακοπής
         λειτουργίας</string>
+    <string name="settings_wireless_debugging_off">Απενεργοποίηση ασύρματου εντοπισμού σφαλμάτων</string>
+    <string name="settings_wireless_debugging_off_summary">Απενεργοποίηση του ασύρματου εντοπισμού σφαλμάτων αφού το Porter ξεκινήσει μέσω αυτού. Αυτό αποσυνδέει υπολογιστές και εφαρμογές που τον χρησιμοποιούν, και το Android μπορεί να ζητήσει ξανά να επιτρέψετε το δίκτυο στην επόμενη εκκίνηση, συμπεριλαμβανομένων των αυτόματων επανεκκινήσεων.</string>
     <string name="settings_restart_dialog_title">Απαιτείται επανεκκίνηση</string>
     <string name="settings_restart_dialog_message">Το Porter πρέπει να επανεκκινηθεί για να
         εφαρμοστεί αυτή η ρύθμιση.</string>

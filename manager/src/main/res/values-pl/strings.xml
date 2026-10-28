@@ -131,6 +131,8 @@
     <string name="settings_watchdog">Nadzorowanie</string>
     <string name="settings_watchdog_summary">Automatycznie uruchom ponownie Porter, jeśli ulegnie
         awarii</string>
+    <string name="settings_wireless_debugging_off">Wyłącz debugowanie bezprzewodowe</string>
+    <string name="settings_wireless_debugging_off_summary">Wyłącz debugowanie bezprzewodowe po uruchomieniu aplikacji Porter za jego pomocą. Rozłącza to komputery i aplikacje, które z niego korzystają, a Android może przy następnym uruchomieniu, również automatycznym, ponownie poprosić o zezwolenie na sieć.</string>
     <string name="settings_restart_dialog_title">Wymagane ponowne uruchomienie</string>
     <string name="settings_restart_dialog_message">Porter musi zacząć od nowa, żeby zastosować to
         ustawienie.</string>

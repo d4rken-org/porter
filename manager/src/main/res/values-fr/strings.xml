@@ -110,6 +110,8 @@
     <string name="settings_start_on_boot_bug">En raison d\'un bug dans Android 11-12, le débogage sans fil ne mémorise aucun réseau autorisé.\n\nVous devrez réautoriser le réseau à chaque redémarrage en appuyant sur \"Autoriser\" lorsque la boîte de dialogue d\'autorisation apparaît.</string>
     <string name="settings_watchdog">Chien de garde</string>
     <string name="settings_watchdog_summary">Redémarre automatiquement Porter en cas de plantage</string>
+    <string name="settings_wireless_debugging_off">Désactiver le débogage sans fil</string>
+    <string name="settings_wireless_debugging_off_summary">Désactive le débogage sans fil une fois que Porter a démarré par son intermédiaire. Cela déconnecte les ordinateurs et les applications qui l\'utilisent, et Android peut redemander d\'autoriser le réseau au prochain démarrage, y compris lors des redémarrages automatiques.</string>
     <string name="settings_restart_dialog_title">Redémarrage requis</string>
     <string name="settings_restart_dialog_message">Porter doit redémarrer pour appliquer ce paramètre.</string>
     <string name="settings_tcp_port">Port TCP</string>

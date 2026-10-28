@@ -132,6 +132,8 @@
         toccando \"Consenti\" quando appare la finestra di autorizzazione.</string>
     <string name="settings_watchdog">Cane da guardia</string>
     <string name="settings_watchdog_summary">Riavvia automaticamente Porter se si blocca</string>
+    <string name="settings_wireless_debugging_off">Disattiva il debug wireless</string>
+    <string name="settings_wireless_debugging_off_summary">Disattiva il debug wireless dopo che Porter si è avviato tramite esso. Questo disconnette i computer e le app che lo usano, e Android potrebbe chiedere di nuovo di consentire la rete al prossimo avvio, compresi i riavvii automatici.</string>
     <string name="settings_restart_dialog_title">Riavvio richiesto</string>
     <string name="settings_restart_dialog_message">Porter deve ricominciare per poter applicare
         questa impostazione.</string>

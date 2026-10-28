@@ -130,6 +130,8 @@
         moet hermagtig deur op \"Laat toe\" te tik wanneer die magtigingsdialoog verskyn.</string>
     <string name="settings_watchdog">Waghond</string>
     <string name="settings_watchdog_summary">Herbegin Porter outomaties as dit vasval</string>
+    <string name="settings_wireless_debugging_off">Skakel draadlose ontfouting af</string>
+    <string name="settings_wireless_debugging_off_summary">Skakel draadlose ontfouting af nadat Porter daardeur begin het. Dit ontkoppel rekenaars en apps wat dit gebruik, en Android kan by die volgende begin, ook outomatiese herbegins, weer vra om die netwerk toe te laat.</string>
     <string name="settings_restart_dialog_title">Herbegin Vereis</string>
     <string name="settings_restart_dialog_message">Porter moet herbegin om hierdie instelling toe
         te pas.</string>

@@ -135,6 +135,8 @@
         hitelesítési párbeszédpanel felugrik.</string>
     <string name="settings_watchdog">Őrzőkutya</string>
     <string name="settings_watchdog_summary">A Porter automatikus újraindítása összeomlás esetén</string>
+    <string name="settings_wireless_debugging_off">Vezeték nélküli hibakeresés kikapcsolása</string>
+    <string name="settings_wireless_debugging_off_summary">A vezeték nélküli hibakeresés kikapcsolása, miután a Porter azon keresztül elindult. Ez bontja az azt használó számítógépek és alkalmazások kapcsolatát, és az Android a következő indításkor, az automatikus újraindításokat is beleértve, ismét engedélyt kérhet a hálózathoz.</string>
     <string name="settings_restart_dialog_title">Újraindítás szükséges</string>
     <string name="settings_restart_dialog_message">A beállítás alkalmazásához újra kell indítani a
         Porter-t.</string>

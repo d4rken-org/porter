@@ -127,6 +127,8 @@
         omstart genom att trycka på \"Tillåt\" när auktoriseringsdialogen dyker upp.</string>
     <string name="settings_watchdog">Vakthund</string>
     <string name="settings_watchdog_summary">Starta om Porter automatiskt om den kraschar</string>
+    <string name="settings_wireless_debugging_off">Stäng av trådlös felsökning</string>
+    <string name="settings_wireless_debugging_off_summary">Stäng av trådlös felsökning när Porter har startat via den. Det kopplar från datorer och appar som använder den, och Android kan be om att tillåta nätverket igen vid nästa start, även vid automatiska omstarter.</string>
     <string name="settings_restart_dialog_title">Omstart krävs</string>
     <string name="settings_restart_dialog_message">Porter måste starta om för att kunna tillämpa
         denna inställning.</string>

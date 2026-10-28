@@ -116,6 +116,8 @@
         «اجازه» هنگام ظاهر شدن دیالوگ مجوزدهی مجددا، مجددا تأیید کنید.</string>
     <string name="settings_watchdog">دیده‌بان</string>
     <string name="settings_watchdog_summary">راه‌اندازی مجدد خودکار Porter در صورت خرابی</string>
+    <string name="settings_wireless_debugging_off">خاموش کردن اشکال‌زدایی بی‌سیم</string>
+    <string name="settings_wireless_debugging_off_summary">خاموش کردن اشکال‌زدایی بی‌سیم پس از راه‌اندازی Porter از طریق آن. این کار اتصال رایانه‌ها و برنامه‌هایی را که از آن استفاده می‌کنند قطع می‌کند و ممکن است اندروید در راه‌اندازی بعدی، از جمله راه‌اندازی‌های مجدد خودکار، دوباره برای مجاز کردن شبکه سؤال کند.</string>
     <string name="settings_restart_dialog_title">راه اندازی مجدد مورد نیاز است</string>
     <string name="settings_restart_dialog_message">برای اعمال این تنظیم، Porter باید دوباره راه‌اندازی شود.</string>
     <string name="settings_tcp_port">پورت TCP</string>

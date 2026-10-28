@@ -111,6 +111,8 @@
         நெட்வொர்க்கை நீங்கள் மீண்டும் அங்கீகரிக்க வேண்டும்.</string>
     <string name="settings_watchdog">வாட்ச்டாக்</string>
     <string name="settings_watchdog_summary">Porter செயலிழந்தால் தானாக மறுதொடக்கம் செய்</string>
+    <string name="settings_wireless_debugging_off">வயர்லெஸ் பிழைத்திருத்தத்தை முடக்கு</string>
+    <string name="settings_wireless_debugging_off_summary">Porter வயர்லெஸ் பிழைத்திருத்தம் மூலம் தொடங்கிய பிறகு அதை முடக்கு. இது அதைப் பயன்படுத்தும் கணினிகளையும் ஆப்ஸையும் துண்டிக்கும், மேலும் அடுத்த தொடக்கத்தில், தானியங்கி மறுதொடக்கங்கள் உட்பட, நெட்வொர்க்கை அனுமதிக்குமாறு Android மீண்டும் கேட்கலாம்.</string>
     <string name="settings_restart_dialog_title">மறுதொடக்கம் அவசியம்</string>
     <string name="settings_restart_dialog_message">இந்த அமைப்பைப் பயன்படுத்த Porter மறுதொடக்கம்
         செய்ய வேண்டும்.</string>

@@ -118,6 +118,8 @@
     <string name="settings_watchdog">Vahtikoira</string>
     <string name="settings_watchdog_summary">Käynnistä Porter automaattisesti uudelleen, jos se
         kaatuu</string>
+    <string name="settings_wireless_debugging_off">Poista langaton virheenkorjaus käytöstä</string>
+    <string name="settings_wireless_debugging_off_summary">Poista langaton virheenkorjaus käytöstä, kun Porter on käynnistynyt sen kautta. Tämä katkaisee sitä käyttävien tietokoneiden ja sovellusten yhteyden, ja Android voi seuraavalla käynnistyskerralla, myös automaattisissa uudelleenkäynnistyksissä, kysyä uudelleen verkon sallimista.</string>
     <string name="settings_restart_dialog_title">Uudelleenkäynnistys vaaditaan</string>
     <string name="settings_restart_dialog_message">Porter on käynnistettävä uudelleen, jotta tämä
         asetus otetaan käyttöön.</string>

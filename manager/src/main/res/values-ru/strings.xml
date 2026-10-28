@@ -111,6 +111,8 @@
     <string name="settings_start_on_boot_bug">Из-за ошибки в Android 11-12 отладка по Wi-Fi не запоминает авторизованные сети.\n\nПри каждой перезагрузке вам нужно будет повторно авторизовать сеть, нажав «Разрешить» при появлении диалога авторизации.</string>
     <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Автоматически перезапускать Porter в случае сбоя</string>
+    <string name="settings_wireless_debugging_off">Выключать отладку по Wi-Fi</string>
+    <string name="settings_wireless_debugging_off_summary">Выключать отладку по Wi-Fi после запуска Porter через неё. Это отключает компьютеры и приложения, которые её используют, а Android может снова попросить разрешить сеть при следующем запуске, включая автоматические перезапуски.</string>
     <string name="settings_restart_dialog_title">Требуется перезапуск</string>
     <string name="settings_restart_dialog_message">Чтобы применить эту настройку, Porter нужно перезапустить.</string>
     <string name="settings_tcp_port">TCP-порт</string>

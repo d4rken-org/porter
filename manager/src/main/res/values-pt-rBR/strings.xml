@@ -110,6 +110,8 @@
     <string name="settings_start_on_boot_bug">Devido a um bug no Android 11-12, a depuração por Wi-Fi não memoriza as redes autorizadas.\n\nVocê precisará autorizar a rede novamente a cada reinicialização, tocando em \"Permitir\" quando a caixa de diálogo de autorização aparecer.</string>
     <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Reiniciar o Porter automaticamente se ele travar</string>
+    <string name="settings_wireless_debugging_off">Desativar a depuração por Wi-Fi</string>
+    <string name="settings_wireless_debugging_off_summary">Desativar a depuração por Wi-Fi depois que o Porter iniciar por ela. Isso desconecta computadores e apps que a usam, e o Android pode pedir para permitir a rede novamente na próxima inicialização, incluindo reinicializações automáticas.</string>
     <string name="settings_restart_dialog_title">Reinicialização necessária</string>
     <string name="settings_restart_dialog_message">O Porter precisa ser reiniciado para aplicar esta configuração.</string>
     <string name="settings_tcp_port">Porta TCP</string>

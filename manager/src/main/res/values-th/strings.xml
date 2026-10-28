@@ -125,6 +125,8 @@
         \"อนุญาต\" เมื่อกล่องโต้ตอบการอนุญาตปรากฏขึ้น</string>
     <string name="settings_watchdog">วอทช์ด็อก</string>
     <string name="settings_watchdog_summary">รีสตาร์ท Porter โดยอัตโนมัติหากเกิดข้อขัดข้อง</string>
+    <string name="settings_wireless_debugging_off">ปิดการแก้ไขข้อบกพร่องผ่าน Wi-Fi</string>
+    <string name="settings_wireless_debugging_off_summary">ปิดการแก้ไขข้อบกพร่องผ่าน Wi-Fi หลังจาก Porter เริ่มทำงานผ่านช่องทางนี้ การดำเนินการนี้จะตัดการเชื่อมต่อคอมพิวเตอร์และแอปที่ใช้งานอยู่ และ Android อาจขอให้อนุญาตเครือข่ายอีกครั้งในการเริ่มครั้งถัดไป รวมถึงการรีสตาร์ทอัตโนมัติ</string>
     <string name="settings_restart_dialog_title">จำเป็นต้องรีสตาร์ท</string>
     <string name="settings_restart_dialog_message">Porter ต้องรีสตาร์ทเพื่อใช้การตั้งค่านี้</string>
     <string name="settings_tcp_port">พอร์ต TCP</string>

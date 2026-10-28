@@ -135,6 +135,8 @@
         nag-pop up ang dialog ng awtorisasyon.</string>
     <string name="settings_watchdog">Tagapagbantay</string>
     <string name="settings_watchdog_summary">Awtomatikong i-restart ang Porter kung nag-crash ito</string>
+    <string name="settings_wireless_debugging_off">I-off ang wireless na pag-debug</string>
+    <string name="settings_wireless_debugging_off_summary">I-off ang wireless na pag-debug pagkatapos magsimula ang Porter sa pamamagitan nito. Madidiskonekta nito ang mga computer at app na gumagamit nito, at maaaring humiling muli ang Android na payagan ang network sa susunod na pagsisimula, kasama ang mga awtomatikong pag-restart.</string>
     <string name="settings_restart_dialog_title">Kailangang mag-restart</string>
     <string name="settings_restart_dialog_message">Kailangang mag-restart ng Porter para mailapat
         ang setting na ito.</string>

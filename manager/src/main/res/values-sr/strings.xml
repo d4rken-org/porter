@@ -118,6 +118,8 @@
         autorizaciju.</string>
     <string name="settings_watchdog">Чувар</string>
     <string name="settings_watchdog_summary">Аутоматски поново покрени Porter ако се сруши</string>
+    <string name="settings_wireless_debugging_off">Искључи бежично отклањање грешака</string>
+    <string name="settings_wireless_debugging_off_summary">Искључи бежично отклањање грешака када се Porter покрене преко њега. Ово прекида везу рачунара и апликација које га користе, а Android може поново тражити да дозволите мрежу при следећем покретању, укључујући аутоматска поновна покретања.</string>
     <string name="settings_restart_dialog_title">Потребно је поновно покретање</string>
     <string name="settings_restart_dialog_message">Porter treba da se ponovo pokrene da bi se
         primenila ova postavka.</string>

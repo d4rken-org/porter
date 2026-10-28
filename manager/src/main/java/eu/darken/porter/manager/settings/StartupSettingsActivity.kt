@@ -64,6 +64,8 @@ class StartupSettingsActivity : ComposeActivity() {
                 watchdog = values[PorterSettings.Keys.KEY_WATCHDOG] as? Boolean ?: false,
                 autoUpdateService = values[PorterSettings.Keys.KEY_AUTO_UPDATE_SERVICE] as? Boolean ?: false,
                 autoUpdateServiceEnabled = UserHandleCompat.myUserId() == 0,
+                showWirelessDebuggingOff = EnvironmentUtils.isTlsSupported(),
+                wirelessDebuggingOff = values[PorterSettings.Keys.KEY_WIRELESS_DEBUGGING_OFF] as? Boolean ?: false,
                 showPairingMethod = !EnvironmentUtils.isTelevision() && Build.VERSION.SDK_INT >= 30,
                 pairingMethodLabel = pairings[if (values[PorterSettings.Keys.KEY_LEGACY_PAIRING] == true) 1 else 0],
                 showTcpPort = showTcpPort,
@@ -77,6 +79,7 @@ class StartupSettingsActivity : ComposeActivity() {
                 onStartOnBootChange = { model.toggle(PorterSettings.Keys.KEY_START_ON_BOOT, it) },
                 onWatchdogChange = { model.toggle(PorterSettings.Keys.KEY_WATCHDOG, it) },
                 onAutoUpdateServiceChange = { model.setAutoUpdateService(it) },
+                onWirelessDebuggingOffChange = { PorterSettings.setWirelessDebuggingOff(it) },
                 onPairingMethod = { model.show("pairing") },
                 onTcpPort = { model.show("tcp") },
                 onBatteryOptimization = {
