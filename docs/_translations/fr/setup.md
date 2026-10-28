@@ -43,7 +43,7 @@ Une connexion Wi-Fi et Android 11 ou ultérieur sont nécessaires. Certains fabr
 6. Revenez à Porter et touchez **Démarrer** dans la section du débogage sans fil.
 7. Vérifiez que Porter indique qu’il est en cours d’exécution.
 
-Lorsque Porter s’arrête, il laisse les paramètres de débogage Android activés. Vous pouvez les désactiver dans les options pour les développeurs quand vous n’en avez plus besoin.
+Lorsque Porter s’arrête, il laisse les paramètres de débogage Android activés. Vous pouvez les désactiver dans les options pour les développeurs quand vous n’en avez plus besoin. Pour que le débogage sans fil soit désactivé chaque fois que Porter démarre par son intermédiaire, activez l’option **Désactiver le débogage sans fil** dans **Paramètres**, **Démarrage**. Cela déconnecte les ordinateurs et les applications qui utilisent le débogage sans fil, et Android peut redemander d’autoriser le réseau au prochain démarrage, y compris lors des redémarrages automatiques.
 
 L’association n’est normalement nécessaire qu’une fois. Le démarrage du service est une étape distincte, à répéter après chaque redémarrage de l’appareil. Si Android oublie l’association, recommencez ces étapes.
 

@@ -43,7 +43,7 @@ Du brauchst eine WLAN-Verbindung und Android 11 oder neuer. Manche Hersteller sc
 6. Kehre zu Porter zurück und tippe unter **Per Debugging über WLAN starten** auf **Starten**.
 7. Prüfe, ob Porter **Porter läuft** anzeigt.
 
-Wenn Porter stoppt, bleiben die Debugging-Einstellungen von Android aktiviert. Du kannst sie in den Entwickleroptionen ausschalten, wenn du keinen Debugging-Zugriff mehr brauchst.
+Wenn Porter stoppt, bleiben die Debugging-Einstellungen von Android aktiviert. Du kannst sie in den Entwickleroptionen ausschalten, wenn du keinen Debugging-Zugriff mehr brauchst. Damit Porter Debugging über WLAN jedes Mal ausschaltet, nachdem es darüber gestartet ist, aktiviere unter **Einstellungen**, **Startverhalten** den Schalter **Debugging über WLAN ausschalten**. Dadurch werden Computer und Apps getrennt, die Debugging über WLAN nutzen, und Android fragt beim nächsten Start, auch bei automatischen Neustarts, eventuell erneut, ob das Netzwerk zugelassen werden soll.
 
 Die Kopplung ist normalerweise nur einmal nötig. Den Dienst zu starten ist ein eigener Schritt, den du nach einem Neustart des Geräts wiederholen musst. Falls Android die Kopplung vergisst, führe die Schritte erneut aus.
 

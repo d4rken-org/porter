@@ -43,7 +43,7 @@ Anda memerlukan Wi-Fi dan Android 11 atau lebih baru. Beberapa produsen membatas
 6. Kembali ke Porter dan ketuk **Mulai** pada bagian proses debug nirkabel.
 7. Pastikan Porter menunjukkan bahwa layanan sedang berjalan.
 
-Porter membiarkan setelan proses debug Android aktif saat berhenti. Anda dapat menonaktifkannya di Opsi developer ketika akses tersebut tidak lagi diperlukan.
+Porter membiarkan setelan proses debug Android aktif saat berhenti. Anda dapat menonaktifkannya di Opsi developer ketika akses tersebut tidak lagi diperlukan. Agar proses debug nirkabel dinonaktifkan setiap kali Porter dimulai melaluinya, aktifkan opsi **Nonaktifkan proses debug nirkabel** di **Setelan**, **Memulai Porter**. Ini memutuskan komputer dan aplikasi yang menggunakan proses debug nirkabel, dan Android mungkin meminta izin untuk jaringan lagi saat dimulai berikutnya, termasuk saat dimulai ulang secara otomatis.
 
 Penyambungan biasanya cukup dilakukan sekali. Menjalankan layanan adalah langkah terpisah yang harus diulang setelah perangkat dimulai ulang. Jika Android melupakan penyambungan, ulangi langkah-langkah ini.
 
