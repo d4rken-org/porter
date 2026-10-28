@@ -110,6 +110,8 @@
     <string name="settings_start_on_boot_bug">Due to a bug in Android 11-12, wireless debugging does not remember any authorized networks.\n\nYou will need to re-authorize the network on each reboot by tapping \"Allow\" when the authorization dialog pops up.</string>
     <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Automatically restart Porter if it crashes</string>
+    <string name="settings_wireless_debugging_off">Turn off wireless debugging</string>
+    <string name="settings_wireless_debugging_off_summary">After Porter starts through wireless debugging, turn it off. This disconnects computers and apps using it, and Android may ask to allow the network again at the next start, including automatic ones.</string>
     <string name="settings_restart_dialog_title">Restart Required</string>
     <string name="settings_restart_dialog_message">Porter needs to restart in order to apply this setting.</string>
     <string name="settings_tcp_port">TCP port</string>

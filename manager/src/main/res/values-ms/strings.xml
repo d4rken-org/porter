@@ -134,6 +134,8 @@
         dialog kebenaran muncul.</string>
     <string name="settings_watchdog">Pengawas</string>
     <string name="settings_watchdog_summary">Mulakan semula Porter secara automatik jika ia ranap</string>
+    <string name="settings_wireless_debugging_off">Matikan penyahpepijatan wayarles</string>
+    <string name="settings_wireless_debugging_off_summary">Matikan penyahpepijatan wayarles selepas Porter bermula melaluinya. Ini memutuskan sambungan komputer dan apl yang menggunakannya, dan Android mungkin meminta untuk membenarkan rangkaian sekali lagi pada permulaan seterusnya, termasuk mula semula automatik.</string>
     <string name="settings_restart_dialog_title">Mulakan semula diperlukan</string>
     <string name="settings_restart_dialog_message">Porter perlu memulakan semula untuk menggunakan
         tetapan ini.</string>

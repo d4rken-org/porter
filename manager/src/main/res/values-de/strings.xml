@@ -109,6 +109,8 @@
     <string name="settings_start_on_boot_bug">Aufgrund eines Fehlers in Android 11-12 merkt sich Debugging über WLAN keine autorisierten Netzwerke.\n\nDu musst das Netzwerk nach jedem Neustart erneut autorisieren, indem du im Autorisierungsdialog auf \"Zulassen\" tippst.</string>
     <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Porter automatisch neu starten, wenn es abstürzt</string>
+    <string name="settings_wireless_debugging_off">Debugging über WLAN ausschalten</string>
+    <string name="settings_wireless_debugging_off_summary">Debugging über WLAN ausschalten, nachdem Porter darüber gestartet ist. Computer und Apps, die es nutzen, werden dabei getrennt, und Android fragt beim nächsten Start, auch bei automatischen Neustarts, eventuell erneut, ob das Netzwerk zugelassen werden soll.</string>
     <string name="settings_restart_dialog_title">Neustart erforderlich</string>
     <string name="settings_restart_dialog_message">Porter muss neu gestartet werden, um diese Einstellung zu übernehmen.</string>
     <string name="settings_tcp_port">TCP-Port</string>

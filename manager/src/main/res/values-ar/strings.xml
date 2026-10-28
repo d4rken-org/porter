@@ -113,6 +113,8 @@
     <string name="settings_start_on_boot_bug">بسبب خلل في Android 11 و12، لا يتذكر تصحيح الأخطاء اللاسلكي أي شبكات مصرّح بها.\n\nستحتاج إلى إعادة التصريح للشبكة عند كل إعادة تشغيل بالنقر على \"السماح\" عند ظهور مربع حوار التصريح.</string>
     <string name="settings_watchdog">المراقب</string>
     <string name="settings_watchdog_summary">إعادة تشغيل Porter تلقائيًا عند تعطّله</string>
+    <string name="settings_wireless_debugging_off">إيقاف تصحيح الأخطاء اللاسلكي</string>
+    <string name="settings_wireless_debugging_off_summary">إيقاف تصحيح الأخطاء اللاسلكي بعد أن يبدأ Porter من خلاله. يؤدي ذلك إلى فصل أجهزة الكمبيوتر والتطبيقات التي تستخدمه، وقد يطلب Android السماح بالشبكة مجددًا عند البدء التالي، بما في ذلك عمليات إعادة التشغيل التلقائية.</string>
     <string name="settings_restart_dialog_title">يلزم إعادة التشغيل</string>
     <string name="settings_restart_dialog_message">يحتاج Porter إلى إعادة التشغيل لتطبيق هذا الإعداد.</string>
     <string name="settings_tcp_port">منفذ TCP</string>

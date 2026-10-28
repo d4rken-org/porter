@@ -110,6 +110,8 @@
     <string name="settings_start_on_boot_bug">Debido a un error en Android 11 y 12, la depuración inalámbrica no recuerda las redes autorizadas.\n\nTendrás que volver a autorizar la red en cada reinicio tocando \"Permitir\" cuando aparezca el diálogo de autorización.</string>
     <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Reiniciar Porter automáticamente si falla</string>
+    <string name="settings_wireless_debugging_off">Desactivar la depuración inalámbrica</string>
+    <string name="settings_wireless_debugging_off_summary">Desactivar la depuración inalámbrica después de que Porter se inicie a través de ella. Esto desconecta las computadoras y apps que la usan, y Android puede volver a pedir que permitas la red en el siguiente inicio, incluidos los reinicios automáticos.</string>
     <string name="settings_restart_dialog_title">Es necesario reiniciar</string>
     <string name="settings_restart_dialog_message">Porter necesita reiniciarse para aplicar este ajuste.</string>
     <string name="settings_tcp_port">Puerto TCP</string>

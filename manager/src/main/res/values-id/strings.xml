@@ -108,6 +108,8 @@
     <string name="settings_start_on_boot_bug">Karena bug di Android 11-12, proses debug nirkabel tidak mengingat jaringan yang telah diizinkan.\n\nAnda perlu mengizinkan ulang jaringan setiap kali perangkat dimulai ulang dengan mengetuk \"Izinkan\" saat dialog otorisasi muncul.</string>
     <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Mulai ulang Porter secara otomatis jika mengalami crash</string>
+    <string name="settings_wireless_debugging_off">Nonaktifkan proses debug nirkabel</string>
+    <string name="settings_wireless_debugging_off_summary">Nonaktifkan proses debug nirkabel setelah Porter dimulai melaluinya. Ini memutuskan komputer dan aplikasi yang menggunakannya, dan Android mungkin meminta izin untuk jaringan lagi saat dimulai berikutnya, termasuk saat dimulai ulang secara otomatis.</string>
     <string name="settings_restart_dialog_title">Perlu Mulai Ulang</string>
     <string name="settings_restart_dialog_message">Porter perlu dimulai ulang untuk menerapkan setelan ini.</string>
     <string name="settings_tcp_port">Port TCP</string>

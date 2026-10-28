@@ -42,6 +42,7 @@ object PorterSettings {
         const val KEY_START_ON_BOOT = "start_on_boot"
         const val KEY_WATCHDOG = "watchdog"
         const val KEY_AUTO_UPDATE_SERVICE = "auto_update_service"
+        const val KEY_WIRELESS_DEBUGGING_OFF = "wireless_debugging_off"
         const val KEY_TCP_PORT = "tcp_port"
         const val KEY_THEME_STYLE = "theme_style"
         const val KEY_THEME_COLOR = "theme_color"
@@ -207,6 +208,13 @@ object PorterSettings {
 
     val autoUpdateService: Boolean
         get() = preferences.getBoolean(Keys.KEY_AUTO_UPDATE_SERVICE, false)
+
+    val wirelessDebuggingOff: Boolean
+        get() = preferences.getBoolean(Keys.KEY_WIRELESS_DEBUGGING_OFF, false)
+
+    fun setWirelessDebuggingOff(enable: Boolean) {
+        preferences.edit().putBoolean(Keys.KEY_WIRELESS_DEBUGGING_OFF, enable).apply()
+    }
 
     val isWatchdogRunning: Boolean
         get() = WatchdogService.isRunning()

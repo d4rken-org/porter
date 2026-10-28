@@ -128,6 +128,8 @@
         авторизації.</string>
     <string name="settings_watchdog">Сторожовий таймер</string>
     <string name="settings_watchdog_summary">Автоматично перезапускати Porter у разі збою</string>
+    <string name="settings_wireless_debugging_off">Вимикати налагодження через Wi-Fi</string>
+    <string name="settings_wireless_debugging_off_summary">Вимикати налагодження через Wi-Fi після запуску Porter через нього. Це від’єднує комп’ютери та застосунки, які його використовують, а Android може знову попросити дозволити мережу під час наступного запуску, зокрема автоматичних перезапусків.</string>
     <string name="settings_restart_dialog_title">Потрібен перезапуск</string>
     <string name="settings_restart_dialog_message">Щоб застосувати це налаштування, потрібно перезапустити Porter.</string>
     <string name="settings_tcp_port">TCP-порт</string>

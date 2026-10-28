@@ -132,6 +132,8 @@
         açıldığında \"İzin ver\" tuşuna tıklayarak ağı yeniden yetkilendirmeniz gerekecek.</string>
     <string name="settings_watchdog">Bekçi köpeği</string>
     <string name="settings_watchdog_summary">Çökerse Porter\'ı otomatik olarak yeniden başlat</string>
+    <string name="settings_wireless_debugging_off">Kablosuz hata ayıklamayı kapat</string>
+    <string name="settings_wireless_debugging_off_summary">Porter kablosuz hata ayıklama üzerinden başladıktan sonra onu kapat. Bu, onu kullanan bilgisayarların ve uygulamaların bağlantısını keser ve Android bir sonraki başlatmada, otomatik yeniden başlatmalar dahil, ağa yeniden izin vermenizi isteyebilir.</string>
     <string name="settings_restart_dialog_title">Yeniden Başlatma Gerekli</string>
     <string name="settings_restart_dialog_message">Porter\'ın bu ayarı uygulayabilmesi için
         yeniden başlatması gerekiyor.</string>

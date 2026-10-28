@@ -127,6 +127,8 @@
     <string name="settings_watchdog">Nəzarətçi</string>
     <string name="settings_watchdog_summary">Porter qəzaya uğradıqda onu avtomatik olaraq yenidən
         başladın</string>
+    <string name="settings_wireless_debugging_off">Simsiz sazlamanı söndür</string>
+    <string name="settings_wireless_debugging_off_summary">Porter simsiz sazlama ilə başladıqdan sonra onu söndür. Bu, ondan istifadə edən kompüterlərin və tətbiqlərin bağlantısını kəsir və Android növbəti başlanğıcda, avtomatik yenidən başlatmalar da daxil olmaqla, şəbəkəyə yenidən icazə verməyi soruşa bilər.</string>
     <string name="settings_restart_dialog_title">Yenidən başlatma tələb olunur</string>
     <string name="settings_restart_dialog_message">Bu ayarı tətbiq etmək üçün Porter yenidən
         başlamalıdır.</string>

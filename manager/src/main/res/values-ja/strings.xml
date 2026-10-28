@@ -108,6 +108,8 @@
     <string name="settings_start_on_boot_bug">Android 11～12のバグにより、ワイヤレスデバッグは承認済みのネットワークを記憶しません。\n\n再起動のたびに、承認ダイアログが表示されたら「許可」をタップしてネットワークを再承認する必要があります。</string>
     <string name="settings_watchdog">ウォッチドッグ</string>
     <string name="settings_watchdog_summary">Porterがクラッシュした場合に自動的に再起動します</string>
+    <string name="settings_wireless_debugging_off">ワイヤレスデバッグをオフにする</string>
+    <string name="settings_wireless_debugging_off_summary">Porterがワイヤレスデバッグ経由で起動した後、ワイヤレスデバッグをオフにします。これを使用しているコンピュータやアプリは切断され、次回の起動時（自動再起動を含む）にAndroidがネットワークの許可を再度求めることがあります。</string>
     <string name="settings_restart_dialog_title">再起動が必要です</string>
     <string name="settings_restart_dialog_message">この設定を適用するには、Porterの再起動が必要です。</string>
     <string name="settings_tcp_port">TCPポート</string>

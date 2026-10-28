@@ -25,6 +25,7 @@ class StartupSettingsContentTest : ComposeTest() {
         onStartOnBootChange = { clicks += "startOnBoot=$it" },
         onWatchdogChange = { clicks += "watchdog=$it" },
         onAutoUpdateServiceChange = { clicks += "autoUpdate=$it" },
+        onWirelessDebuggingOffChange = { clicks += "wirelessDebuggingOff=$it" },
         onPairingMethod = { clicks += "pairing" },
         onTcpPort = { clicks += "tcpPort" },
         onBatteryOptimization = { clicks += "battery" },
@@ -37,6 +38,8 @@ class StartupSettingsContentTest : ComposeTest() {
         watchdog = false,
         autoUpdateService = false,
         autoUpdateServiceEnabled = true,
+        showWirelessDebuggingOff = true,
+        wirelessDebuggingOff = false,
         showPairingMethod = true,
         pairingMethodLabel = "Pairing code",
         showTcpPort = true,
@@ -52,7 +55,8 @@ class StartupSettingsContentTest : ComposeTest() {
         render()
         listOf(
             R.string.porter_startup, R.string.settings_start_on_boot, R.string.settings_watchdog,
-            R.string.porter_service_auto_update, R.string.porter_pairing_method, R.string.settings_tcp_port,
+            R.string.porter_service_auto_update, R.string.settings_wireless_debugging_off,
+            R.string.porter_pairing_method, R.string.settings_tcp_port,
         ).forEach { composeTestRule.onNodeWithText(string(it)).assertIsDisplayed() }
     }
 
@@ -70,6 +74,17 @@ class StartupSettingsContentTest : ComposeTest() {
         assertEquals(Icons.TwoTone.RestartAlt, tcpPortIcon(true))
         render(state().copy(tcpPortNeedsRestart = true))
         composeTestRule.onNodeWithText(string(R.string.settings_tcp_port)).assertIsDisplayed()
+    }
+
+    @Test fun theWirelessDebuggingRowIsAbsentWithoutWirelessDebugging() {
+        render(state().copy(showWirelessDebuggingOff = false))
+        composeTestRule.onAllNodesWithText(string(R.string.settings_wireless_debugging_off)).assertCountEquals(0)
+    }
+
+    @Test fun anEnabledWirelessDebuggingRowReportsTheSwitchOff() {
+        render(state().copy(wirelessDebuggingOff = true))
+        composeTestRule.onNodeWithText(string(R.string.settings_wireless_debugging_off)).assertIsOn().performClick()
+        assertEquals(listOf("wirelessDebuggingOff=false"), clicks.toList())
     }
 
     @Test fun theBatteryAndAlertsRowsStayHiddenUnlessFlagged() {
@@ -96,6 +111,7 @@ class StartupSettingsContentTest : ComposeTest() {
             R.string.settings_start_on_boot to "startOnBoot=true",
             R.string.settings_watchdog to "watchdog=true",
             R.string.porter_service_auto_update to "autoUpdate=true",
+            R.string.settings_wireless_debugging_off to "wirelessDebuggingOff=true",
             R.string.porter_background_operation to "battery",
             R.string.settings_alerts_blocked_title to "alerts",
             R.string.porter_pairing_method to "pairing",

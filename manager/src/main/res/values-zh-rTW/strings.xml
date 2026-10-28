@@ -97,6 +97,8 @@
         的一個錯誤，無線偵錯無法記住任何授權網路。\n\n每次重新啟動時，當授權對話框跳出時，點擊「允許」重新授權網路。</string>
     <string name="settings_watchdog">看門狗</string>
     <string name="settings_watchdog_summary">如果 Porter 當機，則自動重新啟動。</string>
+    <string name="settings_wireless_debugging_off">關閉無線偵錯</string>
+    <string name="settings_wireless_debugging_off_summary">Porter 透過無線偵錯啟動後，關閉無線偵錯。這會中斷正在使用它的電腦和應用程式，且 Android 可能會在下次啟動時（包括自動重新啟動）再次詢問是否允許該網路。</string>
     <string name="settings_restart_dialog_title">需要重新啟動</string>
     <string name="settings_restart_dialog_message">Porter 需要重新啟動才能套用此設定。</string>
     <string name="settings_tcp_port">TCP 埠</string>

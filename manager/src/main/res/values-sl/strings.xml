@@ -133,6 +133,8 @@
         ponovno avtorizirati omrežje tako, da tapnete »Dovoli«, ko se pojavi okno za avtorizacijo.</string>
     <string name="settings_watchdog">Nadzorni pes</string>
     <string name="settings_watchdog_summary">Samodejni ponovni zagon aplikacije Porter, če se sesuje</string>
+    <string name="settings_wireless_debugging_off">Izklopi brezžično odpravljanje napak</string>
+    <string name="settings_wireless_debugging_off_summary">Izklopi brezžično odpravljanje napak, ko se Porter zažene prek njega. To prekine povezavo računalnikov in aplikacij, ki ga uporabljajo, Android pa lahko ob naslednjem zagonu, tudi pri samodejnih ponovnih zagonih, znova zahteva dovoljenje za omrežje.</string>
     <string name="settings_restart_dialog_title">Potreben je ponovni zagon</string>
     <string name="settings_restart_dialog_message">Porter mora začeti znova, da lahko uporabi to
         nastavitev.</string>

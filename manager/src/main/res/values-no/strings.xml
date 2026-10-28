@@ -124,6 +124,8 @@
         hver omstart ved å trykke på «Tillat» når autorisasjonsdialogen dukker opp.</string>
     <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Start Porter automatisk på nytt hvis den krasjer</string>
+    <string name="settings_wireless_debugging_off">Slå av trådløs feilsøking</string>
+    <string name="settings_wireless_debugging_off_summary">Slå av trådløs feilsøking etter at Porter har startet via den. Dette kobler fra datamaskiner og apper som bruker den, og Android kan be om å tillate nettverket på nytt ved neste start, også ved automatiske omstarter.</string>
     <string name="settings_restart_dialog_title">Omstart kreves</string>
     <string name="settings_restart_dialog_message">Porter må starte på nytt for å kunne bruke denne
         innstillingen.</string>

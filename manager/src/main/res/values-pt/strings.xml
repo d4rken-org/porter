@@ -136,6 +136,8 @@
     <string name="settings_watchdog">Cão de guarda</string>
     <string name="settings_watchdog_summary">Reiniciar Porter automaticamente se o programa
         bloquear</string>
+    <string name="settings_wireless_debugging_off">Desativar a depuração sem fios</string>
+    <string name="settings_wireless_debugging_off_summary">Desativar a depuração sem fios depois de o Porter iniciar através dela. Isto desliga os computadores e as aplicações que a utilizam, e o Android pode voltar a pedir para permitir a rede no próximo início, incluindo reinícios automáticos.</string>
     <string name="settings_restart_dialog_title">É necessário reiniciar.</string>
     <string name="settings_restart_dialog_message">A Porter precisa de reiniciar para poder aplicar
         esta definição.</string>

@@ -124,6 +124,8 @@
         պատուհանը։</string>
     <string name="settings_watchdog">Հսկիչ</string>
     <string name="settings_watchdog_summary">Ավտոմատ վերագործարկեք Porter-ը, եթե այն խափանվի</string>
+    <string name="settings_wireless_debugging_off">Անջատել անլար վրիպազերծումը</string>
+    <string name="settings_wireless_debugging_off_summary">Անջատել անլար վրիպազերծումը, երբ Porter-ը գործարկվի դրա միջոցով։ Դա անջատում է այն օգտագործող համակարգիչներն ու հավելվածները, և Android-ը հաջորդ գործարկման ժամանակ, ներառյալ ավտոմատ վերագործարկումները, կարող է կրկին խնդրել թույլատրել ցանցը։</string>
     <string name="settings_restart_dialog_title">Վերագործարկումը պարտադիր է</string>
     <string name="settings_restart_dialog_message">Այս կարգավորումը կիրառելու համար Porter-ը պետք է
         վերագործարկվի։</string>

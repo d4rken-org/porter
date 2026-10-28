@@ -131,6 +131,8 @@
         ფანჯარა გამოჩნდება.</string>
     <string name="settings_watchdog">მაკონტროლებელი</string>
     <string name="settings_watchdog_summary">ავტომატური გადატვირთვა Porter-ისთვის, თუ ის გაითიშება</string>
+    <string name="settings_wireless_debugging_off">უსადენო გამართვის გამორთვა</string>
+    <string name="settings_wireless_debugging_off_summary">უსადენო გამართვის გამორთვა მას შემდეგ, რაც Porter მისი მეშვეობით გაეშვება. ეს წყვეტს მის გამომყენებელ კომპიუტერებსა და აპებს, და Android-მა შემდეგი გაშვებისას, ავტომატური გადატვირთვების ჩათვლით, შეიძლება კვლავ მოითხოვოს ქსელის დაშვება.</string>
     <string name="settings_restart_dialog_title">გადატვირთვა აუცილებელია</string>
     <string name="settings_restart_dialog_message">ამ პარამეტრის გამოსაყენებლად Porter-ს
         გადატვირთვაა საჭირო.</string>

@@ -87,6 +87,8 @@
     <string name="settings_start_on_boot_bug">Kvůli chybě v systému Android 11-12 si bezdrátové ladění nepamatuje žádné autorizované sítě.\n\nPři každém restartu budete muset síť znovu autorizovat klepnutím na „Povolit“, jakmile se zobrazí dialogové okno pro autorizaci.</string>
     <string name="settings_watchdog">Watchdog</string>
     <string name="settings_watchdog_summary">Automaticky restartovat Porter v případě pádu</string>
+    <string name="settings_wireless_debugging_off">Vypnout bezdrátové ladění</string>
+    <string name="settings_wireless_debugging_off_summary">Po spuštění Porteru přes bezdrátové ladění ho vypnout. Tím se odpojí počítače a aplikace, které ho používají, a Android se při dalším spuštění, včetně automatických restartů, může znovu zeptat na povolení sítě.</string>
     <string name="settings_restart_dialog_title">Vyžadován restart</string>
     <string name="settings_restart_dialog_message">Aby se toto nastavení projevilo, je nutné restartovat Porter.</string>
     <string name="settings_tcp_port">TCP port</string>

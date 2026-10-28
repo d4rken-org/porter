@@ -131,6 +131,8 @@
         verschijnt.</string>
     <string name="settings_watchdog">Bewaker</string>
     <string name="settings_watchdog_summary">Porter automatisch opnieuw opstarten als het vastloopt</string>
+    <string name="settings_wireless_debugging_off">Draadloze foutopsporing uitschakelen</string>
+    <string name="settings_wireless_debugging_off_summary">Draadloze foutopsporing uitschakelen nadat Porter daarmee is gestart. Hierdoor worden computers en apps die het gebruiken losgekoppeld, en Android kan bij de volgende start, ook bij automatische herstarts, opnieuw vragen om het netwerk toe te staan.</string>
     <string name="settings_restart_dialog_title">Opnieuw opstarten vereist</string>
     <string name="settings_restart_dialog_message">Porter moet opnieuw worden opgestart om deze
         instelling toe te passen.</string>

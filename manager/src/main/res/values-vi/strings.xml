@@ -127,6 +127,8 @@
         lại bằng cách nhấn vào \"Cho phép\" khi hộp thoại ủy quyền bật lên.</string>
     <string name="settings_watchdog">Chó canh gác</string>
     <string name="settings_watchdog_summary">Tự động khởi động lại Porter nếu nó bị sập</string>
+    <string name="settings_wireless_debugging_off">Tắt gỡ lỗi không dây</string>
+    <string name="settings_wireless_debugging_off_summary">Tắt gỡ lỗi không dây sau khi Porter khởi động qua nó. Việc này ngắt kết nối máy tính và ứng dụng đang dùng nó, và Android có thể hỏi lại để cho phép mạng ở lần khởi động tiếp theo, kể cả các lần tự khởi động lại.</string>
     <string name="settings_restart_dialog_title">Cần khởi động lại</string>
     <string name="settings_restart_dialog_message">Porter cần khởi động lại để áp dụng cài đặt này.</string>
     <string name="settings_tcp_port">Cổng TCP</string>

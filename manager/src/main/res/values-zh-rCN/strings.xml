@@ -108,6 +108,8 @@
     <string name="settings_start_on_boot_bug">由于 Android 11-12 的一个 bug，无线调试不会记住任何已授权的网络。\n\n每次重启后，当授权对话框弹出时，您需要点按“允许”来重新授权网络。</string>
     <string name="settings_watchdog">看门狗</string>
     <string name="settings_watchdog_summary">Porter 崩溃时自动重启</string>
+    <string name="settings_wireless_debugging_off">关闭无线调试</string>
+    <string name="settings_wireless_debugging_off_summary">Porter 通过无线调试启动后，关闭无线调试。这会断开正在使用它的电脑和应用，且 Android 可能会在下次启动时（包括自动重启）再次询问是否允许该网络。</string>
     <string name="settings_restart_dialog_title">需要重启</string>
     <string name="settings_restart_dialog_message">Porter 需要重启才能应用此设置。</string>
     <string name="settings_tcp_port">TCP 端口</string>

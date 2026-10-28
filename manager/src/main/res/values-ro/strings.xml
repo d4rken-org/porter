@@ -129,6 +129,8 @@
         fiecare repornire apăsând pe „Permite” când apare fereastra de autorizare.</string>
     <string name="settings_watchdog">Câine de pază</string>
     <string name="settings_watchdog_summary">Repornește automat Porter dacă se blochează</string>
+    <string name="settings_wireless_debugging_off">Dezactivează remedierea erorilor wireless</string>
+    <string name="settings_wireless_debugging_off_summary">Dezactivează remedierea erorilor wireless după ce Porter pornește prin ea. Aceasta deconectează computerele și aplicațiile care o folosesc, iar Android poate cere din nou permisiunea pentru rețea la următoarea pornire, inclusiv la repornirile automate.</string>
     <string name="settings_restart_dialog_title">Repornire necesară</string>
     <string name="settings_restart_dialog_message">Porter trebuie să repornească pentru a aplica
         această setare.</string>
