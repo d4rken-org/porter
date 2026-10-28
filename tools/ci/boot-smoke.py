@@ -38,15 +38,35 @@ SETTINGS = "com.android.settings"
 SYSTEMUI = "com.android.systemui"
 # Where the system keeps paired keys and the networks wireless debugging is always allowed on.
 ADB_KEYSTORE = "/data/misc/adb/adb_temp_keys.xml"
+SECURE_SETTINGS = "android.permission.WRITE_SECURE_SETTINGS"
+WIRELESS_OFF_KEY = "wireless_debugging_off"
+WIRELESS_OFF_TITLE = "Turn off wireless debugging"
+STARTER_RECORD = base.MANAGER + "/.manager.starter.StarterActivity"
+# "ActivityRecord{2b0e4d2 u0 eu.darken.porter/.manager.starter.StarterActivity t15}" names the
+# component after the user.
+ACTIVITY_RECORD = re.compile(r"ActivityRecord\{\S+ u\d+ ([^\s/}]+/[^\s}]+)")
+# The manager waits up to 10 s for the grant before it writes, and the write itself is immediate.
+WIRELESS_OFF_TIMEOUT = 30
+# The starter screen closes 3 s after it reports the start; this only absorbs a slow device.
+STARTER_CLOSE_TIMEOUT = 30
+# Long enough for adbd to have dropped what it served over wireless debugging, and for anything
+# that went down with it to be gone.
+WIRELESS_OFF_SETTLE = 15
+# The background start runs when WorkManager gets to it, and only then turns wireless debugging on.
+NETWORK_PROMPT_TIMEOUT = 120
 # The order run() declares, which --case narrows without ever reordering.
-CASES = ("setup", "wireless-pairing", "app-adb-start", "automation-broadcasts", "force-stop-before-boot",
+CASES = ("setup", "wireless-pairing", "wireless-off-home-start", "wireless-off-background-start",
+         "app-adb-start", "automation-broadcasts", "force-stop-before-boot",
          "start-on-boot", "force-stop-after-boot", "start-on-boot-off", "boot-without-adb")
 # Run only when named.
-OPT_IN = ("wireless-pairing",)
+OPT_IN = ("wireless-pairing", "wireless-off-home-start", "wireless-off-background-start")
 # Each of these inherits what the case before it established on the device. boot-without-adb does
 # not name start-on-boot-off: it sets the toggle it needs rather than assuming a previous case
 # left it either way.
 REQUIRES = {
+    # Both start over the pairing that case leaves behind.
+    "wireless-off-home-start": ("wireless-pairing",),
+    "wireless-off-background-start": ("wireless-pairing",),
     "automation-broadcasts": ("app-adb-start",),
     "force-stop-before-boot": ("app-adb-start",),
     "start-on-boot": ("app-adb-start",),
@@ -54,6 +74,17 @@ REQUIRES = {
     "start-on-boot-off": ("app-adb-start", "start-on-boot"),
     "boot-without-adb": ("app-adb-start", "start-on-boot"),
 }
+
+
+def resumed_components(activities):
+    """The components dumpsys activity activities names on its resumed lines."""
+    return {found.group(1) for line in activities.splitlines()
+            if base.RESUMED_ACTIVITY.match(line) and (found := ACTIVITY_RECORD.search(line))}
+
+
+def switched_on(prefs, key):
+    """Whether a preferences file holds this boolean as true. Never written reads as off."""
+    return f'name="{key}" value="true"' in prefs
 
 
 class Boot(base.Smoke):
@@ -180,7 +211,93 @@ class Boot(base.Smoke):
         assert listing in (NO_PROCESS, "") or listing.isdigit(), listing
         return listing == NO_PROCESS
 
+    def holds_secure_settings(self):
+        return f"{SECURE_SETTINGS}: granted=true" in self.shell("dumpsys", "package", base.MANAGER)
+
+    def revoke_secure_settings(self):
+        """Takes back setup's grant, so the server's attach is the only thing that can restore it.
+        A pm that refuses raises with its reason; one that answers and changes nothing fails here."""
+        # First, so that a dump this check cannot read is not taken for a revocation.
+        assert self.holds_secure_settings(), f"the manager does not hold {SECURE_SETTINGS} to revoke"
+        reply = self.shell("pm", "revoke", base.MANAGER, SECURE_SETTINGS)
+        assert not self.holds_secure_settings(), f"pm revoke left {SECURE_SETTINGS} granted: {reply!r}"
+
+    def wireless_debugging_on(self):
+        return self.shell("settings", "get", "global", "adb_wifi_enabled") == "1"
+
+    def wireless_debugging_off_is(self, enable):
+        # Read, never written: the same file holds the manager's paired ADB key.
+        prefs = self.shell("su", "0", "cat", f"{SETTINGS_DIR}/settings.xml")
+        return switched_on(prefs, WIRELESS_OFF_KEY) == enable
+
+    def set_wireless_debugging_off(self, enable):
+        """Leaves the manager's switch in the asked-for state through its own screen, whatever it
+        was before."""
+        self.open_home()
+        self.tap("Settings", desc="Settings")
+        self.tap("Startup")
+        if self.wireless_debugging_off_is(enable):
+            return
+        self.tap(WIRELESS_OFF_TITLE, scroll=True, screenshot="wireless-off-" + ("on" if enable else "off"))
+        self.until(f"the app saved the switch {'on' if enable else 'off'}",
+                   lambda: self.wireless_debugging_off_is(enable), timeout=60)
+
+    def turn_on_wireless_debugging(self):
+        """From Settings' Developer options or its Wireless debugging page, whichever is in front."""
+        # The button lands on the Wireless debugging page itself where Settings allows it.
+        landed = self.until("Settings opened", lambda: (
+            "page" if self.locate("Use wireless debugging", SETTINGS) else
+            "list" if self.locate("Wireless debugging", SETTINGS, scroll=True) else None))
+        if landed == "list":
+            self.tap("Wireless debugging", SETTINGS, scroll=True)
+        if not self.wireless_debugging_on():
+            self.tap("Use wireless debugging", SETTINGS)
+            # Allowed this once only, so the network is not remembered past this case.
+            self.tap("Allow", SYSTEMUI)
+        self.until("wireless debugging is on", self.wireless_debugging_on)
+
+    def write_automation_token(self):
+        """Puts the token the automation broadcasts are checked against where the manager reads it."""
+        # Only the token lives in these preferences. Written while the manager is stopped, so no
+        # process holds a copy to write back over it; a running server outlives that stop.
+        self.shell("am", "force-stop", base.MANAGER)
+        write = (f"mkdir -p {SETTINGS_DIR} && printf %s {shlex.quote(AUTOMATION_SECRETS)}"
+                 f" > {SETTINGS_DIR}/secrets.xml")
+        if self.release_build():
+            # run-as refuses a release build. Root writes as itself, so what it wrote is handed
+            # the owner and label of the package's own directory.
+            package = SETTINGS_DIR.rsplit("/", 1)[0]
+            self.shell("su", "0", "sh", "-c",
+                       f"{write} && chown $(stat -c %u:%g {package}) {SETTINGS_DIR} {SETTINGS_DIR}/secrets.xml"
+                       f" && chcon $(stat -c %C {package}) {SETTINGS_DIR} {SETTINGS_DIR}/secrets.xml")
+        else:
+            self.shell("run-as", base.MANAGER, "sh", "-c", write)
+
+    def automation_broadcast(self, action, auth):
+        self.shell("am", "broadcast", "-a", f"{base.MANAGER}.{action}", "-p", base.MANAGER,
+                   "--es", "auth", auth)
+
+    def resumed(self):
+        return resumed_components(self.shell("dumpsys", "activity", "activities", check=False))
+
+    def served_after_wireless_off(self, server):
+        """The server a start over wireless debugging left running, still the same process and still
+        serving a client after wireless debugging went off under it."""
+        time.sleep(WIRELESS_OFF_SETTLE)
+        assert self.pid("porter_server") == server, "the server did not outlive wireless debugging going off"
+        self.launch_probe(base.NATIVE)
+        # The first client authorization of the run asks; any later one is already decided.
+        self.allow_if_requested()
+        self.authorized(base.NATIVE)
+        assert self.pid("porter_server") == server, "the server was replaced while serving the probe"
+        return {"server_pid": server}
+
     def restore(self, *aspects):
+        if "wireless-debugging-off" in aspects:
+            # Ahead of the wireless-debugging aspect, whose force-stop ends with the manager stopped.
+            self.shell("pm", "grant", base.MANAGER, SECURE_SETTINGS)
+            self.shell("cmd", "statusbar", "collapse")
+            self.set_wireless_debugging_off(False)
         if "wireless-debugging" in aspects:
             self.kill_server(check=False)
             self.until("no server is left", self.no_server)
@@ -193,7 +310,8 @@ class Boot(base.Smoke):
             # A fresh manager process, so the next case's look at the manager's own log sees
             # only what that case caused.
             self.shell("am", "force-stop", base.MANAGER)
-        rest = tuple(aspect for aspect in aspects if aspect != "wireless-debugging")
+        rest = tuple(aspect for aspect in aspects
+                     if aspect not in ("wireless-debugging", "wireless-debugging-off"))
         if rest:
             super().restore(*rest)
 
@@ -211,9 +329,6 @@ class Boot(base.Smoke):
                     print(f"NOTE {e}", flush=True)
                     return False
 
-            def wireless_on():
-                return self.shell("settings", "get", "global", "adb_wifi_enabled") == "1"
-
             self.shell("pm", "grant", base.MANAGER, "android.permission.NEARBY_WIFI_DEVICES", check=False)
             self.open_home()
             self.tap("Pairing", scroll=True, screenshot="home-pairing")
@@ -223,17 +338,7 @@ class Boot(base.Smoke):
             # its own button into Developer options, then Wireless debugging and its pairing code.
             self.shell("settings", "put", "global", "development_settings_enabled", "1")
             self.tap("Developer options", scroll=True)
-            # The button lands on the Wireless debugging page itself where Settings allows it.
-            landed = self.until("Settings opened", lambda: (
-                "page" if self.locate("Use wireless debugging", SETTINGS) else
-                "list" if self.locate("Wireless debugging", SETTINGS, scroll=True) else None))
-            if landed == "list":
-                self.tap("Wireless debugging", SETTINGS, scroll=True)
-            if not wireless_on():
-                self.tap("Use wireless debugging", SETTINGS)
-                # Allowed this once only, so the network is not remembered past this case.
-                self.tap("Allow", SYSTEMUI)
-            self.until("wireless debugging is on", wireless_on)
+            self.turn_on_wireless_debugging()
             self.tap("Pair device with pairing code", SETTINGS, scroll=True, screenshot="pairing-code")
             code = self.until("the pairing code", lambda: next(
                 (n.get("text") for n in self.ui().iter("node")
@@ -254,6 +359,72 @@ class Boot(base.Smoke):
             self.until("the server sent its binders", lambda: "sent binders" in self.server_log(pid))
             return {"server_pid": pid, "code": code}
         self.case("wireless-pairing", wireless_pairing, restore=("wireless-debugging",))
+
+        def wireless_debugging_turned_off():
+            self.until("the manager turned wireless debugging off",
+                       lambda: self.shell("settings", "get", "global", "adb_wifi_enabled") == "0",
+                       timeout=WIRELESS_OFF_TIMEOUT)
+
+        def wireless_off_home_start():
+            """Home's Start over wireless debugging with the turn-off switch on, by a manager that
+            does not yet hold WRITE_SECURE_SETTINGS, as on its first start ever."""
+            self.revoke_secure_settings()
+            self.set_wireless_debugging_off(True)
+            # The manager cannot turn it on itself without the permission, so the user does. A new,
+            # cleared task, so Settings opens on Developer options rather than where it was left.
+            self.shell("am", "start", "-W", "-f", "0x10008000",
+                       "-a", "android.settings.APPLICATION_DEVELOPMENT_SETTINGS")
+            self.turn_on_wireless_debugging()
+
+            self.open_home()
+            # The wireless-debugging card's own Start button. Asserting the card first means a
+            # layout change fails here rather than silently tapping a different Start.
+            assert self.locate("Start via Wireless debugging"), "the wireless start card is gone"
+            self.tap("Start", screenshot="wireless-off-home-start")
+            self.until("the starter screen opened", lambda: STARTER_RECORD in self.resumed(), timeout=60)
+            manager = self.pid(base.MANAGER)
+            pid = self.until("a server started over wireless debugging", lambda: self.pid("porter_server"),
+                             timeout=120)
+            self.started_by_manager()
+            self.until("the server sent its binders", lambda: "sent binders" in self.server_log(pid))
+            # Before anything opens Home: Home put in front by this side would hide a starter
+            # screen that never closed.
+            self.until("the starter screen closed by itself", lambda: (
+                (resumed := self.resumed()) and base.HOME_RECORD in resumed and STARTER_RECORD not in resumed),
+                timeout=STARTER_CLOSE_TIMEOUT)
+            # A manager that crashed and came back would also put Home in front.
+            assert self.pid(base.MANAGER) == manager, "the manager process was replaced while starting"
+
+            wireless_debugging_turned_off()
+            assert self.holds_secure_settings(), "the server's attach did not grant WRITE_SECURE_SETTINGS"
+            return {**self.served_after_wireless_off(pid), "manager_pid": manager}
+        self.case("wireless-off-home-start", wireless_off_home_start,
+                  restore=("wireless-debugging-off", "wireless-debugging"))
+
+        def wireless_off_background_start():
+            """The automation START with the turn-off switch on: the worker turns wireless debugging
+            on, starts over it, and turns it off again."""
+            # Without it the receiver posts a permission error instead of queueing the start.
+            assert self.holds_secure_settings(), f"the manager does not hold {SECURE_SETTINGS}"
+            self.set_wireless_debugging_off(True)
+            self.write_automation_token()
+            # A force-stopped package receives no broadcast that names only its package.
+            self.open_home()
+            assert self.no_server(), "a server was already running before START"
+
+            self.automation_broadcast("START", AUTOMATION_TOKEN)
+            # Allowed this once only, so the network is not remembered past this case.
+            self.until("the network prompt for wireless debugging",
+                       lambda: self.locate("Allow", SYSTEMUI), timeout=NETWORK_PROMPT_TIMEOUT)
+            self.tap("Allow", SYSTEMUI, screenshot="wireless-off-network-prompt")
+            pid = self.until("START started a server", lambda: self.pid("porter_server"), timeout=120)
+            self.until("the server sent its binders", lambda: "sent binders" in self.server_log(pid))
+            wireless_debugging_turned_off()
+            # START went through WorkManager, which runs unfinished work again later.
+            self.until("the start work finished", lambda: not self.manager_jobs(), timeout=60)
+            return self.served_after_wireless_off(pid)
+        self.case("wireless-off-background-start", wireless_off_background_start,
+                  restore=("wireless-debugging-off", "wireless-debugging"))
 
         def app_adb_start():
             """The manager's own wireless start, over loopback, with its own ADB key."""
@@ -277,20 +448,7 @@ class Boot(base.Smoke):
 
         def automation_broadcasts():
             """The START and STOP intents the automation sheet tells users to send, token and all."""
-            # Only the token lives in these preferences. Written while the manager is stopped, so no
-            # process holds a copy to write back over it; the server outlives that stop.
-            self.shell("am", "force-stop", base.MANAGER)
-            write = (f"mkdir -p {SETTINGS_DIR} && printf %s {shlex.quote(AUTOMATION_SECRETS)}"
-                     f" > {SETTINGS_DIR}/secrets.xml")
-            if self.release_build():
-                # run-as refuses a release build. Root writes as itself, so what it wrote is handed
-                # the owner and label of the package's own directory.
-                package = SETTINGS_DIR.rsplit("/", 1)[0]
-                self.shell("su", "0", "sh", "-c",
-                           f"{write} && chown $(stat -c %u:%g {package}) {SETTINGS_DIR} {SETTINGS_DIR}/secrets.xml"
-                           f" && chcon $(stat -c %C {package}) {SETTINGS_DIR} {SETTINGS_DIR}/secrets.xml")
-            else:
-                self.shell("run-as", base.MANAGER, "sh", "-c", write)
+            self.write_automation_token()
             # A force-stopped package receives no broadcast that names only its package, and a
             # device whose automation fires has the manager in its ordinary state.
             self.open_home()
@@ -300,20 +458,16 @@ class Boot(base.Smoke):
             self.until("the relaunched manager is connected",
                        lambda: self.locate("Running via ADB", prefix=True))
 
-            def broadcast(action, auth):
-                self.shell("am", "broadcast", "-a", f"{base.MANAGER}.{action}", "-p", base.MANAGER,
-                           "--es", "auth", auth)
-
-            broadcast("STOP", "not-the-token")
+            self.automation_broadcast("STOP", "not-the-token")
             # The refusal shows itself, which is what makes the server still running mean something.
             self.until("the wrong token is reported", lambda: any(
                 "Invalid auth token" in record for record in self.manager_notifications()))
             assert self.pid("porter_server") == server, "a STOP with the wrong token stopped the server"
 
-            broadcast("STOP", AUTOMATION_TOKEN)
+            self.automation_broadcast("STOP", AUTOMATION_TOKEN)
             self.until("STOP stopped the server", self.no_server)
 
-            broadcast("START", AUTOMATION_TOKEN)
+            self.automation_broadcast("START", AUTOMATION_TOKEN)
             started = self.until("START started a server", lambda: self.pid("porter_server"), timeout=120)
             self.until("the new server sent its binders", lambda: "sent binders" in self.server_log(started))
             # START went through WorkManager, which runs unfinished work again after a reboot. Left
