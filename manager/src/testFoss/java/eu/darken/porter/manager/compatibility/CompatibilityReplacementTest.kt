@@ -9,10 +9,12 @@ import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.TestApplication
 import eu.darken.porter.manager.compatibility.CompatibilityRepository.Companion.PACKAGE
 import eu.darken.porter.manager.compatibility.CompatibilityRepository.Status
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.test.StandardTestDispatcher
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -26,7 +28,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @OptIn(ExperimentalCoroutinesApi::class)
-@Config(application = TestApplication::class, sdk = [34])
+@Config(application = TestApplication::class, sdk = [34], shadows = [ShadowMemoryMappedFileDataSource::class])
 class CompatibilityReplacementTest {
     private val application = ApplicationProvider.getApplicationContext<Application>()
     private val packages = CompatibilityPackages(application)
@@ -42,6 +44,7 @@ class CompatibilityReplacementTest {
     private var protocolMismatch = false
     private var uninstallRemoves = true
     private var duringStop: () -> Unit = {}
+    private val uncaught = mutableListOf<Throwable>()
 
     private fun createRepository(permissionOwner: (PackageManager) -> String? = OtherShizukuDetector::permissionOwner) =
         CompatibilityRepository(application,
@@ -68,7 +71,7 @@ class CompatibilityReplacementTest {
             stopShizuku = { stops++; duringStop() },
             porterRunning = { true },
             permissionOwner = permissionOwner,
-            scope = CoroutineScope(SupervisorJob() + dispatcher),
+            scope = CoroutineScope(SupervisorJob() + dispatcher + CoroutineExceptionHandler { _, e -> uncaught += e }),
         )
 
     private val repository = createRepository()
@@ -81,6 +84,8 @@ class CompatibilityReplacementTest {
     }
 
     @Before fun signPorter() = packages.signPorter()
+
+    @After fun nothingEscapedTheRepository() = assertEquals(emptyList<Throwable>(), uncaught)
 
     private fun prepared() {
         perform({ prepareReplacement() })
