@@ -38,6 +38,23 @@ Porter 会自动导入能够与已安装应用及其当前访问状态核对的�
 兼容应用的 APK 仍可从同一发布版本单独下载。手动安装时，请停止并卸载 Shizuku，安装 Porter Compatibility，然后启动 Porter。要迁移符合条件的访问决定，请使用 Porter 的集成替换；仅打开替换对话框不会保存导入。设备的安装限制同样可能影响集成安装程序；**手动**操作会打开 Android 安装程序。
 
 安装完成后，主屏幕会显示有多少已安装应用通过它连接。点击其卡片可查看版本、重新安装内置副本或将其卸载。Porter 会先尝试通过自身服务卸载，失败时打开 Android 卸载程序。移除它会中断需要兼容支持的应用；直接支持 Porter 的应用不受影响。兼容性界面在打开期间会自动检查变化。
+
+## 来自 Google Play 的 Porter
+{: #porter-from-google-play }
+
+来自 Google Play 的 Porter 不内置配套应用，也不会导入 Shizuku 的访问决定。它需要自己的配套应用：Porter 只能配合与其使用相同密钥签名的配套应用工作，而 Google Play 为 Porter 签名所用的密钥与 GitHub 版本不同。每个版本都提供两种配套应用：
+
+| Porter 的安装来源 | 要下载的配套应用 |
+| --- | --- |
+| Google Play | `porter-compat-VERSION-gplay.apk` |
+| GitHub（FOSS 版本） | `porter-compat-VERSION-release.apk` |
+
+1. 停止并卸载 Shizuku。
+2. 从与你的 Porter 版本对应的[发布版本](https://github.com/d4rken-org/porter/releases)下载适用于 Google Play 的配套应用并安装。
+3. 启动 Porter。返回客户端应用并批准访问。
+
+如果已安装 Porter Compatibility，但兼容性页面仍提示安装了其他 Shizuku 应用，说明该配套应用属于另一个版本。请将其卸载并安装匹配的版本。
+
 ## Porter 和 Shizuku 可以同时运行吗？
 {: #can-porter-and-shizuku-run-together }
 

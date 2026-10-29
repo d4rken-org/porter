@@ -36,6 +36,21 @@ The companion APK remains available as a separate download from the same release
 
 Once installed, the home screen shows how many installed apps connect through it. Tap its card to see its version, reinstall the included copy, or uninstall it. Porter tries to uninstall through its service first and opens the Android uninstaller if that fails. Removing it interrupts apps that need compatibility support; direct Porter apps keep working. The compatibility screen checks for changes automatically while open.
 
+## Porter from Google Play
+
+Porter from Google Play does not include the companion, and it does not import Shizuku's access decisions. It needs its own companion: Porter only works with a companion signed with the same key as itself, and Google Play signs Porter with a different key than the GitHub releases. Each release offers both companions:
+
+| Porter installed from | Companion download |
+| --- | --- |
+| Google Play | `porter-compat-VERSION-gplay.apk` |
+| GitHub (FOSS build) | `porter-compat-VERSION-release.apk` |
+
+1. Stop and uninstall Shizuku.
+2. Download the Google Play companion from the [release](https://github.com/d4rken-org/porter/releases) that matches your Porter version and install it.
+3. Start Porter. Return to the client app and approve access.
+
+If the compatibility screen says another Shizuku app is installed although Porter Compatibility is, the companion belongs to the other build. Uninstall it and install the matching one.
+
 ## Can Porter and Shizuku run together?
 
 Yes. Porter and Shizuku can both be installed and running. An app that supports choosing between them connects to one service at a time.
