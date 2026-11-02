@@ -108,6 +108,15 @@ TAP_ATTEMPTS = 3
 # as shown ever became a visible layer, which is where the input dispatcher's windows come from.
 TAP_EVIDENCE_QUERIES = ("input", "window windows", "activity activities", "SurfaceFlinger")
 TAP_EVIDENCE_TIMEOUT = 20
+# Porter's permission prompt, as the input dispatcher and the window manager name its window, and
+# the buttons it offers.
+PROMPT_WINDOW = MANAGER + "/eu.darken.porter.manager.authorization.RequestPermissionActivity"
+PROMPT_BUTTONS = ("Allow all the time", "Deny")
+# How long a prompt being rebuilt gets to come back with a window that takes input.
+PROMPT_REBUILD_TIMEOUT = 30
+# Past the answer guard a freshly drawn prompt applies to taps (counterpart:
+# RequestPermissionActivity.SUPERSEDE_GRACE).
+PROMPT_ANSWER_GUARD = 1
 # The framework's own crash dialog, which belongs to no app under test and sits in front of
 # whatever the case was about. The message is phrased around the crashed app's name, so the
 # wording that is not is what identifies it. An ANR dialog offers the same button but is never
@@ -288,6 +297,47 @@ def apksigner():
 def without_bounds(screen):
     """A dump as ET.tostring() wrote it, with every node's position left out."""
     return re.sub(rb' bounds="[^"]*"', b"", screen)
+
+
+def evidence_section(evidence, query):
+    """What one dumpsys printed in an unanswered-tap file, or None where it did not finish."""
+    name = re.escape(query)
+    found = re.search(rf"^=== dumpsys {name} at [^\n]*\n(.*?)^=== dumpsys {name} exit status 0$",
+                      evidence, re.S | re.M)
+    return found.group(1) if found else None
+
+
+def stranded_prompt(evidence):
+    """The window token and user of Porter's permission prompt where an unanswered-tap file shows
+    the platform left that window out of the screen, else None.
+
+    Shown and focused as far as the window manager is concerned, while the input dispatcher has no
+    window for its focus request and SurfaceFlinger keeps the same window's layer offscreen:
+
+        name='e09b5 eu.darken.porter/eu.darken.porter.manager.authorization.RequestPermissionActivity' result='NO_WINDOW'
+        Offscreen Hierarchy
+         └─ e09b5 eu.darken.porter/eu.darken.por[...]zation.RequestPermissionActivity#206 ...
+
+    Read only from dumps that finished, and only where all of them name the same window.
+    """
+    focus, windows, layers = (evidence_section(evidence, q) for q in ("input", "window windows", "SurfaceFlinger"))
+    if focus is None or windows is None or layers is None:
+        return None
+    request = re.search(rf"name='(\w+) {re.escape(PROMPT_WINDOW)}' result='NO_WINDOW'", focus)
+    owner = request and re.search(rf"Window\{{{request.group(1)} u(\d+) {re.escape(PROMPT_WINDOW)}\}}", windows)
+    if not owner or not prompt_offscreen(layers, request.group(1)):
+        return None
+    return request.group(1), owner.group(1)
+
+
+def prompt_offscreen(layers, token):
+    """Whether dumpsys SurfaceFlinger lists the prompt window [token] in its Offscreen Hierarchy,
+    the tree that runs from that heading to the next blank line."""
+    heading = re.search(r"^Offscreen Hierarchy\n", layers, re.M)
+    if not heading:
+        return False
+    offscreen = layers[heading.end():].split("\n\n", 1)[0]
+    return bool(re.search(rf"^[\s│├└─]*{token} {re.escape(MANAGER)}/\S*RequestPermissionActivity#", offscreen, re.M))
 
 
 class CommandFailed(RuntimeError):
@@ -635,16 +685,29 @@ class Smoke:
         again, and only while the button is still there. Anything else - the dialog gone, the
         button gone, a different screen - is the tap having been acted on, however little of it
         has finished.
+
+        The exception is Porter's permission prompt when the evidence shows the platform left its
+        window off the screen: that prompt is rebuilt once, and the button is waited for and
+        tapped again, since the rebuild itself takes the button away for a moment.
         """
         wanted = repr(text) if desc is None else f"content-desc {desc!r}"
         ordinal = f" #{occurrence}" if occurrence else ""
         description = f"button {wanted}{ordinal} in {package}"
+        def find():
+            return self.locate(text, package, prefix, scroll, occurrence, desc)
+
+        rebuilt, reacquire = False, True
         for attempt in range(TAP_ATTEMPTS):
-            if attempt == 0:
-                bounds = self.until(description,
-                                    lambda: self.locate(text, package, prefix, scroll, occurrence, desc))
+            if reacquire:
+                reacquire = False
+                bounds = self.until(description, find)
+                if rebuilt:
+                    # The rebuilt prompt's answer guard runs from the composition that drew this
+                    # button, so it is waited out from here and the button read again after.
+                    time.sleep(PROMPT_ANSWER_GUARD)
+                    bounds = self.until(description, find)
             else:
-                bounds = self.locate(text, package, prefix, scroll, occurrence, desc)
+                bounds = find()
                 # Gone between the failed tap and this look: it was acted on after all, and
                 # tapping where it used to be would hit whatever took its place.
                 if bounds is None:
@@ -662,8 +725,54 @@ class Smoke:
             evidence = self.unanswered_tap_evidence(description, x, y, reason, before)
             print(f"NOTE the screen did not answer a tap on {description} ({reason}); see {evidence}",
                   flush=True)
+            prompt_button = package == MANAGER and text in PROMPT_BUTTONS
+            stranded = stranded_prompt(evidence.read_text(errors="replace")) if prompt_button else None
+            if stranded and not rebuilt and attempt < TAP_ATTEMPTS - 1:
+                try:
+                    self.rebuild_stranded_prompt(*stranded)
+                except (AssertionError, RuntimeError, subprocess.TimeoutExpired) as e:
+                    raise AssertionError(f"Tapped {description}; rebuilding the stranded prompt failed: {e}; "
+                                         f"see {evidence}") from e
+                rebuilt = reacquire = True
         raise AssertionError(f"Tapped {description} {TAP_ATTEMPTS} times and the screen never "
                              f"answered; see {evidence}")
+
+    def rebuild_stranded_prompt(self, token, user):
+        """Rebuilds the permission prompt whose window [stranded_prompt] found off the screen
+        (https://issuetracker.google.com/issues/566540092), and returns once a new window for it
+        takes input.
+
+        A per-app locale change recreates the manager's activities and no other app's, so the probe
+        that asked is left running; the prompt comes back from its saved state (counterpart:
+        RequestPermissionActivity.onSaveInstanceState). The app's own locales are put back however
+        the rebuild goes."""
+        def prompt_focus():
+            found = re.search(rf"name='(\w+) {re.escape(PROMPT_WINDOW)}' result='(\w+)'",
+                              self.shell("dumpsys", "input", check=False))
+            return found.groups() if found else None
+
+        locales = re.search(r"are \[(.*)\]$", self.shell("cmd", "locale", "get-app-locales", MANAGER, "--user", user))
+        assert locales, f"no locales listed for {MANAGER} in user {user}"
+        previous = locales.group(1).replace(" ", "")
+        # A locale the app is not already showing, or the change rebuilds nothing.
+        showing = previous.split(",")[0] or self.shell("getprop", "persist.sys.locale") \
+            or self.shell("getprop", "ro.product.locale")
+        temporary = next(tag for tag in ("en-GB", "en-US") if tag != showing)
+        print(f"NOTE rebuilding the stranded permission prompt {token} in user {user}", flush=True)
+        try:
+            self.shell("cmd", "locale", "set-app-locales", MANAGER, "--user", user, "--locales", temporary)
+            interim = self.until("the prompt rebuilt", lambda: (focus := prompt_focus()) and focus[0] != token
+                                 and focus[0], timeout=PROMPT_REBUILD_TIMEOUT)
+        finally:
+            self.shell("cmd", "locale", "set-app-locales", MANAGER, "--user", user, "--locales", previous)
+        # The put-back rebuilds it once more, and a tap has to wait for that one too: otherwise the
+        # second rebuild would be read as the screen answering the tap.
+        rebuilt = self.until("the prompt rebuilt in the app's own locales, taking input",
+                             lambda: (focus := prompt_focus()) and focus[0] not in (token, interim)
+                             and focus[1] == "OK" and focus[0], timeout=PROMPT_REBUILD_TIMEOUT)
+        layers = self.shell("dumpsys", "SurfaceFlinger")
+        assert re.search(r"^Layer Hierarchy$", layers, re.M), "SurfaceFlinger listed no layers to check the rebuilt prompt in"
+        assert not prompt_offscreen(layers, rebuilt), f"the rebuilt permission prompt {rebuilt} is off the screen too"
 
     def screenshot(self, name):
         (self.output / f"{name}.png").write_bytes(self.adb("exec-out", "screencap", "-p", binary=True))

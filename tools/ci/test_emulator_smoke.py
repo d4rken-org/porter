@@ -618,6 +618,239 @@ class TapConfirmationTest(unittest.TestCase):
         self.runner.screenshot.assert_called_once_with("native-permission")
 
 
+def stall_evidence(focus_token="e09b5", layer_token="e09b5", finished=("input", "window windows", "SurfaceFlinger"),
+                   focus_result="NO_WINDOW", window_token=None, user="0"):
+    """An unanswered-tap file as unanswered_tap_evidence() writes one, cut down to the lines a
+    stranded prompt is read from. Run 40740882227, boot (Android 36, release)."""
+    prompt = "eu.darken.porter/eu.darken.porter.manager.authorization.RequestPermissionActivity"
+    sections = {
+        "input": f"  FocusRequests:\n    displayId=0, name='{focus_token} {prompt}' result='{focus_result}'\n",
+        "window windows": f"  Window #8 Window{{{window_token or focus_token} u{user} {prompt}}}:\n",
+        "activity activities": f"  mCurrentFocus=Window{{{focus_token} u0 {prompt}}}\n",
+        "SurfaceFlinger": ("Offscreen Hierarchy\n"
+                           " ├─ Surface(name=8e76c18 eu.darken.porte[...]imation-leash of starting_reveal#201\n"
+                           f" └─ {layer_token} eu.darken.porter/eu.darken.por[...]zation.RequestPermissionActivity#206 pid=640\n"
+                           "    └─ eu.darken.porter/eu.darken.porter.ma[...]zation.RequestPermissionActivity#207\n"
+                           "\nDisplay 4619827259835644672 (active) HWC layers:\n"),
+    }
+    text = "=== tap\nbutton 'Allow all the time' in eu.darken.porter at 726,1218: screen unchanged\n"
+    for query in smoke.TAP_EVIDENCE_QUERIES:
+        text += f"=== dumpsys {query} at 10-28 18:12:14\n{sections[query]}"
+        if query in finished or query == "activity activities":
+            text += f"=== dumpsys {query} exit status 0\n"
+    return text + "\n=== evidence query: adb exit status 0\n"
+
+
+class StrandedPromptTest(unittest.TestCase):
+    def test_the_prompt_focused_but_offscreen_is_stranded(self):
+        self.assertEqual(smoke.stranded_prompt(stall_evidence()), ("e09b5", "0"))
+
+    def test_a_dump_that_did_not_finish_reads_as_nothing(self):
+        self.assertIsNone(smoke.stranded_prompt(stall_evidence(finished=("input", "window windows"))))
+
+    def test_the_focus_request_and_the_layer_have_to_be_the_same_window(self):
+        self.assertIsNone(smoke.stranded_prompt(stall_evidence(layer_token="a1b2c3")))
+
+    def test_a_window_that_is_not_offscreen_is_not_stranded(self):
+        evidence = stall_evidence().replace("Offscreen Hierarchy\n", "Layer Hierarchy\n")
+        self.assertIsNone(smoke.stranded_prompt(evidence))
+
+    def test_a_prompt_whose_focus_request_found_its_window_is_not_stranded(self):
+        self.assertIsNone(smoke.stranded_prompt(stall_evidence(focus_result="OK")))
+
+    def test_the_focus_request_and_the_window_have_to_be_the_same(self):
+        self.assertIsNone(smoke.stranded_prompt(stall_evidence(window_token="a1b2c3")))
+
+    def test_an_input_dump_that_did_not_finish_reads_as_nothing(self):
+        self.assertIsNone(smoke.stranded_prompt(stall_evidence(finished=("window windows", "SurfaceFlinger"))))
+
+    def test_a_window_dump_that_did_not_finish_reads_as_nothing(self):
+        self.assertIsNone(smoke.stranded_prompt(stall_evidence(finished=("input", "SurfaceFlinger"))))
+
+    def test_a_prompt_in_another_user_names_that_user(self):
+        self.assertEqual(smoke.stranded_prompt(stall_evidence(user="10")), ("e09b5", "10"))
+
+    def test_a_layer_listed_after_the_offscreen_tree_does_not_count(self):
+        evidence = stall_evidence(layer_token="a1b2c3").replace(
+            "\nDisplay 46", "\n └─ e09b5 eu.darken.porter/eu.darken.por[...]zation.RequestPermissionActivity#206\nDisplay 46")
+        self.assertIsNone(smoke.stranded_prompt(evidence))
+
+
+class StrandedPromptTapTest(unittest.TestCase):
+    """A prompt the platform left off the screen is rebuilt once, then tapped like any other."""
+
+    PROMPT = ET.fromstring('<hierarchy><node package="eu.darken.porter"><node text="Allow all the time" '
+                           'package="eu.darken.porter" enabled="true" bounds="[556,1144][897,1292]" /></node></hierarchy>')
+    REBUILDING = ET.fromstring('<hierarchy><node package="eu.darken.porter.probe.native" /></hierarchy>')
+    GRANTED = ET.fromstring('<hierarchy><node package="eu.darken.porter.probe.native"><node text="AUTHORIZED" '
+                            'package="eu.darken.porter.probe.native" enabled="true" /></node></hierarchy>')
+
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.runner = smoke.Smoke(argparse.Namespace(serial="emulator-5554", output=Path(directory.name)))
+        self.runner.shell = Mock()
+        self.runner.rebuild_stranded_prompt = Mock()
+        patcher = patch.object(smoke, "TAP_SETTLE", 0)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = patch.object(smoke.subprocess, "run", return_value=completed(0, stdout=stall_evidence().encode()))
+        self.evidence_run = patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = patch.object(smoke.time, "sleep")
+        self.sleep = patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def taps(self):
+        return [c for c in self.runner.shell.call_args_list if c.args[0] == "input"]
+
+    def test_a_button_missing_while_the_prompt_is_rebuilt_is_waited_for_and_tapped(self):
+        self.runner.ui = Mock(side_effect=[self.PROMPT, self.PROMPT, self.REBUILDING, self.PROMPT, self.PROMPT,
+                                           self.GRANTED])
+        self.runner.tap("Allow all the time")
+        self.runner.rebuild_stranded_prompt.assert_called_once_with("e09b5", "0")
+        self.assertEqual(self.taps(), [call("input", "tap", 726, 1218)] * 2)
+
+    def test_a_prompt_is_rebuilt_once_however_often_it_strands(self):
+        self.runner.ui = Mock(return_value=self.PROMPT)
+        with self.assertRaisesRegex(AssertionError, "3 times and the screen never answered"):
+            self.runner.tap("Allow all the time")
+        self.runner.rebuild_stranded_prompt.assert_called_once()
+        self.assertEqual(len(self.taps()), smoke.TAP_ATTEMPTS)
+
+    def test_an_unanswered_tap_without_the_signature_is_only_tapped_again(self):
+        self.evidence_run.return_value = completed(0, stdout=stall_evidence(layer_token="a1b2c3").encode())
+        self.runner.ui = Mock(side_effect=[self.PROMPT, self.PROMPT, self.PROMPT, self.GRANTED])
+        self.runner.tap("Allow all the time")
+        self.runner.rebuild_stranded_prompt.assert_not_called()
+
+    def test_the_rebuilt_prompts_answer_guard_is_waited_out_before_the_button_is_read_again(self):
+        self.runner.ui = Mock(side_effect=[self.PROMPT, self.PROMPT, self.PROMPT, self.PROMPT, self.GRANTED])
+        self.runner.tap("Allow all the time")
+        self.sleep.assert_any_call(smoke.PROMPT_ANSWER_GUARD)
+        self.assertEqual(self.runner.ui.call_count, 5)
+
+    def test_a_rebuild_that_fails_fails_the_tap_with_its_evidence(self):
+        self.runner.rebuild_stranded_prompt.side_effect = AssertionError("Timed out: the prompt rebuilt")
+        self.runner.ui = Mock(return_value=self.PROMPT)
+        with self.assertRaisesRegex(AssertionError, "rebuilding the stranded prompt failed: Timed out: the prompt "
+                                                    "rebuilt; see .*unanswered-tap-1.txt"):
+            self.runner.tap("Allow all the time")
+        self.assertEqual(len(self.taps()), 1)
+
+    def test_a_button_that_never_comes_back_after_the_rebuild_is_a_failure(self):
+        self.runner.ui = Mock(side_effect=[self.PROMPT, self.PROMPT] + [self.REBUILDING] * 50)
+        with patch.object(smoke.time, "monotonic", side_effect=itertools.count(0, 10)):
+            with self.assertRaisesRegex(AssertionError, "Timed out: button 'Allow all the time'"):
+                self.runner.tap("Allow all the time")
+
+    def test_a_manager_button_outside_the_prompt_never_rebuilds_it(self):
+        settings = ET.fromstring('<hierarchy><node package="eu.darken.porter"><node text="Settings" '
+                                 'package="eu.darken.porter" enabled="true" bounds="[556,1144][897,1292]" />'
+                                 '</node></hierarchy>')
+        self.runner.ui = Mock(side_effect=[settings, settings, settings, self.GRANTED])
+        self.runner.tap("Settings")
+        self.runner.rebuild_stranded_prompt.assert_not_called()
+
+    def test_another_apps_button_never_rebuilds_the_prompt(self):
+        other = ET.fromstring('<hierarchy><node package="com.android.permissioncontroller"><node '
+                              'text="Allow all the time" package="com.android.permissioncontroller" enabled="true" '
+                              'bounds="[556,1144][897,1292]" /></node></hierarchy>')
+        self.runner.ui = Mock(side_effect=[other, other, other, self.GRANTED])
+        self.runner.tap("Allow all the time", "com.android.permissioncontroller")
+        self.runner.rebuild_stranded_prompt.assert_not_called()
+
+
+class RebuildStrandedPromptTest(unittest.TestCase):
+    PROMPT = "eu.darken.porter/eu.darken.porter.manager.authorization.RequestPermissionActivity"
+
+    def setUp(self):
+        self.runner = smoke.Smoke.__new__(smoke.Smoke)
+        self.focus = []
+        self.locales = "[]"
+        self.system_locale = "en-US"
+        self.layers = ("Layer Hierarchy\n ├─ Display 0#2\n\nOffscreen Hierarchy\n"
+                       " └─ e09b5 eu.darken.porter/eu.darken.por[...]zation.RequestPermissionActivity#206\n\n")
+        self.runner.shell = Mock(side_effect=self.device)
+        for name, value in (("PROMPT_REBUILD_TIMEOUT", 0.3), ("PROMPT_ANSWER_GUARD", 0)):
+            patcher = patch.object(smoke, name, value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+        patcher = patch.object(smoke.time, "sleep")
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def device(self, *args, **kwargs):
+        if args[:2] == ("dumpsys", "input"):
+            token, result = self.focus.pop(0) if len(self.focus) > 1 else self.focus[0]
+            return f"  FocusRequests:\n    displayId=0, name='{token} {self.PROMPT}' result='{result}'\n"
+        if args[:3] == ("cmd", "locale", "get-app-locales"):
+            return f"Locales for eu.darken.porter for user {args[5]} are {self.locales}"
+        if args[:2] == ("dumpsys", "SurfaceFlinger"):
+            return self.layers
+        if args == ("getprop", "persist.sys.locale"):
+            return self.system_locale
+        return ""
+
+    def locale_calls(self):
+        return [c.args[3:] for c in self.runner.shell.call_args_list
+                if c.args[:3] == ("cmd", "locale", "set-app-locales")]
+
+    def focus_reads(self):
+        return sum(1 for c in self.runner.shell.call_args_list if c.args[:2] == ("dumpsys", "input"))
+
+    def test_the_prompt_is_rebuilt_twice_and_the_apps_own_locales_put_back(self):
+        self.locales = "[de-DE,en-US]"
+        self.focus = [("e09b5", "NO_WINDOW"), ("1f2e3d", "OK"), ("4a5b6c", "OK")]
+        self.runner.rebuild_stranded_prompt("e09b5", "10")
+        self.assertEqual(self.locale_calls(), [
+            ("eu.darken.porter", "--user", "10", "--locales", "en-GB"),
+            ("eu.darken.porter", "--user", "10", "--locales", "de-DE,en-US")])
+
+    def test_a_rebuilt_window_still_without_input_is_waited_out(self):
+        # A new window's focus request can read NO_WINDOW until SurfaceFlinger has composited it.
+        self.focus = [("1f2e3d", "OK"), ("4a5b6c", "NO_WINDOW"), ("4a5b6c", "OK")]
+        self.runner.rebuild_stranded_prompt("e09b5", "0")
+        self.assertEqual(self.focus_reads(), 3)
+
+    def test_the_interim_window_is_not_taken_for_the_put_back_rebuild(self):
+        self.focus = [("1f2e3d", "OK"), ("1f2e3d", "OK"), ("4a5b6c", "OK")]
+        self.runner.rebuild_stranded_prompt("e09b5", "0")
+        self.assertEqual(self.focus_reads(), 3)
+
+    def test_the_stranded_window_is_not_taken_for_the_put_back_rebuild(self):
+        self.focus = [("1f2e3d", "OK"), ("e09b5", "OK"), ("4a5b6c", "OK")]
+        self.runner.rebuild_stranded_prompt("e09b5", "0")
+        self.assertEqual(self.focus_reads(), 3)
+
+    def test_a_rebuild_that_never_comes_puts_the_locales_back_and_fails(self):
+        self.focus = [("e09b5", "NO_WINDOW")]
+        with self.assertRaisesRegex(AssertionError, "the prompt rebuilt"):
+            self.runner.rebuild_stranded_prompt("e09b5", "0")
+        self.assertEqual(self.locale_calls()[-1], ("eu.darken.porter", "--user", "0", "--locales", ""))
+
+    def test_a_rebuilt_prompt_still_offscreen_fails(self):
+        self.focus = [("1f2e3d", "OK"), ("4a5b6c", "OK")]
+        self.layers = ("Layer Hierarchy\n ├─ Display 0#2\n\nOffscreen Hierarchy\n"
+                       " └─ 4a5b6c eu.darken.porter/eu.darken.por[...]zation.RequestPermissionActivity#310\n\n")
+        with self.assertRaisesRegex(AssertionError, "4a5b6c is off the screen too"):
+            self.runner.rebuild_stranded_prompt("e09b5", "0")
+
+    def test_layers_that_cannot_be_read_do_not_count_as_on_screen(self):
+        self.focus = [("1f2e3d", "OK"), ("4a5b6c", "OK")]
+        self.layers = "Permission Denial: can't dump SurfaceFlinger\n"
+        with self.assertRaisesRegex(AssertionError, "listed no layers"):
+            self.runner.rebuild_stranded_prompt("e09b5", "0")
+
+    def test_a_system_already_in_the_temporary_locale_gets_another(self):
+        # With no locales of its own the app shows the system's, and asking for those again
+        # rebuilds nothing.
+        self.system_locale = "en-GB"
+        self.focus = [("1f2e3d", "OK"), ("4a5b6c", "OK")]
+        self.runner.rebuild_stranded_prompt("e09b5", "0")
+        self.assertEqual(self.locale_calls()[0], ("eu.darken.porter", "--user", "0", "--locales", "en-US"))
+
+
 class FrameworkErrorDialogTest(unittest.TestCase):
     """A crashed system app's dialog is about neither Porter nor the probe, and covers both."""
 
