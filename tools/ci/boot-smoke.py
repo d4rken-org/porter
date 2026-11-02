@@ -54,6 +54,11 @@ STARTER_CLOSE_TIMEOUT = 30
 WIRELESS_OFF_SETTLE = 15
 # The background start runs when WorkManager gets to it, and only then turns wireless debugging on.
 NETWORK_PROMPT_TIMEOUT = 120
+# How long the reply field gets to show what was typed on two reads in a row. Text the keyboard
+# dropped never shows.
+REPLY_TIMEOUT = 30
+# Deletions that empty a reply field however many late digits reached it after it was read.
+REPLY_CLEAR_KEYS = 32
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "wireless-pairing", "wireless-off-home-start", "wireless-off-background-start",
          "app-adb-start", "automation-broadcasts", "force-stop-before-boot",
@@ -194,6 +199,51 @@ class Boot(base.Smoke):
                   flush=True)
         raise AssertionError(f"Tapped '{action}' in '{title}' {base.TAP_ATTEMPTS} times and the screen never "
                              f"answered; see {evidence}")
+
+    def type_into_reply(self, text):
+        """Types into the open notification's reply field and returns once the field holds exactly
+        [text] on two reads in a row. Typing that arrives while the keyboard is still restarting its
+        input on the field is dropped, whole or in part, and logged only as "commitText on inactive
+        InputConnection", so what the field holds is read back, and a field holding anything else is
+        emptied and typed into again."""
+        def field():
+            """What the focused reply field holds, in a tuple so that an empty field still counts
+            as found; an empty field reports its hint as its text."""
+            node = next((n for n in self.ui().iter("node")
+                         if n.get("resource-id") == f"{SYSTEMUI}:id/remote_input_text"
+                         and n.get("focused") == "true"), None)
+            if node is None:
+                return None
+            return ("" if node.get("text") == node.get("hint") else node.get("text", ""),)
+
+        def settles_on(wanted):
+            reads = []
+
+            def look():
+                reads.append(field())
+                return reads[-2:] == [(wanted,)] * 2
+            try:
+                self.until(f"the reply field holding {wanted!r}", look, timeout=REPLY_TIMEOUT)
+                return True
+            except AssertionError:
+                return False
+
+        held = None
+        for attempt in range(base.TAP_ATTEMPTS):
+            (held,) = self.until("the focused reply field", field)
+            if held:
+                self.shell("input", "keyevent", "KEYCODE_MOVE_END", *["KEYCODE_DEL"] * REPLY_CLEAR_KEYS)
+                if not settles_on(""):
+                    held = (field() or (None,))[0]
+                    print(f"NOTE the reply field held {held!r} after clearing it", flush=True)
+                    continue
+            self.shell("input", "text", text)
+            if settles_on(text):
+                return
+            held = (field() or (None,))[0]
+            print(f"NOTE the reply field held {held!r} after typing {text!r}", flush=True)
+        raise AssertionError(f"Could not get {text!r} into the reply field in {base.TAP_ATTEMPTS} attempts; "
+                             f"it held {held!r}")
 
     def started_by_manager(self):
         """Evidence that the manager's own ADB client made the connection, read from its debug
@@ -347,7 +397,7 @@ class Boot(base.Smoke):
             # The dialog stays up while the code goes in through the notification, as it must.
             self.until("Porter found the pairing service", lambda: notified("Pairing service found"), timeout=60)
             self.tap_notification_action("Pairing service found", "Enter pairing code", screenshot="pairing-notification")
-            self.shell("input", "text", code)
+            self.type_into_reply(code)
             self.shell("input", "keyevent", "KEYCODE_ENTER")
             self.until("Porter reports the pairing", lambda: notified("Pairing successful"), timeout=60)
 
