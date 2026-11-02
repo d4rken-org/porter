@@ -178,6 +178,85 @@ class NotificationTapTest(unittest.TestCase):
                       (self.smoke.output / "unanswered-tap-1.txt").read_text())
 
 
+class ReplyTypingTest(unittest.TestCase):
+    """A fake reply field. Typing lands as [arrivals] says, one entry per `input text`, and each
+    entry of [late] reaches the field on a later read, as digits the keyboard delivered late."""
+
+    def setUp(self):
+        self.smoke, directory = runner()
+        self.addCleanup(directory.cleanup)
+        self.held = ""
+        self.arrivals = []
+        self.late = []
+        self.hidden = 0
+        self.stuck = False
+        self.smoke.shell = Mock(side_effect=self.device)
+        self.smoke.ui = Mock(side_effect=self.read)
+        for name, value in (("REPLY_TIMEOUT", 0.2),):
+            patcher = patch.object(boot, name, value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+        patcher = patch.object(boot.base.time, "sleep")
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def read(self, *args, **kwargs):
+        if self.hidden:
+            self.hidden -= 1
+            return ET.fromstring("<hierarchy />")
+        if self.late:
+            self.held += self.late.pop(0)
+        return ET.fromstring(
+            f'<hierarchy><node package="{boot.SYSTEMUI}" resource-id="{boot.SYSTEMUI}:id/remote_input_text" '
+            f'focused="true" text="{self.held or "Pairing code"}" hint="Pairing code" /></hierarchy>')
+
+    def device(self, *args, **kwargs):
+        if args[:2] == ("input", "text"):
+            self.held += self.arrivals.pop(0) if self.arrivals else args[2]
+        elif args[:2] == ("input", "keyevent") and not self.stuck:
+            self.held = self.held[:max(0, len(self.held) - args.count("KEYCODE_DEL"))]
+        return ""
+
+    def typed(self):
+        return [c.args for c in self.smoke.shell.call_args_list if c.args[:2] == ("input", "text")]
+
+    def test_text_the_field_shows_is_typed_once(self):
+        self.smoke.type_into_reply("997329")
+        self.assertEqual(self.typed(), [("input", "text", "997329")])
+        self.assertEqual(self.held, "997329")
+
+    def test_a_partly_dropped_code_is_cleared_and_typed_again(self):
+        # Run 40740882227, 10-28 18:17:32: "commitText on inactive InputConnection", and adbd then
+        # refused the code as invalid.
+        self.arrivals = ["329"]
+        self.smoke.type_into_reply("997329")
+        self.assertEqual(self.typed(), [("input", "text", "997329")] * 2)
+        self.smoke.shell.assert_any_call("input", "keyevent", "KEYCODE_MOVE_END", *["KEYCODE_DEL"] * boot.REPLY_CLEAR_KEYS)
+        self.assertEqual(self.held, "997329")
+
+    def test_digits_that_arrive_after_a_matching_read_are_not_sent(self):
+        self.late = ["", "", "9"]
+        self.smoke.type_into_reply("997329")
+        self.assertEqual(len(self.typed()), 2)
+        self.assertEqual(self.held, "997329")
+
+    def test_a_field_missing_from_one_read_is_waited_for_before_typing(self):
+        self.hidden = 2
+        self.smoke.type_into_reply("997329")
+        self.assertEqual(self.typed(), [("input", "text", "997329")])
+
+    def test_a_field_that_never_holds_the_code_fails_rather_than_sending_it(self):
+        self.arrivals = [""] * 3
+        with self.assertRaisesRegex(AssertionError, "Could not get '997329' into the reply field in 3 attempts; it held ''"):
+            self.smoke.type_into_reply("997329")
+
+    def test_a_field_that_will_not_clear_is_never_typed_into(self):
+        self.held, self.stuck = "12", True
+        with self.assertRaisesRegex(AssertionError, "in 3 attempts; it held '12'"):
+            self.smoke.type_into_reply("997329")
+        self.assertEqual(self.typed(), [])
+
+
 class ResumedComponentsTest(unittest.TestCase):
     """What the home-start case reads to see the starter screen open and close by itself."""
     STARTER = "ActivityRecord{2b0e4d2 u0 eu.darken.porter/.manager.starter.StarterActivity t15}"
