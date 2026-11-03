@@ -9,6 +9,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -78,6 +79,10 @@ class AdbMdns(
             else -> null
         }
 
+        private fun forget(info: NsdServiceInfo) {
+            if (found[info.serviceName] === info) found.remove(info.serviceName)
+        }
+
         private fun logOutcome(service: String, resolve: String, result: String) {
             Log.i(TAG, "Resolve outcome: listener=$id service=$service resolve=$resolve result=$result")
         }
@@ -126,11 +131,16 @@ class AdbMdns(
         override fun onServiceFound(info: NsdServiceInfo) {
             handler.post {
                 if (!active) return@post
-                found[info.serviceName] = info
                 val service = label(info.serviceName)
                 val seen = (sightings[info.serviceName] ?: 0) + 1
                 sightings[info.serviceName] = seen
                 Log.i(TAG, "Service found: listener=$id service=$service seen=$seen")
+                if (info.serviceName in found) {
+                    val reason = if (info.serviceName == serviceName) "accepted" else "pending"
+                    Log.i(TAG, "Resolve skipped: listener=$id service=$service reason=$reason")
+                    return@post
+                }
+                found[info.serviceName] = info
                 val resolve = "R${++resolves}"
                 val request = "listener=$id client=$client service=$service resolve=$resolve"
                 Log.i(TAG, "Resolve issued: $request")
@@ -138,26 +148,40 @@ class AdbMdns(
                     nsdManager.resolveService(info, object : NsdManager.ResolveListener {
                         override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
                             Log.w(TAG, "Resolving service failed: $errorCode $request")
+                            handler.post { forget(info) }
                         }
                         override fun onServiceResolved(resolved: NsdServiceInfo) {
                             Log.i(TAG, "Service resolved: $request host=${hostKind(resolved.host)} port=${resolved.port}")
                             handler.post resolved@{
                                 staleReason(info)?.let { logOutcome(service, resolve, it); return@resolved }
-                                val host = resolved.host?.hostAddress
-                                    ?: run { logOutcome(service, resolve, "no-host"); return@resolved }
+                                val host = resolved.host?.hostAddress ?: run {
+                                    logOutcome(service, resolve, "no-host")
+                                    if (active) forget(info)
+                                    return@resolved
+                                }
                                 scope.launch {
-                                    val rejected = withContext(Dispatchers.IO) {
-                                        val local = NetworkInterface.getNetworkInterfaces().asSequence().any { network ->
-                                            network.inetAddresses.asSequence().any { it.hostAddress == host }
+                                    val rejected = try {
+                                        withContext(Dispatchers.IO) {
+                                            val local = NetworkInterface.getNetworkInterfaces().asSequence().any { network ->
+                                                network.inetAddresses.asSequence().any { it.hostAddress == host }
+                                            }
+                                            when {
+                                                !local -> "no-interface"
+                                                !isPortAvailable(host, resolved.port) -> "port-closed"
+                                                else -> null
+                                            }
                                         }
-                                        when {
-                                            !local -> "no-interface"
-                                            !isPortAvailable(host, resolved.port) -> "port-closed"
-                                            else -> null
-                                        }
+                                    } catch (e: CancellationException) {
+                                        throw e
+                                    } catch (e: Exception) {
+                                        logOutcome(service, resolve, "probe-error")
+                                        Log.w(TAG, "Probe failed: listener=$id service=$service resolve=$resolve", e)
+                                        if (active) forget(info)
+                                        return@launch
                                     }
                                     val result = rejected ?: staleReason(info)?.let { "recheck-$it" }
                                     logOutcome(service, resolve, result ?: "accepted")
+                                    if (rejected != null && active) forget(info)
                                     if (result == null) {
                                         serviceName = info.serviceName
                                         Log.i(TAG, "Service accepted: type=$serviceType port=${resolved.port}")
@@ -169,6 +193,7 @@ class AdbMdns(
                     })
                 } catch (e: Exception) {
                     Log.w(TAG, "Cannot resolve service: $request", e)
+                    forget(info)
                 }
             }
         }
