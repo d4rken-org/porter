@@ -28,7 +28,8 @@ class AdbMdnsTest {
         assertTrue("Callback did not arrive", check())
     }
 
-    private fun entries(prefix: String) = ShadowLog.getLogsForTag(AdbMdns.TAG).filter { it.msg.startsWith(prefix) }
+    private fun entries(prefix: String, listener: String? = null) = ShadowLog.getLogsForTag(AdbMdns.TAG)
+        .filter { it.msg.startsWith(prefix) && (listener == null || it.field("listener") == listener) }
     private fun ShadowLog.LogItem.field(key: String) = Regex("\\b$key=(\\S+)").find(msg)?.groupValues?.get(1)
 
     private fun discover(type: String, results: MutableList<Pair<String, Int>>): Pair<AdbMdns, NsdManager.DiscoveryListener> {
@@ -40,9 +41,13 @@ class AdbMdnsTest {
         return mdns to listener
     }
 
-    private fun service(port: Int, host: InetAddress? = InetAddress.getLoopbackAddress()) = NsdServiceInfo().apply {
+    private fun service(
+        port: Int,
+        host: InetAddress? = InetAddress.getLoopbackAddress(),
+        type: String = AdbMdns.TLS_CONNECT,
+    ) = NsdServiceInfo().apply {
         serviceName = SERVICE_NAME
-        serviceType = AdbMdns.TLS_CONNECT
+        serviceType = type
         if (host != null) this.host = host
         this.port = port
     }
@@ -51,6 +56,11 @@ class AdbMdnsTest {
         listener.onServiceFound(info)
         idle()
         nsd.getResolveListeners(info)!!.single().onServiceResolved(info)
+    }
+
+    private fun assertResolves(expected: Int, info: NsdServiceInfo, listener: String? = null) {
+        assertEquals(expected, nsd.getResolveListeners(info)!!.size)
+        assertEquals(expected, entries("Resolve issued:", listener).size)
     }
 
     @After fun noRawServiceNameIsLogged() {
@@ -128,7 +138,33 @@ class AdbMdnsTest {
         mdns.stop()
     }
 
-    @Test fun resolutionOfReplacedFoundEntryIsLoggedAsReplaced() {
+    @Test fun duplicateSightingsResolveOnceForPairingAndStartup() {
+        for (type in listOf(AdbMdns.TLS_PAIRING, AdbMdns.TLS_CONNECT)) {
+            val results = mutableListOf<Pair<String, Int>>()
+            val (mdns, listener) = discover(type, results)
+            val id = entries("Discovery start: ").last().field("listener")
+            ServerSocket(0, 1, InetAddress.getLoopbackAddress()).use { socket ->
+                val first = service(socket.localPort, type = type)
+                listener.onServiceFound(first)
+                idle()
+                listener.onServiceFound(service(socket.localPort, type = type))
+                idle()
+                assertResolves(1, first, id)
+                val skipped = entries("Resolve skipped:", id).single()
+                assertEquals("S1", skipped.field("service"))
+                assertEquals("pending", skipped.field("reason"))
+                assertEquals(Log.INFO, skipped.type)
+                assertEquals(listOf("1", "2"), entries("Service found:", id).map { it.field("seen") })
+                nsd.getResolveListeners(first)!!.single().onServiceResolved(first)
+                await { results.isNotEmpty() }
+                assertEquals(listOf("127.0.0.1" to socket.localPort), results)
+            }
+            assertEquals("accepted", entries("Resolve outcome:", id).single().field("result"))
+            mdns.stop()
+        }
+    }
+
+    @Test fun resolutionOfLostAndRefoundEntryIsLoggedAsReplaced() {
         val results = mutableListOf<Pair<String, Int>>()
         val (mdns, listener) = discover(AdbMdns.TLS_CONNECT, results)
         ServerSocket(0, 1, InetAddress.getLoopbackAddress()).use { socket ->
@@ -137,31 +173,125 @@ class AdbMdnsTest {
             listener.onServiceFound(first)
             idle()
             val resolution = nsd.getResolveListeners(first)!!.single()
+            listener.onServiceLost(first)
+            idle()
             listener.onServiceFound(second)
             idle()
+            assertResolves(2, first)
             resolution.onServiceResolved(first)
             idle()
+            assertTrue(results.isEmpty())
+            assertEquals("replaced", entries("Resolve outcome:").single().field("result"))
+            nsd.getResolveListeners(first)!!.last().onServiceResolved(second)
+            await { results.isNotEmpty() }
+            assertEquals(listOf("127.0.0.1" to socket.localPort), results)
         }
-        assertTrue(results.isEmpty())
         val found = entries("Service found:")
         assertEquals(listOf("S1", "S1"), found.map { it.field("service") })
         assertEquals(listOf("1", "2"), found.map { it.field("seen") })
         assertTrue(found.all { it.type == Log.INFO })
-        val outcome = entries("Resolve outcome:").single()
-        assertEquals("replaced", outcome.field("result"))
-        assertEquals("R1", outcome.field("resolve"))
-        assertEquals(Log.INFO, outcome.type)
+        val outcomes = entries("Resolve outcome:")
+        assertEquals(listOf("replaced", "accepted"), outcomes.map { it.field("result") })
+        assertEquals(listOf("R1", "R2"), outcomes.map { it.field("resolve") })
+        assertTrue(outcomes.all { it.type == Log.INFO })
+        mdns.stop()
+    }
+
+    @Test fun sightingAfterAcceptanceIssuesNoResolve() {
+        val results = mutableListOf<Pair<String, Int>>()
+        val (mdns, listener) = discover(AdbMdns.TLS_CONNECT, results)
+        ServerSocket(0, 1, InetAddress.getLoopbackAddress()).use { socket ->
+            val first = service(socket.localPort)
+            resolveOnce(first, listener)
+            await { results.isNotEmpty() }
+            listener.onServiceFound(service(socket.localPort))
+            idle()
+            assertResolves(1, first)
+            assertEquals("accepted", entries("Resolve skipped:").single().field("reason"))
+            assertEquals(listOf("127.0.0.1" to socket.localPort), results)
+        }
+        mdns.stop()
+    }
+
+    @Test fun failedResolveLetsTheNextSightingResolve() {
+        val results = mutableListOf<Pair<String, Int>>()
+        val (mdns, listener) = discover(AdbMdns.TLS_CONNECT, results)
+        ServerSocket(0, 1, InetAddress.getLoopbackAddress()).use { socket ->
+            val first = service(socket.localPort)
+            listener.onServiceFound(first)
+            idle()
+            nsd.getResolveListeners(first)!!.single().onResolveFailed(first, NsdManager.FAILURE_INTERNAL_ERROR)
+            idle()
+            val second = service(socket.localPort)
+            listener.onServiceFound(second)
+            idle()
+            assertResolves(2, first)
+            assertTrue(entries("Resolve skipped:").isEmpty())
+            nsd.getResolveListeners(first)!!.last().onServiceResolved(second)
+            await { results.isNotEmpty() }
+            assertEquals(listOf("127.0.0.1" to socket.localPort), results)
+        }
+        assertEquals("accepted", entries("Resolve outcome:").single().field("result"))
+        mdns.stop()
+    }
+
+    @Test fun staleResolveFailureKeepsTheNewerEntry() {
+        val (mdns, listener) = discover(AdbMdns.TLS_CONNECT, mutableListOf())
+        val first = service(5555)
+        listener.onServiceFound(first)
+        idle()
+        val resolution = nsd.getResolveListeners(first)!!.single()
+        listener.onServiceLost(first)
+        idle()
+        listener.onServiceFound(service(5555))
+        idle()
+        resolution.onResolveFailed(first, NsdManager.FAILURE_INTERNAL_ERROR)
+        idle()
+        listener.onServiceFound(service(5555))
+        idle()
+        assertResolves(2, first)
+        assertEquals("pending", entries("Resolve skipped:").single().field("reason"))
+        mdns.stop()
+    }
+
+    @Test fun staleRejectionAfterTheProbeKeepsTheNewerEntry() {
+        val results = mutableListOf<Pair<String, Int>>()
+        val (mdns, listener) = discover(AdbMdns.TLS_CONNECT, results)
+        val closed = ServerSocket(0, 1, InetAddress.getLoopbackAddress()).use { it.localPort }
+        ServerSocket(0, 1, InetAddress.getLoopbackAddress()).use { socket ->
+            val first = service(closed)
+            val second = service(socket.localPort)
+            listener.onServiceFound(first)
+            idle()
+            nsd.getResolveListeners(first)!!.single().onServiceResolved(first)
+            listener.onServiceLost(first)
+            listener.onServiceFound(second)
+            await { entries("Resolve outcome:").isNotEmpty() }
+            assertEquals("port-closed", entries("Resolve outcome:").single().field("result"))
+            listener.onServiceFound(service(socket.localPort))
+            idle()
+            assertResolves(2, first)
+            assertEquals("pending", entries("Resolve skipped:").single().field("reason"))
+            nsd.getResolveListeners(first)!!.last().onServiceResolved(second)
+            await { results.isNotEmpty() }
+            assertEquals(listOf("127.0.0.1" to socket.localPort), results)
+        }
+        assertEquals(listOf("port-closed", "accepted"), entries("Resolve outcome:").map { it.field("result") })
         mdns.stop()
     }
 
     @Test fun nonLocalHostIsLoggedAsNoInterface() {
         val results = mutableListOf<Pair<String, Int>>()
         val (mdns, listener) = discover(AdbMdns.TLS_CONNECT, results)
-        resolveOnce(service(5555, InetAddress.getByName("203.0.113.1")), listener)
+        val info = service(5555, InetAddress.getByName("203.0.113.1"))
+        resolveOnce(info, listener)
         await { entries("Resolve outcome:").isNotEmpty() }
         assertEquals("no-interface", entries("Resolve outcome:").single().field("result"))
         assertEquals("ipv4-other", entries("Service resolved:").single().field("host"))
         assertTrue(results.isEmpty())
+        listener.onServiceFound(service(5555, InetAddress.getByName("203.0.113.1")))
+        idle()
+        assertResolves(2, info)
         mdns.stop()
     }
 
@@ -169,21 +299,29 @@ class AdbMdnsTest {
         val results = mutableListOf<Pair<String, Int>>()
         val (mdns, listener) = discover(AdbMdns.TLS_CONNECT, results)
         val port = ServerSocket(0, 1, InetAddress.getLoopbackAddress()).use { it.localPort }
-        resolveOnce(service(port), listener)
+        val info = service(port)
+        resolveOnce(info, listener)
         await { entries("Resolve outcome:").isNotEmpty() }
         assertEquals("port-closed", entries("Resolve outcome:").single().field("result"))
         assertTrue(results.isEmpty())
+        listener.onServiceFound(service(port))
+        idle()
+        assertResolves(2, info)
         mdns.stop()
     }
 
     @Test fun resolutionWithoutHostIsLoggedAsNoHost() {
         val results = mutableListOf<Pair<String, Int>>()
         val (mdns, listener) = discover(AdbMdns.TLS_CONNECT, results)
-        resolveOnce(service(5555, host = null), listener)
+        val info = service(5555, host = null)
+        resolveOnce(info, listener)
         idle()
         assertEquals("no-host", entries("Resolve outcome:").single().field("result"))
         assertEquals("none", entries("Service resolved:").single().field("host"))
         assertTrue(results.isEmpty())
+        listener.onServiceFound(service(5555, host = null))
+        idle()
+        assertResolves(2, info)
         mdns.stop()
     }
 
@@ -252,6 +390,34 @@ class AdbMdnsTest {
         assertEquals("R1", failed.field("resolve"))
         assertEquals(issued.field("resolve"), failed.field("resolve"))
         assertEquals(issued.field("service"), failed.field("service"))
+        val valid = service(5555)
+        listener.onServiceFound(valid)
+        idle()
+        assertEquals(1, nsd.getResolveListeners(valid)!!.size)
+        assertEquals(2, entries("Resolve issued:").size)
+        assertTrue(entries("Resolve skipped:").isEmpty())
+        mdns.stop()
+    }
+
+    @Test fun probeErrorIsLoggedAndLetsTheNextSightingResolve() {
+        val results = mutableListOf<Pair<String, Int>>()
+        val (mdns, listener) = discover(AdbMdns.TLS_CONNECT, results)
+        val info = service(70000)
+        resolveOnce(info, listener)
+        await { entries("Resolve outcome:").isNotEmpty() }
+        assertEquals("probe-error", entries("Resolve outcome:").single().field("result"))
+        val issued = entries("Resolve issued:").single()
+        val failed = entries("Probe failed:").single()
+        assertEquals(Log.WARN, failed.type)
+        assertTrue(failed.throwable is IllegalArgumentException)
+        for (key in listOf("listener", "service", "resolve")) {
+            assertNotNull(key, failed.field(key))
+            assertEquals(key, issued.field(key), failed.field(key))
+        }
+        assertTrue(results.isEmpty())
+        listener.onServiceFound(service(70000))
+        idle()
+        assertResolves(2, info)
         mdns.stop()
     }
 
