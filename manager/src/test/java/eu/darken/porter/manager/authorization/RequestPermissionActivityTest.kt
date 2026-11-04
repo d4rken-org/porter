@@ -15,6 +15,7 @@ import eu.darken.porter.manager.R
 import eu.darken.porter.manager.TestApplication
 import eu.darken.porter.manager.utils.PorterStateMachine
 import eu.darken.porter.manager.utils.UserHandleCompat
+import kotlinx.coroutines.test.StandardTestDispatcher
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -34,7 +35,10 @@ import java.util.concurrent.TimeUnit
 @Config(application = TestApplication::class, sdk = [34])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class RequestPermissionActivityTest {
-    @get:Rule val compose = createEmptyComposeRule()
+    // compose-ui-test 1.9.2's default rule runs effects on an unconfined dispatcher, which resumes
+    // the prompt's icon load on the IO worker that finished it and recomposes there.
+    @OptIn(ExperimentalTestApi::class)
+    @get:Rule val compose = createEmptyComposeRule(StandardTestDispatcher())
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val gateway = FakePermissionGateway()
     private var scenario: ActivityScenario<RequestPermissionActivity>? = null
@@ -236,6 +240,8 @@ class RequestPermissionActivityTest {
         }
         val scenario = launch()
         awaitText(allow)
+        // The effect that records which app was drawn is queued behind the frame that drew it.
+        compose.mainClock.advanceTimeByFrame()
         pastGrace()
         scenario.onActivity {
             assertTrue("a prompt that never changed app answers normally", it.userIsAnswering())
