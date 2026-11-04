@@ -38,6 +38,23 @@ El reemplazo integrado está disponible desde el usuario principal de Android. S
 El APK del complemento sigue disponible como descarga independiente de la misma versión. Para la instalación manual, detén y desinstala Shizuku, instala Porter Compatibility e inicia Porter. Usa el reemplazo integrado de Porter para transferir las decisiones de acceso aptas; abrir el diálogo de reemplazo por sí solo no guarda ninguna importación. Las restricciones de instalación del dispositivo también pueden afectar al instalador integrado; la acción **Manual** abre el instalador de Android.
 
 Una vez instalado, la pantalla de inicio muestra cuántas apps instaladas se conectan a través de ella. Toca su tarjeta para ver su versión, reinstalar la copia incluida o desinstalarla. Porter intenta desinstalar primero mediante su servicio y abre el desinstalador de Android si eso falla. Quitarla interrumpe las apps que necesitan compatibilidad; las apps con soporte directo de Porter siguen funcionando. La pantalla de compatibilidad comprueba los cambios automáticamente mientras está abierta.
+
+## Porter de Google Play
+{: #porter-from-google-play }
+
+Porter de Google Play no incluye la app complementaria ni importa las decisiones de acceso de Shizuku. Necesita su propia app complementaria: Porter solo funciona con una app complementaria firmada con la misma clave que Porter, y Google Play firma Porter con una clave distinta a la de las versiones de GitHub. Cada versión ofrece ambas apps complementarias:
+
+| Porter instalado desde | Descarga de la app complementaria |
+| --- | --- |
+| Google Play | `porter-compat-VERSION-gplay.apk` |
+| GitHub (versión FOSS) | `porter-compat-VERSION-release.apk` |
+
+1. Detén y desinstala Shizuku.
+2. Descarga la app complementaria para Google Play desde la [versión](https://github.com/d4rken-org/porter/releases) que corresponda a tu versión de Porter e instálala.
+3. Inicia Porter. Vuelve a la app cliente y aprueba el acceso.
+
+Si la pantalla de compatibilidad indica que hay otra app de Shizuku instalada aunque Porter Compatibility esté instalado, la app complementaria corresponde a la otra versión. Desinstálala e instala la correcta.
+
 ## ¿Pueden ejecutarse Porter y Shizuku a la vez?
 {: #can-porter-and-shizuku-run-together }
 

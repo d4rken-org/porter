@@ -199,7 +199,7 @@ class CompatibilityActivity : ComposeActivity() {
                     HomeCard(stringResource(R.string.compat_help), Icons.AutoMirrored.TwoTone.HelpOutline) {
                         Text(stringResource(R.string.compat_other_build))
                         HomeCardActions {
-                            TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@CompatibilityActivity, Helps.APPS.get()) }) {
+                            TextButton(onClick = { CustomTabsHelper.launchUrlOrCopy(this@CompatibilityActivity, Helps.APPS_GPLAY.get()) }) {
                                 Text(stringResource(R.string.compat_help))
                             }
                         }

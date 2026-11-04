@@ -38,6 +38,23 @@ Le remplacement intégré est disponible depuis l’utilisateur Android principa
 L’APK du compagnon reste téléchargeable séparément depuis la même version. Pour une installation manuelle, arrêtez et désinstallez Shizuku, installez Porter Compatibility, puis démarrez Porter. Utilisez le remplacement intégré de Porter pour transférer les décisions d’accès éligibles ; ouvrir la boîte de dialogue de remplacement ne suffit pas à enregistrer un import. Les restrictions d’installation de l’appareil peuvent aussi s’appliquer à l’installateur intégré ; l’action **Manuel** ouvre l’installateur d’Android.
 
 Une fois installée, la page d’accueil affiche le nombre d’applications installées qui passent par elle. Touchez sa carte pour voir sa version, réinstaller la copie incluse ou la désinstaller. Porter tente d’abord de désinstaller via son service et ouvre le désinstallateur d’Android en cas d’échec. La retirer interrompt les applications qui ont besoin de la compatibilité ; celles qui prennent directement en charge Porter continuent de fonctionner. L’écran de compatibilité vérifie automatiquement les changements tant qu’il est ouvert.
+
+## Porter depuis Google Play
+{: #porter-from-google-play }
+
+Porter depuis Google Play n’inclut pas l’application compagnon et n’importe pas les décisions d’accès de Shizuku. Il lui faut son propre compagnon : Porter ne fonctionne qu’avec un compagnon signé avec la même clé que lui, et Google Play signe Porter avec une clé différente de celle des versions GitHub. Chaque version propose les deux compagnons :
+
+| Porter installé depuis | Compagnon à télécharger |
+| --- | --- |
+| Google Play | `porter-compat-VERSION-gplay.apk` |
+| GitHub (version FOSS) | `porter-compat-VERSION-release.apk` |
+
+1. Arrêtez et désinstallez Shizuku.
+2. Téléchargez le compagnon pour Google Play depuis la [version](https://github.com/d4rken-org/porter/releases) qui correspond à votre version de Porter et installez-le.
+3. Démarrez Porter. Revenez à l’application cliente et autorisez l’accès.
+
+Si l’écran de compatibilité indique qu’une autre application Shizuku est installée alors que Porter Compatibility l’est, le compagnon appartient à l’autre version. Désinstallez-le et installez celui qui correspond.
+
 ## Porter et Shizuku peuvent-ils fonctionner ensemble ?
 {: #can-porter-and-shizuku-run-together }
 
