@@ -269,6 +269,7 @@ jobs:
           ram-size: ${{ matrix.ram || '' }}
           avd-name: porter-ci
           emulator-port: 5554
+          emulator-build: 16428233 # 37.2.12
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none ${{ matrix.features }}
           disable-animations: true
           script: >-
@@ -370,6 +371,7 @@ jobs:
           profile: pixel_2
           avd-name: porter-ci
           emulator-port: 5554
+          emulator-build: 16428233 # 37.2.12
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
           disable-animations: true
           script: >-
