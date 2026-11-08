@@ -2,6 +2,7 @@ package eu.darken.porter.manager.home
 
 import android.app.Application
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -123,9 +124,16 @@ class PairingViewModel(application: Application, savedStateHandle: SavedStateHan
                 pairAdb(host.ifEmpty { "127.0.0.1" }, port, password)
                 success.value = true
             } catch (e: CancellationException) { throw e }
-            catch (e: Exception) { error.value = e }
+            catch (e: Exception) {
+                Log.w(TAG, "Pair failed: port=$port", e)
+                error.value = e
+            }
             finally { busy.value = false }
         }
     }
     override fun onCleared() { mdns.stop() }
+
+    private companion object {
+        const val TAG = "AdbPairDialog"
+    }
 }
