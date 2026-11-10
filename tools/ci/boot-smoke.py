@@ -63,6 +63,12 @@ REPLY_CLEAR_KEYS = 32
 # waits for a network. Counterpart: PorterReceiverStarter.
 BOOT_START_NOTIFICATION = 1447
 AWAITING_WIFI = "Awaiting Wi-Fi connection before proceeding"
+# A reboot straight after svc switched the networks off came back with Wi-Fi on; one a few seconds
+# after the settings read off kept both off.
+NETWORK_OFF_SETTLE = 5
+# A start that got its network runs and replaces the waiting text with its own progress, so the text
+# still there this much later is a start that is still queued.
+AWAITING_WIFI_RECHECK = 5
 # "NotificationRecord(0x0c5c7d3e: pkg=eu.darken.porter user=UserHandle{0} id=1447 tag=null ..."
 # heads each record; the space before it keeps uid= from matching.
 RECORD_ID = re.compile(r"\sid=(\d+)\b")
@@ -105,6 +111,11 @@ def record_id(record):
     """The id a notification record was posted under, read from its header line only."""
     found = RECORD_ID.search(record.split("\n", 1)[0])
     return int(found.group(1)) if found else None
+
+
+def awaiting_wifi(record):
+    """Whether a boot start's notification record says it is waiting for Wi-Fi. No record does not."""
+    return record is not None and AWAITING_WIFI in record
 
 
 class Boot(base.Smoke):
@@ -172,6 +183,12 @@ class Boot(base.Smoke):
         # where older releases print "JOB #u0a216/2: ... eu.darken.porter/...".
         return [line.strip() for line in dump.splitlines()
                 if re.match(r"\s*JOB\s", line) and re.search(rf"[ @]{re.escape(base.MANAGER)}/", line)]
+
+    def networks_off(self):
+        """Whether the settings the system boots from have Wi-Fi and mobile data both off. A read
+        that failed is not an off."""
+        return all(self.shell("settings", "get", "global", key, check=False) == "0"
+                   for key in ("wifi_on", "mobile_data"))
 
     def tap_notification_action(self, title, action, screenshot=None):
         """Taps this action of the notification with this title, expanding that notification in the
@@ -719,20 +736,29 @@ class Boot(base.Smoke):
             self.shell("su", "0", "setprop", "persist.adb.tcp.port", "")
             self.shell("svc", "wifi", "disable")
             self.shell("svc", "data", "disable")
+            self.until("Wi-Fi and mobile data are off", self.networks_off)
+            time.sleep(NETWORK_OFF_SETTLE)
             self.reboot()
             assert self.shell("getprop", "persist.adb.tcp.port", check=False) == ""
             assert self.shell("getprop", "service.adb.tcp.port", check=False) == ""
+            assert self.networks_off(), ("the device did not keep Wi-Fi and mobile data off across the "
+                                         "reboot; a fixture failure, not a Porter defect")
 
             def waiting_for_wifi():
                 # Polled across the boot, so one dump that fails is a look that answered nothing.
                 try:
-                    record = self.manager_notification(BOOT_START_NOTIFICATION)
-                    return (record is not None and AWAITING_WIFI in record
+                    return (awaiting_wifi(self.manager_notification(BOOT_START_NOTIFICATION))
                             and bool(self.manager_jobs(check=True)))
                 except RuntimeError as e:
                     print(f"NOTE {e}", flush=True)
                     return False
             self.until("the boot start is waiting for Wi-Fi", waiting_for_wifi, timeout=BOOT_TIMEOUT)
+            # The notification and the job also exist for the moment a start that found a network
+            # takes to begin running.
+            time.sleep(AWAITING_WIFI_RECHECK)
+            assert awaiting_wifi(self.manager_notification(BOOT_START_NOTIFICATION)), (
+                "the boot start ran instead of waiting: the device found a network after all, a fixture "
+                "failure, not a Porter defect")
             assert self.no_server(), "a server started with no network to start it through"
 
             # From the host as root, the way the issue's reporter started it.

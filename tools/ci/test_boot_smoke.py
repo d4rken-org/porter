@@ -155,6 +155,35 @@ class NotificationIdTest(unittest.TestCase):
         self.assertIsNone(boot.record_id("  NotificationRecord(0x1: pkg=eu.darken.porter user=0)\n"
                                          "      android.text=id=1447"))
 
+    def test_a_queued_start_is_awaiting_wifi(self):
+        self.assertTrue(boot.awaiting_wifi(self.record(boot.base.MANAGER, 1447, boot.AWAITING_WIFI)))
+
+    def test_a_running_start_is_not(self):
+        self.assertFalse(boot.awaiting_wifi(self.record(boot.base.MANAGER, 1447, "Starting Porter…")))
+
+    def test_no_record_is_not(self):
+        self.assertFalse(boot.awaiting_wifi(None))
+
+
+class NetworksOffTest(unittest.TestCase):
+    """Both networks off in the settings the system boots from."""
+
+    @staticmethod
+    def reading(**values):
+        runner = boot.Boot.__new__(boot.Boot)
+        runner.shell = Mock(side_effect=lambda *args, **kwargs: values[args[-1]])
+        return runner
+
+    def test_both_off(self):
+        self.assertTrue(self.reading(wifi_on="0", mobile_data="0").networks_off())
+
+    def test_one_still_on_is_not_off(self):
+        self.assertFalse(self.reading(wifi_on="1", mobile_data="0").networks_off())
+        self.assertFalse(self.reading(wifi_on="0", mobile_data="1").networks_off())
+
+    def test_a_read_that_failed_is_not_off(self):
+        self.assertFalse(self.reading(wifi_on="", mobile_data="0").networks_off())
+
 
 class ManagerJobsTest(unittest.TestCase):
     """Unfinished WorkManager work, as JobScheduler lists it for the manager."""
