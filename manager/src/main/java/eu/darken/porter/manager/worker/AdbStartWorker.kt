@@ -11,6 +11,7 @@ import android.database.ContentObserver
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.VisibleForTesting
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.asFlow
 import androidx.work.*
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeoutException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.callbackFlow
@@ -38,6 +40,7 @@ import eu.darken.porter.manager.receiver.PorterReceiverStarter.WorkerState
 import eu.darken.porter.manager.receiver.PorterReceiverStarter.updateNotification
 import eu.darken.porter.manager.support.SupportActivity
 import eu.darken.porter.manager.utils.EnvironmentUtils
+import eu.darken.porter.manager.utils.LOGGER
 import eu.darken.porter.manager.utils.PorterStateMachine
 
 class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
@@ -48,9 +51,17 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
      * thread, read from the coroutine the cancellation lands in.
      */
     @Volatile
-    private var handedOff = false
+    @VisibleForTesting
+    internal var handedOff = false
 
     override suspend fun doWork(): Result {
+        val forced = inputData.getBoolean(KEY_FORCE, false)
+        // A server started another way while this request waited, as from root or a computer.
+        // Replacing it is for a forced start, which asks for exactly that.
+        if (!forced && PorterReceiverStarter.isServerRunning()) {
+            cancelStartNotification(applicationContext)
+            return Result.success()
+        }
         try {
             updateNotification(
                 applicationContext,
@@ -87,7 +98,7 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
                     // the work back: a cancel is one of the things that stops it.
                     if (!isStopped) {
                         handedOff = true
-                        enqueue(applicationContext)
+                        enqueue(applicationContext, forced)
                     }
                 }
 
@@ -169,7 +180,7 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
                 }
             }.first()
             
-            startOverAdb(applicationContext, port, requireTls = tcpPort == null)
+            startServer(applicationContext, port, tcpPort == null)
 
             val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.cancel(PorterReceiverStarter.NOTIFICATION_ID)
@@ -183,6 +194,12 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
                 // this run. Re-posting it leaves the attempt something to show for itself and the
                 // actions to cancel it with.
                 updateNotification(applicationContext, WorkerState.RUNNING)
+                throw e
+            }
+
+            // A server that came up meanwhile leaves nothing to wait or retry for.
+            if (PorterReceiverStarter.isServerRunning()) {
+                cancelStartNotification(applicationContext)
                 throw e
             }
 
@@ -215,6 +232,8 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
             if (ignored.none { it.isInstance(e) }) showErrorNotification(applicationContext, e)
 
             if (PorterStateMachine.instance.update() == PorterStateMachine.State.RUNNING) {
+                // Only the attempt's own notification: an error just posted on NOTIFICATION_ID stays.
+                cancelStartNotification(applicationContext)
                 return Result.success()
             } else {
                 updateNotification(
@@ -280,7 +299,16 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
     }
 
     companion object {
-        fun enqueue(context: Context) {
+        private const val UNIQUE_WORK = "adb_start_worker"
+
+        @VisibleForTesting
+        internal const val KEY_FORCE = "force"
+
+        /**
+         * A [force]d attempt replaces a server that already runs, as a changed TCP port needs.
+         * [onEnqueued] runs off the caller's thread once WorkManager has stored the request.
+         */
+        fun enqueue(context: Context, force: Boolean = false, onEnqueued: (() -> Unit)? = null) {
             val cb = Constraints.Builder()
             if (EnvironmentUtils.isWifiRequired())
                 cb.setRequiredNetworkType(NetworkType.UNMETERED)
@@ -288,14 +316,61 @@ class AdbStartWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
             val request = OneTimeWorkRequestBuilder<AdbStartWorker>()
                 .setConstraints(constraints)
+                .setInputData(workDataOf(KEY_FORCE to force))
                 .build()
 
-            WorkManager.getInstance(context).enqueueUniqueWork(
-                "adb_start_worker",
-                ExistingWorkPolicy.REPLACE,
-                request
-            )
+            enqueueUnique(context, request, onEnqueued)
         }
+
+        /**
+         * Ends an attempt still waiting for its turn, as one waiting for Wi-Fi at boot, once a
+         * server runs. A running attempt is left alone: its own start delivers a binder too.
+         */
+        fun supersede(context: Context) {
+            try {
+                if (supersedes(workStates(context))) cancel(context)
+            } catch (e: Exception) {
+                LOGGER.w(e, "End the waiting ADB start")
+            }
+        }
+
+        @VisibleForTesting
+        internal fun supersedes(states: List<WorkInfo.State>): Boolean =
+            WorkInfo.State.ENQUEUED in states && WorkInfo.State.RUNNING !in states
+
+        /** Ends the attempt, waiting or running, and takes its notification down. */
+        internal fun cancel(context: Context) {
+            cancelWork(context)
+            cancelStartNotification(context)
+        }
+
+        private fun cancelStartNotification(context: Context) {
+            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.cancel(PorterReceiverStarter.NOTIFICATION_ID)
+        }
+
+        @VisibleForTesting
+        internal var startServer: suspend (Context, Int, Boolean) -> Unit = { context, port, requireTls ->
+            startOverAdb(context, port, requireTls = requireTls)
+        }
+
+        @VisibleForTesting
+        internal var enqueueUnique: (Context, OneTimeWorkRequest, (() -> Unit)?) -> Unit = { context, request, onEnqueued ->
+            val operation = WorkManager.getInstance(context)
+                .enqueueUniqueWork(UNIQUE_WORK, ExistingWorkPolicy.REPLACE, request)
+            if (onEnqueued != null) operation.result.addListener({ onEnqueued() }, Dispatchers.IO.asExecutor())
+        }
+
+        @VisibleForTesting
+        internal var workStates: (Context) -> List<WorkInfo.State> = { context ->
+            WorkManager.getInstance(context).getWorkInfosForUniqueWork(UNIQUE_WORK).get().map { it.state }
+        }
+
+        @VisibleForTesting
+        internal var cancelWork: (Context) -> Unit = { context ->
+            WorkManager.getInstance(context).cancelUniqueWork(UNIQUE_WORK)
+        }
+
         const val NOTIFICATION_ID = 1448
 
         /**

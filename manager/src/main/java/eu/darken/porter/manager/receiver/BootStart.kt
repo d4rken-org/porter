@@ -1,6 +1,7 @@
 package eu.darken.porter.manager.receiver
 
 import android.content.Context
+import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.VisibleForTesting
@@ -8,10 +9,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import eu.darken.porter.manager.AppConstants
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.ServerBinder
+import eu.darken.porter.manager.worker.AdbStartWorker
 
 /**
  * Decides whether a BOOT_COMPLETED is a boot to start the server for. From Android 15 the system
@@ -26,12 +29,23 @@ object BootStart {
 
     private val attached = AtomicBoolean(false)
 
-    /** Marks every boot in which a server is delivered as needing no start. Once-only. */
+    /**
+     * Marks every boot in which a server is delivered as needing no start, and ends a start that
+     * is still waiting for its turn. Once-only.
+     */
     fun attachToPorter(context: Context) {
         if (!attached.compareAndSet(false, true)) return
         val appContext = context.applicationContext
-        scope.launch {
-            ServerBinder.binder.collect { binder -> if (binder != null) serverSeen(appContext) }
+        scope.launch { follow(appContext, ServerBinder.binder) }
+    }
+
+    @VisibleForTesting
+    internal suspend fun follow(context: Context, binders: Flow<IBinder?>) {
+        binders.collect { binder ->
+            if (binder != null) {
+                serverSeen(context)
+                AdbStartWorker.supersede(context)
+            }
         }
     }
 

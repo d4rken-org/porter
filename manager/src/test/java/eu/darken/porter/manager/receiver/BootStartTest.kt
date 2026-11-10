@@ -1,17 +1,29 @@
 package eu.darken.porter.manager.receiver
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Binder
 import android.provider.Settings
 import androidx.test.core.app.ApplicationProvider
+import androidx.work.WorkInfo
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.TestApplication
+import eu.darken.porter.manager.receiver.PorterReceiverStarter.WorkerState
+import eu.darken.porter.manager.worker.AdbStartWorker
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 
 /**
@@ -22,6 +34,9 @@ import org.robolectric.annotation.Config
 @Config(application = TestApplication::class, sdk = [34])
 class BootStartTest {
     private val application = ApplicationProvider.getApplicationContext<Application>()
+    private val originalWorkStates = AdbStartWorker.workStates
+    private val originalCancelWork = AdbStartWorker.cancelWork
+    private var workCancels = 0
 
     private fun boot(count: Int) {
         Settings.Global.putInt(application.contentResolver, Settings.Global.BOOT_COUNT, count)
@@ -33,7 +48,20 @@ class BootStartTest {
             .edit().clear().commit()
         PorterSettings.resetForTest()
         PorterSettings.initialize(application)
+        AdbStartWorker.cancelWork = { workCancels++ }
     }
+
+    @After fun restore() {
+        AdbStartWorker.workStates = originalWorkStates
+        AdbStartWorker.cancelWork = originalCancelWork
+    }
+
+    private fun queued(vararg states: WorkInfo.State) {
+        AdbStartWorker.workStates = { states.toList() }
+    }
+
+    private fun startNotification() = shadowOf(application.getSystemService(NotificationManager::class.java))
+        .getNotification(PorterReceiverStarter.NOTIFICATION_ID)
 
     @Test fun onlyTheFirstDeliveryOfABootStarts() {
         boot(7)
@@ -77,5 +105,48 @@ class BootStartTest {
     @Test fun withoutABootCountEveryDeliveryStarts() {
         assertTrue(BootStart.claim(application))
         assertTrue(BootStart.claim(application))
+    }
+
+    /** As at a boot without Wi-Fi, followed by a root start from the app. */
+    @Test fun aServerEndsTheStartWaitingForItsTurn() = runTest {
+        queued(WorkInfo.State.ENQUEUED)
+        PorterReceiverStarter.updateNotification(application, WorkerState.AWAITING_WIFI)
+
+        BootStart.follow(application, flowOf(Binder()))
+
+        assertEquals(1, workCancels)
+        assertNull(startNotification())
+    }
+
+    /** The running attempt's own start delivers a server too. */
+    @Test fun aRunningStartIsLeftToFinish() = runTest {
+        queued(WorkInfo.State.RUNNING)
+        PorterReceiverStarter.updateNotification(application, WorkerState.RUNNING)
+
+        BootStart.follow(application, flowOf(Binder()))
+
+        assertEquals(0, workCancels)
+        assertNotNull(startNotification())
+    }
+
+    @Test fun aServerGoneEndsNothing() = runTest {
+        queued(WorkInfo.State.ENQUEUED)
+
+        BootStart.follow(application, flowOf(null))
+
+        assertEquals(0, workCancels)
+    }
+
+    @Test fun aFailedLookupLeavesTheNextServerHandled() = runTest {
+        var lookups = 0
+        AdbStartWorker.workStates = {
+            if (++lookups == 1) throw IllegalStateException("WorkManager is not initialized")
+            listOf(WorkInfo.State.ENQUEUED)
+        }
+
+        BootStart.follow(application, flowOf(Binder(), Binder()))
+
+        assertEquals(2, lookups)
+        assertEquals(1, workCancels)
     }
 }
