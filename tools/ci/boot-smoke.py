@@ -59,15 +59,24 @@ NETWORK_PROMPT_TIMEOUT = 120
 REPLY_TIMEOUT = 30
 # Deletions that empty a reply field however many late digits reached it after it was read.
 REPLY_CLEAR_KEYS = 32
+# The id the manager posts its boot start under, and what that notification says while the start
+# waits for a network. Counterpart: PorterReceiverStarter.
+BOOT_START_NOTIFICATION = 1447
+AWAITING_WIFI = "Awaiting Wi-Fi connection before proceeding"
+# "NotificationRecord(0x0c5c7d3e: pkg=eu.darken.porter user=UserHandle{0} id=1447 tag=null ..."
+# heads each record; the space before it keeps uid= from matching.
+RECORD_ID = re.compile(r"\sid=(\d+)\b")
 # The order run() declares, which --case narrows without ever reordering.
 CASES = ("setup", "wireless-pairing", "wireless-off-home-start", "wireless-off-background-start",
          "app-adb-start", "automation-broadcasts", "force-stop-before-boot",
-         "start-on-boot", "force-stop-after-boot", "start-on-boot-off", "boot-without-adb")
+         "start-on-boot", "force-stop-after-boot", "start-on-boot-off", "boot-without-adb",
+         "boot-start-superseded")
 # Run only when named.
 OPT_IN = ("wireless-pairing", "wireless-off-home-start", "wireless-off-background-start")
 # Each of these inherits what the case before it established on the device. boot-without-adb does
 # not name start-on-boot-off: it sets the toggle it needs rather than assuming a previous case
-# left it either way.
+# left it either way. boot-start-superseded names nothing: it starts the server whose launch mode
+# the boot start then follows.
 REQUIRES = {
     # Both start over the pairing that case leaves behind.
     "wireless-off-home-start": ("wireless-pairing",),
@@ -90,6 +99,12 @@ def resumed_components(activities):
 def switched_on(prefs, key):
     """Whether a preferences file holds this boolean as true. Never written reads as off."""
     return f'name="{key}" value="true"' in prefs
+
+
+def record_id(record):
+    """The id a notification record was posted under, read from its header line only."""
+    found = RECORD_ID.search(record.split("\n", 1)[0])
+    return int(found.group(1)) if found else None
 
 
 class Boot(base.Smoke):
@@ -143,10 +158,16 @@ class Boot(base.Smoke):
                 records[-1].append(line)
         return ["\n".join(record) for record in records]
 
-    def manager_jobs(self):
+    def manager_notification(self, notification_id):
+        """The manager's record posted under this id, or None."""
+        return next((record for record in self.manager_notifications()
+                     if record_id(record) == notification_id), None)
+
+    def manager_jobs(self, check=False):
         """The JobScheduler jobs the manager has registered, which is where WorkManager keeps work
-        that has not finished."""
-        dump = self.shell("dumpsys", "jobscheduler", base.MANAGER, check=False)
+        that has not finished. Unchecked, a dump that failed lists nothing; check=True raises
+        instead, for a caller that must not take that for an absence."""
+        dump = self.shell("dumpsys", "jobscheduler", base.MANAGER, check=check)
         # Android 16 prints "JOB <namespace>:u0a216/2: ... @<namespace>@eu.darken.porter/...",
         # where older releases print "JOB #u0a216/2: ... eu.darken.porter/...".
         return [line.strip() for line in dump.splitlines()
@@ -292,6 +313,39 @@ class Boot(base.Smoke):
         self.until(f"the app saved the switch {'on' if enable else 'off'}",
                    lambda: self.wireless_debugging_off_is(enable), timeout=60)
 
+    def start_on_boot_is(self, enable):
+        listing = self.shell("sh", "-c", f"dumpsys package {base.MANAGER} | grep -A4 enabledComponents")
+        return ("BootCompleteReceiver" in listing) == enable
+
+    def toggle_start_on_boot(self, enable):
+        """Leaves the setting in the asked-for state, whatever it was before."""
+        self.open_home()
+        self.tap("Settings", desc="Settings")
+        self.tap("Startup")
+        if self.start_on_boot_is(enable):
+            return
+        self.tap("Start on boot", screenshot="start-on-boot-" + ("on" if enable else "off"))
+        # Below API 33 the switch opens a warning about wireless debugging first, and the
+        # write only happens when it is confirmed. Both outcomes are watched for at once: the
+        # dialog takes a moment to appear, so a single look would miss it and then wait out
+        # the state check against a switch that is still asking.
+        outcome = self.until(
+            "the switch either asked or applied",
+            lambda: ("asked" if self.locate("OK") else
+                     "applied" if self.start_on_boot_is(enable) else None))
+        if outcome == "asked":
+            self.tap("OK")
+        self.until(f"start on boot is {'on' if enable else 'off'}", lambda: self.start_on_boot_is(enable))
+        # The component list changes before the write that makes it survive a restart has
+        # finished. The preference is written after that call returns, so it is what says the
+        # app is done rather than merely under way.
+        wanted = f'name="start_on_boot" value="{str(enable).lower()}"'
+        self.until("the app finished saving the setting",
+                   lambda: wanted in self.shell(
+                       "su", "0", "cat", f"/data/user_de/0/{base.MANAGER}/shared_prefs/settings.xml",
+                       check=False),
+                   timeout=60)
+
     def turn_on_wireless_debugging(self):
         """From Settings' Developer options or its Wireless debugging page, whichever is in front."""
         # The button lands on the Wireless debugging page itself where Settings allows it.
@@ -360,8 +414,15 @@ class Boot(base.Smoke):
             # A fresh manager process, so the next case's look at the manager's own log sees
             # only what that case caused.
             self.shell("am", "force-stop", base.MANAGER)
+        if "offline-boot" in aspects:
+            self.shell("svc", "wifi", "enable")
+            self.shell("svc", "data", "enable")
+            self.toggle_start_on_boot(False)
+            # Last, so that a start the networks coming back let through is killed with the rest.
+            self.kill_server(check=False)
+            self.until("no server is left", self.no_server)
         rest = tuple(aspect for aspect in aspects
-                     if aspect not in ("wireless-debugging", "wireless-debugging-off"))
+                     if aspect not in ("wireless-debugging", "wireless-debugging-off", "offline-boot"))
         if rest:
             super().restore(*rest)
 
@@ -526,39 +587,6 @@ class Boot(base.Smoke):
             return {"stopped": server, "started": started}
         self.case("automation-broadcasts", automation_broadcasts)
 
-        def start_on_boot_is(enable):
-            listing = self.shell("sh", "-c", f"dumpsys package {base.MANAGER} | grep -A4 enabledComponents")
-            return ("BootCompleteReceiver" in listing) == enable
-
-        def toggle_start_on_boot(enable):
-            """Leaves the setting in the asked-for state, whatever it was before."""
-            self.open_home()
-            self.tap("Settings", desc="Settings")
-            self.tap("Startup")
-            if start_on_boot_is(enable):
-                return
-            self.tap("Start on boot", screenshot="start-on-boot-" + ("on" if enable else "off"))
-            # Below API 33 the switch opens a warning about wireless debugging first, and the
-            # write only happens when it is confirmed. Both outcomes are watched for at once: the
-            # dialog takes a moment to appear, so a single look would miss it and then wait out
-            # the state check against a switch that is still asking.
-            outcome = self.until(
-                "the switch either asked or applied",
-                lambda: ("asked" if self.locate("OK") else
-                         "applied" if start_on_boot_is(enable) else None))
-            if outcome == "asked":
-                self.tap("OK")
-            self.until(f"start on boot is {'on' if enable else 'off'}", lambda: start_on_boot_is(enable))
-            # The component list changes before the write that makes it survive a restart has
-            # finished. The preference is written after that call returns, so it is what says the
-            # app is done rather than merely under way.
-            wanted = f'name="start_on_boot" value="{str(enable).lower()}"'
-            self.until("the app finished saving the setting",
-                       lambda: wanted in self.shell(
-                           "su", "0", "cat", f"/data/user_de/0/{base.MANAGER}/shared_prefs/settings.xml",
-                           check=False),
-                       timeout=60)
-
         def relaunch_keeps_server():
             """Force-stops the manager and opens it again. From Android 15 the relaunch delivers
             BOOT_COMPLETED, to a process that has not yet been handed the running server's binder."""
@@ -595,16 +623,16 @@ class Boot(base.Smoke):
             """Start on boot turned on while a server runs, then a force-stop and a relaunch in that
             same boot. No boot broadcast has been handled yet, so the server the manager saw is
             what marks the boot as needing no start."""
-            toggle_start_on_boot(True)
+            self.toggle_start_on_boot(True)
             result = relaunch_keeps_server()
             # Off again, so start-on-boot turns it on itself and the reboot there follows the write.
-            toggle_start_on_boot(False)
+            self.toggle_start_on_boot(False)
             return result
         self.case("force-stop-before-boot", force_stop_before_boot)
 
         def start_on_boot():
             """Nothing on the host starts anything: the device has to do it by itself."""
-            toggle_start_on_boot(True)
+            self.toggle_start_on_boot(True)
             # service.adb.tcp.port does not survive a reboot. This is the persistent form, which
             # models a device whose TCP adb is still there afterwards; finding a port over mDNS
             # instead is a different path and not what this case is about.
@@ -632,7 +660,7 @@ class Boot(base.Smoke):
 
         def start_on_boot_off():
             """The same device with the same way in, and the setting the only difference."""
-            toggle_start_on_boot(False)
+            self.toggle_start_on_boot(False)
             self.kill_server()
             self.until("the server is gone", self.no_server)
 
@@ -645,7 +673,7 @@ class Boot(base.Smoke):
 
         def boot_without_adb():
             """Start on boot back on, and no way in: the app cannot, and says so."""
-            toggle_start_on_boot(True)
+            self.toggle_start_on_boot(True)
             # Emptied rather than deleted: persistent properties live together in one file, so
             # there is nothing per-property to remove, and getInt reads an empty value as absent.
             self.shell("su", "0", "setprop", "persist.adb.tcp.port", "")
@@ -668,6 +696,72 @@ class Boot(base.Smoke):
             self.screenshot("boot-without-adb")
             return {}
         self.case("boot-without-adb", boot_without_adb, debuggable=True)
+
+        def boot_start_superseded():
+            """A boot start left waiting for Wi-Fi, then a server the user started another way: that
+            server is what the wait was for, so the waiting notification and its work have to go."""
+            # The host's own start is what makes ADB the last launch mode, whichever way an earlier
+            # case last started the server.
+            self.open_home()
+            self.start_service()
+            # Recorded a moment after the server's binder reaches the manager; a server killed
+            # before then leaves the previous mode in place.
+            self.until("the manager recorded an ADB start",
+                       lambda: 'name="mode" value="1"' in self.shell(
+                           "su", "0", "cat", f"{SETTINGS_DIR}/settings.xml", check=False),
+                       timeout=60)
+            self.kill_server()
+            self.until("the server is gone", self.no_server)
+
+            self.toggle_start_on_boot(True)
+            # No port and no network, so the boot start is queued behind an unmetered network that
+            # never comes.
+            self.shell("su", "0", "setprop", "persist.adb.tcp.port", "")
+            self.shell("svc", "wifi", "disable")
+            self.shell("svc", "data", "disable")
+            self.reboot()
+            assert self.shell("getprop", "persist.adb.tcp.port", check=False) == ""
+            assert self.shell("getprop", "service.adb.tcp.port", check=False) == ""
+
+            def waiting_for_wifi():
+                # Polled across the boot, so one dump that fails is a look that answered nothing.
+                try:
+                    record = self.manager_notification(BOOT_START_NOTIFICATION)
+                    return (record is not None and AWAITING_WIFI in record
+                            and bool(self.manager_jobs(check=True)))
+                except RuntimeError as e:
+                    print(f"NOTE {e}", flush=True)
+                    return False
+            self.until("the boot start is waiting for Wi-Fi", waiting_for_wifi, timeout=BOOT_TIMEOUT)
+            assert self.no_server(), "a server started with no network to start it through"
+
+            # From the host as root, the way the issue's reporter started it.
+            self.start_service(root=True)
+            server = self.pid("porter_server")
+            assert server, "the root start left no server running"
+
+            left = []
+
+            def left_behind():
+                """What remains of the boot start. A query that failed is not an absence."""
+                left.clear()
+                try:
+                    if self.manager_notification(BOOT_START_NOTIFICATION) is not None:
+                        left.append(f"the notification {BOOT_START_NOTIFICATION}")
+                except RuntimeError as e:
+                    left.append(f"a notification dump that failed ({e})")
+                try:
+                    left.extend(f"the job {job!r}" for job in self.manager_jobs(check=True))
+                except RuntimeError as e:
+                    left.append(f"a job dump that failed ({e})")
+                return left
+            try:
+                self.until("the running server ended the boot start", lambda: not left_behind(), timeout=60)
+            except AssertionError:
+                raise AssertionError("the running server left the boot start behind: " + "; ".join(left)) from None
+            assert self.pid("porter_server") == server, "the root-started server was replaced"
+            return {"server_pid": server}
+        self.case("boot-start-superseded", boot_start_superseded, restore=("offline-boot",))
 
 
 def parse_args(argv=None):
