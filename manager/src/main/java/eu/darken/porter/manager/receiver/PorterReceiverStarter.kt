@@ -38,19 +38,27 @@ object PorterReceiverStarter {
         STOPPED
     }
 
+    /**
+     * A delivered binder can be held while the state machine still reports STOPPED, as in a
+     * process the server's own delivery just started. Pinned by
+     * PorterReceiverStarterTest.aDeliveredServerIsNotReplacedBeforeTheStateMachineHearsOfIt.
+     */
+    internal fun isServerRunning(): Boolean = PorterStateMachine.instance.isRunning() || ServerBinder.isAlive
+
     fun start(context: Context, forceStart: Boolean = false) {
-        // A delivered binder can be held while the state machine still reports STOPPED, as in a
-        // process the server's own delivery just started. Pinned by
-        // PorterReceiverStarterTest.aDeliveredServerIsNotReplacedBeforeTheStateMachineHearsOfIt.
-        if (!forceStart && (UserHandleCompat.myUserId() > 0 || PorterStateMachine.instance.isRunning() || ServerBinder.isAlive)) return
+        if (!forceStart && (UserHandleCompat.myUserId() > 0 || isServerRunning())) return
 
         if (PorterSettings.lastLaunchMode == LaunchMethod.ROOT) {
             rootStart(context)
         } else if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R || EnvironmentUtils.isTelevision() || EnvironmentUtils.getAdbTcpPort() > 0)
             && PorterSettings.lastLaunchMode == LaunchMethod.ADB) {
                 if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
-                    AdbStartWorker.enqueue(context)
+                    // The notification goes up before the request is stored and the check runs
+                    // after: a server delivered before the check is caught by it, one delivered
+                    // later finds both to end. counterpart: AdbStartWorker.supersede
                     updateNotification(context, WorkerState.AWAITING_WIFI)
+                    if (forceStart) AdbStartWorker.enqueue(context, force = true)
+                    else AdbStartWorker.enqueue(context) { if (isServerRunning()) AdbStartWorker.cancel(context) }
                 } else {
                     showPermissionErrorNotification(context)
                 }
