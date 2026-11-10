@@ -117,6 +117,45 @@ class NotificationChannelTest(unittest.TestCase):
             self.assertEqual(self.smoke.manager_notifications(), [])
 
 
+class NotificationIdTest(unittest.TestCase):
+    """The boot start's notification, told apart by the id it was posted under."""
+
+    def setUp(self):
+        self.smoke, directory = runner()
+        self.addCleanup(directory.cleanup)
+
+    @staticmethod
+    def record(package, notification_id, text):
+        return "\n".join([
+            f"  NotificationRecord(0x0c5c7d3e: pkg={package} user=UserHandle{{0}} id={notification_id} "
+            f"tag=null importance=2 key=0|{package}|{notification_id}|null|10123: Notification("
+            "channel=porter.adb_start shortcut=null contentView=null vibrate=null sound=null "
+            "defaults=0x0 flags=0x62 color=0x00000000 actions=2 vis=PRIVATE))",
+            "    uid=10123 userId=0",
+            f"      android.text=String ({text})",
+        ])
+
+    def find(self, *records):
+        with patch.object(self.smoke, "shell", return_value="\n".join(records)):
+            return self.smoke.manager_notification(boot.BOOT_START_NOTIFICATION)
+
+    def test_the_managers_record_under_that_id_is_found(self):
+        found = self.find(self.record("com.example", 7, "hello"),
+                          self.record(boot.base.MANAGER, 1447, boot.AWAITING_WIFI))
+        self.assertIn(boot.AWAITING_WIFI, found)
+
+    def test_a_record_under_another_id_is_not_it(self):
+        self.assertIsNone(self.find(self.record(boot.base.MANAGER, 1448, boot.AWAITING_WIFI)))
+
+    def test_another_package_under_that_id_is_never_counted(self):
+        self.assertIsNone(self.find(self.record("com.example", 1447, boot.AWAITING_WIFI),
+                                    self.record(boot.base.NATIVE, 1447, boot.AWAITING_WIFI)))
+
+    def test_the_id_is_read_from_the_header_alone(self):
+        self.assertIsNone(boot.record_id("  NotificationRecord(0x1: pkg=eu.darken.porter user=0)\n"
+                                         "      android.text=id=1447"))
+
+
 class ManagerJobsTest(unittest.TestCase):
     """Unfinished WorkManager work, as JobScheduler lists it for the manager."""
 
@@ -134,6 +173,29 @@ class ManagerJobsTest(unittest.TestCase):
             "    Source: uid=u0a216 user=0 pkg=eu.darken.porter",
         )))
         self.assertEqual(len(runner.manager_jobs()), 2)
+
+
+class CheckedManagerJobsTest(unittest.TestCase):
+    """The absence of the boot start's work has to come from a dump that worked."""
+
+    def setUp(self):
+        self.smoke, directory = runner()
+        self.addCleanup(directory.cleanup)
+
+    def answer(self, returncode, stdout, stderr=b""):
+        return patch.object(boot.base.subprocess, "run",
+                            return_value=boot.base.subprocess.CompletedProcess(["adb"], returncode, stdout, stderr))
+
+    def test_a_failed_dump_is_not_an_absence(self):
+        with self.answer(1, b"", b"Can't find service: jobscheduler"):
+            with self.assertRaises(RuntimeError):
+                self.smoke.manager_jobs(check=True)
+            # Unchecked, the same failure reads as nothing registered.
+            self.assertEqual(self.smoke.manager_jobs(), [])
+
+    def test_a_dump_that_worked_and_lists_nothing_is_one(self):
+        with self.answer(0, b"Registered 0 jobs:\n"):
+            self.assertEqual(self.smoke.manager_jobs(check=True), [])
 
 
 class StartedByManagerTest(unittest.TestCase):
@@ -356,6 +418,23 @@ class WirelessDebuggingOffRestoreTest(unittest.TestCase):
         self.assertIn(("settings", "put", "global", "adb_wifi_enabled", "0"), steps)
 
 
+class OfflineBootRestoreTest(unittest.TestCase):
+    def setUp(self):
+        self.smoke, directory = runner()
+        self.addCleanup(directory.cleanup)
+
+    def test_the_networks_come_back_before_the_server_is_killed(self):
+        steps = []
+        self.smoke.shell = Mock(side_effect=lambda *a, **k: steps.append(a) or boot.NO_PROCESS)
+        self.smoke.toggle_start_on_boot = Mock(side_effect=lambda enable: steps.append(("start-on-boot", enable)))
+        with patch.object(boot.base.Smoke, "restore") as inherited:
+            self.smoke.restore("offline-boot")
+        inherited.assert_not_called()
+        kill = next(i for i, step in enumerate(steps) if step[:3] == ("su", "0", "kill"))
+        for step in (("svc", "wifi", "enable"), ("svc", "data", "enable"), ("start-on-boot", False)):
+            self.assertLess(steps.index(step), kill)
+
+
 class CaseSelectionTest(unittest.TestCase):
     """A narrowed run must not assert against a device the cases it dropped would have built."""
 
@@ -409,6 +488,11 @@ class CaseSelectionTest(unittest.TestCase):
         # It sets the toggle it needs rather than inheriting whichever way a previous case left it.
         args = self.parse("setup", "app-adb-start", "start-on-boot", "boot-without-adb")
         self.assertNotIn("start-on-boot-off", args.cases)
+
+    def test_the_superseded_boot_start_runs_by_default_last_and_needs_only_setup(self):
+        self.assertEqual(boot.CASES[-1], "boot-start-superseded")
+        self.assertIn("boot-start-superseded", self.parse().cases)
+        self.assertEqual(self.parse("setup", "boot-start-superseded").cases, ["setup", "boot-start-superseded"])
 
     def test_the_automation_case_needs_the_app_started_server(self):
         with self.assertRaises(SystemExit):
