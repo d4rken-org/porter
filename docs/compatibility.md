@@ -51,6 +51,8 @@ Porter from Google Play does not include the companion, and it does not import S
 
 If the compatibility screen says another Shizuku app is installed although Porter Compatibility is, the companion belongs to the other build. Uninstall it and install the matching one.
 
+When the compatibility screen says an update is available, download the Google Play companion from the release that matches your Porter version and install it over the current one.
+
 ## Can Porter and Shizuku run together?
 
 Yes. Porter and Shizuku can both be installed and running. An app that supports choosing between them connects to one service at a time.

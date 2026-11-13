@@ -55,6 +55,8 @@ Porter dari Google Play tidak menyertakan aplikasi pendamping dan tidak mengimpo
 
 Jika layar kompatibilitas menyebutkan aplikasi Shizuku lain terpasang padahal Porter Compatibility sudah terpasang, pendamping tersebut milik build lainnya. Copot pemasangannya dan pasang yang sesuai.
 
+Jika layar kompatibilitas menyebutkan pembaruan tersedia, unduh pendamping Google Play dari rilis yang sesuai dengan versi Porter Anda dan pasang di atas yang sekarang.
+
 ## Bisakah Porter dan Shizuku berjalan bersama?
 {: #can-porter-and-shizuku-run-together }
 

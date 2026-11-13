@@ -55,6 +55,8 @@ Porter 会自动导入能够与已安装应用及其当前访问状态核对的�
 
 如果已安装 Porter Compatibility，但兼容性页面仍提示安装了其他 Shizuku 应用，说明该配套应用属于另一个版本。请将其卸载并安装匹配的版本。
 
+如果兼容性页面提示有可用更新，请从与你的 Porter 版本对应的发布中下载 Google Play 配套应用，并覆盖安装当前版本。
+
 ## Porter 和 Shizuku 可以同时运行吗？
 {: #can-porter-and-shizuku-run-together }
 

@@ -55,6 +55,8 @@ Porter aus Google Play enthält die Begleit-App nicht und übernimmt keine Zugri
 
 Meldet der Kompatibilitätsbildschirm eine andere Shizuku-App, obwohl Porter Compatibility installiert ist, gehört die Begleit-App zur anderen Version. Deinstalliere sie und installiere die passende.
 
+Meldet der Kompatibilitätsbildschirm ein verfügbares Update, lade die Google-Play-Begleit-App aus dem Release herunter, das zu deiner Porter-Version passt, und installiere sie über die vorhandene.
+
 ## Können Porter und Shizuku gleichzeitig laufen?
 {: #can-porter-and-shizuku-run-together }
 

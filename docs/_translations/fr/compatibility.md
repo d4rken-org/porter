@@ -55,6 +55,8 @@ Porter depuis Google Play n’inclut pas l’application compagnon et n’import
 
 Si l’écran de compatibilité indique qu’une autre application Shizuku est installée alors que Porter Compatibility l’est, le compagnon appartient à l’autre version. Désinstallez-le et installez celui qui correspond.
 
+Si l’écran de compatibilité indique qu’une mise à jour est disponible, téléchargez le compagnon Google Play depuis la version correspondant à votre Porter et installez-le par-dessus l’actuel.
+
 ## Porter et Shizuku peuvent-ils fonctionner ensemble ?
 {: #can-porter-and-shizuku-run-together }
 

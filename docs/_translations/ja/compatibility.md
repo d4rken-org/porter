@@ -55,6 +55,8 @@ Google Play 版 Porter にはコンパニオンが含まれておらず、Shizuk
 
 Porter Compatibility がインストールされているのに、互換性画面に別の Shizuku アプリがインストールされていると表示される場合、そのコンパニオンはもう一方の版用です。アンインストールして、対応するものをインストールしてください。
 
+互換性画面にアップデートがあると表示された場合は、お使いの Porter のバージョンに対応するリリースから Google Play 用コンパニオンをダウンロードし、現在のものに上書きインストールしてください。
+
 ## Porter と Shizuku は同時に動作できますか？
 {: #can-porter-and-shizuku-run-together }
 

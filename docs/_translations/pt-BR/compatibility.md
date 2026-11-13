@@ -55,6 +55,8 @@ O Porter do Google Play não inclui o app complementar e não importa as decisõ
 
 Se a tela de compatibilidade disser que outro app Shizuku está instalado mesmo com o Porter Compatibility instalado, o complemento pertence à outra versão. Desinstale-o e instale o correspondente.
 
+Se a tela de compatibilidade indicar que há uma atualização disponível, baixe o complemento do Google Play na versão correspondente ao seu Porter e instale-o por cima do atual.
+
 ## Porter e Shizuku podem funcionar juntos?
 {: #can-porter-and-shizuku-run-together }
 
