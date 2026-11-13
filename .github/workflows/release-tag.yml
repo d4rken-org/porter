@@ -50,7 +50,6 @@ jobs:
     environment: foss-production
     permissions:
       contents: write
-      actions: write
     env:
       DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
       RELEASE_TAG: ${{ github.ref_name }}
@@ -176,12 +175,22 @@ jobs:
           args=(--draft=false)
           if [[ "$RELEASE_TAG" == *-beta* ]]; then args+=(--prerelease); else args+=(--latest); fi
           gh release edit "$RELEASE_TAG" "${args[@]}"
-      - name: Deploy user guide
-        if: env.DRY_RUN != 'true'
-        run: gh workflow run pages.yml --ref main
       - name: Remove signing material
         if: always()
         run: rm -rf "$RUNNER_TEMP/porter-signing"
+
+  # Outside release-github, so a failed dispatch does not hold back the Play upload.
+  deploy-guide:
+    name: Deploy user guide
+    needs: release-github
+    if: ${{ !cancelled() && needs.release-github.result == 'success' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+    runs-on: ubuntu-26.04
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - run: gh workflow run pages.yml --ref main --repo "$GITHUB_REPOSITORY"
 
   # The Play app signing key lives only in this environment. Dry runs and non-tag refs skip it.
   gplay-companion:
@@ -247,13 +256,14 @@ jobs:
         if: always()
         run: rm -rf "$RUNNER_TEMP/porter-signing"
 
-  # Runs beside release-github rather than after it: a failed Play upload must not hold back the
-  # GitHub release, and the reverse. A dry run skips this job entirely, because its environment
-  # requires a review and the job's only output is the upload.
+  # Runs after release-github, so a Play build never reaches testers before the companion it asks
+  # for can be downloaded. A failed Play upload still does not hold back the GitHub release. A dry
+  # run skips this job entirely, because its environment requires a review and the job's only
+  # output is the upload.
   release-gplay:
     name: Upload to Google Play
-    needs: validate-tag
-    if: ${{ !cancelled() && startsWith(github.ref, 'refs/tags/v') && (needs.validate-tag.result == 'success' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run)) }}
+    needs: [validate-tag, release-github]
+    if: ${{ !cancelled() && startsWith(github.ref, 'refs/tags/v') && (needs.validate-tag.result == 'success' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run)) && needs.release-github.result == 'success' }}
     runs-on: ubuntu-26.04
     environment: gplay-production-upload
     env:
