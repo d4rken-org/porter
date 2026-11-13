@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.Helps
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.compatibility.OtherShizukuDetector
@@ -91,7 +92,8 @@ internal class OnboardingViewModel @JvmOverloads constructor(
     }
 
     fun openCompatibilityGuide() {
-        eventChannel.trySend(OnboardingEvent.OpenUrl(Helps.APPS.get()))
+        val guide = if (BuildConfig.IS_FOSS) Helps.APPS else Helps.APPS_GPLAY
+        eventChannel.trySend(OnboardingEvent.OpenUrl(guide.get()))
     }
 
     fun finish() {

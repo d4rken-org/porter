@@ -79,6 +79,9 @@ jobs:
           if-no-files-found: warn
       - name: Build development APKs
         run: ./gradlew :manager:assembleDebug :compat:assembleDebug :probe:assembleDebug
+      # After a debug build, which creates the debug keystore that development signing falls back to.
+      - name: Build the Google Play bundle
+        run: ./gradlew :manager:bundleGplayRelease -Pporter.developmentSigning=true
       - name: Verify APK identities
         run: |
           python3 tools/verify-apks.py manager/build/outputs/apk/foss/debug/*.apk compat/build/outputs/apk/debug/*.apk --embedded required

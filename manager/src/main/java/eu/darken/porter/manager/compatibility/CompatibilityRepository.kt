@@ -390,7 +390,7 @@ internal class CompatibilityRepository @VisibleForTesting internal constructor(
                 companion == null -> Status.MISSING
                 !isCompanion -> Status.CONFLICT
                 !ownsPermission(companion) -> Status.INVALID
-                BuildConfig.IS_FOSS && version(companion) < BuildConfig.COMPAT_VERSION_CODE -> Status.UPDATE
+                version(companion) < BuildConfig.COMPAT_VERSION_CODE -> Status.UPDATE
                 else -> Status.INSTALLED
             }
             return Resolution(status, target, foreign, companion, if (foreign) packageInfo(pm, target) else companion, isCompanion)
