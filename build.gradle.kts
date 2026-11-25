@@ -18,7 +18,7 @@ subprojects {
         extensions.configure<BaseExtension>("android") {
             compileSdkVersion(37)
             buildToolsVersion = "37.0.0"
-            ndkVersion = "29.0.13113456"
+            ndkVersion = "29.0.14206865"
             defaultConfig {
                 minSdk = 24
                 targetSdk = 37
