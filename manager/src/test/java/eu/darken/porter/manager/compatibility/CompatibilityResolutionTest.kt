@@ -2,6 +2,7 @@ package eu.darken.porter.manager.compatibility
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
+import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.TestApplication
 import eu.darken.porter.manager.compatibility.CompatibilityRepository.Companion.PACKAGE
 import eu.darken.porter.manager.compatibility.CompatibilityRepository.Status
@@ -75,6 +76,18 @@ class CompatibilityResolutionTest {
         assertEquals(Status.INSTALLED, resolution.status)
         assertEquals(PACKAGE, resolution.target)
         assertTrue(resolution.isCompanion)
+    }
+
+    @Test fun olderCompanionNeedsUpdate() {
+        packages.install(PACKAGE, packages.porterSigner, version = BuildConfig.COMPAT_VERSION_CODE - 1L)
+        val resolution = resolve()
+        assertEquals(Status.UPDATE, resolution.status)
+        assertTrue(resolution.isCompanion)
+    }
+
+    @Test fun newerCompanionIsInstalled() {
+        packages.install(PACKAGE, packages.porterSigner, version = BuildConfig.COMPAT_VERSION_CODE + 1L)
+        assertEquals(Status.INSTALLED, resolve().status)
     }
 
     @Test fun companionWithoutThePermissionIsInvalid() {

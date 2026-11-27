@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.core.app.ApplicationProvider
+import eu.darken.porter.manager.BuildConfig
 import eu.darken.porter.manager.PorterSettings
 import eu.darken.porter.manager.TestApplication
 import eu.darken.porter.manager.onboarding.OnboardingPage.PRIVACY
@@ -193,7 +194,10 @@ class OnboardingViewModelTest {
         assertEquals(
             listOf(
                 OnboardingEvent.OpenUrl("https://porter.darken.eu/privacy"),
-                OnboardingEvent.OpenUrl("https://porter.darken.eu/compatibility"),
+                OnboardingEvent.OpenUrl(
+                    if (BuildConfig.IS_FOSS) "https://porter.darken.eu/compatibility"
+                    else "https://porter.darken.eu/compatibility#porter-from-google-play"
+                ),
             ),
             model.drain(),
         )

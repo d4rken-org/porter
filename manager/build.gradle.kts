@@ -93,24 +93,27 @@ android {
     }
     signingConfigs {
         create("sign")
+        create("signGplay")
     }
     flavorDimensions += "version"
     productFlavors {
         create("foss") {
             dimension = "version"
             buildConfigField("boolean", "IS_FOSS", "true")
+            signingConfig = signingConfigs.getByName("sign")
         }
         create("gplay") {
             dimension = "version"
             buildConfigField("boolean", "IS_FOSS", "false")
+            signingConfig = signingConfigs.getByName("signGplay")
         }
     }
     buildTypes {
+        // A build type's signing config overrides the flavor's, so release leaves it to the flavor.
         debug {
             signingConfig = signingConfigs.getByName("debug")
         }
         release {
-            signingConfig = signingConfigs.getByName("sign")
             isMinifyEnabled = true
             isShrinkResources = true
             vcsInfo.include = false

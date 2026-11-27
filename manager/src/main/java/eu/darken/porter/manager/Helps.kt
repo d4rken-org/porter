@@ -13,6 +13,7 @@ object Helps {
     val ADB = MultiLocaleEntity().apply { put("en", WEBSITE + "setup#with-a-computer") }
     val ADB_ANDROID11 = MultiLocaleEntity().apply { put("en", WEBSITE + "setup#wireless-debugging") }
     val APPS = MultiLocaleEntity().apply { put("en", WEBSITE + "compatibility") }
+    val APPS_GPLAY = MultiLocaleEntity().apply { put("en", WEBSITE + "compatibility#porter-from-google-play") }
     val HOME = MultiLocaleEntity().apply { put("en", WEBSITE + "developers") }
     val DOWNLOAD = MultiLocaleEntity().apply { put("en", SOURCE + "/releases") }
     val SUI = MultiLocaleEntity().apply { put("en", "https://github.com/RikkaApps/Sui") }
